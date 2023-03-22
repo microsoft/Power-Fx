@@ -1,0 +1,48 @@
+{
+  "name": "[dbo].[sp_1]",
+  "title": "[dbo].[sp_1]",
+  "schema": {
+    "inputparameters": {
+      "type": "object",
+      "properties": {
+        "p1": {
+          "title": "p1",
+          "type": "integer"
+        }
+      }
+    },
+    "type": "object",
+    "procedureresultschema": {
+      "type": "object",
+      "properties": {
+        "returncode": {
+          "title": "ReturnCode",
+          "type": "integer"
+        },
+        "outputparameters": {
+          "title": "OutputParameters",
+          "type": "object"
+        },
+        "resultsets": {
+          "title": "ResultSets",
+          "type": "object",
+          "properties": {
+            "Table1": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Column1": {
+                    "title": "Column1",
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

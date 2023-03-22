@@ -864,7 +864,8 @@
     <value>Wyrażenie, które jest oceniane względem wierszy w elemencie „źródło” i zapewnia wartości na potrzeby sortowania.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Rosnąco lub malejąco</value>
+    <value>SortOrder.Ascending lub SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sortuje element podany w parametrze „źródło” w oparciu o kolumnę. Opcjonalnie za pomocą parametru „kolejność” można określić kolejność sortowania.</value>
@@ -889,7 +890,8 @@
     <value>Unikatowa nazwa kolumny.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Rosnąco lub malejąco</value>
+    <value>SortOrder.Ascending lub SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sortuje element podany w parametrze „źródło” w oparciu o indeks pasujących wartości w określonej kolumnie.</value>
@@ -2382,7 +2384,7 @@
     <value>Liczba jednostek do dodania. Ta liczba może być ujemna.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jednostka do użycia: Years (Lata), Quarters (Kwartały), Months (Miesiące), Days (Dni), Hours (Godziny), Minutes (Minuty), Seconds (Sekundy) lub Milliseconds (Milisekundy).</value>
+    <value>Jednostka, która ma być używana. Może to być jedna z następujących jednostek: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds lub TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Data zakończenia operacji różnicowej.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jednostka, w której zostanie wyrażony wynik: Years (Lata), Quarters (Kwartały), Months (Miesiące), Days (Dni), Hours (Godziny), Minutes (Minuty), Seconds (Sekundy) lub Milliseconds (Milisekundy).</value>
+    <value>Jednostka, za pomocą której ma zostać wyrażony wynik. Może to być jedna z następujących jednostek: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds lub TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Pobieraj domyślny zestaw ustawień regionalnych w czasie wykonywania.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Koduje ciąg adresu URL, zamieniając pewne znaki niealfanumeryczne na znak % i liczbę szesnastkową.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>adres URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Adres URL do zakodowania.</value>
   </data>
 </root>

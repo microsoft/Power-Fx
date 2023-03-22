@@ -864,7 +864,8 @@
     <value>Avaldis, mille väärtus arvutatakse allikas olevate ridade põhjal ja mis esitab sortimiseks väärtused.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Tõusev või laskuv järjestus</value>
+    <value>SortOrder.Ascending või SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sordib allika veeru põhjal, määrates soovi korral sortimisjärjestuse.</value>
@@ -889,7 +890,8 @@
     <value>Kordumatu veerunimi.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Tõusev või laskuv järjestus</value>
+    <value>SortOrder.Ascending või SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sordib allika vastavalt määratud veerus vastavuses olevate väärtuste registrile.</value>
@@ -2382,7 +2384,7 @@
     <value>Lisatavate ühikute arv. Arv võib olla negatiivne.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Kasutatav ühik, mis võib olla kas: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Kasutatav ühik, mis võib olla üks järgmistest: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Lõppkuupäev erinevuse arvutamise toimingu jaoks.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Ühik, milles tulemus esitatakse, mis võib olla kas: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Ühik, milles väljendatakse tulemus. Võib olla üks järgmistest: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Saate hankida käitusajal määratud vaikelokaadi.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kodeerib URL-stringi, asendades teatud mittetähtnumbrilised märgid märgiga % ja kuueteistkümnendarvuga.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Kodeeritav URL.</value>
   </data>
 </root>

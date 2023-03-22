@@ -85,28 +85,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var type = ReturnType;
 
-            // Are we on a behavior property?
-            var isBehavior = context.AllowsSideEffects;
-
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);
             for (var i = 1; i < count;)
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
-                if (typeArg.IsError)
-                {
-                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                }
 
                 var typeSuper = DType.Supertype(type, typeArg);
                 if (!typeSuper.IsError)
                 {
                     type = typeSuper;
                 }
-                else if (type.Kind == DKind.Unknown)
+                else if (typeArg.IsVoid)
                 {
-                    type = typeSuper;
+                    type = DType.Void;
+                }
+                else if (typeArg.IsError)
+                {
+                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
                     fArgsValid = false;
                 }
                 else if (!type.IsError)
@@ -115,15 +112,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }
-                    else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
+                    else
                     {
-                        errors.EnsureError(
-                            DocumentErrorSeverity.Severe,
-                            nodeArg,
-                            TexlStrings.ErrBadType_ExpectedType_ProvidedType,
-                            type.GetKindString(),
-                            typeArg.GetKindString());
-                        fArgsValid = false;
+                        // If the types are incompatible, the result type is void.
+                        type = DType.Void;
                     }
                 }
                 else if (typeArg.Kind != DKind.Unknown)
@@ -152,94 +144,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(argumentIndex >= 0);
 
             return argumentIndex > 1;
-        }
-
-        // When IsArgTypeInconsequential returns true, the runtime result of If may not match the binder's expectation.
-        // So use this helper to skip asserts comparing runtime and bind time types.
-        // Also other function, that can wrap If statement inside can face the same issue.
-        internal static bool CanCheckIfReturn(TexlFunction func)
-        {
-            return func is not IfFunction && 
-                func is not WithFunction;
-        }
-
-        private bool IsArgTypeInconsequential(TexlNode arg)
-        {
-            Contracts.AssertValue(arg);
-            Contracts.Assert(arg.Parent is ListNode);
-            Contracts.Assert(arg.Parent.Parent is CallNode);
-            Contracts.Assert(arg.Parent.Parent.AsCall().Head.Name == Name);
-
-            var call = arg.Parent.Parent.AsCall().VerifyValue();
-
-            // Pattern: OnSelect = If(cond, argT, argF)
-            // Pattern: OnSelect = If(cond, arg1, cond, arg2, ..., argK, argF)
-            // Pattern: OnSelect = If(cond, arg1, If(cond, argT, argF))
-            // Pattern: OnSelect = If(cond, arg1, If(cond, arg2, cond, arg3, ...))
-            // Pattern: OnSelect = If(cond, arg1, cond, If(cond, arg2, cond, arg3, ...), ...)
-            // ...etc.
-            var ancestor = call;
-            while (ancestor.Head.Name == Name)
-            {
-                if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
-                {
-                    for (var i = 0; i < ancestor.Args.Children.Length; i += 2)
-                    {
-                        // If the given node is part of a condition arg of an outer If invocation,
-                        // then it's NOT inconsequential. Note that the very last arg to an If
-                        // is not a condition -- it's the "else" branch, hence the test below.
-                        if (i != ancestor.Args.Children.Length - 1 && arg.InTree(ancestor.Args.Children[i]))
-                        {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                }
-
-                // Deal with the possibility that the ancestor may be contributing to a chain.
-                // This also lets us cover the following patterns:
-                // Pattern: OnSelect = X; If(cond, arg1, arg2); Y; Z
-                // Pattern: OnSelect = X; If(cond, arg1;arg11;...;arg1k, arg2;arg21;...;arg2k); Y; Z
-                // ...etc.
-                VariadicOpNode chainNode;
-                if ((chainNode = ancestor.Parent.AsVariadicOp()) != null && chainNode.Op == VariadicOp.Chain)
-                {
-                    // Top-level chain in a behavior rule.
-                    if (chainNode.Parent == null)
-                    {
-                        return true;
-                    }
-
-                    // A chain nested within a larger non-call structure.
-                    if (!(chainNode.Parent is ListNode) || !(chainNode.Parent.Parent is CallNode))
-                    {
-                        return false;
-                    }
-
-                    // Only the last chain segment is consequential.
-                    var numSegments = chainNode.Children.Length;
-                    if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
-                    {
-                        return true;
-                    }
-
-                    // The node is in the last segment of a chain nested within a larger invocation.
-                    ancestor = chainNode.Parent.Parent.AsCall();
-                    continue;
-                }
-
-                // Walk up the parent chain to the outer invocation.
-                if (!(ancestor.Parent is ListNode) || !(ancestor.Parent.Parent is CallNode))
-                {
-                    return false;
-                }
-
-                ancestor = ancestor.Parent.Parent.AsCall();
-            }
-
-            // Exhausted all supported patterns.
-            return false;
         }
 
         // Gets the overloads for the If function for the specified arity.
