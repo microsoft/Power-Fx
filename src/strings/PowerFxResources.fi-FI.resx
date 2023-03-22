@@ -864,7 +864,8 @@
     <value>Lauseke, joka arvioidaan source-kohteen riveille ja antaa arvot lajittelua varten.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Nouseva tai laskeva</value>
+    <value>SortOrder.Ascending tai SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Lajittelee source-lähteen sarakkeen perusteella määrittäen valinnaisesti lajittelun order-järjestyksen.</value>
@@ -889,7 +890,8 @@
     <value>Yksilöivä sarakkeen nimi.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Nouseva tai laskeva</value>
+    <value>SortOrder.Ascending tai SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Lajittelee source-lähteen määritetyn sarakkeen vastaavien arvojen indeksin perusteella.</value>
@@ -2382,7 +2384,7 @@
     <value>Lisättävien yksiköiden määrä. Luku voi olla negatiivinen.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Käytettävä yksikkö. Se voi olla jokin seuraavista: Years, Quarters, Months, Days, Hours, Minutes, Seconds ja Milliseconds.</value>
+    <value>Käytettävä yksikkö, joka voi olla jokin seuraavista: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Eri toiminnon päättymispäivämäärä.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Yksikkö, jota käyttäen tulos ilmaistaan. Se voi olla jokin seuraavista: Years, Quarters, Months, Days, Hours, Minutes, Seconds ja Milliseconds.</value>
+    <value>Tuloksen ilmaiseva yksikkö, joka voi olla jokin seuraavista: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Hanki oletusarvoinen kieliasetus, joka määritetään suorituksen aikana.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Koodaa URL-merkkijonon, joka korvaa tietyt muut kuin aakkosnumeeriset merkit %:lla ja heksadesimaalinumerolla.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Koodattava URL-osoite.</value>
   </data>
 </root>

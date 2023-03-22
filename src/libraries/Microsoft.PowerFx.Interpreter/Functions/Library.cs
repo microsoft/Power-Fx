@@ -1872,7 +1872,7 @@ namespace Microsoft.PowerFx.Functions
                         var trueBranch = args[i + 1];
 
                         var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
-                        return MaybeWrapRecordValue(trueBranchResult, irContext);
+                        return MaybeAdjustToCompileTimeType(trueBranchResult, irContext);
                     }
                 }
 
@@ -1890,7 +1890,7 @@ namespace Microsoft.PowerFx.Functions
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
                     
-                    return MaybeWrapRecordValue(falseBranchResult, irContext);
+                    return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -1901,16 +1901,24 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
-        /// <summary>
-        /// If the <paramref name="result"/> is a record value, and the IRContext result type is a record type,
-        /// then this helper may wrap it in CompileTimeTypeWrapperRecordValue, else return the result it self.
-        /// e.g. If(false, {x:1, y:1}, {x:1, z:2}) has compile time type ![x:n] while runtime type ![x:n, z:n].
-        /// </summary>
-        private static FormulaValue MaybeWrapRecordValue(FormulaValue result, IRContext irContext)
+        private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
         {
-            if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
+            if (irContext.ResultType is Types.Void)
+            {
+                if (result is ErrorValue ev)
+                {
+                    return new ErrorValue(IRContext.NotInSource(FormulaType.Void), (List<ExpressionError>)ev.Errors);
+                }
+
+                return new VoidValue(irContext);
+            }
+            else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
             {
                 return CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
+            }
+            else if (result is TableValue tableValue && irContext.ResultType is TableType compileTimeTableType)
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType(compileTimeTableType, tableValue);
             }
 
             return result;
