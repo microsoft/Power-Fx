@@ -58,21 +58,6 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
-        // Check for field existence, avoids the overhead of actually building the return type. 
-        internal bool HasFieldLogical(string logicalName)
-        {
-            return _type.TryGetType(new DName(logicalName), out _);
-        }
-
-        internal bool HasField(string displayOrLogicalName)
-        {
-            Contracts.CheckNonEmpty(displayOrLogicalName, nameof(displayOrLogicalName));
-
-            return DType.TryGetDisplayNameForColumn(_type, displayOrLogicalName, out _) ||
-                   DType.TryGetLogicalNameForColumn(_type, displayOrLogicalName, out _) ||
-                   _type.TryGetType(new DName(displayOrLogicalName), out _);
-        }
-
         /// <summary>
         /// Lookup for logical name and field for input display or logical name.
         /// If there is a conflict, it prioritizes logical name.
