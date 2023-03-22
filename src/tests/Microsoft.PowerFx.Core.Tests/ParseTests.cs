@@ -795,5 +795,16 @@ namespace Microsoft.PowerFx.Core.Tests
             // Parser restarted, and found 'c' correctly
             Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
         }
+
+        [Theory]
+        [InlineData("a = 10;; b = in'valid ;; c = 20", "c")]
+        public void TestFormulaParseRestart2(string script, string key)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script, new CultureInfo("fr-FR"));
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+        }
     }
 }

@@ -658,7 +658,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             tok = _curs.TokMove();
 
                             // Stop recursing if we reach a semicolon
-                            if (_curs.TidCur == TokKind.Semicolon)
+                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas))
                             {
                                 return node;
                             }

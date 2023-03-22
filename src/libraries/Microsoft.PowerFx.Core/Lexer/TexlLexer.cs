@@ -1288,10 +1288,22 @@ namespace Microsoft.PowerFx.Syntax
                         fDelimiterEnd = false;
                         break;
                     }
-                    else if (_lex.TryGetPunctuator(CurrentChar.ToString(), out var tid) && tid == TokKind.Semicolon)
+                    else if (CurrentChar.ToString() == PunctuatorSemicolonInvariant)
                     {
+                        // This is to enable parser restarting
                         // Don't know if semicolon is end of identifier so we will store for fallback
-                        semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                        // Some locales use ;;, so we check for match and move shift 2 characters instead of 1
+                        if (_lex.TryGetPunctuator(CurrentChar.ToString(), out TokKind tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                        }
+                        else if (_lex.TryGetPunctuator(CurrentChar.ToString() + _text[Math.Min(CurrentPos + 1, _charCount)].ToString(), out tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                            _sb.Append(CurrentChar);
+                            NextChar();
+                        }
+
                         _sb.Append(CurrentChar);
                         NextChar();
                     }
