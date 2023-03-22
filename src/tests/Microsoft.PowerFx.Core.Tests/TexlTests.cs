@@ -27,7 +27,7 @@ using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
-{    
+{
     public class TexlTests : PowerFxTest
     {
         private readonly CultureInfo _defaultLocale = new ("en-US");
@@ -80,8 +80,8 @@ namespace Microsoft.PowerFx.Core.Tests
             // TestBindingErrors(script, DType.Error);
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(script);
-            
-            Assert.Equal(DType.Error, result.Binding.ResultType);            
+
+            Assert.Equal(DType.Error, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
@@ -394,6 +394,59 @@ namespace Microsoft.PowerFx.Core.Tests
                 "CountRows(First(Table2).D)",
                 DType.Number,
                 symbol);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("Error({ Kind: 3 })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\" })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Observed: \"MyObserved\" })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\" })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\", Details: { HttpStatusCode: 200, HttpResponse: \"A response from the network\"} })")]
+
+        // Using First(Table(...)) to avoid the literal record condition of the CheckTypes
+        [InlineData("Error(First(Table({ Kind: 3, Message: \"Asdf\"})))")]
+        [InlineData("Error(First(Table({ Kind: 3, Message: \"Asdf\", Observed: \"MyControl.MyProperty\" })))")]
+        [InlineData("Error(First(Table({ Kind: \"hello\" })))")]
+
+        // Multiple errors
+        [InlineData("Error(Table({ Kind: 3, Message: \"Asdf\"}, { Kind: 4, Message: \"Zxcv\"}))")]
+        [InlineData("Error(Table({ Kind: 3, Message: \"Asdf\", Observed: \"MyControl.MyProperty\" }, { Kind: 2, Message: \"Qwer\", Observed: \"MyControl.MyProperty2\" }, { Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\", Details: { HttpStatusCode: 200, HttpResponse: \"A response from the network\"} }))")]
+
+        // String overload
+        [InlineData("Error(\"\")")]
+        [InlineData("Error(\"An error message\")")]
+
+        // Coercion in properties
+        [InlineData("Error({ Kind: \"12\" })")]
+        [InlineData("Error({ Kind: 3, Message: Today() })")]
+        public void TexlFunctionTypeSemanticsError(string expression)
+        {
+            TestSimpleBindingSuccess(expression, DType.ObjNull);
+        }
+
+        [Theory]
+        [InlineData("Error()")]
+        [InlineData("Error(1)")]
+        [InlineData("Error({})")]
+        [InlineData("Error([])")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Notify: false, Irrelevant: true })")]
+        [InlineData("Error({ Irrelevant: true })")]
+
+        // Using First(Table(...)) to avoid the literal record condition of the CheckTypes
+        [InlineData("Error(First(Table({ Kind: 3, Irrelevant: true })))")]
+        [InlineData("Error(First(Table({ Irrelevant: true })))")]
+        [InlineData("Error(First(Table({ Message: \"Asdf\"})))")]
+        [InlineData("Error(First(Table({ })))")]
+
+        // Testing multiple errors
+        [InlineData("Error(Table({ Kind: 3, Irrelevant: true }))")]
+        [InlineData("Error(Table({ Irrelevant: true }))")]
+        [InlineData("Error(Table({ Message: \"Asdf\"}))")]
+        [InlineData("Error(Table({ }))")]
+        public void TexlFunctionTypeSemanticsError_Negative(string expression)
+        {
+            TestBindingErrors(expression, DType.ObjNull);
         }
 
         [Fact]
