@@ -22,9 +22,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public bool _nativeDecimal;
+        private readonly bool _nativeDecimal;
 
-        public bool _nativeDateTime;
+        private readonly bool _nativeDateTime;
 
         public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false, bool nativeDateTime = true)
             : base(name, description, fc, DType.Unknown, 0x02, 2, 2, DType.EmptyTable, DType.Unknown)

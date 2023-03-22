@@ -1099,7 +1099,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             // Decimal TODO: Is this the right thing to do for deferred and unknown?
-            if (argType == DType.Deferred || argType == DType.Unknown)
+            if (argType == DType.Deferred || argType == DType.Unknown || argType == DType.Void)
             {
                 return argType;
             }

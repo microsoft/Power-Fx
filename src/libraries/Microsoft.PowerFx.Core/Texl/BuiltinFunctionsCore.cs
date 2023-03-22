@@ -79,8 +79,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Day = _library.Add(new DayFunction());
         public static readonly TexlFunction Dec2Hex = _library.Add(new Dec2HexFunction());
         public static readonly TexlFunction Dec2HexT = _library.Add(new Dec2HexTFunction());
-        public static readonly TexlFunction Decimal = _library.Add(new DecimalFunction());
-        public static readonly TexlFunction Decimal_UO = _library.Add(new DecimalFunction_UO());
         public static readonly TexlFunction Degrees = _library.Add(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Add(new DegreesTableFunction());
         public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
@@ -96,8 +94,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction FirstN = _library.Add(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction First_UO = _library.Add(new FirstLastFunction_UO(isFirst: true));
         public static readonly TexlFunction FirstN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: true));
-        public static readonly TexlFunction Float = _library.Add(new FloatFunction());
-        public static readonly TexlFunction Float_UO = _library.Add(new FloatFunction_UO());
         public static readonly TexlFunction ForAll = _library.Add(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Add(new ForAllFunction_UO());
         public static readonly TexlFunction GUIDPure = _library.Add(new GUIDPureFunction());
@@ -230,6 +226,10 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
         public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
         public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
+        public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
+        public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
+        public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
+        public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        

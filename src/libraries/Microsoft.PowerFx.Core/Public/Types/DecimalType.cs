@@ -27,10 +27,5 @@ namespace Microsoft.PowerFx.Types
         {
             sb.Append("0");
         }
-
-        internal override void DefaultUniqueExpressionValue(StringBuilder sb)
-        {
-            sb.Append("Decimal(0)");
-        }
     }
 }

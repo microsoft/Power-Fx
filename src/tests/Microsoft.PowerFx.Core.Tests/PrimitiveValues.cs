@@ -41,10 +41,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 var fxValue = PrimitiveValueConversions.Marshal(value, dotnetType);
                 Assert.Equal(fxType, fxValue.Type.GetType());
 
-                var expr = actualFxType.DefaultUniqueExpressionValue();
+                var expr = actualFxType.DefaultExpressionValue();
                 var engine = new Engine(new PowerFxConfig());
-
-                var check = engine.Check(expr);
+                var options = new ParserOptions()
+                {
+                    NumberIsFloat = !(dotnetType == typeof(decimal) || dotnetType == typeof(long))
+                };
+                var check = engine.Check(expr, options);
 
                 Assert.Equal(check.ReturnType, actualFxType);
             }
