@@ -864,7 +864,8 @@
     <value>Một biểu thức được đánh giá qua các hàng trong 'nguồn' và cung cấp các giá trị để sắp xếp.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Tăng dần hoặc Giảm dần</value>
+    <value>SortOrder.Ascending hoặc SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sắp xếp 'nguồn' dựa theo cột, có thể tùy chọn chỉ định một 'thứ tự' sắp xếp.</value>
@@ -889,7 +890,8 @@
     <value>Tên cột duy nhất.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Tăng dần hoặc Giảm dần</value>
+    <value>SortOrder.Ascending hoặc SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sắp xếp 'nguồn' dựa trên chỉ mục của các giá trị khớp trong cột được chỉ định.</value>
@@ -2382,7 +2384,7 @@
     <value>Số đơn vị cần thêm. Số này có thể là số âm.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Đơn vị cần sử dụng, có thể là một trong các đơn vị Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Đơn vị để sử dụng, có thể là một trong những đơn vị TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Ngày kết thúc cho phép tính khác.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Đơn vị để hiển thị kết quả, có thể là một trong các đơn vị Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Đơn vị để thể hiện kết quả, có thể là một trong những đơn vị TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Đặt ngôn ngữ mặc định trong thời gian chạy.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Mã hóa chuỗi URL, thay thế một số ký tự không phải chữ và số bằng % và số thập lục phân.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL sẽ được mã hóa.</value>
   </data>
 </root>

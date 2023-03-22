@@ -864,7 +864,8 @@
     <value>Výraz vyhodnotený pre riadky v zdroji a uvádza hodnoty pre zoradenie.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Vzostupne alebo zostupne</value>
+    <value>SortOrder.Ascending alebo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Zoradí zdroj podľa stĺpca a voliteľne určí spôsob zoradenia.</value>
@@ -889,7 +890,8 @@
     <value>Jedinečný názov stĺpca.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Vzostupne alebo zostupne</value>
+    <value>SortOrder.Ascending alebo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Zoradí zdroj podľa stĺpca na základe indexu zhodných hodnôt v zadanom stĺpci.</value>
@@ -2382,7 +2384,7 @@
     <value>Počet jednotiek na pridanie. Toto číslo môže byť záporné.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jednotka, ktorá sa má použiť – jedna z týchto možností: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jednotka na použitie, ktorá môže byť jednou z nasledujúcich: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Koncový dátum pre operáciu rozdielu.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jednotka, v ktorej má byť vyjadrený výsledok – jedna z týchto možností: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jednotka na vyjadrenie výsledku, ktorá môže byť jednou z nasledujúcich: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Získať predvolené miestne nastavenia nastavené v režime runtime.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Zakóduje reťazec URL adresy a nahradí určité nealfanumerické znaky znakom % a šestnástkovým číslom.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL adresa</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL adresa, ktorá sa má kódovať.</value>
   </data>
 </root>

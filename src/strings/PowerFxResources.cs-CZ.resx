@@ -864,7 +864,8 @@
     <value>Výraz, který se vyhodnocuje na řádcích ve zdroji a poskytuje hodnoty pro řazení</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Vzestupné nebo sestupné pořadí</value>
+    <value>SortOrder.Ascending nebo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Seřadí „zdroj“ podle určitého sloupce. Volitelně může být zadáno „pořadí“ řazení.</value>
@@ -889,7 +890,8 @@
     <value>Jedinečný název sloupce.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Vzestupné nebo sestupné pořadí</value>
+    <value>SortOrder.Ascending nebo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Seřadí „zdroj“ na základě indexu porovnávaných hodnot v zadaném sloupci.</value>
@@ -2382,7 +2384,7 @@
     <value>Počet jednotek, které se mají přičíst. Toto číslo může být záporné.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jednotka, která se má použít. Může to být jedna z těchto hodnot: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jednotka, která se má použít, může být jedna z následujících: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Koncové datum rozdílové operace</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jednotka, ve které se má výsledek vyjádřit. Může to být jedna z těchto hodnot: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jednotka, která má vyjádřit výsledek, může být jedna z následujících: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Získejte výchozí národní prostředí nastavené za běhu.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Zakóduje řetězec URL a nahradí některé nealfanumerické znaky znakem % a šestnáctkovým číslem.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>adresa URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Adresa URL, která má být zakódována.</value>
   </data>
 </root>

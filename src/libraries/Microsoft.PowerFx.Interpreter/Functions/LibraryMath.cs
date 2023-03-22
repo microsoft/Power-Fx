@@ -762,6 +762,30 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
         public static FormulaValue Mod(IRContext irContext, FormulaValue[] args)
         {
+            double arg0 = ((NumberValue)args[0]).Value;
+
+            if (args[1] is TableValue table)
+            {
+                List<FormulaValue> modResults = new List<FormulaValue>();
+
+                foreach (DValue<RecordValue> row in table.Rows)
+                {
+                    FormulaValue val = row.Value.GetField("Value");
+                    double arg1 = val is NumberValue nv ? nv.Value : 0d;
+                    modResults.Add(ModInternal(arg0, arg1, IRContext.NotInSource(FormulaType.Number)));
+                }
+
+                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, modResults.ToArray(), forceSingleColumn: true));
+            }
+            else
+            {
+                double arg1 = ((NumberValue)args[1]).Value;
+
+                return ModInternal(arg0, arg1, irContext);
+            }
+        }
+        public static FormulaValue Mod(IRContext irContext, FormulaValue[] args)
+        {
             if (irContext.ResultType == FormulaType.Decimal)
             {
                 decimal arg0 = ((DecimalValue)args[0]).Value;
@@ -792,10 +816,12 @@ namespace Microsoft.PowerFx.Functions
                 double arg0 = ((NumberValue)args[0]).Value;
                 double arg1 = ((NumberValue)args[1]).Value;
 
-                if (arg1 == 0)
-                {
-                    return CommonErrors.DivByZeroError(irContext);
-                }
+        private static FormulaValue ModInternal(double arg0, double arg1, IRContext irContext)
+        {
+            if (arg1 == 0)
+            {
+                return CommonErrors.DivByZeroError(irContext);
+            }
 
                 // r = a – N × floor(a/b)
                 double q = Math.Floor(arg0 / arg1);
