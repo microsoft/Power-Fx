@@ -3338,9 +3338,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null, Features features = Features.None)
         {
-            var config = new PowerFxConfig
+            var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
             };
