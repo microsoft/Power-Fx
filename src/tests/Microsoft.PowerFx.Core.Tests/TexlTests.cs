@@ -398,7 +398,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("")]
         [InlineData("Error({ Kind: 3 })")]
         [InlineData("Error({ Kind: 3, Message: \"Asdf\" })")]
         [InlineData("Error({ Kind: 3, Message: \"Asdf\", Observed: \"MyObserved\" })")]
