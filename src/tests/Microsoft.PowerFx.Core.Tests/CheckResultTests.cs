@@ -394,7 +394,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var ir = check.ApplyIR();
             Assert.NotNull(ir);
-            Assert.Equal("BinaryOp(AddNumbers, Number(1), Number(2))", ir.TopNode.ToString());
+            Assert.Equal("AddNumbers:w(1:w, 2:w)", ir.TopNode.ToString());
         }
 
         // IR can only be produced for successful bindings

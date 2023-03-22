@@ -535,6 +535,14 @@ namespace Microsoft.PowerFx
             return _irresult;
         }
 
+        // pretty print IR for debugging purposes, used by the Console REPL
+        public string PrintIR()
+        {
+            var x = this.ApplyIR().TopNode;
+            var y = x.ToString();
+            return y;
+        }
+
         /// <summary>
         /// Gets the type of a syntax node. Must call <see cref="ApplyBinding"/> first. 
         /// </summary>

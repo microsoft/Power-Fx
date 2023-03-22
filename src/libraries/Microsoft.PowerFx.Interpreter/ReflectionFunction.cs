@@ -141,8 +141,8 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Base class for importing a C# function into Power Fx. 
     /// Dervied class should follow this convention:
-    /// - class name should folow this convention: "[Method Name]" + "Function"
-    /// - it should have a public static  method 'Execute'. this class will reflect over that signature to import to power fx. 
+    /// - class name should folow this convention: "[Method Name]" + "Function" + optional postfix for function orevloading
+    /// - it should have a public static  method 'Execute'. this class will reflect over that signature to import to Power Fx. 
     /// </summary>
     public abstract class ReflectionFunction
     {
@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx
             {
                 var t = GetType();
                 var suffix = "Function";
-                var name = t.Name.Substring(0, t.Name.Length - suffix.Length);
+                var name = t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
                 var returnType = GetType(m.ReturnType);
                 var paramTypes = new List<FormulaType>();

@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"BinaryOp({Op}, {Left}, {Right})";
+            return $"{Op}:{IRContext.ResultType._type}({Left}, {Right})";
         }
     }
 }
