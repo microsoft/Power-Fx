@@ -88,7 +88,9 @@ namespace Microsoft.PowerFx.Core.Types
 
         Deferred = 38,
 
-        _Lim = 39,
+        Void = 39,
+
+        _Lim = 40,
 #pragma warning restore SA1300 // Element should begin with upper-case letter
     }
 }
