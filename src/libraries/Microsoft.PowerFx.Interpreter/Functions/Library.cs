@@ -1723,7 +1723,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.ModT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], DoNotReplaceBlank))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
             },
             {
                 BuiltinFunctionsCore.RoundT,
