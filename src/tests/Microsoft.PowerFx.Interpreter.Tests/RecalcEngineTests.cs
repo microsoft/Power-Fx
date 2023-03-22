@@ -444,9 +444,10 @@ namespace Microsoft.PowerFx.Tests
             var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
             var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
 
+            var opts = new ParserOptions() { NumberIsFloat = true };
             Assert.False(recalcEngine.DefineFunctions($"odd(number:Number):Boolean = {bodyOdd}; even(number:Number):Boolean = {bodyEven};").Errors.Any());
-            Assert.Equal(true, recalcEngine.Eval("odd(Float(17))").ToObject());
-            Assert.Equal(false, recalcEngine.Eval("even(Float(17))").ToObject());
+            Assert.Equal(true, recalcEngine.Eval("odd(17)", options: opts).ToObject());
+            Assert.Equal(false, recalcEngine.Eval("even(17)", options: opts).ToObject());
         }
 
         [Fact]
@@ -457,12 +458,13 @@ namespace Microsoft.PowerFx.Tests
                 MaxCallDepth = 100
             };
             var recalcEngine = new RecalcEngine(config);
-            var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
-            var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
+            var bodyEven = @"If(number = 0, true, odd(If(number<0,-number,number)-1))";
+            var bodyOdd = @"If(number = 0, false, even(If(number<0,-number,number)-1))";
 
+            var opts = new ParserOptions() { NumberIsFloat = false };
             Assert.False(recalcEngine.DefineFunctions($"odd(number:Decimal):Boolean = {bodyOdd}; even(number:Decimal):Boolean = {bodyEven};").Errors.Any());
-            Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());
-            Assert.Equal(false, recalcEngine.Eval("even(17)").ToObject());
+            Assert.Equal(true, recalcEngine.Eval("odd(17)", options: opts).ToObject());
+            Assert.Equal(false, recalcEngine.Eval("even(17)", options: opts).ToObject());
         }
 
         [Fact]

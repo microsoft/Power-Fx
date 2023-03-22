@@ -16,7 +16,7 @@ Blank()
 Table({Value:4},{Value:17},{Value:Error({Kind:ErrorKind.Div0})})
 
 >> Sqrt(Table({a:6.25}, {a:Power(2,2)}))
-#SKIP Issue 1204 with decimal, expected: Table({Value:2.5},{Value:2})
+Table({Value:2.5},{Value:2})
 
 >> Round(Sqrt(Table({a: 5}, {a: 2.34567}, {a: Ln(2)})), 8)
-#SKIP Issue 1204 with decimal, expected: Table({Value:2.23606798},{Value:1.53155803},{Value:0.83255461})
+Table({Value:2.23606798},{Value:1.53155803},{Value:0.83255461})

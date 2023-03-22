@@ -2,7 +2,7 @@
 Table({Value:1},{Value:1})
 
 >> Round(Exp(Table({a: Ln(3)}, {a: 0})),4)
-#SKIP Issue 1204 with decimal, expected: Table({a:3},{a:1})
+Table({a:3},{a:1})
 
 >> Exp(Table({a: 1/0}, {a: -750}))
 Table({a:Error({Kind:ErrorKind.Div0})},{a:0})

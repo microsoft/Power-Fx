@@ -347,7 +347,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
                 // based on the function.
-                args = AttachArgPreprocessor(args, func, context);
+                args = AttachArgPreprocessor(args, func);
 
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
@@ -356,7 +356,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
-            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, IRTranslatorContext context)
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func)
             {
                 var len = args.Count;
                 List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
@@ -368,17 +368,11 @@ namespace Microsoft.PowerFx.Core.IR
 
                     switch (argPreprocessor)
                     {
-                        case ArgPreprocessor.ReplaceBlankWithFloatZero:
-                            convertedNode = ReplaceBlankWithFloatZero(args[i]);
+                        case ArgPreprocessor.ReplaceBlankWithZero:
+                            convertedNode = ReplaceBlankWithZero(args[i]);
                             break;
-                        case ArgPreprocessor.ReplaceBlankWithDecimalZero:
-                            convertedNode = ReplaceBlankWithDecimalZero(args[i]);
-                            break;
-                        case ArgPreprocessor.ReplaceBlankWithFuncResultTypedZero:
-                            convertedNode = ReplaceBlankWithFuncResultTypedZero(args[i]);
-                            break;
-                        case ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate:
-                            convertedNode = ReplaceBlankWithFloatZeroAndTruncate(args[i]);
+                        case ArgPreprocessor.ReplaceBlankWithZeroAndTruncate:
+                            convertedNode = ReplaceBlankWithZeroAndTruncatePreProcessor(args[i]);
                             break;
                         case ArgPreprocessor.ReplaceBlankWithEmptyString:
                             convertedNode = BlankToEmptyString(args[i]);
@@ -395,11 +389,11 @@ namespace Microsoft.PowerFx.Core.IR
             }
 
             /// <summary>
-            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number/Decimal Literal.
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
             /// </summary>
-            private static IntermediateNode ReplaceBlankWithFloatZero(IntermediateNode arg)
+            private static IntermediateNode ReplaceBlankWithZero(IntermediateNode arg)
             {
-                if (arg is NumberLiteralNode || arg is DecimalLiteralNode)
+                if (arg is NumberLiteralNode)
                 {
                     return arg;
                 }
@@ -411,45 +405,12 @@ namespace Microsoft.PowerFx.Core.IR
                 return convertedNode;
             }
 
-            private static IntermediateNode ReplaceBlankWithDecimalZero(IntermediateNode arg)
-            {
-                if (arg is NumberLiteralNode || arg is DecimalLiteralNode)
-                {
-                    return arg;
-                }
-
-                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
-                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
-                var zeroDecLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
-                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroDecLitNode);
-                return convertedNode;
-            }
-
-            private static IntermediateNode ReplaceBlankWithFuncResultTypedZero(IntermediateNode arg)
-            {
-                if (arg is NumberLiteralNode || arg is DecimalLiteralNode)
-                {
-                    return arg;
-                }
-
-                var argType = arg.IRContext.ResultType;
-
-                if (argType == FormulaType.Decimal || argType == FormulaType.Boolean || argType == FormulaType.UntypedObject || argType == FormulaType.Blank || argType == FormulaType.String)
-                {
-                    return ReplaceBlankWithDecimalZero(arg);
-                }
-                else
-                {
-                    return ReplaceBlankWithFloatZero(arg);
-                }
-            }
-
             /// <summary>
             /// Wraps node arg => Truc(Coalesce(arg , 0)).
             /// </summary>
-            private static IntermediateNode ReplaceBlankWithFloatZeroAndTruncate(IntermediateNode arg)
+            private static IntermediateNode ReplaceBlankWithZeroAndTruncatePreProcessor(IntermediateNode arg)
             {
-                var blankToZeroNode = ReplaceBlankWithFloatZero(arg);
+                var blankToZeroNode = ReplaceBlankWithZero(arg);
                 var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
                 return truncateNode;
             }
@@ -842,12 +803,18 @@ namespace Microsoft.PowerFx.Core.IR
                 switch (coercionKind)
                 {
                     case CoercionKind.TextToNumber:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Float, child);
+                        return new CallNode(
+                            IRContext.NotInSource(FormulaType.Build(toType)),
+                            context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value : BuiltinFunctionsCore.Float,
+                            child);
                     case CoercionKind.TextToDecimal:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
 
                     case CoercionKind.DecimalToNumber:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Float, child);
+                        return new CallNode(
+                            IRContext.NotInSource(FormulaType.Build(toType)),
+                            context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value : BuiltinFunctionsCore.Float,
+                            child);
                     case CoercionKind.NumberToDecimal:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
 
@@ -1004,7 +971,10 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.UntypedToText:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
                     case CoercionKind.UntypedToNumber:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Float_UO, child);
+                        return new CallNode(
+                            IRContext.NotInSource(FormulaType.Build(toType)),
+                            context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value_UO : BuiltinFunctionsCore.Float_UO,
+                            child);
                     case CoercionKind.UntypedToDecimal:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal_UO, child);
                     case CoercionKind.UntypedToBoolean:

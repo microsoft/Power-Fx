@@ -15,38 +15,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class FileExpressionEvaluationTests : PowerFxTest
     {
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), false)]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), true)]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over.
-            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
-
-            var runner = new InterpreterRunner();
-            var (result, msg) = runner.RunTestCase(testCase, numberIsFloat: false);
-
-            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
-            switch (result)
-            {
-                case TestResult.Pass:
-                    break;
-
-                case TestResult.Fail:
-                    Assert.True(false, prefix + msg);
-                    break;
-
-                case TestResult.Skip:
-                    Skip.If(true, prefix + msg);
-                    break;
-            }
-        }
-
-        [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), true)]
-        public void InterpreterTestCase_NumberIsFloat(ExpressionTestCase testCase)
-        {
-            // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over. abcdw
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
             var runner = new InterpreterRunner();
@@ -113,9 +86,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(numberIsFloat: false, path);
+            testRunner.AddFile(numberIsFloat: true, path);
 
-            var result = testRunner.RunTests();
+            var result = testRunner.RunTests(numberIsFloat: true);
 
             if (result.Fail > 0)
             {

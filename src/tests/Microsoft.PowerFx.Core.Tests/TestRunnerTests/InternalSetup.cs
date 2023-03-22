@@ -28,6 +28,11 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var iSetup = new InternalSetup();
 
+            if (numberIsFloat)
+            {
+                iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
+            }
+
             if (string.IsNullOrWhiteSpace(setupHandlerName))
             {
                 return iSetup;
@@ -74,11 +79,6 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw new ArgumentException("Invalid TimeZoneInfo setup!");
                     }
                 }
-            }
-
-            if (numberIsFloat)
-            {
-                iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
             }
 
             if (parts.Count > 1)

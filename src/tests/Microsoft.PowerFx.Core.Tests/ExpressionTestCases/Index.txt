@@ -47,10 +47,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 "asdf"
 
 >> Index(Error({Kind: 11}), 1)
-#SKIP Issue 1203 with decimal, expected: Error({Kind:ErrorKind.Validation})
+Error({Kind:ErrorKind.Validation})
 
 >> Index([1, 2, 3, 4, 5], Error({Kind: 11}))
-#SKIP Issue 1203 with decimal, expected: Error({Kind:ErrorKind.Validation})
+Error({Kind:ErrorKind.Validation})
 
 // ********** Coercions ************
 >> Index([1,2,3,4,5], "3")

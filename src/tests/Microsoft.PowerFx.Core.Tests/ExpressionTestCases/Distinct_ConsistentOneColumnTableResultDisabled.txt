@@ -46,11 +46,11 @@ Error({Kind:ErrorKind.Div0})
 
 // Distinct values where expression handles errors
 >> Distinct(Table({a:1},{a:2},{a:If(1/0<2,{a:2}).a},{a:7},{a:Sqrt(-1)},{a:-13},{a:2}), IfError(a,-FirstError.Kind))
-#SKIP Issue 1204 with decimal, expected: Table({Result:1},{Result:2},{Result:-13},{Result:7},{Result:-24})
+Table({Result:1},{Result:2},{Result:-13},{Result:7},{Result:-24})
 
 // Distinct which ignores columns with errors
 >> Distinct(Table({a:10,b:1/0},{a:9,b:Sqrt(-1)},{a:8,b:3},{a:10,b:1/0},{a:8,b:Ln(-1)}), a)
-#SKIP Issue 1204 with decimal, expected: Table({Result:10},{Result:9},{Result:8})
+Table({Result:10},{Result:9},{Result:8})
 
 // The Distinct keeps the same ordering as the input
 >> Distinct([1,2,3,2,1], Value)

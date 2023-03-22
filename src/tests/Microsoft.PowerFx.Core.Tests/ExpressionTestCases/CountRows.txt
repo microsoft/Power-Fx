@@ -124,4 +124,4 @@ Error({Kind:ErrorKind.Div0})
 1
 
 >> CountRows(Table({a:1/0},{a:Sqrt(-1)}))
-#SKIP Issue 1204 with Decimal, expected: 2
+2

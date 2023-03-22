@@ -32,15 +32,16 @@ namespace Microsoft.PowerFx.Tests
             {
                 MaxCallDepth = 10
             };
+            var opts = new ParserOptions() { NumberIsFloat = true };
             var recalcEngine = new RecalcEngine(config);
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
-            Assert.IsType<DecimalValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
-            Assert.IsType<DecimalValue>(recalcEngine.Eval(
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))", options: opts));
+            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))", options: opts));
+            Assert.IsType<NumberValue>(recalcEngine.Eval(
                 @"Sum(
                 Sum(Sum(1),1),
                 Sum(Sum(1),1),
                 Sum(Sum(1),1)
-                )"));
+                )", options: opts));
         }
 
         // Create a small expression that runs quickly and rapidly consumes large amounts of memory. 

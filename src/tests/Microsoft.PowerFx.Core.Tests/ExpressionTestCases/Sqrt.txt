@@ -10,8 +10,9 @@
 >> Sqrt(144)
 12
 
->> Sqrt(1E28)
-100000000000000
+// Excel shows typo in the formula and suggest to change the formula to Sqrt(E1+308)
+>> Sqrt(1E+308)
+10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
 // Negative Integer Parameters
 
@@ -27,10 +28,7 @@ Error({Kind:ErrorKind.Numeric})
 Error({Kind:ErrorKind.Numeric})
 
 //PowerFx shows error message "Argument to SQRT function should be non-negative number", while Excel shows typo in the formula and suggest to change the formula to Sqrt(-E1+308)
->> Sqrt(Float("-1E+308"))
-Error({Kind:ErrorKind.Numeric})
-
->> Sqrt(-1E28)
+>> Sqrt(-1E+308)
 Error({Kind:ErrorKind.Numeric})
 
 // ******** DECIMAL PARAMETERS ********

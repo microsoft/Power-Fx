@@ -114,11 +114,11 @@ Error({Kind:ErrorKind.Numeric})
 
 // All error values
 >> CountA(Table({a:1/0},{a:Sqrt(-1)}))
-#SKIP Issue 1204 with Decimal, expected: Error({Kind:ErrorKind.Div0})
+Error({Kind:ErrorKind.Div0})
 
 // All error values
 >> CountA(Table({a:Sqrt(-1)},{a:1/0}))
-#SKIP Issue 1204 with Decimal, expected: Error({Kind:ErrorKind.Numeric})
+Error({Kind:ErrorKind.Numeric})
 
 // Error table
 >> CountA(Sort([-2,-1,0,1,2],1/Value))

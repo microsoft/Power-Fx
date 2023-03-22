@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,!NumberIsFloat
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
 // Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
@@ -39,7 +39,7 @@ Errors: Error 0-25: Invalid number of arguments: received 3, expected 2.
 Errors: Error 12-15: Invalid argument type (Text). Expecting a Record value instead.|Error 12-15: Invalid argument type. Cannot use Text values in this context.|Error 0-16: The function 'Collect' has some invalid arguments.
 
 >> Collect(t1, 1)
-Errors: Error 12-13: Invalid argument type (Decimal). Expecting a Record value instead.|Error 12-13: Invalid argument type. Cannot use Decimal values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
+Errors: Error 12-13: Invalid argument type (Number). Expecting a Record value instead.|Error 12-13: Invalid argument type. Cannot use Number values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
 
 >> Collect(Table({name: "VC"}), {surname: "textInput1"})
 Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.

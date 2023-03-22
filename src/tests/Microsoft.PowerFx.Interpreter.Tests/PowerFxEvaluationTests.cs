@@ -106,25 +106,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
         {
             /*
-             * Record r1 => {![Field1:w, Field2:s, Field3:d, Field4:b]}
-             * Record r2 => {![Field1:w, Field2:s, Field3:d, Field4:b]}
-             * Record rwr1 => {![Field1:w, Field2:![Field2_1:w, Field2_2:s, Field2_3:![Field2_3_1:w, Field2_3_2:s]], Field3:b]}
-             * Record rwr2 => {![Field1:w, Field2:![Field2_1:w, Field2_2:s, Field2_3:![Field2_3_1:w, Field2_3_2:s]], Field3:b]}
-             * Record rwr3 => {![Field1:w, Field2:![Field2_1:w, Field2_2:s, Field2_3:![Field2_3_1:w, Field2_3_2:s]], Field3:b]}
+             * Record r1 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
+             * Record r2 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
+             * Record rwr1 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
+             * Record rwr2 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
+             * Record rwr3 => {![Field1:n, Field2:![Field2_1:n, Field2_2:s, Field2_3:![Field2_3_1:n, Field2_3_2:s]], Field3:b]}
              * Record r_empty => {}
              * Table t1(r1) => Type (Field1, Field2, Field3, Field4)
              * Table t2(rwr1, rwr2, rwr3)
              */
 
             var rType = RecordType.Empty()
-                .Add(new NamedFormulaType("Field1", FormulaType.Decimal, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
                 .Add(new NamedFormulaType("Field2", FormulaType.String, "DisplayNameField2"))
                 .Add(new NamedFormulaType("Field3", FormulaType.DateTime, "DisplayNameField3"))
                 .Add(new NamedFormulaType("Field4", FormulaType.Boolean, "DisplayNameField4"));
 
             var r1Fields = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(1m)),
+                new NamedValue("Field1", FormulaValue.New(1)),
                 new NamedValue("Field2", FormulaValue.New("earth")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("1/1/2022").Date)),
                 new NamedValue("Field4", FormulaValue.New(true))
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var r2Fields = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(2m)),
+                new NamedValue("Field1", FormulaValue.New(2)),
                 new NamedValue("Field2", FormulaValue.New("moon")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("2/1/2022").Date)),
                 new NamedValue("Field4", FormulaValue.New(false))
@@ -146,12 +146,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
 #pragma warning disable SA1117 // Parameters should be on same line or separate lines
             var recordWithRecordType = RecordType.Empty()
-                .Add(new NamedFormulaType("Field1", FormulaType.Decimal, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
                 .Add(new NamedFormulaType("Field2", RecordType.Empty()
-                    .Add(new NamedFormulaType("Field2_1", FormulaType.Decimal, "DisplayNameField2_1"))
+                    .Add(new NamedFormulaType("Field2_1", FormulaType.Number, "DisplayNameField2_1"))
                     .Add(new NamedFormulaType("Field2_2", FormulaType.String, "DisplayNameField2_2"))
                     .Add(new NamedFormulaType("Field2_3", RecordType.Empty()
-                        .Add(new NamedFormulaType("Field2_3_1", FormulaType.Decimal, "DisplayNameField2_3_1"))
+                        .Add(new NamedFormulaType("Field2_3_1", FormulaType.Number, "DisplayNameField2_3_1"))
                         .Add(new NamedFormulaType("Field2_3_2", FormulaType.String, "DisplayNameField2_3_2")),
                     "DisplayNameField2_3")),
                 "DisplayNameField2"))
@@ -160,14 +160,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields1 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(1m)),
+                new NamedValue("Field1", FormulaValue.New(1)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(121m)),
+                    new NamedValue("Field2_1", FormulaValue.New(121)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(1231m)),
+                        new NamedValue("Field2_3_1", FormulaValue.New(1231)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -176,14 +176,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields2 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(2m)),
+                new NamedValue("Field1", FormulaValue.New(2)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(221m)),
+                    new NamedValue("Field2_1", FormulaValue.New(221)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(2231m)),
+                        new NamedValue("Field2_3_1", FormulaValue.New(2231)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -192,14 +192,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields3 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(3m)),
+                new NamedValue("Field1", FormulaValue.New(3)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(321m)),
+                    new NamedValue("Field2_1", FormulaValue.New(321)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(3231m)),
+                        new NamedValue("Field2_3_1", FormulaValue.New(3231)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -342,7 +342,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal class ReplRunner : BaseRunner
         {
             private readonly RecalcEngine _engine;
-            public ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
             public ReplRunner(RecalcEngine engine)
             {
@@ -351,12 +350,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, bool numberIsFloat = false)
             {
-                if (TryMatchSet(expr, out var runResult))
+                if (TryMatchSet(expr, out var runResult, numberIsFloat))
                 {
                     return runResult;
                 }
 
-                var check = _engine.Check(expr, _opts);
+                ParserOptions opts = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = numberIsFloat };
+
+                var check = _engine.Check(expr, opts);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
@@ -367,11 +368,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             // Pattern match for Set(x,y) so that we can define the variable
-            public bool TryMatchSet(string expr, out RunResult runResult)
+            public bool TryMatchSet(string expr, out RunResult runResult, bool numberIsFloat = false)
             {
-                var parserOptions = new ParserOptions { AllowsSideEffects = true };
+                var parserOptions = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = numberIsFloat };
 
-                var parse = _engine.Parse(expr);
+                var parse = _engine.Parse(expr, parserOptions);
                 if (parse.IsSuccess)
                 {
                     if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
@@ -389,7 +390,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                                     var arg1 = call.Args.ChildNodes[1];
                                     var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
 
-                                    var check = _engine.Check(arg1expr);
+                                    var check = _engine.Check(arg1expr, parserOptions);
                                     if (check.IsSuccess)
                                     {
                                         var arg1Type = check.ReturnType;

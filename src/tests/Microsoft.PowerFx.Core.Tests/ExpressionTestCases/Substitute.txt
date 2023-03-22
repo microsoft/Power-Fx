@@ -27,7 +27,7 @@
 >> Substitute("HelloHelloHello", "He", "Je", 100)
 "HelloHelloHello"
 
->> Substitute("HelloHelloHello", "He", "Je", 5e27)
+>> Substitute("HelloHelloHello", "He", "Je", 5e100)
 "HelloHelloHello"
 
 >> Substitute("Hello", "Hello", "Greetings")

@@ -55,44 +55,29 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("IsBlank(X)", "b")]
         [InlineData("IsError(X)", "b")]
         [InlineData("Text(X)", "s")]
-        [InlineData("Value(X)", "w")] 
+        [InlineData("Value(X)", "n")]
         [InlineData("Boolean(X)", "b")]
-        [InlineData("Index([1,2,3].Value, X)", "![Value:w]")]
+        [InlineData("Index([1,2,3].Value, X)", "![Value:n]")]
         [InlineData("Sum(X, 1) < 5", "b")]
         [InlineData("Sum(X, 1, R) < 5", "b")] // All error are discarded for function calls, hence we don't get error for RecordType here.
         [InlineData("Sum(X, T) < 5", "b")] // Since we discard all errors for function calls, Function calls are biased to non tabular overload.
 
-        [InlineData("Sum(X, X)", "X")]
+        [InlineData("Sum(X, X)", "n")]
         [InlineData("X.Field1.Field1", "X")]
         [InlineData("If(true, X)", "X")]
-        [InlineData("If(true, X, 1)", "w")]
+        [InlineData("If(true, X, 1)", "n")]
         [InlineData("If(true, X, X)", "X")]
         [InlineData("ForAll([1,2,3], X)", "X")]
         [InlineData("ForAll(ParseJSON(\"[1]\"), X)", "X")]
-        [InlineData("Abs(Table(X))", "X")]
-        [InlineData("Abs(X)", "X")]
-        [InlineData("Sum(Table(X),Float(1))", "X")]
-        [InlineData("Sum(X,Float(1))", "X")]
-        [InlineData("Sum(Table(X),Decimal(1))", "X")]
-        [InlineData("Sum(X,Decimal(1))", "X")]
-        [InlineData("Mod(Table(X),Decimal(1))", "X")]
-        [InlineData("Mod(X,Decimal(1))", "X")]
-        [InlineData("Mod(Table(X),Float(1))", "X")]
-        [InlineData("Mod(X,Float(1))", "X")]
-        [InlineData("Mod(Decimal(1),Table(X))", "w")]
-        [InlineData("Mod(Decimal(1),X)", "w")]
-        [InlineData("Mod(Float(1),Table(X))", "n")]
-        [InlineData("Mod(Float(1),X)", "n")]
+        [InlineData("Abs(Table(X))", "n")]
         [InlineData("Power(2, Table(X))", "n")]
-        [InlineData("Switch(X, 0, 0, 1, 1)", "w")]
-        [InlineData("Switch(0, 0, X, 1, 1)", "w")]
+        [InlineData("Switch(X, 0, 0, 1, 1)", "n")]
+        [InlineData("Switch(0, 0, X, 1, 1)", "n")]
         [InlineData("Switch(0, 0, X, 1, X)", "X")]
         [InlineData("Switch(0, 0, X, 1, \"test\")", "s")]
         [InlineData("Set(N, X); N", "n")]
-        [InlineData("Set(N, X); Set(N, Float(5)); N", "n")]
-        [InlineData("Set(W, X); Set(W, 5); W", "w")]
+        [InlineData("Set(N, X); Set(N, 5); N", "n")]
         [InlineData("Set(XM, X); XM", "X")]
-        [InlineData("First(Sum(X, 1))", "X")]
 
         // Ensures expression binds without any errors - but issues a warning for the deferred(unknown) type.
         public void DeferredTypeTest(string script, string expectedReturnType)
@@ -104,9 +89,8 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("T", RecordType.Empty().ToTable());
             symbolTable.AddVariable("N", FormulaType.Number, mutable: true);
             symbolTable.AddVariable("XM", FormulaType.Deferred, mutable: true);
-            symbolTable.AddVariable("W", FormulaType.Decimal, mutable: true);
 
-            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable);
+            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable, numberIsFloat: true);
         }
 
         [Theory]
@@ -115,6 +99,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("X.field + N.field", "ErrInvalidDot")]
         [InlineData("Index([1,2,3], X).missing", "ErrInvalidName")]
         [InlineData("X < \"2021-12-09T20:28:52Z\"", "ErrBadType_ExpectedTypesCSV")]
+        [InlineData("First(Sum(X, 1))", "ErrBadType_ExpectedType_ProvidedType")]
 
         // Can't create aggregates around Deferred type.
         [InlineData("[X]", "ErrTableDoesNotAcceptThisType")]
@@ -148,7 +133,7 @@ namespace Microsoft.PowerFx.Interpreter
             Assert.Throws<NotSupportedException>(() => TableType.Empty().Add(new NamedFormulaType("someName", FormulaType.Deferred)));
         }
 
-        private void TestDeferredTypeBindingWarning(string script, Features features, DType expected, SymbolTable symbolTable = null)
+        private void TestDeferredTypeBindingWarning(string script, Features features, DType expected, SymbolTable symbolTable = null, bool numberIsFloat = false)
         {
             var config = new PowerFxConfig(features)
             {
@@ -159,7 +144,7 @@ namespace Microsoft.PowerFx.Interpreter
             config.EnableParseJSONFunction();
 
             var engine = new RecalcEngine(config);
-            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true });
+            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });
             
             Assert.True(result.IsSuccess);
 

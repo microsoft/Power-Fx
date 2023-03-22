@@ -81,7 +81,7 @@
 >> Replace("abcdefg", 3.7, 2.6, "P")
 "abPefg"
 
->> Replace("abcd", 5e28, 1, "P")
+>> Replace("abcd", 5e100, 1, "P")
 "abcdP"
 
 // ******** NUMBER PARAMETERS ********

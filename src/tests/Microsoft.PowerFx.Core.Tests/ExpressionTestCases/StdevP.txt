@@ -32,7 +32,7 @@ Error({Kind:ErrorKind.Div0})
 0
 
 // Infinity
->> StdevP(Float("-1.7e308"),Float("1.7e308"))
+>> StdevP(-1.7e308,1.7e308)
 Error({Kind:ErrorKind.Numeric})
 
 >> StdevP("100", "AB")

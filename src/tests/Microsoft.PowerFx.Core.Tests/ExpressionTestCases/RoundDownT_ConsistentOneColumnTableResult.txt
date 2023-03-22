@@ -43,7 +43,7 @@ Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.NotAppli
 Table({Value:1.2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> RoundDown(Table({b: 1.23}, {b: Sqrt(-1)}, {b: 7.89}), 1)
-#SKIP Issue 1204 with decimal, expected: Table({Value:1.2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7.8})
+Table({Value:1.2},{Value:Error({Kind:ErrorKind.Numeric})},{Value:7.8})
 
 // Coercions and blank values
 >> RoundDown(["12.34", "56.78"], "1")

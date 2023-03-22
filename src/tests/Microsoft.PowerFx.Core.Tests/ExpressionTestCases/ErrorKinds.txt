@@ -192,10 +192,10 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Validation})
 
 >> Error({Kind:23})
-#SKIP Issue 1203 with decimal, expected: Error({Kind:ErrorKind.Network})
+Error({Kind:ErrorKind.Network})
 
 >> Error(Table({Kind:15},{Kind:14}))
-#SKIP Issue 1203 with decimal, expected: Error(Table({Kind:ErrorKind.BadRegex},{Kind:ErrorKind.BadLanguageCode}))
+Error(Table({Kind:ErrorKind.BadRegex},{Kind:ErrorKind.BadLanguageCode}))
 
 >> Exp(1000000)
 Error({Kind:ErrorKind.Numeric})
@@ -527,7 +527,7 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0}))
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 
 // Overflow in calculation
->> StdevP(Float("1e200"), Float("2e200"), Float("3e200"), Float("4e200"))
+>> StdevP(1e200, 2e200, 3e200, 4e200)
 Error({Kind:ErrorKind.Numeric})
 
 >> StdevP([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
@@ -543,10 +543,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 
 // Overflow in calculation
->> Sum(Float("1e308"), Float("1e308"), Float("1e308"), Float("1e308"), Float("1e308"))
-Error({Kind:ErrorKind.Numeric})
-
->> Sum(2e28, 2e28, 2e28, 2e28, 2e28)
+>> Sum(1e308, 1e308, 1e308, 1e308, 1e308)
 Error({Kind:ErrorKind.Numeric})
 
 >> Sum([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
@@ -636,7 +633,7 @@ Error({Kind:ErrorKind.Div0})
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 
 // Overflow in calculation
->> VarP(Float("1e200"), Float("2e200"), Float("3e200"), Float("4e200"))
+>> VarP(1e200, 2e200, 3e200, 4e200)
 Error({Kind:ErrorKind.Numeric})
 
 >> VarP([3, 2, 1, 0, -1, -2], Sqrt(1/Value))

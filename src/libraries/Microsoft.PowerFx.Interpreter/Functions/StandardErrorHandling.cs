@@ -473,6 +473,11 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
         }
 
+        private static FormulaValue ReplaceBlankWithZeroDecimal(IRContext irContext, int index)
+        {
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
+        }
+
         private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index)
         {
             return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);

@@ -34,11 +34,10 @@
 >> Average(2.34567)
 2.34567
 
->> Average(Float("1.234"),Float("-2.456"),Float("5.427"),Float("-43.234"))
--9.75725
+//Excel returns -0.781666667
+>> Average(-1.234, 2.345, -3.456)
+-0.78166667
 
->> Average(1.234,-2.456,5.427,-43.234)
--9.75725
 
 // ******** NULL and ERROR PARAMETERS ********
 
@@ -64,10 +63,7 @@ Error({Kind:ErrorKind.Div0})
 -3.2
 
 //Excel gives compile error and mention typo in the formula. Suggest to correct 1E+308 to E1+308
->> Average(Float("1E+308"), Float("1E+308"))
-Error({Kind:ErrorKind.Numeric})
-
->> Average(7E28, 7E28)
+>> Average(1E+308, 1E+308)
 Error({Kind:ErrorKind.Numeric})
 
 // ******** STRING PARAMETERS ********

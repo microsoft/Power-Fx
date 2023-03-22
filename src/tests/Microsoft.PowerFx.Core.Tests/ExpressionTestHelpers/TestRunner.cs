@@ -236,7 +236,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public TestRunFullResults RunTests()
+        public TestRunFullResults RunTests(bool numberIsFloat = false)
         {
             var summary = new TestRunFullResults();
 
@@ -251,7 +251,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     var engineName = runner.GetName();
 
-                    var (result, msg) = runner.RunTestCase(testCase);
+                    var (result, msg) = runner.RunTestCase(testCase, numberIsFloat: numberIsFloat);
 
                     summary.AddResult(testCase, result, engineName, msg);
                 }

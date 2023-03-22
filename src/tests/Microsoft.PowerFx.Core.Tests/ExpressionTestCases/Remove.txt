@@ -1,4 +1,4 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,!NumberIsFloat
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
 // Check MutationFunctionsTestSetup handler (PowerFxEvaluationTests.cs) for documentation.
 
