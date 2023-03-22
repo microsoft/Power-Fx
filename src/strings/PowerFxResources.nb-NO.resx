@@ -864,7 +864,8 @@
     <value>Et uttrykk som blir evaluert over rader i kilden og inneholder verdier for sortering.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Stigende eller synkende</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorterer kilden basert på kolonnen. En sorteringsrekkefølge kan eventuelt angis.</value>
@@ -889,7 +890,8 @@
     <value>Et unikt kolonnenavn.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Stigende eller synkende</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorterer kilden basert på indeksen av samsvarende verdier i den angitte kolonnen.</value>
@@ -2382,7 +2384,7 @@
     <value>Antall enheter som skal legges til. Tallet kan være negativt.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Enheten som skal brukes, som kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Enheten som skal brukes, som kan være en av TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>En sluttdato for differanseoperasjonen.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Enheten som resultatet skal uttrykkes i, som kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Enheten som resultatet skal uttrykkes i, som kan være en av TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Hent angitt standard nasjonal innstilling ved kjøretid.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Koder en nettadressestreng som erstatter bestemte ikke-alfanumeriske tegn med % og et heksadesimalt tall.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>nettadresse</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>En nettadresse som skal kodes.</value>
   </data>
 </root>

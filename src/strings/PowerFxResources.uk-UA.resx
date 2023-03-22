@@ -864,7 +864,8 @@
     <value>Вираз, що обчислюється стосовно рядків у джерелі й надає значення для сортування.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>За зростанням або за спаданням</value>
+    <value>SortOrder.Ascending або SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сортує дані джерела стосовно стовпця. Додатково можна визначити порядок сортування.</value>
@@ -889,7 +890,8 @@
     <value>Унікальне ім’я стовпця.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>За зростанням або за спаданням</value>
+    <value>SortOrder.Ascending або SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Сортує дані джерела на основі індексу відповідних значень в указаному стовпці.</value>
@@ -2382,7 +2384,7 @@
     <value>Кількість одиниць вимірювання, які потрібно додати. Число може бути від’ємне.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Одиниця вимірювання, яку потрібно використовувати: Years (роки), Quarters (квартали), Months (місяці), Days (дні), Hours (години), Minutes (хвилини), Seconds (секунди), Milliseconds (мілісекунди).</value>
+    <value>Одиниця вимірювання для використання, наприклад: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds або TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Кінцева дата для операції "Різниця".</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Одиниця вимірювання результату: Years (роки), Quarters (квартали), Months (місяці), Days (дні), Hours (години), Minutes (хвилини), Seconds (секунди), Milliseconds (мілісекунди).</value>
+    <value>Одиниця вимірювання для вираження результату, наприклад: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Налаштування мовних і регіональних параметрів за замовчуванням під час виконання.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Кодує рядок URL-адреси, замінюючи певні символи, відмінні від букв і цифр, на % і шістнадцяткове число.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url-адреса</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL-адреса, яку потрібно закодувати.</value>
   </data>
 </root>

@@ -864,7 +864,8 @@
     <value>'원본'의 행에 대해 평가되는 식으로, 정렬에 필요한 값을 제공합니다.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>오름차순 또는 내림차순</value>
+    <value>SortOrder.Ascending 또는 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>열을 기준으로 '원본'을 정렬합니다(경우에 따라 정렬 '순서' 지정).</value>
@@ -889,7 +890,8 @@
     <value>고유한 열 이름입니다.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>오름차순 또는 내림차순</value>
+    <value>SortOrder.Ascending 또는 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>지정된 열에서 일치하는 값 인덱스를 기준으로 '원본'을 정렬합니다.</value>
@@ -2382,7 +2384,7 @@
     <value>추가할 단위 수입니다. 숫자는 음수일 수 있습니다.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>사용할 단위로 Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds 중 하나가 될 수 있습니다.</value>
+    <value>사용할 단위는 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds 중 하나일 수 있습니다.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>difference 연산의 종료 날짜입니다.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>결과를 표시할 단위로 Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds 중 하나가 될 수 있습니다.</value>
+    <value>결과를 표현하는 단위로 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds 중 하나일 수 있습니다.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>런타임에 설정된 기본 로캘을 가져옵니다.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
   </data>
 </root>

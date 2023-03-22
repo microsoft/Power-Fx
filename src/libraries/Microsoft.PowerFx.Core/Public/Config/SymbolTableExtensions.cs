@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
-    public static class SymbolExtensions
+    public static class SymbolTableExtensions
     {
         /// <summary>
         /// Adds a UserInfo object schema.
@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx
                 .Add("FullName", FormulaType.String)
                 .Add("Email", FormulaType.String);
 
-            symbolTable.AddHostObject("UserInfo", userInfoType, GetUserInfoObject);
+            symbolTable.AddHostObject("User", userInfoType, GetUserInfoObject);
         }
 
         private static FormulaValue GetUserInfoObject(IServiceProvider serviceProvider)

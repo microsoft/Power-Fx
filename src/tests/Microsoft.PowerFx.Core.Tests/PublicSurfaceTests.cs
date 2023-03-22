@@ -143,6 +143,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
+                "Microsoft.PowerFx.Types.Void",
+                "Microsoft.PowerFx.Types.VoidValue",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
@@ -170,7 +172,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.IUserInfo",
                 "Microsoft.PowerFx.UserInfo",
-                "Microsoft.PowerFx.SymbolExtensions"
+                "Microsoft.PowerFx.SymbolTableExtensions"
             };
 
             var sb = new StringBuilder();
