@@ -864,7 +864,8 @@
     <value>Et udtryk, der bliver evalueret i rækker i 'kilden' og giver værdier for sortering.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Stigende eller faldende</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorterer 'kilde' på baggrund af kolonnen, angiver eventuelt en sorterings-'rækkefølge'.</value>
@@ -889,7 +890,8 @@
     <value>Et unikt kolonnenavn.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Stigende eller faldende</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorterer 'kilde' på baggrund af indekset for matchende værdier i den angivne kolonne.</value>
@@ -2382,7 +2384,7 @@
     <value>Et antal enheder, der skal tilføjes. Antallet kan være negativt.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Den enhed, der skal bruges, kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Den enhed, der skal bruges, som kan være en af TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>En slutdato for forskelsberegningen.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Den enhed, som resultatet skal udtrykkes i, kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Den enhed, resultatet skal udtrykkes i, som kan være en af TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Hent standardudgaven af landestandardsættet ved kørsel.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Koder en URL-streng og erstatter visse ikke-alfanumeriske tegn med % og et hexadecimalt tal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-adresse</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>En URL-adresse, der skal kodes.</value>
   </data>
 </root>

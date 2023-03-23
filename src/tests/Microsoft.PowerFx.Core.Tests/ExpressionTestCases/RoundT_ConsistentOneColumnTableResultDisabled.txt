@@ -1,3 +1,5 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
 // Round(Number_or_table, digits_or_table)
 
 // Table and scalar

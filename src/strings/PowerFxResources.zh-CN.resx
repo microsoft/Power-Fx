@@ -864,7 +864,8 @@
     <value>对 "source" 中的行计算并为排序提供值的表达式。</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>升序或降序</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>基于列对 "source" 排序(可以选择指定排序 "order")。</value>
@@ -889,7 +890,8 @@
     <value>唯一的列名。</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>升序或降序</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>基于指定列中匹配值的索引对 "source" 排序。</value>
@@ -2382,7 +2384,7 @@
     <value>要添加的单位数。该数字可以是负数。</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>要使用的单位，可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 之一。</value>
+    <value>要使用的单位，可以是 TimeUnit.Years、TimeUnit.Quarters、TimeUnit.Months、TimeUnit.Days、TimeUnit.Hours、TimeUnit.Minutes、TimeUnit.Seconds、TimeUnit.Milliseconds 之一。</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>用于差值运算的结束日期。</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>用于表示结果的单位，可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 之一。</value>
+    <value>用于表示结果的单位，可以是 TimeUnit.Years、TimeUnit.Quarters、TimeUnit.Months、TimeUnit.Days、TimeUnit.Hours、TimeUnit.Minutes、TimeUnit.Seconds、TimeUnit.Milliseconds 之一。</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>获取运行时设置的默认区域设置。</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>对 URL 字符串进行编码，将某些非字母数字字符替换为 % 和一个十六进制数字。</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>要编码的 URL。</value>
   </data>
 </root>

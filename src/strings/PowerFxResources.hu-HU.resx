@@ -864,7 +864,8 @@
     <value>Egy kifejezés, amelynek kiértékelése a megadott „forrás” sorain történik, és a rendezéshez használt értékeket biztosítja.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascending (növekvő) vagy Descending (csökkenő) lehet.</value>
+    <value>SortOrder.Ascending vagy SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Az oszlop alapján rendezi a forrást; a nem kötelező „sorrend” argumentum is megadható.</value>
@@ -889,7 +890,8 @@
     <value>Egy egyedi oszlopnév.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascending (növekvő) vagy Descending (csökkenő) lehet.</value>
+    <value>SortOrder.Ascending vagy SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>A megadott oszlopban szereplő megfelelő értékek indexe alapján rendezi a forrást.</value>
@@ -2382,7 +2384,7 @@
     <value>A hozzáadandó egységek száma. Negatív szám is lehet.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>A használandó egység. Ez lehet év, negyedév, hónap, nap, óra, perc, másodperc vagy milliszekundum (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds).</value>
+    <value>A használni kívánt egység, amely a következő lehet: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>A befejező dátum a különbséget kiszámító művelethez.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Ebben az egységben kell kifejezni az eredményt. Ez lehet év, negyedév, hónap, nap, óra, perc, másodperc vagy milliszekundum (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds).</value>
+    <value>Az eredmény kifejezésére használt egység, amely a következő lehet: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Kérje le a futásidőben beállított alapértelmezett területi beállítást.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kódol egy URL-sztringet úgy, hogy bizonyos nem alfanumerikus karaktereket %-ra és hexadecimális számra cseréli.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-cím</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A kódolandó URL-cím.</value>
   </data>
 </root>

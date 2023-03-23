@@ -864,7 +864,8 @@
     <value>"source" taulako errenkaden arabera ebaluatzen den espresioa, ordenatzeko balioak ematen dituena.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Gorantz ala beherantz</value>
+    <value>SortOrder.Ascending edo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>"source" ordenatzen du zutabeen arabera (aukera duzu "order" ordenatzeko irizpidea zehazteko).</value>
@@ -889,7 +890,8 @@
     <value>Zutabearen izen esklusiboa.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Gorantz ala beherantz</value>
+    <value>SortOrder.Ascending edo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>"source" ordenatzen du zehaztutako zutabean bat datozen balioen aurkibidean oinarrituta.</value>
@@ -2382,7 +2384,7 @@
     <value>Gehituko den unitate kopurua. Kopuruak ezin du izan negatiboa.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Erabiliko den unitatea, hauetako bat izan daitekeena: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Erabili beharreko unitatea. Hauetako bat izan daiteke: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds edo TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Eragiketa desberdinaren amaiera-data.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Emaitza adierazteko erabiliko den unitatea, hauetako bat izan daitekeena: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Emaitza adierazteko unitatea. Hauetako bat izan daiteke: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds edo TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Lortu eskualdeko ezarpen lokalek exekuzio-denbora ezartzea.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>URLaren kate bat kodetzen du. Horretarako, alfanumerikoak ez diren karaktere jakin batzuk ordezten ditu "%" ikurrarekin eta zenbaki hamaseitar batekin.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URLa</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Kodetu nahi duzun URLa.</value>
   </data>
 </root>

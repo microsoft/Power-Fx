@@ -864,7 +864,8 @@
     <value>एक एक्सप्रेशन जिसका 'source' में पंक्तियों पर आकलन होता है और सॉर्टिंग का मान प्रदान करता है.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>बढ़ते क्रम में या घटते क्रम में</value>
+    <value>SortOrder.Ascending या SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>वैकल्पिक रूप से एक सॉर्ट 'क्रम' निर्दिष्‍ट करते हुए, स्तंभ के आधार पर 'source' को सॉर्ट करता है.</value>
@@ -889,7 +890,8 @@
     <value>एक अद्वितीय स्तंभ नाम.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>बढ़ते क्रम में या घटते क्रम में</value>
+    <value>SortOrder.Ascending या SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>निर्दिष्ट स्तंभ में मेल खाने वाले मानों की इंडेक्स के आधार पर 'source' को सॉर्ट करता है.</value>
@@ -2382,7 +2384,7 @@
     <value>जोड़ी जाने वाली इकाइयों की संख्या. संख्या नकारात्मक हो सकती है.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>उपयोग की जाने वाली इकाई, यह Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds में से एक हो सकती है.</value>
+    <value>इस्तेमाल की जाने वाली इकाई, जो TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds में से एक हो सकती है.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>भिन्न कार्रवाई के लिए एक समाप्ति दिनांक.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>वह इकाई, जिसमें परिणाम व्यक्त किया जाना है, यह Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds में से एक हो सकती है.</value>
+    <value>परिणाम व्यक्त करने की इकाई, जो TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds में से एक हो सकती है.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>रनटाइम पर डिफ़ॉल्ट लोकेल सेट पाएं.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>कुछ गैर-अल्फ़ान्यूमेरिक वर्णों को % और हेक्साडेसिमल संख्या के साथ बदलकर URL स्ट्रिंग को एन्कोड करता है.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>Url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>एन्कोड किया जाने वाला URL.</value>
   </data>
 </root>

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -286,11 +287,8 @@ namespace Microsoft.PowerFx
                                 Kind = ex.ErrorKind
                             });
                     }
-
-                    if (IfFunction.CanCheckIfReturn(func))
-                    {
-                        Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
-                    }
+                    
+                    Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
                 }
                 else
                 {
@@ -658,13 +656,33 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, EvalVisitorContext context)
         {
-            return node.Value switch
+            switch (node.Value)
             {
-                NameSymbol name => GetVariableOrFail(node, name),
-                FormulaValue fi => fi,
-                IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
-                _ => ResolvedObjectHelpers.ResolvedObjectError(node),
-            };
+                case NameSymbol name: 
+                    return GetVariableOrFail(node, name);
+                case FormulaValue fi:
+                    return fi;
+                case IExternalOptionSet optionSet:
+                    return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext);
+                case Func<IServiceProvider, FormulaValue> getHostObject:
+                    FormulaValue hostObj;
+                    try
+                    {
+                        hostObj = getHostObject(_services);
+                        if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type))
+                        {
+                            hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext);
+                        }
+                    }
+                    catch (CustomFunctionErrorException ex)
+                    {
+                        hostObj = CommonErrors.CustomError(node.IRContext, ex.Message);
+                    }
+
+                    return hostObj;
+                default:
+                    return ResolvedObjectHelpers.ResolvedObjectError(node);
+            }
         }
 
         private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)

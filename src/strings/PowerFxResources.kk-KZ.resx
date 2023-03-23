@@ -864,7 +864,8 @@
     <value>Көздегі жолдар бойынша есептелетін және сұрыптау үшін мәндерді беретін өрнек.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Артуы бойынша немесе кемуі бойынша</value>
+    <value>SortOrder.Ascending немесе SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сұрыптау ретін қосымша көрсету арқылы, көзді баған негізінде сұрыптайды.</value>
@@ -889,7 +890,8 @@
     <value>Бірегей баған атауы.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Артуы бойынша немесе кемуі бойынша</value>
+    <value>SortOrder.Ascending немесе SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Көзді көрсетілген бағандағы сәйкес мәндердің индексіне негізделіп сұрыптайды.</value>
@@ -2382,7 +2384,7 @@
     <value>Қосылатын бірліктер саны. Сан теріс болуы мүмкін.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Пайдаланылатын бірлік, ол Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds бірліктерінің біреуі болуы мүмкін.</value>
+    <value>Пайдаланылатын бірлік, ол TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds бірі болуы мүмкін.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Айырма операциясы үшін аяқталу күні.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Нәтиже көрсетілетін бірлік, ол Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds бірліктерінің біреуі болуы мүмкін.</value>
+    <value>Құрамында нәтиже берілетін бірлік, ол TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds бірі болуы мүмкін.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Іске қосу уақытында әдепкі тілді алыңыз.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Әріптерден басқа белгілі бір таңбаларды % және оналтылық санмен ауыстыра отырып, URL жолын кодтайды.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Кодталатын URL.</value>
   </data>
 </root>

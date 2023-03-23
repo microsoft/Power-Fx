@@ -291,73 +291,135 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         {
             if (argPosition >= 0 && argPosition < _requiredParameters.Length)
             {
-                ConnectorDynamicValue cdv = _requiredParameters[argPosition].ConnectorDynamicValue;
+                ConnectorDynamicValue cdv = _requiredParameters[argPosition].ConnectorDynamicValue;                
 
-                if (cdv == null || cdv.ServiceFunction == null)
+                if (cdv != null && cdv.ServiceFunction != null)
                 {
-                    return null;
-                }
+                    FormulaValue result = await ConnectorDynamicCall(cdv, callNode, cts).ConfigureAwait(false);
 
-                List<FormulaValue> arguments = new List<FormulaValue>();
-
-                foreach (ServiceFunctionParameterTemplate sfpt in cdv.ServiceFunction._requiredParameters)
-                {
-                    string paramName = sfpt.TypedName.Name;
-                    DType paramType = sfpt.TypedName.Type;
-
-                    string currentFunctionParamName = cdv.ParameterMap.FirstOrDefault(kvp => kvp.Value == paramName).Value;
-                    int currentFunctionParamIndex = _requiredParameters.FindIndex(st => st.TypedName.Name == currentFunctionParamName);
-                    TexlNode texlNode = callNode.Args.ChildNodes[currentFunctionParamIndex];
-
-                    FormulaValue arg = texlNode switch
+                    List<string> suggestions = new List<string>();
+                    if (result is RecordValue rv)
                     {
-                        StrLitNode str => FormulaValue.New(str.Value),
-                        NumLitNode num => FormulaValue.New(num.ActualNumValue),
-                        _ => null
-                    };
-
-                    if (arg == null)
-                    {
-                        return null;
-                    }
-
-                    arguments.Add(arg);
-                }
-
-                cts.ThrowIfCancellationRequested();
-                FormulaValue result = await cdv.ServiceFunction.InvokeAsync(arguments.ToArray(), cts);
-
-                List<string> suggestions = new List<string>();
-                if (result is RecordValue rv)
-                {
-                    if (!string.IsNullOrEmpty(cdv.ValueCollection) && !string.IsNullOrEmpty(cdv.ValuePath))
-                    {
-                        FormulaValue collection = rv.GetField(cdv.ValueCollection);
-
-                        if (collection is TableValue tv)
+                        if (!string.IsNullOrEmpty(cdv.ValueCollection) && !string.IsNullOrEmpty(cdv.ValuePath))
                         {
-                            foreach (DValue<RecordValue> row in tv.Rows)
+                            FormulaValue collection = rv.GetField(cdv.ValueCollection);
+
+                            if (collection is TableValue tv)
                             {
-                                FormulaValue suggestion = row.Value.GetField(cdv.ValuePath);
-                                suggestions.Add(@$"""{suggestion.ToObject().ToString()}""");
+                                foreach (DValue<RecordValue> row in tv.Rows)
+                                {
+                                    FormulaValue suggestion = row.Value.GetField(cdv.ValuePath);
+                                    suggestions.Add(@$"""{suggestion.ToObject().ToString()}""");
+                                }
+                            }
+                            else
+                            {
+                                throw new NotImplementedException($"Expecting a TableValue and got {collection.GetType().FullName}");
                             }
                         }
                         else
                         {
-                            throw new NotImplementedException($"Expecting a TableValue and got {collection.GetType().FullName}");
+                            throw new NotImplementedException($"Valuecollection is null");
+                        }
+                    }
+
+                    return suggestions;
+                }
+
+                ConnectorDynamicSchema cds = _requiredParameters[argPosition].ConnectorDynamicSchema;
+
+                if (cds != null && cds.ServiceFunction != null && !string.IsNullOrEmpty(cds.ValuePath))
+                {
+                    FormulaValue result = await ConnectorDynamicCall(cds, callNode, cts).ConfigureAwait(false);
+                    TexlNode currentArg = callNode.Args.Children[argPosition];
+                    bool isRecord = currentArg.Kind == NodeKind.Record;
+                    List<string> suggestions = new List<string>();
+
+                    foreach (string vpPart in (cds.ValuePath + "/properties").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        result = ((RecordValue)result).Fields.FirstOrDefault(f => f.Name.Equals(vpPart, StringComparison.OrdinalIgnoreCase)).Value;
+                    }
+
+                    if (!isRecord)
+                    {
+                        // not in a record, we add the complete list and prefix with '{'
+                        foreach (NamedValue nv in ((RecordValue)result).Fields)
+                        {
+                            suggestions.Add(@$"{{ {nv.Name}:");
                         }
                     }
                     else
                     {
-                        throw new NotImplementedException($"Valuecollection is null");
-                    }
+                        List<string> possibleFields = ((RecordValue)result).Fields.Select(f => f.Name).ToList();
+                        string[] existingFieldsInCall = currentArg.AsRecord().Ids.Select(id => id.Token._value).ToArray();
+
+                        // remove all existing valid ids
+                        for (int i = 0; i < existingFieldsInCall.Length - 1; i++)
+                        {
+                            string idInCall = existingFieldsInCall[i];
+                            string possibleField = possibleFields.FirstOrDefault(pf => pf.Equals(idInCall, StringComparison.OrdinalIgnoreCase));
+
+                            if (!string.IsNullOrWhiteSpace(possibleField))
+                            {
+                                possibleFields.Remove(possibleField);
+                            }
+                        }
+
+                        // filter on last element name
+                        if (existingFieldsInCall.Length > 0)
+                        {
+                            string lastIdInCall = existingFieldsInCall[existingFieldsInCall.Length - 1];
+
+                            if (!string.IsNullOrWhiteSpace(lastIdInCall))
+                            {
+                                possibleFields = possibleFields.Where(f => f.StartsWith(lastIdInCall, StringComparison.OrdinalIgnoreCase)).ToList();
+                            }
+                        }
+
+                        suggestions.AddRange(possibleFields);
+                    }                    
+
+                    return suggestions;
                 }
 
-                return suggestions;
+                // Neither dynamic value nor dynamic schema
+                return null;
             }
 
             return null;
-        }    
+        }
+
+        private async Task<FormulaValue> ConnectorDynamicCall(ConnectionDynamicApi dynamicApi, CallNode callNode, CancellationToken cts)
+        {
+            List<FormulaValue> arguments = new List<FormulaValue>();
+
+            foreach (ServiceFunctionParameterTemplate sfpt in dynamicApi.ServiceFunction._requiredParameters)
+            {
+                string paramName = sfpt.TypedName.Name;
+                DType paramType = sfpt.TypedName.Type;
+
+                string currentFunctionParamName = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value == paramName).Value;
+                int currentFunctionParamIndex = _requiredParameters.FindIndex(st => st.TypedName.Name == currentFunctionParamName);
+                TexlNode texlNode = callNode.Args.ChildNodes[currentFunctionParamIndex];
+
+                FormulaValue arg = texlNode switch
+                {
+                    StrLitNode str => FormulaValue.New(str.Value),
+                    NumLitNode num => FormulaValue.New(num.ActualNumValue),
+                    _ => null
+                };
+
+                if (arg == null)
+                {
+                    return null;
+                }
+
+                arguments.Add(arg);
+            }
+
+            cts.ThrowIfCancellationRequested();
+            return await dynamicApi.ServiceFunction.InvokeAsync(arguments.ToArray(), cts).ConfigureAwait(false);
+        }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)

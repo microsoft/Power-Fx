@@ -60,3 +60,17 @@ Error({Kind:ErrorKind.Div0})
 
 >> If(true, {x:1, y:1}, {x:2, z:2})
 {x:1}
+
+// Demos expression that generates Void value.
+>> If(true, {a:1}, "test")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+// Void can be passed through another If statment
+>> If( true, If(1<0, {x:3}, 1), 1)
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> If(true, 1, x)
+Errors: Error 12-13: Name isn't valid. 'x' isn't recognized.|Error 0-14: The function 'If' has some invalid arguments.
+
+>> If(true, x, 1)
+Errors: Error 9-10: Name isn't valid. 'x' isn't recognized.|Error 0-14: The function 'If' has some invalid arguments.

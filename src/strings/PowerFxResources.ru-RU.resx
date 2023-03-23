@@ -864,7 +864,8 @@
     <value>Выражение, которое вычисляется для строк в "источнике" и предоставляет значения для сортировки.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>По возрастанию или по убыванию</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сортирует "источник" на основе столбца, дополнительно можно указать "порядок сортировки".</value>
@@ -889,7 +890,8 @@
     <value>Уникальное имя столбца.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>По возрастанию или по убыванию</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Сортирует "источник" на основе индекса соответствующих значений в указанном столбце.</value>
@@ -2382,7 +2384,7 @@
     <value>Количество единиц для добавления. Может быть отрицательным.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Единица измерения, допустимые варианты: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Используемые единицы: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Конечная дата для операции разности.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Результат может выражаться в следующих единицах: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Единица, в которой нужно выразить результат: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Настройка языкового стандарта по умолчанию во время выполнения.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Кодирует строку URL-адреса, заменяя определенные символы, отличные от буквенно-цифровых, на % и шестнадцатеричное число.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-адрес</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL-адрес, который следует закодировать.</value>
   </data>
 </root>

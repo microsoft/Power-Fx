@@ -549,6 +549,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DropColumns)
             },
             {
+                BuiltinFunctionsCore.EncodeUrl,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.EncodeUrl.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: EncodeUrl)
+            },
+            {
                 BuiltinFunctionsCore.EndsWith,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.EndsWith.Name,
@@ -815,6 +826,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.IsBlankOrErrorOptionSetValue,
                 NoErrorHandling(IsBlankOrError)
+            },
+            {
+                BuiltinFunctionsCore.IsEmpty,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.IsEmpty.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsEmpty)
             },
             {
                 BuiltinFunctionsCore.IsError,
@@ -1711,6 +1733,10 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
             {
+                BuiltinFunctionsCore.ModT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
+            },
+            {
                 BuiltinFunctionsCore.RoundT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithZero))
             },
@@ -1799,6 +1825,23 @@ namespace Microsoft.PowerFx.Functions
             return false;
         }
 
+        private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            if (args[0] is TableValue tv)
+            {
+                return new BooleanValue(irContext, !tv.Rows.Any());
+            }
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
         public static FormulaValue IsNumeric(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
@@ -1848,7 +1891,7 @@ namespace Microsoft.PowerFx.Functions
                         var trueBranch = args[i + 1];
 
                         var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
-                        return MaybeWrapRecordValue(trueBranchResult, irContext);
+                        return MaybeAdjustToCompileTimeType(trueBranchResult, irContext);
                     }
                 }
 
@@ -1866,7 +1909,7 @@ namespace Microsoft.PowerFx.Functions
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
                     
-                    return MaybeWrapRecordValue(falseBranchResult, irContext);
+                    return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -1877,16 +1920,24 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
-        /// <summary>
-        /// If the <paramref name="result"/> is a record value, and the IRContext result type is a record type,
-        /// then this helper may wrap it in CompileTimeTypeWrapperRecordValue, else return the result it self.
-        /// e.g. If(false, {x:1, y:1}, {x:1, z:2}) has compile time type ![x:n] while runtime type ![x:n, z:n].
-        /// </summary>
-        private static FormulaValue MaybeWrapRecordValue(FormulaValue result, IRContext irContext)
+        private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
         {
-            if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
+            if (irContext.ResultType is Types.Void)
+            {
+                if (result is ErrorValue ev)
+                {
+                    return new ErrorValue(IRContext.NotInSource(FormulaType.Void), (List<ExpressionError>)ev.Errors);
+                }
+
+                return new VoidValue(irContext);
+            }
+            else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
             {
                 return CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
+            }
+            else if (result is TableValue tableValue && irContext.ResultType is TableType compileTimeTableType)
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType(compileTimeTableType, tableValue);
             }
 
             return result;
@@ -1988,6 +2039,11 @@ namespace Microsoft.PowerFx.Functions
             foreach (var errorRecord in errorRecords)
             {
                 var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
+
+                if (errorRecord.GetField(ErrorType.KindFieldName) is ErrorValue error)
+                {
+                    return error;
+                }
 
                 if (errorRecord.GetField(ErrorType.KindFieldName) is not NumberValue kindField)
                 {

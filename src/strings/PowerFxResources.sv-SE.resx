@@ -864,7 +864,8 @@
     <value>Ett uttyck som utvärderas för rader i källan och ger sorteringsvärden.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Stigande eller fallande</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorterar källan baserat på kolumnen. Valfritt så att en sorteringsordning kan anges.</value>
@@ -889,7 +890,8 @@
     <value>Ett unikt kolumnnamn.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Stigande eller fallande</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorterar källan baserat på indexet med matchande värden i den angivna kolumnen.</value>
@@ -2382,7 +2384,7 @@
     <value>Ett antal enheter att lägga till. Antalet kan vara negativt.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Den enhet som kan användas kan vara någon av följande: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Enheten som ska användas, som kan vara en av TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Ett slutdatum för differens-operationen.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Den enhet som resultatet kan uttryckas i kan vara någon av följande: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Enheten som resultatet ska uttryckas i, som kan vara en av TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Hämta standardspråket som anges vid körningen.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>En URL-sträng kodas och vissa icke-alfanumeriska tecken ersätts med % och ett hexadecimalt tal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>En url som ska kodas.</value>
   </data>
 </root>

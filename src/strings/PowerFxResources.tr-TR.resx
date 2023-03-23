@@ -864,7 +864,8 @@
     <value>'source' içindeki satırlarda değerlendirilen ve sıralama için değerler sağlayan bir ifade.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Artan veya Azalan</value>
+    <value>SortOrder.Ascending veya SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>İsteğe bağlı bir sıralama 'order' değeri belirterek 'source' öğesini sütuna göre sıralar.</value>
@@ -889,7 +890,8 @@
     <value>Benzersiz bir sütun adı.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Artan veya Azalan</value>
+    <value>SortOrder.Ascending veya SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>'source' öğesini belirtilen sütundaki eşleşen değerler dizinine göre sıralar.</value>
@@ -2382,7 +2384,7 @@
     <value>Eklenecek birim sayısı. Sayı negatif olabilir.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Kullanılacak birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    <value>Kullanılacak birim. TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds değerlerinden biri olabilir.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Fark alma işlemi için bitiş tarihi.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Sonucun ifade edileceği birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    <value>Sonucun ifade edileceği birim. TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds değerlerinden biri olabilir.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4423,7 +4425,7 @@
     
   </data>
   <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
-    <value>Unable to compare values of type {0}.</value>
+    <value>{0} türündeki değerler karşılaştırılamıyor.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4843,7 +4845,7 @@
     
   </data>
   <data name="OptionSetOptionNotSupported" xml:space="preserve">
-    <value>The value of option {0} is not of expected type {1}.</value>
+    <value>{0} seçeneğinin değeri, beklenen {1} türünde değil.</value>
     
   </data>
   <data name="AboutOptionSetInfo" xml:space="preserve">
@@ -4857,7 +4859,18 @@
     <value>Mantıksal adı döndürülecek bir seçenek kümesi değeri.</value>
   </data>
   <data name="AboutLanguage" xml:space="preserve">
-    <value>Get the default locale set at runtime.</value>
+    <value>Çalışma zamanında ayarlanan varsayılan yerel ayarı alın.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Bir URL dizesini kodlayarak alfasayısal olmayan bazı karakterleri % ve onaltılık sayıyla değiştirir.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Kodlanacak bir URL.</value>
   </data>
 </root>

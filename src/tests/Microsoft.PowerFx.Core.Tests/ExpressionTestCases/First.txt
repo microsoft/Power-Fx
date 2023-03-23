@@ -92,3 +92,9 @@ Blank()
 
 >> First({a:1,b:2})
 Errors: Error 0-16: The function 'First' has some invalid arguments.|Error 6-15: Invalid argument type (Record). Expecting a Table value instead.
+
+>> First(If(false, Table({a:1}), Table({b:2})))
+{}
+
+>> FirstN(If(false, Table({a:1}), Table({b:2})), 1)
+Table({})

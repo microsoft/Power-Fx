@@ -864,7 +864,8 @@
     <value>Izraz koji se vrednuje na temelju redaka u "izvoru" i daje vrijednosti za sortiranje.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Uzlazno ili silazno</value>
+    <value>SortOrder.Ascending ili SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sortira "izvor" na temelju stupca, po želji određuje "redoslijed" sortiranja.</value>
@@ -889,7 +890,8 @@
     <value>Jedinstveni naziv stupca.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Uzlazno ili silazno</value>
+    <value>SortOrder.Ascending ili SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sortira "izvor" na temelju indeksa podudarnih vrijednosti u navedenom stupcu.</value>
@@ -2382,7 +2384,7 @@
     <value>Broj jedinica koje se dodaju. Može biti negativan broj.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jedinica koja se koristi, a koja može biti: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jedinica koja će se upotrijebiti, može biti jedna od sljedećih: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Datum završetka za operaciju razlikovanja.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jedinica u kojoj se izražava rezultat, a koja može biti: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jedinica za izražavanje rezultata, može biti jedna od sljedećih: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Nabavite zadanu regionalnu shemu postavljenu tijekom izvođenja.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kodira URL niz, zamjenjujući određene znakove koji nisu alfanumerički s % i heksadecimalnim brojem.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL koji treba kodirati.</value>
   </data>
 </root>
