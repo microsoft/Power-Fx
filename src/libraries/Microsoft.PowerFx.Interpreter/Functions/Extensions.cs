@@ -63,7 +63,16 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                if (!type.Accepts(dsNameType, out var schemaDifference, out var schemaDifferenceType) &&
+                // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
+                if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)
+                {
+                    if (dsNameType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out var expandedType))
+                    {
+                        dsNameType = expandedType;
+                    }
+                }
+
+                if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: false) &&
                     (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
                 {
                     if (dsNameType.Kind == type.Kind)
