@@ -222,3 +222,180 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(Blank(), Blank(), 1)
 1
+
+// ************************* SCALAR PARAMETERS - EMPTY, NULL or ERROR *************************
+
+>> Find(Blank(), "")
+1
+
+>> Find("", Blank())
+1
+
+>> Find(1/0, "", 1)
+Error({Kind:ErrorKind.Div0})
+
+>> Find(1, 1/0, 1)
+Error({Kind:ErrorKind.Div0})
+
+>> Find(1, 1, 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> Find(18, 18, ErrorKind.Sync)
+1
+
+>> Find(18, 18, ErrorKind.MissingRequired)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex)
+1
+
+>> Find(1, ErrorKind.BadRegex, 1)
+1
+
+>> Find(1, ErrorKind.BadRegex, 2)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex, 3)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex, 4)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(ErrorKind.BadRegex, 156)
+1
+
+>> Find(ErrorKind.BadRegex, 156, 1)
+1
+
+>> Find(ErrorKind.BadRegex, 156, 2)
+Blank()
+
+>> Find(ErrorKind.BadRegex, 156, 4)
+Blank()
+
+>> Find(ErrorKind.BadRegex, 156, 5)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ************************* TABLE PARAMETERS *************************
+
+// ======================== SCENARIO 9 ========================
+// : findText: [{ find: null }, { find: '' }, { find: ',' }], withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: 1
+
+>> Find(Table(
+   {find: Blank()},
+   {find: ""},
+   {find: ","}),
+   "textToBeSearchedIn,textToBeSearchedIn",
+   1)
+Table({Result:1},{Result:1},{Result:19})
+
+// ======================== SCENARIO 10 ========================
+// findText: [{ find: null }, { find: '' }, { find: ',' }, { find: ',' }], withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: [{ start: 1 }, { start: 2 }, { start: 3 }, { start: 20 }]
+>> Find(
+   Table(
+   {find: Blank()},{find: ""},{find: ","},{find: ","}),
+   "textToBeSearchedIn,textToBeSearchedIn",
+   Table({start:1},{start:2},{start:3},{start:20}))
+Table({Result:1},{Result:2},{Result:19},{Result:Blank()})
+
+// ======================== SCENARIO 11 ========================   
+// findText: ',', withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' }], startIndex: 1
+
+>> Find(",", Table({within: "textToBeSearchedIn,textToBeSearchedIn"}),1)
+Table({Result:19})
+
+//  ======================== SCENARIO 12 ========================
+// findText: ',', 
+// withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' },{ within: 'textToBeSearchedIn,textToBeSearchedIn,' },{ within: 'textToBeSearchedIn,textToBeSearchedIn' },]
+// startIndex: [{ start: 1 }, { start: 20 }, { start: 40 }]   
+
+>> Find(",", 
+   Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"}),
+   [1,20,40])
+Table({Result:19},{Result:38},{Result:Error({Kind:ErrorKind.InvalidArgument})})
+
+//  ======================== SCENARIO 13 ========================
+// findText: [{ find: null }, { find: '' }, { find: ',' }]
+// withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' },{ within: 'textToBeSearchedIn,textToBeSearchedIn,' },{ within: 'textToBeSearchedIn,textToBeSearchedIn' }]
+// startIndex: [{ start: 1 }, { start: 10 }, { start: 9 }]
+
+>> Find(
+   Table({find: Blank()},{find: ""},{find: ","}), 
+   Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"}),
+   [1,10,9])
+Table({Result:1},{Result:10},{Result:19})
+
+//  ======================== SCENARIO 14 ========================
+// findText: ',', withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: [{ start: 1 }, { start: 2 }, { start: 19 }, { start: 20 }]
+
+>> Find(
+   ",", 
+   "textToBeSearchedIn,textToBeSearchedIn",
+   [1,2,19,20])
+Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
+
+//  ======================== SCENARIO 17 ========================
+//  findText: [{ find: null }, { find: '' }, { find: ',' }] , withinText: 'textToBeSearchedIn,textToBeSearchedIn'
+
+>> Find(
+   Table({find: Blank()},{find: ""},{find: ","}),  	
+   "textToBeSearchedIn,textToBeSearchedIn" )
+Table({Result:1},{Result:1},{Result:19})
+
+//  ======================== SCENARIO 18 ========================
+//  findText: ',' , withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' }],
+
+>> Find(
+   ",",  	
+   Table({within:"textToBeSearchedIn,textToBeSearchedIn"})
+   )
+Table({Result:19})
+
+//  ======================== SCENARIO 19 ========================
+//  findText: [{ find: null }, { find: '' }, { find: ',' }], 
+//  withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' },{ within: 'textToBeSearchedIn,textToBeSearchedIn,' },{ within: 'textToBeSearchedIn,textToBeSearchedIn' }]
+
+>> Find(
+   Table({find: Blank()},{find: ""},{find: ","}), 
+   Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"})
+   )
+Table({Result:1},{Result:1},{Result:19})
+
+//  ======================== SCENARIO 26 ========================
+//  findText: [], withinText: '', startIndex: 1,
+
+>> Find(Filter(["string"], Len(Value) > 10),"",1)
+Table()
+
+//  ======================== SCENARIO 27 ========================
+// findText: '', withinText: [], startIndex: 1,
+
+>> Find("", Filter(["string"], Len(Value) > 10),1)
+Table()
+
+//  ======================== SCENARIO 28 ========================
+//  findText: 'textToFind', withinText: [], startIndex: 2
+
+>> Find("textToFind", Filter(["string"], Len(Value) > 10),2)
+Table()
+
+//  ======================== SCENARIO 29 ========================
+//  findText: [],withinText: []
+
+>> Find(Filter(["string"], Len(Value) > 10), Filter(["string"], Len(Value) > 10))
+Table()
+
+//  ======================== SCENARIO 30 ========================
+//  findText: [],withinText: [], startIndex: []
+
+>> Find(Filter(["string"], Len(Value) > 10), Filter(["string"], Len(Value) > 10), Filter([1, 2, 3], Value > 100))
+Table()
+
+//  ======================== SCENARIO 41 ========================
+//  findText: [{ find: 'a' }, { find: 'b' }, { find: 'c' }], withinText: anError 
+	
+>> Find(
+   Table({find:"a"},{find:"b"},{find:"c"}),
+   1/0
+   )
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
