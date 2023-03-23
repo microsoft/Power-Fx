@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"UnaryOp({Op}, {Child})";
+            return $"{Op}:{IRContext.ResultType._type}({Child})";
         }
     }
 }
