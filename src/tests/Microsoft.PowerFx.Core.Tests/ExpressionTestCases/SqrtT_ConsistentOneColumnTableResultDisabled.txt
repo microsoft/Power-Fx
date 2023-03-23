@@ -1,3 +1,4 @@
+#SETUP: disable:ConsistentOneColumnTableResult
 
 >> Sqrt([1, 529, 144, 324])
 Table({Value:1},{Value:23},{Value:12},{Value:18})
