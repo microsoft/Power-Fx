@@ -538,9 +538,9 @@ namespace Microsoft.PowerFx
         // pretty print IR for debugging purposes, used by the Console REPL
         public string PrintIR()
         {
-            var x = this.ApplyIR().TopNode;
-            var y = x.ToString();
-            return y;
+            var topNode = this.ApplyIR().TopNode;
+            var topStr = topNode.ToString();
+            return topStr;
         }
 
         /// <summary>

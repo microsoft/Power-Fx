@@ -178,11 +178,18 @@ namespace Microsoft.PowerFx
                         output?.WriteLine(ir);
                     }
 
-                    // formula definition: <ident> = <formula>
-                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>[a-zA-Z]\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+                    // named formula definition: <ident> = <formula>
+                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+                              !Regex.IsMatch(match.Groups["ident"].Value, "^\\d") &&
                               match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
                     {
-                        _engine.SetFormula(match.Groups["ident"].Value, match.Groups["formula"].Value, OnUpdate);
+                        var ident = match.Groups["ident"].Value;
+                        if (ident.StartsWith('\''))
+                        {
+                            ident = ident.Substring(1, ident.Length - 2).Replace("''", "'", StringComparison.Ordinal);
+                        }
+
+                        _engine.SetFormula(ident, match.Groups["formula"].Value, OnUpdate);
                     }
 
                     // function definition: <ident>( <ident> : <type>, ... ) : <type> = <formula>
