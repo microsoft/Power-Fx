@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Dynamic;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Types
     {
         bool IsBlank();
 
-        object ToObject();
+        void ToExpression(StringBuilder sb);
     }
 
     public abstract class UntypedArray : IUntypedArray
@@ -47,16 +48,21 @@ namespace Microsoft.PowerFx.Types
 
         public abstract bool IsBlank();
 
-        public object ToObject()
+        public void ToExpression(StringBuilder sb)
         {
-            object[] array = new object[Length];
+            sb.Append("[ ");
 
             for (int i = 0; i < Length; i++)
             {
-                array[i] = this[i].ToObject();
+                this[i].ToExpression(sb);
+
+                if (i != Length - 1)
+                {
+                    sb.Append(", ");
+                }
             }
 
-            return array;
+            sb.Append(" ]");
         }
     }
 
@@ -76,17 +82,24 @@ namespace Microsoft.PowerFx.Types
         
         public abstract bool TryGetProperty(string value, out IUntypedObject result);
 
-        public object ToObject()
+        public void ToExpression(StringBuilder sb)
         {
-            ExpandoObject eo = new ExpandoObject();
+            sb.Append("{ ");
 
-            foreach (string propName in PropertyNames)
+            for (int i = 0; i < PropertyNames.Length; i++)
             {
-                bool b = TryGetProperty(propName, out IUntypedObject propValue);
-                ((IDictionary<string, object>)eo)[propName] = propValue.ToObject();
+                bool b = TryGetProperty(PropertyNames[i], out IUntypedObject propValue);
+
+                sb.Append($@"""{PropertyNames[i]}"": ");
+                propValue.ToExpression(sb);
+
+                if (i < PropertyNames.Length -1)
+                {
+                    sb.Append(", ");
+                }
             }
 
-            return eo;
+            sb.Append(" }");
         }
     }
 
@@ -142,9 +155,9 @@ namespace Microsoft.PowerFx.Types
             return false;
         }
 
-        public object ToObject()
+        public void ToExpression(StringBuilder sb)
         {
-            return Value.ToObject();
+            Value.ToExpression(sb, null);
         }
     }
 
@@ -162,7 +175,7 @@ namespace Microsoft.PowerFx.Types
 
         public override object ToObject()
         {
-            return Implementation.ToObject();
+            throw new NotImplementedException("UntypedObjectValue cannot be converted to an object.");
         }
 
         public override void Visit(IValueVisitor visitor)
@@ -172,8 +185,8 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            // Not supported for the time being.
-            throw new NotImplementedException("UntypedObjectValue cannot be serialized.");
+            // We ignore settings for now
+            Implementation.ToExpression(sb);
         }
     }
 }

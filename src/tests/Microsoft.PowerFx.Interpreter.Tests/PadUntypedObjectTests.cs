@@ -47,11 +47,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             FormulaValue fv4 = engine.Eval(@"padTable");
             Assert.Equal(FormulaType.UntypedObject, fv4.Type);
-
-            object o4 = fv4.ToObject();
-            Assert.True(o4 is object[]);
-            object o41 = ((object[])o4)[1];
-            Assert.Equal("data3", ((dynamic)o41).Column1);
+                       
+            string expression = fv4.ToExpression();
+            Assert.Equal(@"ParseJson(""[ { ""Id"": 1, ""Column1"": ""data1"", ""Column2"": ""data2"" }, { ""Id"": 2, ""Column1"": ""data3"", ""Column2"": ""data4"" } ])""", expression);
         }
     }
 

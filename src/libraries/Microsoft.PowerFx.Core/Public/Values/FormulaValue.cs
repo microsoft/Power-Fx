@@ -54,7 +54,9 @@ namespace Microsoft.PowerFx.Types
             var settings = new FormulaValueSerializerSettings();
             var sb = new StringBuilder();
 
+            sb.Append(@"ParseJson(""");
             ToExpression(sb, settings);
+            sb.Append(@")""");
 
             return sb.ToString();
         }
