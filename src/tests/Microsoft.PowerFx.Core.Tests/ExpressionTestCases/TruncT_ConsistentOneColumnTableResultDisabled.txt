@@ -1,3 +1,5 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
 // Trunc(Number_or_table, [digits_or_table]), toward zero
 // Results should match RoundDown.txt
 

@@ -1,4 +1,6 @@
-﻿>> Len(["abc", "def"])
+﻿#SETUP: disable:ConsistentOneColumnTableResult
+
+>> Len(["abc", "def"])
 Table({Result:3},{Result:3})
 
 >> Len([123, -2344566, 0567])
