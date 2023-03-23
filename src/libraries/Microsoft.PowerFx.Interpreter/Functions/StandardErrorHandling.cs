@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Functions
                     return ErrorValue.Combine(irContext, errors);
                 }
 
-                var anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Implementation.IsBlank()));
+                var anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Implementation is UntypedValue uv && uv.Value is BlankValue));
 
                 switch (returnBehavior)
                 {

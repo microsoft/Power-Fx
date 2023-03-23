@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            if (arg0.Implementation is ISupportsArray array)
+            if (arg0.Implementation is IUntypedArray array)
             {
                 var len = array.Length;
                 var index1 = (int)arg1.Value;
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (UntypedObjectValue)args[0];
 
-            if (arg0.Implementation is ISupportsArray array)
+            if (arg0.Implementation is IUntypedArray array)
             {
                 var len = array.Length;
 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = (UntypedObjectValue)args[0];
 
-            if (arg0.Implementation is ISupportsArray array)
+            if (arg0.Implementation is IUntypedArray array)
             {
                 var len = array.Length;
 
@@ -114,7 +114,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            if (arg0.Implementation is ISupportsArray array)
+            if (arg0.Implementation is IUntypedArray array)
             {
                 var len = array.Length;
 
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (UntypedObjectValue)args[0];
             var arg1 = (NumberValue)args[1];
 
-            if (arg0.Implementation is ISupportsArray array)
+            if (arg0.Implementation is IUntypedArray array)
             {
                 var len = array.Length;
 
@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var uo = args[0] as UntypedObjectValue;
 
-            if (uo.Implementation is SupportsFxValue fxValue)
+            if (uo.Implementation is UntypedValue fxValue)
             {
                 if (fxValue.Type == FormulaType.String)
                 {
@@ -204,7 +204,7 @@ namespace Microsoft.PowerFx.Functions
         {
             IUntypedObject uo = args[0].Implementation;
 
-            if (uo is SupportsFxValue fxValue)
+            if (uo is UntypedValue fxValue)
             {
                 if (fxValue.Type == FormulaType.String)
                 {
@@ -233,7 +233,7 @@ namespace Microsoft.PowerFx.Functions
 
             var resultRows = new List<DValue<RecordValue>>();
 
-            if (args[0].Implementation is ISupportsArray array)
+            if (args[0].Implementation is IUntypedArray array)
             {
                 var len = array.Length;
 
@@ -261,7 +261,7 @@ namespace Microsoft.PowerFx.Functions
                     return new BlankValue(irContext);
                 }
 
-                if (!(uov.Implementation is ISupportsArray))
+                if (!(uov.Implementation is IUntypedArray))
                 {
                     return new ErrorValue(irContext, new ExpressionError()
                     {
@@ -279,7 +279,7 @@ namespace Microsoft.PowerFx.Functions
         {
             IUntypedObject uo = args[0].Implementation;
 
-            if (uo is SupportsFxValue fxValue)
+            if (uo is UntypedValue fxValue)
             {
                 if (fxValue.Type == FormulaType.String)
                 {
@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Functions
         {
             IUntypedObject uo = args[0].Implementation;
 
-            if (uo is ISupportsArray array)
+            if (uo is IUntypedArray array)
             {
                 return new NumberValue(irContext, array.Length);
             }
@@ -316,7 +316,7 @@ namespace Microsoft.PowerFx.Functions
         {
             IUntypedObject uo = args[0].Implementation;
 
-            if (uo is SupportsFxValue fxValue)
+            if (uo is UntypedValue fxValue)
             {
                 if (fxValue.Type == FormulaType.String)
                 {
@@ -342,7 +342,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var uo = args[0].Implementation;
 
-            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
+            if (uo is UntypedValue fxValue && fxValue.Type == FormulaType.String)
             {
                 StringValue s = (StringValue)fxValue.Value;
 
@@ -362,7 +362,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var uo = args[0].Implementation;
 
-            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
+            if (uo is UntypedValue fxValue && fxValue.Type == FormulaType.String)
             {
                 StringValue s = (StringValue)fxValue.Value;
 
@@ -384,7 +384,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var uo = args[0].Implementation;
 
-            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
+            if (uo is UntypedValue fxValue && fxValue.Type == FormulaType.String)
             {
                 StringValue str = (StringValue)fxValue.Value;
                 return Guid(irContext, new StringValue[] { str });
@@ -410,7 +410,7 @@ namespace Microsoft.PowerFx.Functions
 
             var items = new List<DValue<UntypedObjectValue>>();
 
-            if (arg0.Implementation is ISupportsArray array)
+            if (arg0.Implementation is IUntypedArray array)
             {
                 var len = array.Length;
 
@@ -449,7 +449,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var uo = args[0].Implementation;
 
-            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.String)
+            if (uo is UntypedValue fxValue && fxValue.Type == FormulaType.String)
             {
                 StringValue str = (StringValue)fxValue.Value;
 

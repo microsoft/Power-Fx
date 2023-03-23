@@ -440,11 +440,11 @@ namespace Microsoft.PowerFx
 
             if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
             {
-                if (cov.Implementation is ISupportsProperties record)
+                if (cov.Implementation is IUntypedPropertyBag record)
                 {
                     if (record.TryGetProperty(sv.Value, out var res))
                     {
-                        if (res.IsBlank())
+                        if (res is UntypedValue uv && uv.Value is BlankValue)
                         {
                             return new BlankValue(node.IRContext);
                         }

@@ -499,11 +499,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg1 is UntypedObjectValue uo1)
             {
-                return new BooleanValue(irContext, uo1.Implementation is SupportsFxValue fxValue1 && fxValue1.IsBlank());
+                return new BooleanValue(irContext, uo1.Implementation is UntypedValue fxValue1 && fxValue1.IsBlank());
             }
 
             var uo2 = (UntypedObjectValue)arg2;            
-            return new BooleanValue(irContext, uo2.Implementation is SupportsFxValue fxValue2 && fxValue2.IsBlank());
+            return new BooleanValue(irContext, uo2.Implementation is UntypedValue fxValue2 && fxValue2.IsBlank());
         }
 
         private static BooleanValue NotEqual(IRContext irContext, FormulaValue[] args)
@@ -527,11 +527,11 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg1 is UntypedObjectValue uo1)
             {
-                return new BooleanValue(irContext, !(uo1.Implementation is SupportsFxValue fxValue1 && fxValue1.IsBlank()));
+                return new BooleanValue(irContext, !(uo1.Implementation is UntypedValue fxValue1 && fxValue1.IsBlank()));
             }
 
             var uo2 = (UntypedObjectValue)arg2;
-            return new BooleanValue(irContext, !(uo2.Implementation is SupportsFxValue fxValue2 && fxValue2.IsBlank()));
+            return new BooleanValue(irContext, !(uo2.Implementation is UntypedValue fxValue2 && fxValue2.IsBlank()));
         }
 
         // See in_SS in JScript membershipReplacementFunctions

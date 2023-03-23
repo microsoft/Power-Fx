@@ -187,15 +187,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             UntypedObjectValue resolutionUO = (UntypedObjectValue)resolutionsValue;
             IUntypedObject impl = resolutionUO.Implementation;
             Assert.NotNull(impl);
-            ISupportsArray array = impl as ISupportsArray;
+            IUntypedArray array = impl as IUntypedArray;
             Assert.NotNull(array);
             Assert.Equal(1, array.Length);
             IUntypedObject element = array[0];
-            ISupportsProperties record = element as ISupportsProperties;
+            IUntypedPropertyBag record = element as IUntypedPropertyBag;
             Assert.NotNull(record);
             bool b = record.TryGetProperty("resolutionKind", out IUntypedObject resolutionKind);
             Assert.True(b);
-            SupportsFxValue fxValue = resolutionKind as SupportsFxValue;
+            UntypedValue fxValue = resolutionKind as UntypedValue;
             Assert.NotNull(fxValue);
             Assert.Equal("NumberResolution", ((StringValue)fxValue.Value).Value);
 
@@ -367,7 +367,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             private void Visit(IUntypedObject uo)
             {
-                if (uo is SupportsFxValue fxValue)
+                if (uo is UntypedValue fxValue)
                 {
                     var type = fxValue.Type;
 
@@ -388,7 +388,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         Result = string.Empty;
                     }
                 }
-                else if (uo is ISupportsArray array)
+                else if (uo is IUntypedArray array)
                 {
                     var rows = new List<string>();
 
@@ -401,7 +401,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                     Result = JsonConvert.SerializeObject(rows);
                 }
-                else if (uo is ISupportsProperties record)
+                else if (uo is IUntypedPropertyBag record)
                 {
                     var fieldBuilder = new Dictionary<string, string>();
 

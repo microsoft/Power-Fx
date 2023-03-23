@@ -136,15 +136,17 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
-                "Microsoft.PowerFx.Types.DeferredType",
-                "Microsoft.PowerFx.Types.ISupportsArray",
-                "Microsoft.PowerFx.Types.ISupportsProperties",
-                "Microsoft.PowerFx.Types.ISupportsPropertyEnumeration",
-                "Microsoft.PowerFx.Types.SupportsFxValue",
+                "Microsoft.PowerFx.Types.DeferredType",               
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
+
+                "Microsoft.PowerFx.Types.UntypedArray",
+                "Microsoft.PowerFx.Types.IUntypedArray",
+                "Microsoft.PowerFx.Types.UntypedPropertyBag",
+                "Microsoft.PowerFx.Types.IUntypedPropertyBag",
+                "Microsoft.PowerFx.Types.UntypedValue",
 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 

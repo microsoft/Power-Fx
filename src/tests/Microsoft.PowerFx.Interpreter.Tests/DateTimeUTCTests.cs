@@ -294,7 +294,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        private class SimpleObject : SupportsFxValue
+        private class SimpleObject : UntypedValue
         {
             public SimpleObject(FormulaValue value)
                 : base(value)

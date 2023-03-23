@@ -44,10 +44,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             FormulaValue fv3 = engine.Eval(@"Index(padTable, 2).Column7"); // invalid column
             Assert.Equal(FormulaType.UntypedObject, fv3.Type);
             Assert.True(fv3 is BlankValue);
+
+            FormulaValue fv4 = engine.Eval(@"padTable");
+            Assert.Equal(FormulaType.UntypedObject, fv4.Type);
+
+            object o4 = fv4.ToObject();
+            Assert.True(o4 is object[]);
+            object o41 = ((object[])o4)[1];
+            Assert.Equal("data3", ((dynamic)o41).Column1);
         }
     }
 
-    public class PadTable : ISupportsArray
+    public class PadTable : UntypedArray
     {
         private readonly DataTable _table;
 
@@ -56,17 +64,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             _table = dt;
         }
 
-        public IUntypedObject this[int index] => new PadRow(_table.Rows[index]);
+        public override IUntypedObject this[int index] => new PadRow(_table.Rows[index]);
 
-        public int Length => _table.Rows.Count;
+        public override int Length => _table.Rows.Count;
 
-        public bool IsBlank()
+        public override bool IsBlank()
         {
             return _table == null;
         }
     }
 
-    public class PadRow : ISupportsArray, ISupportsProperties
+    public class PadRow : UntypedPropertyBag, IUntypedArray
     {
         private readonly DataRow _row;
 
@@ -79,12 +87,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         public int Length => _row.Table.Columns.Count;
 
-        public bool IsBlank()
+        public override string[] PropertyNames => _row.Table.Columns.Cast<DataColumn>().Select(dc => dc.ColumnName).ToArray();
+                
+        public override bool IsBlank()
         {
             return _row == null;
         }
 
-        public bool TryGetProperty(string propertyName, out IUntypedObject result)
+        public override bool TryGetProperty(string propertyName, out IUntypedObject result)
         {
             if (!_row.Table.Columns.Contains(propertyName))
             {
@@ -98,7 +108,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    public class PadCell : SupportsFxValue
+    public class PadCell : UntypedValue
     {
         public PadCell(object obj)
             : base(obj)

@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -13,7 +14,7 @@ namespace Microsoft.PowerFx.Tests
     // Wrap a .net object as an UntypedObject.
     // This will lazily marshal through the object as it's accessed.
     [DebuggerDisplay("{_source}")]
-    public class PrimitiveWrapperAsUnknownObject : SupportsFxValue, ISupportsArray, ISupportsProperties
+    public class PrimitiveWrapperAsUnknownObject : UntypedValue, IUntypedArray, IUntypedPropertyBag
     {
         public readonly object _source;
 
@@ -28,7 +29,9 @@ namespace Microsoft.PowerFx.Tests
             return FormulaValue.New(new PrimitiveWrapperAsUnknownObject(source));
         }
 
-        public int Length => ((Array)_source).Length;            
+        public int Length => ((Array)_source).Length;
+
+        public string[] PropertyNames => _source.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public).Select(pi => pi.Name).ToArray();
 
         public IUntypedObject this[int index]
         {

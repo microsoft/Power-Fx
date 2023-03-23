@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Dynamic;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
 
@@ -33,32 +35,73 @@ namespace Microsoft.PowerFx.Types
     public interface IUntypedObject
     {
         bool IsBlank();
+
+        object ToObject();
+    }
+
+    public abstract class UntypedArray : IUntypedArray
+    {
+        public abstract IUntypedObject this[int index] { get; }
+
+        public abstract int Length { get; }
+
+        public abstract bool IsBlank();
+
+        public object ToObject()
+        {
+            object[] array = new object[Length];
+
+            for (int i = 0; i < Length; i++)
+            {
+                array[i] = this[i].ToObject();
+            }
+
+            return array;
+        }
     }
 
     // Enables Index function
-    public interface ISupportsArray : IUntypedObject
+    public interface IUntypedArray : IUntypedObject
     {
         IUntypedObject this[int index] { get; }
 
-        int Length { get; }
+        int Length { get; }        
+    }
+
+    public abstract class UntypedPropertyBag : IUntypedPropertyBag
+    {
+        public abstract string[] PropertyNames { get; }
+
+        public abstract bool IsBlank();
+        
+        public abstract bool TryGetProperty(string value, out IUntypedObject result);
+
+        public object ToObject()
+        {
+            ExpandoObject eo = new ExpandoObject();
+
+            foreach (string propName in PropertyNames)
+            {
+                bool b = TryGetProperty(propName, out IUntypedObject propValue);
+                ((IDictionary<string, object>)eo)[propName] = propValue.ToObject();
+            }
+
+            return eo;
+        }
     }
 
     // Enables access via properties
-    public interface ISupportsProperties : IUntypedObject
+    public interface IUntypedPropertyBag : IUntypedObject
     {
         bool TryGetProperty(string value, out IUntypedObject result);
-    }
-
-    // Enables property enumeration (Intellisense)
-    public interface ISupportsPropertyEnumeration : IUntypedObject
-    {
-        string[] PropertyNames { get; }
+    
+        string[] PropertyNames { get; }        
     }
 
     // Hosts a FormulaValue in an UO
-    public abstract class SupportsFxValue : IUntypedObject
+    public abstract class UntypedValue : IUntypedObject
     {
-        public SupportsFxValue(object obj)
+        public UntypedValue(object obj)
             : this(obj == null
                 ? FormulaValue.NewBlank()
                 : obj switch
@@ -80,7 +123,7 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        public SupportsFxValue(FormulaValue val)
+        public UntypedValue(FormulaValue val)
         {
             Value = val;
         }
@@ -91,12 +134,17 @@ namespace Microsoft.PowerFx.Types
 
         public virtual bool IsBlank()
         {
-            if (Value is BlankValue)
+            if (Value is BlankValue || (Value is StringValue sv && string.IsNullOrEmpty(sv.Value)))
             {
                 return true;
-            }
+            }            
 
             return false;
+        }
+
+        public object ToObject()
+        {
+            return Value.ToObject();
         }
     }
 
@@ -114,13 +162,7 @@ namespace Microsoft.PowerFx.Types
 
         public override object ToObject()
         {
-            // When an UO hosts a FormulaValue, we can return its value
-            if (Implementation is SupportsFxValue fxValue)
-            {
-                return fxValue.Value.ToObject();
-            }
-
-            throw new NotImplementedException();
+            return Implementation.ToObject();
         }
 
         public override void Visit(IValueVisitor visitor)

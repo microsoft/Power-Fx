@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx.Json.Tests
     {
         public static double GetDouble(this IUntypedObject uo)
         {            
-            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.Number)
+            if (uo is UntypedValue fxValue && fxValue.Type == FormulaType.Number)
             {
                 return ((NumberValue)fxValue.Value).Value;
             }
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
         public static string GetString(this IUntypedObject uo)
         {
-            if (uo is SupportsFxValue fxValue)
+            if (uo is UntypedValue fxValue)
             {
                 if (fxValue.Type == FormulaType.Blank)
                 {
@@ -335,7 +335,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
         public static bool GetBoolean(this IUntypedObject uo)
         {
-            if (uo is SupportsFxValue fxValue && fxValue.Type == FormulaType.Boolean)
+            if (uo is UntypedValue fxValue && fxValue.Type == FormulaType.Boolean)
             {
                 return ((BooleanValue)fxValue.Value).Value;
             }
@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
         public static bool TryGetProperty(this IUntypedObject uo, string propertyName, out IUntypedObject result)
         {
-            if (uo is ISupportsProperties record)
+            if (uo is IUntypedPropertyBag record)
             {
                 return record.TryGetProperty(propertyName, out result);
             }
@@ -355,7 +355,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
         public static int GetArrayLength(this IUntypedObject uo)
         {
-            if (uo is ISupportsArray array)
+            if (uo is IUntypedArray array)
             {
                 return array.Length;
             }
@@ -365,7 +365,7 @@ namespace Microsoft.PowerFx.Json.Tests
 
         public static IUntypedObject Index(this IUntypedObject uo, int index)
         {
-            if (uo is ISupportsArray array)
+            if (uo is IUntypedArray array)
             {
                 return array[index];
             }

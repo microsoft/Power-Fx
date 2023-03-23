@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
 {
-    internal class ArrayUntypedObject : ISupportsArray
+    internal class ArrayUntypedObject : UntypedArray
     {
         private readonly List<IUntypedObject> _list;
 
@@ -16,11 +16,11 @@ namespace Microsoft.PowerFx.Functions
             _list = list;
         }
 
-        public IUntypedObject this[int index] => _list[index];
+        public override IUntypedObject this[int index] => _list[index];
 
-        public int Length => _list.Count;
+        public override int Length => _list.Count;
 
-        public bool IsBlank()
+        public override bool IsBlank()
         {
             return _list == null;
         }

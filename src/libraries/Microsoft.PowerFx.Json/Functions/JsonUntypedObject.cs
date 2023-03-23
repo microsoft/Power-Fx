@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-    internal class JsonObject : ISupportsProperties
+    internal class JsonObject : UntypedPropertyBag
     {
         private readonly JsonElement _element;
 
@@ -32,12 +32,14 @@ namespace Microsoft.PowerFx.Functions
             _element = je;
         }
 
-        public bool IsBlank()
+        public override string[] PropertyNames => _element.EnumerateObject().Select(o => o.Name).ToArray();
+
+        public override bool IsBlank()
         {
             return !_element.EnumerateObject().Any();
         }
 
-        public bool TryGetProperty(string value, out IUntypedObject result)
+        public override bool TryGetProperty(string value, out IUntypedObject result)
         {
             var res = _element.TryGetProperty(value, out JsonElement je);
             result = JsonUntypedObject.New(je);
@@ -45,7 +47,7 @@ namespace Microsoft.PowerFx.Functions
         }
     }
 
-    internal class JsonArray : ISupportsArray
+    internal class JsonArray : UntypedArray
     {
         private readonly JsonElement _element;
 
@@ -54,17 +56,17 @@ namespace Microsoft.PowerFx.Functions
             _element = je;
         }
 
-        public IUntypedObject this[int index] => JsonUntypedObject.New(_element[index]);
+        public override IUntypedObject this[int index] => JsonUntypedObject.New(_element[index]);
 
-        public int Length => _element.GetArrayLength();
+        public override int Length => _element.GetArrayLength();
 
-        public bool IsBlank()
+        public override bool IsBlank()
         {
             return false;
         }
     }
 
-    internal class JsonValue : SupportsFxValue
+    internal class JsonValue : UntypedValue
     {
         internal JsonValue(JsonElement je)
             : base(je.ValueKind switch

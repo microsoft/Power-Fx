@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -96,7 +97,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public NumberValue Execute(UntypedObjectValue obj, NumberValue val)
             {
                 IUntypedObject uo = obj.Implementation;
-                SupportsFxValue fxValue = uo as SupportsFxValue;
+                UntypedValue fxValue = uo as UntypedValue;
 
                 Assert.NotNull(fxValue);
                 Assert.Equal(FormulaType.Number, fxValue.Type);
@@ -137,17 +138,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             public void Execute(UntypedObjectValue obj, StringValue propName, StringValue propName2)
             {
                 MutableObject uo = (MutableObject)obj.Implementation;
-                ISupportsProperties record = uo as ISupportsProperties;
+                IUntypedPropertyBag record = uo as IUntypedPropertyBag;
                 
                 record.TryGetProperty(propName2.Value, out IUntypedObject propValue);
-                SupportsFxValue fxValue = propValue as SupportsFxValue;
+                UntypedValue fxValue = propValue as UntypedValue;
 
                 var val = ((NumberValue)fxValue.Value).Value;
                 uo.Set(propName.Value, new NumberValue(IRContext.NotInSource(FormulaType.Number), val));
             }
         }
 
-        private class SimpleObject : SupportsFxValue
+        private class SimpleObject : UntypedValue
         {
             public SimpleObject(FormulaValue value)
                 : base(value)
@@ -155,9 +156,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        private class MutableObject : ISupportsProperties
+        private class MutableObject : UntypedPropertyBag
         {
             private Dictionary<string, FormulaValue> _values = new Dictionary<string, FormulaValue>();
+
+            public override string[] PropertyNames => _values.Keys.ToArray();
 
             public void Set(string property, FormulaValue newValue)
             {
@@ -169,7 +172,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return FormulaValue.New(new MutableObject() { _values = d });
             }
 
-            public bool TryGetProperty(string value, out IUntypedObject result)
+            public override bool TryGetProperty(string value, out IUntypedObject result)
             {
                 if (_values.TryGetValue(value, out var x))
                 {
@@ -181,7 +184,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return false;
             }
 
-            public bool IsBlank()
+            public override bool IsBlank()
             {
                 return _values == null;
             }
