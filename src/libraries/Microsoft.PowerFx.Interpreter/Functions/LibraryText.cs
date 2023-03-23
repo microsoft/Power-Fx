@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
-        
+
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
         {
@@ -353,6 +353,11 @@ namespace Microsoft.PowerFx.Functions
                     var formatStr = ExpandDateTimeFormatSpecifiers(format, culture);
                     result = new StringValue(irContext, dateTime.ToString(formatStr, culture));
                     break;
+                case "'utc'":
+                case "utc":
+                    var formatUtcStr = ExpandDateTimeFormatSpecifiers(format, culture);
+                    result = new StringValue(irContext, dateTime.ToUniversalTime().ToString(formatUtcStr, culture));
+                    break;
                 default:
                     try
                     {
@@ -399,6 +404,7 @@ namespace Microsoft.PowerFx.Functions
                 case "'longdate'":
                     return info.LongDatePattern;
                 case "'utc'":
+                case "utc":
                     return info.UniversalSortableDateTimePattern;
                 default:
                     return format;
@@ -857,7 +863,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         break;
                     }
-                    
+
                     if (--instanceNum == 0)
                     {
                         strBuilder.Replace(match.Value, replacement.Value, idx, match.Value.Length);
@@ -868,7 +874,7 @@ namespace Microsoft.PowerFx.Functions
 
             return new StringValue(irContext, strBuilder.ToString());
         }
-        
+
         public static FormulaValue StartsWith(IRContext irContext, StringValue[] args)
         {
             var text = args[0];

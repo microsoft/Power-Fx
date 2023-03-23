@@ -272,3 +272,12 @@ Error({Kind:ErrorKind.Div0})
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "", "vi-Vn")
 "0f8fad5b-d9cb-469f-a165-70867728950e"
+
+>> Text(DateTimeValue("March 10, 2023 5:30 PM"), DateTimeFormat.UTC)
+"2023-03-11 01:30:00Z"
+
+>> Text(DateTimeValue("March 10, 2023 5:30 PM"), "utc")
+"2023-03-11 01:30:00Z"
+
+>> Text(DateTimeValue("March 10, 2023 5:30 PM"), "UTC")
+"2023-03-11 01:30:00Z"
