@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -122,6 +123,11 @@ namespace Microsoft.PowerFx.Types
                 // Ensure that type is properly projected. 
                 if (result is RecordValue recordValue)
                 {
+                    if (fieldType._type == DType.Polymorphic)
+                    {
+                        return result;
+                    }
+
                     var compileTimeType = (RecordType)fieldType;
                     result = CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
                 }
