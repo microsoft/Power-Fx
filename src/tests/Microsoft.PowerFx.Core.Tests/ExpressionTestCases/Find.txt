@@ -287,7 +287,7 @@ Error({Kind:ErrorKind.InvalidArgument})
    {find: ","}),
    "textToBeSearchedIn,textToBeSearchedIn",
    1)
-Table({Result:1},{Result:1},{Result:19})
+Table({Value:1},{Value:1},{Value:19})
 
 // ======================== SCENARIO 10 ========================
 // findText: [{ find: null }, { find: '' }, { find: ',' }, { find: ',' }], withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: [{ start: 1 }, { start: 2 }, { start: 3 }, { start: 20 }]
@@ -296,13 +296,13 @@ Table({Result:1},{Result:1},{Result:19})
    {find: Blank()},{find: ""},{find: ","},{find: ","}),
    "textToBeSearchedIn,textToBeSearchedIn",
    Table({start:1},{start:2},{start:3},{start:20}))
-Table({Result:1},{Result:2},{Result:19},{Result:Blank()})
+Table({Value:1},{Value:2},{Value:19},{Value:Blank()})
 
 // ======================== SCENARIO 11 ========================   
 // findText: ',', withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' }], startIndex: 1
 
 >> Find(",", Table({within: "textToBeSearchedIn,textToBeSearchedIn"}),1)
-Table({Result:19})
+Table({Value:19})
 
 //  ======================== SCENARIO 12 ========================
 // findText: ',', 
@@ -312,7 +312,7 @@ Table({Result:19})
 >> Find(",", 
    Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"}),
    [1,20,40])
-Table({Result:19},{Result:38},{Result:Error({Kind:ErrorKind.InvalidArgument})})
+Table({Value:19},{Value:38},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 
 //  ======================== SCENARIO 13 ========================
 // findText: [{ find: null }, { find: '' }, { find: ',' }]
@@ -323,7 +323,7 @@ Table({Result:19},{Result:38},{Result:Error({Kind:ErrorKind.InvalidArgument})})
    Table({find: Blank()},{find: ""},{find: ","}), 
    Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"}),
    [1,10,9])
-Table({Result:1},{Result:10},{Result:19})
+Table({Value:1},{Value:10},{Value:19})
 
 //  ======================== SCENARIO 14 ========================
 // findText: ',', withinText: 'textToBeSearchedIn,textToBeSearchedIn', startIndex: [{ start: 1 }, { start: 2 }, { start: 19 }, { start: 20 }]
@@ -332,7 +332,7 @@ Table({Result:1},{Result:10},{Result:19})
    ",", 
    "textToBeSearchedIn,textToBeSearchedIn",
    [1,2,19,20])
-Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
+Table({Value:19},{Value:19},{Value:19},{Value:Blank()})
 
 //  ======================== SCENARIO 17 ========================
 //  findText: [{ find: null }, { find: '' }, { find: ',' }] , withinText: 'textToBeSearchedIn,textToBeSearchedIn'
@@ -340,7 +340,7 @@ Table({Result:19},{Result:19},{Result:19},{Result:Blank()})
 >> Find(
    Table({find: Blank()},{find: ""},{find: ","}),  	
    "textToBeSearchedIn,textToBeSearchedIn" )
-Table({Result:1},{Result:1},{Result:19})
+Table({Value:1},{Value:1},{Value:19})
 
 //  ======================== SCENARIO 18 ========================
 //  findText: ',' , withinText: [{ within: 'textToBeSearchedIn,textToBeSearchedIn' }],
@@ -349,7 +349,7 @@ Table({Result:1},{Result:1},{Result:19})
    ",",  	
    Table({within:"textToBeSearchedIn,textToBeSearchedIn"})
    )
-Table({Result:19})
+Table({Value:19})
 
 //  ======================== SCENARIO 19 ========================
 //  findText: [{ find: null }, { find: '' }, { find: ',' }], 
@@ -359,7 +359,7 @@ Table({Result:19})
    Table({find: Blank()},{find: ""},{find: ","}), 
    Table({within: "textToBeSearchedIn,textToBeSearchedIn"},{within: "textToBeSearchedIn,textToBeSearchedIn,"},{within: "textToBeSearchedIn,textToBeSearchedIn"})
    )
-Table({Result:1},{Result:1},{Result:19})
+Table({Value:1},{Value:1},{Value:19})
 
 //  ======================== SCENARIO 26 ========================
 //  findText: [], withinText: '', startIndex: 1,
@@ -398,4 +398,4 @@ Table()
    Table({find:"a"},{find:"b"},{find:"c"}),
    1/0
    )
-Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
