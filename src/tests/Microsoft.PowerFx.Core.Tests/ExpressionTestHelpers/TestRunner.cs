@@ -105,6 +105,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // #Directive: Parameter
             string fileSetup = null;
             string fileOveride = null;
+            string fileSkipFile = null;
 
             while (i < lines.Length - 1)
             {
@@ -126,15 +127,16 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Can apply to multiple files. 
                         var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
                     }
-                    else if (TryParseDirective(line, "#SETUP:", ref fileSetup))
+                    else if (TryParseDirective(line, "#SKIPFILE:", ref fileSkipFile))
                     {
-                        if ((Regex.IsMatch(line, "[:,]!NumberIsFloat") && numberIsFloat) ||
-                            (Regex.IsMatch(line, "[:,]NumberIsFloat") && !numberIsFloat))
+                        if ((Regex.IsMatch(line, "[:,]\\s*disable:\\s*NumberIsFloat") && !numberIsFloat) ||
+                            (Regex.IsMatch(line, "[:,]\\s*NumberIsFloat") && numberIsFloat))
                         {
                             return;
                         }
                     }
-                    else if (TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                    else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
+                             TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
                     {
                         // flag is set, no additional work needed.
                     }

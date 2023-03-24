@@ -876,6 +876,17 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(IsBlankOrError)
             },
             {
+                BuiltinFunctionsCore.IsEmpty,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.IsEmpty.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsEmpty)
+            },
+            {
                 BuiltinFunctionsCore.IsError,
                 NoErrorHandling(IsError)
             },
@@ -1862,12 +1873,30 @@ namespace Microsoft.PowerFx.Functions
             return false;
         }
 
+        private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            if (args[0] is TableValue tv)
+            {
+                return new BooleanValue(irContext, !tv.Rows.Any());
+            }
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
         public static FormulaValue IsNumeric(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
             switch (arg0)
             {
                 case NumberValue _:
+                case DecimalValue _:
                 case DateValue _:
                 case DateTimeValue _:
                 case TimeValue _:

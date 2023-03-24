@@ -4,8 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
@@ -298,7 +301,7 @@ namespace Microsoft.PowerFx.Core.Binding
         private static BinderCheckTypeResult CheckTypeCore(IErrorContainer errorContainer, TexlNode node, DType nodeType, DType typeWant, params DType[] alternateTypes)
         {
             Contracts.AssertValue(node);
-            Contracts.Assert(typeWant.IsValid);
+            Contracts.Assert(typeWant.IsValid || typeWant == DType.Deferred);
             Contracts.Assert(!typeWant.IsError);
             Contracts.AssertValue(alternateTypes);
 
@@ -513,6 +516,107 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
+        // Determine the type of a numeric binary op when it could be either Decimal or Number (+, -, *, /, %)
+        // For binary ops that always return a Number, like ^ (power), this calculation is not needed and Deferred will never be returned
+        // For unary ops, pass DType.ObjNull for the other type
+        private static DType NumericOpReturnType(DType leftType, DType rightType, bool numberIsFloat)
+        { 
+            // unexpected, something went wrong
+            if (leftType == DType.Unknown || rightType == DType.Unknown)
+            {
+                return DType.Unknown;
+            }
+
+            // deferred for either arg results in deferred
+            else if (leftType == DType.Deferred || rightType == DType.Deferred)
+            {
+                return DType.Deferred;
+            }
+
+            // untyped/null for both arguments results in default based on numberIsFloat
+            else if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) &&
+                     (rightType == DType.UntypedObject || rightType == DType.ObjNull))
+            {
+                return numberIsFloat ? DType.Number : DType.Decimal;
+            }
+
+            // If either argument is not decimal and does not coerce to decimal when numberIsFloat is disabled, the result is number
+            // The rule is stated as negatives so that the default is number for any other types
+            else
+            {
+                return (leftType != DType.Decimal && (leftType == DType.Number || numberIsFloat || !leftType.CoercesTo(DType.Decimal)))
+                    || (rightType != DType.Decimal && (rightType == DType.Number || numberIsFloat || !rightType.CoercesTo(DType.Decimal)))
+                    ? DType.Number : DType.Decimal;
+            }
+        }
+
+        private static BinderCheckTypeResult CheckDecimalBinaryOp(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
+        {
+            var leftKind = leftType.Kind;
+            var rightKind = rightType.Kind;
+
+            var returnType = NumericOpReturnType(leftType, rightType, numberIsFloat);
+
+            if (returnType == DType.Decimal || (returnType != DType.Number && !numberIsFloat))
+            {
+                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+
+                // Deferred op decimal or decimal op Deferred
+                if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
+                {
+                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = resLeft.Coercions.Concat(resRight.Coercions).ToList() };
+                }
+
+                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal, Coercions = resLeft.Coercions.Concat(resRight.Coercions).ToList() };
+            }
+            else
+            {
+                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+
+                // Deferred + number or number + Deferred
+                if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
+                {
+                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = resLeft.Coercions.Concat(resRight.Coercions).ToList() };
+                }
+
+                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resLeft.Coercions.Concat(resRight.Coercions).ToList() };
+            }
+        }
+
+        private static BinderCheckTypeResult CheckDecimalUnaryOp(IErrorContainer errorContainer, UnaryOpNode node, DType childType, bool numberIsFloat)
+        {
+            var childKind = childType.Kind;
+
+            var returnType = NumericOpReturnType(childType, DType.ObjNull, numberIsFloat);
+
+            if (returnType == DType.Decimal || (returnType != DType.Number && !numberIsFloat))
+            {
+                var resChild = CheckTypeCore(errorContainer, node.Child, childType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+
+                // Deferred op decimal or decimal op Deferred
+                if (childKind == DKind.Deferred)
+                {
+                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = resChild.Coercions.ToList() };
+                }
+
+                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal, Coercions = resChild.Coercions.ToList() };
+            }
+            else
+            {
+                var resChild = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+
+                // Deferred + number or number + Deferred
+                if (childKind == DKind.Deferred)
+                {
+                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = resChild.Coercions.ToList() };
+                }
+
+                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resChild.Coercions.ToList() };
+            }
+        }
+
         private static BinderCheckTypeResult PostVisitBinaryOpNodeAdditionCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
         {
             Contracts.AssertValue(node);
@@ -658,33 +762,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Time, Coercions = leftResTime.Coercions };
                         default:
                             // Regular Addition
-                            // Only operations where both operands are Decimal-compatible result in Decimal
-                            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
-                            {
-                                var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
-                                var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
-
-                                // Deferred + decimal or decimal + Deferred
-                                if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
-                                {
-                                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
-                                }
-
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Decimal, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
-                            }
-                            else
-                            {
-                                var leftResAdd = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
-                                var rightResAdd = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
-
-                                // Deferred + number or number + Deferred
-                                if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
-                                {
-                                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Deferred, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
-                                }
-
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = leftResAdd.Coercions.Concat(rightResAdd.Coercions).ToList() };
-                            }
+                            return CheckDecimalBinaryOp(errorContainer, node, leftType, rightType, numberIsFloat);
                     }
             } 
         }
@@ -1036,9 +1114,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             var resPercent = CheckTypeCore(errorContainer, node.Child, childType, DType.Number, /* coerced: */ DType.Date, DType.DateTime, DType.DateTimeNoTimeZone, DType.Time);
                             return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resPercent.Coercions };
                         default:
-                            var resultType = numberIsFloat ? DType.Number : DType.Decimal;
-                            var resPercent2 = CheckTypeCore(errorContainer, node.Child, childType, resultType, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
-                            return new BinderCheckTypeResult() { Node = node, NodeType = resultType, Coercions = resPercent2.Coercions };
+                            return CheckDecimalUnaryOp(errorContainer, node, childType, numberIsFloat);
                     }
 
                 default:
@@ -1061,33 +1137,15 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 case BinaryOp.Add:
                     return PostVisitBinaryOpNodeAdditionCore(errorContainer, node, leftType, rightType, numberIsFloat);
+
                 case BinaryOp.Power:
+                    var resLeftPow = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+                    var resRightPow = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+                    return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number, Coercions = resLeftPow.Coercions.Concat(resRightPow.Coercions).ToList() };
+
                 case BinaryOp.Mul:
                 case BinaryOp.Div:
-                    // Both operands must be Decimal compatible for a Decimal result (Float has precedence)
-                    if (node.Op != BinaryOp.Power && DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
-                    {
-                        var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
-                        var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
-
-                        return new BinderCheckTypeResult()
-                        {
-                            Node = node,
-                            NodeType = DType.Decimal,
-                            Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList()
-                        };
-                    }
-                    else
-                    {
-                        var resLeftDiv = CheckTypeCore(errorContainer, leftNode, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
-                        var resRightDiv = CheckTypeCore(errorContainer, rightNode, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
-                        return new BinderCheckTypeResult()
-                        {
-                            Node = node,
-                            NodeType = DType.Number,
-                            Coercions = resLeftDiv.Coercions.Concat(resRightDiv.Coercions).ToList()
-                        };
-                    }
+                    return CheckDecimalBinaryOp(errorContainer, node, leftType, rightType, numberIsFloat);
 
                 case BinaryOp.Or:
                 case BinaryOp.And:

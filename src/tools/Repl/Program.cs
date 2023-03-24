@@ -110,7 +110,7 @@ namespace Microsoft.PowerFx
         {
             var parserOptions = _engine.GetDefaultParserOptionsCopy();
             parserOptions.AllowsSideEffects = true;
-            
+
             var parse = Engine.Parse(expr, parserOptions, parserOptions.Culture);
             if (parse.IsSuccess)
             {
@@ -168,11 +168,28 @@ namespace Microsoft.PowerFx
                         output?.WriteLine(varName + ": " + PrintResult(varValue));
                     }
 
-                    // formula definition: <ident> = <formula>
-                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>[a-zA-Z]\w+)\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+                    // IR pretty printer: IR( <expr> )
+                    else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
+                    {
+                        var opts = new ParserOptions() { AllowsSideEffects = true };
+                        var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
+                        var ir = cr.PrintIR();
+                        Console.WriteLine(ir);
+                        output?.WriteLine(ir);
+                    }
+
+                    // named formula definition: <ident> = <formula>
+                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+                              !Regex.IsMatch(match.Groups["ident"].Value, "^\\d") &&
                               match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
                     {
-                        _engine.SetFormula(match.Groups["ident"].Value, match.Groups["formula"].Value, OnUpdate);
+                        var ident = match.Groups["ident"].Value;
+                        if (ident.StartsWith('\''))
+                        {
+                            ident = ident.Substring(1, ident.Length - 2).Replace("''", "'", StringComparison.Ordinal);
+                        }
+
+                        _engine.SetFormula(ident, match.Groups["formula"].Value, OnUpdate);
                     }
 
                     // function definition: <ident>( <ident> : <type>, ... ) : <type> = <formula>
@@ -419,7 +436,7 @@ namespace Microsoft.PowerFx
                     resultString = "<table>";
                 }
                 else
-                {                    
+                {
                     var columnCount = 0;
                     foreach (var row in table.Rows)
                     {
@@ -631,9 +648,8 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("File not found: " + fileName);
+                    Console.WriteLine($"File not found: {fileName}");
                     Console.ResetColor();
                     return BooleanValue.New(false);
                 }

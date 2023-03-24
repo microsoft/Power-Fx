@@ -77,7 +77,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of numerics
                 fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                // Decimal TODO: This doesn't work right for strings and decimal
+                returnType = !context.NumberIsFloat ||
+                    context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                     : type0;
 

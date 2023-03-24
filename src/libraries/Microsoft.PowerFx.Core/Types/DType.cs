@@ -3572,28 +3572,5 @@ namespace Microsoft.PowerFx.Core.Types
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
         }
-
-        // Determins if the result of a numeric binary operation should be a Decimal or a Number.
-        // If !numberIsFloat then Strings and Booleans are allowed to coerce to Decimal for this test, as if they were passed through Value
-        public static bool DecimalBinaryOp(DType leftType, DType rightType, bool numberIsFloat)
-        {
-            if (leftType == DType.Unknown || rightType == DType.Unknown ||
-                leftType == DType.Deferred || rightType == DType.Deferred)
-            {
-                return false;
-            }
-            else if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) && 
-                     (rightType == DType.UntypedObject || rightType == DType.ObjNull))
-            {
-                return !numberIsFloat;
-            }
-            else
-            {
-                return (leftType == DType.Decimal || leftType == DType.UntypedObject || leftType == DType.ObjNull ||
-                        (!numberIsFloat && (leftType == DType.String || leftType == DType.Boolean))) &&
-                       (rightType == DType.Decimal || rightType == DType.UntypedObject || rightType == DType.ObjNull ||
-                        (!numberIsFloat && (rightType == DType.String || rightType == DType.Boolean)));
-            }
-        }
     }
 }

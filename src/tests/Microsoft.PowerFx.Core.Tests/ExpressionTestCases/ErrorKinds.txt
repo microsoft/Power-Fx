@@ -526,10 +526,6 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0}))
 >> StdevP(2, Sqrt(-1), 3, 1/0, 4)
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 
-// Overflow in calculation
->> StdevP(1e200, 2e200, 3e200, 4e200)
-Error({Kind:ErrorKind.Numeric})
-
 >> StdevP([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
 Error({Kind:ErrorKind.Div0})
 
@@ -541,10 +537,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Sum(2, Sqrt(-1), 3, 1/0, 4)
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
-
-// Overflow in calculation
->> Sum(1e308, 1e308, 1e308, 1e308, 1e308)
-Error({Kind:ErrorKind.Numeric})
 
 >> Sum([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
 Error({Kind:ErrorKind.Div0})
@@ -631,10 +623,6 @@ Error({Kind:ErrorKind.Div0})
 
 >> VarP(2, Sqrt(-1), 3, 1/0, 4)
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
-
-// Overflow in calculation
->> VarP(1e200, 2e200, 3e200, 4e200)
-Error({Kind:ErrorKind.Numeric})
 
 >> VarP([3, 2, 1, 0, -1, -2], Sqrt(1/Value))
 Error({Kind:ErrorKind.Div0})

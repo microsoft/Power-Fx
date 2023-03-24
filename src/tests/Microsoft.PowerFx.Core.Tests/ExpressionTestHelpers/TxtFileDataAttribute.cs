@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.PowerFx.Core.Parser;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests

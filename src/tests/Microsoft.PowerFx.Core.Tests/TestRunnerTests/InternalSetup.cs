@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
@@ -26,7 +27,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
         {
-            var iSetup = new InternalSetup();
+            var iSetup = new InternalSetup
+            {
+                // Default features
+                Features = Features.TableSyntaxDoesntWrapRecords | Features.ConsistentOneColumnTableResult
+            };
 
             if (numberIsFloat)
             {
@@ -42,24 +47,63 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var part in parts.ToArray())
             {
-                // negative flags are caught when adding the tests
-                if (part.StartsWith("!"))
+                var isDisable = false;
+                var partName = part;
+                if (part.StartsWith("disable:", StringComparison.OrdinalIgnoreCase))
                 {
-                    parts.Remove(part);
+                    isDisable = true;
+                    partName = part.Substring("disable:".Length);
                 }
-                else if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
+
+                if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
                     iSetup.DisableMemoryChecks = true;
                     parts.Remove(part);
                 }
-                else if (Enum.TryParse<TexlParser.Flags>(part, out var flag))
+                else if (Enum.TryParse<TexlParser.Flags>(partName, out var flag))
                 {
-                    iSetup.Flags |= flag;
+                    if (isDisable)
+                    {
+                        if (!iSetup.Flags.HasFlag(flag))
+                        {
+                            throw new InvalidOperationException($"Flag {partName} is already disabled");
+                        }
+
+                        iSetup.Flags &= ~flag;
+                    }
+                    else
+                    {
+                        if (iSetup.Flags.HasFlag(flag))
+                        {
+                            throw new InvalidOperationException($"Flag {partName} is already enabled");
+                        }
+
+                        iSetup.Flags |= flag;
+                    }
+
                     parts.Remove(part);
                 }
-                else if (Enum.TryParse<Features>(part, out var f))
+                else if (Enum.TryParse<Features>(partName, out var f))
                 {
-                    iSetup.Features |= f;
+                    if (isDisable)
+                    {
+                        if (!iSetup.Features.HasFlag(f))
+                        {
+                            throw new InvalidOperationException($"Feature {partName} is already disabled");
+                        }
+
+                        iSetup.Features &= ~f;
+                    }
+                    else
+                    {
+                        if (iSetup.Features.HasFlag(f))
+                        {
+                            throw new InvalidOperationException($"Feature {partName} is already enabled");
+                        }
+
+                        iSetup.Features |= f;
+                    }
+
                     parts.Remove(part);
                 }
                 else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))

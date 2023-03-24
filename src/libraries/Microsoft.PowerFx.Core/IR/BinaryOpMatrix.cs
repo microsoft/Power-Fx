@@ -25,9 +25,9 @@ namespace Microsoft.PowerFx.Core.IR
                 BinaryOp.Concat => BinaryOpKind.Concatenate,
                 BinaryOp.And => BinaryOpKind.And,
                 BinaryOp.Or => BinaryOpKind.Or,
-                BinaryOp.Add => GetAddOp(node, leftType, rightType, binding.BindingConfig.NumberIsFloat),
-                BinaryOp.Mul => GetMulOp(node, leftType, rightType, binding.BindingConfig.NumberIsFloat),
-                BinaryOp.Div => GetDivOp(node, leftType, rightType, binding.BindingConfig.NumberIsFloat),
+                BinaryOp.Add => GetAddOp(node, binding, leftType, rightType),
+                BinaryOp.Mul => binding.GetType(node) == DType.Decimal ? BinaryOpKind.MulDecimals : BinaryOpKind.MulNumbers,
+                BinaryOp.Div => binding.GetType(node) == DType.Decimal ? BinaryOpKind.DivDecimals : BinaryOpKind.DivNumbers,
                 BinaryOp.Equal or
                 BinaryOp.NotEqual or
                 BinaryOp.Less or
@@ -315,31 +315,7 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        private static BinaryOpKind GetMulOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
-        {
-            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
-            {
-                return BinaryOpKind.MulDecimals;
-            }
-            else
-            {
-                return BinaryOpKind.MulNumbers;
-            }
-        }
-
-        private static BinaryOpKind GetDivOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
-        {
-            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
-            {
-                return BinaryOpKind.DivDecimals;
-            }
-            else
-            {
-                return BinaryOpKind.DivNumbers;
-            }
-        }
-
-        private static BinaryOpKind GetAddOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType, bool numberIsFloat)
+        private static BinaryOpKind GetAddOp(PowerFx.Syntax.BinaryOpNode node, TexlBinding binding, DType leftType, DType rightType)
         {
             switch (leftType.Kind)
             {
@@ -451,8 +427,7 @@ namespace Microsoft.PowerFx.Core.IR
                             }
 
                         default:
-                            // Only operations where both operands are Decimal-compatible result in Decimal
-                            if (DType.DecimalBinaryOp(leftType, rightType, numberIsFloat))
+                            if (binding.GetType(node) == DType.Decimal)
                             {
                                 // Decimal + Decimal
                                 return BinaryOpKind.AddDecimals;

@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
-        public decimal Normalize(decimal value)
+        public decimal Normalize()
         {
             // remove trailing 0's (significant digits)
             return Value / 1.000000000000000000000000000000m;
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            decimal normalized = Normalize(Value);
+            decimal normalized = Normalize();
             sb.Append(normalized.ToString(CultureInfo.InvariantCulture));
         }
     }

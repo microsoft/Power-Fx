@@ -86,9 +86,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal sealed class ValueFunction : ValueBaseFunction
     {
-        // Decimal TODO: When functions PR is added, DType.Number becomes DType.Unknown.  At this time, Value and Float are the same.
         public ValueFunction()
-            : base("Value", TexlStrings.AboutValue, DType.Number)
+            : base("Value", TexlStrings.AboutValue, DType.Unknown)
         {
         }
     }
@@ -135,9 +134,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Value(arg:O)
     internal sealed class ValueFunction_UO : ValueBaseFunction_UO
     {
-        // Decimal TODO: When functions PR is added, DType.Number becomes DType.Unknown.  At this time, Value and Float are the same.
         public ValueFunction_UO()
-            : base("Value", TexlStrings.AboutValue, DType.Number)
+            : base("Value", TexlStrings.AboutValue, DType.Unknown)
         {
         }
 

@@ -1,4 +1,6 @@
-﻿>> Find(Blank(), [""], [1])
+﻿#SETUP: disable:ConsistentOneColumnTableResult
+
+>> Find(Blank(), [""], [1])
 Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18: Invalid argument type (Table). Expecting a Text value instead.|Error 20-23: Invalid argument type (Table). Expecting a Number value instead.
 
 >> Find([""], [""], Blank())

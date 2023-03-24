@@ -420,7 +420,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var ir = check.ApplyIR();
             Assert.NotNull(ir);
-            Assert.Equal("BinaryOp(AddDecimals, Decimal(1), Decimal(2))", ir.TopNode.ToString());
+            Assert.Equal("AddDecimals:w(1:w, 2:w)", ir.TopNode.ToString());
         }
 
         // IR can only be produced for successful bindings

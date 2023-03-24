@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Date(2022, 11, 10) + X", "D")]
         [InlineData("Time(0, 0, 0) + X", "T")]
 
-        [InlineData("X * 1", "n")]
+        [InlineData("X * 1", "X")]
         [InlineData("And(X, 1=1)", "b")]
         [InlineData("X&\"test\"", "s")]
         [InlineData("X = 1", "b")]

@@ -386,7 +386,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         // Decimal TODO: best approach for normailization, and should we be showing scientific notation for this and numbers?
-                        var normalized = dec.Value / 1.000000000000000000000000000000m;
+                        var normalized = dec.Normalize();
                         result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
                     }
 

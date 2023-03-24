@@ -1,4 +1,5 @@
-﻿#SETUP: DisableMemChecks,NumberIsFloat
+﻿#SETUP: DisableMemChecks
+#SKIPFILE: disable:NumberIsFloat
 
 // Floating point edition
 
