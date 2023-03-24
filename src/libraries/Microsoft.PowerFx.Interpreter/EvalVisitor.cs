@@ -3,19 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -273,7 +269,7 @@ namespace Microsoft.PowerFx
                 {
                     try
                     {
-                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
+                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
                     }
                     catch (CustomFunctionErrorException ex)
                     {
@@ -288,7 +284,10 @@ namespace Microsoft.PowerFx
                             });
                     }
                     
-                    Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
+                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType))
+                    {
+                        throw CommonExceptions.RuntimeMisMatch;
+                    }
                 }
                 else
                 {
