@@ -39,19 +39,19 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Perform sub-expression type checking and produce a return type for the function declaration, this is only applicable for UDFs.
         /// </summary>
-        public static void CheckTypesOnDeclaration(CheckTypesContext context, IEnumerable<UDFArg> uDFArgs, IdentToken returnType, DType actualReturnType, IErrorContainer errorContainer)
+        public static void CheckTypesOnDeclaration(CheckTypesContext context, IEnumerable<UDFArg> uDFArgs, IdentToken returnType, DType actualBodyReturnType, IErrorContainer errorContainer)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(uDFArgs);
             Contracts.AssertValue(returnType);
-            Contracts.AssertValue(actualReturnType);
+            Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(errorContainer);
 
             CheckParameters(uDFArgs, errorContainer);
-            CheckReturnType(returnType, actualReturnType, errorContainer);
+            CheckReturnType(returnType, actualBodyReturnType, errorContainer);
         }
 
-        private static void CheckReturnType(IdentToken returnType, DType actualReturnType, IErrorContainer errorContainer)
+        private static void CheckReturnType(IdentToken returnType, DType actualBodyReturnType, IErrorContainer errorContainer)
         {
             var returnTypeFormulaType = returnType.GetFormulaType()._type;
 
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 return; 
             }
 
-            if (returnTypeFormulaType.Kind.Equals(actualReturnType.Kind))
+            if (!returnTypeFormulaType.Kind.Equals(actualBodyReturnType.Kind))
             {
                 errorContainer.EnsureError(DocumentErrorSeverity.Severe, returnType, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
             }
@@ -71,17 +71,10 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private static void CheckParameters(IEnumerable<UDFArg> args, IErrorContainer errorContainer)
         {
-            var argsAlreadySeen = new HashSet<string>();
-
             foreach (var arg in args)
             {
                 var argNameToken = arg.VarIdent;
                 var argTypeToken = arg.VarType;
-
-                if (!argsAlreadySeen.Add(arg.VarIdent.Name))
-                {
-                    errorContainer.EnsureError(DocumentErrorSeverity.Severe, argNameToken, TexlStrings.ErrUDF_DuplicateParameter, argNameToken.Name);
-                }
 
                 if (argTypeToken.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
                 {
