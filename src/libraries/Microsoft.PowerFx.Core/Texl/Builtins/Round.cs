@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -72,16 +73,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             TexlNode otherArg = null;
 
             // At least one of the arguments has to be a table.
-            if (type0.IsTable)
+            if (type0.IsColumn)
             {
                 // Ensure we have a one-column table of numerics
                 fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                // Decimal TODO: This doesn't work right for strings and decimal
-                returnType = !context.NumberIsFloat ||
-                    context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                    : type0;
+                    : DType.CreateTable(new TypedName(DType.Number, new DName(type0.GetNames(DPath.Root).First().Name)));
 
                 // Check arg1 below.
                 otherArg = args[1];

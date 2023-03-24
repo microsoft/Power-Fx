@@ -49,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ExpressionTestCases\DecimalBoot.txt" />
     <None Remove="ExpressionTestCases\FloatLarge.txt" />
   </ItemGroup>
   
