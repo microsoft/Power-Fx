@@ -73,14 +73,24 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             TexlNode otherArg = null;
 
             // At least one of the arguments has to be a table.
-            if (type0.IsColumn)
+            if (type0.IsTable)
             {
                 // Ensure we have a one-column table of numerics
                 fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
+                if (nodeToCoercedTypeMap?.Any() ?? false)
+                {
+                    // Now set the coerced type to a table with numeric column type with the same name as in the argument.
+                    returnType = nodeToCoercedTypeMap[args[0]];
+                }
+                else
+                {
+                    returnType = type0;
+                }
+
                 returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                     ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                    : DType.CreateTable(new TypedName(DType.Number, new DName(type0.GetNames(DPath.Root).First().Name)));
+                    : returnType;
 
                 // Check arg1 below.
                 otherArg = args[1];
