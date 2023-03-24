@@ -196,7 +196,6 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DecimalToDate)
             },
             {
-                // Decimal TODO: Should this (and Decimal) be using DateTimeToNumber targetFunction, or remove that?  Same implementation.  
                 UnaryOpKind.DateTimeToNumber,
                 StandardErrorHandling<FormulaValue>(
                     functionName: null, // internal function, no user-facing name

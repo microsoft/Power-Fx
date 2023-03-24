@@ -385,7 +385,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        // Decimal TODO: best approach for normailization, and should we be showing scientific notation for this and numbers?
+                        // Decimal TODO: consistent default text format for float and decimal?
                         var normalized = dec.Normalize();
                         result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
                     }

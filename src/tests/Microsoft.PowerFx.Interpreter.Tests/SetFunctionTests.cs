@@ -36,8 +36,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(15m, r1.ToObject());          
         }
 
-        // Decimal TODO: Set( x, 1 ); Set( x, Sqrt(2) )
-
         [Fact]
         public void SetVarNumber()
         {
