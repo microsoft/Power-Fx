@@ -20,17 +20,17 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             new Dictionary<string, string>()
             {
                 {
-                    EnumConstants.ColorEnumString,
+                    LanguageConstants.ColorEnumString,
                     ColorTable.ToString()
                 },
                 {
-                    EnumConstants.DateTimeFormatEnumString,
+                    LanguageConstants.DateTimeFormatEnumString,
                     "%s[LongDate:\"'longdate'\", ShortDate:\"'shortdate'\", LongTime:\"'longtime'\", ShortTime:\"'shorttime'\", LongTime24:\"'longtime24'\", " +
                     "ShortTime24:\"'shorttime24'\", LongDateTime:\"'longdatetime'\", ShortDateTime:\"'shortdatetime'\", " +
                     "LongDateTime24:\"'longdatetime24'\", ShortDateTime24:\"'shortdatetime24'\", UTC:\"utc\"]"
                 },
                 {
-                    EnumConstants.StartOfWeekEnumString,
+                    LanguageConstants.StartOfWeekEnumString,
                     "%n[Sunday:1, Monday:2, MondayZero:3, Tuesday:12, Wednesday:13, Thursday:14, Friday:15, Saturday:16]"
                 },
                 {
@@ -38,11 +38,11 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                     "%s[Ascending:\"ascending\", Descending:\"descending\"]"
                 },
                 {
-                    EnumConstants.TimeUnitEnumString,
+                    LanguageConstants.TimeUnitEnumString,
                     "%s[Years:\"years\", Quarters:\"quarters\", Months:\"months\", Days:\"days\", Hours:\"hours\", Minutes:\"minutes\", Seconds:\"seconds\", Milliseconds:\"milliseconds\"]"
                 },
                 {
-                    EnumConstants.ErrorKindEnumString,
+                    LanguageConstants.ErrorKindEnumString,
                     "%n[None:0, Sync:1, MissingRequired:2, CreatePermission:3, EditPermissions:4, DeletePermissions:5, Conflict:6, NotFound:7, " +
                     "ConstraintViolated:8, GeneratedValue:9, ReadOnlyValue:10, Validation: 11, Unknown: 12, Div0: 13, BadLanguageCode: 14, " +
                     "BadRegex: 15, InvalidFunctionUsage: 16, FileNotFound: 17, AnalysisError: 18, ReadPermission: 19, NotSupported: 20, " +
