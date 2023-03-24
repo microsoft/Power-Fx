@@ -62,3 +62,18 @@ Date(2011,1,16)
 
 >> If(true, 1, TimeUnit.Seconds)
 If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
+"Thursday, January 1, 1970"
+
+>> Text(Date(1970, 1, 1), "'longdatetime'") 
+"Thursday, January 1, 1970 12:00:00 AM"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime) 
+"Thursday, January 1, 1970 12:00:00 AM"
+
+>> Text(Date(1970, 1, 1), "'longdatetime24'") 
+"Thursday, January 1, 1970 0:00:00"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
+"Thursday, January 1, 1970 0:00:00"

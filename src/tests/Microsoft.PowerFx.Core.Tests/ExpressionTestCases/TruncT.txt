@@ -1,6 +1,4 @@
-﻿#SETUP: ConsistentOneColumnTableResult
-
-// Trunc(Number_or_table, [digits_or_table]), toward zero
+﻿// Trunc(Number_or_table, [digits_or_table]), toward zero
 
 // Table and scalar
 
