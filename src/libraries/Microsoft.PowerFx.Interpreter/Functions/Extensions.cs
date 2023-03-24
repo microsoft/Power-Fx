@@ -90,5 +90,43 @@ namespace Microsoft.PowerFx.Functions
 
             return isValid;
         }
+
+        // !!!###
+        // Copy and paste from CheckAggregateNames but check coercion only
+        internal static bool CheckAggregateNamesWithCoercion(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false)
+        {
+            bool isValid = true;
+
+            foreach (var typedName in argType.GetNames(DPath.Root))
+            {
+                DName name = typedName.Name;
+                DType type = typedName.Type;
+
+                if (!dataSourceType.TryGetType(name, out DType dsNameType))
+                {
+                    dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, arg);
+                    isValid = false;
+                    continue;
+                }
+
+                // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
+                if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)
+                {
+                    if (dsNameType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out var expandedType))
+                    {
+                        dsNameType = expandedType;
+                    }
+                }
+
+                if (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
     }
 }

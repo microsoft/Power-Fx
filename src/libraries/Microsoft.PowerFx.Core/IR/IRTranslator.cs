@@ -747,7 +747,8 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
                     {
-                        continue;
+                        // If field type is present, add to coerce list as is.
+                        fieldCoercions.Add(fromField.Name, new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))));
                     }
                     else
                     {

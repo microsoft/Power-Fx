@@ -183,10 +183,7 @@ namespace Microsoft.PowerFx.Core.Utils
         public static void Sort<T>(List<T> list)
         {
             Contracts.AssertValueOrNull(list);
-            if (list != null)
-            {
-                list.Sort();
-            }
+            list?.Sort();
         }
 
         public static TItem Append<TItem>(this List<TItem> list, TItem item)
