@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -81,9 +82,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
+                    if (nodeToCoercedTypeMap?.Any() ?? false)
+                    {
+                        // Now set the coerced type to a table with numeric column type with the same name as in the argument.
+                        returnType = nodeToCoercedTypeMap[args[0]];
+                    }
+                    else
+                    {
+                        returnType = argTypes[0];
+                    }
+
                     returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                        : type0;
+                        : returnType;
 
                     // Check arg1 below.
                     otherArg = args[1];
@@ -143,9 +154,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
+                    if (nodeToCoercedTypeMap?.Any() ?? false)
+                    {
+                        // Now set the coerced type to a table with numeric column type with the same name as in the argument.
+                        returnType = nodeToCoercedTypeMap[args[0]];
+                    }
+                    else
+                    {
+                        returnType = argTypes[0];
+                    }
+
                     returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                        : type0;
+                        : returnType;
                 }
                 else
                 {

@@ -79,7 +79,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 returnType = argType;
             }
 
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult) ? DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features))) : returnType;
+            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                ? DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features))) 
+                : returnType;
 
             if (!fValid)
             {

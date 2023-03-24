@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -80,9 +81,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the input table
             fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
 
+            if (nodeToCoercedTypeMap?.Any() ?? false)
+            {
+                // Now set the coerced type to a table with numeric column type with the same name as in the argument.
+                returnType = nodeToCoercedTypeMap[args[0]];
+            }
+            else
+            {
+                returnType = argTypes[0];
+            }
+
             returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
+                : returnType;
 
             return fValid;
         }
@@ -131,9 +142,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the count table
             fValid &= CheckNumericColumnType(argTypes[1], args[1], errors, ref nodeToCoercedTypeMap);
 
+            if (nodeToCoercedTypeMap?.Any() ?? false)
+            {
+                // Now set the coerced type to a table with numeric column type with the same name as in the argument.
+                returnType = nodeToCoercedTypeMap[args[0]];
+            }
+            else
+            {
+                returnType = argTypes[0];
+            }
+
             returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
+                : returnType;
 
             return fValid;
         }
