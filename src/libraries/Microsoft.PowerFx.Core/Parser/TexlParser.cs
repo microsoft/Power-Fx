@@ -235,13 +235,13 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, loc);
         }
 
-        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)
+        public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var formulaTokens = TokenizeScript(script, loc, flags | Flags.NamedFormulas);
+            var parser = new TexlParser(formulaTokens, flags | Flags.NamedFormulas);
 
             return parser.ParseFormulas(script);
         }
