@@ -161,9 +161,15 @@ namespace Microsoft.PowerFx.Functions
             }
             else if (impl.Type == FormulaType.Number && !numberIsFloat)
             {
-                // Decimal TODO: Badly formed decimal, error return?
-                var dec = impl.GetDecimal();
-                return new DecimalValue(irContext, dec);
+                try
+                {
+                    var dec = impl.GetDecimal();
+                    return new DecimalValue(irContext, dec);
+                }
+                catch (FormatException)
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
             }
             else if (impl.Type == FormulaType.Boolean && numberIsFloat)
             {

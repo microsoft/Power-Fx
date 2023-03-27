@@ -94,7 +94,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal sealed class DecimalFunction : ValueBaseFunction
     {
-        // Decimal TODO: Need new TexlStrings
         public DecimalFunction()
             : base("Decimal", TexlStrings.AboutDecimal, DType.Decimal)
         {
@@ -103,7 +102,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     internal sealed class FloatFunction : ValueBaseFunction
     {
-        // Decimal TODO: Need new TexlStrings
         public FloatFunction()
             : base("Float", TexlStrings.AboutFloat, DType.Number)
         {

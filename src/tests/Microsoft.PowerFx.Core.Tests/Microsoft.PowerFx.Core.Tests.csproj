@@ -51,6 +51,7 @@
   <ItemGroup>
     <None Remove="ExpressionTestCases\DecimalBoot.txt" />
     <None Remove="ExpressionTestCases\FloatLarge.txt" />
+    <None Remove="ExpressionTestCases\If_AllowsSideEffects_NumberIsFloat.txt" />
   </ItemGroup>
   
   <ItemGroup>

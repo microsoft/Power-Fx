@@ -519,6 +519,39 @@ namespace Microsoft.PowerFx.Core.Binding
         // Determine the type of a numeric binary op when it could be either Decimal or Number (+, -, *, /, %)
         // For binary ops that always return a Number, like ^ (power), this calculation is not needed and Deferred will never be returned
         // For unary ops, pass DType.ObjNull for the other type
+
+        // Result types:
+        // * Type codes in DTypeSpecParser.cs, nif == NumberIsFloat.
+        // * Date/DateTime/Time exceptions for addition are are handled in PostVisitBinaryOpNodeAdditionCore.
+        //
+        // Non NumberIsFloat (no flag)                          NumberIsFloat
+        //    +   | n  s  b  N  D  d  T  w  O  (right)        +   | n  s  b  N  D  d  T  w  O  (right)
+        // =======|====================================    =======|====================================
+        //      n | n  n  n  n  D  d  T  n  n                   n | n  n  n  n  D  d  T  n  n 
+        //      s | n  w  w  w  D  d  T  w  w                   s | n  n  n  n  D  d  T  n  n 
+        //      b | n  w  w  w  D  d  T  w  w                   b | n  n  n  n  D  d  T  w  n 
+        //      N | n  w  w  w  D  d  T  w  w                   N | n  n  n  n  D  d  T  w  n 
+        //      D | D  D  D  D  e  e  d  D  D                   D | D  D  D  D  e  e  d  D  D 
+        //      d | d  d  d  d  e  e  d  d  d                   d | d  d  d  d  e  e  d  d  d 
+        //      T | T  T  T  T  d  d  T  T  T                   T | T  T  T  T  d  d  T  T  T 
+        //      w | n  w  w  w  D  d  T  w  w                   w | n  n  w  w  D  d  T  w  n 
+        //      O | n  w  w  w  D  d  T  w  w                   O | n  n  n  n  D  d  T  n  n 
+        // (left) |                                        (left) |
+        //
+        // Non NumberIsFloat (no flag)                          NumberIsFloat
+        //  *, /  | n  s  b  N  D  d  T  w  O  (right)       *, / | n  s  b  N  D  d  T  w  O  (right)
+        // =======|====================================    =======|====================================
+        //      n | n  n  n  n  n  n  n  n  n                   n | n  n  n  n  n  n  n  n  n 
+        //      s | n  w  w  w  w  w  w  w  w                   s | n  n  n  n  n  n  n  n  n 
+        //      b | n  w  w  w  w  w  w  w  w                   b | n  n  n  n  n  n  n  w  n 
+        //      N | n  w  w  w  w  w  w  w  w                   N | n  n  n  n  n  n  n  w  n 
+        //      D | n  w  w  w  w  w  w  w  w                   D | n  n  n  n  n  n  n  w  n  
+        //      d | n  w  w  w  w  w  w  w  w                   d | n  n  n  n  n  n  n  w  n  
+        //      T | n  w  w  w  w  w  w  w  w                   T | n  n  n  n  n  n  n  w  n  
+        //      w | n  w  w  w  w  w  w  w  w                   w | n  n  w  w  w  w  w  w  n 
+        //      O | n  w  w  w  w  w  w  w  w                   O | n  n  n  n  n  n  n  n  n 
+        // (left) |                                        (left) |
+
         private static DType NumericOpReturnType(DType leftType, DType rightType, bool numberIsFloat)
         { 
             // unexpected, something went wrong
@@ -533,20 +566,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 return DType.Deferred;
             }
 
-            // untyped/null for both arguments results in default based on numberIsFloat
-            else if ((leftType == DType.UntypedObject || rightType == DType.ObjNull) &&
-                     (rightType == DType.UntypedObject || rightType == DType.ObjNull))
+            // the rest of the matrix, !numberIsFloat (default case) leans toward Decimal with Number being the exception
+            else if (!numberIsFloat)
             {
-                return numberIsFloat ? DType.Number : DType.Decimal;
+                return leftType == DType.Number || rightType == DType.Number
+                    ? DType.Number : DType.Decimal;
             }
 
-            // If either argument is not decimal and does not coerce to decimal when numberIsFloat is disabled, the result is number
-            // The rule is stated as negatives so that the default is number for any other types
+            // numberIsFloat, leans toward Number with Decimal being the exception
             else
             {
-                return (leftType != DType.Decimal && (leftType == DType.Number || numberIsFloat || !leftType.CoercesTo(DType.Decimal)))
-                    || (rightType != DType.Decimal && (rightType == DType.Number || numberIsFloat || !rightType.CoercesTo(DType.Decimal)))
-                    ? DType.Number : DType.Decimal;
+                return (leftType == DType.Decimal && rightType != DType.Number && rightType != DType.String && rightType != DType.UntypedObject) ||
+                       (rightType == DType.Decimal && leftType != DType.Number && rightType != DType.String && rightType != DType.UntypedObject)
+                    ? DType.Decimal : DType.Number;
             }
         }
 
@@ -557,10 +589,11 @@ namespace Microsoft.PowerFx.Core.Binding
 
             var returnType = NumericOpReturnType(leftType, rightType, numberIsFloat);
 
-            if (returnType == DType.Decimal || (returnType != DType.Number && !numberIsFloat))
+            if (returnType == DType.Decimal)
             {
-                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
-                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.String, DType.Boolean, DType.UntypedObject);
+                // This is different from Number below as coercion for Date, DateTime, Time is needed since Decimal does not have an Accepts relationship with these types
+                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.Number, DType.String, DType.Boolean, DType.Date, DType.DateTime, DType.Time, DType.UntypedObject);
+                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.Number, DType.String, DType.Boolean, DType.Date, DType.DateTime, DType.Time, DType.UntypedObject);
 
                 // Deferred op decimal or decimal op Deferred
                 if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)

@@ -1,4 +1,4 @@
-#SETUP:!NumberIsFloat
+#SKIPFILE: NumberIsFloat
 
 // 79228162514264337593543950335 is the max decimal number, and -79228162514264337593543950335 is the min decimal number (same as C# limits)
 
@@ -115,7 +115,7 @@ Error({Kind:ErrorKind.Numeric})
 >> 0.00000000000000000000000001-0.00000000000000000000000000000000000000000000001
 0.00000000000000000000000001
 
->> 79228162514264337593543950336*79228162514264337593543950336
+>> 79228162514264337593543950335*79228162514264337593543950335
 Error({Kind:ErrorKind.Numeric})
 
 >> IfError( 79228162514264337593543950335*79228162514264337593543950335, 79228162514264337593543950335 )
@@ -134,7 +134,7 @@ Error({Kind:ErrorKind.Div0})
 79228162514264337593543950335
 
 >> IfError( 79228162514264337593543950335/0, FirstError.Kind )
-24
+13
 
 >> IsError( 79228162514264337593543950335/0 )
 true
@@ -149,4 +149,55 @@ true
 0
 
 >> IsError( 1/79228162514264337593543950335/79228162514264337593543950335 )
-true
+false
+
+>> Value( "1e100" )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( "-1e100" )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( "1e-100" )
+0
+
+>> Value( "-1e-100" )
+0
+
+// Decimal TODO: Why is Value returning 0 and UO not?
+
+>> Value( ParseJSON( "1e100" ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( ParseJSON( "-1e100" ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( ParseJSON( "1e-100" ) )
+0
+
+>> Value( ParseJSON( "-1e-100" ) )
+0
+
+>> Value( ParseJSON( """1e100""" ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( ParseJSON( """-1e100""" ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( ParseJSON( """1e-100""" ) )
+0
+
+>> Value( ParseJSON( """-1e-100""" ) )
+0
+
+>> Value( ParseJSON( "12345678901234567890123456789012345" ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( ParseJSON( "123456789012345.67890123456789012345" ) )
+123456789012345.67890123456789
+
+>> Value( ParseJSON( "-12345678901234567890123456789012345" ) )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Value( ParseJSON( "-123456789012345.67890123456789012345" ) )
+-123456789012345.67890123456789
+

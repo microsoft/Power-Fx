@@ -568,22 +568,22 @@
     <comment>Description of 'Concatenate' function.</comment>
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a decimal value.</value>
+    <value>Converts a 'text' that represents a number to a Decimal value.</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
     <value>Language code to use when converting the value.</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a numeric value.</value>
+    <value>The text value to convert to a Decimal value.</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a floating point value.</value>
+    <value>Converts a 'text' that represents a number to a Float value.</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
     <value>Language code to use when converting the value.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a numeric value.</value>
+    <value>The text value to convert to a Float value.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
