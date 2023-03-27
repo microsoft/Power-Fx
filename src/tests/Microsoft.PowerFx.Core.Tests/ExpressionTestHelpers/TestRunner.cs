@@ -152,6 +152,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 break;
             }
 
+            List<string> duplicateTests = new List<string>();
+
             while (true)
             {
                 i++;
@@ -201,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw ParseError(i, $"Multiline comments aren't supported in output");
                     }
 
-                    test.Expected = line.Trim();
+                    test.Expected = line.Trim();                    
 
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))
@@ -209,7 +211,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Must be in different sources
                         if (existingTest.SourceFile == test.SourceFile && existingTest.SetupHandlerName == test.SetupHandlerName)
                         {
-                            throw ParseError(i, $"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
+                            duplicateTests.Add($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
 
                         // Updating an existing test. 
@@ -222,7 +224,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         Tests.Add(test);
 
                         _keyToTests[key] = test;
-                    }
+                    }                    
 
                     test = null;
                 }
@@ -235,6 +237,11 @@ namespace Microsoft.PowerFx.Core.Tests
             if (test != null)
             {
                 throw ParseError(i, "Parse error - missing test result");
+            }
+
+            if (duplicateTests.Any())
+            {
+                throw ParseError(0, string.Join("\r\n", duplicateTests));
             }
         }
 

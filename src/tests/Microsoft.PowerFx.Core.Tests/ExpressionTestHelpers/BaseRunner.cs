@@ -282,7 +282,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                 }
 
-                return (TestResult.Fail, $"Expected: {expected}. actual: {actualStr}");
+                return (TestResult.Fail, $"\r\n  Expected: {expected}\r\n  Actual  : {actualStr}");
             }
         }
 
