@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
         }
 
-        protected override bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding)
+        protected override bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding, TexlFunction trackingFunction = null)
         {
             // AsType should always be marked as valid regardless of it being async and impure.
             return true;

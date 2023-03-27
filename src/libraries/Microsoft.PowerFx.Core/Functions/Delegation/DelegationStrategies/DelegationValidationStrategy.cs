@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 {
     internal interface ICallNodeDelegatableNodeValidationStrategy
     {
-        bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata);
+        bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null);
     }
 
     internal interface IDottedNameNodeDelegatableNodeValidationStrategy
@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        public virtual bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public virtual bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
         {
             // Functions may have their specific CallNodeDelegationStrategies (i.e. AsType, User)
             // so, if available, we need to ensure we use their specific delegation strategy.
@@ -362,13 +362,14 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // overwrite this method to prevent getting lost in recursion.
             if (function != null && function != Function)
             {
-                return function.GetCallNodeDelegationStrategy().IsValidCallNode(node, binding, metadata);
+                // We need to keep track of the tracking function for delegation tracking telemetry to be consistent.
+                return function.GetCallNodeDelegationStrategy().IsValidCallNode(node, binding, metadata, trackingFunction ?? Function);
             }
 
-            return IsValidCallNodeInternal(node, binding, metadata);
+            return IsValidCallNodeInternal(node, binding, metadata, trackingFunction ?? Function);
         }
 
-        protected bool IsValidCallNodeInternal(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata)
+        protected bool IsValidCallNodeInternal(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -378,7 +379,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // to allow for nesting of valid async nodes.
             if (!binding.IsBlockScopedConstant(node))
             {
-                if (!IsValidAsyncOrImpureNode(node, binding))
+                if (!IsValidAsyncOrImpureNode(node, binding, trackingFunction))
                 {
                     return false;
                 }
@@ -404,7 +405,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         }
 
         // Generic check for blocking impure / async nodes
-        protected virtual bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding)
+        // We need to keep track of the tracking function for delegation tracking telemetry to be consistent.
+        protected virtual bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding, TexlFunction trackingFunction = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -424,7 +426,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // Impure nodes should only be marked valid when Feature is enabled.
             if (!isPure && !binding.Features.HasFlag(Features.AllowImpureNodeDelegation))
             {
-                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.ImpureNode, node, binding, Function, DelegationTelemetryInfo.CreateImpureNodeTelemetryInfo(node, binding));
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.ImpureNode, node, binding, trackingFunction ?? Function, DelegationTelemetryInfo.CreateImpureNodeTelemetryInfo(node, binding));
             }
             else
             {
@@ -442,7 +444,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (isAsync)
             {
-                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, Function);
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, trackingFunction ?? Function);
             }
 
             var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
