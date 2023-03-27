@@ -44,3 +44,6 @@ DateTime(2022,9,29,13,0,0,0)
 
 >> DateTimeValue("2022-09-29T20:00:00-08:00")
 DateTime(2022,9,29,21,0,0,0)
+
+>> Text(DateTime(2023, 3, 24, 19, 12, 34, 567), DateTimeFormat.UTC)
+"2023-03-25T02:12:34.567Z"

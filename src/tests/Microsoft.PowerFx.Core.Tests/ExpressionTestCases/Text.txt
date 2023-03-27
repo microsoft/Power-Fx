@@ -380,3 +380,9 @@ Error({Kind:ErrorKind.BadLanguageCode})
 //Excel doesn't support three arguments
 >> Text(Date(2016,1,31), "dddd mmmm d", "es-ES")
 "domingo enero 31"
+
+>> Text(DateTimeValue("2023-02-03 04:05:06Z"), DateTimeFormat.UTC)
+"2023-02-03T04:05:06.000Z"
+
+>> Text(DateTimeValue("2023-12-21T12:34:56.789Z"), DateTimeFormat.UTC)
+"2023-12-21T12:34:56.789Z"
