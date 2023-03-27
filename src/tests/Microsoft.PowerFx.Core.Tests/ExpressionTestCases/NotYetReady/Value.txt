@@ -1,7 +1,4 @@
 ﻿
->> Value(" 1.23")
-1.23
-
 >> Value("( 123)")
 -123
 
@@ -9,12 +6,6 @@
 -1.23
 
 >> Value("(123%)")
--1.23
-
->> Value("(123)%")
--1.23
-
->> Value("% (123)")
 -1.23
 
 >> Value("( % 123)")
@@ -25,32 +16,6 @@
 
 >> Value("( $ 123)")
 -123
-
->> Value(123.456)
-123.456
-
-// In en-us, comma is thousand separator. In fr-FR, it's decimal separate.
->> Value("123,456")
-123456
-
->> Value("123,456", "en-US")
-123456
-
->> Value("123,456", "fr-FR")
-123.456
-
-
-//Excel allows only single parameter
->> Value( "123,456", "es-ES" )
-123.456
-
-//Excel allows only single parameter
->> Value("€1 234,56","fr")
-1234.56
-
-//Excel allows only single parameter
->> Value("€1.234,56","de")
-1234.56
 
 // ******** DATE PARAMETERS ********
 
@@ -102,27 +67,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 // cannot have both () and +
 >> Value("+(123)")
 Error({Kind:ErrorKind.InvalidArgument})
-
-// cannot have both () and -
->> Value("$(-123)")
-Error({Kind:ErrorKind.InvalidArgument})
-
-// cannot have both () and -
->> Value("$-(123)")
-Error({Kind:ErrorKind.InvalidArgument})
-
-// invalid format string for fr
->> Value("$1,234.56","fr")
-Error({Kind:ErrorKind.InvalidArgument})
-
-// invalid format string for de
->> Value("$1,234.56","de")
-Error({Kind:ErrorKind.InvalidArgument})
-
-//Excel allows only single parameter
-//PowerFx message: Language code "12" not supported
->> Value("$1,234.56","12")
-Error({Kind:ErrorKind.BadLanguageCode})
 
 //Excel allows only single parameter
 //PowerFx Error message: Language code "Abc" not supported
