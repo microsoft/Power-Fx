@@ -69,13 +69,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Whereas these are fed into a repl and each file maintains state. 
         [Theory]
         [InlineData("Patch.txt")]
-
-        //[InlineData("Simple1.txt")]
-        //[InlineData("Collect.txt")]
-        //[InlineData("Patch.txt")]
-        //[InlineData("Clear.txt")]
-        //[InlineData("ClearCollect.txt")]
-        //[InlineData("ForAllMutate.txt")]
+        [InlineData("Simple1.txt")]
+        [InlineData("Collect.txt")]
+        [InlineData("Patch.txt")]
+        [InlineData("Clear.txt")]
+        [InlineData("ClearCollect.txt")]
+        [InlineData("ForAllMutate.txt")]
         public void RunMutationTests(string file)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
