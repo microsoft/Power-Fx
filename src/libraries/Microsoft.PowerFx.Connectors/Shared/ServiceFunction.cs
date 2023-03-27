@@ -287,17 +287,17 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 #endif
 
-        public override async Task<List<string>> GetConnectorSuggestionsAsync(CallNode callNode, int argPosition, CancellationToken cts)
+        public override async Task<List<RecordValue>> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
         {
-            if (argPosition >= 0 && argPosition < _requiredParameters.Length)
+            if (argPosition >= 0)
             {
-                ConnectorDynamicValue cdv = _requiredParameters[argPosition].ConnectorDynamicValue;                
+                ConnectorDynamicValue cdv = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicValue;
 
                 if (cdv != null && cdv.ServiceFunction != null)
                 {
-                    FormulaValue result = await ConnectorDynamicCall(cdv, callNode, cts).ConfigureAwait(false);
+                    FormulaValue result = await ConnectorDynamicCallAsync(cdv, knownParameters, cts).ConfigureAwait(false);
+                    List<RecordValue> suggestions = new List<RecordValue>();
 
-                    List<string> suggestions = new List<string>();
                     if (result is RecordValue rv)
                     {
                         if (!string.IsNullOrEmpty(cdv.ValueCollection) && !string.IsNullOrEmpty(cdv.ValuePath))
@@ -309,7 +309,11 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                                 foreach (DValue<RecordValue> row in tv.Rows)
                                 {
                                     FormulaValue suggestion = row.Value.GetField(cdv.ValuePath);
-                                    suggestions.Add(@$"""{suggestion.ToObject().ToString()}""");
+                                    FormulaValue suggestionDisplayName = row.Value.GetField(cdv.ValueTitle);
+
+                                    suggestions.Add(FormulaValue.NewRecordFromFields(
+                                                        new NamedValue("Suggestion", suggestion),
+                                                        new NamedValue("DisplayName", suggestionDisplayName)));
                                 }
                             }
                             else
@@ -326,57 +330,21 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                     return suggestions;
                 }
 
-                ConnectorDynamicSchema cds = _requiredParameters[argPosition].ConnectorDynamicSchema;
+                ConnectorDynamicSchema cds = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicSchema;
 
                 if (cds != null && cds.ServiceFunction != null && !string.IsNullOrEmpty(cds.ValuePath))
                 {
-                    FormulaValue result = await ConnectorDynamicCall(cds, callNode, cts).ConfigureAwait(false);
-                    TexlNode currentArg = callNode.Args.Children[argPosition];
-                    bool isRecord = currentArg.Kind == NodeKind.Record;
-                    List<string> suggestions = new List<string>();
+                    FormulaValue result = await ConnectorDynamicCallAsync(cds, knownParameters.Take(Math.Min(argPosition, MaxArity - 1)).ToArray(), cts).ConfigureAwait(false);
+                    List<RecordValue> suggestions = new List<RecordValue>();
 
                     foreach (string vpPart in (cds.ValuePath + "/properties").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         result = ((RecordValue)result).Fields.FirstOrDefault(f => f.Name.Equals(vpPart, StringComparison.OrdinalIgnoreCase)).Value;
                     }
 
-                    if (!isRecord)
+                    foreach (NamedValue nv in ((RecordValue)result).Fields)
                     {
-                        // not in a record, we add the complete list and prefix with '{'
-                        foreach (NamedValue nv in ((RecordValue)result).Fields)
-                        {
-                            suggestions.Add(@$"{{ {nv.Name}:");
-                        }
-                    }
-                    else
-                    {
-                        List<string> possibleFields = ((RecordValue)result).Fields.Select(f => f.Name).ToList();
-                        string[] existingFieldsInCall = currentArg.AsRecord().Ids.Select(id => id.Token._value).ToArray();
-
-                        // remove all existing valid ids
-                        for (int i = 0; i < existingFieldsInCall.Length - 1; i++)
-                        {
-                            string idInCall = existingFieldsInCall[i];
-                            string possibleField = possibleFields.FirstOrDefault(pf => pf.Equals(idInCall, StringComparison.OrdinalIgnoreCase));
-
-                            if (!string.IsNullOrWhiteSpace(possibleField))
-                            {
-                                possibleFields.Remove(possibleField);
-                            }
-                        }
-
-                        // filter on last element name
-                        if (existingFieldsInCall.Length > 0)
-                        {
-                            string lastIdInCall = existingFieldsInCall[existingFieldsInCall.Length - 1];
-
-                            if (!string.IsNullOrWhiteSpace(lastIdInCall))
-                            {
-                                possibleFields = possibleFields.Where(f => f.StartsWith(lastIdInCall, StringComparison.OrdinalIgnoreCase)).ToList();
-                            }
-                        }
-
-                        suggestions.AddRange(possibleFields);
+                        suggestions.Add(FormulaValue.NewRecordFromFields(nv));
                     }                    
 
                     return suggestions;
@@ -387,9 +355,9 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             }
 
             return null;
-        }
+        }        
 
-        private async Task<FormulaValue> ConnectorDynamicCall(ConnectionDynamicApi dynamicApi, CallNode callNode, CancellationToken cts)
+        private FormulaValue[] GetArguments(ConnectionDynamicApi dynamicApi, CallNode callNode)
         {
             List<FormulaValue> arguments = new List<FormulaValue>();
 
@@ -417,8 +385,13 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                 arguments.Add(arg);
             }
 
+            return arguments.ToArray();
+        }
+
+        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
+        {            
             cts.ThrowIfCancellationRequested();
-            return await dynamicApi.ServiceFunction.InvokeAsync(arguments.ToArray(), cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(arguments, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.

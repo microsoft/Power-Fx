@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -356,14 +357,66 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
 
+                FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => texlNode.Kind != NodeKind.Error).Select(texlNode => texlNode switch
+                {
+                    StrLitNode strNode => FormulaValue.New(strNode.Value),
+                    NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
+                    _ => null as FormulaValue
+                }).ToArray();
+
                 // If connector function has some suggestions, let's add them here
-                List<string> suggestions = info.Function.GetConnectorSuggestionsAsync(callNode, argPosition, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                List<RecordValue> suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (suggestions != null)
-                {
-                    foreach (string suggestion in suggestions)
+                {                    
+                    foreach (RecordValue suggestion in suggestions)
                     {
-                        AddSuggestion(intellisenseData, suggestion, SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                        if (argPosition < info.Function.MaxArity - 1)
+                        {
+                            AddSuggestion(intellisenseData, $@"""{suggestion.GetField("Suggestion").ToObject()}""", SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                        }
+                        else
+                        {
+                            TexlNode currentArg = callNode.Args.Children[argPosition];
+
+                            if (currentArg.Kind != NodeKind.Record)
+                            {
+                                AddSuggestion(intellisenseData, $@"{{ {suggestion.Fields.First().Name}:", SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                            }
+                            else
+                            {
+                                List<string> possibleFields = suggestions.Select(s => s.Fields.First().Name).ToList();
+                                string[] existingFieldsInCall = currentArg.AsRecord().Ids.Select(id => id.Token._value).ToArray();
+
+                                // remove all existing valid ids
+                                for (int i = 0; i < existingFieldsInCall.Length - 1; i++)
+                                {
+                                    string idInCall = existingFieldsInCall[i];
+                                    string possibleField = possibleFields.FirstOrDefault(pf => pf.Equals(idInCall, StringComparison.OrdinalIgnoreCase));
+
+                                    if (!string.IsNullOrWhiteSpace(possibleField))
+                                    {
+                                        possibleFields.Remove(possibleField);
+                                    }
+                                }
+
+                                // filter on last element name
+                                if (existingFieldsInCall.Length > 0)
+                                {
+                                    string lastIdInCall = existingFieldsInCall[existingFieldsInCall.Length - 1];
+
+                                    if (!string.IsNullOrWhiteSpace(lastIdInCall))
+                                    {
+                                        possibleFields = possibleFields.Where(f => f.StartsWith(lastIdInCall, StringComparison.OrdinalIgnoreCase)).ToList();
+                                    }
+                                }
+
+                                foreach (string possibleField in possibleFields)
+                                {
+                                    AddSuggestion(intellisenseData, possibleField, SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx
             return functionInfos;
         }
 
-        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
+        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpClient httpClient = null, ICachingHttpClient cache = null)
         {
             if (config == null) 
             { 
@@ -68,8 +68,8 @@ namespace Microsoft.PowerFx
             { 
                 throw new ArgumentNullException(nameof(function)); 
             }
-
-            config.AddFunction(function.GetServiceFunction());
+            
+            config.AddFunction(function.GetServiceFunction(functionNamespace, httpClient, cache));
         }
 
         public static void Add(this Dictionary<string, FormulaValue> map, string fieldName, FormulaValue value)

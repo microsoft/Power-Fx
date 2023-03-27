@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient = null, bool throwOnError = false)
         {
             if (openApiDocument == null)
             {
@@ -32,6 +32,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             List<ConnectorFunction> functions = new ();
+            List<ServiceFunction> sFunctions = new ();                
             string basePath = openApiDocument.GetBasePath();
 
             foreach (KeyValuePair<string, OpenApiPathItem> kv in openApiDocument.Paths)
@@ -52,8 +53,30 @@ namespace Microsoft.PowerFx.Connectors
                     
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError);
 
-                    functions.Add(new ConnectorFunction(op, operationName, opPath, verb));            
+                    functions.Add(connectorFunction);
+                    sFunctions.Add(connectorFunction._serviceFunction);
+                }
+            }
+
+            // post processing for ConnectorDynamicValue, identify service functions
+            foreach (ConnectorFunction cf in functions)
+            {
+                if (cf._serviceFunction != null)
+                {
+                    foreach (ServiceFunctionParameterTemplate sfpt in cf._serviceFunction._requiredParameters)
+                    {
+                        if (sfpt.ConnectorDynamicValue != null)
+                        {
+                            sfpt.ConnectorDynamicValue.ServiceFunction = sFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
+                        }
+
+                        if (sfpt.ConnectorDynamicSchema != null)
+                        {
+                            sfpt.ConnectorDynamicSchema.ServiceFunction = sFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicSchema.OperationId);
+                        }
+                    }
                 }
             }
 
@@ -73,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors
                 throw new ArgumentException(nameof(functionNamespace));
             }
 
-            List<ServiceFunction> newFunctions = new List<ServiceFunction>();
+            List<ServiceFunction> functions = new List<ServiceFunction>();
             string basePath = openApiDocument.GetBasePath();
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
 
@@ -150,28 +173,28 @@ namespace Microsoft.PowerFx.Connectors
                         _invoker = invoker
                     };
 
-                    newFunctions.Add(sfunc);
+                    functions.Add(sfunc);
                 }
             }
 
             // post processing for ConnectorDynamicValue, identify service functions
-            foreach (ServiceFunction sf in newFunctions)
+            foreach (ServiceFunction sf in functions)
             {
                 foreach (ServiceFunctionParameterTemplate sfpt in sf._requiredParameters)
                 {
                     if (sfpt.ConnectorDynamicValue != null)
                     {
-                        sfpt.ConnectorDynamicValue.ServiceFunction = newFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
+                        sfpt.ConnectorDynamicValue.ServiceFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
                     }
 
                     if (sfpt.ConnectorDynamicSchema != null)
                     {
-                        sfpt.ConnectorDynamicSchema.ServiceFunction = newFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicSchema.OperationId);
+                        sfpt.ConnectorDynamicSchema.ServiceFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicSchema.OperationId);
                     }
                 }
             }
 
-            return newFunctions;
+            return functions;
         }
        
         internal static bool IsSafeHttpMethod(HttpMethod httpMethod)
