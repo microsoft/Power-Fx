@@ -3204,9 +3204,14 @@ namespace Microsoft.PowerFx.Core.Types
 
                     isValid &= isFieldValid;
                 }
-                else if (!typeDest.AreFieldsOptional)
+
+                //else if (!typeDest.AreFieldsOptional)
+                //{
+                //    isValid = false; // If the name doesn't exist, it is valid only if it is optional
+                //}
+                else
                 {
-                    isValid = false; // If the name doesn't exist, it is valid only if it is optional
+                    coercionType = coercionType.Add(typedName.Name, typedName.Type);
                 }
 
                 isSafe &= fieldIsSafe;
@@ -3463,6 +3468,10 @@ namespace Microsoft.PowerFx.Core.Types
 
                     coercionNeeded |= thisFieldCoercionNeeded;
                     coercionType = coercionType.Add(typedName.Name, thisFieldCoercionType);
+                }
+                else
+                {
+                    coercionType = coercionType.Add(typedName.Name, typedName.Type);
                 }
             }
 

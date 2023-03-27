@@ -25,8 +25,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class DatabaseSimulationTests
     {
         [Theory]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false)]
+
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", true)]
         [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: 44986 })", true)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"!!!\" })", true)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: GUID(\"00000000-0000-0000-0000-000000000001\") })", false)]
         public async Task DatabaseSimulation_Test(string expr, bool checkSuccess)
         {
             var databaseTable = DatabaseTable.CreateTestTable(0);

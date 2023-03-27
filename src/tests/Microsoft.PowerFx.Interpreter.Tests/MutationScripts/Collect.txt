@@ -32,15 +32,22 @@ Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77},
 {Value:200}
 
 >> Collect([1,2,3],{Value:Date(2023,3,1)})
-Errors: Error 16-38: The type of this argument 'Value' does not match the expected type 'Number'. Found type 'Date'.|Error 0-39: The function 'Collect' has some invalid arguments.
+{Value:44986}
+
+>> With({t1:[1,2,3,Date(2023,3,2)]}, Collect(t1,{Value:Date(2023,3,1)});t1)
+Table({Value:1},{Value:2},{Value:3},{Value:44987},{Value:44986})
 
 >> Collect(Table({x:1,y:2}), {x: 3}).y 
 Blank()
 
+>> Table({a:1},{a:"2",b:"2"})
+Table({a:1,b:Blank()},{a:2,b:"2"})
 
-// Coercions
-﻿>> Set(t1, Table({number:1},{number:"2",string:"2"}))
-Table({number:1,string:Blank()},{number:2,string:"2"})
+>> Table({b:{x:1}},{b:{x:"2",y:2}})
+Table({b:{x:1,y:Blank()}},{b:{x:2,y:2}})
 
->> Collect(t1, {number:"3"});t1
-Table({number:1,string:Blank()},{number:2,string:"2"},{number:3,string:Blank()})
+>> Collect(Table({a:1},{a:"2",b:"2"}), {a:Date(2023,3,1), b:3})
+{a:44986,b:"3"}
+
+>> With({x: Table({a:1},{a:"2",b:"2"})}, Collect(x, {a:Date(2023,3,1), b:3});x)
+Table({a:1,b:Blank()},{a:2,b:"2"},{a:44986,b:"3"})

@@ -1,0 +1,17 @@
+﻿>> Set( t1, [3,2,1] )
+Table({Value:3},{Value:2},{Value:1})
+
+>> Set( t2_1, [ {a:1}, {a:"1"}, {a:true} ])
+Table({a:1},{a:1},{a:1})
+
+>> Set( t2_2, Table({a:1}, {a:"1"}, {a:true}))
+Table({a:1},{a:1},{a:1})
+
+>> Set( t3_1, [{f1: {f11:1}}, {f1: {f11:"2", f12:2}}])
+Table({f1:{f11:1,f12:Blank()}},{f1:{f11:2,f12:2}})
+
+>> Set( t3_2, Table({b: {x:1}}, {b: {x:"2", y:2}}))
+Table({b:{x:1,y:Blank()}},{b:{x:2,y:2}})
+
+>> Patch( t3_1, First(t3_1), {f1:{f12:"1"}} );t3_1
+Table({f1:{f11:1,f12:1}},{f1:{f11:2,f12:2}})

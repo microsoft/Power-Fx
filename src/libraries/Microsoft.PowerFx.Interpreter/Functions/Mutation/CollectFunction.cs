@@ -186,6 +186,10 @@ namespace Microsoft.PowerFx.Interpreter
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
                     }
                 }
+                else
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], returnType);
+                }
             }
 
             return fValid;

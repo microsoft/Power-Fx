@@ -118,6 +118,8 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
+        public override bool SupportsParamCoercion => true;
+
         public PatchFunction()
             : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
         {
@@ -178,7 +180,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion);
+                bool checkAggregateNames = curType.CheckAggregateNamesWithCoercion(dataSourceType, args[i], errors, SupportsParamCoercion);
 
                 isValid = isValid && checkAggregateNames;
                 isSafeToUnion = checkAggregateNames;

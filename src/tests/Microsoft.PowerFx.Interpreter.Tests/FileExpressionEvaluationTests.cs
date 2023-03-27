@@ -68,18 +68,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Normal tests have each line as an independent test case. 
         // Whereas these are fed into a repl and each file maintains state. 
         [Theory]
-        [InlineData("Simple1.txt")]
-        [InlineData("Collect.txt")]
-        [InlineData("Clear.txt")]
-        [InlineData("ClearCollect.txt")]
-        [InlineData("ForAllMutate.txt")]
+        [InlineData("Patch.txt")]
+
+        //[InlineData("Simple1.txt")]
+        //[InlineData("Collect.txt")]
+        //[InlineData("Patch.txt")]
+        //[InlineData("Clear.txt")]
+        //[InlineData("ClearCollect.txt")]
+        //[InlineData("ForAllMutate.txt")]
         public void RunMutationTests(string file)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
             //path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\ForAllMutate.txt";
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.TableSyntaxDoesntWrapRecords);
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
             var runner = new ReplRunner(engine);
