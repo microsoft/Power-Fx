@@ -864,7 +864,8 @@
     <value>Een expressie waarmee de rijen in 'source' worden geëvalueerd en die de waarden voor de sortering verstrekt.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Oplopend of Aflopend</value>
+    <value>SortOrder.Ascending of SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Hiermee wordt 'source' gesorteerd op basis van de kolom en kunt eventueel een 'order' voor sorteren opgeven.</value>
@@ -889,7 +890,8 @@
     <value>Een unieke kolomnaam.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Oplopend of Aflopend</value>
+    <value>SortOrder.Ascending of SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Hiermee wordt 'source' gesorteerd op basis van de index van overeenkomende waarde in de opgegeven kolom.</value>
@@ -2382,7 +2384,7 @@
     <value>Een aantal eenheden dat moet worden toegevoegd. Dit aantal kan negatief zijn.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>De eenheid die moet worden gebruikt. Dit kan een van de volgende waarden zijn: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>De eenheid die moet worden gebruikt. Dit kan een van de volgende waarden zijn: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Een einddatum voor de bewerking Different.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>De eenheid die moet worden gebruikt om het resultaat in weer te geven. Dit kan een van de volgende waarden zijn: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>De eenheid waarin het resultaat wordt uitgedrukt. Dit kan een van de volgende waarden zijn: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Haal de standaardlandinstellingen tijdens de runtime op.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codeert een URL-tekenreeks, die bepaalde niet-alfanumerieke tekens vervangt door % en een hexadecimal getal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Een URL die moet worden gecodeerd.</value>
   </data>
 </root>

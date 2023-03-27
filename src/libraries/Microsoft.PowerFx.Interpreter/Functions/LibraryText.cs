@@ -596,6 +596,11 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToUpper(args[0].Value));
         }
 
+        public static FormulaValue EncodeUrl(IRContext irContext, StringValue[] args)
+        {
+            return new StringValue(irContext, Uri.EscapeDataString(args[0].Value));
+        }
+
         public static FormulaValue Proper(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
             return new StringValue(irContext, runner.CultureInfo.TextInfo.ToTitleCase(runner.CultureInfo.TextInfo.ToLower(args[0].Value)));

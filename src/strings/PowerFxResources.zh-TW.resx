@@ -864,7 +864,8 @@
     <value>對 'source' 中的資料列評估運算式，並為排序提供值。</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>遞增或遞減</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>依資料行排序 'source'，可選擇性地指定排序 'order'。</value>
@@ -889,7 +890,8 @@
     <value>不重複的資料行名稱。</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>遞增或遞減</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>根據指定資料行中相符值的索引，排序 'source'。</value>
@@ -2382,7 +2384,7 @@
     <value>要新增的單位數。數字可以是負數。</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>要使用的單位，其可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 的其中之一。</value>
+    <value>要使用的單位，可以是 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>比較差異運算的結束日期。</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>表示結果的單位，其可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 的其中之一。</value>
+    <value>用於表示結果的單位，可以是 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4857,7 +4859,18 @@
     <value>邏輯名稱將被傳回的選項組值。</value>
   </data>
   <data name="AboutLanguage" xml:space="preserve">
-    <value>Get the default locale set at runtime.</value>
+    <value>取得執行階段的預設地區設定。</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>對 URL 字串進行編碼，以 % 和十六進位數字取代特定非英數字元。</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>要編碼的 URL。</value>
   </data>
 </root>

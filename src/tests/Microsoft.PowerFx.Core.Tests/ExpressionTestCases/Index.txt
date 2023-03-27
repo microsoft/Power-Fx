@@ -43,7 +43,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Index(LastN([1, 2, 3, 4, 5], 3), 1)
 {Value:3}
 
->> Index([ {a:10, b: "asdf"}, {a: 20, b: "second"}, {a:30, b: "third"}], 1.1).Value.b
+>> Index([ {a:10, b: "asdf"}, {a: 20, b: "second"}, {a:30, b: "third"}], 1.1).b
 "asdf"
 
 >> Index(Error({Kind: 11}), 1)

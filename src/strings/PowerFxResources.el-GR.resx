@@ -864,7 +864,8 @@
     <value>Μια παράσταση που αξιολογείται σε σειρές στην "προέλευση" και παρέχει τιμές για ταξινόμηση.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Με αύξουσα ή φθίνουσα σειρά</value>
+    <value>SortOrder.Ascending ή SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ταξινομεί την "προέλευση" με βάση τη στήλη, προαιρετικά με καθορισμό "σειράς" ταξινόμησης.</value>
@@ -889,7 +890,8 @@
     <value>Μοναδικό όνομα στήλης.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Με αύξουσα ή φθίνουσα σειρά</value>
+    <value>SortOrder.Ascending ή SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ταξινομεί την "προέλευση" με βάση το δείκτη αντιστοίχισης τιμών στην καθορισμένη στήλη.</value>
@@ -2382,7 +2384,7 @@
     <value>Ένας αριθμός μονάδων για προσθήκη. Ο αριθμός μπορεί να είναι αρνητικός.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Η μονάδα προς χρήση. Μπορεί να είναι Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Η μονάδα προς χρήση, η οποία μπορεί να είναι μία από τις TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Ημερομηνία λήξης για τη λειτουργία διαφοράς.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Η μονάδα που εκφράζει το αποτέλεσμα. Μπορεί να είναι Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Η μονάδα για την έκφραση του αποτελέσματος το οποίο μπορεί να είναι ένα από τα TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Αποκτήστε τις προεπιλεγμένες τοπικές ρυθμίσεις που έχουν οριστεί κατά το χρόνο εκτέλεσης.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Κωδικοποιεί μια συμβολοσειρά διεύθυνσης URL, αντικαθιστώντας ορισμένους μη αλφαριθμητικούς χαρακτήρες με % και δεκαεξαδική αρίθμηση.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>Διεύθυνση URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Μια διεύθυνση URL για κωδικοποίηση.</value>
   </data>
 </root>

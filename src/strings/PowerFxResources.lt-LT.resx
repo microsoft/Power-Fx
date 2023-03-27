@@ -864,7 +864,8 @@
     <value>Reiškinys, apskaičiuojamas pagal šaltinio eilutes, pateikia rikiavimo reikšmes.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Didėjimo arba mažėjimo</value>
+    <value>SortOrder.Ascending arba SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Rikiuoja šaltinį pagal stulpelį. Galima pasirinktinai nurodyti rikiavimo tvarką.</value>
@@ -889,7 +890,8 @@
     <value>Unikalus stulpelio pavadinimas.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Didėjimo arba mažėjimo</value>
+    <value>SortOrder.Ascending arba SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Rikiuoja šaltinį pagal nurodyto stulpelio atitinkančių reikšmių indeksą.</value>
@@ -2382,7 +2384,7 @@
     <value>Įtrauktinų vienetų skaičius. Skaičius gali būti neigiamas.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Naudotinas vienetas, kuris gali būti vienas iš šių: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Naudotinas vienetas, galintis būti vienas iš šių: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Skirtumo operacijos pabaigos data.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Vienetas, skirtas rezultatui išreikšti, kuris gali būti vienas iš šių: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Vienetas, kuriuo turėtų būti išreikštas rezultatas, galintis būti vienas iš šių: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Gaukite numatytąją lokalę, nustatytą vykdyklėje.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Užkoduoja URL eilutę, kai kuriuos ne raidinius ir skaitinius simbolius pakeičiant % ir šešioliktainiu skaičiumi.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL, kuris bus užkoduotas.</value>
   </data>
 </root>

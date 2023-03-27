@@ -43,11 +43,14 @@ namespace Microsoft.PowerFx
             _symbolValues = new SymbolValues(_symbolTable);
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
-            EngineSymbols = _symbolTable;
+            base.EngineSymbols = _symbolTable;
 
             // Add Builtin functions that aren't yet in the shared library. 
             SupportedFunctions = _interpreterSupportedFunctions;
         }
+
+        // Expose publicly. 
+        public new ReadOnlySymbolTable EngineSymbols => base.EngineSymbols; 
 
         // Set of default functions supported by the interpreter. 
         private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);
@@ -173,13 +176,16 @@ namespace Microsoft.PowerFx
         {
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
             var result = parsedUDFS.GetParsed();
+            var errors = result.Errors?.ToList();
+            var comments = new List<Syntax.CommentToken>();
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
-                udf.Body.ToString(),
-                FormulaType.GetFromStringOrNull(udf.ReturnType.ToString()),
+                new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script),
+                udf.ReturnType.GetFormulaType(),
                 udf.IsImperative,
-                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), FormulaType.GetFromStringOrNull(arg.VarType.ToString()))).ToArray())).ToArray();
+                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType())).ToArray())).ToArray();
+
             return DefineFunctions(udfDefinitions);
         }
 
@@ -196,10 +202,10 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.Body, record, definition.IsImperative);
+            var check = new CheckWrapper(this, definition.ParseResult, record, definition.IsImperative);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
-            
+
             if (_symbolTable.Functions.AnyWithName(definition.Name))
             {
                 throw new InvalidOperationException($"Function {definition.Name} is already defined");

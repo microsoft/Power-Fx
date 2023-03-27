@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -18,7 +19,7 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{
+{ 
     /// <summary>
     /// Holds work such as parsing, binding, error checking done on a single expression. 
     /// Different options require different work. 
@@ -505,7 +506,7 @@ namespace Microsoft.PowerFx
                 // Errors require Binding, Parse 
                 var binding = ApplyBindingInternal();
 
-                // Plus engine's may have additional constaints. 
+                // Plus engine's may have additional constraints. 
                 // PostCheck may refer to binding. 
                 var extraErrors = Engine.InvokePostCheck(this);
 
@@ -534,6 +535,14 @@ namespace Microsoft.PowerFx
             return _irresult;
         }
 
+        // pretty print IR for debugging purposes, used by the Console REPL
+        public string PrintIR()
+        {
+            var topNode = this.ApplyIR().TopNode;
+            var topStr = topNode.ToString();
+            return topStr;
+        }
+
         /// <summary>
         /// Gets the type of a syntax node. Must call <see cref="ApplyBinding"/> first. 
         /// </summary>
@@ -550,7 +559,9 @@ namespace Microsoft.PowerFx
             return FormulaType.Build(type);
         }
 
-        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this.Binding, flags);
+        // Called by language server to get custom tokens.
+        // If binding is available, returns context sensitive tokens.  $$$
+        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this._binding, flags);
 
         private string _expressionInvariant;
 

@@ -60,3 +60,179 @@ Error({Kind:ErrorKind.Div0})
 
 >> If(true, {x:1, y:1}, {x:2, z:2})
 {x:1}
+
+// Demos expression that generates Void value.
+>> If(true, {a:1}, "test")
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+// Void can be passed through another If statment
+>> If( true, If(1<0, {x:3}, 1), 1)
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> If(true, 1, x)
+Errors: Error 12-13: Name isn't valid. 'x' isn't recognized.|Error 0-14: The function 'If' has some invalid arguments.
+
+>> If(true, x, 1)
+Errors: Error 9-10: Name isn't valid. 'x' isn't recognized.|Error 0-14: The function 'If' has some invalid arguments.
+
+// ************************************** FIRST CONDITION TRUE CASES **************************************
+
+// The first condition is true, and the corresponding string ThenResult is returned.
+>> If(true, "Result1", "Result2")
+"Result1"
+
+// The first condition is true, and the corresponding boolean ThenResult is returned.
+>> If(IsNumeric(4), true, false)
+true
+
+//First condition is true, hence the condition in ThenResult branch is evaluated
+//Excel doesn't take more than 3 parameters
+>> If(Sum(3,4)=7, If(Max(3,4)=3,1,2), 8)
+2
+
+// Both the first and second condition is true. But the second condition isn't evaluated as it appears later in the argument list, than a condition that evaluates to true.	
+//Excel doesn't take more than 3 parameters
+>> If( 25=25, "Result1", 25 > 0, "Result2" )
+"Result1"
+
+>> If(10, 2, 3)
+2
+
+// ************************************** FIRST CONDITION FALSE CASES **************************************
+
+// The first condition is false. The second condition is true because the value is a number, and the corresponding result is returned.	
+>> If( 5>25, "Result1", IsNumeric(25), "Result2" )	
+"Result2"
+
+>> If(Len("Hello")=6, 1, Left("Hello",2)="lo", 2)
+Blank()
+
+// Variadic cases
+>> If(5>=10, "Result1", 6>=10, "Result2", 7>=10, "Result3", 8>=10, "Result4", 9>=10, "Result5")
+Blank()
+
+>> If(5>=10, "Result1", 6>=10, "Result2", 7>=10, "Result3", 8>=10, "Result4", 9>=10, "Result5", "No Matching Results")
+"No Matching Results"
+
+>> If(5>=10, "Result1", 6>=10, "Result2", 7>=10, "Result3", 8>=10, "Result4", 9>=10, "Result5", 10>=10, "Result6", "No Matching Results")
+"Result6"
+
+>> If(5>=10, "Result1", 6>=10, "Result2", 7<=10, "Result3", 8>=10, "Result4", 9>=10, "Result5", 10>=10, "Result6", "No Matching Results")
+"Result3"
+
+// ************************************** AND, OR, NOT Operators **************************************
+
+>> If(false || true, false || true, false || true, false || true, false || true)
+true
+
+>> If(1 > 2 || 1 = 0 || 1 <> 1 || 2 < 1 || 3 <= 2 || 2 >= 3 || !true || (!false && false), "Hello")
+Blank()
+
+>> If(1 < 2 || 1 = 0 || 1 <> 1 || 2 < 1 || 3 <= 2 || 2 >= 3 || !true || (!false && false), "Hello")
+"Hello"
+
+// ************************************** NULL OR ERROR PARAMETERS **************************************
+
+>> If(Blank(),"Result1","Result2")
+"Result2"
+
+//Excel returns 0
+>> If(5<10,Blank(),"Result2")
+Blank()
+
+//Excel returns 0
+>> If(5>10,"Result1",Blank())
+Blank()
+
+>> If(5<7, 1/0, 3)
+Error({Kind:ErrorKind.Div0})
+
+>> If(5>7, 2, 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> IsError(If(5<7, 1/0, 3))
+true
+
+>> IsError(If(5>7, 2, 1/0))
+true
+
+// ************************************** COERCION CASES **************************************
+
+// ***************** FIRST ARGUMENT NUMBER, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Number to Number Coercion
+>> If(false,1,-12.5)
+-12.5
+
+//Number to String Coercion
+//Excel returns "Hello"
+>> If(false,1,"Hello")
+Error({Kind:ErrorKind.InvalidArgument})
+
+//Number to Boolean Coercion
+//Excel returns "TRUE"
+>> If(false,1,true)
+1
+
+//Number to Boolean Coercion
+//Excel returns "FALSE"
+>> If(false,1,false)
+0
+
+// ***************** FIRST ARGUMENT STRING, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//String to String Coercion
+>> If(false,"Hello","Good morning")
+"Good morning"
+
+//String to Number Coercion
+>> If(false,"Hello",1)
+"1"
+
+//String to Boolean Coercion
+>> If(false,"Hello",true)
+"true"
+
+//String to Boolean Coercion
+>> If(false,"Hello",false)
+"false"
+
+//String to Time Coercion
+>> If(false,"Hello",TimeValue("12:35:55"))
+"12:35 PM"
+
+// ***************** FIRST ARGUMENT BOOLEAN, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Boolean to Boolean Coercion
+>> If(false,true,true)
+true
+
+>> If(false,true,false)
+false
+
+//Boolean to Number Coercion
+//Excel returns 1
+>> If(false,true,1)
+true
+
+//Excel returns 0
+>> If(false,true,0)
+false
+
+// ***************** FIRST ARGUMENT DATE, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Date to String Coercion
+>> If(false,Date(2012,12,14),"Hello")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ***************** FIRST ARGUMENT TIME, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//Time to String Coercion
+>> If(false,Time(12,35,55),"Hello")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// ***************** FIRST ARGUMENT DATETIME, SECOND ARGUMENT OTHER DATAYPE *****************
+
+//DateTime to String Coercion
+>> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),"Hello")
+Error({Kind:ErrorKind.InvalidArgument})

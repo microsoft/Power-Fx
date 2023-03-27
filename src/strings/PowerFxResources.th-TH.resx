@@ -864,7 +864,8 @@
     <value>นิพจน์ที่ถูกประเมินจากแถวใน 'source' และให้ค่าในการเรียงลำดับ</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>จากน้อยไปหามาก หรือจากมากไปหาน้อย</value>
+    <value>SortOrder.Ascending หรือ SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>เรียงลำดับ 'source' โดยอิงตามคอลัมน์ และสามารถเลือกกำหนด 'order' การเรียงลำดับได้</value>
@@ -889,7 +890,8 @@
     <value>ชื่อคอลัมน์เฉพาะ</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>จากน้อยไปหามาก หรือจากมากไปหาน้อย</value>
+    <value>SortOrder.Ascending หรือ SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>เรียงลำดับ 'source' โดยอิงตามดัชนีของค่าที่ตรงกันในคอลัมน์ที่กำหนด</value>
@@ -2382,7 +2384,7 @@
     <value>ตัวเลขของหน่วยที่จะเพิ่ม สามารถเป็นจำนวนลบได้</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>หน่วยที่จะใช้ Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds</value>
+    <value>หน่วยที่จะใช้ ซึ่งอาจเป็นหนึ่งในรายการนี้ TimeUnit.Years TimeUnit.Quarters TimeUnit.Months TimeUnit.Days TimeUnit.Hours TimeUnit.Minutes TimeUnit.Seconds TimeUnit.Milliseconds</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>วันที่สิ้นสุดสำหรับกระบวนการที่ต่างๆ</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>หน่วยที่จะใช้แสดงผลลัพธ์ หน่วยที่จะใช้แสดงผลลัพธ์ Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds</value>
+    <value>หน่วยเพื่อแสดงผลลัพธ์ ซึ่งอาจเป็นหนึ่งในรายการนี้ TimeUnit.Years TimeUnit.Quarters TimeUnit.Months TimeUnit.Days TimeUnit.Hours TimeUnit.Minutes TimeUnit.Seconds TimeUnit.Milliseconds</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>ตั้งค่าตำแหน่งที่ตั้งเริ่มต้นขณะรันไทม์</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>เข้ารหัสสตริง URL โดยแทนที่อักขระที่ไม่ใช่ตัวอักษรและตัวเลขบางตัวด้วย % และเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL ที่จะเข้ารหัส</value>
   </data>
 </root>

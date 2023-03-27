@@ -864,7 +864,8 @@
     <value>Expression évaluée sur les lignes de « source », fournissant des valeurs pour le tri.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Croissant ou décroissant</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Trie la « source » sur la base de la colonne, en spécifiant éventuellement un « ordre » de tri.</value>
@@ -889,7 +890,8 @@
     <value>Nom de colonne unique.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Croissant ou décroissant</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Trie la « source » sur la base de l’index des valeurs de correspondance dans la colonne spécifiée.</value>
@@ -2382,7 +2384,7 @@
     <value>Nombre d’unités à ajouter. Ce nombre peut être négatif.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unité à utiliser, parmi Années, Trimestres, Mois, Jours, Heures, Minutes, Secondes, Millisecondes.</value>
+    <value>Unité à utiliser, qui peut être l’une de TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Date de fin pour l’opération Différence.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unité dans laquelle exprimer le résultat, parmi Années, Trimestres, Mois, Jours, Heures, Minutes, Secondes, Millisecondes.</value>
+    <value>Unité d’expression du résultat, qui peut être l’une de TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Obtenez les paramètres régionaux par défaut au moment de l’exécution.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Code une chaîne d’URL dans le but de remplacer certains caractères non alphanumériques par un pourcentage et un nombre hexadécimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL à coder.</value>
   </data>
 </root>

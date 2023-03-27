@@ -864,7 +864,8 @@
     <value>Ekspresi yang dievaluasi pada setiap baris di 'sumber' dan memberikan hasil untuk proses sortir.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Urutan Naik atau Turun</value>
+    <value>SortOrder.Ascending atau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Menyortir 'sumber' berdasarkan kolom, menentukan 'urutan' sortir opsional.</value>
@@ -889,7 +890,8 @@
     <value>Nama kolom unik.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Urutan Naik atau Turun</value>
+    <value>SortOrder.Ascending atau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Menyortir 'sumber' berdasarkan indeks nilai yang cocok di kolom yang ditentukan.</value>
@@ -2382,7 +2384,7 @@
     <value>Jumlah unit untuk ditambahkan. Jumlah boleh negatif.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unit untuk digunakan, yang dapat berupa Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Satuan yang akan digunakan, yang dapat berupa salah satu dari TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Tanggal akhir operasi berbeda.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unit untuk digunakan, yang dapat berupa Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Satuan untuk menyatakan hasil, yang dapat berupa salah satu dari TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Dapatkan lokal default yang ditetapkan pada runtime.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Mengodekan string URL, mengganti karakter non-alfanumerik tertentu dengan % dan angka heksadesimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL untuk dikodekan.</value>
   </data>
 </root>

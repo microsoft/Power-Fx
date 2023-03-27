@@ -864,7 +864,8 @@
     <value>Ungkapan yang dinilai di atas baris dalam 'sumber' dan menyediakan nilai untuk pengisihan.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Menaik atau Menurun</value>
+    <value>SortOrder.Ascending atau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Mengisih 'sumber' berdasarkan lajur, secara pilihan menentukan 'tertib' isihan.</value>
@@ -889,7 +890,8 @@
     <value>Nama lajur yang unik.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Menaik atau Menurun</value>
+    <value>SortOrder.Ascending atau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Mengisih 'sumber' berdasarkan indeks nilai sepadan dalam lajur yang ditentukan.</value>
@@ -2382,7 +2384,7 @@
     <value>Bilangan unit untuk ditambah. Bilangan boleh jadi negatif.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unit untuk digunakan, yang boleh merupakan Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unit untuk digunakan, yang mungkin merupakan satu daripada TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2404,7 +2406,7 @@
     <value>Tarikh tamat untuk pengendalian yang berbeza.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unit untuk mengungkapkan hasil, yang boleh merupakan Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unit untuk menggambarkan hasil, yang mungkin merupakan satu daripada TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4859,5 +4861,16 @@
   <data name="AboutLanguage" xml:space="preserve">
     <value>Dapatkan set tempat lalai pada masa jalanan.</value>
     
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Mengekod rentetan URL, menggantikan aksara bukan abjad angka tertentu dengan % dan nombor perenambelasan.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Url untuk dikodkan.</value>
   </data>
 </root>

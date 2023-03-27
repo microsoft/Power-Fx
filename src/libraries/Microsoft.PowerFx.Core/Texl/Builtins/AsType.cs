@@ -120,14 +120,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    internal class AsTypeCallNodeDelegationStrategy : DelegationValidationStrategy
+    internal sealed class AsTypeCallNodeDelegationStrategy : DelegationValidationStrategy
     {
         public AsTypeCallNodeDelegationStrategy(TexlFunction function)
             : base(function)
         {
         }
 
-        protected override bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding)
+        protected override bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding, TexlFunction trackingFunction = null)
         {
             // AsType should always be marked as valid regardless of it being async and impure.
             return true;
