@@ -19,9 +19,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class TextDateTimeToUTCTests : PowerFxTest
     {
         [Theory]
-        [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "Pacific Standard Time", "2023-03-11T01:30:00Z")]
-        [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "Tokyo Standard Time", "2023-03-10T08:30:00Z")]
-        [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "SE Asia Standard Time", "2023-03-10T10:30:00Z")]
+        [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "Pacific Standard Time", "2023-03-11T01:30:00.000Z")]
+        [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "Tokyo Standard Time", "2023-03-10T08:30:00.000Z")]
+        [InlineData("Text(DateTimeValue(\"March 10, 2023 5:30 PM\"), DateTimeFormat.UTC)", "SE Asia Standard Time", "2023-03-10T10:30:00.000Z")]
         public async void TextDateTimeToUTC(string inputExp, string timeZoneId, string expectedDateTimeUTC)
         {
             var engine = new RecalcEngine();

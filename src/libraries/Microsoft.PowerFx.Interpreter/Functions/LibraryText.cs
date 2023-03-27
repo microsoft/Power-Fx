@@ -349,7 +349,7 @@ namespace Microsoft.PowerFx.Functions
                 case "'utc'":
                 case "utc":
                     var formatUtcStr = ExpandDateTimeFormatSpecifiers(format, culture);
-                    result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString(formatUtcStr, culture).Replace(" ", "T"));
+                    result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString(formatUtcStr, culture));
                     break;
                 default:
                     try
@@ -398,7 +398,7 @@ namespace Microsoft.PowerFx.Functions
                     return info.LongDatePattern;
                 case "'utc'":
                 case "utc":
-                    return info.UniversalSortableDateTimePattern;
+                    return "yyyy-MM-ddTHH:mm:ss.fffZ";
                 default:
                     return format;
             }
