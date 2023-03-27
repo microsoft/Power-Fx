@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
@@ -12,6 +13,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -356,14 +358,77 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
 
-                // If connector function has some suggestions, let's add them here
-                List<string> suggestions = info.Function.GetConnectorSuggestionsAsync(callNode, argPosition, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                if (suggestions != null)
+                FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => texlNode.Kind != NodeKind.Error).Select(texlNode => texlNode switch
                 {
-                    foreach (string suggestion in suggestions)
+                    StrLitNode strNode => FormulaValue.New(strNode.Value),
+                    NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
+                    _ => null as FormulaValue
+                }).ToArray();
+
+                // If connector function has some suggestions, let's add them here
+                ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+
+                if (suggestions != null && suggestions.Error == null && suggestions.Suggestions != null)
+                {                    
+                    foreach (ConnectorSuggestion suggestion in suggestions.Suggestions)
                     {
-                        AddSuggestion(intellisenseData, suggestion, SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                        // for all parameters, except last one we have direct parameters / not in a record
+                        if (argPosition < info.Function.MaxArity - 1)
+                        {
+                            string sg = suggestion.Suggestion switch
+                            {
+                                StringValue sv => sv.Value,
+                                NumberValue nv => nv.Value.ToString(CultureInfo.InvariantCulture),
+                                _ => null
+                            };
+
+                            if (!string.IsNullOrEmpty(sg))
+                            {
+                                AddSuggestion(intellisenseData, $@"""{sg}""", SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                            }
+                        }
+                        else
+                        {
+                            TexlNode currentArg = callNode.Args.Children[argPosition];
+
+                            if (currentArg.Kind != NodeKind.Record)
+                            {
+                                AddSuggestion(intellisenseData, $@"{{ {suggestion.DisplayName}:", SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                            }
+                            else
+                            {
+                                List<string> possibleFields = suggestions.Suggestions.Select(s => s.DisplayName).ToList();
+                                string[] existingFieldsInCall = currentArg.AsRecord().Ids.Select(id => id.Token._value).ToArray();
+
+                                // remove all existing valid ids
+                                for (int i = 0; i < existingFieldsInCall.Length - 1; i++)
+                                {
+                                    string idInCall = existingFieldsInCall[i];
+                                    string possibleField = possibleFields.FirstOrDefault(pf => pf.Equals(idInCall, StringComparison.OrdinalIgnoreCase));
+
+                                    if (!string.IsNullOrWhiteSpace(possibleField))
+                                    {
+                                        possibleFields.Remove(possibleField);
+                                    }
+                                }
+
+                                // filter on last element name
+                                if (existingFieldsInCall.Length > 0)
+                                {
+                                    string lastIdInCall = existingFieldsInCall[existingFieldsInCall.Length - 1];
+
+                                    if (!string.IsNullOrWhiteSpace(lastIdInCall))
+                                    {
+                                        possibleFields = possibleFields.Where(f => f.StartsWith(lastIdInCall, StringComparison.OrdinalIgnoreCase)).ToList();
+                                    }
+                                }
+
+                                foreach (string possibleField in possibleFields)
+                                {
+                                    AddSuggestion(intellisenseData, possibleField, SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                                }
+                            }
+                        }
                     }
                 }
             }

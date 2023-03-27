@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Tests
     public class PublicSurfaceTests
     {
         [Fact]
-        public void Test()
+        public void PublicSurface_Tests()
         {
             var asm = typeof(Parser.TexlParser).Assembly;
 
@@ -105,6 +105,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.CollectionTableValue`1",
                 "Microsoft.PowerFx.Types.ColorType",
                 "Microsoft.PowerFx.Types.ColorValue",
+                "Microsoft.PowerFx.Types.ConnectorSuggestionsType",
+                "Microsoft.PowerFx.Types.ConnectorSuggestionType",
                 "Microsoft.PowerFx.Types.DateTimeNoTimeZoneType",
                 "Microsoft.PowerFx.Types.DateTimeType",
                 "Microsoft.PowerFx.Types.DateTimeValue",
@@ -146,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
                 "Microsoft.PowerFx.Types.Void",
                 "Microsoft.PowerFx.Types.VoidValue",
-
+                
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
@@ -166,7 +168,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
@@ -231,7 +233,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var len = values1.Length;
             Assert.Equal(len, values2.Length);
-            
+
             for (var i = 0; i < len; i++)
             {
                 var x = values1.GetValue(i);

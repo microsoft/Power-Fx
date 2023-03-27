@@ -12,6 +12,7 @@ namespace Microsoft.AppMagic.Authoring
     {
         private readonly TypedName _typedName;
         private readonly string _description;
+        private readonly string _summary;
         private readonly FormulaValue _defaultValue;
         private readonly FormulaType _formulaType;
         private readonly ConnectorDynamicValue _dynamicValue;
@@ -23,13 +24,15 @@ namespace Microsoft.AppMagic.Authoring
 
         public string Description => _description;
 
+        public string Summary => _summary;
+
         public FormulaValue DefaultValue => _defaultValue;
 
         public ConnectorDynamicValue ConnectorDynamicValue => _dynamicValue;
         
         public ConnectorDynamicSchema ConnectorDynamicSchema => _dynamicSchema;
 
-        public ServiceFunctionParameterTemplate(FormulaType formulaType, TypedName typedName, string description, FormulaValue defaultValue, ConnectorDynamicValue dynamicValue, ConnectorDynamicSchema dynamicSchema)
+        public ServiceFunctionParameterTemplate(FormulaType formulaType, TypedName typedName, string description, string summary, FormulaValue defaultValue, ConnectorDynamicValue dynamicValue, ConnectorDynamicSchema dynamicSchema)
         {
             Contracts.Assert(typedName.IsValid);
             Contracts.AssertValueOrNull(description);
@@ -38,6 +41,7 @@ namespace Microsoft.AppMagic.Authoring
             _formulaType = formulaType;
             _typedName = typedName;
             _description = description;
+            _summary = summary;
             _defaultValue = defaultValue;
             _dynamicValue = dynamicValue;
             _dynamicSchema = dynamicSchema;
