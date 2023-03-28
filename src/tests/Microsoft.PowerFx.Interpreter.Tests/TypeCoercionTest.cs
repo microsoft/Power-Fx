@@ -8,8 +8,10 @@ using System.Threading;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -19,12 +21,16 @@ namespace Microsoft.PowerFx.Tests
     {
         // From number to other types
         [Theory]
-        [InlineData(1, "true", "1", "1", "12/31/1899 12:00 AM")]
-        [InlineData(0, "false", "0", "0", "12/30/1899 12:00 AM")]
-        [InlineData(44962, "true", "44962", "44962", "2/5/2023 12:00 AM")]
+        [InlineData(1, "true", "1", "1", "12/31/1899 12:00:00 AM")]
+        [InlineData(0, "false", "0", "0", "12/30/1899 12:00:00 AM")]
+        [InlineData(44962, "true", "44962", "44962", "2/5/2023 12:00:00 AM")]
         public void TryCoerceFromNumberTest(double value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            TryCoerceToTargetTypes(FormulaValue.New(value), exprBool, exprNumber, exprStr, exprDateTime);
+            var inputValue = FormulaValue.New(value);
+            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprStr, exprDateTime);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.Boolean, exprBool != null, exprBool);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.String, exprStr != null, exprStr);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.DateTime, exprDateTime != null, exprDateTime);
         }
 
         // From string to other types
@@ -38,7 +44,11 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("This is a string", null, null, "This is a string", null)]
         public void TryCoerceFromStringTest(string value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            TryCoerceToTargetTypes(FormulaValue.New(value), exprBool, exprNumber, exprStr, exprDateTime);
+            var inputValue = FormulaValue.New(value);
+            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprStr, exprDateTime);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.Boolean, exprBool != null, exprBool);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.String, exprStr != null, exprStr);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.DateTime, exprDateTime != null, exprDateTime);
         }
 
         // From boolean to other types
@@ -47,7 +57,11 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(false, "false", "0", "false", null)]
         public void TryCoerceFromBooleanTest(bool value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            TryCoerceToTargetTypes(FormulaValue.New(value), exprBool, exprNumber, exprStr, exprDateTime);
+            var inputValue = FormulaValue.New(value);
+            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprStr, exprDateTime);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.Boolean, exprBool != null, exprBool);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.String, exprStr != null, exprStr);
+            TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.DateTime, exprDateTime != null, exprDateTime);
         }
 
         // From dateTime to other types
@@ -95,9 +109,36 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(numberInput.CanCoerceToStringValue());
         }
 
+        // From original type to target type
+        [Fact]
+        public void CanPotentiallyCoerceToTest()
+        {
+            Assert.True(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.String));
+            Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Number));
+
+            Assert.False(FormulaType.Color.CanPotentiallyCoerceTo(FormulaType.String));
+            Assert.False(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.Hyperlink));
+        }
+
+        private void TryCoerceFromSourceTypeToTargetType(FormulaValue value, FormulaType target, bool expectedSucceeded, string expected)
+        {
+            bool isSucceeded = value.TryCoerceTo(target, out FormulaValue result);
+            if (expectedSucceeded)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(expected.ToLower(), result.ToObject().ToString().ToLower());
+                Assert.Equal(target, result.Type);
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+                Assert.Null(result);
+            }
+        }
+
         private void TryCoerceToTargetTypes(FormulaValue inputValue, string exprBool, string exprNumber, string exprStr, string exprDateTime)
         {
-            bool isSucceeded = inputValue.TryCoerceTo(out BooleanValue resultBoolean);
+            bool isSucceeded = inputValue.TryCoerceTo(out BooleanValue resultBoolean);            
             if (exprBool != null)
             {
                 Assert.True(isSucceeded);
@@ -108,7 +149,7 @@ namespace Microsoft.PowerFx.Tests
                 Assert.False(isSucceeded);
                 Assert.Null(resultBoolean);
             }
-
+            
             isSucceeded = inputValue.TryCoerceTo(out NumberValue resultNumber);
             if (exprNumber != null)
             {

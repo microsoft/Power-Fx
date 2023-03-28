@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx
 {
@@ -32,16 +33,73 @@ namespace Microsoft.PowerFx
         };
 
         /// <summary>
-        /// Try to convert value to Boolean format.
+        /// Can convert value to source format to target or not.
         /// </summary>
-        /// <param name="value">Input value.</param>
-        /// <param name="result">Result value.</param>
-        /// <returns>True/False based on whether function can convert from original type to Boolean type.</returns> 
-        public static bool TryCoerceTo(this FormulaValue value, out BooleanValue result)
+        /// <param name="source">Source type format.</param>
+        /// <param name="target">Target type format.</param>
+        /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
+        public static bool CanPotentiallyCoerceTo(this FormulaType source, FormulaType target)
         {
-            return TryGetBoolean(IRContext.NotInSource(FormulaType.Boolean), value, out result);
+            if (source == FormulaType.Boolean)
+            {
+                return BooleanValue.AllowedListConvertToBoolean.Contains(target);
+            }
+            else if (source == FormulaType.String)
+            {
+                return StringValue.AllowedListConvertToString.Contains(target);
+            }
+            else if (source == FormulaType.Number)
+            {
+                return NumberValue.AllowedListConvertToNumber.Contains(target);
+            }
+            else if (source == FormulaType.DateTime)
+            {
+                return DateTimeValue.AllowedListConvertToDateTime.Contains(target);
+            }
+
+            return false;
         }
 
+        /// <summary>
+        /// Try to convert value to target format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="targetType">Target type format.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
+        public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, out FormulaValue result)
+        {
+            result = null;            
+            if (!value.Type.CanPotentiallyCoerceTo(targetType))
+            {
+                return false;
+            }
+
+            bool canCoerce = false;
+            if (targetType == FormulaType.Boolean)
+            {
+                canCoerce = value.TryCoerceTo(out BooleanValue boolResult);
+                result = boolResult;
+            }
+            else if (targetType == FormulaType.String)
+            {
+                canCoerce = value.TryCoerceTo(out StringValue stringResult);
+                result = stringResult;
+            }
+            else if (targetType == FormulaType.Number)
+            {
+                canCoerce = value.TryCoerceTo(out NumberValue numResult);
+                result = numResult;
+            }
+            else if (targetType == FormulaType.DateTime)
+            {
+                canCoerce = value.TryCoerceTo(out DateTimeValue dateTimeResult);
+                result = dateTimeResult;
+            }
+
+            return canCoerce;
+        }
+        
         /// <summary>
         /// Can convert value to String format or not.
         /// </summary>
@@ -50,6 +108,17 @@ namespace Microsoft.PowerFx
         public static bool CanCoerceToStringValue(this FormulaValue value)
         {
             return StringValue.AllowedListConvertToString.Contains(value.Type);
+        }
+
+        /// <summary>
+        /// Try to convert value to Boolean format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to Boolean type.</returns> 
+        public static bool TryCoerceTo(this FormulaValue value, out BooleanValue result)
+        {
+            return TryGetBoolean(IRContext.NotInSource(FormulaType.Boolean), value, out result);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -9,6 +10,8 @@ namespace Microsoft.PowerFx.Types
 {
     public class BooleanValue : PrimitiveValue<bool>
     {
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToBoolean = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Boolean };
+
         internal BooleanValue(IRContext irContext, bool value)
             : base(irContext, value)
         {
