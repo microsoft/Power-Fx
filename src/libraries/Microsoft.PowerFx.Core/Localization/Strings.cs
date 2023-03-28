@@ -77,8 +77,6 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutFirstN = (b) => StringResources.Get("AboutFirstN", b);
         public static StringGetter AboutLastN = (b) => StringResources.Get("AboutLastN", b);
-        public static StringGetter AboutFirstNW = (b) => StringResources.Get("AboutFirstNW", b);
-        public static StringGetter AboutLastNW = (b) => StringResources.Get("AboutLastNW", b);
         public static StringGetter FirstLastNArg1 = (b) => StringResources.Get("FirstLastNArg1", b);
         public static StringGetter FirstLastNArg2 = (b) => StringResources.Get("FirstLastNArg2", b);
 
@@ -102,11 +100,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter BooleanNArg1 = (b) => StringResources.Get("BooleanNArg1", b);
         public static StringGetter AboutBooleanNT = (b) => StringResources.Get("AboutBooleanNT", b);
         public static StringGetter BooleanNTArg1 = (b) => StringResources.Get("BooleanNTArg1", b);
-
-        public static StringGetter AboutBooleanW = (b) => StringResources.Get("AboutBooleanW", b);
-        public static StringGetter BooleanWArg1 = (b) => StringResources.Get("BooleanWArg1", b);
-        public static StringGetter AboutBooleanWT = (b) => StringResources.Get("AboutBooleanWT", b);
-        public static StringGetter BooleanWTArg1 = (b) => StringResources.Get("BooleanWTArg1", b);
 
         public static StringGetter AboutBooleanB = (b) => StringResources.Get("AboutBooleanB", b);
         public static StringGetter BooleanBArg1 = (b) => StringResources.Get("BooleanBArg1", b);

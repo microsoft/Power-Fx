@@ -385,7 +385,6 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        // Decimal TODO: consistent default text format for float and decimal?
                         var normalized = dec.Normalize();
                         result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
                     }

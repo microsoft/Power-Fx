@@ -552,7 +552,7 @@ namespace Microsoft.PowerFx.Core.Binding
         //      O | n  w  w  w  w  w  w  w  w                   O | n  n  n  n  n  n  n  n  n 
         // (left) |                                        (left) |
 
-        private static DType NumericOpReturnType(DType leftType, DType rightType, bool numberIsFloat)
+        private static DType DetermineNumericOpReturnType(DType leftType, DType rightType, bool numberIsFloat)
         { 
             // unexpected, something went wrong
             if (leftType == DType.Unknown || rightType == DType.Unknown)
@@ -587,7 +587,7 @@ namespace Microsoft.PowerFx.Core.Binding
             var leftKind = leftType.Kind;
             var rightKind = rightType.Kind;
 
-            var returnType = NumericOpReturnType(leftType, rightType, numberIsFloat);
+            var returnType = DetermineNumericOpReturnType(leftType, rightType, numberIsFloat);
 
             if (returnType == DType.Decimal)
             {
@@ -622,7 +622,7 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             var childKind = childType.Kind;
 
-            var returnType = NumericOpReturnType(childType, DType.ObjNull, numberIsFloat);
+            var returnType = DetermineNumericOpReturnType(childType, DType.ObjNull, numberIsFloat);
 
             if (returnType == DType.Decimal || (returnType != DType.Number && !numberIsFloat))
             {

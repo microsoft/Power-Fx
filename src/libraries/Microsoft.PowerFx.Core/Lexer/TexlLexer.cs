@@ -341,12 +341,12 @@ namespace Microsoft.PowerFx.Syntax
             return tokens;
         }
 
-        public List<Token> GetTokens(string text)
+        public List<Token> GetTokens(string text, Flags flags = Flags.None)
         {
             Contracts.AssertValue(text);
 
             Token tok;
-            var impl = new LexerImpl(this, text, new StringBuilder(), Flags.None);
+            var impl = new LexerImpl(this, text, new StringBuilder(), flags);
             var tokens = new List<Token>();
             while ((tok = impl.GetNextToken()) != null)
             {

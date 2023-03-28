@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -83,19 +81,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                    if (nodeToCoercedTypeMap?.Any() ?? false)
-                    {
-                        // Now set the coerced type to a table with numeric column type with the same name as in the argument.
-                        returnType = nodeToCoercedTypeMap[args[0]];
-                    }
-                    else
-                    {
-                        returnType = type0;
-                    }
-
                     returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                        : returnType;
+                        : type0;
 
                     // Check arg1 below.
                     otherArg = args[1];
@@ -128,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 Contracts.Assert(returnType.IsTable);
                 Contracts.Assert(!fValid || returnType.IsColumn);
 
-                if (otherType.IsColumn)
+                if (otherType.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(otherType, otherArg, errors, ref nodeToCoercedTypeMap);
@@ -155,19 +143,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
-                    if (nodeToCoercedTypeMap?.Any() ?? false)
-                    {
-                        // Now set the coerced type to a table with numeric column type with the same name as in the argument.
-                        returnType = nodeToCoercedTypeMap[args[0]];
-                    }
-                    else
-                    {
-                        returnType = type0;
-                    }
-
                     returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                        : returnType;
+                        : type0;
                 }
                 else
                 {

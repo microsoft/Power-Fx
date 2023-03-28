@@ -77,20 +77,20 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var arg0 = (TableValue)args[0];
-            var arg1 = (int)((NumberValue)args[1]).Value;
+            var arg1 = (NumberValue)args[1];
 
             if (arg0 is QueryableTableValue queryableTable)
             {
                 try
                 {
-                    return queryableTable.FirstN(arg1);
+                    return queryableTable.FirstN((int)arg1.Value);
                 }
                 catch (NotDelegableException)
                 {
                 }
             }
 
-            var rows = arg0.Rows.Take(arg1);
+            var rows = arg0.Rows.Take((int)arg1.Value);
             return new InMemoryTableValue(irContext, rows);
         }
 
@@ -107,12 +107,12 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var arg0 = (TableValue)args[0];
-            var arg1 = (int)((NumberValue)args[1]).Value;
+            var arg1 = (NumberValue)args[1];
 
             // $$$ How to do on a streaming service?            
             var allRows = arg0.Rows.ToArray();
             var len = allRows.Length;
-            var take = arg1; // $$$ rounding?
+            var take = (int)arg1.Value; // $$$ rounding?
 
             var rows = allRows.Skip(len - take).Take(take);
 

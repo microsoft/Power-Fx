@@ -86,6 +86,7 @@ namespace Microsoft.PowerFx.Tests
             AllowsSideEffects = true,
             
             // Decimal TODO: why is this needed?  What about decimal doesn't work here?
+            // coercion appears to be needed in HTTP call, need that PR or investigate further without
             NumberIsFloat = true
         };
 
