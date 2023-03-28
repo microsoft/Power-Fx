@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -83,6 +84,18 @@ namespace Microsoft.PowerFx.Functions
         public decimal GetDecimal()
         {
             return _element.GetDecimal();
+        }
+
+        public string GetUntypedNumber()
+        {
+            if (Type == ExternalType.UntypedNumber)
+            {
+                return _element.GetRawText();
+            }
+            else
+            {
+                throw new FormatException();
+            }
         }
 
         public bool TryGetProperty(string value, out IUntypedObject result)

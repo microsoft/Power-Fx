@@ -308,9 +308,8 @@ namespace Microsoft.PowerFx.Functions
             }
             else if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
             {
-                // Decimal TODO needs to work with untyped decimal, this will lose precision
-                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
-                return Text(runner, context, irContext, new FormulaValue[] { n });
+                var str = impl.GetUntypedNumber();
+                return new StringValue(irContext, str);
             }
             else if (impl.Type == FormulaType.Number)
             {

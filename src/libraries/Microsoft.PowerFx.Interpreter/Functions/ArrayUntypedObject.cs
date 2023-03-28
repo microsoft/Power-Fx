@@ -35,6 +35,11 @@ namespace Microsoft.PowerFx.Functions
             throw new NotImplementedException();
         }
 
+        public string GetUntypedNumber()
+        {
+            throw new NotImplementedException();
+        }
+
         public string GetString()
         {
             throw new NotImplementedException();

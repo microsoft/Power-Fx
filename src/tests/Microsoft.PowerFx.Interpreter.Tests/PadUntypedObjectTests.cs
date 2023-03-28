@@ -132,6 +132,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             throw new NotImplementedException();
         }
 
+        public string GetUntypedNumber()
+        {
+            throw new NotImplementedException();
+        }
+
         public string[] GetPropertyNames()
         {
             throw new NotImplementedException();

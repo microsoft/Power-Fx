@@ -31,11 +31,11 @@ namespace Microsoft.PowerFx.Tests
         {
             get
             {
-                if (_source is int || _source is double)
+                if (_source is int || _source is double || _source is uint)
                 {
                     return FormulaType.Number;
                 }
-                
+
                 if (_source is bool)
                 {
                     return FormulaType.Boolean;
@@ -49,6 +49,11 @@ namespace Microsoft.PowerFx.Tests
                 if (_source.GetType().IsArray)
                 {
                     return ExternalType.ArrayType;
+                }
+
+                if (_source is decimal || _source is long || _source is ulong)
+                {
+                    return FormulaType.Decimal;
                 }
 
                 return ExternalType.ObjectType;
@@ -98,14 +103,19 @@ namespace Microsoft.PowerFx.Tests
             // Fx will only call this helper for numbers. 
             Assert.True(Type == FormulaType.Number);
 
+            if (_source is double valDouble)
+            {
+                return valDouble;
+            }
+
             if (_source is int valInt)
             {
                 return valInt;
             }
 
-            if (_source is double valDouble)
+            if (_source is uint valUInt)
             {
-                return valDouble;
+                return valUInt;
             }
 
             throw new InvalidOperationException($"Not a number type");
@@ -121,7 +131,22 @@ namespace Microsoft.PowerFx.Tests
                 return valDecimal;
             }
 
+            if (_source is long valLong)
+            {
+                return valLong;
+            }
+
+            if (_source is ulong valULong)
+            {
+                return valULong;
+            }
+
             throw new InvalidOperationException($"Not a decimal type");
+        }
+
+        public string GetUntypedNumber()
+        {
+            throw new NotImplementedException();
         }
 
         public string GetString()

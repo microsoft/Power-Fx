@@ -230,6 +230,44 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text( "123456789", "00000-0000" )
 "123456789"
 
+>> Text( ParseJSON("1.234567890123456789012345678"), "0.000000000000e00" )
+"1.234567890123456789012345678"
+
+>> Text( ParseJSON("1.234567890123456789012345678"), "00.0000000000000%" )
+"1.234567890123456789012345678"
+
+>> Text( ParseJSON("1.234567890123456789012345678") )
+"1.234567890123456789012345678"
+
+>> Text( ParseJSON("3.1415e300") )
+"3.1415e300"
+
+>> Text( ParseJSON("3.1415E300") )
+"3.1415E300"
+
+>> Text( ParseJSON("3.1415e-300") )
+"3.1415e-300"
+
+>> Text( ParseJSON("3.1415E+300") )
+"3.1415E+300"
+
+>> Text( ParseJSON("123456789"), "00000-0000" )
+"123456789"
+
+>> Text( ParseJSON("1234.34534554e20") )
+"1234.34534554e20"
+
+>> Text( ParseJSON("1234.34534554e2000") )
+"1234.34534554e2000"
+
+// badly formed numbers
+
+>> Text( ParseJSON("123456789d12") )
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text( ParseJSON("--123456789") )
+Error({Kind:ErrorKind.InvalidArgument})
+
 
 
 

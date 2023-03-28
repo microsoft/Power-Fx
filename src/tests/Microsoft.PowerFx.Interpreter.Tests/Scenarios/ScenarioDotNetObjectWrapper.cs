@@ -25,10 +25,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public string Msg { get; set; }
 
-            // Decimal TODO add decimal/bigint tests (and double)
             public long BigInt { get; set; }
 
             public decimal Decimal { get; set; }
+
+            public decimal Decimal2 { get; set; }
+
+            public double Double { get; set; }
+
+            public uint UInt { get; set; }
+
+            public ulong ULong { get; set; }
 
             // Verify we don't eagerly touch all properties
             public string Fail => throw new NotImplementedException("Don't call this");
@@ -40,10 +47,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable(name, objFx);
         }
 
+        // inline data does not support decimal, which is why the max/min decimal tests aren't here
         [Theory]
         [InlineData("Float(obj.Next.Value)", 20.0)]
-        [InlineData("Float(Value(obj.Next.Value))", 20.0)]
+        [InlineData("Float(obj.Next.Double)", 2.28515625)]
+        [InlineData("Float(obj.UInt)", (double)0xffffffffU)]
+        [InlineData("Float(obj.Next.UInt)", (double)0xfffffff0U)]
+        [InlineData("Decimal(obj.ULong)", 0xffffffffffffffffUL)]
+        [InlineData("Decimal(obj.Next.ULong)", 0xfffffffffffffff0UL)]
+        [InlineData("Decimal(obj.BigInt)", -9223372036854775808L)]
+        [InlineData("Decimal(obj.Next.BigInt)", 9223372036854775807L)]
+        [InlineData("Decimal(obj.Decimal2)", 9882075136L)]
+        [InlineData("Decimal(obj.Next.Decimal2)", 158113202176L)]
         [InlineData("Text(obj.Value)", "10")]
+        [InlineData("Text(obj.BigInt)", "-9223372036854775808")]
+        [InlineData("Text(obj.Decimal)", "-79228162514264337593543950335")]
+        [InlineData("Text(obj.Double)", "0.5712890625")]
+        [InlineData("Text(obj.Next.Value)", "20")]
+        [InlineData("Text(obj.Next.BigInt)", "9223372036854775807")]
+        [InlineData("Text(obj.Next.Decimal)", "79228162514264337593543950335")]
+        [InlineData("Text(obj.Next.Double)", "2.28515625")]
+        [InlineData("Text(obj.UInt)", "4294967295")]
+        [InlineData("Text(obj.Next.UInt)", "4294967280")]
+        [InlineData("Text(obj.ULong)", "18446744073709551615")]
+        [InlineData("Text(obj.Next.ULong)", "18446744073709551600")]
         [InlineData("obj.missing", null)] // missing fields are blank
         [InlineData("IsBlank(obj.Next.Next)", true)]
         [InlineData("IsBlank(obj.Next)", false)]
@@ -55,6 +82,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Index(array, 0)", "#error")] // Out of bounds, low
         [InlineData("Index(array, -1)", "#error")] // Out of bounds, low
         [InlineData("Index(array, 100)", "#error")] // Out of bounds, high
+
         public void Test(string expr, object expected)
         {
             var engine = new RecalcEngine();
@@ -62,9 +90,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var obj = new TestObj
             {
                 Value = 10,
+                Double = 0.5712890625,
+                BigInt = -9223372036854775808L,
+                Decimal = -79228162514264337593543950335m,
+                Decimal2 = 9882075136,
+                UInt = 0xFFFFFFFF,
+                ULong = 0xFFFFFFFFFFFFFFFFUL,
                 Next = new TestObj
                 {
-                    Value = 20
+                    Value = 20,
+                    Double = 2.28515625,
+                    BigInt = 9223372036854775807L,
+                    Decimal = 79228162514264337593543950335m,
+                    Decimal2 = 158113202176,
+                    UInt = 0xFFFFFFF0,
+                    ULong = 0xFFFFFFFFFFFFFFF0UL
                 },
                 Flag = true,
                 Msg = "xyz"
@@ -80,6 +120,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             if (expected is string str && str == "#error")
             {
                 Assert.IsType<ErrorValue>(result);
+            }
+            else if (expected is long || expected is ulong)
+            {
+                Assert.Equal(Convert.ToDecimal(expected), result.ToObject());
             }
             else
             {
