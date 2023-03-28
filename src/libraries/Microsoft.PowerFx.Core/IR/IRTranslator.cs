@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                // I think node.NumValue might be dead code, this could be cleaned up
+                // I think node.DecValue might be dead code, this could be cleaned up (copied comment from NumLitNode overload)
                 var value = node.Value?.Value ?? node.DecValue;
                 return MaybeInjectCoercion(node, new DecimalLiteralNode(context.GetIRContext(node), value), context);
             }
