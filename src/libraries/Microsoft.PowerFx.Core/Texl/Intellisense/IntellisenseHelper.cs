@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
@@ -375,16 +374,11 @@ namespace Microsoft.PowerFx.Intellisense
                         // for all parameters, except last one we have direct parameters / not in a record
                         if (argPosition < info.Function.MaxArity - 1)
                         {
-                            string sg = suggestion.Suggestion switch
-                            {
-                                StringValue sv => sv.Value,
-                                NumberValue nv => nv.Value.ToString(CultureInfo.InvariantCulture),
-                                _ => null
-                            };
+                            string suggestionStr = suggestion.Suggestion.ToExpression();
 
-                            if (!string.IsNullOrEmpty(sg))
+                            if (!string.IsNullOrEmpty(suggestionStr))
                             {
-                                AddSuggestion(intellisenseData, $@"""{sg}""", SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                                AddSuggestion(intellisenseData, suggestionStr, SuggestionKind.Global, SuggestionIconKind.Other, suggestion.Suggestion.Type._type, false);
                             }
                         }
                         else

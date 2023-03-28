@@ -4,28 +4,30 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
 #if canvas
 using Microsoft.AppMagic.Authoring.Publish;
 using Microsoft.AppMagic.DocumentServer.Common;
 #endif
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
-using Microsoft.PowerFx;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
-using System.Threading;
+using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {

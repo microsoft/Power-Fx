@@ -2,8 +2,9 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx.Types
+namespace Microsoft.PowerFx.Intellisense
 {
     public class ConnectorSuggestions
     {
@@ -11,7 +12,7 @@ namespace Microsoft.PowerFx.Types
 
         public ErrorValue Error { get; }
 
-        public ConnectorSuggestions(ErrorValue error) 
+        public ConnectorSuggestions(ErrorValue error)
         {
             Suggestions = null;
             Error = error;
@@ -25,7 +26,7 @@ namespace Microsoft.PowerFx.Types
     }
 
     public class ConnectorSuggestion
-    {       
+    {
         public FormulaValue Suggestion { get; }
 
         public string DisplayName { get; }
@@ -35,5 +36,5 @@ namespace Microsoft.PowerFx.Types
             Suggestion = suggestion;
             DisplayName = displayName;
         }
-    }    
+    }
 }

@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var asm = typeof(Parser.TexlParser).Assembly;
 
             // The goal for public namespaces is to make the SDK easy for the consumer. 
-            // Namespace principles for public classes:            // 
+            // Namespace principles for public classes:
             // - prefer fewer namespaces. See C# for example: https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis
             // - For easy discovery, but Engine in "Microsoft.PowerFx".
             // - For sub areas with many related classes, cluster into a single subnamespace.
@@ -105,8 +105,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.CollectionTableValue`1",
                 "Microsoft.PowerFx.Types.ColorType",
                 "Microsoft.PowerFx.Types.ColorValue",
-                "Microsoft.PowerFx.Types.ConnectorSuggestions",
-                "Microsoft.PowerFx.Types.ConnectorSuggestion",
                 "Microsoft.PowerFx.Types.DateTimeNoTimeZoneType",
                 "Microsoft.PowerFx.Types.DateTimeType",
                 "Microsoft.PowerFx.Types.DateTimeValue",
@@ -151,6 +149,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
+                "Microsoft.PowerFx.Intellisense.ConnectorSuggestion",
+                "Microsoft.PowerFx.Intellisense.ConnectorSuggestions",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
                 "Microsoft.PowerFx.Intellisense.IntellisenseOperations",
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
-                "Microsoft.PowerFx.Intellisense.SuggestionKind",
+                "Microsoft.PowerFx.Intellisense.SuggestionKind",                
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
                 "Microsoft.PowerFx.Intellisense.CodeFixHandler",
