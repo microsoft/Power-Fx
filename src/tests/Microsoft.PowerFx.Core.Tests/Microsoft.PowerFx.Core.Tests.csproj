@@ -47,12 +47,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ExpressionTestCases\DecimalBoot.txt" />
-    <None Remove="ExpressionTestCases\FloatLarge.txt" />
-    <None Remove="ExpressionTestCases\If_AllowsSideEffects_NumberIsFloat.txt" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
