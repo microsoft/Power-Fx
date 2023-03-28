@@ -68,8 +68,8 @@ namespace Microsoft.PowerFx
             { 
                 throw new ArgumentNullException(nameof(function)); 
             }
-
-            config.AddFunction(function.GetServiceFunction());
+            
+            config.AddFunction(function.GetServiceFunction(functionNamespace, httpClient, cache));
         }
 
         public static void Add(this Dictionary<string, FormulaValue> map, string fieldName, FormulaValue value)

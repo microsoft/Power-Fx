@@ -1,0 +1,5 @@
+﻿{
+  "status": 400,
+  "source": "https://tip1-shared-002.token.azure-apim.net:443/tokens/tip1-shared-002/sql/5f57ec83acef477b8ccc769e52fa22cc/exchange",
+  "message": "Error from token exchange: Bad authorization token. The access token is missing or invalid."
+}
