@@ -2937,6 +2937,26 @@
     <value>地球仪</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>全局 - 未连接</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>全局 - 刷新</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>全局 - 等待更改</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>全局 - 警告</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>全局 - 错误</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>半填充的圆形</value>
     

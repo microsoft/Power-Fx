@@ -2937,6 +2937,26 @@
     <value>โลก</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>ส่วนกลาง - ไม่ได้เชื่อมต่อ</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>ส่วนกลาง - รีเฟรช</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>ส่วนกลาง - การเปลี่ยนแปลงที่รอดำเนินการ</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>ส่วนกลาง - คำเตือน</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>ส่วนกลาง - ข้อผิดพลาด</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>วงกลมลงสีครึ่งหนึ่ง</value>
     
