@@ -51,6 +51,14 @@ namespace Microsoft.PowerFx
         /// </summary>
         RestrictedIsEmptyArguments = 0x20,
 
+        /// <summary>
+        /// Allow the language to support legacy behavior and avoid breaking Canvas. Changes in the behavior:
+        ///   Number accepts a datetime and vice-versa (useLegacyDateTimeAccepts). (TODO LEAVE AS IT IS)
+        ///   Table function coercions (some as arrays)
+        ///   Mutation functions coercions.
+        /// </summary>
+        PowerFxV1 = 0x40,
+
         /// <summary>        
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.

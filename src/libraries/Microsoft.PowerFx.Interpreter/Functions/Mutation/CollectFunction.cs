@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Interpreter
         }
 
         // Attempt to get the unified schema of the items being collected by an invocation.
-        public bool TryGetUnifiedCollectedType(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType collectedType)
+        public bool TryGetUnifiedCollectedType(TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType collectedType, bool powerfxV1 = false)
         {
             Contracts.AssertValue(args);
             Contracts.AssertAllValues(args);
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Interpreter
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = argType.CheckAggregateNamesWithCoercion(argTypes[0], args[i], errors, SupportsParamCoercion);
+                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion, powerfxV1: powerfxV1);
                 fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Interpreter
                 else
                 {
                     var fUnionError = false;
-                    itemType = DType.UnionWithCoercion(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true);
+                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, powerfxV1: powerfxV1);
                     if (fUnionError)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
@@ -158,6 +158,7 @@ namespace Microsoft.PowerFx.Interpreter
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
+            var powerfxV1 = context.Features.HasPowerFxV1();
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // Need a collection for the 1st arg
@@ -170,14 +171,14 @@ namespace Microsoft.PowerFx.Interpreter
 
             // Get the unified collected type on the RHS. This will generate appropriate
             // document errors for invalid arguments such as unsupported aggregate types.
-            fValid &= TryGetUnifiedCollectedType(args, argTypes, errors, out DType collectedType);
+            fValid &= TryGetUnifiedCollectedType(args, argTypes, errors, out DType collectedType, powerfxV1: powerfxV1);
             Contracts.Assert(collectedType.IsRecord);
 
             if (fValid)
             {
                 // The item type must be compatible with the collection schema.
                 var fError = false;
-                returnType = DType.UnionWithCoercion(ref fError, collectionType.ToRecord(), collectedType);
+                returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, powerfxV1: powerfxV1);
                 if (fError)
                 {
                     fValid = false;

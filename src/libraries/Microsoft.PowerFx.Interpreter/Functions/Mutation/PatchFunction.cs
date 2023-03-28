@@ -150,6 +150,7 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
+            var powerfxV1 = context.Features.HasPowerFxV1();
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             DType dataSourceType = argTypes[0];
@@ -180,7 +181,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = curType.CheckAggregateNamesWithCoercion(dataSourceType, args[i], errors, SupportsParamCoercion);
+                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion, powerfxV1: powerfxV1);
 
                 isValid = isValid && checkAggregateNames;
                 isSafeToUnion = checkAggregateNames;
@@ -198,12 +199,12 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType);
+                        retType = DType.Union(retType, coercionType, powerfxV1: powerfxV1);
                     }
                 }
                 else if (isSafeToUnion)
                 {
-                    retType = DType.Union(retType, curType);
+                    retType = DType.Union(retType, curType, powerfxV1: powerfxV1);
                 }
             }
 

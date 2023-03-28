@@ -55,6 +55,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
+            var powerfx1 = context.Features.HasPowerFxV1();
+
             // Ensure that all args (if any) are records with compatible schemas.
             var rowType = DType.EmptyRecord;
             for (var i = 0; i < argTypes.Length; i++)
@@ -80,7 +82,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else if (isargTypeAllowedInTable && argType.CoercesTo(rowType))
                     {
-                        rowType = DType.UnionWithCoercion(ref isUnionError, rowType, argType);
+                        if (powerfx1)
+                        {
+                            rowType = DType.Union(ref isUnionError, rowType, argType, powerfxV1: powerfx1);
+                        }
+
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
                     }
                     else

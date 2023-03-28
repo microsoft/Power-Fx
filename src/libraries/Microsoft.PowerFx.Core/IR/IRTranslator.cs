@@ -741,14 +741,22 @@ namespace Microsoft.PowerFx.Core.IR
 
             private IntermediateNode GetAggregateCoercionNode(UnaryOpKind unaryOpKind, IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
             {
+                var powerfxv1 = context.Binding.Features.HasPowerFxV1();
                 var fieldCoercions = new Dictionary<DName, IntermediateNode>();
                 var scope = GetNewScope();
                 foreach (var fromField in fromType.GetNames(DPath.Root))
                 {
                     if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
                     {
-                        // If field type is present, add to coerce list as is.
-                        fieldCoercions.Add(fromField.Name, new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))));
+                        if (powerfxv1)
+                        {
+                            // If field type is present, add to coerce list as is.
+                            fieldCoercions.Add(fromField.Name, new ScopeAccessNode(IRContext.NotInSource(FormulaType.Build(fromField.Type)), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(fromField.Name))));
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                     else
                     {

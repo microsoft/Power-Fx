@@ -46,8 +46,9 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="arg">Arg node.</param>
         /// <param name="errors">Error object reference.</param>
         /// <param name="supportsParamCoercion">Does the caller function support coercion.</param>
+        /// <param name="powerfxV1">PowerFx 1.0 mode.</param>
         /// <returns></returns>
-        internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false)
+        internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false, bool powerfxV1 = false)
         {
             bool isValid = true;
 
@@ -72,57 +73,33 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: false) &&
-                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
+                bool coercionIsSafe = false;
+
+                if (powerfxV1)
                 {
-                    if (dsNameType.Kind == type.Kind)
-                    {
-                        errors.Errors(arg, type, schemaDifference, schemaDifferenceType);
-                    }
-                    else
+                    if (!supportsParamCoercion || !type.CoercesTo(dsNameType, out coercionIsSafe, powerfxV1: powerfxV1))
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+
+                        isValid = false;
                     }
-
-                    isValid = false;
                 }
-            }
-
-            return isValid;
-        }
-
-        // !!!###
-        // Copy and paste from CheckAggregateNames but check coercion only
-        internal static bool CheckAggregateNamesWithCoercion(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false)
-        {
-            bool isValid = true;
-
-            foreach (var typedName in argType.GetNames(DPath.Root))
-            {
-                DName name = typedName.Name;
-                DType type = typedName.Type;
-
-                if (!dataSourceType.TryGetType(name, out DType dsNameType))
+                else
                 {
-                    dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, arg);
-                    isValid = false;
-                    continue;
-                }
-
-                // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
-                if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)
-                {
-                    if (dsNameType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out var expandedType))
+                    if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: false) &&
+                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
                     {
-                        dsNameType = expandedType;
+                        if (dsNameType.Kind == type.Kind)
+                        {
+                            errors.Errors(arg, type, schemaDifference, schemaDifferenceType);
+                        }
+                        else
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+                        }
+
+                        isValid = false;
                     }
-                }
-
-                if (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
-
-                    isValid = false;
                 }
             }
 

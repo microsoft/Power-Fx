@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             //path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\ForAllMutate.txt";
 
-            var config = new PowerFxConfig(Features.TableSyntaxDoesntWrapRecords);
+            var config = new PowerFxConfig(Features.All);
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
             var runner = new ReplRunner(engine);

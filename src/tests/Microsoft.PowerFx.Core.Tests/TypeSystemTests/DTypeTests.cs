@@ -2003,7 +2003,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("![A:![B:s]]", out type1) && DType.TryParse("*[A:*[B:s]]", out type2) && type1.CoercesTo(type2));
 
             Assert.False(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:n]", out type2) && type1.CoercesTo(type2));
-            Assert.True(DType.TryParse("![A:n]", out type1) && DType.TryParse("*[A:n, B:s]", out type2) && type1.CoercesTo(type2));
+            Assert.False(DType.TryParse("![A:n]", out type1) && DType.TryParse("*[A:n, B:s]", out type2) && type1.CoercesTo(type2));
             Assert.False(DType.TryParse("![A:*[B:*[C:n]]]", out type1) && DType.TryParse("*[A:*[B:![C:n]]]", out type2) && type1.CoercesTo(type2));
 
             Assert.False(DType.EmptyEnum.CoercesTo(DType.EmptyTable));

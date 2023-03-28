@@ -5188,6 +5188,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 var exprType = DType.Invalid;
                 var isSelfContainedConstant = true;
 
+                var powerfx1 = _features.HasPowerFxV1();
+
                 foreach (var child in node.Children)
                 {
                     var childType = _txb.GetType(child);
@@ -5201,11 +5203,15 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else if (isChildTypeAllowedInTable && exprType.CanUnionWith(childType))
                     {
-                        exprType = DType.Union(exprType, childType);
+                        exprType = DType.Union(exprType, childType, powerfxV1: powerfx1);
                     }
                     else if (isChildTypeAllowedInTable && childType.CoercesTo(exprType))
                     {
-                        exprType = DType.UnionWithCoercion(exprType, childType);
+                        if (powerfx1)
+                        {
+                            exprType = DType.Union(exprType, childType, powerfxV1: powerfx1);
+                        }
+
                         _txb.SetCoercedType(child, exprType);
                     }
                     else
