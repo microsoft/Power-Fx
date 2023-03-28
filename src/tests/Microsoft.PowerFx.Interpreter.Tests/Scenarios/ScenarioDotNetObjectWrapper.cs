@@ -25,6 +25,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public string Msg { get; set; }
 
+            // Decimal TODO add decimal/bigint tests (and double)
+            public long BigInt { get; set; }
+
+            public decimal Decimal { get; set; }
+
             // Verify we don't eagerly touch all properties
             public string Fail => throw new NotImplementedException("Don't call this");
         }

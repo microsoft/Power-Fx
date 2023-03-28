@@ -86,8 +86,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel and DAX function: Value
     internal sealed class ValueFunction : ValueBaseFunction
     {
+        public const string ValueInvariantFunctionName = "Value";
+
         public ValueFunction()
-            : base("Value", TexlStrings.AboutValue, DType.Unknown)
+            : base(ValueInvariantFunctionName, TexlStrings.AboutValue, DType.Unknown)
         {
         }
     }
@@ -96,8 +98,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent to Excel and DAX Value function, but always returns a Decimal number (C# decimal)
     internal sealed class DecimalFunction : ValueBaseFunction
     {
+        public const string DecimalInvariantFunctionName = "Decimal";
+
         public DecimalFunction()
-            : base("Decimal", TexlStrings.AboutDecimal, DType.Decimal)
+            : base(DecimalInvariantFunctionName, TexlStrings.AboutDecimal, DType.Decimal)
         {
         }
     }
@@ -106,8 +110,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent to Excel and DAX Value function, but always returns a Float number (C#/IEEE double precision)
     internal sealed class FloatFunction : ValueBaseFunction
     {
+        public const string FloatInvariantFunctionName = "Float";
+
         public FloatFunction()
-            : base("Float", TexlStrings.AboutFloat, DType.Number)
+            : base(FloatInvariantFunctionName, TexlStrings.AboutFloat, DType.Number)
         {
         }
     }
@@ -136,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ValueFunction_UO : ValueBaseFunction_UO
     {
         public ValueFunction_UO()
-            : base("Value", TexlStrings.AboutValue, DType.Unknown)
+            : base(ValueFunction.ValueInvariantFunctionName, TexlStrings.AboutValue, DType.Unknown)
         {
         }
 
@@ -152,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FloatFunction_UO : ValueBaseFunction_UO
     {
         public FloatFunction_UO()
-            : base("Float", TexlStrings.AboutFloat, DType.Number)
+            : base(FloatFunction.FloatInvariantFunctionName, TexlStrings.AboutFloat, DType.Number)
         {
         }
     }
@@ -161,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DecimalFunction_UO : ValueBaseFunction_UO
     {
         public DecimalFunction_UO()
-            : base("Decimal", TexlStrings.AboutDecimal, DType.Decimal)
+            : base(DecimalFunction.DecimalInvariantFunctionName, TexlStrings.AboutDecimal, DType.Decimal)
         {
         }
     }

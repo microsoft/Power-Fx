@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -149,7 +150,8 @@ namespace Microsoft.PowerFx.Functions
 
                 return Value(runner, context, irContext, new FormulaValue[] { str });
             }
-            else if (impl.Type == FormulaType.Number && numberIsFloat)
+            else if ((impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber && numberIsFloat) ||
+                     impl.Type == FormulaType.Number)
             {
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
@@ -157,31 +159,33 @@ namespace Microsoft.PowerFx.Functions
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
 
-                return new NumberValue(irContext, number);
+                return Value(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
             }
-            else if (impl.Type == FormulaType.Number && !numberIsFloat)
+            else if ((impl.Type is ExternalType et2 && et2.Kind == ExternalTypeKind.UntypedNumber && !numberIsFloat) ||
+                     impl.Type == FormulaType.Decimal)
             {
                 try
                 {
                     var dec = impl.GetDecimal();
-                    return new DecimalValue(irContext, dec);
+                    return Value(runner, context, irContext, new FormulaValue[] { new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), dec) });
                 }
                 catch (FormatException)
                 {
                     return CommonErrors.ArgumentOutOfRange(irContext);
                 }
             }
-            else if (impl.Type == FormulaType.Boolean && numberIsFloat)
+            else if (impl.Type == FormulaType.Boolean)
             {
                 var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
 
-                return BooleanToNumber(irContext, new BooleanValue[] { b });
-            }
-            else if (impl.Type == FormulaType.Boolean && !numberIsFloat)
-            {
-                var b = new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), impl.GetBoolean());
-
-                return BooleanToDecimal(irContext, new BooleanValue[] { b });
+                if (numberIsFloat)
+                {
+                    return BooleanToNumber(irContext, new BooleanValue[] { b });
+                }
+                else
+                {
+                    return BooleanToDecimal(irContext, new BooleanValue[] { b });
+                }
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
@@ -202,11 +206,33 @@ namespace Microsoft.PowerFx.Functions
 
                 return Decimal(runner, context, irContext, new FormulaValue[] { str });
             }
+            else if ((impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber) ||
+                     impl.Type == FormulaType.Decimal)
+            {
+                try
+                {
+                    var dec = impl.GetDecimal();
+                    return new DecimalValue(irContext, dec);
+                }
+                catch
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
+            }
             else if (impl.Type == FormulaType.Number)
             {
-                // Decimal TODO: Badly formed decimal, error return?
-                var dec = impl.GetDecimal();
-                return new DecimalValue(irContext, dec);
+                var number = impl.GetDouble();
+                if (IsInvalidDouble(number))
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+
+                return Decimal(runner, context, irContext, new FormulaValue[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), number) });
             }
             else if (impl.Type == FormulaType.Boolean)
             {
@@ -233,7 +259,8 @@ namespace Microsoft.PowerFx.Functions
 
                 return Float(runner, context, irContext, new FormulaValue[] { str });
             }
-            else if (impl.Type == FormulaType.Number)
+            else if ((impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber) ||
+                      impl.Type == FormulaType.Number)  
             {
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
@@ -242,6 +269,23 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return new NumberValue(irContext, number);
+            }
+            else if (impl.Type == FormulaType.Decimal)
+            {
+                try
+                {
+                    var dec = impl.GetDecimal();
+                    return Float(runner, context, irContext, new FormulaValue[] { new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), dec) });
+                }
+                catch
+                {
+                    return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = "Untyped number is not a valid Decimal value, possible overflow",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.InvalidArgument
+                    });
+                }
             }
             else if (impl.Type == FormulaType.Boolean)
             {
@@ -262,9 +306,20 @@ namespace Microsoft.PowerFx.Functions
                 var str = impl.GetString();
                 return new StringValue(irContext, str);
             }
+            else if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
+            {
+                // Decimal TODO needs to work with untyped decimal, this will lose precision
+                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
+                return Text(runner, context, irContext, new FormulaValue[] { n });
+            }
             else if (impl.Type == FormulaType.Number)
             {
                 var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
+                return Text(runner, context, irContext, new FormulaValue[] { n });
+            }
+            else if (impl.Type == FormulaType.Decimal)
+            {
+                var n = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), impl.GetDecimal());
                 return Text(runner, context, irContext, new FormulaValue[] { n });
             }
             else if (impl.Type == FormulaType.Boolean)
@@ -330,8 +385,9 @@ namespace Microsoft.PowerFx.Functions
                 var str = new StringValue(IRContext.NotInSource(FormulaType.String), impl.GetString());
                 return TextToBoolean(irContext, new StringValue[] { str });
             }
-            else if (impl.Type == FormulaType.Number)
+            else if (impl.Type is ExternalType externalType && externalType.Kind == ExternalTypeKind.UntypedNumber)
             {
+                // OK to use only Float here before conversion to Boolean, as all Decimal values can be represented in Float
                 var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
                 return NumberToBoolean(irContext, new NumberValue[] { n });
             }
