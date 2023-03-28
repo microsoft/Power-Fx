@@ -2129,9 +2129,9 @@ namespace Microsoft.PowerFx.Functions
 
                 if (i + 2 == args.Length - 1)
                 {
-                    var falseBranch = args[i + 2];
-                    var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
+                    var otherwiseBranch = args[i + 2];
+                    var otherwiseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    return MaybeAdjustToCompileTimeType(otherwiseBranchResult, irContext);
                 }
             }
 

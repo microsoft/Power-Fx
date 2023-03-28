@@ -214,8 +214,24 @@ If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 >> IfError(1, 2, 3/0, If(true, 1/0, {x:4}))
 Error({Kind:ErrorKind.Div0})
 
+// Error is not returned.
+>> IfError(1, 2, 3/0, If(false, 1/0, {x:4}))
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
 >> IfError(1, a)
 Errors: Error 11-12: Name isn't valid. 'a' isn't recognized.|Error 0-13: The function 'IfError' has some invalid arguments.
 
 >> IfError(a, 1)
 Errors: Error 8-9: Name isn't valid. 'a' isn't recognized.|Error 0-13: The function 'IfError' has some invalid arguments.
+
+>> IfError( If(true, 1, {a:1}), 1, 2 )
+2
+
+>> IfError( If(true, 1/0, {a:1}), 1, 2 )
+1
+
+>> IfError( 1, "hello", If(true,1/0,{a:1}), "great", "world")
+"great"
+
+>> IfError( 1, "one", If(true,1,{a:1}), "two", "three")
+"three"

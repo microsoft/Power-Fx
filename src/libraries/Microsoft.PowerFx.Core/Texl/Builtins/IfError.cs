@@ -131,7 +131,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         // If the types are incompatible, the result type is void.
                         type = DType.Void;
-                        break;
                     }
                 }
                 else if (typeArg.Kind != DKind.Unknown)
