@@ -208,7 +208,7 @@ namespace Microsoft.PowerFx.Connectors
 
     public class ConnectorParameterWithSuggestions : ConnectorParameter
     {
-        public List<ConnectorSuggestion> Suggestions { get; internal set; }
+        public IReadOnlyList<ConnectorSuggestion> Suggestions { get; internal set; }
 
         public FormulaValue Value { get; private set; }
         

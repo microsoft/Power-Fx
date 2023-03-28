@@ -7,7 +7,7 @@ namespace Microsoft.PowerFx.Types
 {
     public class ConnectorSuggestions
     {
-        public List<ConnectorSuggestion> Suggestions { get; internal set; }
+        public IReadOnlyList<ConnectorSuggestion> Suggestions { get; internal set; }
 
         public ErrorValue Error { get; }
 
@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Types
             Error = error;
         }
 
-        public ConnectorSuggestions(List<ConnectorSuggestion> suggestions)
+        public ConnectorSuggestions(IReadOnlyList<ConnectorSuggestion> suggestions)
         {
             Suggestions = suggestions;
             Error = null;
