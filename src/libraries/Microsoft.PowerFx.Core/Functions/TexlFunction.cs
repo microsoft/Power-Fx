@@ -1252,7 +1252,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DefaultUnaryOpDelegationStrategy(op, this);
         }
 
-        public ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        public virtual ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
         {
             return new DelegationValidationStrategy(this);
         }
