@@ -1108,7 +1108,7 @@ namespace Microsoft.PowerFx.Core.Binding
             switch (node.Op)
             {
                 case UnaryOp.Not:
-                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue);
+                    var resNot = CheckTypeCore(errorContainer, node.Child, childType, DType.Boolean, /* coerced: */ DType.Number, DType.Decimal, DType.String, DType.OptionSetValue, DType.UntypedObject);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resNot.Coercions };
                 case UnaryOp.Minus:
                     switch (childType.Kind)

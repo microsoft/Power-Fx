@@ -15,9 +15,7 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Value(arg:s|n [,language:s])
-    // Corresponding Excel and DAX function: Value
-    internal class ValueBaseFunction : BuiltinFunction
+    internal abstract class ValueBaseFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
@@ -84,6 +82,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Value(arg:s|n [,language:s])
+    // Corresponding Excel and DAX function: Value
     internal sealed class ValueFunction : ValueBaseFunction
     {
         public ValueFunction()
@@ -92,6 +92,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Decimal(arg:s|n [,language:s])
+    // Equivalent to Excel and DAX Value function, but always returns a Decimal number (C# decimal)
     internal sealed class DecimalFunction : ValueBaseFunction
     {
         public DecimalFunction()
@@ -100,6 +102,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Float(arg:s|n [,language:s])
+    // Equivalent to Excel and DAX Value function, but always returns a Float number (C#/IEEE double precision)
     internal sealed class FloatFunction : ValueBaseFunction
     {
         public FloatFunction()
@@ -108,8 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // Value(arg:O)
-    internal class ValueBaseFunction_UO : BuiltinFunction
+    internal abstract class ValueBaseFunction_UO : BuiltinFunction
     {
         public override bool IsSelfContained => true;
 
@@ -145,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // Value(arg:O)
+    // Float(arg:O)
     internal sealed class FloatFunction_UO : ValueBaseFunction_UO
     {
         public FloatFunction_UO()
@@ -154,6 +157,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Decimal(arg:O)
     internal sealed class DecimalFunction_UO : ValueBaseFunction_UO
     {
         public DecimalFunction_UO()

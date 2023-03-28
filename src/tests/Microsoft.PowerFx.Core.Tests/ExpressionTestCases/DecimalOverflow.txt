@@ -163,8 +163,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Value( "-1e-100" )
 0
 
-// Decimal TODO: Why is Value returning 0 and UO not?
-
 >> Value( ParseJSON( "1e100" ) )
 Error({Kind:ErrorKind.InvalidArgument})
 

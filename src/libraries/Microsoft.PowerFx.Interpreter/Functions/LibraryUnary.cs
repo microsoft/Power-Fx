@@ -869,7 +869,7 @@ namespace Microsoft.PowerFx.Functions
                 return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)evalValue);
             }
 
-            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Color._type.GetKindString());
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Decimal._type.GetKindString());
             return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
         }
 

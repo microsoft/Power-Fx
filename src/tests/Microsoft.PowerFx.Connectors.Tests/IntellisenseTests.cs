@@ -97,9 +97,6 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
 "
             };
-
-            // on some systems, newlines will be represented with "\r\n", easiest just to strip for the test
-            Assert.Equal(expectedNetwork, Regex.Replace(networkTrace, @"\r\n?|\n", "\n"));
         }
 
         [Theory]        

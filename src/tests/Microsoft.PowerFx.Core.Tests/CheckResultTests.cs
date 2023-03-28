@@ -161,11 +161,13 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.SetBindingInfo());
         }
 
-        [Fact]
-        public void BasicParseErrors2()
+        [Theory]
+        [InlineData("1+", true)]
+        [InlineData("1+", false)]
+        public void BasicParseErrors2(string expr, bool numberIsFloat)
         {
             var check = new CheckResult(new Engine());
-            check.SetText("1+", _numberIsFloatOpts); // parse error
+            check.SetText(expr, numberIsFloat ? _numberIsFloatOpts : null); // parse error
 
            // Can still try to bind even with parse errors. 
             // But some information like Returntype isn't computed.
@@ -183,32 +185,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Still assign some types
             var node = ((BinaryOpNode)parse.Root).Left;
             var type = check.GetNodeType(node);
-            Assert.Equal(FormulaType.Number, type);
-        }
-
-        [Fact]
-        public void BasicParseErrors2_Decimal()
-        {
-            var check = new CheckResult(new Engine());
-            check.SetText("1+"); // parse error
-
-            // Can still try to bind even with parse errors. 
-            // But some information like Returntype isn't computed.
-            check.SetBindingInfo();
-            var parse = check.ApplyParse();
-            Assert.NotNull(parse);
-            Assert.False(parse.IsSuccess);
-
-            Assert.False(check.IsSuccess);
-
-            check.ApplyBinding();
-            Assert.NotNull(check.Binding);
-            Assert.Null(check.ReturnType);
-
-            // Still assign some types
-            var node = ((BinaryOpNode)parse.Root).Left;
-            var type = check.GetNodeType(node);
-            Assert.Equal(FormulaType.Decimal, type);
+            Assert.Equal(numberIsFloat ? FormulaType.Number : FormulaType.Decimal, type);
         }
 
         // Ensure we can pass in ParserOptions. 
