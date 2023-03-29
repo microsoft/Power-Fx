@@ -3234,7 +3234,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                         return;
                     }
-                    
+
                     // Validate that the name exists in the enum type
                     if (leftType.TryGetEnumValue(nameRhs, out value))
                     {
@@ -5187,6 +5187,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertValue(node);
                 var exprType = DType.Invalid;
                 var isSelfContainedConstant = true;
+                var powerfxV1 = _features.HasPowerFxV1();
 
                 foreach (var child in node.Children)
                 {
@@ -5205,6 +5206,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else if (isChildTypeAllowedInTable && childType.CoercesTo(exprType))
                     {
+                        if (powerfxV1)
+                        {
+                            exprType = DType.Union(exprType, childType, powerfxV1: powerfxV1);
+                        }
+
                         _txb.SetCoercedType(child, exprType);
                     }
                     else

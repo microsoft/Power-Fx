@@ -63,6 +63,14 @@ namespace Microsoft.PowerFx
         /// </summary>
         AllowImpureNodeDelegation = 0x80,
 
+        /// <summary>
+        /// Allow the language to support legacy behavior and avoid breaking Canvas. Changes in the behavior:
+        ///   Tabular don't drop columns after coercions (#1162)
+        ///   Table function allows coercions (#1204)
+        /// Added March 2023.
+        /// </summary>
+        PowerFxV1 = 0x100,
+
         /// <summary>        
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.

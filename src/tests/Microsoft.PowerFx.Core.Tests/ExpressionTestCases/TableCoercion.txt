@@ -1,0 +1,37 @@
+﻿#SETUP:PowerFxV1
+
+>> [{a:1}, {a:true, b:2}]
+Table({a:1,b:Blank()},{a:1,b:2})
+
+>> First([{a:1}, {a:true, b:2}]).b
+Blank()
+
+>> Last([{a:1}, {a:true, b:2}]).b
+2
+
+>> [{a:1}, {a:Date(2023,3,1), b:2}]
+Table({a:1,b:Blank()},{a:44986,b:2})
+
+>> [{a:10,b:11}, {a:20, b:"21"}]
+Table({a:10,b:11},{a:20,b:21})
+
+>> Table({a:1}, {a:true, b:2})
+Table({a:1,b:Blank()},{a:1,b:2})
+
+>> First(Table({a:1}, {a:true, b:2})).b
+Blank()
+
+>> Last(Table({a:1}, {a:true, b:2})).b
+2
+
+>> Table({a:1}, {a:Date(2023,3,1), b:2})
+Table({a:1,b:Blank()},{a:44986,b:2})
+
+>> Table({a:10,b:11}, {a:20, b:"21"})
+Table({a:10,b:11},{a:20,b:21})
+
+>> Table({a:1}, {a:"1"}, {a:true})
+Table({a:1},{a:1},{a:1})
+
+>> Table({a:1}, {a:Date(2023,3,1)}, {a:true})
+Table({a:1},{a:44986},{a:1})
