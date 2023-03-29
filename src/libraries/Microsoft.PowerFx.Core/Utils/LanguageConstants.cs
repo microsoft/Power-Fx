@@ -8,6 +8,31 @@ namespace Microsoft.PowerFx.Core.Utils
     internal class LanguageConstants
     {
         /// <summary>
+        /// The string value representing Color enum.
+        /// </summary>
+        public const string ColorEnumString = "Color";
+
+        /// <summary>
+        /// The string value representing DateTimeFormat enum.
+        /// </summary>
+        public const string DateTimeFormatEnumString = "DateTimeFormat";
+
+        /// <summary>
+        /// The string value representing StartOfWeek enum.
+        /// </summary>
+        public const string StartOfWeekEnumString = "StartOfWeek";
+
+        /// <summary>
+        /// The string value representing TimeUnit enum.
+        /// </summary>
+        public const string TimeUnitEnumString = "TimeUnit";
+
+        /// <summary>
+        /// The string value representing ErrorKind enum.
+        /// </summary>
+        public const string ErrorKindEnumString = "ErrorKind";
+
+        /// <summary>
         /// The string value representing SortOrder enum.
         /// </summary>
         public static string SortOrderEnumString => "SortOrder";

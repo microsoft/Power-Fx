@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -52,12 +52,24 @@ namespace Microsoft.PowerFx
         RestrictedIsEmptyArguments = 0x20,
 
         /// <summary>
+        /// Allow delegation for async calls (delegate using awaited call result).
+        /// Added March 2023.
+        /// </summary>
+        AllowAsyncDelegation = 0x40,
+
+        /// <summary>
+        /// Allow delegation for impure nodes.
+        /// Added March 2023.
+        /// </summary>
+        AllowImpureNodeDelegation = 0x80,
+
+        /// <summary>
         /// Allow the language to support legacy behavior and avoid breaking Canvas. Changes in the behavior:
         ///   Number accepts a datetime and vice-versa (useLegacyDateTimeAccepts). (TODO LEAVE AS IT IS)
         ///   Table function coercions (some as arrays)
         ///   Mutation functions coercions.
         /// </summary>
-        PowerFxV1 = 0x40,
+        PowerFxV1 = 0x100,
 
         /// <summary>        
         /// All features enabled
