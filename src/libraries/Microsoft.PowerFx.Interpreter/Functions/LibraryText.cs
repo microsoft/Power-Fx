@@ -165,6 +165,9 @@ namespace Microsoft.PowerFx.Functions
         public static bool TryValue(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out NumberValue result)
         {
             result = null;
+            
+            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type));
+
             switch (value)
             {
                 case NumberValue n:

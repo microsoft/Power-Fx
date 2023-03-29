@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Types
     /// </summary>
     public class DateTimeValue : PrimitiveValue<DateTime>
     {
+        // List of types that allowed to convert to DateTimeValue
         internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToDateTime = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date };
 
         /// <summary>

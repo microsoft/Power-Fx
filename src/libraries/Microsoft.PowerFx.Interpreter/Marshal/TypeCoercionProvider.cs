@@ -69,13 +69,9 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, out FormulaValue result)
         {
-            result = null;            
-            if (!value.Type.CanPotentiallyCoerceTo(targetType))
-            {
-                return false;
-            }
-
+            result = null;
             bool canCoerce = false;
+
             if (targetType == FormulaType.Boolean)
             {
                 canCoerce = value.TryCoerceTo(out BooleanValue boolResult);

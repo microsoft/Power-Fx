@@ -11,6 +11,7 @@ namespace Microsoft.PowerFx.Types
 {
     public class NumberValue : PrimitiveValue<double>
     {
+        // List of types that allowed to convert to NumberValue
         internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToNumber = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Boolean };
 
         internal NumberValue(IRContext irContext, double value)
