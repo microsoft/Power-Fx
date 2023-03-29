@@ -53,6 +53,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static readonly DType MinimalLargeImage = CreateMinimalLargeImageType();
         public static readonly DType UntypedObject = new DType(DKind.UntypedObject);
         public static readonly DType Deferred = new DType(DKind.Deferred);
+        public static readonly DType Void = new DType(DKind.Void);
 
         public static readonly DType Invalid = new DType();
 
@@ -571,6 +572,8 @@ namespace Microsoft.PowerFx.Core.Types
         public bool IsUnknown => Kind == DKind.Unknown;
 
         public bool IsDeferred => Kind == DKind.Deferred;
+
+        public bool IsVoid => Kind == DKind.Void;
 
         public bool IsError => Kind == DKind.Error;
 
@@ -1859,6 +1862,12 @@ namespace Microsoft.PowerFx.Core.Types
             schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
             schemaDifferenceType = Invalid;
 
+            if (Kind == DKind.Void || type.Kind == DKind.Void)
+            {
+                // No types accept a void type, void type doesn't accept any type
+                return false;
+            }
+
             // We accept ObjNull as any DType (but subtypes can override).
             if (type.Kind == DKind.ObjNull)
             {
@@ -3078,6 +3087,13 @@ namespace Microsoft.PowerFx.Core.Types
 
             isSafe = true;
 
+            if (Kind == DKind.Void || typeDest.Kind == DKind.Void)
+            {
+                // No types coerces to a void type, void type doesn't coerce to any type.
+                coercionType = this;
+                return false;
+            }
+
             if (typeDest.Accepts(this))
             {
                 coercionType = typeDest;
@@ -3408,6 +3424,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return "V";
                 case DKind.UntypedObject:
                     return "O";
+                case DKind.Void:
+                    return "-";
             }
         }
 

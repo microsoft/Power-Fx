@@ -828,6 +828,17 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(IsBlankOrError)
             },
             {
+                BuiltinFunctionsCore.IsEmpty,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.IsEmpty.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsEmpty)
+            },
+            {
                 BuiltinFunctionsCore.IsError,
                 NoErrorHandling(IsError)
             },
@@ -1058,19 +1069,6 @@ namespace Microsoft.PowerFx.Functions
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
-                    checkRuntimeValues: DeferRuntimeTypeChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: Mod)
-            },
-            {
-                BuiltinFunctionsCore.ModT,
-                StandardErrorHandling<FormulaValue>(
-                    BuiltinFunctionsCore.Mod.Name,
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: ExactSequence(
-                        ExactValueType<NumberValue>,
-                        ExactValueTypeOrBlank<TableValue>),                        
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Mod)
@@ -1735,6 +1733,74 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
             {
+                BuiltinFunctionsCore.LeftST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.MidT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Mid],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.ModT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.RightST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
                 BuiltinFunctionsCore.RoundT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithZero))
             },
@@ -1745,6 +1811,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.RoundDownT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.SubstituteT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Substitute],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
                 BuiltinFunctionsCore.TruncT,
@@ -1823,6 +1900,23 @@ namespace Microsoft.PowerFx.Functions
             return false;
         }
 
+        private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            if (args[0] is TableValue tv)
+            {
+                return new BooleanValue(irContext, !tv.Rows.Any());
+            }
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
         public static FormulaValue IsNumeric(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
@@ -1872,7 +1966,7 @@ namespace Microsoft.PowerFx.Functions
                         var trueBranch = args[i + 1];
 
                         var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
-                        return MaybeWrapRecordValue(trueBranchResult, irContext);
+                        return MaybeAdjustToCompileTimeType(trueBranchResult, irContext);
                     }
                 }
 
@@ -1890,7 +1984,7 @@ namespace Microsoft.PowerFx.Functions
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
                     
-                    return MaybeWrapRecordValue(falseBranchResult, irContext);
+                    return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
                 // Else, if there are more values, this is another conditional.
@@ -1901,16 +1995,24 @@ namespace Microsoft.PowerFx.Functions
             return new BlankValue(irContext);
         }
 
-        /// <summary>
-        /// If the <paramref name="result"/> is a record value, and the IRContext result type is a record type,
-        /// then this helper may wrap it in CompileTimeTypeWrapperRecordValue, else return the result it self.
-        /// e.g. If(false, {x:1, y:1}, {x:1, z:2}) has compile time type ![x:n] while runtime type ![x:n, z:n].
-        /// </summary>
-        private static FormulaValue MaybeWrapRecordValue(FormulaValue result, IRContext irContext)
+        private static FormulaValue MaybeAdjustToCompileTimeType(FormulaValue result, IRContext irContext)
         {
-            if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
+            if (irContext.ResultType is Types.Void)
+            {
+                if (result is ErrorValue ev)
+                {
+                    return new ErrorValue(IRContext.NotInSource(FormulaType.Void), (List<ExpressionError>)ev.Errors);
+                }
+
+                return new VoidValue(irContext);
+            }
+            else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
             {
                 return CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
+            }
+            else if (result is TableValue tableValue && irContext.ResultType is TableType compileTimeTableType)
+            {
+                return CompileTimeTypeWrapperTableValue.AdjustType(compileTimeTableType, tableValue);
             }
 
             return result;

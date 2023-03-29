@@ -45,6 +45,24 @@ namespace Microsoft.PowerFx
         /// </summary>
         StronglyTypedBuiltinEnums = 0x10,
 
+        /// <summary>
+        /// Updates the IsEmpty function to only allow table arguments, since it
+        /// does not work properly with other types of arguments.
+        /// </summary>
+        RestrictedIsEmptyArguments = 0x20,
+
+        /// <summary>
+        /// Allow delegation for async calls (delegate using awaited call result).
+        /// Added March 2023.
+        /// </summary>
+        AllowAsyncDelegation = 0x40,
+
+        /// <summary>
+        /// Allow delegation for impure nodes.
+        /// Added March 2023.
+        /// </summary>
+        AllowImpureNodeDelegation = 0x80,
+
         /// <summary>        
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.

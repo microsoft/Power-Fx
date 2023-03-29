@@ -58,3 +58,9 @@ Table()
 
 >> Last({a:1,b:2})
 Errors: Error 0-15: The function 'Last' has some invalid arguments.|Error 5-14: Invalid argument type (Record). Expecting a Table value instead.
+
+>> Last(If(false, Table({a:1}), Table({b:2})))
+{}
+
+>> LastN(If(false, Table({a:1}), Table({b:2})), 1)
+Table({})

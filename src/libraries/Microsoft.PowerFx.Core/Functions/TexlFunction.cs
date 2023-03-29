@@ -27,7 +27,9 @@ using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -211,8 +213,8 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool ModifiesValues => false;
 
         // This method is used for managing "x-ms-dynamic-values" and "x-ms-dynamic-schema" OpenApi extensions in connectors
-        // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-        public virtual async Task<List<string>> GetConnectorSuggestionsAsync(CallNode callNode, int argPosition, CancellationToken cts)
+        // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
+        public virtual async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
         {
             return null;
         }
@@ -496,7 +498,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 var type = argTypes[i];
-                if (type.IsError)
+                if (type.IsError || 
+                    type.IsVoid)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrBadType);
                     fValid = false;
@@ -1249,7 +1252,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DefaultUnaryOpDelegationStrategy(op, this);
         }
 
-        public ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        public virtual ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
         {
             return new DelegationValidationStrategy(this);
         }

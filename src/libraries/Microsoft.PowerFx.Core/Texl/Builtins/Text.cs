@@ -100,7 +100,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return isValid;
             }
 
-            if (!DType.String.Accepts(argTypes[1]))
+            if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1]))
+            {
+                // Coerce enum values to string
+                CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
+            }
+            else if (!DType.String.Accepts(argTypes[1]))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
                 isValid = false;
@@ -173,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.DateTimeFormatEnumString };
+            return new List<string>() { LanguageConstants.DateTimeFormatEnumString };
         }
     }
 

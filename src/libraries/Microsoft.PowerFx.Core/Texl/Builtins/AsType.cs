@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -111,6 +112,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // For the second argument, we need only metadata. No actual data from datasource is required.
             return paramIndex != 1;
+        }
+
+        public override ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        {
+            return new AsTypeCallNodeDelegationStrategy(this);
+        }
+    }
+
+    internal sealed class AsTypeCallNodeDelegationStrategy : DelegationValidationStrategy
+    {
+        public AsTypeCallNodeDelegationStrategy(TexlFunction function)
+            : base(function)
+        {
+        }
+
+        protected override bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding, TexlFunction trackingFunction = null)
+        {
+            // AsType should always be marked as valid regardless of it being async and impure.
+            return true;
         }
     }
 }

@@ -1,0 +1,73 @@
+>> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Substitute(emptyTable, emptyTable, emptyTable))
+Table()
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], Filter(["a"], Len(Value) > 10), [{repl:"X"}, {repl:"Y"}])
+Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Substitute(emptyTable, "a", "b"))
+Table()
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
+Table({Value:"Xbcdefg"},{Value:"YY hh ii"})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], "g", [{repl:"X"}, {repl:"Y"}])
+Table({Value:"abcdefX"},{Value:"YY hh ii"})
+
+>> Substitute( "abcdefg", [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
+Table({Value:"Xbcdefg"},{Value:"abcdefY"})
+
+>> Substitute("aaabbbccc", "a", "X", [1,2])
+Table({Value:"Xaabbbccc"},{Value:"aXabbbccc"})
+
+>> Substitute(["aaabbbccc", "xxxyyyzzz"], ["c", "y"], ["C", "Y"], [2, 3])
+Table({Value:"aaabbbcCc"},{Value:"xxxyyYzzz"})
+
+// ##### Blank arguments
+>> Substitute(If(1<0,"c"), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
+Table({Value:""},{Value:""})
+
+>> Substitute(If(1<0,["a","b"]), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
+Blank()
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1<0,"null"), [{repl:"X"}, {repl:"Y"}])
+Table({Value:"abcdefg"},{Value:"gg hh ii"})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1<0,[{match:"a"},{match:"g"}]), [{repl:"X"}, {repl:"Y"}])
+Blank()
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1<0,"null"))
+Table({Value:"bcdefg"},{Value:" hh ii"})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1<0,[{repl:"X"}, {repl:"Y"}]))
+Blank()
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1<0,1))
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1<0,[1]))
+Blank()
+
+// ##### Error arguments
+>> Substitute(If(1/0<2,"c"), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Substitute(If(1/0<2,["a","b"]), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
+Error({Kind:ErrorKind.Div0})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1/0<2,"null"), [{repl:"X"}, {repl:"Y"}])
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1/0<2,[{match:"a"},{match:"g"}]), [{repl:"X"}, {repl:"Y"}])
+Error({Kind:ErrorKind.Div0})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1/0<2,"null"))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1/0<2,[{repl:"X"}, {repl:"Y"}]))
+Error({Kind:ErrorKind.Div0})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1/0<2,1))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1/0<2,[1]))
+Error({Kind:ErrorKind.Div0})
