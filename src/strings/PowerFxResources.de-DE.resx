@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Der Wert, der zurückgegeben wird, wenn es sich um das erste Argument ohne Fehler handelt.</value>
+    <value>Wert, der zurückgegeben wird, wenn das vorherige Argument ein Fehler ist.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>Ein Ausdruck, der für Zeilen in "Quelle" ausgewertet wird und Werte für die Sortierung bereitstellt.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Aufsteigend oder absteigend</value>
+    <value>SortOrder.Ascending oder SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sortiert „Quelle“ auf der Grundlage der Spalte, wobei optional eine Sortierreihenfolge „Reihenfolge“ angegeben werden kann.</value>
@@ -889,7 +890,8 @@
     <value>Ein eindeutiger Spaltenname.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Aufsteigend oder absteigend</value>
+    <value>SortOrder.Ascending oder SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sortiert „Quelle“ basierend auf dem Index übereinstimmender Werte in der angegebenen Spalte.</value>
@@ -1849,6 +1851,10 @@
     <value>Ungültiges Format.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Das Argument stellt keinen gültigen Datums- oder Uhrzeitwert dar.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Diese Datenquelle ist ungültig. Beheben Sie den Fehler im Abschnitt „Datenquellen“, indem Sie auf „Inhalt &gt; Datenquellen“ oder „Ansicht &gt; Optionen“ klicken.</value>
     
@@ -2378,7 +2384,7 @@
     <value>Eine Anzahl von hinzuzufügenden Einheiten. Die Zahl darf negativ sein.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Die zu verwendende Einheit. Mögliche Werte sind: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Die zu verwendende Einheit. Kann eine der folgenden sein: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>Ein Enddatum für die Differenzbildung.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Die Einheit, in der das Ergebnis ausgedrückt werden soll. Mögliche Werte sind: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Die Einheit, in der das Ergebnis ausgedrückt wird. Kann eine der folgenden sein: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -3184,7 +3190,7 @@
     
   </data>
   <data name="DisplayMode_View_DisplayName" xml:space="preserve">
-    <value>Ansicht</value>
+    <value>Anzeigen</value>
     
   </data>
   <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
@@ -3412,7 +3418,7 @@
     
   </data>
   <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
-    <value>Stretching durchführen</value>
+    <value>Gestreckt</value>
     
   </data>
   <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
@@ -3548,7 +3554,7 @@
     
   </data>
   <data name="FormMode_View_DisplayName" xml:space="preserve">
-    <value>Ansicht</value>
+    <value>Anzeigen</value>
     
   </data>
   <data name="FormMode_New_DisplayName" xml:space="preserve">
@@ -3560,7 +3566,7 @@
     
   </data>
   <data name="SelectedState_View_DisplayName" xml:space="preserve">
-    <value>Ansicht</value>
+    <value>Anzeigen</value>
     
   </data>
   <data name="SelectedState_New_DisplayName" xml:space="preserve">
@@ -4418,6 +4424,10 @@
     <value>Stellen Sie sicher, dass für Ihren Bezeichner Text vorliegt. Dieser Fehler tritt auf, wenn der Bezeichner nur Leerzeichen enthält.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Die Werte vom Typ {0} konnten nicht verglichen werden.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Einige Typen sind für den Vergleich inkompatibel. Diese Typen können nicht verglichen werden: {0}, {1}.</value>
     
@@ -4834,8 +4844,33 @@
     <value>Diese Funktion ist mehrdeutig; sie enthält Lambdaausdrücke und Spaltenbezeichner für dasselbe Argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Die BooleanOptionSet-Option {0} wird nicht unterstützt.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Der Wert der Option {0} entspricht nicht dem erwarteten Typ {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Gibt den logischen Namen des angegebenen Optionssatzwerts zurück.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>Option</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Ein Optionssatzwert, dessen logischer Name zurückgegeben wird.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Rufen Sie das zur Runtime festgelegte Standardgebietsschema ab.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codiert eine URL-Zeichenfolge, indem bestimmte nicht alphanumerische Zeichen mit % und einer Hexadezimalzahl ersetzt werden.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Eine zu codierende URL.</value>
   </data>
 </root>

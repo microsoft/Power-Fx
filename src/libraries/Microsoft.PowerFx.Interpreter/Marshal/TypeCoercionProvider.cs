@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         public static bool CanCoerceToStringValue(this FormulaValue value)
         {
-            return AllowedListConvertToString.Contains(value.Type);
+            return StringValue.AllowedListConvertToString.Contains(value.Type);
         }
 
         /// <summary>

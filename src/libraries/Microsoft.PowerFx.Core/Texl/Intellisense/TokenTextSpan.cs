@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.AppMagic.Transport;
 
@@ -68,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             if (self.TokenName != other.TokenName)
             {
-                return self.TokenName.CompareTo(other.TokenName);
+                return string.Compare(self.TokenName, other.TokenName, StringComparison.Ordinal);
             }
 
             return self.StartIndex.CompareTo(other.StartIndex);

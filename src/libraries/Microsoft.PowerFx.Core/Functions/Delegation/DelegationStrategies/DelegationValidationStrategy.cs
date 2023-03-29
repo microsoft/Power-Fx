@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
+using System.Security.Authentication.ExtendedProtection;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
@@ -15,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 {
     internal interface ICallNodeDelegatableNodeValidationStrategy
     {
-        bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata);
+        bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null);
     }
 
     internal interface IDottedNameNodeDelegatableNodeValidationStrategy
@@ -46,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
 
-            var message = string.Format("Function:{0}, Message:{1}", Function.Name, telemetryMessage);
+            var message = string.Format(CultureInfo.InvariantCulture, "Function:{0}, Message:{1}", Function.Name, telemetryMessage);
             TrackingProvider.Instance.AddSuggestionMessage(message, node, binding);
         }
 
@@ -103,18 +105,56 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return true;
             }
 
+            if (node.Left.Kind == NodeKind.Call)
+            {
+                return IsValidCallNode(node.Left as CallNode, binding, metadata);
+            }
+
             if (node.Left.Kind == NodeKind.DottedName)
             {
                 return IsValidRowScopedDottedNameNode(node.Left.AsDottedName(), binding, metadata, out isRowScopedDelegationExempted);
             }
 
-            if (node.Left.Kind == NodeKind.Call && binding.GetInfo(node.Left as CallNode).Function is AsTypeFunction)
+            return node.Left.Kind == NodeKind.FirstName;
+        }
+
+        private bool IsValidNonRowScopedDottedNameNode(DottedNameNode node, TexlBinding binding, OperationCapabilityMetadata metadata, IOpDelegationStrategy opDelStrategy)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValue(binding);
+            Contracts.AssertValueOrNull(opDelStrategy);
+
+            if (node.Left.Kind == NodeKind.Call)
             {
                 return IsValidCallNode(node.Left as CallNode, binding, metadata);
             }
 
-            // We only allow dotted or firstname node on LHS for now, with exception of AsType.
-            return node.Left.Kind == NodeKind.FirstName;
+            if (node.Left.Kind == NodeKind.DottedName)
+            {
+                return IsValidDottedNameNode(node.Left.AsDottedName(), binding, metadata, opDelStrategy);
+            }
+
+            if (node.Left.Kind == NodeKind.FirstName)
+            {
+                return true;
+            }
+
+            return IsValidOptionSetOrViewDottedNameNode(node, binding)
+                       || IsValidAsyncOrImpureNode(node, binding);
+        }
+
+        private bool IsValidOptionSetOrViewDottedNameNode(DottedNameNode node, TexlBinding binding)
+        {
+            var leftType = binding.GetType(node.Left);
+            var nodeType = binding.GetType(node);
+
+            if (leftType == null || nodeType == null)
+            {
+                return false;
+            }
+
+            // OptionSet and View Access are delegable despite being async
+            return (leftType.Kind == DKind.OptionSet && nodeType.Kind == DKind.OptionSetValue) || (leftType.Kind == DKind.View && nodeType.Kind == DKind.ViewValue);
         }
 
         private OperationCapabilityMetadata GetScopedOperationCapabilityMetadata(IDelegationMetadata delegationMetadata)
@@ -137,15 +177,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var isRowScoped = binding.IsRowScope(node);
             if (!isRowScoped)
             {
-                return IsValidNode(node, binding);
+                return IsValidNonRowScopedDottedNameNode(node, binding, metadata, opDelStrategy);
             }
 
             if (!IsValidRowScopedDottedNameNode(node, binding, metadata, out var isRowScopedDelegationExempted))
             {
-                var telemetryMessage = string.Format(
-                    "Kind:{0}, isRowScoped:{1}",
-                    node.Kind,
-                    isRowScoped);
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isRowScoped:{1}", node.Kind, isRowScoped);
 
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 return false;
@@ -174,7 +211,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 if (!BinderUtils.TryConvertNodeToDPath(binding, node, out var columnPath) || !metadata.IsDelegationSupportedByColumn(columnPath, Function.FunctionDelegationCapability))
                 {
                     var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnPath.ToDottedSyntax());
-                    var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
+                    var message = string.Format(CultureInfo.InvariantCulture, StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
                     SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
                     TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(columnPath.ToDottedSyntax()));
                     return false;
@@ -190,11 +227,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (!dataSourceInfo.DataEntityMetadataProvider.TryGetEntityMetadata(info.Identity, out var entityMetadata))
             {
-                var telemetryMessage = string.Format(
-                    "Kind:{0}, isRowScoped:{1}, no metadata found for entity {2}",
-                    node.Kind,
-                    isRowScoped,
-                    CharacterUtils.MakeSafeForFormatString(info.Identity));
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isRowScoped:{1}, no metadata found for entity {2}", node.Kind, isRowScoped, CharacterUtils.MakeSafeForFormatString(info.Identity));
 
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 return false;
@@ -212,7 +245,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!entityCapabilityMetadata.IsDelegationSupportedByColumn(entityColumnPath, Function.FunctionDelegationCapability))
             {
                 var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnName.Value);
-                var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
+                var message = string.Format(CultureInfo.InvariantCulture, StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(columnName));
                 return false;
@@ -229,7 +262,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValueOrNull(opDelStrategy);
 
             var isRowScoped = binding.IsRowScope(node);
-            var isValid = IsValidNode(node, binding);
+            var isValid = IsValidAsyncOrImpureNode(node, binding);
             if (isValid && !isRowScoped)
             {
                 return true;
@@ -304,7 +337,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (!metadata.FilterDelegationMetadata.IsDelegationSupportedByColumn(columnPath, capability))
             {
                 var safeColumnName = CharacterUtils.MakeSafeForFormatString(columnName.Value);
-                var message = string.Format(StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
+                var message = string.Format(CultureInfo.InvariantCulture, StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn), safeColumnName);
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, message, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, safeColumnName);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NoDelSupportByColumn, node, binding, Function, DelegationTelemetryInfo.CreateNoDelSupportByColumnTelemetryInfo(firstNameInfo));
                 return false;
@@ -319,16 +352,37 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             return true;
         }
 
-        public bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata)
+        public virtual bool IsValidCallNode(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
+        {
+            // Functions may have their specific CallNodeDelegationStrategies (i.e. AsType, User)
+            // so, if available, we need to ensure we use their specific delegation strategy.
+            var function = binding.GetInfo(node)?.Function;
+
+            // We need to have this check in case an override does not properly
+            // overwrite this method to prevent getting lost in recursion.
+            if (function != null && function != Function)
+            {
+                // We need to keep track of the tracking function for delegation tracking telemetry to be consistent.
+                return function.GetCallNodeDelegationStrategy().IsValidCallNode(node, binding, metadata, trackingFunction ?? Function);
+            }
+
+            return IsValidCallNodeInternal(node, binding, metadata, trackingFunction ?? Function);
+        }
+
+        protected bool IsValidCallNodeInternal(CallNode node, TexlBinding binding, OperationCapabilityMetadata metadata, TexlFunction trackingFunction = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            if (!IsValidNode(node, binding))
+            // We skip aysnc or impure check for BlockScopedConstants
+            // to allow for nesting of valid async nodes.
+            if (!binding.IsBlockScopedConstant(node))
             {
-                SuggestDelegationHint(node, binding);
-                return false;
+                if (!IsValidAsyncOrImpureNode(node, binding, trackingFunction))
+                {
+                    return false;
+                }
             }
 
             // If the node is not row scoped and it's valid then it can be delegated.
@@ -344,13 +398,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return true;
             }
 
-            var telemetryMessage = string.Format("Kind:{0}, isRowScoped:{1}", node.Kind, isRowScoped);
+            var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isRowScoped:{1}", node.Kind, isRowScoped);
             SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
             TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.UndelegatableFunction, node, binding, Function, DelegationTelemetryInfo.CreateUndelegatableFunctionTelemetryInfo((TexlFunction)callInfo?.Function));
             return false;
         }
 
-        protected bool IsValidNode(TexlNode node, TexlBinding binding)
+        // Generic check for blocking impure / async nodes
+        // We need to keep track of the tracking function for delegation tracking telemetry to be consistent.
+        protected virtual bool IsValidAsyncOrImpureNode(TexlNode node, TexlBinding binding, TexlFunction trackingFunction = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(binding);
@@ -358,75 +414,41 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var isAsync = binding.IsAsync(node);
             var isPure = binding.IsPure(node);
 
-            if (node is DottedNameNode dottedNameNode)
-            {
-                var leftType = binding.GetType(dottedNameNode.Left);
-                var nodeType = binding.GetType(node);
-
-                if (leftType != null && nodeType != null)
-                {
-                    if ((leftType.Kind == DKind.OptionSet && nodeType.Kind == DKind.OptionSetValue) || (leftType.Kind == DKind.View && nodeType.Kind == DKind.ViewValue))
-                    {
-                        // OptionSet and View Access are delegable despite being async
-                        return true;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            if (node is CallNode callNode)
-            {
-                var callInfo = binding.GetInfo(callNode);
-                if (callInfo != null)
-                {
-                    if (binding.IsBlockScopedConstant(node) || (callInfo.Function is AsTypeFunction))
-                    {
-                        // AsType is delegable despite being async
-                        return true;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            // Async predicates and impure nodes are not supported.
-            // Let CallNodes for User() be marked as being Valid to allow
-            // expressions with User() calls to be delegated
-            if (!IsUserCallNodeDelegable(node, binding) && (isAsync || !isPure))
-            {
-                var telemetryMessage = string.Format("Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
-                SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
-
-                if (isAsync)
-                {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, Function);
-                }
-
-                if (!isPure)
-                {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.ImpureNode, node, binding, Function, DelegationTelemetryInfo.CreateImpureNodeTelemetryInfo(node, binding));
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool IsUserCallNodeDelegable(TexlNode node, TexlBinding binding)
-        {
-            if ((node is DottedNameNode)
-                && (node.AsDottedName().Left is CallNode)
-                && (binding.GetInfo(node.AsDottedName().Left.AsCall()).Function is ICustomDelegationFunction customDelFunc)
-                && customDelFunc.IsUserCallNodeDelegable())
+            if (!isAsync && isPure)
             {
                 return true;
             }
+
+            // Async predicates and impure nodes are not supported unless Features say otherwise.
+            // Let CallNodes for delegatable async functions be marked as being Valid to allow
+            // expressions with delegatable async function calls to be delegated
+
+            // Impure nodes should only be marked valid when Feature is enabled.
+            if (!isPure && !binding.Features.HasFlag(Features.AllowImpureNodeDelegation))
+            {
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.ImpureNode, node, binding, trackingFunction ?? Function, DelegationTelemetryInfo.CreateImpureNodeTelemetryInfo(node, binding));
+            }
+            else
+            {
+                if (!isAsync)
+                {
+                    return true;
+                }
+                else if (binding.Features.HasFlag(Features.AllowAsyncDelegation))
+                {
+                    // If the feature is enabled, enable delegation for
+                    // async call, first name and dotted name nodes.
+                    return (node is CallNode) || (node is FirstNameNode) || (node is DottedNameNode);
+                }
+            }
+
+            if (isAsync)
+            {
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, trackingFunction ?? Function);
+            }
+
+            var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);
+            SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
 
             return false;
         }

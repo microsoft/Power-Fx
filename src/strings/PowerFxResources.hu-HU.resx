@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>A visszaadott érték, ha az az első nem-hiba argumentum.</value>
+    <value>A visszaadott érték, ha az előző argumentum hiba volt.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>Egy kifejezés, amelynek kiértékelése a megadott „forrás” sorain történik, és a rendezéshez használt értékeket biztosítja.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascending (növekvő) vagy Descending (csökkenő) lehet.</value>
+    <value>SortOrder.Ascending vagy SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Az oszlop alapján rendezi a forrást; a nem kötelező „sorrend” argumentum is megadható.</value>
@@ -889,7 +890,8 @@
     <value>Egy egyedi oszlopnév.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascending (növekvő) vagy Descending (csökkenő) lehet.</value>
+    <value>SortOrder.Ascending vagy SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>A megadott oszlopban szereplő megfelelő értékek indexe alapján rendezi a forrást.</value>
@@ -1849,6 +1851,10 @@
     <value>Érvénytelen formátum.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>A(z) {0} argumentum nem érvényes dátum- vagy időpontértéket jelent.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Az adatforrás érvénytelen. Javítsa ki a hibát az „Adatforrások” panelen. Ehhez kattintson a „Tartalom -&gt; Adatforrások” vagy a „Nézet -&gt; Beállítások” parancsra</value>
     
@@ -2378,7 +2384,7 @@
     <value>A hozzáadandó egységek száma. Negatív szám is lehet.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>A használandó egység. Ez lehet év, negyedév, hónap, nap, óra, perc, másodperc vagy milliszekundum (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds).</value>
+    <value>A használni kívánt egység, amely a következő lehet: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>A befejező dátum a különbséget kiszámító művelethez.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Ebben az egységben kell kifejezni az eredményt. Ez lehet év, negyedév, hónap, nap, óra, perc, másodperc vagy milliszekundum (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds).</value>
+    <value>Az eredmény kifejezésére használt egység, amely a következő lehet: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4344,7 +4350,7 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
-    <value>Cikk: A Power Apps-beli vászonalkalmazások viselkedési képleteinek ismertetése</value>
+    <value>Cikk: A Power Apps-beli vászonalapú alkalmazások viselkedési képleteinek ismertetése</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -4416,6 +4422,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Győződjön meg arról, hogy az azonosító szöveget tartalmaz. Ez a hiba akkor fordul elő, ha az azonosító csak üres vagy szóközkarakterekből áll.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Nem lehet {0} típusú értékeket összehasonlítani.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4844,33 @@
     <value>Ez a függvény nem egyértelmű, azonos argumentumhoz tartalmaz lambda kifejezéseket és oszlopazonosítókat.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>A(z) {0} BooleanOptionSet lehetőség nem támogatott.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>A beírt {0} értéke nem a(z) {1} várt típusú.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Az adott beállításkészlet értékének logikai nevét adja vissza.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>beállítás</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Olyan értékkészlet-érték, amelynek a logikai neve vissza lesz állítva.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Kérje le a futásidőben beállított alapértelmezett területi beállítást.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kódol egy URL-sztringet úgy, hogy bizonyos nem alfanumerikus karaktereket %-ra és hexadecimális számra cseréli.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-cím</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A kódolandó URL-cím.</value>
   </data>
 </root>

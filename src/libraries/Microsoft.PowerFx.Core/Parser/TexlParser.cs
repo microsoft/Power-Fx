@@ -654,7 +654,6 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.True:
                         case TokKind.False:
                             PostError(_curs.TokCur, TexlStrings.ErrOperatorExpected);
-
                             tok = _curs.TokMove();
 
                             // Stop recursing if we reach a semicolon
@@ -666,7 +665,6 @@ namespace Microsoft.PowerFx.Core.Parser
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Error);
                             node = MakeBinary(BinaryOp.Error, node, leftTrivia, tok, rightTrivia, right);
-
                             break;
 
                         case TokKind.ParenOpen:
@@ -887,7 +885,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 case TokKind.Eof:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
-
+                
                 case TokKind.Semicolon:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
 

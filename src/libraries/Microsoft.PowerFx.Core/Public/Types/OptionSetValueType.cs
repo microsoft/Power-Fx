@@ -55,16 +55,10 @@ namespace Microsoft.PowerFx.Types
         public bool TryGetValue(string logicalName, out OptionSetValue osValue)
         {
             var info = _type.OptionSetInfo;
-
-            // Verify this value exists in the option set. 
-            if (info != null && info.DisplayNameProvider.TryGetDisplayName(new DName(logicalName), out var displayName))
-            {
-                osValue = new OptionSetValue(logicalName, this);
-                return true;
-            }
-
             osValue = null;
-            return false;
+
+            // Retrieve the value from the option set. 
+            return info?.TryGetValue(new DName(logicalName), out osValue) ?? false;
         }
 
         internal override void DefaultExpressionValue(StringBuilder sb)

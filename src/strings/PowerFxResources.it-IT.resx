@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valore restituito se si tratta del primo argomento non di errore.</value>
+    <value>Valore restituito se l'argomento precedente è un errore.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>Espressione che viene valutata in base alle righe in 'origine' e fornisce i valori per l'ordinamento.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Crescente o Decrescente</value>
+    <value>SortOrder.Ascending o SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ordina 'origine' in base alla colonna, specificando facoltativamente un valore 'ordine' per l'ordinamento.</value>
@@ -889,7 +890,8 @@
     <value>Nome colonna univoco.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Crescente o Decrescente</value>
+    <value>SortOrder.Ascending o SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ordina 'origine' in base all'indice di valori corrispondenti nella colonna specificata.</value>
@@ -1849,6 +1851,10 @@
     <value>Formato non valido.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>L'argomento non rappresenta un valore di data o ora valido.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Questa origine dati non è valida. Risolvere l'errore nel riquadro "Origini dati" facendo clic su "Contenuto -&gt; Origini dati" oppure "Visualizza -&gt; Opzioni"</value>
     
@@ -2378,7 +2384,7 @@
     <value>Numero di unità da aggiungere. Il numero può essere negativo.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unità da usare che può essere una delle seguenti: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unità da utilizzare, che può essere una tra TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>Data di fine per l'operazione di tipo differenza.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unità da usare per esprimere il risultato che può essere una delle seguenti: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unità in cui esprimere il risultato, che può essere una tra TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4124,7 +4130,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>È previsto un operando. La formula o l'espressione prevede un operando valido. Ad esempio, è possibile aggiungere l'operando '2' all'espressione ' 1 +_' per ottenere il risultato '3'. In alternativa, è possibile aggiungere l'operando "tutti" all'espressione '"Cari "&amp; _ ' per ottenere 'Cari tutti'.</value>
+    <value>È previsto un operando. La formula o l'espressione prevede un operando valido. Ad esempio, è possibile aggiungere l'operando "2" all'espressione " 1 +_" per ottenere il risultato "3". In alternativa, è possibile aggiungere l'operando "tutti" all'espressione ""Cari "&amp; _ " per ottenere "Cari tutti".</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4416,6 +4422,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Assicurarsi che l'identificatore contenga testo. Questo errore si verifica quando l'identificatore è completamente vuoto o costituito da spazi vuoti.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Impossibile confrontare valori di tipo {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4844,33 @@
     <value>Questa funzione è ambigua, contiene espressioni lambda e identificatori di colonna per lo stesso argomento.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>L'opzione BooleanOptionSet {0} non è supportata.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Il valore dell'opzione {0} non è del tipo previsto {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Restituisce il nome logico del valore del set di opzioni specificato.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opzione</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Valore del set di opzioni il cui nome logico verrà restituito.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Recupera le impostazioni locali predefinite specificate in fase di runtime.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codifica una stringa URL, sostituisce alcuni caratteri non alfanumerici con % e un numero esadecimale.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL da codificare.</value>
   </data>
 </root>

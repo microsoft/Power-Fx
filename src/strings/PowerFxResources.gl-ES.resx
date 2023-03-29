@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valor que se devolve se é o primeiro argumento sen erros.</value>
+    <value>Valor que se devolve se o argumento anterior é un erro.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>Expresión que se avalía sobre as filas da "orixe" e fornece valores para ordenar.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascendente ou descendente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ordena a "orixe" segundo a columna, especificando opcionalmente unha "ordenación".</value>
@@ -889,7 +890,8 @@
     <value>Nome de columna único.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascendente ou descendente</value>
+    <value>SortOrder.Ascending ou SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ordena a "orixe" segundo o índice de valores coincidentes da columna especificada.</value>
@@ -1849,6 +1851,10 @@
     <value>Formato non válido.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>O argumento non representa un valor de data ou hora válido.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Esta orixe de datos non é válida. Corrixa o erro no panel "Orixes de datos" ao premer "Contido -&gt; Orixes de datos" ou "Visualización -&gt; Opcións"</value>
     
@@ -2378,7 +2384,7 @@
     <value>Número de unidades que se van engadir. Pode ser negativo.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unidade que se vai usar, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unidade que se vai utilizar, que pode ser algunha destas: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>Data de finalización da operación de diferenza.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unidade na que se expresará o resultado, que pode ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unidade en que expresar o resultado, que pode ser algunha destas: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4225,7 +4231,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_LongMessage" xml:space="preserve">
-    <value>Este erro aparece cando unha fórmula fai referencia a propiedades de funcionamento de compoñentes con sintaxe non válida. Component.CustomFunction en lugar de Component.CustomFunction())</value>
+    <value>Este erro aparece cando unha fórmula fai referencia ás propiedades dunha función de compoñente con sintaxe non válida. (Por exemplo, Component.CustomFunction en lugar de Component.CustomFunction())</value>
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_HowToFix_1" xml:space="preserve">
     <value>Use a sintaxe correcta para facer referencia á propiedade de funcionamento do compoñente. Por exemplo, Component.CustomFunction()</value>
@@ -4416,6 +4422,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Asegúrese de que ten texto para o identificador. Este erro prodúcese cando o identificador consiste só en espazos ou espazos en branco.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Non se poden comparar valores de tipo {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4844,33 @@
     <value>Esta función é ambigua, contén expresións lambda e identificadores de columna para o mesmo argumento.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>A opción de BooleanOptionSet {0} non é compatible.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>O valor da opción {0} non é do tipo {1} esperado.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Devolve o nome lóxico do valor do conxunto de opcións indicado.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opción</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Valor dun conxunto de opcións cuxo nome lóxico se vai devolver.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Permite obter a configuración rexional predefinida no tempo de execución.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codifica unha cadea de URL, substituíndo certos caracteres non alfanuméricos por % e un número hexadecimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL que se vai codificar.</value>
   </data>
 </root>

@@ -11,8 +11,6 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -305,7 +303,7 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.Name == name);
+            var enumValue = GetEnumSymbolSnapshot.FirstOrDefault(symbol => symbol.EntityName.Value == name);
             if (enumValue != null)
             {
                 nameInfo = new NameLookupInfo(BindKind.Enum, enumValue.EnumType, DPath.Root, 0, enumValue);

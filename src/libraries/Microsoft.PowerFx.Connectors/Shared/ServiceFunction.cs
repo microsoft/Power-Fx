@@ -4,29 +4,30 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
 #if canvas
 using Microsoft.AppMagic.Authoring.Publish;
 using Microsoft.AppMagic.DocumentServer.Common;
 #endif
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
-using Microsoft.PowerFx;
-using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
-using System.Threading;
+using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
@@ -51,6 +52,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues;
         private readonly WeakReference<IService> _parentService;
         private readonly string _actionName;
+        internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;        
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
         public Dictionary<string, TypedName> OptionalParamInfo => _optionalParamInfo;
@@ -110,6 +112,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _signatures.Add(_orderedRequiredParams);
             _parameterDefaultValues = parameterDefaultValues;
             _actionName = actionName;
+            _requiredParameters = requiredParamInfo;            
 
             if (arityMax > arityMin)
             {
@@ -284,6 +287,121 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return false;
         }
 #endif
+
+        public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
+        {
+            if (argPosition >= 0)
+            {
+                ConnectorDynamicValue cdv = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicValue;
+
+                if (cdv != null && cdv.ServiceFunction != null)
+                {
+                    FormulaValue result = await ConnectorDynamicCallAsync(cdv, knownParameters, cts).ConfigureAwait(false);
+                    List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
+
+                    if (result is ErrorValue ev)
+                    {
+                        return new ConnectorSuggestions(ev);
+                    }
+
+                    if (result is RecordValue rv)
+                    {
+                        if (!string.IsNullOrEmpty(cdv.ValueCollection) && !string.IsNullOrEmpty(cdv.ValuePath))
+                        {
+                            FormulaValue collection = rv.GetField(cdv.ValueCollection);
+
+                            if (collection is TableValue tv)
+                            {
+                                foreach (DValue<RecordValue> row in tv.Rows)
+                                {
+                                    FormulaValue suggestion = row.Value.GetField(cdv.ValuePath);                                    
+                                    string displayName = (row.Value.GetField(cdv.ValueTitle) as StringValue)?.Value;
+
+                                    suggestions.Add(new ConnectorSuggestion(suggestion, displayName));
+                                }
+                            }
+                            else
+                            {
+                                throw new NotImplementedException($"Expecting a TableValue and got {collection.GetType().FullName}");
+                            }
+                        }
+                        else
+                        {
+                            throw new NotImplementedException($"Valuecollection is null");
+                        }
+                    }                    
+
+                    return new ConnectorSuggestions(suggestions);
+                }                
+
+                ConnectorDynamicSchema cds = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicSchema;
+
+                if (cds != null && cds.ServiceFunction != null && !string.IsNullOrEmpty(cds.ValuePath))
+                {
+                    FormulaValue result = await ConnectorDynamicCallAsync(cds, knownParameters.Take(Math.Min(argPosition, MaxArity - 1)).ToArray(), cts).ConfigureAwait(false);
+                    List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
+
+                    if (result is ErrorValue ev)
+                    {
+                        return new ConnectorSuggestions(ev);
+                    }
+
+                    foreach (string vpPart in (cds.ValuePath + "/properties").Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        result = ((RecordValue)result).Fields.FirstOrDefault(f => f.Name.Equals(vpPart, StringComparison.OrdinalIgnoreCase)).Value;
+                    }
+
+                    foreach (NamedValue nv in ((RecordValue)result).Fields)
+                    {
+                        suggestions.Add(new ConnectorSuggestion(nv.Value, nv.Name));
+                    }                    
+
+                    return new ConnectorSuggestions(suggestions);
+                }
+
+                // Neither dynamic value nor dynamic schema
+                return null;
+            }
+
+            return null;
+        }        
+
+        private FormulaValue[] GetArguments(ConnectionDynamicApi dynamicApi, CallNode callNode)
+        {
+            List<FormulaValue> arguments = new List<FormulaValue>();
+
+            foreach (ServiceFunctionParameterTemplate sfpt in dynamicApi.ServiceFunction._requiredParameters)
+            {
+                string paramName = sfpt.TypedName.Name;
+                DType paramType = sfpt.TypedName.Type;
+
+                string currentFunctionParamName = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value == paramName).Value;
+                int currentFunctionParamIndex = _requiredParameters.FindIndex(st => st.TypedName.Name == currentFunctionParamName);
+                TexlNode texlNode = callNode.Args.ChildNodes[currentFunctionParamIndex];
+
+                FormulaValue arg = texlNode switch
+                {
+                    StrLitNode str => FormulaValue.New(str.Value),
+                    NumLitNode num => FormulaValue.New(num.ActualNumValue),
+                    _ => null
+                };
+
+                if (arg == null)
+                {
+                    return null;
+                }
+
+                arguments.Add(arg);
+            }
+
+            return arguments.ToArray();
+        }
+
+        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
+        {            
+            cts.ThrowIfCancellationRequested();
+            return await dynamicApi.ServiceFunction.InvokeAsync(arguments, cts).ConfigureAwait(false);
+        }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)

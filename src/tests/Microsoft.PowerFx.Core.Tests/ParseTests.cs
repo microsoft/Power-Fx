@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Syntax;
@@ -787,6 +788,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 10; b = 3213d 123123asdf; c = 23;", "c")]
         [InlineData("a = 10; b = 3213d 123123asdf;; c = 23;", "c")]
         [InlineData("a = 10; b = 321;3;d ;;;123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = in'valid ; c = 20; d = also(invalid; e = 44;", "e")]
         public void TestFormulaParseRestart(string script, string key)
         {
             var formulasResult = TexlParser.ParseFormulasScript(script);
@@ -798,6 +800,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("a = 10;; b = in'valid ;; c = 20", "c")]
+        [InlineData("a = 10;; b = in'valid ;; c = 20;; d = also(invalid;; e = 44;;", "e")]
         public void TestFormulaParseRestart2(string script, string key)
         {
             var formulasResult = TexlParser.ParseFormulasScript(script, new CultureInfo("fr-FR"));

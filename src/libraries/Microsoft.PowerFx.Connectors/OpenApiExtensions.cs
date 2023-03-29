@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Connectors
                             if (schema.Properties[columnName].TryGetDefaultValue(nft.Type, out FormulaValue innerDefaultValue))
                             {
                                 values.Add(new NamedValue(columnName, innerDefaultValue));
-                            }                            
+                            }
                         }
                     }
 
@@ -199,11 +199,15 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         case null:
                         case "uuid":
+                        case "mquery": // For SQL Server Power Query language
                             return (FormulaType.String, null);
 
                         case "date-time":
                             // Consider this as a string for now
                             // $$$ Should be DateTime type
+                            return (FormulaType.String, null);
+
+                        case "binary":
                             return (FormulaType.String, null);
 
                         default:
@@ -222,7 +226,7 @@ namespace Microsoft.PowerFx.Connectors
                 case "array":
                     var innerA = GetUniqueIdentifier(schema.Items);
 
-                    if (innerA.StartsWith("R:") && chain.Contains(innerA))
+                    if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
                     {
                         // Here, we have a circular reference and default to a string
                         return (FormulaType.String, null);
@@ -245,7 +249,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     if (elementType is RecordType r)
-                    {                        
+                    {
                         return (r.ToTable(), null);
                     }
                     else if (elementType is not AggregateType)
@@ -293,7 +297,7 @@ namespace Microsoft.PowerFx.Connectors
                             var propName = kv.Key;
                             var innerO = GetUniqueIdentifier(kv.Value);
 
-                            if (innerO.StartsWith("R:") && chain.Contains(innerO))
+                            if (innerO.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerO))
                             {
                                 // Here, we have a circular reference and default to a string
                                 return (FormulaType.String, hObj);
@@ -309,8 +313,8 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             if (hiddenRequired)
-                            {                                
-                                hObj = (hObj ?? RecordType.Empty()).Add(propName, propType);                           
+                            {
+                                hObj = (hObj ?? RecordType.Empty()).Add(propName, propType);
                             }
                             else
                             {
@@ -425,13 +429,26 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (content.TryGetValue(ct, out var mediaType))
                 {
-                    if ((ct == ContentType_ApplicationJson && !mediaType.Schema.Properties.Any()) ||
-                        (ct == ContentType_TextJson && mediaType.Schema.Properties.Any()))
+                    if (ct == ContentType_TextJson && mediaType.Schema.Properties.Any())
                     {
                         continue;
                     }
 
-                    return (ct, mediaType);
+                    if (ct != ContentType_ApplicationJson)
+                    {
+                        return (ct, mediaType);
+                    }
+
+                    // application/json
+                    if (mediaType.Schema.Properties.Any() || mediaType.Schema.Type == "object")
+                    {
+                        return (ct, mediaType);
+                    }
+
+                    if (mediaType.Schema.Type == "string")
+                    {
+                        return (ContentType_TextPlain, mediaType);
+                    }
                 }
             }
 

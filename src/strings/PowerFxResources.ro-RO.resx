@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valoarea care este returnată dacă este primul argument non-eroare.</value>
+    <value>Valoarea care este returnată dacă argumentul anterior este o eroare.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>O expresie care se evaluează pentru rândurile din „sursă” și furnizează valori pentru sortare.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascendent sau descendent</value>
+    <value>SortOrder.Ascending sau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sortează „sursa” pe baza coloanei, specificând în mod opțional o „ordine” de sortare.</value>
@@ -889,7 +890,8 @@
     <value>Un nume de coloană unic.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascendent sau descendent</value>
+    <value>SortOrder.Ascending sau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sortează „sursa” pe baza indexului valorilor potrivite din coloana specificată.</value>
@@ -1849,6 +1851,10 @@
     <value>Format nevalid.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentul nu reprezintă o valoare de dată sau oră validă.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Această sursă de date este nevalidă. Remediați eroarea din panoul „Surse de date” făcând clic pe „Conținut -&gt; Surse de date” sau pe „Vizualizare -&gt; Opțiuni”</value>
     
@@ -2378,7 +2384,7 @@
     <value>Un număr de unități de adăugat. Numărul poate fi negativ.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unitatea care se folosește, care poate fi una dintre Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unitatea de utilizat, care poate fi una din TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>O dată de sfârșit pentru operația de diferențiere.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unitatea în care se exprimă rezultatul, care poate fi una dintre Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unitatea de exprimare a rezultatului, care poate fi una din TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4418,6 +4424,10 @@
     <value>Asigurați-vă că aveți text pentru identificator. Această eroare apare atunci când identificatorul are numai blancuri sau spații.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Nu se pot compara valorile de tip {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Tipuri incompatibile într-o comparație. Aceste tipuri nu pot fi comparate: {0}, {1}.</value>
     
@@ -4730,7 +4740,7 @@
     
   </data>
   <data name="ErrorResource_ErrUntypedObjectScope_ShortMessage" xml:space="preserve">
-    <value>Obiectele fără tip nu pot fi utilizate ca prim argument pentru funcțiile care acceptă domenii de înregistrare. </value>
+    <value>Obiectele fără tip nu pot fi utilizate ca prim argument pentru funcțiile care acceptă domenii de aplicare pentru înregistrări.</value>
     
   </data>
   <data name="ErrNamedFormula_MissingSemicolon" xml:space="preserve">
@@ -4834,8 +4844,33 @@
     <value>Această funcție este ambiguă. Conține expresii lambda și identificatori de coloană pentru același argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Opțiunea BooleanOptionSet {0} nu este acceptată.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Valoarea opțiunii {0} nu are tipul prevăzut {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Returnează numele logic al valorii setului dat de opțiuni.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opțiune</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>O valoare a setului de opțiuni al cărei nume logic va fi returnat.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Obțineți setările regionale implicite la runtime.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codifică un șir URL înlocuind anumite caractere non-alfanumerice cu % și cu un număr hexazecimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Un URL de codificat.</value>
   </data>
 </root>

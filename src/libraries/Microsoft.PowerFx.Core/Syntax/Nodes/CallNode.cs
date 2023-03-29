@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
@@ -79,7 +80,7 @@ namespace Microsoft.PowerFx.Syntax
             // We need to generate a globally unique name for this function invocation, so we use
             // a new (hardcoded) guid as well as the unique counter to avoid colliding with any
             // other data sources that may be imported by the user.
-            UniqueInvocationId = string.Format("Inv_7339A45FDB3141D49CB36063B712F5E0_{0}", invocationId);
+            UniqueInvocationId = string.Format(CultureInfo.InvariantCulture, "Inv_7339A45FDB3141D49CB36063B712F5E0_{0}", invocationId);
         }
 
         internal override TexlNode Clone(ref int idNext, Span ts)

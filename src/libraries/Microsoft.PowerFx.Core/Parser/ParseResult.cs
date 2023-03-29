@@ -84,13 +84,7 @@ namespace Microsoft.PowerFx
             return new ParseResult(root, errors, true, comments, null, null, text);         
         }
 
-        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo errorMessageLocale)
-            : this(root, errors, hasError, comments, before, after, text)
-        {
-            ErrorMessageLocale = errorMessageLocale;
-        }
-
-        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text)
+        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo errorMessageLocale = null)           
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(comments);
@@ -106,6 +100,8 @@ namespace Microsoft.PowerFx
             After = after;
 
             Text = text;
+
+            ErrorMessageLocale = errorMessageLocale ?? CultureInfo.CurrentCulture;
         }
 
         internal string ParseErrorText => !HasError ? string.Empty : string.Join("\r\n", _errors.Select((err, i) =>

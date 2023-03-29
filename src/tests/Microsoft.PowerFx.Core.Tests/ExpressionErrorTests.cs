@@ -150,7 +150,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var baseError = GetBaseError(TexlStrings.ErrInvalidName, "name");
             var baseErrors = new IDocumentError[] { baseError };
 
-            var errors = ExpressionError.New(baseErrors);
+            var errors = ExpressionError.New(baseErrors, new CultureInfo("en-US"));
 
             Assert.Single(errors);
             var error = errors.First();
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // We don't want null IEnumerables. 
             // Null gets normalized to empty.
             var internalErrors = (IEnumerable<IDocumentError>)null;
-            var errors = ExpressionError.New(internalErrors);
+            var errors = ExpressionError.New(internalErrors, CultureInfo.CurrentCulture);
 
             Assert.Empty(errors);
 

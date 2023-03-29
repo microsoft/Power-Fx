@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             if (argumentIndex == 1)
             {
-                if (!DType.DateTime.Accepts(scopeType) || !tryGetEnumSymbol(EnumConstants.DateTimeFormatEnumString, out var enumInfo))
+                if (!DType.DateTime.Accepts(scopeType) || !tryGetEnumSymbol(LanguageConstants.DateTimeFormatEnumString, out var enumInfo))
                 {
                     return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
                 }
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Intellisense
                 requiresSuggestionEscaping = false;
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
                 {
-                    retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
+                    retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.EntityName.Value) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
                 }
 
                 return retVal;
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Intellisense
             requiresSuggestionEscaping = false;
             var retVal = new List<KeyValuePair<string, DType>>();
 
-            if (argumentIndex == 2 && tryGetEnumSymbol(EnumConstants.TimeUnitEnumString, out var enumInfo))
+            if (argumentIndex == 2 && tryGetEnumSymbol(LanguageConstants.TimeUnitEnumString, out var enumInfo))
             {
                 Contracts.AssertValue(enumInfo);
                 foreach (var name in enumInfo.EnumType.GetNames(DPath.Root))
@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                     else
                     {
-                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.Name) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
+                        retVal.Add(new KeyValuePair<string, DType>(TexlLexer.EscapeName(enumInfo.EntityName.Value) + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(name.Name.Value), name.Type));
                     }
                 }
             }

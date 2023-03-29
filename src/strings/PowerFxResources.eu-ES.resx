@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Itzultzen den balioa, errore bat ez den lehen argumentua bada.</value>
+    <value>Itzuliko den balioa, aurreko argumentua errore bat ez bada.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>"source" taulako errenkaden arabera ebaluatzen den espresioa, ordenatzeko balioak ematen dituena.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Gorantz ala beherantz</value>
+    <value>SortOrder.Ascending edo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>"source" ordenatzen du zutabeen arabera (aukera duzu "order" ordenatzeko irizpidea zehazteko).</value>
@@ -889,7 +890,8 @@
     <value>Zutabearen izen esklusiboa.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Gorantz ala beherantz</value>
+    <value>SortOrder.Ascending edo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>"source" ordenatzen du zehaztutako zutabean bat datozen balioen aurkibidean oinarrituta.</value>
@@ -1507,7 +1509,7 @@
     
   </data>
   <data name="IsBlankOrErrorArg1" xml:space="preserve">
-    <value>espresioa</value>
+    <value>adierazpena</value>
     
   </data>
   <data name="AboutIsBlankOrError_expression" xml:space="preserve">
@@ -1847,6 +1849,10 @@
   </data>
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Formatuak ez du balio.</value>
+    
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentuak ez du adierazten erabil daitekeen data- edo ordu-balioa.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -2378,7 +2384,7 @@
     <value>Gehituko den unitate kopurua. Kopuruak ezin du izan negatiboa.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Erabiliko den unitatea, hauetako bat izan daitekeena: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Erabili beharreko unitatea. Hauetako bat izan daiteke: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds edo TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>Eragiketa desberdinaren amaiera-data.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Emaitza adierazteko erabiliko den unitatea, hauetako bat izan daitekeena: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Emaitza adierazteko unitatea. Hauetako bat izan daiteke: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds edo TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -3184,7 +3190,7 @@
     
   </data>
   <data name="DisplayMode_View_DisplayName" xml:space="preserve">
-    <value>Ikusi</value>
+    <value>Ikuspegia</value>
     
   </data>
   <data name="LayoutMode_Manual_DisplayName" xml:space="preserve">
@@ -3420,7 +3426,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>Erdigunean</value>
+    <value>Erdia</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3548,7 +3554,7 @@
     
   </data>
   <data name="FormMode_View_DisplayName" xml:space="preserve">
-    <value>Ikusi</value>
+    <value>Ikuspegia</value>
     
   </data>
   <data name="FormMode_New_DisplayName" xml:space="preserve">
@@ -4418,6 +4424,10 @@
     <value>Ziurtatu identifikatzaileak testua duela. Identifikatzailea hutsik badago edo zuriuneak soilik baditu gertatu ohi da errore hau.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Ezin dira alderatu {0} motako balioak.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Konparazioaren motak ez dira bateragarriak. Ezin dira konparatu honako mota hauek: {0}, {1}.</value>
     
@@ -4834,8 +4844,33 @@
     <value>Funtzioa anbiguoa da: argumentu bereko lambda adierazpenak eta zutabe-identifikatzaileak ditu.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet aukera ({0}) ez da onartzen.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>{0} aukeraren balioa ez da esperotako motakoa ({1}).</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Emandako aukera multzoaren balioaren izen logikoa itzultzen du.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>aukera</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Aukera multzo baten balioa, zeinaren izen logikoa itzuliko den.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Lortu eskualdeko ezarpen lokalek exekuzio-denbora ezartzea.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>URLaren kate bat kodetzen du. Horretarako, alfanumerikoak ez diren karaktere jakin batzuk ordezten ditu "%" ikurrarekin eta zenbaki hamaseitar batekin.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URLa</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Kodetu nahi duzun URLa.</value>
   </data>
 </root>

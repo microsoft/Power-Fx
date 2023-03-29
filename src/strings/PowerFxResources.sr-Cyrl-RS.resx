@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Вредност која се враћа ако је у питању први аргумент без грешке.</value>
+    <value>Вредност која се враћа ако је претходни аргумент грешка.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>Израз који се проверава у редовима у „извору“ и пружа вредности за сортирање.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Растући или опадајући</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сортира „извор“ на основу колоне, опционално наводећи „редослед“ сортирања.</value>
@@ -889,7 +890,8 @@
     <value>Јединствено име колоне.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Растући или опадајући</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Сортира „извор“ на основу индекса подударних вредности у наведеној колони.</value>
@@ -1849,6 +1851,10 @@
     <value>Неважећи формат.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Аргумент не представља важећу вредност датума или времена.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Овај извор података је неважећи. Поправите грешку у окну „Извори података“ тако што ћете изабрати ставке „Садржај –&gt; Извори података“ или „Приказ –&gt; Опције“</value>
     
@@ -2378,7 +2384,7 @@
     <value>Број јединица за додавање. Број може да буде негативан.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Јединица која ће се користити, што може бити Years, Quarters, Months, Days, Hours, Minutes, Seconds или Milliseconds.</value>
+    <value>Јединица за коришћење, која може бити једна од следећих: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>Датум завршетка за операцију разлике.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Јединица у којој ће бити изражен резултат, што може бити Years, Quarters, Months, Days, Hours, Minutes, Seconds или Milliseconds.</value>
+    <value>Јединица за изражавање резултата, која може бити једна од следећих: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2829,7 +2835,7 @@
     
   </data>
   <data name="StartsWithArg2" xml:space="preserve">
-    <value>покрени</value>
+    <value>почетак</value>
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
@@ -3268,7 +3274,7 @@
     
   </data>
   <data name="LayoutOverflow_Scroll_DisplayName" xml:space="preserve">
-    <value>Листај</value>
+    <value>Померање</value>
     
   </data>
   <data name="Overflow_Hidden_DisplayName" xml:space="preserve">
@@ -3412,7 +3418,7 @@
     
   </data>
   <data name="ImagePosition_Stretch_DisplayName" xml:space="preserve">
-    <value>Развуци</value>
+    <value>Растезање</value>
     
   </data>
   <data name="ImagePosition_Tile_DisplayName" xml:space="preserve">
@@ -3420,7 +3426,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>Центар</value>
+    <value>Центрирано</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -4124,7 +4130,7 @@
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
-    <value>Очекује се операнд. Формула или израз очекују важећи операнд. На пример, можете да додате операнд „2“ у израз „ 1 + _“ тако да резултат буде „3“. Или, можете да додате операнд „како си“ у израз „Здраво, “&amp; _ “ тако да резултат буде „Здраво, како си“.</value>
+    <value>Очекује се операнд. Формула или израз очекују важећи операнд. На пример, можете да додате операнд „2“ у израз „ 1 + _“ тако да резултат буде „3“. Или, можете да додате операнд „како си“ у израз „„Здраво, “&amp; _ “ тако да резултат буде „Здраво, како си“.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_HowToFix_1" xml:space="preserve">
@@ -4416,6 +4422,10 @@
   </data>
   <data name="ErrorResource_ErrEmptyInvalidIdentifier_HowToFix_1" xml:space="preserve">
     <value>Уверите се да идентификатор има текст. Ова грешка се јавља када се идентификатор састоји само од празних места или размака.</value>
+    
+  </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Није могуће упоредити вредности типа {0}.</value>
     
   </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
@@ -4834,8 +4844,33 @@
     <value>Ова функција је двосмислена, садржи ламбда изразе и идентификаторе колона за исти аргумент.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Опција BooleanOptionSet {0} није подржана.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Вредност опције {0} није очекиваног типа {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Даје логичко име дате вредности скупа опција.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>опција</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Вредност скупа опција чије ће логичко име бити враћено.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Преузмите подразумевани локални стандард у време извршавања.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
   </data>
 </root>

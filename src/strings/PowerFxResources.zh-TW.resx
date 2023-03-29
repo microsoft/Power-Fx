@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>若為第一個非錯誤引數，即為傳回的值。</value>
+    <value>上一個引數錯誤時傳回的值。</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>對 'source' 中的資料列評估運算式，並為排序提供值。</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>遞增或遞減</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>依資料行排序 'source'，可選擇性地指定排序 'order'。</value>
@@ -889,7 +890,8 @@
     <value>不重複的資料行名稱。</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>遞增或遞減</value>
+    <value>SortOrder.Ascending 或 SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>根據指定資料行中相符值的索引，排序 'source'。</value>
@@ -1849,6 +1851,10 @@
     <value>無效的格式。</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>引數不代表有效的日期或時間值。</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>此資料來源無效。請在 [資料來源] 窗格中按一下 [內容] -&gt; [資料來源] 或 [檢視] -&gt; [選項]，以修正錯誤。</value>
     
@@ -2378,7 +2384,7 @@
     <value>要新增的單位數。數字可以是負數。</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>要使用的單位，其可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 的其中之一。</value>
+    <value>要使用的單位，可以是 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>比較差異運算的結束日期。</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>表示結果的單位，其可以是 Years、Quarters、Months、Days、Hours、Minutes、Seconds、Milliseconds 的其中之一。</value>
+    <value>用於表示結果的單位，可以是 TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds。</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2888,7 +2894,7 @@
     
   </data>
   <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
-    <value>書簽</value>
+    <value>書籤</value>
     
   </data>
   <data name="Icon_Bug_DisplayName" xml:space="preserve">
@@ -3208,7 +3214,7 @@
     
   </data>
   <data name="LayoutAlignItems_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="LayoutAlignItems_End_DisplayName" xml:space="preserve">
@@ -3224,7 +3230,7 @@
     
   </data>
   <data name="AlignInContainer_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="AlignInContainer_End_DisplayName" xml:space="preserve">
@@ -3244,7 +3250,7 @@
     
   </data>
   <data name="LayoutJustifyContent_Center_DisplayName" xml:space="preserve">
-    <value>中心</value>
+    <value>置中</value>
     
   </data>
   <data name="LayoutJustifyContent_End_DisplayName" xml:space="preserve">
@@ -3420,7 +3426,7 @@
     
   </data>
   <data name="ImagePosition_Center_DisplayName" xml:space="preserve">
-    <value>中央</value>
+    <value>置中</value>
     
   </data>
   <data name="VerticalAlign_Top_DisplayName" xml:space="preserve">
@@ -3432,7 +3438,7 @@
     
   </data>
   <data name="VerticalAlign_Bottom_DisplayName" xml:space="preserve">
-    <value>下</value>
+    <value>底部</value>
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
@@ -3788,7 +3794,7 @@
     
   </data>
   <data name="Icon_Bus_DisplayName" xml:space="preserve">
-    <value>匯流排</value>
+    <value>公共汽車</value>
     
   </data>
   <data name="Icon_Cars_DisplayName" xml:space="preserve">
@@ -3840,7 +3846,7 @@
     
   </data>
   <data name="Icon_Bell_DisplayName" xml:space="preserve">
-    <value>鈴</value>
+    <value>鐘</value>
     
   </data>
   <data name="Icon_ShoppingCart_DisplayName" xml:space="preserve">
@@ -4418,6 +4424,10 @@
     <value>請確認您為識別碼提供了文字。若識別碼完全為空白或空格，就會發生此錯誤。</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>無法比較類型 {0} 的值。</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>比較不相容的類型。這些類型無法比較: {0}、{1}。</value>
     
@@ -4834,8 +4844,33 @@
     <value>此函式不明確，其包含同一個引數的 Lambda 運算式和資料行識別碼。</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>不支援 BooleanOptionSet 選項 {0}。</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>選項 {0} 的值不是預期的類型 {1}。</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>傳回給定選項組值的邏輯名稱。</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>選項</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>邏輯名稱將被傳回的選項組值。</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>取得執行階段的預設地區設定。</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>對 URL 字串進行編碼，以 % 和十六進位數字取代特定非英數字元。</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>要編碼的 URL。</value>
   </data>
 </root>

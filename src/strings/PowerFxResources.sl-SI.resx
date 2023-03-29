@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Vrednost, ki je vrnjena, če je prvi argument brez napake.</value>
+    <value>Vrednost, ki je vrnjena, če je prejšnji argument napaka.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>Izraz, ki bo ovrednoten za vrstice v argumentu »vir« in ki zagotovi vrednosti za razvrščanje.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Naraščajoče ali padajoče</value>
+    <value>SortOrder.Ascending ali SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Razvrsti »vir« glede na stolpec, z izbirnim določilom vrstnega reda razvrščanja argumenta »vrstni_red«.</value>
@@ -889,7 +890,8 @@
     <value>Enolično ime stolpca.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Naraščajoče ali padajoče</value>
+    <value>SortOrder.Ascending ali SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Razvrsti »vir« glede na indeks ujemajočih se vrednosti v določenem stolpcu.</value>
@@ -1849,6 +1851,10 @@
     <value>Oblika zapisa ni veljavna.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument ne predstavlja veljavne vrednosti za datum ali uro.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Vir podatkov ni veljaven. Odpravite napako v podoknu »Viri podatkov«, tako da kliknete »Vsebina -&gt; Viri podatkov« ali »Pogled -&gt; Možnosti«.</value>
     
@@ -2378,7 +2384,7 @@
     <value>Število enot, ki jih je treba dodati. Številko je lahko negativno.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Enota, ki jo je treba uporabiti in je lahko je ena od teh: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Enota, ki bo uporabljena; lahko je ena od teh: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>Končni datum za operacijo razlike.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Enota, v kateri bo izražen rezultat. Lahko je ena izmed teh: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Enota za izražanje rezultata: lahko je ena od teh: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4418,6 +4424,10 @@
     <value>Prepričajte se, da imate besedilo za svoj identifikator. Do te napake pride, če je identifikator prazen ali vsebuje samo presledke.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Vrednosti vrste {0} ni mogoče primerjati.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nezdružljivi vrsti za primerjavo. Teh vrst ni mogoče primerjati: {0}, {1}.</value>
     
@@ -4834,8 +4844,33 @@
     <value>Ta funkcija je dvoumna. Za isti argument vsebuje izraze lambda in identifikatorje stolpcev.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>The BooleanOptionSet option {0} is not supported.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Vrednost možnosti {0} ni pričakovane vrste {1}.</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Vrne logično ime navedene vrednosti nabora možnosti.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>možnost</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Vrednost nabora možnosti, za katero bo vrnjeno logično ime.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Pridobi privzeti nabor območnih nastavitev ob času zagona.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
   </data>
 </root>

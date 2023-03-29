@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
-            sb.Append(string.Format(ExpressionFormat, Value.Hours, Value.Minutes, Value.Seconds, Value.Milliseconds));
+            sb.Append(string.Format(CultureInfo.InvariantCulture, ExpressionFormat, Value.Hours, Value.Minutes, Value.Seconds, Value.Milliseconds));
         }
     }
 }

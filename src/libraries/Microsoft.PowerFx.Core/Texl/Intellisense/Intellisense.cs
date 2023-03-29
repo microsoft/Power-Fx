@@ -268,18 +268,20 @@ namespace Microsoft.PowerFx.Intellisense
 
             TypeMatchPriority(expectedType, intellisenseData.Suggestions);
             TypeMatchPriority(expectedType, intellisenseData.SubstringSuggestions);
-            intellisenseData.Suggestions.Sort();
-            intellisenseData.SubstringSuggestions.Sort();
-            var resultSuggestions = intellisenseData.Suggestions.Distinct().ToList();
-            var resultSubstringSuggestions = intellisenseData.SubstringSuggestions.Distinct();
-            resultSuggestions.AddRange(resultSubstringSuggestions);
+            List<IntellisenseSuggestion> resultSuggestions = intellisenseData.Suggestions.Distinct().ToList();
+            IEnumerable<IntellisenseSuggestion> resultSubstringSuggestions = intellisenseData.SubstringSuggestions.Distinct();
 
+            resultSuggestions.AddRange(resultSubstringSuggestions);
             TypeFilter(expectedType, intellisenseData.MatchingStr, ref resultSuggestions);
 
             foreach (var handler in intellisenseData.CleanupHandlers)
             {
                 handler.Run(context, intellisenseData, resultSuggestions);
             }
+
+            intellisenseData.Suggestions.Sort(_config?.CultureInfo);
+            intellisenseData.SubstringSuggestions.Sort(_config?.CultureInfo);
+            resultSuggestions.Sort(new IntellisenseSuggestionComparer(_config?.CultureInfo));
 
             return new IntellisenseResult(intellisenseData, resultSuggestions);
         }

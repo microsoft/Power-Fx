@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Syntax
         internal readonly bool IsModified;
 
         // Unescaped, unmodified value.
-        private readonly string _value;
+        internal readonly string _value;
 
         /// <summary>
         /// Identifier represented as <see cref="DName" />.

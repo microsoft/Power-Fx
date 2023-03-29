@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -27,7 +28,7 @@ using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
-{    
+{
     public class TexlTests : PowerFxTest
     {
         private readonly CultureInfo _defaultLocale = new ("en-US");
@@ -80,8 +81,8 @@ namespace Microsoft.PowerFx.Core.Tests
             // TestBindingErrors(script, DType.Error);
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(script);
-            
-            Assert.Equal(DType.Error, result.Binding.ResultType);            
+
+            Assert.Equal(DType.Error, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
@@ -294,14 +295,37 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        private class BooleanOptionSet : OptionSet, IExternalOptionSet
+        internal class BooleanOptionSet : IExternalOptionSet
         {
-            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
-                : base(name, displayNameProvider)
+            public DisplayNameProvider DisplayNameProvider => DisplayNameUtility.MakeUnique(new Dictionary<string, string>
             {
-            }
+                { "Yes", "Yes" },
+                { "No", "No" },
+            });
 
-            bool IExternalOptionSet.IsBooleanValued => true;
+            public IEnumerable<DName> OptionNames => new[] { new DName("No"), new DName("Yes") };
+
+            public DKind BackingKind => DKind.Boolean;
+
+            public bool IsConvertingDisplayNameMapping => false;
+
+            public DName EntityName => new DName("BoolOptionSet");
+
+            public DType Type => DType.CreateOptionSetType(this);
+
+            public OptionSetValueType OptionSetValueType => new OptionSetValueType(this);
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (fieldName.Value == "No" || fieldName.Value == "Yes")
+                {
+                    optionSetValue = new OptionSetValue(fieldName.Value, this.OptionSetValueType, fieldName.Value == "Yes");
+                    return true;
+                }
+
+                optionSetValue = null;
+                return false;
+            }
         }
 
         [Theory]
@@ -317,18 +341,12 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
-            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
-            {
-                { "Yes", "Yes" },
-                { "No", "No" },
-            });
-
             TestSimpleBindingSuccess(
                 expression,
                 DType.Number,
                 symbol,
                 features: Features.All,
-                optionSets: new[] { new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider) });
+                optionSets: new[] { new BooleanOptionSet() });
         }
 
         [Theory]
@@ -377,6 +395,58 @@ namespace Microsoft.PowerFx.Core.Tests
                 "CountRows(First(Table2).D)",
                 DType.Number,
                 symbol);
+        }
+
+        [Theory]
+        [InlineData("Error({ Kind: 3 })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\" })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Observed: \"MyObserved\" })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\" })")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\", Details: { HttpStatusCode: 200, HttpResponse: \"A response from the network\"} })")]
+
+        // Using First(Table(...)) to avoid the literal record condition of the CheckTypes
+        [InlineData("Error(First(Table({ Kind: 3, Message: \"Asdf\"})))")]
+        [InlineData("Error(First(Table({ Kind: 3, Message: \"Asdf\", Observed: \"MyControl.MyProperty\" })))")]
+        [InlineData("Error(First(Table({ Kind: \"hello\" })))")]
+
+        // Multiple errors
+        [InlineData("Error(Table({ Kind: 3, Message: \"Asdf\"}, { Kind: 4, Message: \"Zxcv\"}))")]
+        [InlineData("Error(Table({ Kind: 3, Message: \"Asdf\", Observed: \"MyControl.MyProperty\" }, { Kind: 2, Message: \"Qwer\", Observed: \"MyControl.MyProperty2\" }, { Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\", Details: { HttpStatusCode: 200, HttpResponse: \"A response from the network\"} }))")]
+
+        // String overload
+        [InlineData("Error(\"\")")]
+        [InlineData("Error(\"An error message\")")]
+
+        // Coercion in properties
+        [InlineData("Error({ Kind: \"12\" })")]
+        [InlineData("Error({ Kind: 3, Message: Today() })")]
+        public void TexlFunctionTypeSemanticsError(string expression)
+        {
+            TestSimpleBindingSuccess(expression, DType.ObjNull);
+        }
+
+        [Theory]
+        [InlineData("Error()")]
+        [InlineData("Error(1)")]
+        [InlineData("Error({})")]
+        [InlineData("Error([])")]
+        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Notify: false, Irrelevant: true })")]
+        [InlineData("Error({ Irrelevant: true })")]
+
+        // Using First(Table(...)) to avoid the literal record condition of the CheckTypes
+        [InlineData("Error(First(Table({ Kind: 3, Irrelevant: true })))")]
+        [InlineData("Error(First(Table({ Irrelevant: true })))")]
+        [InlineData("Error(First(Table({ Message: \"Asdf\"})))")]
+        [InlineData("Error(First(Table({ })))")]
+
+        // Testing multiple errors
+        [InlineData("Error(Table({ Kind: 3, Irrelevant: true }))")]
+        [InlineData("Error(Table({ Irrelevant: true }))")]
+        [InlineData("Error(Table({ Message: \"Asdf\"}))")]
+        [InlineData("Error(Table({ }))")]
+        public void TexlFunctionTypeSemanticsError_Negative(string expression)
+        {
+            TestBindingErrors(expression, DType.ObjNull);
         }
 
         [Fact]
@@ -498,38 +568,61 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion()
+        [Theory]
+        [InlineData("If(A < 10, 1, \"2\")", "n", true)]
+        [InlineData("If(A < 1, \"one\", A < 2, 2, A < 3, true, false)", "s", true)]
+        [InlineData("If(A < 1, true, A < 2, 2, A < 3, false, \"true\")", "b", true)]
+        [InlineData("If(A < 10, 1, [1,2,3])", "-", true)]
+        [InlineData("If(A < 10, 1, {Value: 2})", "-", true)]
+        [InlineData("If(0 < 1, [1], 2)", "-", true)]
+
+        // negative cases, when if produces void type
+        // If(1 < 0, [1], 2) => V which is void value
+
+        // void type is not allowed in aggregate type.
+        // {test: V}
+        [InlineData("{test: If(1 < 0, [1], 2)}", "![]", false)]
+
+        // [V]
+        [InlineData("[If(1 < 0, [1], 2)]", "*[]", false)]
+
+        // void type can't be consumed.
+        // V + 1 
+        [InlineData("If(1 < 0, [1], 2) + 1", "n", false)]
+
+        // Abs(V)
+        [InlineData("Abs(If(1 < 0, [1], 2))", "n", false)]
+
+        // Len(V)
+        [InlineData("Len(If(1 < 0, [1], 2))", "n", false)]
+
+        // If(V, 0, 1)
+        [InlineData("If(If(1 < 0, [1], 2), 0, 1)", "n", false)]
+
+        // Hour(V)
+        [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
+
+        // ForAll([1,2,3], V)
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "e", false)]
+        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("A", FormulaType.Number);
-            
-            TestSimpleBindingSuccess(
-                "If(A < 10, 1, \"2\")",
-                DType.Number,
-                symbol);
 
-            TestSimpleBindingSuccess(
-                "If(A < 1, \"one\", A < 2, 2, A < 3, true, false)",
-                DType.String,
-                symbol);
-
-            TestSimpleBindingSuccess(
-                "If(A < 1, true, A < 2, 2, A < 3, false, \"true\")",
-                DType.Boolean,
-                symbol);
-
-            // Negative cases -- when args cannot be coerced.
-
-            TestBindingErrors(
-                "If(A < 10, 1, [1,2,3])",
-                DType.Number,
-                symbol);
-
-            TestBindingErrors(
-                "If(A < 10, 1, {Value: 2})",
-                DType.Number,
-                symbol);
+            if (checkSuccess)
+            {
+                TestSimpleBindingSuccess(
+                                    expression,
+                                    TestUtils.DT(expectedType),
+                                    symbol);
+            }
+            else
+            {
+                TestBindingErrors(
+                    expression,
+                    TestUtils.DT(expectedType),
+                    symbol);
+            }
         }
 
         [Fact]
@@ -2470,6 +2563,33 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("IsEmpty(\"Hello\")", true)]
+        [InlineData("IsEmpty(7)", true)]
+        [InlineData("IsEmpty([1,2,3,4])", false)]
+        [InlineData("IsEmpty({a:3, b:4})", true)]
+        [InlineData("IsEmpty(Blank())", false)]
+        public void TexlFunctionTypeSemanticsIsEmpty(string script, bool expectedError)
+        {
+            TestSimpleBindingSuccess(script, DType.Boolean); // Without restriction, all succeed
+
+            if (expectedError)
+            {
+                TestBindingErrors(
+                    script,
+                    DType.Boolean,
+                    symbolTable: null,
+                    features: Features.RestrictedIsEmptyArguments);
+            }
+            else
+            {
+                TestSimpleBindingSuccess(
+                    script,
+                    DType.Boolean,
+                    features: Features.RestrictedIsEmptyArguments);
+            }
+        }
+
+        [Theory]
         [InlineData("Sequence(20)", "*[Value:n]")]
         [InlineData("Sequence(20, 30)", "*[Value:n]")]
         [InlineData("Sequence(20, 30, 10)", "*[Value:n]")]
@@ -3218,9 +3338,9 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null, Features features = Features.None)
         {
-            var config = new PowerFxConfig
+            var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
             };
@@ -3240,7 +3360,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None, OptionSet[] optionSets = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None, IExternalOptionSet[] optionSets = null)
         {
             var config = new PowerFxConfig(features)
             {
@@ -3254,7 +3374,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     foreach (var optionSet in optionSets)
                     {
-                        config.AddOptionSet(optionSet);
+                        config.AddEntity(optionSet);
                     }
                 }
             }

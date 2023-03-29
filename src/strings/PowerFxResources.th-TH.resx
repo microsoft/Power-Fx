@@ -795,7 +795,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>ค่าที่ส่งกลับถ้าเป็นอาร์กิวเมนต์แรกที่ไม่ใช่ข้อผิดพลาด</value>
+    <value>ค่าที่ส่งกลับหากอาร์กิวเมนต์ก่อนหน้าเป็นข้อผิดพลาด</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +864,8 @@
     <value>นิพจน์ที่ถูกประเมินจากแถวใน 'source' และให้ค่าในการเรียงลำดับ</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>จากน้อยไปหามาก หรือจากมากไปหาน้อย</value>
+    <value>SortOrder.Ascending หรือ SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>เรียงลำดับ 'source' โดยอิงตามคอลัมน์ และสามารถเลือกกำหนด 'order' การเรียงลำดับได้</value>
@@ -889,7 +890,8 @@
     <value>ชื่อคอลัมน์เฉพาะ</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>จากน้อยไปหามาก หรือจากมากไปหาน้อย</value>
+    <value>SortOrder.Ascending หรือ SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>เรียงลำดับ 'source' โดยอิงตามดัชนีของค่าที่ตรงกันในคอลัมน์ที่กำหนด</value>
@@ -1849,6 +1851,10 @@
     <value>รูปแบบไม่ถูกต้อง</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>อาร์กิวเมนต์ไม่ได้แสดงค่าวันที่หรือเวลาที่ถูกต้อง</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>แหล่งข้อมูลนี้ไม่ถูกต้อง: โปรดแก้ไขข้อผิดพลาดในบานหน้าต่าง "แหล่งข้อมูล" โดยคลิก "เนื้อหา -&gt; แหล่งเครื่องมือ" หรือ "แสดง -&gt; ตัวเลือก"</value>
     
@@ -2378,7 +2384,7 @@
     <value>ตัวเลขของหน่วยที่จะเพิ่ม สามารถเป็นจำนวนลบได้</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>หน่วยที่จะใช้ Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds</value>
+    <value>หน่วยที่จะใช้ ซึ่งอาจเป็นหนึ่งในรายการนี้ TimeUnit.Years TimeUnit.Quarters TimeUnit.Months TimeUnit.Days TimeUnit.Hours TimeUnit.Minutes TimeUnit.Seconds TimeUnit.Milliseconds</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2406,7 @@
     <value>วันที่สิ้นสุดสำหรับกระบวนการที่ต่างๆ</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>หน่วยที่จะใช้แสดงผลลัพธ์ หน่วยที่จะใช้แสดงผลลัพธ์ Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds</value>
+    <value>หน่วยเพื่อแสดงผลลัพธ์ ซึ่งอาจเป็นหนึ่งในรายการนี้ TimeUnit.Years TimeUnit.Quarters TimeUnit.Months TimeUnit.Days TimeUnit.Hours TimeUnit.Minutes TimeUnit.Seconds TimeUnit.Milliseconds</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -4418,6 +4424,10 @@
     <value>ตรวจสอบให้แน่ใจว่าคุณมีข้อความสำหรับตัวระบุของคุณ ข้อผิดพลาดนี้เกิดขึ้นเมื่อตัวตัวระบุนั้นเว้นว่างไว้หรือเป็นพื้นที่ว่างทั้งหมด</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>ไม่สามารถเปรียบเทียบค่าชนิด {0} ได้</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>ชนิดที่เข้ากันไม่ได้สำหรับการเปรียบเทียบ ชนิดเหล่านี้ไม่สามารถเปรียบเทียบกันได้: {0}, {1}</value>
     
@@ -4834,8 +4844,33 @@
     <value>ฟังก์ชันนี้คลุมเครือ โดยประกอบด้วยนิพจน์แลมบ์ดาและตัวระบุคอลัมน์สำหรับอาร์กิวเมนต์เดียวกัน</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>ไม่รองรับตัวเลือก {0} BooleanOptionSet</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>ค่าของตัวเลือก {0} ไม่ใช่ประเภท {1} ที่คาดไว้</value>
     
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>คืนค่าชื่อที่แสดงของค่าชุดตัวเลือกที่กำหนด</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>ตัวเลือก</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>ค่าชุดตัวเลือกที่จะคืนค่าเป็นชื่อที่แสดง</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>ตั้งค่าตำแหน่งที่ตั้งเริ่มต้นขณะรันไทม์</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>เข้ารหัสสตริง URL โดยแทนที่อักขระที่ไม่ใช่ตัวอักษรและตัวเลขบางตัวด้วย % และเลขฐานสิบหก</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL ที่จะเข้ารหัส</value>
   </data>
 </root>

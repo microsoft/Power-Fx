@@ -79,6 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Degrees = _library.Add(new DegreesFunction());
         public static readonly TexlFunction DegreesT = _library.Add(new DegreesTableFunction());
         public static readonly TexlFunction DropColumns = _library.Add(new DropColumnsFunction());
+        public static readonly TexlFunction EncodeUrl = _library.Add(new EncodeUrlFunction());
         public static readonly TexlFunction EndsWith = _library.Add(new EndsWithFunction());
         public static readonly TexlFunction Error = _library.Add(new ErrorFunction());
         public static readonly TexlFunction Exp = _library.Add(new ExpFunction());
@@ -112,6 +113,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
+        public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
         public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
         public static readonly TexlFunction LastN = _library.Add(new FirstLastNFunction(isFirst: false));
         public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));

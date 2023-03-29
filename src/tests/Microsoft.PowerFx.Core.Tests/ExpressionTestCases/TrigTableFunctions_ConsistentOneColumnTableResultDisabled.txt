@@ -1,3 +1,5 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
 >> Round(Sin(Table({a:0},{a:Pi()/6},{a:Pi()/2})),3)
 Table({a:0},{a:0.5},{a:1})
 

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -10,6 +11,8 @@ namespace Microsoft.PowerFx.Types
 {
     public class StringValue : PrimitiveValue<string>
     {
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToString = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.DateTime, FormulaType.Date, FormulaType.Time, FormulaType.Boolean, FormulaType.Guid };
+
         internal StringValue(IRContext irContext, string value)
             : base(irContext, value)
         {

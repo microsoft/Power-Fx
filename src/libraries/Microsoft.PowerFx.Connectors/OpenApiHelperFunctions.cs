@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -52,11 +53,11 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else if (c <= 255)
                 {
-                    sb.Append("_ux" + ((int)c).ToString("X2"));
+                    sb.Append("_ux" + ((int)c).ToString("X2", CultureInfo.InvariantCulture));
                 }
                 else
                 {
-                    sb.Append("_Ux" + ((int)c).ToString("X4"));
+                    sb.Append("_Ux" + ((int)c).ToString("X4", CultureInfo.InvariantCulture));
                 }
             }
 

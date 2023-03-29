@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = SuggestTests.Default;
             config.SymbolTable.EnableMutationFunctions();
             var actualSuggestions = SuggestStrings(expression, config, null);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
         }
     }
 }

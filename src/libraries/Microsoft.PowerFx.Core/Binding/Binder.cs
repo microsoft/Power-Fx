@@ -20,6 +20,7 @@ using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -418,7 +419,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
 
             var nodeDType = GetType(node);
-            return (nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued) ||
+            return (nodeDType.IsOptionSet && nodeDType.OptionSetInfo != null && nodeDType.OptionSetInfo.IsBooleanValued()) ||
                 (nodeDType == DType.Boolean && node.Kind != NodeKind.BoolLit);
         }
 
@@ -1700,7 +1701,7 @@ namespace Microsoft.PowerFx.Core.Binding
             foreach (var info in _infoMap.OfType<FirstNameInfo>())
             {
                 var kind = info.Kind;
-                if (info.Name.Value.Equals(globalName) &&
+                if (info.Name.Value.Equals(globalName, StringComparison.Ordinal) &&
                     (kind == BindKind.Control || kind == BindKind.Data || kind == BindKind.Resource || kind == BindKind.QualifiedValue || kind == BindKind.WebResource))
                 {
                     firstName = info.Node;
@@ -2831,6 +2832,14 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (lookupType.IsDeferred)
                 {
                     _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeferredType);
+                }
+
+                // If we retrieved a builtin enum, use the option set type instead of the weaker enum type
+                if (_features.HasFlag(Features.StronglyTypedBuiltinEnums) &&
+                    lookupInfo.Kind == BindKind.Enum &&
+                    lookupInfo.Data is EnumSymbol enumSymbol)
+                {
+                    lookupType = enumSymbol.OptionSetType;
                 }
 
                 // Make a note of this global's type, as identifier by the resolver.
@@ -5155,7 +5164,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrMultipleValuesForField_Name, displayName);
                         }
-                        else if (_txb.GetType(node.Children[i]).IsDeferred)
+                        else if (_txb.GetType(node.Children[i]).IsDeferred || _txb.GetType(node.Children[i]).IsVoid)
                         {
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, node.Children[i], TexlStrings.ErrRecordDoesNotAcceptThisType);
                         }
@@ -5184,15 +5193,17 @@ namespace Microsoft.PowerFx.Core.Binding
                     var childType = _txb.GetType(child);
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
 
-                    if (!childType.IsDeferred && !exprType.IsValid)
+                    // Deferred and void types are not allowed in tables.
+                    var isChildTypeAllowedInTable = !childType.IsDeferred && !childType.IsVoid;
+                    if (isChildTypeAllowedInTable && !exprType.IsValid)
                     {
                         exprType = childType;
                     }
-                    else if (!childType.IsDeferred && exprType.CanUnionWith(childType))
+                    else if (isChildTypeAllowedInTable && exprType.CanUnionWith(childType))
                     {
                         exprType = DType.Union(exprType, childType);
                     }
-                    else if (!childType.IsDeferred && childType.CoercesTo(exprType))
+                    else if (isChildTypeAllowedInTable && childType.CoercesTo(exprType))
                     {
                         _txb.SetCoercedType(child, exprType);
                     }

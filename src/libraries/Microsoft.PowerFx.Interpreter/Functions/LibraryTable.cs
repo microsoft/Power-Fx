@@ -447,7 +447,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (StringValue)args[2];
 
-            var isDescending = arg2.Value.ToLower() == "descending";
+            var isDescending = arg2.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
 
             if (arg0 is QueryableTableValue queryableTable)
             {
@@ -600,7 +600,8 @@ namespace Microsoft.PowerFx.Functions
 
                 var n1 = a.sortValue as OptionSetValue;
                 var n2 = b.sortValue as OptionSetValue;
-                return n1.Option.CompareTo(n2.Option) * compareToResultModifier;
+
+                return string.Compare(n1.Option, n2.Option, StringComparison.Ordinal) * compareToResultModifier;
             });
 
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));

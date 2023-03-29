@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
@@ -14,7 +12,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -116,6 +113,11 @@ namespace Microsoft.PowerFx
         public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, EvalVisitorContext context)
         {
             return new BooleanValue(node.IRContext, node.LiteralValue);
+        }
+
+        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, EvalVisitorContext context)
+        {
+            return new ColorValue(node.IRContext, node.LiteralValue);
         }
 
         public override async ValueTask<FormulaValue> Visit(RecordNode node, EvalVisitorContext context)
@@ -267,7 +269,7 @@ namespace Microsoft.PowerFx
                 {
                     try
                     {
-                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args);
+                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
                     }
                     catch (CustomFunctionErrorException ex)
                     {
@@ -281,10 +283,10 @@ namespace Microsoft.PowerFx
                                 Kind = ex.ErrorKind
                             });
                     }
-
-                    if (IfFunction.CanCheckIfReturn(func))
+                    
+                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
-                        Contract.Assert(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType);
+                        throw CommonExceptions.RuntimeMisMatch;
                     }
                 }
                 else
@@ -435,7 +437,7 @@ namespace Microsoft.PowerFx
 
             if (arg1 is UntypedObjectValue cov && arg2 is StringValue sv)
             {
-                if (cov.Impl.Type is ExternalType et && et.Kind == ExternalTypeKind.Object)
+                if (cov.Impl.Type is ExternalType et && (et.Kind == ExternalTypeKind.Object || et.Kind == ExternalTypeKind.ArrayAndObject))
                 {
                     if (cov.Impl.TryGetProperty(sv.Value, out var res))
                     {
@@ -495,6 +497,11 @@ namespace Microsoft.PowerFx
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
         {
             var arg1 = await node.Child.Accept(this, context);
+
+            if (arg1 is BlankValue || arg1 is ErrorValue)
+            {
+                return arg1;
+            }
 
             if (node.Op == UnaryOpKind.TableToTable)
             {
@@ -619,11 +626,6 @@ namespace Microsoft.PowerFx
             });
         }
 
-        public override async ValueTask<FormulaValue> Visit(ColorLiteralNode node, EvalVisitorContext context)
-        {
-            return CommonErrors.NotYetImplementedError(node.IRContext, "Color literal");
-        }
-
         public override async ValueTask<FormulaValue> Visit(ChainingNode node, EvalVisitorContext context)
         {
             CheckCancel();
@@ -653,13 +655,33 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(ResolvedObjectNode node, EvalVisitorContext context)
         {
-            return node.Value switch
+            switch (node.Value)
             {
-                NameSymbol name => GetVariableOrFail(node, name),
-                FormulaValue fi => fi,
-                IExternalOptionSet optionSet => ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext),
-                _ => ResolvedObjectHelpers.ResolvedObjectError(node),
-            };
+                case NameSymbol name: 
+                    return GetVariableOrFail(node, name);
+                case FormulaValue fi:
+                    return fi;
+                case IExternalOptionSet optionSet:
+                    return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext);
+                case Func<IServiceProvider, FormulaValue> getHostObject:
+                    FormulaValue hostObj;
+                    try
+                    {
+                        hostObj = getHostObject(_services);
+                        if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type))
+                        {
+                            hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext);
+                        }
+                    }
+                    catch (CustomFunctionErrorException ex)
+                    {
+                        hostObj = CommonErrors.CustomError(node.IRContext, ex.Message);
+                    }
+
+                    return hostObj;
+                default:
+                    return ResolvedObjectHelpers.ResolvedObjectError(node);
+            }
         }
 
         private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)

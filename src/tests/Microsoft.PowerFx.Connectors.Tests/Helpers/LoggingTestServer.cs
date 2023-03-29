@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,6 +23,8 @@ namespace Microsoft.PowerFx.Tests
 
         public OpenApiDocument _apiDocument;
 
+        public bool SendAsyncCalled = false;
+
         public LoggingTestServer(string swaggerName)
         {
             _apiDocument = Helpers.ReadSwagger(swaggerName);
@@ -36,6 +37,11 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
+            if (string.IsNullOrEmpty(filename))
+            {
+                return;
+            }
+
             var text = Helpers.ReadAllText(filename);
             SetResponse(text, status);
         }
@@ -62,6 +68,7 @@ namespace Microsoft.PowerFx.Tests
             var method = request.Method;
             var url = request.RequestUri.ToString();
 
+            SendAsyncCalled = true;
             _log.AppendLine($"{method} {url}");
 
             foreach (var kv in request.Headers.OrderBy(x => x.Key))
