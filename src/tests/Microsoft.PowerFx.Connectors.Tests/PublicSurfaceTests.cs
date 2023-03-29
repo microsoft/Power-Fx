@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Connector.Tests
     public class PublicSurfaceTests
     {
         [Fact]
-        public void Test()
+        public void PublicSurfaceTest_Connectors()
         {
             var asm = typeof(PowerPlatformConnectorClient).Assembly;
 
@@ -36,7 +36,9 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ConnectorParameter",
-              "Microsoft.PowerFx.Connectors.ConnectorFunction"
+              "Microsoft.PowerFx.Connectors.ConnectorFunction",
+              "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
+              "Microsoft.PowerFx.Connectors.ConnectorParameters"
             };
 
             var sb = new StringBuilder();

@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.DateTimeFormatEnumString };
+            return new List<string>() { LanguageConstants.DateTimeFormatEnumString };
         }
     }
 

@@ -52,10 +52,22 @@ namespace Microsoft.PowerFx
         RestrictedIsEmptyArguments = 0x20,
 
         /// <summary>
+        /// Allow delegation for async calls (delegate using awaited call result).
+        /// Added March 2023.
+        /// </summary>
+        AllowAsyncDelegation = 0x40,
+
+        /// <summary>
+        /// Allow delegation for impure nodes.
+        /// Added March 2023.
+        /// </summary>
+        AllowImpureNodeDelegation = 0x80,
+
+        /// <summary>
         /// Updates the FirstN/LastN functions to require a second argument, instead of
         /// defaulting to 1.
         /// </summary>
-        FirstLastNRequiresSecondArguments = 0x40,
+        FirstLastNRequiresSecondArguments = 0x100,
 
         /// <summary>        
         /// All features enabled

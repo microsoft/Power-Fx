@@ -99,3 +99,6 @@ DateTime(2011,1,30,8,0,0,0)
 
 >> DateTimeValue("2011-01-30T08:00:00.1234567")
 DateTime(2011,1,30,8,0,0,123)
+
+>> With({d:DateTimeValue("March 10, 2023 5:30 PM")}, DateTimeValue(Text(d, DateTimeFormat.UTC)) = d)
+true

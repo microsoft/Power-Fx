@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.StartOfWeekEnumString };
+            return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
     }
 
@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.StartOfWeekEnumString };
+            return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
     }
 
@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.DateTimeFormatEnumString };
+            return new List<string>() { LanguageConstants.DateTimeFormatEnumString };
         }
 
         public override bool HasSuggestionsForParam(int index)
@@ -383,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -450,7 +450,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -585,7 +585,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -615,7 +615,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)

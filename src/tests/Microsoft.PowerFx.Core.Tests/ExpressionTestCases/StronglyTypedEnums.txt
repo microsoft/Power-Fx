@@ -7,8 +7,8 @@ Errors: Error 15-16: Incompatible types for comparison. These types can't be com
 Color.Red
 
 // Both string backed enums, but incompatble for comparison
->> TimeUnit.Days <> JSONFormat.IndentFour
-Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Enum (JSONFormat).
+>> TimeUnit.Days <> SortOrder.Ascending
+Errors: Error 14-16: Incompatible types for comparison. These types can't be compared: Enum (TimeUnit), Enum (SortOrder).
 
 // Valid to compare to strings
 >> TimeUnit.Days <> "abc"
@@ -22,21 +22,21 @@ RGBA(255,0,0,1)
 Errors: Error 10-11: Unable to compare values of type Enum (Color).
 
 // Number backed enums support gt/lt/geq/leq, but enforce type checks
->> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < ErrorSeverity.Severe) 
+>> With({ErrorKnd: ErrorKind.Div0}, ErrorKnd < ErrorKind.Custom) 
 true
 
->> ErrorSeverity.Warning < 5
+>> ErrorKind.Numeric < 100
 true
 
->> ErrorSeverity.Warning = 5
+>> ErrorKind.Custom = 100
 false
 
->> With({ErrorSev: ErrorSeverity.Warning}, ErrorSev < StartOfWeek.Saturday) 
-Errors: Error 49-50: Incompatible types for comparison. These types can't be compared: Enum (ErrorSeverity), Enum (StartOfWeek).
+>> With({ErrorKnd: ErrorKind.Numeric}, ErrorKnd < StartOfWeek.Saturday) 
+Errors: Error 45-46: Incompatible types for comparison. These types can't be compared: Enum (ErrorKind), Enum (StartOfWeek).
 
 // Coercion to string uses backing values if the enum is string-backed
->> JSONFormat.IndentFour & JSONFormat.IncludeBinaryData
-"4B"
+>> SortOrder.Ascending & SortOrder.Descending
+"ascendingdescending"
 
 // Non string-backed enums use the name when coerced to string
 // This might not be great, but it matches the CDS Option Set behavior.
