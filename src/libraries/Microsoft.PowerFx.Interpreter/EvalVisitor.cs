@@ -554,7 +554,6 @@ namespace Microsoft.PowerFx
                 {
                     CheckCancel();
 
-                    // $$$ This would be better to resolve at IR generation time. 
                     if (node.FieldCoercions.TryGetValue(new Core.Utils.DName(f2.Name), out var coercion))
                     {
                         var newValue = await coercion.Accept(this, context.NewScope(newScope));
@@ -564,7 +563,6 @@ namespace Microsoft.PowerFx
                     else
                     {
                         // Existing field, no coercion needed. 
-
                         fields.Add(f2);
                     }
                 }
