@@ -89,6 +89,15 @@ Error({Kind:ErrorKind.Numeric})
 >> Dec2Hex(-45780, 11)
 Error({Kind:ErrorKind.Numeric})
 
+>> Dec2Hex(-45780, Blank())
+Error({Kind:ErrorKind.Numeric})
+
+>> Dec2Hex(-45780, 0)
+Error({Kind:ErrorKind.Numeric})
+
+>> Dec2Hex(-45780, -1)
+Error({Kind:ErrorKind.Numeric})
+
 // ******** NULL and ERROR PARAMETERS ********
 >> Dec2Hex(1/0)
 Error({Kind:ErrorKind.Div0})

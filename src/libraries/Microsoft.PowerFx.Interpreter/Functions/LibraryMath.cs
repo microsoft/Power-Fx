@@ -952,7 +952,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // places need to be non-negative and 10 or less
-            if (places != null && (places < 0 || places > 10))
+            if (places != null && (places <= 0 || places > 10))
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
@@ -979,7 +979,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // places need to be greater or equal to length of hexadecimal when number is positive
-            if (places != null && result.Length > places && number > 0)
+            if (result.Length > places && number > 0)
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
