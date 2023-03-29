@@ -449,7 +449,7 @@ namespace Microsoft.PowerFx
 
                     if (columnCount == 0)
                     {
-                        return minimal ? string.Empty : "Blank()";
+                        return minimal ? string.Empty : "Table()";
                     }
 
                     var columnWidth = new int[columnCount];
