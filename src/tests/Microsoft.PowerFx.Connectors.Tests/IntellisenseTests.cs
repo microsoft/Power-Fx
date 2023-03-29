@@ -97,6 +97,8 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
 "
             };
+
+            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
         [Theory]        
@@ -161,7 +163,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
 ";           
 
-            Assert.Equal(expectedNetwork, networkTrace);
+            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
     }
 }

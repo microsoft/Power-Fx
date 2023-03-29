@@ -1781,8 +1781,72 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
             {
+                BuiltinFunctionsCore.LeftST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.MidT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Mid],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
                 BuiltinFunctionsCore.ModT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.RightST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
                 BuiltinFunctionsCore.RoundT,
@@ -1795,6 +1859,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.RoundDownT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.SubstituteT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Substitute],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
                 BuiltinFunctionsCore.TruncT,

@@ -210,6 +210,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
  [content-header] Content-Type: application/json; charset=utf-8
  [body] {{""kind"":""Conversation"",""analysisInput"":{{""conversationItem"":{{""id"":""0"",""participantId"":""0"",""language"":""en-us"",""modality"":""text"",""text"":""Book me a flight for Munich""}}}},""parameters"":{{""projectName"":""project1"",""deploymentName"":""deploy1"",""verbose"":true,""stringIndexType"":""TextElement_V8""}}}}
 ";
+
+            Assert.Equal(expectedInput.Replace("\r\n", "\n").Replace("\r", "\n"), input.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
         [Fact]
