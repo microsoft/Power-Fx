@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
             if (string.IsNullOrEmpty(locale))
             {
-                locale = CultureInfo.CurrentUICulture.Name;
+                locale = "en-US";
                 Contracts.CheckNonEmpty(locale, "locale");
             }
 
@@ -211,7 +211,7 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 if (string.IsNullOrEmpty(locale))
                 {
-                    return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
+                    return _resourceManager.GetString(resourceKey, new CultureInfo("en-US"));
                 }
 
                 return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));

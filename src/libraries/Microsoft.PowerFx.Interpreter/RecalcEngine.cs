@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -181,7 +182,7 @@ namespace Microsoft.PowerFx
 
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
-                new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script),
+                new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script, CultureInfo.InvariantCulture),
                 udf.ReturnType.GetFormulaType(),
                 udf.IsImperative,
                 udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType())).ToArray())).ToArray();

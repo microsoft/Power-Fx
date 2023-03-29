@@ -38,8 +38,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
             var runtimeConfig = new SymbolValues(symbols);
             runtimeConfig.Set(slot, databaseTable);
-            
-            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+
+            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions(allowsSideEffects: true));
             Assert.Equal(checkSuccess, check.IsSuccess);
 
             if (!check.IsSuccess)
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runtimeConfig = new SymbolValues(symbols);
             runtimeConfig.Set(slot, databaseTable);
 
-            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions(allowsSideEffects: true));
             Assert.True(check.IsSuccess);
 
             IExpressionEvaluator run = check.GetEvaluator();

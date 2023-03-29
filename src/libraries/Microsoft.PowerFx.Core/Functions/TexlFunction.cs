@@ -76,10 +76,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
         private SignatureConstraint _signatureConstraint;
 
-        private TransportSchemas.FunctionInfo _cachedFunctionInfo;
-
-        private string _cachedLocaleName;
-
         // Return true if the function should be hidden from the formular bar, false otherwise.
         public virtual bool IsHidden => false;
 
@@ -1374,38 +1370,6 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         #endregion
-
-        internal TransportSchemas.FunctionInfo Info(string locale)
-        {
-            // If the locale has changed, we want to reset the function info to one of the new locale
-            if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
-            {
-                return _cachedFunctionInfo;
-            }
-
-            _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
-            return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
-            {
-                Label = Name,
-                Detail = Description,
-                Signatures = GetSignatures().Select(signature => new FunctionSignature()
-                {
-                    Label = Name + (signature == null ?
-                        "()" :
-                        ("(" + string.Join(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),
-                    Parameters = signature?.Select(getter =>
-                    {
-                        TryGetParamDescription(getter(locale), out var description);
-
-                        return new ParameterInfo()
-                        {
-                            Label = getter(null),
-                            Documentation = description
-                        };
-                    }).ToArray()
-                }).ToArray()
-            };
-        }
 
         /// <summary>
         /// Override this method to rewrite the CallNode that is generated.

@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.Globalization;
 using System.Threading;
-using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
@@ -47,15 +45,13 @@ namespace Microsoft.PowerFx
         // This captures the critical invariant: EditorContextScope corresponds to a formula bar where the user just types text, all other context is provided; 
         private readonly Func<string, CheckResult> _getCheckResult;
 
-        internal EditorContextScope(
-            Engine engine,
-            ParserOptions parserOptions,
-            ReadOnlySymbolTable symbols)
-            : this((string expr) => new CheckResult(engine)
-                    .SetText(expr, parserOptions)
-                    .SetBindingInfo(symbols))
-        {            
-        }        
+        private readonly CultureInfo _culture;
+
+        internal EditorContextScope(Engine engine, ParserOptions parserOptions, ReadOnlySymbolTable symbols)
+            : this((string expr) => new CheckResult(engine).SetText(expr, parserOptions).SetBindingInfo(symbols))
+        {
+            _culture = parserOptions?.Culture ?? CultureInfo.InvariantCulture;
+        }
 
         public EditorContextScope(Func<string, CheckResult> getCheckResult)
         {
@@ -84,7 +80,7 @@ namespace Microsoft.PowerFx
             var symbols = check._symbols;
             var engine = check.Engine;
 
-            return engine.GetDisplayExpression(expression, symbols);
+            return engine.GetDisplayExpression(expression, symbols, _culture);
         }
 
         IIntellisenseResult IPowerFxScope.Suggest(string expression, int cursorPosition)

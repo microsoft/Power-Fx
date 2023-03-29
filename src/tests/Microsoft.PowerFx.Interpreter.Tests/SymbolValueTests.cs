@@ -698,7 +698,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var symTableAll = ReadOnlySymbolTable.Compose(symTable2, symTableThisItem);
                 var symValuesAll = symTableAll.CreateValues(symValuesThisItem);
 
-                var opts = new ParserOptions { AllowsSideEffects = true };
+                var opts = new ParserOptions(allowsSideEffects: true);
 
                 var runtimeConfig = new RuntimeConfig(symValuesAll);
                 var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: runtimeConfig);

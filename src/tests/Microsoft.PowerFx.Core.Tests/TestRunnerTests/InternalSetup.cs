@@ -28,9 +28,8 @@ namespace Microsoft.PowerFx.Core.Tests
         internal static InternalSetup Parse(string setupHandlerName)
         {
             var iSetup = new InternalSetup
-            {
-                // Default features
-                Features = Features.TableSyntaxDoesntWrapRecords | Features.ConsistentOneColumnTableResult
+            {                
+                Features = Features.DefaultFeatures
             };
 
             if (string.IsNullOrWhiteSpace(setupHandlerName))

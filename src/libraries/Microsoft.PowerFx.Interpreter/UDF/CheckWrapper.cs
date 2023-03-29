@@ -25,11 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.UDF
             _parseResult = parseResult;
             _parameterType = parameterType;
 
-            ParserOptions = new ParserOptions()
-            {
-                Culture = _engine.Config.CultureInfo,
-                AllowsSideEffects = isImperative,
-            };
+            ParserOptions = new ParserOptions(parseResult.ParseCulture, allowsSideEffects: isImperative);
 
             _parseResult.Options = ParserOptions;
         }

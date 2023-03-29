@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Syntax
 
         // The language settings used for parsing this script.
         // May be null if the script is to be parsed in the current locale.
-        public readonly CultureInfo Loc;
+        public readonly CultureInfo Culture;
         private List<TexlError> _errors;
 
         // This may be null if the script hasn't yet been parsed.
@@ -32,14 +32,14 @@ namespace Microsoft.PowerFx.Syntax
 
         internal List<CommentToken> Comments { get; private set; }
 
-        public Formula(string script, TexlNode tree, CultureInfo loc = null)
+        public Formula(string script, TexlNode tree, CultureInfo culture = null)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(culture);
 
             Script = script;
             ParseTree = tree;
-            Loc = loc;
+            Culture = culture;
             AssertValid();
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Syntax
 
             if (ParseTree == null)
             {
-                var result = TexlParser.ParseScript(Script, loc: Loc, flags: flags);
+                var result = TexlParser.ParseScript(Script, culture: Culture, flags: flags);
                 ApplyParse(result);
             }
 

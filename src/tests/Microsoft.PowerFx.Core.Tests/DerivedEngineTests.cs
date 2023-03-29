@@ -83,10 +83,7 @@ namespace Microsoft.PowerFx.Tests
 
             public override ParserOptions GetDefaultParserOptionsCopy()
             {
-                return new ParserOptions
-                {
-                     MaxExpressionLength = 10
-                };
+                return new ParserOptions(maxExpressionLength: 10);                
             }
 
             public int PostCheckCounter = 0;

@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class SetFunctionTests : PowerFxTest
     {
-        private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
+        private readonly ParserOptions _opts = new ParserOptions(allowsSideEffects: true);
 
         [Fact]
         public void SetVar()

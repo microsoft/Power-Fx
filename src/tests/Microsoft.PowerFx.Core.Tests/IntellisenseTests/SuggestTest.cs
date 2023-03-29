@@ -57,15 +57,15 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+        internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums());
 
-        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
+        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet());
+        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet());
 
         // No extra enums, but standard functions (which will include some enums).
-        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library));
+        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library));
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -250,7 +250,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                     { "Field1", 1 },
                     { "Field2", 2 },
                 }));
-            var config = PowerFxConfig.BuildWithEnumStore(CultureInfo.InvariantCulture, enumStoreBuilder);
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder);
 
             var result = SuggestStrings("Fiel|", config);
             Assert.Equal(2, result.Length);
@@ -288,9 +288,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
             var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
-            var config = PowerFxConfig.BuildWithEnumStore(new CultureInfo(culture), new EnumStoreBuilder().WithDefaultEnums());
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums());
 
-            var result = Suggest("variabl|", config, context);
+            var result = Suggest("variabl|", config, context, new CultureInfo(culture));
             var suggestions = result.Suggestions.ToList();
 
             Assert.Equal(expectedSuggestions.Length, suggestions.Count);
@@ -381,10 +381,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {
             var lazyInstance = new LazyRecursiveRecordType();
-            var config = PowerFxConfig.BuildWithEnumStore(
-                null,
-                new EnumStoreBuilder(),
-                new TexlFunctionSet(new[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table }));
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet(new[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table }));
             var actualSuggestions = SuggestStrings(expression, config, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 

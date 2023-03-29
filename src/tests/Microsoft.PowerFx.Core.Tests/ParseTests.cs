@@ -522,12 +522,9 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("1234+6789+++++")] // Invalid parse
         public void MaxExpressionLength(string expr)
         {
-            var opts = new ParserOptions
-            {
-                 MaxExpressionLength = 10
-            };
+            var opts = new ParserOptions(maxExpressionLength: 10);
 
-            var parseResult = Engine.Parse(expr, opts);
+            var parseResult = Engine.Parse(expr, options: opts);
             Assert.False(parseResult.IsSuccess);
             Assert.True(parseResult.HasError);
 

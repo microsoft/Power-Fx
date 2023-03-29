@@ -58,33 +58,32 @@ namespace Microsoft.PowerFx
         // All the spans in the tokens are relative to this. 
         public string Text { get; }
 
+        public CultureInfo ParseCulture { get; } 
+
         /// <summary>
         /// If string is too large, don't even attempt to lex or parse it. 
         /// Just create a parse result directly encapsulating the error. 
         /// </summary>
         /// <param name="text"></param>
         /// <param name="maxAllowed">Maximum number of characters allowed. </param>
+        /// <param name="parseCulture">Culture.</param>
         /// <returns></returns>
-        internal static ParseResult ErrorTooLarge(string text, int maxAllowed)
+        internal static ParseResult ErrorTooLarge(string text, int maxAllowed, CultureInfo parseCulture)
         {
             Token tok = new ErrorToken(new Span(0, text.Length));
 
             var errKey = Core.Localization.TexlStrings.ErrTextTooLarge;
             var err = new TexlError(tok, DocumentErrorSeverity.Critical, errKey, maxAllowed, text.Length);
-
-            List<TexlError> errors = new List<TexlError>()
-            {
-                err
-            };
+            List<TexlError> errors = new List<TexlError>() { err };
 
             int id = 0;
             TexlNode root = new ErrorNode(ref id, tok, err.ShortMessage);
             var comments = new List<CommentToken>();
 
-            return new ParseResult(root, errors, true, comments, null, null, text);         
+            return new ParseResult(root, errors, true, comments, null, null, text, parseCulture: parseCulture);         
         }
 
-        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo errorMessageLocale = null)           
+        internal ParseResult(TexlNode root, List<TexlError> errors, bool hasError, List<CommentToken> comments, SourceList before, SourceList after, string text, CultureInfo parseCulture, CultureInfo errorMessageLocale = null)           
         {
             Contracts.AssertValue(root);
             Contracts.AssertValue(comments);
@@ -101,13 +100,14 @@ namespace Microsoft.PowerFx
 
             Text = text;
 
-            ErrorMessageLocale = errorMessageLocale ?? CultureInfo.CurrentCulture;
+            ParseCulture = parseCulture ?? CultureInfo.InvariantCulture;
+            ErrorMessageLocale = errorMessageLocale ?? CultureInfo.InvariantCulture;
         }
 
         internal string ParseErrorText => !HasError ? string.Empty : string.Join("\r\n", _errors.Select((err, i) =>
         {
             var sb = new StringBuilder(1024);
-            err.FormatCore(sb);            
+            err.FormatCore(sb, ErrorMessageLocale);            
             return $"Err#{++i} {sb}";
         }));
 

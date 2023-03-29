@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var slot = symbols.AddVariable("MyTable", tableType);
 
             var engine = new RecalcEngine(new PowerFxConfig());
-            var checkResult = engine.Check("Patch(MyTable, { Currency: 1.2 }, { Currency: 1.5 })", new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbols);
+            var checkResult = engine.Check("Patch(MyTable, { Currency: 1.2 }, { Currency: 1.5 })", new ParserOptions(allowsSideEffects: true), symbolTable: symbols);
 
             checkResult.ThrowOnErrors();
 
@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
             engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);
 
-            var result = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true });
+            var result = engine.Eval(expr, options: new ParserOptions(allowsSideEffects: true));
 
             Assert.IsNotType<ErrorValue>(result);
         }

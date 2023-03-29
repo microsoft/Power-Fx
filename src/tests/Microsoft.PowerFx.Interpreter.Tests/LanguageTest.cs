@@ -65,8 +65,8 @@ namespace Microsoft.PowerFx.Tests
 
         private void TestDefaultCulture()
         {
-            var engine = new RecalcEngine(new PowerFxConfig(_defaultCulture));
-            var result = engine.Eval("Language()");
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var result = engine.Eval("Language()", options: new ParserOptions(_defaultCulture));
 
             Assert.Equal("en-US", result.ToObject());
         }

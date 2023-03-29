@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Tests
             var result = await engine.EvalAsync(
                 @"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size",
                 CancellationToken.None,
-                options: new ParserOptions() { AllowsSideEffects = true });
+                options: new ParserOptions(allowsSideEffects: true));
 
             dynamic res = result.ToObject();
             var size = (double)res;
@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddBehaviorFunction();
 
             var engine = new Engine(config);
-            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+            var check = engine.Check(expr, RecordType.Empty(), withAllowSideEffects ? new ParserOptions(allowsSideEffects: true) : null);
 
             if (expectedBehaviorError)
             {
@@ -505,7 +505,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server GetProceduresV2.json");
-            var result = await engine.EvalAsync(@"SQL.GetProceduresV2(""pfxdev-sql.database.windows.net"", ""connectortest"")", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true });
+            var result = await engine.EvalAsync(@"SQL.GetProceduresV2(""pfxdev-sql.database.windows.net"", ""connectortest"")", CancellationToken.None, new ParserOptions(allowsSideEffects: true));
 
             var record = result as RecordValue;
             Assert.NotNull(record);
@@ -553,7 +553,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true });
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions(allowsSideEffects: true));
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
 

@@ -124,7 +124,7 @@ First(
             Assert.IsType<BlankValue>(result4);
 
             var symbol = new SymbolTable();
-            var opt = new ParserOptions() { AllowsSideEffects = true };
+            var opt = new ParserOptions(allowsSideEffects: true);
 
             symbol.EnableMutationFunctions();
 

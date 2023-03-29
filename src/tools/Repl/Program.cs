@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx
 
             foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
             {
-                if ((_engine.Config.Features & feature) == feature && feature != Features.None)
+                if ((_engine.Config.Features & feature) == feature && feature != Features.DefaultFeatures)
                 {
                     enabled.Append(" " + feature.ToString());
                 }
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx
             var parserOptions = _engine.GetDefaultParserOptionsCopy();
             parserOptions.AllowsSideEffects = true;
 
-            var parse = Engine.Parse(expr, parserOptions, parserOptions.Culture);
+            var parse = Engine.Parse(expr, Features.All, parserOptions);
             if (parse.IsSuccess)
             {
                 if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx
                     // IR pretty printer: IR( <expr> )
                     else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
                     {
-                        var opts = new ParserOptions() { AllowsSideEffects = true };
+                        var opts = new ParserOptions(allowsSideEffects: true);
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
                         var ir = cr.PrintIR();
                         Console.WriteLine(ir);
@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx
                     // eval and print everything else
                     else
                     {
-                        var opts = new ParserOptions() { AllowsSideEffects = true };
+                        var opts = new ParserOptions(allowsSideEffects: true);
                         var result = _engine.Eval(expr, options: opts);
 
                         if (output != null)
@@ -603,7 +603,7 @@ namespace Microsoft.PowerFx
                 {
                     if (option.Value.ToLower(CultureInfo.InvariantCulture) == feature.ToString().ToLower(CultureInfo.InvariantCulture))
                     {
-                        _features = _features & ~feature | (value.Value ? feature : Features.None);
+                        _features = _features & ~feature | (value.Value ? feature : Features.DefaultFeatures);
                         ResetEngine();
                         return value;
                     }

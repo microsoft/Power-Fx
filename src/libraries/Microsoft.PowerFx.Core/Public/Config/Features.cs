@@ -67,6 +67,16 @@ namespace Microsoft.PowerFx
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.
         /// </summary>
-        All = ~0
+        All = ~0,
+
+        /// <summary>
+        /// Default features enabled for Power Fx Version 1.0
+        /// </summary>        
+        PowerFx10Features = Features.TableSyntaxDoesntWrapRecords | Features.ConsistentOneColumnTableResult,
+
+        /// <summary>
+        /// List of features enabled by default
+        /// </summary>
+        DefaultFeatures = PowerFx10Features
     }
 }

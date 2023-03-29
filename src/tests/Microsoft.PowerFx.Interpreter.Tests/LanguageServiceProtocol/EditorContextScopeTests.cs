@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     {
         // Check() calls through to engine. 
         [Fact]
-        public void Test()
+        public void EditorContextScope_Test()
         {
             var engine = new Engine(new PowerFxConfig());
 
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         }
 
         [Fact]
-        public void Fix()
+        public void EditorContextScope_Fix()
         {
             var engine = new Engine(new PowerFxConfig());
 
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         // Still report ecen when a handler throws. 
         [Fact]
-        public void FixHandlerFails()
+        public void EditorContextScope_FixHandlerFails()
         {
             var failHandler = new ExceptionQuickFixHandler();
 
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         // Verify OnCommandExecuted callbacks is executed. 
         [Fact]
-        public void OnCommandExecuted()
+        public void EditorContextScope_OnCommandExecuted()
         {
             var handler = new MyHandler();
             var engine = new Engine(new PowerFxConfig());
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         // Calling Suggest() on intellisense doesn't need to compute errors
         [Fact]
-        public void SuggestDoesntNeedErrors()
+        public void EditorContextScope_SuggestDoesntNeedErrors()
         {
             var engine = new MyEngine();
 
@@ -138,13 +138,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         }
 
         [Fact]
-        public void NullCtor()
+        public void EditorContextScope_NullCtor()
         {
             Assert.Throws<ArgumentNullException>(() => new EditorContextScope(null));
         }
 
         [Fact]
-        public void Ctor()
+        public void EditorContextScope_Ctor()
         {
             var check = new CheckResult(new Engine());
             var editor = new EditorContextScope(
@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
         // Fail if the getter doesn't fully create the CheckResult
         [Fact]
-        public void MissingInit()
+        public void EditorContextScope_MissingInit()
         {
             var check = new CheckResult(new Engine());
 
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
         }
 
         [Fact]
-        public void HandlerName()
+        public void EditorContextScope_HandlerName()
         {
             var handler = new MyHandler();
             var name = handler.HandlerName;

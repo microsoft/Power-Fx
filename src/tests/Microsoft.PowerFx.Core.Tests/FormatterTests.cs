@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Tests
             
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine());
-            check.SetText(script, new ParserOptions { AllowsSideEffects = true });
+            check.SetText(script, new ParserOptions(allowsSideEffects: true));
             var result2 = check.ApplyGetLogging();
             Assert.Equal(expected, result2);
         }

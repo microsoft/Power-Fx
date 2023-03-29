@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:n]")]
         public void TexlDateTableFunctions(string expression, string expectedType)
         {
-            var engine = new Engine(new PowerFxConfig());
+            var engine = new Engine(new PowerFxConfig(Features.None));
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:n]")]
         public void TexlDateTableFunctions_ConsistentOneColumnTableResult(string expression, string expectedType)
         {
-            var engine = new Engine(new PowerFxConfig(Features.ConsistentOneColumnTableResult));
+            var engine = new Engine(new PowerFxConfig(Features.DefaultFeatures));
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));

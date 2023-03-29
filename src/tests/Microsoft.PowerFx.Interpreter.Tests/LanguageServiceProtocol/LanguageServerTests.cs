@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Init();
         }
 
-        private void Init(Features features = Features.None, ParserOptions options = null)
+        private void Init(Features features = Features.DefaultFeatures, ParserOptions options = null)
         {
             var config = new PowerFxConfig(features: features);
             config.AddFunction(new BehaviorFunction());
@@ -304,7 +304,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         private static ParserOptions GetParserOptions(bool withAllowSideEffects)
         {
-            return withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null;
+            return withAllowSideEffects ? new ParserOptions(allowsSideEffects: true) : null;
         }
 
         private void TestPublishDiagnostics(string uri, string method, string formula, Diagnostic[] expectedDiagnostics)
@@ -1188,7 +1188,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
-            Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
+            Init(tableSyntaxDoesntWrapRecords ? Features.DefaultFeatures : Features.None);
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -1278,7 +1278,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
-                (string documentUri) => engine.CreateEditorScope(new ParserOptions() { Culture = locale }, GetFromUri(documentUri)));
+                (string documentUri) => engine.CreateEditorScope(new ParserOptions(locale), GetFromUri(documentUri)));
             _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
 
             _testServer.OnDataReceived(
@@ -1319,7 +1319,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => new EditorContextScope(
                     (expr) => new CheckResult(engine)
-                        .SetText(expr, new ParserOptions { Culture = parseLocale })
+                        .SetText(expr, new ParserOptions(parseLocale))
                         .SetBindingInfo()
                         .SetDefaultErrorCulture(errorLocale)));
 

@@ -176,19 +176,19 @@ namespace Microsoft.PowerFx.Core.Errors
             return messages.Count == 0 ? null : messages;
         }
 
-        private void Format(StringBuilder sb)
+        private void Format(StringBuilder sb, CultureInfo culture)
         {
 #if DEBUG
             var lenStart = sb.Length;
 #endif
-            FormatCore(sb);
+            FormatCore(sb, culture);
 #if DEBUG
             Contracts.Assert(sb.Length > lenStart);
 #endif
-            FormatInnerError(sb);
+            FormatInnerError(sb, culture);
         }
 
-        internal virtual void FormatCore(StringBuilder sb)
+        internal virtual void FormatCore(StringBuilder sb, CultureInfo culture)
         {
             Contracts.AssertValue(sb);
 
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Core.Errors
             sb.Append(ShortMessage);
         }
 
-        private void FormatInnerError(StringBuilder sb)
+        private void FormatInnerError(StringBuilder sb, CultureInfo culture)
         {
             Contracts.AssertValue(sb);
 
@@ -208,14 +208,16 @@ namespace Microsoft.PowerFx.Core.Errors
             sb.AppendLine();
             var innerError = InnerError as BaseError;
             Contracts.AssertValue(innerError);
-            innerError?.Format(sb);
+            innerError?.Format(sb, culture);
         }
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            Format(sb);
-            return sb.ToString();
+            throw new Exception();
+            
+            //var sb = new StringBuilder();
+            //Format(sb);
+            //return sb.ToString();
         }
     }
 }

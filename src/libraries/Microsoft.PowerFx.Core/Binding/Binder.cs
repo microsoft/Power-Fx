@@ -262,7 +262,7 @@ namespace Microsoft.PowerFx.Core.Binding
             bool updateDisplayNames = false,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = Features.None)
+            Features features = Features.DefaultFeatures)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(bindingConfig);
@@ -353,7 +353,7 @@ namespace Microsoft.PowerFx.Core.Binding
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = Features.None)
+            Features features = Features.DefaultFeatures)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
@@ -380,7 +380,7 @@ namespace Microsoft.PowerFx.Core.Binding
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = Features.None)
+            Features features = Features.DefaultFeatures)
         {
             return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, updateDisplayNames, ruleScope, forceUpdateDisplayNames, rule, features);
         }
@@ -391,7 +391,7 @@ namespace Microsoft.PowerFx.Core.Binding
             INameResolver resolver,
             BindingConfig bindingConfig,
             DType ruleScope,
-            Features features = Features.None)
+            Features features = Features.DefaultFeatures)
         {
             return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, features);
         }

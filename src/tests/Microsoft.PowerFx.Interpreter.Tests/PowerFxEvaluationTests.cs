@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 
         private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config)
         {
-            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(config.CultureInfo, new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
+            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
         }
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
@@ -320,6 +321,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     runtimeConfig.AddService<Governor>(mem);
                 }
 
+                // TXT files are targetting en-US locale
+                runtimeConfig.AddService(new CultureInfo("en-US"));
+
                 var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
 
                 // UntypedObjectType type is currently not supported for serialization.
@@ -340,7 +344,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal class ReplRunner : BaseRunner
         {
             private readonly RecalcEngine _engine;
-            public ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
+            public ParserOptions _opts = new ParserOptions(allowsSideEffects: true);
 
             public ReplRunner(RecalcEngine engine)
             {
@@ -367,7 +371,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Pattern match for Set(x,y) so that we can define the variable
             public bool TryMatchSet(string expr, out RunResult runResult)
             {
-                var parserOptions = new ParserOptions { AllowsSideEffects = true };
+                var parserOptions = new ParserOptions(allowsSideEffects: true);
 
                 var parse = _engine.Parse(expr);
                 if (parse.IsSuccess)

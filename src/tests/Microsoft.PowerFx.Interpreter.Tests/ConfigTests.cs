@@ -270,12 +270,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var us_Symbols = new RuntimeConfig();
             var us_Culture = new CultureInfo("en-US");
             us_Symbols.AddService(us_Culture);
-            var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
+            var us_ParserOptions = new ParserOptions(us_Culture);
 
             var fr_Symbols = new RuntimeConfig();
             var fr_Culture = new CultureInfo("fr-FR");
             fr_Symbols.AddService(fr_Culture);
-            var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
+            var fr_ParserOptions = new ParserOptions(fr_Culture);
 
             var fa_Symbols = new RuntimeConfig();
             var fa_Culture = new CultureInfo("fa-IR");
@@ -288,6 +288,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols));
             Assert.Equal(2.0, engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result.ToObject());
 
+            // This is likely a .Net Core 3.1 bug. In .Net 6 or 7, this is "2.01"
             Assert.Equal("2/01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
         }
 
@@ -298,12 +299,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var us_Symbols = new RuntimeConfig();
             var us_Culture = new CultureInfo("en-US");
             us_Symbols.AddService(us_Culture);
-            var us_ParserOptions = new ParserOptions() { Culture = us_Culture };
+            var us_ParserOptions = new ParserOptions(us_Culture);
 
             var fr_Symbols = new RuntimeConfig();
             var fr_Culture = new CultureInfo("fr-FR");
             fr_Symbols.AddService(fr_Culture);
-            var fr_ParserOptions = new ParserOptions() { Culture = fr_Culture };
+            var fr_ParserOptions = new ParserOptions(fr_Culture);
 
             var engine = new RecalcEngine();
 
@@ -321,7 +322,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo3()
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
             var tr_symbols = new RuntimeConfig();
@@ -346,7 +347,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo4()
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
             var us_symbols = new RuntimeConfig();
@@ -376,15 +377,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         private void RecalcEngine_Symbol_CultureInfo5_ThreadProc()
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
 
             var upperExpression = "Upper(\"INDIGO inDigo\")";
             var lowerExpression = "Lower(\"INDIGO inDigo\")";
             var properExpression = "Proper(\"INDIGO inDigo\")";
 
             var datetimeExpression = "Text(DateTimeValue(\"Perşembe 6 Ekim 2022 14:19:06\", \"tr-TR\"))";
+            ParserOptions trOptions = new ParserOptions(new CultureInfo("tr-TR"));
 
-            // Engine will use custom locale (invariant)
+            // Engine will use default locale (invariant)
             var engine = new RecalcEngine(config);
 
             var result = engine.Eval(upperExpression);
@@ -399,16 +401,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             result = engine.Eval(datetimeExpression);
             Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
 
-            // Engine will use thread locale (tr-TR)
+            // Engine will use tr-TR culture
             var engine2 = new RecalcEngine(new PowerFxConfig());
 
-            result = engine2.Eval(upperExpression);
+            result = engine2.Eval(upperExpression, options: trOptions);
             Assert.Equal("INDIGO İNDİGO", (result as StringValue).Value);
 
-            result = engine2.Eval(lowerExpression);
+            result = engine2.Eval(lowerExpression, options: trOptions);
             Assert.Equal("ındıgo indigo", (result as StringValue).Value);
 
-            result = engine2.Eval(properExpression);
+            result = engine2.Eval(properExpression, options: trOptions);
             Assert.Equal("Indıgo İndigo", (result as StringValue).Value);
         }
 
@@ -424,27 +426,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             const string formula = "Concatenate(\"Hello\", \" World!\")";
             var defaultCulture = CultureInfo.CreateSpecificCulture("en");
-            var engine = new RecalcEngine(new PowerFxConfig(defaultCulture));
-            var result = engine.Eval(formula);
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var result = engine.Eval(formula, options: new ParserOptions(defaultCulture));
 
             var helloWorld = Assert.IsType<string>(result.ToObject());
             Assert.Equal("Hello World!", helloWorld);
-        }
-
-        // Verify DoNotUseCulture object indeed fails when accessed.
-        [Fact]
-        public void TestDoNotUseCulture()
-        {
-            // Ignore thread's current culture. 
-            RunOnIsolatedThread(new DoNotUseCulture(), () =>
-            {
-                var engine = new Engine();
-                var check = new CheckResult(engine);
-                check.SetText("1+2"); // will pull from CurrentThread. 
-
-                // Verify DoNotUseCulture works.
-                Assert.Throws<NotImplementedException>(() => check.ApplyParse());
-            });
         }
 
         private static readonly CultureInfo _doNotUseCulture = new DoNotUseCulture();
@@ -464,14 +450,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private void MultiCulture1ThreadProc()
         {
             var cultureParse = new CultureInfo("fr-FR"); // has commas as decimal separator
-
             var engine = new RecalcEngine();
-
-            // By default, engine is picking up culture from current thread. 
-            Assert.Same(_doNotUseCulture, engine.Config.CultureInfo);
-
             var check = new CheckResult(engine);
-            check.SetText("1+2,4 + missing", new ParserOptions { Culture = cultureParse });
+            check.SetText("1+2,4 + missing", new ParserOptions(cultureParse));
             check.SetBindingInfo();
 
             // Very significant that we can get through parse phase without acccessing Thread.CurrrentCulture. 
@@ -520,7 +501,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             //   Value("12.345") // parsing             
             //   Upper("indigo") // casing
             var check = new CheckResult(engine);
-            check.SetText("Upper(\"indigo\") & \" \" &  Text(12,345)", new ParserOptions { Culture = cultureParse });
+            check.SetText("Upper(\"indigo\") & \" \" &  Text(12,345)", new ParserOptions(cultureParse));
             check.SetBindingInfo();
 
             // The same expression can be re-run in different cultures. 
@@ -558,13 +539,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var fr_culture = new CultureInfo("fr-FR");
             var invariant_culture = CultureInfo.InvariantCulture;
 
-            var engine = new RecalcEngine(new PowerFxConfig(fr_culture));
+            var engine = new RecalcEngine(new PowerFxConfig());
 
             var fr_formula = "Concatenate(\"My \";\"french \";\"formula\")";
-            var invariant_formula = engine.GetInvariantExpression(fr_formula, RecordType.Empty());
+            var invariant_formula = engine.GetInvariantExpression(fr_formula, RecordType.Empty(), fr_culture);
 
-            var fr_ParserOptions = new ParserOptions() { Culture = fr_culture };
-            var invariant_ParserOptions = new ParserOptions() { Culture = invariant_culture };
+            var fr_ParserOptions = new ParserOptions(fr_culture);
+            var invariant_ParserOptions = new ParserOptions(invariant_culture);
 
             Assert.Throws<AggregateException>(() => engine.Eval(invariant_formula, options: fr_ParserOptions));
             Assert.Equal("My french formula", engine.Eval(fr_formula, options: fr_ParserOptions).ToObject());

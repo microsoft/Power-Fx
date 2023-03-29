@@ -123,7 +123,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                 var optionFormat = new StringBuilder(TexlLexer.PunctuatorCurlyOpen);
                 string sep = "";
-                string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+                string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
                 foreach (var option in optionalParamInfo)
                 {
                     optionFormat.Append(sep);

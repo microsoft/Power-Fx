@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var obj = MutableObject.New(d);
             engine.UpdateVariable("obj", obj);
 
-            var x = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true }); // Assert failures will throw.
+            var x = engine.Eval(expr, options: new ParserOptions(allowsSideEffects: true)); // Assert failures will throw.
 
             if (x is ErrorValue ev)
             {

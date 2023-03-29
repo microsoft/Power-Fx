@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Errors
             {
                 try
                 {
-                    sb.AppendFormat(locale ?? CultureInfo.CurrentCulture, message, args);
+                    sb.AppendFormat(locale ?? CultureInfo.InvariantCulture, message, args);
                 }
                 catch (FormatException)
                 {

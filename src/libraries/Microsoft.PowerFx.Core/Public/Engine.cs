@@ -127,21 +127,17 @@ namespace Microsoft.PowerFx
 
         public virtual ParserOptions GetDefaultParserOptionsCopy()
         {
-            return new ParserOptions
-            {
-                 Culture = this.Config.CultureInfo,
-                 AllowsSideEffects = false,
-                 MaxExpressionLength = 0, // no limit
-            };
+            return new ParserOptions(CultureInfo.InvariantCulture, allowsSideEffects: false, maxExpressionLength: 0 /* no limit */);
         }
 
         /// <summary>
         ///     Tokenize an expression to a sequence of <see cref="Token" />s.
         /// </summary>
         /// <param name="expressionText"></param>
+        /// <param name="culture"></param>
         /// <returns></returns>
-        public IReadOnlyList<Token> Tokenize(string expressionText)
-            => TexlLexer.GetLocalizedInstance(Config.CultureInfo).GetTokens(expressionText);
+        public IReadOnlyList<Token> Tokenize(string expressionText, CultureInfo culture = null)
+            => TexlLexer.GetLocalizedInstance(culture ?? CultureInfo.InvariantCulture).GetTokens(expressionText);
 
         /// <summary>
         /// Parse the expression without doing any binding.
@@ -152,25 +148,13 @@ namespace Microsoft.PowerFx
         public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
             options ??= this.GetDefaultParserOptionsCopy();
-            return Parse(expressionText, Config.Features, options, Config.CultureInfo);
+            return Parse(expressionText, Config.Features, options);
         }
 
         /// <summary>
         /// Parse the expression without doing any binding.
         /// </summary>
-        /// <param name="expressionText"></param>
-        /// <param name="options"></param>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
-        public static ParseResult Parse(string expressionText, ParserOptions options = null, CultureInfo cultureInfo = null)
-        {
-            return Parse(expressionText, Features.None, options, cultureInfo);
-        }
-
-        /// <summary>
-        /// Parse the expression without doing any binding.
-        /// </summary>
-        public static ParseResult Parse(string expressionText, Features features, ParserOptions options = null, CultureInfo cultureInfo = null)
+        public static ParseResult Parse(string expressionText, Features features = Features.DefaultFeatures, ParserOptions options = null)
         {
             if (expressionText == null)
             {
@@ -179,11 +163,8 @@ namespace Microsoft.PowerFx
 
             options ??= new ParserOptions();
 
-            // If culture isn't explicitly set, use the one from PowerFx Config
-            options.Culture ??= cultureInfo;
-
             var result = options.Parse(expressionText, features);
-            return result;            
+            return result;
         }
 
         /// <summary>
@@ -325,9 +306,9 @@ namespace Microsoft.PowerFx
         /// Optional hook to customize intellisense. 
         /// </summary>
         /// <returns></returns>
-        private protected virtual IIntellisense CreateIntellisense()
+        private protected virtual IIntellisense CreateIntellisense(CultureInfo culture)
         {
-            return IntellisenseProvider.GetIntellisense(Config);
+            return IntellisenseProvider.GetIntellisense(Config, culture);
         }
 
         public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
@@ -344,14 +325,14 @@ namespace Microsoft.PowerFx
             // Note that for completions, we just need binding,
             // but we don't need errors or dependency info. 
             var binding = checkResult.ApplyBindingInternal();
-                        
+
             var formula = checkResult.GetParseFormula();
             var expression = formula.Script;
 
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = this.CreateIntellisense();
+            var intellisense = CreateIntellisense(checkResult.ParserCultureInfo);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;
@@ -362,15 +343,15 @@ namespace Microsoft.PowerFx
         /// </summary>
         [Obsolete("Use overload without expression")]
         public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
-        {            
+        {
             var binding = checkResult.Binding;
-            var formula = new Formula(expression, Config.CultureInfo);
+            var formula = new Formula(expression, checkResult.ParserCultureInfo);
             formula.ApplyParse(checkResult.Parse);
 
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = CreateIntellisense();
+            var intellisense = CreateIntellisense(checkResult.ParserCultureInfo);
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;
@@ -383,8 +364,9 @@ namespace Microsoft.PowerFx
         /// be acecssed as top-level identifiers in the formula. Must be the names from before any rename operation is applied.</param>
         /// <param name="pathToRename">Path to the field to rename.</param>
         /// <param name="updatedName">New name. Replaces the last segment of <paramref name="pathToRename"/>.</param>
+        /// <param name="culture">Culture.</param>
         /// <returns></returns>
-        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName)
+        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName, CultureInfo culture = null)
         {
             Contracts.CheckValue(parameters, nameof(parameters));
             Contracts.CheckValid(pathToRename, nameof(pathToRename));
@@ -399,23 +381,24 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal(), CreateBinderGlue());
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal(), CreateBinderGlue(), culture);
         }
 
         /// <summary>
         /// Convert references in an expression to the invariant form.
         /// </summary>
-        /// <param name="expressionText">textual representation of the formula.</param>
+        /// <param name="expressionText">textual representation of the formula.</param>        
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
         /// as part of the RecordType.</param>
+        /// <param name="parseCulture">Culture.</param>
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
-        public string GetInvariantExpression(string expressionText, RecordType parameters)
-        {            
+        public string GetInvariantExpression(string expressionText, RecordType parameters, CultureInfo parseCulture = null)
+        {
             var ruleScope = this.GetRuleScope();
             var symbolTable = (parameters == null) ? null : SymbolTable.NewFromRecord(parameters);
 
-            return GetInvariantExpressionWorker(expressionText, symbolTable, Config.CultureInfo);
+            return GetInvariantExpressionWorker(expressionText, symbolTable, parseCulture);
         }
 
         internal string GetInvariantExpressionWorker(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo parseCulture)
@@ -429,20 +412,23 @@ namespace Microsoft.PowerFx
         /// Convert references in an expression to the display form.
         /// </summary>
         /// <param name="expressionText">textual representation of the formula.</param>
+        /// <param name="culture">Culture.</param>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
         /// as part of the RecordType.</param>
         /// <returns>The formula, with all identifiers converted to display form.</returns>
-        public string GetDisplayExpression(string expressionText, RecordType parameters)
+        public string GetDisplayExpression(string expressionText, RecordType parameters, CultureInfo culture = null)
         {
             var symbols = SymbolTable.NewFromRecord(parameters);
-            return GetDisplayExpression(expressionText, symbols);
+
+            return GetDisplayExpression(expressionText, symbols, culture);
         }
 
-        public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable)
+        public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo culture = null)
         {
             var ruleScope = this.GetRuleScope();
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), Config, toDisplay: true);
+
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
     }
 }

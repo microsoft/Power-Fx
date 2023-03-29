@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Parser
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = Features.None)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = Features.DefaultFeatures)
         {
             Contracts.AssertValue(tokens);
 
@@ -214,22 +214,22 @@ namespace Microsoft.PowerFx.Core.Parser
         // Parse the script
         // Parsing strips out parens used to establish precedence, but these may be helpful to the
         // caller, so precedenceTokens provide a list of stripped tokens.
-        internal static ParseResult ParseScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
+        internal static ParseResult ParseScript(string script, CultureInfo culture = null, Flags flags = Flags.None)
         {
-            return ParseScript(script, Features.None, loc, flags);
+            return ParseScript(script, Features.DefaultFeatures, culture, flags);
         }
 
-        internal static ParseResult ParseScript(string script, Features features, CultureInfo loc = null, Flags flags = Flags.None)
+        internal static ParseResult ParseScript(string script, Features features, CultureInfo parseCulture = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(parseCulture);
 
-            var tokens = TokenizeScript(script, loc, flags);
+            var tokens = TokenizeScript(script, parseCulture, flags);
             var parser = new TexlParser(tokens, flags, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
-            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, loc);
+            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, parseCulture, parseCulture);
         }
 
         public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null)

@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Tests
             var scope = FromJson(
                 new RecalcEngine(config), 
                 "{\"A\":1,\"B\":[1,2,3]}",
-                withAllowSideEffects ? new ParserOptions() { AllowsSideEffects = true } : null);
+                withAllowSideEffects ? new ParserOptions(allowsSideEffects: true) : null);
             var checkResult = scope.Check(expr);
 
             var result = GetTokensUtils.GetTokens(checkResult.Binding, GetTokensFlags.None);
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Tests
                     { "option_1", "Option1" },
                     { "option_2", "Option2" }
             }));
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddOptionSet(optionSet);
 
             var scope = FromJson(new RecalcEngine(config), "{\"A\":1,\"B\":[1,2,3]}");

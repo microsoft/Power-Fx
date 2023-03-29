@@ -30,14 +30,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void TestResourceImportUsesCurrentUICulture()
         {
-            var initialCulture = CultureInfo.CurrentUICulture;
             var enUsERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
-            var enUsBasicContent = StringResources.Get("AboutAbs");
+            var enUsBasicContent = StringResources.Get("AboutAbs");            
 
-            CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
-
-            var frERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
-            var frBasicContent = StringResources.Get("AboutAbs");
+            var frERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken, "fr-FR");
+            var frBasicContent = StringResources.Get("AboutAbs", "fr-FR");
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 

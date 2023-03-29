@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Parser;
@@ -15,19 +14,10 @@ namespace Microsoft.PowerFx.Core
 {
     internal class ExpressionLocalizationHelper
     {
-        [Obsolete("Use ConvertExpression with PowerFxConfig parameter instead of CultureInfo", false)]
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, bool toDisplay)
-        {
-            return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, new PowerFxConfig(culture), toDisplay);
-        }
-
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, PowerFxConfig fxConfig, bool toDisplay)
-        {
-            return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, fxConfig.CultureInfo, fxConfig.Features, toDisplay);
-        }
-
         internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, Features flags, bool toDisplay)
         {
+            culture ??= CultureInfo.InvariantCulture;
+
             var targetLexer = toDisplay ? TexlLexer.GetLocalizedInstance(culture) : TexlLexer.InvariantLexer;
             var sourceLexer = toDisplay ? TexlLexer.InvariantLexer : TexlLexer.GetLocalizedInstance(culture);
 

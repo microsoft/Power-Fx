@@ -25,8 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         public DateTimeUTCTests() 
         {
-            _engine = new RecalcEngine(
-               new PowerFxConfig(System.Globalization.CultureInfo.InvariantCulture));
+            _engine = new RecalcEngine(new PowerFxConfig());
             _symbolTable = new SymbolTable();
             _symbolValues = new SymbolValues(_symbolTable);
 

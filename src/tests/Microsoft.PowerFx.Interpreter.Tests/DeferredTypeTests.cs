@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("N", FormulaType.Number, mutable: true);
             symbolTable.AddVariable("XM", FormulaType.Deferred, mutable: true);
 
-            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable);
+            TestDeferredTypeBindingWarning(script, Features.DefaultFeatures, TestUtils.DT(expectedReturnType), symbolTable);
         }
 
         [Theory]
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("X", FormulaType.Deferred);
             symbolTable.AddVariable("N", FormulaType.Number);
             symbolTable.AddVariable("R", RecordType.Empty());
-            TestBindingError(script, Features.None, errorMessage, symbolTable);
+            TestBindingError(script, Features.DefaultFeatures, errorMessage, symbolTable);
         }
 
         [Fact]
@@ -144,16 +144,12 @@ namespace Microsoft.PowerFx.Interpreter
             config.EnableParseJSONFunction();
 
             var engine = new RecalcEngine(config);
-            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true });
+            var result = engine.Check(script, options: new ParserOptions(allowsSideEffects: true));
             
             Assert.True(result.IsSuccess);
-
             Assert.Equal(expected, result.ReturnType._type);
-
             Assert.True(result.Errors.Count() > 0);
-
             Assert.True(result.Errors.All(error => error.MessageKey.Equals(TexlStrings.WarnDeferredType.Key)));
-
             Assert.Throws<NotSupportedException>(() => CheckResultExtensions.GetEvaluator(result));
             Assert.Throws<AggregateException>(() => engine.Eval(script));
         }
@@ -169,7 +165,6 @@ namespace Microsoft.PowerFx.Interpreter
             var result = engine.Check(script);
 
             Assert.False(result.IsSuccess);
-
             Assert.Contains(result.Errors, error => error.MessageKey.Equals(errorMessageKey));
         }
     }

@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         // A non-default culture that  uses comma as a decimal separator
         private static readonly CultureInfo _frCulture = new CultureInfo("fr-FR");
-        private static readonly ParserOptions _frCultureOpts = new ParserOptions { Culture = _frCulture };
+        private static readonly ParserOptions _frCultureOpts = new ParserOptions(_frCulture);
 
         [Fact]
         public void Ctors()
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(check.Errors);
 
             // Other operations will now fail
-            var parse = ParseResult.ErrorTooLarge("abc", 2); // any parse result
+            var parse = ParseResult.ErrorTooLarge("abc", 2, CultureInfo.InvariantCulture); // any parse result
 
             Assert.Throws<InvalidOperationException>(() => check.SetText("1+2"));
             Assert.Throws<InvalidOperationException>(() => check.SetText(parse));
