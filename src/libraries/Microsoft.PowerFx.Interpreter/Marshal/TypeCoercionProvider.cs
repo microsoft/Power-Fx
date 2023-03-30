@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -69,31 +70,16 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, out FormulaValue result)
         {
-            result = null;
-            bool canCoerce = false;
-
-            if (targetType == FormulaType.Boolean)
+            if (value is RecordValue recordValue && targetType is RecordType recordType)
             {
-                canCoerce = value.TryCoerceTo(out BooleanValue boolResult);
-                result = boolResult;
+                return TryCoerceTo(recordValue, recordType, out result);
             }
-            else if (targetType == FormulaType.String)
+            else if (value is TableValue tableValue && targetType is TableType tableType)
             {
-                canCoerce = value.TryCoerceTo(out StringValue stringResult);
-                result = stringResult;
-            }
-            else if (targetType == FormulaType.Number)
-            {
-                canCoerce = value.TryCoerceTo(out NumberValue numResult);
-                result = numResult;
-            }
-            else if (targetType == FormulaType.DateTime)
-            {
-                canCoerce = value.TryCoerceTo(out DateTimeValue dateTimeResult);
-                result = dateTimeResult;
+                return TryCoerceTo(tableValue, tableType, out result);
             }
 
-            return canCoerce;
+            return TryCoerceToTargetType(value, targetType, out result);
         }
         
         /// <summary>
@@ -209,6 +195,102 @@ namespace Microsoft.PowerFx
         internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out DateTimeValue result)
         {
             return TryGetDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), value, out result);
+        }
+
+        /// <summary>
+        /// Try to convert value to Record format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to Record type.</returns> 
+        public static bool TryCoerceTo(this RecordValue value, RecordType targetType, out RecordValue result)
+        {
+            result = null;
+            var recordResult = new NamedValue[value.Fields.Count()];
+            int i = 0;
+
+            foreach (var field in value.Fields)
+            {
+                var fieldValue = value.GetField(field.Name);
+                if (!targetType.TryGetFieldType(field.Name, out FormulaType fieldType))
+                {
+                    return false;
+                }
+
+                if (!TryCoerceToTargetType(fieldValue, fieldType, out FormulaValue fieldResult))
+                {
+                    return false;
+                }
+
+                recordResult[i++] = new NamedValue(field.Name, fieldResult);
+            }
+
+            result = FormulaValue.NewRecordFromFields(recordResult);
+            return true;
+        }
+
+        /// <summary>
+        /// Try to convert value to Table format.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="targetType">Target type.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to Table type.</returns> 
+        public static bool TryCoerceTo(this TableValue value, TableType targetType, out TableValue result)
+        {
+            result = null;
+            var records = new RecordValue[value.Rows.Count()];
+            int i = 0;
+
+            foreach (var row in value.Rows)
+            {
+                if (!row.Value.TryCoerceTo(targetType.ToRecord(), out RecordValue recordResult))
+                {
+                    return false;
+                }
+
+                records[i++] = recordResult;
+            }
+            
+            result = FormulaValue.NewTable(targetType.ToRecord(), records.ToArray());
+            return true;
+        }
+
+        /// <summary>
+        /// Try to convert value to target type.
+        /// </summary>
+        /// <param name="value">Input value.</param>
+        /// <param name="targetType">Target type format.</param>
+        /// <param name="result">Result value.</param>
+        /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
+        private static bool TryCoerceToTargetType(FormulaValue value, FormulaType targetType, out FormulaValue result)
+        {
+            result = null;
+            bool canCoerce = false;
+
+            if (targetType == FormulaType.Boolean)
+            {
+                canCoerce = value.TryCoerceTo(out BooleanValue boolResult);
+                result = boolResult;
+            }
+            else if (targetType == FormulaType.String)
+            {
+                canCoerce = value.TryCoerceTo(out StringValue stringResult);
+                result = stringResult;
+            }
+            else if (targetType == FormulaType.Number)
+            {
+                canCoerce = value.TryCoerceTo(out NumberValue numResult);
+                result = numResult;
+            }
+            else if (targetType == FormulaType.DateTime)
+            {
+                canCoerce = value.TryCoerceTo(out DateTimeValue dateTimeResult);
+                result = dateTimeResult;
+            }
+
+            return canCoerce;
         }
     }
 }

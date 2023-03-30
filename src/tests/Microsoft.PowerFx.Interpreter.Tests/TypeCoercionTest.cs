@@ -120,6 +120,102 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.Hyperlink));
         }
 
+        [Theory]
+        [InlineData("6", "False", true)]
+        [InlineData("26", "true", true)]
+        [InlineData("test string", "true", false)]
+        [InlineData("25", "test string", false)]
+        public void TryCoerceToRecordTest(string field1, string field2, bool expectedSucceeded)
+        {
+            var fieldName1 = "a";
+            var fieldName2 = "b";
+            var expectedFieldType1 = FormulaType.Number;
+            var expectedFieldType2 = FormulaType.Boolean;
+
+            RecordValue inputRecord = FormulaValue.NewRecordFromFields(
+                new NamedValue(fieldName1, FormulaValue.New(field1)),
+                new NamedValue(fieldName2, FormulaValue.New(field2)));
+
+            RecordType targetType = RecordType.Empty()
+                .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
+                .Add(new NamedFormulaType(fieldName2, expectedFieldType2));
+
+            bool isSucceeded = inputRecord.TryCoerceTo(targetType, out RecordValue result);
+            if (expectedSucceeded)
+            {
+                Assert.True(isSucceeded);
+                Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, result.GetField(fieldName1).ToObject());
+                Assert.Equal(FormulaValue.New(bool.Parse(field2)).Value, result.GetField(fieldName2).ToObject());
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+                Assert.Null(result);
+            }
+
+            Assert.False(inputRecord.TryCoerceTo(RecordType.Empty(), out RecordValue res));
+
+            RecordType notExpectedTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
+                .Add(new NamedFormulaType(fieldName2, FormulaType.Hyperlink));
+
+            Assert.False(inputRecord.TryCoerceTo(notExpectedTargetType, out RecordValue nullResult));
+            Assert.Null(nullResult);
+        }
+
+        [Theory]
+        [InlineData("6", "False", "8", "true", true)]
+        [InlineData("test", "False", "8", "true", false)]
+        [InlineData("6", "False", "8", "test", false)]
+        public void TryCoerceToTableTest(string field1, string field2, string field3, string field4, bool expectedSucceeded)
+        {
+            var fieldName1 = "a";
+            var fieldName2 = "b";
+            var expectedFieldType1 = FormulaType.Number;
+            var expectedFieldType2 = FormulaType.Boolean;
+
+            RecordValue r1 = FormulaValue.NewRecordFromFields(
+                new NamedValue(fieldName1, FormulaValue.New(field1)),
+                new NamedValue(fieldName2, FormulaValue.New(field2)));
+
+            RecordValue r2 = FormulaValue.NewRecordFromFields(
+                            new NamedValue(fieldName1, FormulaValue.New(field3)),
+                            new NamedValue(fieldName2, FormulaValue.New(field4)));
+
+            TableValue tableValue = FormulaValue.NewTable(r1.Type, r1, r2);
+
+            RecordType targetType = RecordType.Empty()
+                .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
+                .Add(new NamedFormulaType(fieldName2, expectedFieldType2));
+
+            bool isSucceeded = tableValue.TryCoerceTo(targetType.ToTable(), out TableValue result);
+
+            if (expectedSucceeded)
+            {
+                Assert.True(isSucceeded);
+                int i = 0;
+
+                foreach (var row in result.Rows)
+                {
+                    if (i++ == 0)
+                    {
+                        Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, row.Value.GetField(fieldName1).ToObject());
+                        Assert.Equal(FormulaValue.New(bool.Parse(field2)).Value, row.Value.GetField(fieldName2).ToObject());
+                    }
+                    else
+                    {
+                        Assert.Equal(FormulaValue.New(double.Parse(field3)).Value, row.Value.GetField(fieldName1).ToObject());
+                        Assert.Equal(FormulaValue.New(bool.Parse(field4)).Value, row.Value.GetField(fieldName2).ToObject());
+                    }
+                }
+            }
+            else
+            {
+                Assert.False(isSucceeded);
+                Assert.Null(result);
+            }
+        }
+
         private void TryCoerceFromSourceTypeToTargetType(FormulaValue value, FormulaType target, bool expectedSucceeded, string expected)
         {
             bool isSucceeded = value.TryCoerceTo(target, out FormulaValue result);
