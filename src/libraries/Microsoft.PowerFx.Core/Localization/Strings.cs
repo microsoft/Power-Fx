@@ -523,6 +523,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrRuleNestedTooDeeply = new ErrorResourceKey("ErrRuleNestedTooDeeply");
         public static ErrorResourceKey ErrInvalidDot = new ErrorResourceKey("ErrInvalidDot");
         public static ErrorResourceKey ErrUnknownFunction = new ErrorResourceKey("ErrUnknownFunction");
+        public static ErrorResourceKey ErrUnimplementedFunction = new ErrorResourceKey("ErrUnimplementedFunction");
         public static ErrorResourceKey ErrUnknownNamespaceFunction = new ErrorResourceKey("ErrUnknownNamespaceFunction");
         public static ErrorResourceKey ErrBadArity = new ErrorResourceKey("ErrBadArity");
         public static ErrorResourceKey ErrBadArityRange = new ErrorResourceKey("ErrBadArityRange");
