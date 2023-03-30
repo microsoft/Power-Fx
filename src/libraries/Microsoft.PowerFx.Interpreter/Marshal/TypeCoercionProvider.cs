@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
         };
 
         /// <summary>
-        /// Try to convert value to Boolean format.
+        /// Try to convert value to Boolean type format.
         /// </summary>
         /// <param name="value">Input value.</param>
         /// <param name="result">Result value.</param>
