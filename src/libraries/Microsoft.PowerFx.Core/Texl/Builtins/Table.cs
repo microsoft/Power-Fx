@@ -112,10 +112,5 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return isValid;
         }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
-        }
     }
 }
