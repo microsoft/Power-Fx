@@ -21,13 +21,13 @@ namespace Microsoft.PowerFx.Tests
     {
         // From number to other types
         [Theory]
-        [InlineData(1, "true", "1", "1", "12/31/1899 12:00:00 AM")]
-        [InlineData(0, "false", "0", "0", "12/30/1899 12:00:00 AM")]
-        [InlineData(44962, "true", "44962", "44962", "2/5/2023 12:00:00 AM")]
-        public void TryCoerceFromNumberTest(double value, string exprBool, string exprNumber, string exprStr, string exprDateTime)
+        [InlineData(1, "true", "1", "1", "1", "12/31/1899 12:00:00 AM")]
+        [InlineData(0, "false", "0", "0", "0", "12/30/1899 12:00:00 AM")]
+        [InlineData(44962, "true", "44962", "44962", "44962", "2/5/2023 12:00:00 AM")]
+        public void TryCoerceFromNumberTest(double value, string exprBool, string exprNumber, string exprDecimal, string exprStr, string exprDateTime)
         {
             var inputValue = FormulaValue.New(value);
-            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprStr, exprDateTime);
+            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprDecimal, exprStr, exprDateTime);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.Boolean, exprBool != null, exprBool);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.String, exprStr != null, exprStr);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.DateTime, exprDateTime != null, exprDateTime);
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Tests
         public void TryCoerceFromStringTest(string value, string exprBool, string exprNumber, string exprDecimal, string exprStr, string exprDateTime)
         {
             var inputValue = FormulaValue.New(value);
-            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprStr, exprDateTime);
+            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprDecimal, exprStr, exprDateTime);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.Boolean, exprBool != null, exprBool);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.String, exprStr != null, exprStr);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.DateTime, exprDateTime != null, exprDateTime);
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Tests
         public void TryCoerceFromBooleanTest(bool value, string exprBool, string exprNumber, string exprDecimal, string exprStr, string exprDateTime)
         {
             var inputValue = FormulaValue.New(value);
-            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprStr, exprDateTime);
+            TryCoerceToTargetTypes(inputValue, exprBool, exprNumber, exprDecimal, exprStr, exprDateTime);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.Boolean, exprBool != null, exprBool);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.String, exprStr != null, exprStr);
             TryCoerceFromSourceTypeToTargetType(inputValue, FormulaType.DateTime, exprDateTime != null, exprDateTime);
@@ -118,6 +118,21 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.False(FormulaType.Color.CanPotentiallyCoerceTo(FormulaType.String));
             Assert.False(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.Hyperlink));
+
+            RecordType inputType = RecordType.Empty()
+                .Add(new NamedFormulaType("a", FormulaType.String))
+                .Add(new NamedFormulaType("b", FormulaType.String));
+
+            RecordType targetType = RecordType.Empty()
+                .Add(new NamedFormulaType("a", FormulaType.Number))
+                .Add(new NamedFormulaType("b", FormulaType.Boolean));
+
+            RecordType notExpectedTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType("a", FormulaType.Number))
+                .Add(new NamedFormulaType("b", FormulaType.Color));
+
+            Assert.True(inputType.CanPotentiallyCoerceTo(targetType));
+            Assert.True(inputType.CanPotentiallyCoerceTo(notExpectedTargetType));
         }
 
         [Theory]

@@ -42,11 +42,11 @@ namespace Microsoft.PowerFx
         {
             if (source is RecordType recordType && target is RecordType targetRecordType)
             {
-                return CanPotentiallyCoerceToRecordType(recordType, targetRecordType);
+                return recordType.CanPotentiallyCoerceToRecordType(targetRecordType);
             }
             else if (source is TableType tableType && target is TableType targetTableType)
             {
-                return CanPotentiallyCoerceToTableType(tableType, targetTableType);
+                return tableType.CanPotentiallyCoerceToTableType(targetTableType);
             }
 
             return CanPotentiallyCoerceToTargetType(source, target);
@@ -278,7 +278,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Source type format.</param>
         /// <param name="target">Target type format.</param>
         /// <returns>True/False based on whether function can convert from source type to record target type.</returns> 
-        public static bool CanPotentiallyCoerceToRecordType(RecordType source, RecordType target)
+        public static bool CanPotentiallyCoerceToRecordType(this RecordType source, RecordType target)
         {
             foreach (var field in source.GetFieldTypes())
             {
@@ -302,7 +302,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Source type format.</param>
         /// <param name="target">Target type format.</param>
         /// <returns>True/False based on whether function can convert from source type to record target type.</returns> 
-        public static bool CanPotentiallyCoerceToTableType(TableType source, TableType target)
+        public static bool CanPotentiallyCoerceToTableType(this TableType source, TableType target)
         {
             return CanPotentiallyCoerceToRecordType(source.ToRecord(), target.ToRecord());
         }
