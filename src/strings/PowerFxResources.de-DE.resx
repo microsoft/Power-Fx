@@ -1876,7 +1876,7 @@
     
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
-    <value>Der Typ dieses Ausdrucks „{0}“ stimmt nicht mit dem erwarteten Typ „{1}“ überein. Gefunden wurde Typ „{2}“.</value>
+    <value>Der Typ dieses Ausdrucks stimmt nicht mit dem erwarteten Typ „{0}“ überein. Gefunden wurde Typ „{1}“.</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2935,6 +2935,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Kugel</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Not connected</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Changes pending</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Warning</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Error</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">

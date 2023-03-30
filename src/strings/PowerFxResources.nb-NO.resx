@@ -1852,7 +1852,7 @@
     
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
-    <value>Argumentet representerer ikke en gyldig dato- eller klokkeslettverdi</value>
+    <value>Argumentet representerer ikke en gyldig dato- eller klokkeslettverdi.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -2935,6 +2935,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Kule</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Not connected</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Changes pending</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Warning</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Error</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
