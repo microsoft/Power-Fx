@@ -38,6 +38,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Number };
             }
 
+            public void Visit(DecimalType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Decimal };
+            }
+
             public void Visit(StringType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.String };

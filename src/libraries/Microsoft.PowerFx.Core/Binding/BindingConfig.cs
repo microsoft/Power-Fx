@@ -19,10 +19,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public bool UseThisRecordForRuleScope { get; }
 
-        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false)
+        public bool NumberIsFloat { get; }
+
+        public BindingConfig(bool allowsSideEffects = false, bool useThisRecordForRuleScope = false, bool numberIsFloat = false)
         {
             AllowsSideEffects = allowsSideEffects;
             UseThisRecordForRuleScope = useThisRecordForRuleScope;
+            NumberIsFloat = numberIsFloat;
         }
     }
 }

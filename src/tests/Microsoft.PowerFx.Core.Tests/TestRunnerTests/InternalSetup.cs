@@ -25,13 +25,18 @@ namespace Microsoft.PowerFx.Core.Tests
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
-        internal static InternalSetup Parse(string setupHandlerName)
+        internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
         {
             var iSetup = new InternalSetup
             {
                 // Default features
                 Features = Features.TableSyntaxDoesntWrapRecords | Features.ConsistentOneColumnTableResult
             };
+
+            if (numberIsFloat)
+            {
+                iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
+            }
 
             if (string.IsNullOrWhiteSpace(setupHandlerName))
             {
