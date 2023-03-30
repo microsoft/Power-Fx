@@ -10,7 +10,6 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx
 {
