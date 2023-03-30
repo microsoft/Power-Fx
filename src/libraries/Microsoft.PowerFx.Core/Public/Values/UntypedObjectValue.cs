@@ -34,7 +34,16 @@ namespace Microsoft.PowerFx.Types
 
         double GetDouble();
 
+        decimal GetDecimal();
+
         bool GetBoolean();
+
+        // For providers that do not imply a type for numbers (JSON), GetUntypedNumber is used to access the raw
+        // underlying string representation, likely from the source representation (again in the case of JSON).
+        // It is validated to be in a culture invariant standard format number, possibly with dot decimal separator and "E" exponent.
+        // This method need not be implemetned if ExteranlType.UntypedNumber is not used.
+        // GetDouble and GetDecimal can be called on an ExternalType.UntypedNumber.
+        string GetUntypedNumber();
     }
 
     [DebuggerDisplay("UntypedObjectValue({Impl})")]

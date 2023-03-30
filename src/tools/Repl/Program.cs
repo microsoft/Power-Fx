@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx
                     //                      <ident>( <ident> : <type>, ... ) : <type> { <formula>; <formula>; ... }
                     else if (Regex.IsMatch(expr, @"^\s*\w+\((\s*\w+\s*\:\s*\w+\s*,?)*\)\s*\:\s*\w+\s*(\=|\{).*$", RegexOptions.Singleline))
                     {
-                        var res = _engine.DefineFunctions(expr);
+                        var res = _engine.DefineFunctions(expr, _numberIsFloat);
                         if (res.Errors.Count() > 0)
                         {
                             throw new Exception("Error: " + res.Errors.First());
@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx
                     // eval and print everything else
                     else
                     {
-                        var opts = new ParserOptions() { AllowsSideEffects = true };
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var result = _engine.Eval(expr, options: opts);
 
                         if (output != null)
@@ -611,9 +611,9 @@ namespace Microsoft.PowerFx
 
                 return FormulaValue.NewError(new ExpressionError()
                 {
-                    Kind = ErrorKind.InvalidArgument,
-                    Severity = ErrorSeverity.Critical,
-                    Message = $"Invalid option name: {option.Value}."
+                        Kind = ErrorKind.InvalidArgument,
+                        Severity = ErrorSeverity.Critical,
+                        Message = $"Invalid option name: {option.Value}."
                 });
             }
         }

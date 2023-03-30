@@ -64,14 +64,16 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("robintable", robinTable);
 
-            var result1 = engine.Eval("Value(Index(robintable, 1).Column1)"); // 101
-            var result2 = engine.Eval("Text(Index(robintable, 2).Column2)"); // "str202"
+            var opts = new ParserOptions() { NumberIsFloat = true };
 
-            Assert.Equal(101.0, result1.ToObject());
+            var result1 = engine.Eval("Value(Index(robintable, 1).Column1)", options: opts); // 101
+            var result2 = engine.Eval("Text(Index(robintable, 2).Column2)", options: opts); // "str202"
+
+            Assert.Equal(101d, result1.ToObject());
             Assert.Equal("str202", result2.ToObject());
 
             var result3 = engine.Eval("Sum(robintable, Value(ThisRecord.Column1))");
-            Assert.Equal(101.0 + 201 + 301, result3.ToObject());
+            Assert.Equal(101d + 201 + 301, result3.ToObject());
         }
 
         // Create table with strong typing
@@ -79,7 +81,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var table = new DataTable();
 
-            table.Columns.Add("Scores", typeof(int));
+            table.Columns.Add("Scores", typeof(double));
             table.Columns.Add("Names", typeof(string));
 
             table.Rows.Add(10, "name1");
@@ -105,26 +107,31 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("robintable", robinTable);
 
-            var result1 = engine.Eval("Index(robintable, 2).Scores"); // 20
-            var result2 = engine.Eval("Index(robintable, 3).Names"); // "name3"
+            var opts = new ParserOptions() { NumberIsFloat = true };
 
-            Assert.Equal(20.0, result1.ToObject());
+            var result1 = engine.Eval("Index(robintable, 2).Scores", options: opts); // 20
+            var result2 = engine.Eval("Index(robintable, 3).Names", options: opts); // "name3"
+
+            Assert.Equal(20d, result1.ToObject());
             Assert.Equal("name3", result2.ToObject());
 
             var result3 = engine.Eval("Sum(robintable, ThisRecord.Scores)");
-            Assert.Equal(60.0, result3.ToObject());
+            Assert.Equal(60d, result3.ToObject());
 
             // Access field not on the table 
-            var result4 = engine.Eval(@"
-First(
-    Table(
-        First(robintable), 
-        { Other : 5}
-     )).Other");
+            var result4 = engine.Eval(
+                @"
+                    First(
+                        Table(
+                            First(robintable), 
+                            { Other : 5}
+                         )).Other",
+                options: opts);
+
             Assert.IsType<BlankValue>(result4);
 
             var symbol = new SymbolTable();
-            var opt = new ParserOptions() { AllowsSideEffects = true };
+            var opt = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true };
 
             symbol.EnableMutationFunctions();
 
@@ -132,7 +139,7 @@ First(
 
             Assert.Equal(3, table.Rows.Count);
 
-            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});robintable", options: opt);            
+            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});robintable", options: opt);
             Assert.Equal("Table({Names:\"name1\",Scores:10},{Names:\"name3\",Scores:30})", ((DataTableValue)result5).Dump());
 
             // Is table object affected?
@@ -186,7 +193,7 @@ First(
             var result1 = engine.Eval("Value(Index(robinList, 1).Value)");
             var result2 = engine.Eval("Text(Index(robinList, 2).Value)");
 
-            Assert.Equal(1.0, result1.ToObject());
+            Assert.Equal(1m, result1.ToObject());
             Assert.Equal("string", result2.ToObject());
         }
     }

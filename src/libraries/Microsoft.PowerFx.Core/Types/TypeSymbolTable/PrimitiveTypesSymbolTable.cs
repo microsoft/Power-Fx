@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Core.Public.Types
             { "DateTimeTZInd", FormulaType.DateTimeNoTimeZone },
             { "GUID", FormulaType.Guid },
             { "Number", FormulaType.Number },
+            { "Decimal", FormulaType.Decimal },
             { "Text", FormulaType.String },
             { "Hyperlink", FormulaType.Hyperlink },
             { "None", FormulaType.Blank },

@@ -16,16 +16,16 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData(
             "Collect(Yep, { a: [1], b: \"Hello\" })",
-            "Collect(#$firstname$#, { #$fieldname$#:[ #$number$# ], #$fieldname$#:#$string$# })")]
+            "Collect(#$firstname$#, { #$fieldname$#:[ #$decimal$# ], #$fieldname$#:#$string$# })")]
         [InlineData(
             "Set(x, 10 + 3); Launch(\"example.com\", ThisItem.Text, Parent.Text)",
-            "Set(#$firstname$#, #$number$# + #$number$#) ; Launch(#$string$#, #$firstname$#.#$righthandid$#, Parent.#$righthandid$#)")]
+            "Set(#$firstname$#, #$decimal$# + #$decimal$#) ; Launch(#$string$#, #$firstname$#.#$righthandid$#, Parent.#$righthandid$#)")]
         [InlineData(
             "$\"Hello {\"World\"}\"",
             "$\"#$string$##$string$#\"")]
         [InlineData(
             "$\"Hello {5}\"",
-            "$\"#$string$#{#$number$#}\"")]
+            "$\"#$string$#{#$decimal$#}\"")]
         public void TestStucturalPrint(string script, string expected)
         {
             var result = ParseScript(
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData(
             "Function(Field,1,\"foo\")",
-            "Function(custom, #$number$#, #$string$#)")]
+            "Function(custom, #$decimal$#, #$string$#)")]
         [InlineData(
             "Lookup.Field && true",
             "custom.custom2 && #$boolean$#")]

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -30,6 +31,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumericNegate)
             },
             {
+                UnaryOpKind.NegateDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZeroDecimal,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DecimalNegate)
+            },
+            {
                 UnaryOpKind.Percent,
                 StandardErrorHandling<NumberValue>(
                     "%",
@@ -39,6 +51,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: NumericPercent)
+            },
+            {
+                UnaryOpKind.PercentDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    "%",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithZeroDecimal,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DecimalPercent)
             },
             {
                 UnaryOpKind.NumberToText,
@@ -52,6 +75,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: NumberToText)
             },
             {
+                UnaryOpKind.DecimalToText,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToText)
+            },
+            {
                 UnaryOpKind.NumberToBoolean,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -61,6 +95,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToBoolean)
+            },
+            {
+                UnaryOpKind.DecimalToBoolean,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToBoolean)
             },
             {
                 UnaryOpKind.BooleanToText,
@@ -85,6 +130,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: BooleanToNumber)
             },
             {
+                UnaryOpKind.BooleanToDecimal,
+                StandardErrorHandling<BooleanValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<BooleanValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: BooleanToDecimal)
+            },
+            {
                 UnaryOpKind.TextToBoolean,
                 StandardErrorHandling<StringValue>(
                     functionName: null, // internal function, no user-facing name
@@ -107,6 +163,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateToNumber)
             },
             {
+                UnaryOpKind.DateToDecimal,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateToDecimal)
+            },
+            {
                 UnaryOpKind.NumberToDate,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -116,6 +183,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToDate)
+            },
+            {
+                UnaryOpKind.DecimalToDate,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToDate)
             },
             {
                 UnaryOpKind.DateTimeToNumber,
@@ -129,6 +207,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: DateToNumber)
             },
             {
+                UnaryOpKind.DateTimeToDecimal,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DateOrDateTime,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DateToDecimal)
+            },
+            {
                 UnaryOpKind.NumberToDateTime,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -138,6 +227,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToDateTime)
+            },
+            {
+                UnaryOpKind.DecimalToDateTime,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToDateTime)
             },
             {
                 UnaryOpKind.DateToDateTime,
@@ -173,6 +273,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: TimeToNumber)
             },
             {
+                UnaryOpKind.TimeToDecimal,
+                StandardErrorHandling<TimeValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TimeValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: TimeToDecimal)
+            },
+            {
                 UnaryOpKind.NumberToTime,
                 StandardErrorHandling<NumberValue>(
                     functionName: null, // internal function, no user-facing name
@@ -182,6 +293,17 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: NumberToTime)
+            },
+            {
+                UnaryOpKind.DecimalToTime,
+                StandardErrorHandling<DecimalValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: DecimalToTime)
             },
             {
                 UnaryOpKind.DateTimeToTime,
@@ -283,6 +405,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: OptionSetValueToNumber)
             },
             {
+                UnaryOpKind.OptionSetToDecimal,
+                StandardErrorHandling<OptionSetValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<OptionSetValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: OptionSetValueToDecimal)
+            },
+            {
                 UnaryOpKind.OptionSetToBoolean,
                 StandardErrorHandling<OptionSetValue>(
                     functionName: null, // internal function, no user-facing name
@@ -316,19 +449,79 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: BlankToEmptyString)
             },
         };
-        #endregion
+#endregion
 
-        #region Unary Operator Implementations
+#region Unary Operator Implementations
         private static NumberValue NumericNegate(IRContext irContext, NumberValue[] args)
         {
             var result = -args[0].Value;
             return new NumberValue(irContext, result);
         }
 
+        private static DecimalValue DecimalNegate(IRContext irContext, DecimalValue[] args)
+        {
+            var result = -args[0].Value;
+            return new DecimalValue(irContext, result);
+        }
+
         private static NumberValue NumericPercent(IRContext irContext, NumberValue[] args)
         {
             var result = args[0].Value / 100.0;
             return new NumberValue(irContext, result);
+        }
+
+        private static DecimalValue DecimalPercent(IRContext irContext, DecimalValue[] args)
+        {
+            var result = args[0].Value / 100m;
+            return new DecimalValue(irContext, result);
+        }
+
+        public static FormulaValue NumberToDecimal(IRContext irContext, NumberValue[] args)
+        {
+            return NumberToDecimal(irContext, args[0]);
+        }
+
+        public static FormulaValue NumberToDecimal(IRContext irContext, NumberValue value)
+        {
+            try
+            {
+                return new DecimalValue(irContext, (decimal)value.Value);
+            }
+            catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+        }
+
+        private static (decimal, ConvertionStatus) ConvertNumberToDecimal(double value)
+        {
+            decimal result;
+
+            try
+            {
+                result = (decimal)value;
+            }
+            catch (OverflowException)
+            {
+                return (0m, ConvertionStatus.InvalidNumber);
+            }
+
+            return (result, ConvertionStatus.Ok);
+        }
+
+        public static NumberValue DecimalToNumber(IRContext irContext, DecimalValue[] args)
+        {
+            return DecimalToNumber(irContext, args[0]);
+        }
+
+        public static NumberValue DecimalToNumber(IRContext irContext, DecimalValue value)
+        {
+            return new NumberValue(irContext, (double)value.Value);
+        }
+
+        public static FormulaValue DecimalToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
+        {
+            return Text(runner, context, irContext, args);
         }
 
         public static FormulaValue NumberToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
@@ -340,6 +533,34 @@ namespace Microsoft.PowerFx.Functions
         {
             var n = args[0].Value;
             return new BooleanValue(irContext, n != 0.0);
+        }
+
+        public static BooleanValue DecimalToBoolean(IRContext irContext, DecimalValue[] args)
+        {
+            var n = args[0].Value;
+            return new BooleanValue(irContext, n != 0m);
+        }
+
+        public static FormulaValue DateToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            return DateToDecimal(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static DecimalValue DateToDecimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
+        {
+            DateTime dateTime = GetNormalizedDateTimeLibrary(value, formatInfo.TimeZoneInfo);
+            return new DecimalValue(irContext, (decimal)dateTime.Subtract(_epoch).TotalDays);
+        }
+
+        public static DecimalValue DateTimeToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
+        {
+            return DateTimeToDecimal(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static DecimalValue DateTimeToDecimal(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
+        {
+            var d = value.GetConvertedValue(formatInfo.TimeZoneInfo);
+            return new DecimalValue(irContext, (decimal)d.Subtract(_epoch).TotalDays);
         }
 
         public static StringValue BooleanToText(IRContext irContext, BooleanValue[] args)
@@ -361,6 +582,16 @@ namespace Microsoft.PowerFx.Functions
         public static NumberValue BooleanToNumber(IRContext irContext, BooleanValue value)
         {
             return new NumberValue(irContext, value.Value ? 1.0 : 0.0);
+        }
+
+        public static DecimalValue BooleanToDecimal(IRContext irContext, BooleanValue[] args)
+        {
+            return BooleanToDecimal(irContext, args[0]);
+        }
+
+        public static DecimalValue BooleanToDecimal(IRContext irContext, BooleanValue value)
+        {
+            return new DecimalValue(irContext, value.Value ? 1m : 0m);
         }
 
         public static FormulaValue TextToBoolean(IRContext irContext, StringValue[] args)
@@ -457,9 +688,21 @@ namespace Microsoft.PowerFx.Functions
             return new DateValue(irContext, date);
         }
 
+        public static DateValue DecimalToDate(IRContext irContext, DecimalValue[] args)
+        {
+            var n = args[0].Value;
+            var date = _epoch.AddDays((double)n);
+            return new DateValue(irContext, date);
+        }
+
         public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
             return NumberToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static DateTimeValue DecimalToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
+        {
+            return NumberToDateTime(CreateFormattingInfo(runner), irContext, new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)args[0].Value));
         }
 
         public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
@@ -538,10 +781,23 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, t.TotalDays);
         }
 
+        public static DecimalValue TimeToDecimal(IRContext irContext, TimeValue[] args)
+        {
+            var t = args[0].Value;
+            return new DecimalValue(irContext, (decimal)t.TotalDays);
+        }
+
         public static TimeValue NumberToTime(IRContext irContext, NumberValue[] args)
         {
             var n = args[0].Value;
             var days = TimeSpan.FromDays(n);
+            return new TimeValue(irContext, days);
+        }
+
+        public static TimeValue DecimalToTime(IRContext irContext, DecimalValue[] args)
+        {
+            var n = args[0].Value;
+            var days = TimeSpan.FromDays((double)n);
             return new TimeValue(irContext, days);
         }
 
@@ -605,6 +861,18 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
         }
 
+        public static FormulaValue OptionSetValueToDecimal(IRContext irContext, OptionSetValue[] args)
+        {
+            var optionSet = args[0];
+            if (optionSet.ExecutionValue is double evalValue)
+            {
+                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)evalValue);
+            }
+
+            var errorMessage = ErrorUtils.FormatMessage(StringResources.Get(TexlStrings.OptionSetOptionNotSupported), null, optionSet.DisplayName, FormulaType.Decimal._type.GetKindString());
+            return CommonErrors.CustomError(IRContext.NotInSource(FormulaType.Number), errorMessage);
+        }
+
         public static FormulaValue OptionSetValueToBoolean(IRContext irContext, OptionSetValue[] args)
         {
             var optionSet = args[0];
@@ -649,6 +917,6 @@ namespace Microsoft.PowerFx.Functions
 
             return args[0];
         }
-        #endregion
+#endregion
     }
 }

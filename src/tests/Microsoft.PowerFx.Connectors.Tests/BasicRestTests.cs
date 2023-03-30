@@ -83,7 +83,7 @@ namespace Microsoft.PowerFx.Tests
         // Allow side-effects for executing behavior functions (any POST)
         private static readonly ParserOptions _optionsPost = new ()
         {
-            AllowsSideEffects = true
+            AllowsSideEffects = true,
         };
 
         // Invoking a connector with a null client throws a InvalidOperationException exception.
