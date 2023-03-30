@@ -188,8 +188,6 @@ namespace Microsoft.PowerFx.Functions
         {
             result = null;
             
-            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type));
-
             switch (value)
             {
                 case NumberValue n:
