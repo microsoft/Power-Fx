@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public enum ParamType
         {
             Number,
+            Decimal,
             String,
             Boolean,
             Date,

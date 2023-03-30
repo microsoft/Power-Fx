@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -37,7 +38,18 @@ namespace Microsoft.PowerFx.Functions
                     case JsonValueKind.String:
                         return FormulaType.String;
                     case JsonValueKind.Number:
-                        return FormulaType.Number;
+                        // Do not be tempted to use FormulaType.Number here.  JSON numbers can be interpreted as either
+                        // a float or a decimal and connectors take advantage of this to interop with decimals in databases.
+                        // Each place that uses this value needs to interpret it appropriately given the context and NumberIsFloat mode.
+                        // In cases where the distinction is not important such as converting to Boolean, use Float as it can hold any Decimal value.
+                        //
+                        // The ECMA 404 2017 JSON spec states:
+                        // JSON is agnostic about the semantics of numbers. In any programming language, there can be a variety of
+                        // number types of various capacities and complements, fixed or floating, binary or decimal.That can make
+                        // interchange between different programming languages difficult. JSON instead offers only the representation of
+                        // numbers that humans use: a sequence of digits. All programming languages know how to make sense of digit
+                        // sequences even if they disagree on internal representations. That is enough to allow interchange 
+                        return ExternalType.UntypedNumber;
                     case JsonValueKind.True:
                     case JsonValueKind.False:
                         return FormulaType.Boolean;
@@ -67,6 +79,23 @@ namespace Microsoft.PowerFx.Functions
         public bool GetBoolean()
         {
             return _element.GetBoolean();
+        }
+
+        public decimal GetDecimal()
+        {
+            return _element.GetDecimal();
+        }
+
+        public string GetUntypedNumber()
+        {
+            if (Type == ExternalType.UntypedNumber)
+            {
+                return _element.GetRawText();
+            }
+            else
+            {
+                throw new FormatException();
+            }
         }
 
         public bool TryGetProperty(string value, out IUntypedObject result)

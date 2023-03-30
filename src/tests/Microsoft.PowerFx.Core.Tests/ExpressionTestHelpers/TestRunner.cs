@@ -5,6 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
@@ -40,25 +44,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
-        public void AddDir(string directory = "")
+        public void AddDir(bool numberIsFloat = false, string directory = "")
         {
             directory = Path.GetFullPath(directory, TestRoot);
             var allFiles = Directory.EnumerateFiles(directory);
 
-            AddFile(allFiles);
+            AddFile(numberIsFloat, allFiles);
         }
 
-        public void AddFile(params string[] files)
+        public void AddFile(bool numberIsFloat, params string[] files)
         {
             var x = (IEnumerable<string>)files;
-            AddFile(x);
+            AddFile(numberIsFloat, x);
         }
 
-        public void AddFile(IEnumerable<string> files)
+        public void AddFile(bool numberIsFloat, IEnumerable<string> files)
         {
             foreach (var file in files)
             {
-                AddFile(file);
+                AddFile(numberIsFloat, file);
             }
         }
 
@@ -80,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return false;
         }
 
-        public void AddFile(string thisFile)
+        public void AddFile(bool numberIsFloat, string thisFile)
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 
@@ -101,6 +105,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // #Directive: Parameter
             string fileSetup = null;
             string fileOveride = null;
+            string fileSkipFile = null;
 
             while (i < lines.Length - 1)
             {
@@ -121,6 +126,14 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Will remove all cases in this file.
                         // Can apply to multiple files. 
                         var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
+                    }
+                    else if (TryParseDirective(line, "#SKIPFILE:", ref fileSkipFile))
+                    {
+                        if ((Regex.IsMatch(line, "[:,]\\s*disable:\\s*NumberIsFloat") && !numberIsFloat) ||
+                            (Regex.IsMatch(line, "[:,]\\s*NumberIsFloat") && numberIsFloat))
+                        {
+                            return;
+                        }
                     }
                     else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
                              TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
@@ -232,7 +245,7 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        public TestRunFullResults RunTests()
+        public TestRunFullResults RunTests(bool numberIsFloat = false)
         {
             var summary = new TestRunFullResults();
 
