@@ -84,10 +84,6 @@ namespace Microsoft.PowerFx.Tests
         private static readonly ParserOptions _optionsPost = new ()
         {
             AllowsSideEffects = true,
-            
-            // Decimal TODO: why is this needed?  What about decimal doesn't work here?
-            // coercion appears to be needed in HTTP call, need that PR or investigate further without
-            NumberIsFloat = true
         };
 
         // Invoking a connector with a null client throws a InvalidOperationException exception.
