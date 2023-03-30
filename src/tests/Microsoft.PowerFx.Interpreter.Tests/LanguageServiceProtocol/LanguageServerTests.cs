@@ -43,9 +43,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Init();
         }
 
-        private void Init(Features features = Features.None, ParserOptions options = null)
+        private void Init(Features features = null, ParserOptions options = null)
         {
-            var config = new PowerFxConfig(features: features);
+            var config = new PowerFxConfig(features: features ?? Features.None);
             config.AddFunction(new BehaviorFunction());
 
             var engine = new Engine(config);
@@ -61,10 +61,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             var uriObj = new Uri(documentUri);
             var json = HttpUtility.ParseQueryString(uriObj.Query).Get("context");
-            if (json == null)
-            {
-                json = "{}";
-            }
+            json ??= "{}";
 
             var record = (RecordValue)FormulaValueJSON.FromJson(json);
             return ReadOnlySymbolTable.NewFromRecord(record.Type);
@@ -1188,7 +1185,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
-            Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
+            Init(new Features { TableSyntaxDoesntWrapRecords = tableSyntaxDoesntWrapRecords });
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
