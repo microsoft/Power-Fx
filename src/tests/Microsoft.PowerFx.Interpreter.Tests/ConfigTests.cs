@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
@@ -859,6 +860,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(checkTrue.IsSuccess);
             Assert.False(checkFalse.IsSuccess);
             Assert.Contains(checkFalse.Errors, e => e.MessageKey == "ErrUnknownFunction" && e.Message.Contains($"'{functionName}' is an unknown or unsupported function."));
+        }
+
+        [Theory]
+        [InlineData(300, "Text(DateTimeValue(\"2023-12-21T12:34:56.789Z\"), DateTimeFormat.UTC)", true)]
+        [InlineData(10, "Text(DateTimeValue(\"2023-12-21T12:34:56.789Z\"), DateTimeFormat.UTC)", false)]
+        [InlineData(200, "Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3)))", false)]
+        [InlineData(500, "Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3)))", true)]
+        public void AllowedMaxExpressionLengthTest(int maxLength, string expression, bool isSucceeded)
+        {
+            var config = new PowerFxConfig
+            {
+                MaximumExpressionLength = maxLength
+            };
+
+            var engine = new Engine(config);            
+            var opt = engine.GetDefaultParserOptionsCopy();
+            var check = engine.Check(expression);
+
+            if (isSucceeded)
+            {
+                Assert.True(check.IsSuccess);
+                Assert.True(expression.Length < opt.MaxExpressionLength);
+            }
+            else
+            {
+                Assert.False(check.IsSuccess);
+                Assert.False(expression.Length < opt.MaxExpressionLength);
+            }
+        }
+
+        [Fact]
+        public void MaxExpressionLenghthTest()
+        {
+            var config = new PowerFxConfig();
+            Assert.Equal(1000, config.MaximumExpressionLength);
         }
 
         private static SymbolTable AddDataverse(string valueName, FormulaValue value)

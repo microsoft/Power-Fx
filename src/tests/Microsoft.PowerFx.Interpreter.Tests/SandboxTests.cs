@@ -82,7 +82,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(50, 20)]
         public async Task MemoryLimit(int nWidth, int nDepth)
         {
-            var engine = new RecalcEngine();
+            var config = new PowerFxConfig
+            {
+                MaximumExpressionLength = 2000
+            };
+
+            var engine = new RecalcEngine(config);
 
             var mem = new SingleThreadedGovernor(DefaultMemorySizeBytes);
 
