@@ -3061,7 +3061,9 @@ namespace Microsoft.PowerFx.Core.Types
                     if (!isFieldValid && isValid)
                     {
                         var fieldName = string.IsNullOrEmpty(fieldSchemaDifference.Key) ? typedName.Name : fieldSchemaDifference.Key;
-                        schemaDifference = new KeyValuePair<string, DType>(fieldName, fieldSchemaDifference.Value);
+                        var fieldType = string.IsNullOrEmpty(fieldSchemaDifference.Key) ? typedName.Type : fieldSchemaDifference.Value;
+
+                        schemaDifference = new KeyValuePair<string, DType>(fieldName, fieldType);
                         schemaDifferenceType = fieldSchemaDifferenceType;
                     }
 

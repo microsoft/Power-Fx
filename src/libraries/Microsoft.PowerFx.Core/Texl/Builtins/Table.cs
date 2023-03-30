@@ -59,27 +59,44 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var rowType = DType.EmptyRecord;
             for (var i = 0; i < argTypes.Length; i++)
             {
+                var isUnionError = false;
                 var argType = argTypes[i];
                 if (!argType.IsRecord)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
-                else if (!rowType.CanUnionWith(argType))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleRecord);
-                    isValid = false;
-                }
                 else
                 {
-                    var isUnionError = false;
-                    rowType = DType.Union(ref isUnionError, rowType, argType);
-                    Contracts.Assert(!isUnionError);
-                    Contracts.Assert(rowType.IsRecord);
+                    KeyValuePair<string, DType> schemaDifference = new KeyValuePair<string, DType>();
+                    DType schemaDifferenceType = null;
+                    DType coercionType = null;
+
+                    // Deferred and void types are not allowed in tables.
+                    var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
+                    if (isChildTypeAllowedInTable && rowType.Equals(DType.EmptyRecord))
+                    {
+                        rowType = argType;
+                    }
+                    else if (isChildTypeAllowedInTable && rowType.CanUnionWith(argType))
+                    {
+                        rowType = DType.Union(ref isUnionError, rowType, argType);
+                    }
+                    else if (isChildTypeAllowedInTable && argType.AggregateCoercesTo(rowType, out var isSafe, out coercionType, out schemaDifference, out schemaDifferenceType))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
+                    }
+                    else
+                    {
+                        errors.Errors(args[i], coercionType, schemaDifference, schemaDifferenceType);
+                        isValid = false;
+                    }
                 }
+
+                Contracts.Assert(!isUnionError);
+                Contracts.Assert(rowType.IsRecord);
             }
 
-            Contracts.Assert(rowType.IsRecord);
             returnType = rowType.ToTable();
 
             return isValid;
