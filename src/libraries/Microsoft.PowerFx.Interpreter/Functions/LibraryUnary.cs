@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -397,9 +395,6 @@ namespace Microsoft.PowerFx.Functions
         public static bool TryGetBoolean(IRContext irContext, FormulaValue value, out BooleanValue result)
         {
             result = null;
-
-            Contract.Assert(BooleanValue.AllowedListConvertToBoolean.Contains(value.Type));
-
             switch (value)
             {
                 case StringValue sv:
@@ -503,8 +498,6 @@ namespace Microsoft.PowerFx.Functions
         public static bool TryGetDateTime(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out DateTimeValue result)
         {
             result = null;
-
-            Contract.Assert(DateTimeValue.AllowedListConvertToDateTime.Contains(value.Type));
 
             switch (value)
             {
