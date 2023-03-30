@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx
             {
                  Culture = this.Config.CultureInfo,
                  AllowsSideEffects = false,
-                 MaxExpressionLength = 0, // no limit
+                 MaxExpressionLength = Config.MaximumExpressionLength,
             };
         }
 
