@@ -86,24 +86,30 @@ namespace Microsoft.PowerFx.Core.Tests
         public static TimeSpan Timeout = TimeSpan.FromSeconds(20);
 
         /// <summary>
+        /// Should the NumberIsFloat parser flag be in effect?
+        /// Also impacts what tests will be run through #SKIPFILE directives.
+        /// </summary>
+        public bool NumberIsFloat { get; set; }
+
+        /// <summary>
         /// Runs a PowerFx test case, with optional setup.
         /// </summary>
         /// <param name="expr">PowerFx expression.</param>
         /// <param name="setupHandlerName">Optional name of a setup handler to run. Throws SetupHandlerNotImplemented if not found.</param>
         /// <returns>Result of evaluating Expr.</returns>
-        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, bool numberIsFloat = false);
+        protected abstract Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null);
 
         /// <summary>
         /// Returns (Pass,Fail,Skip) and a status message.
         /// </summary>
         /// <param name="test">test case to run.</param>
         /// <returns>status from running.</returns>
-        public (TestResult result, string message) RunTestCase(TestCase testCase, bool numberIsFloat = false)
+        public (TestResult result, string message) RunTestCase(TestCase testCase)
         {
             var t = Task.Factory.StartNew(
                 () =>
                 {
-                    var t = RunAsync2(testCase, numberIsFloat);
+                    var t = RunAsync2(testCase);
                     t.ConfigureAwait(false);
 
                     return t.Result;
@@ -143,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // also check that:
         //   >> IsError(x)
         //   true
-        private async Task<(TestResult, string)> RunErrorCaseAsync(TestCase testCase, bool numberIsFloat)
+        private async Task<(TestResult, string)> RunErrorCaseAsync(TestCase testCase)
         {
             var case2 = new TestCase
             {
@@ -154,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "true"
             };
 
-            var (result, msg) = await RunAsync2(case2, numberIsFloat);
+            var (result, msg) = await RunAsync2(case2);
             if (result == TestResult.Fail)
             {
                 msg += " (IsError() followup call)";
@@ -163,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return (result, msg);
         }
 
-        private async Task<(TestResult, string)> RunAsync2(TestCase testCase, bool numberIsFloat)
+        private async Task<(TestResult, string)> RunAsync2(TestCase testCase)
         {
             RunResult runResult = null;
             FormulaValue result = null;
@@ -180,7 +186,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName, numberIsFloat);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
                 result = runResult.Value;
                 originalResult = runResult.OriginalValue;
 
@@ -203,7 +209,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
                         var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
 
-                        if (numberIsFloat)
+                        if (NumberIsFloat)
                         {
                             expected = Regex.Replace(expected, "(\\s|'|\\()Decimal(\\s|'|\\))", "$1Number$2");
                         }
@@ -232,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
                 // If they override IsError, then do additional checks. 
-                return await RunErrorCaseAsync(testCase, numberIsFloat);
+                return await RunErrorCaseAsync(testCase);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below

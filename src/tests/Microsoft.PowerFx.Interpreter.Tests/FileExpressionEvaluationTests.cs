@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // make sure they build is actually copying them over.affgtgerfere
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner();
-            var (result, msg) = runner.RunTestCase(testCase, numberIsFloat: false);
+            var runner = new InterpreterRunner() { NumberIsFloat = false };
+            var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)
@@ -49,8 +49,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner();
-            var (result, msg) = runner.RunTestCase(testCase, numberIsFloat: true);
+            var runner = new InterpreterRunner() { NumberIsFloat = true };
+            var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)
@@ -109,13 +109,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig();
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
-            var runner = new ReplRunner(engine);
+            var runner = new ReplRunner(engine) { NumberIsFloat = true };
 
             var testRunner = new TestRunner(runner);
 
             testRunner.AddFile(numberIsFloat: true, path);
 
-            var result = testRunner.RunTests(numberIsFloat: true);
+            var result = testRunner.RunTests();
 
             if (result.Fail > 0)
             {

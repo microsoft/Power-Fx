@@ -245,8 +245,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal class InterpreterRunner : BaseRunner
         {
             // For async tests, run in special mode. 
+
             // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
+
             // task completion status.. 
+
             private async Task<FormulaValue> RunVerifyAsync(string expr, PowerFxConfig config, InternalSetup setup)
             {
                 var verify = new AsyncVerify();
@@ -267,11 +270,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return result;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName, bool numberIsFloat)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName)
             {
                 RecalcEngine engine;
                 RecordValue parameters;
-                var iSetup = InternalSetup.Parse(setupHandlerName, numberIsFloat);
+                var iSetup = InternalSetup.Parse(setupHandlerName, NumberIsFloat);
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
 
@@ -287,7 +290,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         throw new SetupHandlerNotFoundException();
                     }
 
-                    (engine, parameters) = handler(config, numberIsFloat);
+                    (engine, parameters) = handler(config, NumberIsFloat);
                 }
                 else
                 {
@@ -335,7 +338,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // Decimal TODO: This seems impossible without type information?  Float("1e300") will produce result that can't be serialized if treated as a decimal.
                 // Serialization test. Serialized expression must produce an identical result.
-                ParserOptions options = new ParserOptions() { NumberIsFloat = numberIsFloat };
+                ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
                 var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
 
                 return new RunResult(newValueDeserialized, newValue);
@@ -353,14 +356,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _engine = engine;
             }
 
-            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null, bool numberIsFloat = false)
+            protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                if (TryMatchSet(expr, out var runResult, numberIsFloat))
+                if (TryMatchSet(expr, out var runResult, NumberIsFloat))
                 {
                     return runResult;
                 }
 
-                ParserOptions opts = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = numberIsFloat };
+                ParserOptions opts = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
 
                 var check = _engine.Check(expr, opts);
                 if (!check.IsSuccess)
@@ -375,7 +378,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Pattern match for Set(x,y) so that we can define the variable
             public bool TryMatchSet(string expr, out RunResult runResult, bool numberIsFloat = false)
             {
-                var parserOptions = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = numberIsFloat };
+                var parserOptions = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
 
                 var parse = _engine.Parse(expr, parserOptions);
                 if (parse.IsSuccess)
