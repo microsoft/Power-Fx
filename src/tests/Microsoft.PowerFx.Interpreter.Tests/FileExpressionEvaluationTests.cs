@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
             var runner = new InterpreterRunner();
-            var (result, msg) = runner.RunTestCase(testCase, numberIsFloat: true);
+            var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
             switch (result)

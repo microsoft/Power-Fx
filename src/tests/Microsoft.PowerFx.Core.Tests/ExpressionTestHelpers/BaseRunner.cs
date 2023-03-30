@@ -232,7 +232,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
                 // If they override IsError, then do additional checks. 
-                return await RunErrorCaseAsync(testCase, numberIsFloat);
+                return await RunErrorCaseAsync(testCase);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below
