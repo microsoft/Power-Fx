@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx
 
             var arg1 = argTypes[1];
 
-            if (!arg0.Accepts(arg1))
+            if (!arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
             {
                 errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
                 return false;
@@ -421,7 +421,7 @@ namespace Microsoft.PowerFx
             
             formulaResult ??= FormulaValue.NewBlank(_info.RetType);
 
-            if (!formulaResult.Type._type.Accepts(_info.RetType._type))
+            if (!formulaResult.Type._type.Accepts(_info.RetType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
             {
                 return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
             }

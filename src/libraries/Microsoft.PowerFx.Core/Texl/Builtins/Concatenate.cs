@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 0; i < count; i++)
             {
-                var typeChecks = CheckType(args[i], argTypes[i], DType.String, errors, true, out DType coercionType);
+                var typeChecks = CheckType(context, args[i], argTypes[i], DType.String, errors, true, out DType coercionType);
                 if (typeChecks && coercionType != null)
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                fArgsValid &= CheckParamIsTypeOrSingleColumnTable(DType.String, args[i], argTypes[i], errors, out var isTable, ref nodeToCoercedTypeMap);
+                fArgsValid &= CheckParamIsTypeOrSingleColumnTable(context, DType.String, args[i], argTypes[i], errors, out var isTable, ref nodeToCoercedTypeMap);
                 hasTableArg |= isTable;
             }
 

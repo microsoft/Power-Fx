@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Core.IR
 {
     internal class CoercionMatrix
     {
-        public static CoercionKind GetCoercionKind(DType fromType, DType toType)
+        public static CoercionKind GetCoercionKind(DType fromType, DType toType, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.AssertValid(fromType);
             Contracts.AssertValid(toType);
@@ -41,19 +41,19 @@ namespace Microsoft.PowerFx.Core.IR
                 return GetUntypedObjectCoercion(toType);
             }
 
-            return FlattenCoercionMatrix(fromType, toType);
+            return FlattenCoercionMatrix(fromType, toType, usePowerFxV1CompatibilityRules);
         }
 
-        private static CoercionKind FlattenCoercionMatrix(DType fromType, DType toType)
+        private static CoercionKind FlattenCoercionMatrix(DType fromType, DType toType, bool usePowerFxV1CompatibilityRules)
         {
             switch (toType.Kind)
             {
                 case DKind.Number:
                 case DKind.Currency:
-                    return GetToNumberCoercion(fromType);
+                    return GetToNumberCoercion(fromType, usePowerFxV1CompatibilityRules);
 
                 case DKind.Color:
-                    if (DType.OptionSetValue.Accepts(fromType) && fromType.OptionSetInfo?.BackingKind == DKind.Color)
+                    if (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && fromType.OptionSetInfo?.BackingKind == DKind.Color)
                     {
                         return CoercionKind.OptionSetToColor;
                     }
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.IR
                     break;
 
                 case DKind.Hyperlink:
-                    if (DType.String.Accepts(fromType))
+                    if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         switch (fromType.Kind)
                         {
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.IR
                         return CoercionKind.LargeImageToImage;
                     }
 
-                    if (fromType.Kind != DKind.Media && fromType.Kind != DKind.Blob && DType.String.Accepts(fromType))
+                    if (fromType.Kind != DKind.Media && fromType.Kind != DKind.Blob && DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TextToImage;
                     }
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Core.IR
                     break;
 
                 case DKind.Media:
-                    if (fromType.Kind != DKind.Image && fromType.Kind != DKind.Blob && DType.String.Accepts(fromType))
+                    if (fromType.Kind != DKind.Image && fromType.Kind != DKind.Blob && DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TextToMedia;
                     }
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Core.IR
                     break;
 
                 case DKind.Blob:
-                    if (DType.String.Accepts(fromType))
+                    if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TextToBlob;
                     }
@@ -118,24 +118,28 @@ namespace Microsoft.PowerFx.Core.IR
                     break;
 
                 case DKind.String:
-                    return GetToStringCoercion(fromType);
+                    return GetToStringCoercion(fromType, usePowerFxV1CompatibilityRules);
 
                 case DKind.Enum:
-                    return GetToEnumCoercion(fromType, toType);
+                    return GetToEnumCoercion(fromType, toType, usePowerFxV1CompatibilityRules);
 
                 case DKind.Boolean:
-                    Contracts.Assert(DType.Number.Accepts(fromType) || DType.String.Accepts(fromType) || (DType.OptionSetValue.Accepts(fromType) && fromType.OptionSetInfo?.BackingKind == DKind.Boolean), "Unsupported type coercion");
-                    if (DType.Number.Accepts(fromType))
+                    Contracts.Assert(
+                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && fromType.OptionSetInfo?.BackingKind == DKind.Boolean),
+                        "Unsupported type coercion");
+                    if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToBoolean;
                     }
 
-                    if (DType.String.Accepts(fromType))
+                    if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TextToBoolean;
                     }
 
-                    if (DType.OptionSetValue.Accepts(fromType) && fromType.OptionSetInfo?.BackingKind == DKind.Boolean)
+                    if (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && fromType.OptionSetInfo?.BackingKind == DKind.Boolean)
                     {
                         return CoercionKind.OptionSetToBoolean;
                     }
@@ -167,16 +171,21 @@ namespace Microsoft.PowerFx.Core.IR
 
                 case DKind.DateTime:
                 case DKind.DateTimeNoTimeZone:
-                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType), "Unsupported type coercion");
-                    if (DType.Number.Accepts(fromType))
+                    Contracts.Assert(
+                        DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules),
+                        "Unsupported type coercion");
+                    if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToDateTime;
                     }
-                    else if (DType.Date.Accepts(fromType))
+                    else if (DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.DateToDateTime;
                     }
-                    else if (DType.Time.Accepts(fromType))
+                    else if (DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TimeToDateTime;
                     }
@@ -184,16 +193,21 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.TextToDateTime;
 
                 case DKind.Time:
-                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType) || DType.Date.Accepts(fromType), "Unsupported type coercion");
-                    if (DType.Number.Accepts(fromType))
+                    Contracts.Assert(
+                        DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                        DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                        DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules),
+                        "Unsupported type coercion");
+                    if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToTime;
                     }
-                    else if (DType.Date.Accepts(fromType))
+                    else if (DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.DateToTime;
                     }
-                    else if (DType.DateTime.Accepts(fromType))
+                    else if (DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.DateTimeToTime;
                     }
@@ -201,16 +215,21 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.TextToTime;
 
                 case DKind.Date:
-                    Contracts.Assert(DType.String.Accepts(fromType) || DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType), "Unsupported type coercion");
-                    if (DType.Number.Accepts(fromType))
+                    Contracts.Assert(
+                        DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                        DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                        DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules),
+                        "Unsupported type coercion");
+                    if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToDate;
                     }
-                    else if (DType.Time.Accepts(fromType))
+                    else if (DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TimeToDate;
                     }
-                    else if (DType.DateTime.Accepts(fromType))
+                    else if (DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.DateTimeToDate;
                     }
@@ -218,9 +237,12 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.TextToDate;
 
                 case DKind.OptionSetValue:
-                    Contracts.Assert(DType.OptionSetValue.Accepts(fromType) || (DType.Boolean.Accepts(fromType) && toType.OptionSetInfo?.BackingKind == DKind.Boolean), "Unsupported type coercion");
+                    Contracts.Assert(
+                        DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Boolean),
+                        "Unsupported type coercion");
 
-                    if (DType.Boolean.Accepts(fromType) && toType.OptionSetInfo?.BackingKind == DKind.Boolean)
+                    if (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && toType.OptionSetInfo?.BackingKind == DKind.Boolean)
                     {
                         return CoercionKind.BooleanToOptionSet;
                     }
@@ -228,8 +250,16 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.None; // Implicit coercion?
 
                 case DKind.ViewValue:
-                    Contracts.Assert(DType.ViewValue.Accepts(fromType), "Unsupported type coercion");
+                    Contracts.Assert(DType.ViewValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules), "Unsupported type coercion");
                     return CoercionKind.None; // Implicit coercion?
+                case DKind.Guid:
+                    Contracts.Assert(DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    {
+                        return CoercionKind.StringToGUID;
+                    }
+
+                    break;
                 default:
                     // Nothing else can be coerced.
                     Contracts.Assert(false, "Unsupported type coercion");
@@ -240,19 +270,26 @@ namespace Microsoft.PowerFx.Core.IR
             throw new InvalidCoercionException($"Attempting to generate invalid coercion from {fromType.GetKindString()} to {toType.GetKindString()}");
         }
 
-        private static CoercionKind GetToNumberCoercion(DType fromType)
+        private static CoercionKind GetToNumberCoercion(DType fromType, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(
-                DType.String.Accepts(fromType) || DType.Boolean.Accepts(fromType) || DType.Number.Accepts(fromType) ||
-                DType.DateTime.Accepts(fromType) || DType.Time.Accepts(fromType) || DType.Date.Accepts(fromType) || DType.DateTimeNoTimeZone.Accepts(fromType) ||
-                fromType.IsControl || (DType.OptionSetValue.Accepts(fromType) && ((fromType.OptionSetInfo?.BackingKind == DKind.Boolean) || fromType.OptionSetInfo?.BackingKind == DKind.Number)), "Unsupported type coercion");
+                DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                DType.DateTimeNoTimeZone.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                fromType.IsControl || 
+                (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && ((fromType.OptionSetInfo?.BackingKind == DKind.Boolean) || fromType.OptionSetInfo?.BackingKind == DKind.Number)),
+                "Unsupported type coercion");
 
-            if (DType.String.Accepts(fromType))
+            if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 return CoercionKind.TextToNumber;
             }
 
-            if (DType.Boolean.Accepts(fromType))
+            if (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 return CoercionKind.BooleanToNumber;
             }
@@ -272,7 +309,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return CoercionKind.DateToNumber;
             }
 
-            if (DType.OptionSetValue.Accepts(fromType) && (fromType.OptionSetInfo?.BackingKind == DKind.Number))
+            if (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && (fromType.OptionSetInfo?.BackingKind == DKind.Number))
             {
                 return CoercionKind.OptionSetToNumber;
             }
@@ -289,35 +326,37 @@ namespace Microsoft.PowerFx.Core.IR
         /// <param name="toType">
         /// An enum type that a value of <paramref name="fromType"/> is being coerced to.
         /// </param>
+        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
+        /// permissive Accepts relationships).</param>
         /// <returns>
         /// The result will generally resemble the coercion kind whose meaning resembles "fromType to
         /// toType.EnumSuperKind", but with special cases evident within.
         /// </returns>
-        private static CoercionKind GetToEnumCoercion(DType fromType, DType toType)
+        private static CoercionKind GetToEnumCoercion(DType fromType, DType toType, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(toType.Kind == DKind.Enum);
 
             return toType.EnumSuperkind switch
             {
-                DKind.Number => GetCoercionKind(fromType, DType.Number),
-                _ => GetToStringCoercion(fromType)
+                DKind.Number => GetCoercionKind(fromType, DType.Number, usePowerFxV1CompatibilityRules),
+                _ => GetToStringCoercion(fromType, usePowerFxV1CompatibilityRules)
             };
         }
 
-        private static CoercionKind GetToStringCoercion(DType fromType)
+        private static CoercionKind GetToStringCoercion(DType fromType, bool usePowerFxV1CompatibilityRules)
         {
-            var acceptsN = DType.Number.Accepts(fromType);
-            var acceptsDT = DType.DateTime.Accepts(fromType);
-            var acceptsD = DType.Date.Accepts(fromType);
-            var acceptsT = DType.Time.Accepts(fromType);
-            var acceptsB = DType.Boolean.Accepts(fromType);
-            var acceptsS = DType.String.Accepts(fromType);
-            var acceptsG = DType.Guid.Accepts(fromType);
-            var acceptsOS = DType.OptionSetValue.Accepts(fromType);
-            var acceptsV = DType.ViewValue.Accepts(fromType);
+            var acceptsN = DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsDT = DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsD = DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsT = DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsB = DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsS = DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsG = DType.Guid.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsOS = DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsV = DType.ViewValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Contracts.Assert(acceptsN || acceptsB || acceptsDT || acceptsD || acceptsT || acceptsS || acceptsG || acceptsOS || acceptsV, "Unsupported type coercion");
 
-            if (DType.Number.Accepts(fromType) || DType.DateTime.Accepts(fromType))
+            if (acceptsN || acceptsDT)
             {
                 if (fromType.Kind == DKind.Date)
                 {
@@ -334,11 +373,19 @@ namespace Microsoft.PowerFx.Core.IR
 
                 return CoercionKind.NumberToText;
             }
-            else if (DType.Boolean.Accepts(fromType))
+            else if (acceptsT)
+            {
+                return CoercionKind.TimeToText;
+            }
+            else if (acceptsD)
+            {
+                return CoercionKind.DateToText;
+            }
+            else if (acceptsB)
             {
                 return CoercionKind.BooleanToText;
             }
-            else if (DType.Hyperlink.Accepts(fromType))
+            else if (DType.Hyperlink.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 switch (fromType.Kind)
                 {
@@ -352,13 +399,29 @@ namespace Microsoft.PowerFx.Core.IR
                         return CoercionKind.None;
                 }
             }
-            else if (DType.OptionSetValue.Accepts(fromType))
+            else if (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 return CoercionKind.OptionSetToText;
             }
-            else if (DType.ViewValue.Accepts(fromType))
+            else if (DType.ViewValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 return CoercionKind.ViewToText;
+            }
+            else if (DType.Blob.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.BlobToText;
+            }
+            else if (DType.Image.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.ImageToText;
+            }
+            else if (DType.Media.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.MediaToText;
+            }
+            else if (DType.PenImage.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.PenImageToText;
             }
             else
             {

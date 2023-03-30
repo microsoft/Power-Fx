@@ -46,9 +46,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var isValid = true;
             var argType = argTypes[0];
-            if (!DType.Number.Accepts(argType) && !DType.String.Accepts(argType) && !DType.Boolean.Accepts(argType))
+            if (!DType.Number.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()) &&
+                !DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()) &&
+                !DType.Boolean.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
             {
-                if (argType.CoercesTo(DType.DateTime) && !argType.IsControl)
+                if (argType.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()) && !argType.IsControl)
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                 }
@@ -62,7 +64,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (args.Length > 1)
             {
                 argType = argTypes[1];
-                if (!DType.String.Accepts(argType))
+                if (!DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
                     isValid = false;

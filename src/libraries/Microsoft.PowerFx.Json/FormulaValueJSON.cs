@@ -135,10 +135,9 @@ namespace Microsoft.PowerFx.Types
             {
                 var name = pair.Name;
                 var value = pair.Value;
-                FormulaType fieldType = null;
 
                 // if TryGetFieldType fails, fieldType is set to Blank
-                if (recordType?.TryGetFieldType(name, out fieldType) != true)
+                if (recordType?.TryGetFieldType(name, out FormulaType fieldType) != true)
                 {
                     fieldType = null;
                 }
@@ -182,7 +181,7 @@ namespace Microsoft.PowerFx.Types
                 DType typeUnion = DType.EmptyRecord;
                 foreach (var record in records)
                 {
-                    typeUnion = DType.Union(GuaranteeRecord(record).IRContext.ResultType._type, typeUnion);
+                    typeUnion = DType.Union(GuaranteeRecord(record).IRContext.ResultType._type, typeUnion, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
                 }
 
                 if (typeUnion.HasErrors)

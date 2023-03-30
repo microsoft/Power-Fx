@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1649 // File name should match first type name
@@ -111,11 +112,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     continue;
                 }
-                else if (DType.Boolean.Accepts(argTypes[i]))
+                else if (DType.Boolean.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()))
                 {
                     continue;
                 }
-                else if (!argTypes[i].CoercesTo(DType.Boolean))
+                else if (!argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     continue;

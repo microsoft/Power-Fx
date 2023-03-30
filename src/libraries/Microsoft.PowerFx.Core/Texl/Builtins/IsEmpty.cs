@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = true;
             if (context.Features.HasFlag(Features.RestrictedIsEmptyArguments))
             {
-                var typeCheck = CheckType(args[0], argTypes[0], DType.EmptyTable, errors, false, out DType coercionType);
+                var typeCheck = CheckType(context, args[0], argTypes[0], DType.EmptyTable, errors, false, out DType coercionType);
                 if (typeCheck)
                 {
                     if (coercionType != null)

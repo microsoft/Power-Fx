@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckNumericColumnType(argType, arg, context.Features, errors, ref nodeToCoercedTypeMap);
 
             if (nodeToCoercedTypeMap?.Any() ?? false)
             {

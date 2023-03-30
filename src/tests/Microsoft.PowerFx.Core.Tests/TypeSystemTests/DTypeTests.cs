@@ -231,9 +231,12 @@ namespace Microsoft.PowerFx.Tests
         {
             foreach (var dType in _dTypes)
             {
-                if (dType != DType.Void)
+                foreach (var usePowerFxV1CompatRules in new[] { false, true })
                 {
-                    Assert.True(DType.Error.Accepts(dType));
+                    if (dType != DType.Void)
+                    {
+                        Assert.True(DType.Error.Accepts(dType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
+                    }
                 }
             }
         }
@@ -243,9 +246,12 @@ namespace Microsoft.PowerFx.Tests
         {
             foreach (var dType in _dTypes)
             {
-                if (dType != DType.Void)
+                foreach (var usePowerFxV1CompatRules in new[] { false, true })
                 {
-                    Assert.True(dType.Accepts(DType.Unknown));
+                    if (dType != DType.Void)
+                    {
+                        Assert.True(dType.Accepts(DType.Unknown, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
+                    }
                 }
             }
         }
@@ -255,10 +261,13 @@ namespace Microsoft.PowerFx.Tests
         {
             foreach (var dType in _dTypes)
             {
-                // Deferred is subtype of all except unknown and void.
-                if (dType != DType.Unknown && dType != DType.Void)
+                foreach (var usePowerFxV1CompatRules in new[] { false, true })
                 {
-                    Assert.True(dType.Accepts(DType.Deferred));
+                    // Deferred is subtype of all except unknown and void.
+                    if (dType != DType.Unknown && dType != DType.Void)
+                    {
+                        Assert.True(dType.Accepts(DType.Deferred, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
+                    }
                 }
             }
         }
@@ -268,7 +277,10 @@ namespace Microsoft.PowerFx.Tests
         {
             foreach (var dType in _dTypes)
             {
-                Assert.False(dType.Accepts(DType.Void));
+                foreach (var usePowerFxV1CompatRules in new[] { false, true })
+                {
+                    Assert.False(dType.Accepts(DType.Void, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
+                }
             }
         }
 
@@ -277,7 +289,10 @@ namespace Microsoft.PowerFx.Tests
         {
             foreach (var dType in _dTypes)
             {
-                Assert.False(DType.Void.Accepts(dType));
+                foreach (var usePowerFxV1CompatRules in new[] { false, true })
+                {
+                    Assert.False(DType.Void.Accepts(dType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
+                }
             }
         }
 
@@ -287,73 +302,78 @@ namespace Microsoft.PowerFx.Tests
             var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
             var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
 
-            Assert.True(type1.Accepts(type2));
+            foreach (var usePowerFxV1CompatRules in new[] { false, true })
+            {
+                Assert.True(type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
 
-            type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
-            Assert.False(type1.Accepts(type2));
+                type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
+                Assert.False(type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
 
-            type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateRecord(new TypedName(DType.String, new DName("DisplayName")))));
-            Assert.False(type2.Accepts(type1));
+                type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateRecord(new TypedName(DType.String, new DName("DisplayName")))));
+                Assert.False(type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
+            }
         }
 
-        [Fact]
-        public void DTypeAcceptanceTest()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void DTypeAcceptanceTest(bool usePowerFxV1CompatibilityRules)
         {
-            Assert.False(DType.Unknown.Accepts(DType.Number));
+            Assert.False(DType.Unknown.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Number.Accepts(DType.Number));
-            Assert.True(DType.Number.Accepts(DType.Currency));
-            Assert.False(DType.Number.Accepts(DType.DateTime));
-            Assert.False(DType.Number.Accepts(DType.Date));
-            Assert.False(DType.Number.Accepts(DType.Time));
-            Assert.True(DType.Number.Accepts(DType.EmptyEnum));
-            Assert.True(DType.TryParse("%n[A:1, B:2]", out DType type) && type.IsEnum && DType.Number.Accepts(type));
+            Assert.True(DType.Number.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%n[A:1, B:2]", out DType type) && type.IsEnum && DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Boolean.Accepts(DType.Boolean));
-            Assert.True(DType.Boolean.Accepts(DType.EmptyEnum));
-            Assert.True(DType.TryParse("%b[A:true, B:false]", out type) && type.IsEnum && DType.Boolean.Accepts(type));
+            Assert.True(DType.Boolean.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Boolean.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%b[A:true, B:false]", out type) && type.IsEnum && DType.Boolean.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.String.Accepts(DType.String));
-            Assert.True(DType.String.Accepts(DType.Hyperlink));
-            Assert.True(DType.String.Accepts(DType.Guid));
-            Assert.True(DType.String.Accepts(DType.Image));
-            Assert.True(DType.String.Accepts(DType.PenImage));
-            Assert.True(DType.String.Accepts(DType.Media));
-            Assert.True(DType.String.Accepts(DType.Blob));
-            Assert.True(DType.String.Accepts(DType.EmptyEnum));
-            Assert.True(DType.TryParse("%s[A:\"a\", B:\"b\"]", out type) && type.IsEnum && DType.String.Accepts(type));
+            Assert.True(DType.String.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.PenImage, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.String.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%s[A:\"a\", B:\"b\"]", out type) && type.IsEnum && DType.String.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Hyperlink.Accepts(DType.Hyperlink));
-            Assert.True(DType.Hyperlink.Accepts(DType.Image));
-            Assert.True(DType.Hyperlink.Accepts(DType.Media));
-            Assert.True(DType.Hyperlink.Accepts(DType.Blob));
-            Assert.True(DType.Hyperlink.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Hyperlink.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Hyperlink.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Hyperlink.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Hyperlink.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Hyperlink.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Image.Accepts(DType.Image));
-            Assert.True(DType.Image.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Image.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Image.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Media.Accepts(DType.Media));
-            Assert.True(DType.Media.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Media.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Media.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Blob.Accepts(DType.Blob));
-            Assert.True(DType.Blob.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Blob.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Blob.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Color.Accepts(DType.Color));
-            Assert.True(DType.Color.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Color.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Color.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Currency.Accepts(DType.Currency));
-            Assert.True(DType.Currency.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Currency.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.DateTime.Accepts(DType.DateTime));
-            Assert.True(DType.DateTime.Accepts(DType.Date));
-            Assert.True(DType.DateTime.Accepts(DType.Time));
-            Assert.True(DType.DateTime.Accepts(DType.EmptyEnum));
+            Assert.True(DType.DateTime.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.DateTime.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.DateTime.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.DateTime.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Date.Accepts(DType.Date));
-            Assert.True(DType.Date.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Date.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Date.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.Time.Accepts(DType.Time));
-            Assert.True(DType.Time.Accepts(DType.EmptyEnum));
+            Assert.True(DType.Time.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Time.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
         }
 
         [Fact]
@@ -393,211 +413,213 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(TestUtils.DT("*[A:n, B:n, C:s]"), newType);
         }
 
-        [Fact]
-        public void DTypeAcceptanceTest_Negative()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void DTypeAcceptanceTest_Negative(bool usePowerFxV1CompatibilityRules)
         {
-            Assert.False(DType.Number.Accepts(DType.String));
-            Assert.False(DType.Number.Accepts(DType.Hyperlink));
-            Assert.False(DType.Number.Accepts(DType.Guid));
-            Assert.False(DType.Number.Accepts(DType.Image));
-            Assert.False(DType.Number.Accepts(DType.Media));
-            Assert.False(DType.Number.Accepts(DType.Blob));
-            Assert.False(DType.Number.Accepts(DType.Boolean));
-            Assert.False(DType.Number.Accepts(DType.EmptyTable));
-            Assert.False(DType.Number.Accepts(DType.EmptyRecord));
+            Assert.False(DType.Number.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Deferred.Accepts(DType.String));
-            Assert.False(DType.Deferred.Accepts(DType.Hyperlink));
-            Assert.False(DType.Deferred.Accepts(DType.Guid));
-            Assert.False(DType.Deferred.Accepts(DType.Image));
-            Assert.False(DType.Deferred.Accepts(DType.Media));
-            Assert.False(DType.Deferred.Accepts(DType.Blob));
-            Assert.False(DType.Deferred.Accepts(DType.Boolean));
-            Assert.False(DType.Deferred.Accepts(DType.EmptyTable));
-            Assert.False(DType.Deferred.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Deferred.Accepts(DType.Number));
+            Assert.False(DType.Deferred.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Deferred.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Boolean.Accepts(DType.String));
-            Assert.False(DType.Boolean.Accepts(DType.Number));
-            Assert.False(DType.Boolean.Accepts(DType.Color));
-            Assert.False(DType.Boolean.Accepts(DType.Currency));
-            Assert.False(DType.Boolean.Accepts(DType.DateTime));
-            Assert.False(DType.Boolean.Accepts(DType.Date));
-            Assert.False(DType.Boolean.Accepts(DType.Time));
-            Assert.False(DType.Boolean.Accepts(DType.Media));
-            Assert.False(DType.Boolean.Accepts(DType.Blob));
-            Assert.False(DType.Boolean.Accepts(DType.Hyperlink));
-            Assert.False(DType.Boolean.Accepts(DType.Image));
-            Assert.False(DType.Boolean.Accepts(DType.EmptyTable));
-            Assert.False(DType.Boolean.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Boolean.Accepts(DType.Guid));
+            Assert.False(DType.Boolean.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Boolean.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.String.Accepts(DType.Number));
-            Assert.False(DType.String.Accepts(DType.Color));
-            Assert.False(DType.String.Accepts(DType.Currency));
-            Assert.False(DType.String.Accepts(DType.DateTime));
-            Assert.False(DType.String.Accepts(DType.Date));
-            Assert.False(DType.String.Accepts(DType.Time));
-            Assert.False(DType.String.Accepts(DType.Boolean));
-            Assert.False(DType.String.Accepts(DType.EmptyRecord));
-            Assert.False(DType.String.Accepts(DType.EmptyTable));
+            Assert.False(DType.String.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Image.Accepts(DType.Boolean));
-            Assert.False(DType.Image.Accepts(DType.Number));
-            Assert.False(DType.Image.Accepts(DType.String));
-            Assert.False(DType.Image.Accepts(DType.DateTime));
-            Assert.False(DType.Image.Accepts(DType.Date));
-            Assert.False(DType.Image.Accepts(DType.Time));
-            Assert.False(DType.Image.Accepts(DType.Hyperlink));
-            Assert.False(DType.Image.Accepts(DType.Currency));
-            Assert.False(DType.Image.Accepts(DType.Media));
-            Assert.False(DType.Image.Accepts(DType.Color));
-            Assert.False(DType.Image.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Image.Accepts(DType.EmptyTable));
-            Assert.False(DType.Image.Accepts(DType.Guid));
+            Assert.False(DType.Image.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.PenImage.Accepts(DType.Boolean));
-            Assert.False(DType.PenImage.Accepts(DType.Number));
-            Assert.False(DType.PenImage.Accepts(DType.String));
-            Assert.False(DType.PenImage.Accepts(DType.Image));
-            Assert.False(DType.PenImage.Accepts(DType.DateTime));
-            Assert.False(DType.PenImage.Accepts(DType.Date));
-            Assert.False(DType.PenImage.Accepts(DType.Time));
-            Assert.False(DType.PenImage.Accepts(DType.Hyperlink));
-            Assert.False(DType.PenImage.Accepts(DType.Currency));
-            Assert.False(DType.PenImage.Accepts(DType.Media));
-            Assert.False(DType.PenImage.Accepts(DType.Blob));
-            Assert.False(DType.PenImage.Accepts(DType.Color));
-            Assert.False(DType.PenImage.Accepts(DType.EmptyRecord));
-            Assert.False(DType.PenImage.Accepts(DType.EmptyTable));
-            Assert.False(DType.PenImage.Accepts(DType.Guid));
+            Assert.False(DType.PenImage.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Media.Accepts(DType.Boolean));
-            Assert.False(DType.Media.Accepts(DType.Number));
-            Assert.False(DType.Media.Accepts(DType.String));
-            Assert.False(DType.Media.Accepts(DType.DateTime));
-            Assert.False(DType.Media.Accepts(DType.Date));
-            Assert.False(DType.Media.Accepts(DType.Time));
-            Assert.False(DType.Media.Accepts(DType.Image));
-            Assert.False(DType.Media.Accepts(DType.Hyperlink));
-            Assert.False(DType.Media.Accepts(DType.Currency));
-            Assert.False(DType.Media.Accepts(DType.Color));
-            Assert.False(DType.Media.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Media.Accepts(DType.EmptyTable));
-            Assert.False(DType.Media.Accepts(DType.Guid));
+            Assert.False(DType.Media.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Blob.Accepts(DType.Boolean));
-            Assert.False(DType.Blob.Accepts(DType.Number));
-            Assert.False(DType.Blob.Accepts(DType.String));
-            Assert.False(DType.Blob.Accepts(DType.DateTime));
-            Assert.False(DType.Blob.Accepts(DType.Date));
-            Assert.False(DType.Blob.Accepts(DType.Time));
-            Assert.False(DType.Blob.Accepts(DType.Image));
-            Assert.False(DType.Blob.Accepts(DType.Hyperlink));
-            Assert.False(DType.Blob.Accepts(DType.Currency));
-            Assert.False(DType.Blob.Accepts(DType.Color));
-            Assert.False(DType.Blob.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Blob.Accepts(DType.EmptyTable));
-            Assert.False(DType.Blob.Accepts(DType.Guid));
+            Assert.False(DType.Blob.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Hyperlink.Accepts(DType.Boolean));
-            Assert.False(DType.Hyperlink.Accepts(DType.Number));
-            Assert.False(DType.Hyperlink.Accepts(DType.String));
-            Assert.False(DType.Hyperlink.Accepts(DType.DateTime));
-            Assert.False(DType.Hyperlink.Accepts(DType.Date));
-            Assert.False(DType.Hyperlink.Accepts(DType.Time));
-            Assert.False(DType.Hyperlink.Accepts(DType.Currency));
-            Assert.False(DType.Hyperlink.Accepts(DType.Color));
-            Assert.False(DType.Hyperlink.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Hyperlink.Accepts(DType.EmptyTable));
-            Assert.False(DType.Hyperlink.Accepts(DType.Guid));
+            Assert.False(DType.Hyperlink.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.DateTime.Accepts(DType.Boolean));
-            Assert.False(DType.DateTime.Accepts(DType.Number));
-            Assert.False(DType.DateTime.Accepts(DType.String));
-            Assert.False(DType.DateTime.Accepts(DType.Hyperlink));
-            Assert.False(DType.DateTime.Accepts(DType.Image));
-            Assert.False(DType.DateTime.Accepts(DType.Media));
-            Assert.False(DType.DateTime.Accepts(DType.Blob));
-            Assert.False(DType.DateTime.Accepts(DType.Currency));
-            Assert.False(DType.DateTime.Accepts(DType.Color));
-            Assert.False(DType.DateTime.Accepts(DType.EmptyRecord));
-            Assert.False(DType.DateTime.Accepts(DType.EmptyTable));
-            Assert.False(DType.DateTime.Accepts(DType.Guid));
+            Assert.False(DType.DateTime.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Date.Accepts(DType.Boolean));
-            Assert.False(DType.Date.Accepts(DType.Number));
-            Assert.False(DType.Date.Accepts(DType.String));
-            Assert.False(DType.Date.Accepts(DType.Hyperlink));
-            Assert.False(DType.Date.Accepts(DType.Image));
-            Assert.False(DType.Date.Accepts(DType.Media));
-            Assert.False(DType.Date.Accepts(DType.Blob));
-            Assert.False(DType.Date.Accepts(DType.Currency));
-            Assert.False(DType.Date.Accepts(DType.Color));
-            Assert.False(DType.Date.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Date.Accepts(DType.EmptyTable));
-            Assert.False(DType.Date.Accepts(DType.DateTime));
-            Assert.False(DType.Date.Accepts(DType.Time));
-            Assert.False(DType.Date.Accepts(DType.Guid));
+            Assert.False(DType.Date.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Time.Accepts(DType.Boolean));
-            Assert.False(DType.Time.Accepts(DType.Number));
-            Assert.False(DType.Time.Accepts(DType.String));
-            Assert.False(DType.Time.Accepts(DType.Hyperlink));
-            Assert.False(DType.Time.Accepts(DType.Image));
-            Assert.False(DType.Time.Accepts(DType.Media));
-            Assert.False(DType.Time.Accepts(DType.Blob));
-            Assert.False(DType.Time.Accepts(DType.Currency));
-            Assert.False(DType.Time.Accepts(DType.Color));
-            Assert.False(DType.Time.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Time.Accepts(DType.EmptyTable));
-            Assert.False(DType.Time.Accepts(DType.DateTime));
-            Assert.False(DType.Time.Accepts(DType.Date));
-            Assert.False(DType.Time.Accepts(DType.Guid));
+            Assert.False(DType.Time.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Currency.Accepts(DType.Boolean));
-            Assert.False(DType.Currency.Accepts(DType.Number));
-            Assert.False(DType.Currency.Accepts(DType.String));
-            Assert.False(DType.Currency.Accepts(DType.Hyperlink));
-            Assert.False(DType.Currency.Accepts(DType.Image));
-            Assert.False(DType.Currency.Accepts(DType.Media));
-            Assert.False(DType.Currency.Accepts(DType.Blob));
-            Assert.False(DType.Currency.Accepts(DType.DateTime));
-            Assert.False(DType.Currency.Accepts(DType.Date));
-            Assert.False(DType.Currency.Accepts(DType.Color));
-            Assert.False(DType.Currency.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Currency.Accepts(DType.EmptyTable));
-            Assert.False(DType.Currency.Accepts(DType.Guid));
+            Assert.False(DType.Currency.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Color, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.Color.Accepts(DType.Boolean));
-            Assert.False(DType.Color.Accepts(DType.Number));
-            Assert.False(DType.Color.Accepts(DType.String));
-            Assert.False(DType.Color.Accepts(DType.Hyperlink));
-            Assert.False(DType.Color.Accepts(DType.Image));
-            Assert.False(DType.Color.Accepts(DType.Media));
-            Assert.False(DType.Color.Accepts(DType.Blob));
-            Assert.False(DType.Color.Accepts(DType.DateTime));
-            Assert.False(DType.Color.Accepts(DType.Date));
-            Assert.False(DType.Color.Accepts(DType.Currency));
-            Assert.False(DType.Color.Accepts(DType.EmptyRecord));
-            Assert.False(DType.Color.Accepts(DType.EmptyTable));
-            Assert.False(DType.Color.Accepts(DType.Guid));
+            Assert.False(DType.Color.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Hyperlink, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Image, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Media, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Blob, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.Accepts(DType.Guid, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.EmptyRecord.Accepts(AttachmentTableType));
-            Assert.False(AttachmentTableType.Accepts(DType.EmptyRecord));
+            Assert.False(DType.EmptyRecord.Accepts(AttachmentTableType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(AttachmentTableType.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.EmptyTable.Accepts(AttachmentTableType));
-            Assert.False(AttachmentTableType.Accepts(DType.EmptyTable));
+            Assert.True(DType.EmptyTable.Accepts(AttachmentTableType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(AttachmentTableType.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.EmptyRecord.Accepts(AttachmentTableType.ToRecord()));
+            Assert.True(DType.EmptyRecord.Accepts(AttachmentTableType.ToRecord(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.EmptyRecord.Accepts(AttachmentRecordType));
-            Assert.False(AttachmentRecordType.Accepts(DType.EmptyRecord));
+            Assert.True(DType.EmptyRecord.Accepts(AttachmentRecordType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(AttachmentRecordType.Accepts(DType.EmptyRecord, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.EmptyTable.Accepts(AttachmentRecordType));
-            Assert.False(AttachmentRecordType.Accepts(DType.EmptyTable));
+            Assert.False(DType.EmptyTable.Accepts(AttachmentRecordType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(AttachmentRecordType.Accepts(DType.EmptyTable, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.EmptyTable.Accepts(AttachmentRecordType.ToTable()));
+            Assert.True(DType.EmptyTable.Accepts(AttachmentRecordType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
         }
 
         [Fact]
@@ -805,21 +827,24 @@ namespace Microsoft.PowerFx.Tests
                     new TypedName(DType.Number, new DName("C"))
                 });
 
-            Assert.True(type1 == type2);
-            Assert.False(type1 != type2);
-            Assert.True(type1.Equals(type2));
-            Assert.Equal(type1.ToString(), type2.ToString());
-            Assert.True(type1.GetHashCode() == type2.GetHashCode());
-            Assert.True(type1.Accepts(type2));
-            Assert.True(type2.Accepts(type1));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                Assert.True(type1 == type2);
+                Assert.False(type1 != type2);
+                Assert.True(type1.Equals(type2));
+                Assert.Equal(type1.ToString(), type2.ToString());
+                Assert.True(type1.GetHashCode() == type2.GetHashCode());
+                Assert.True(type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            type2 = DType.CreateRecord(type1.GetNames(DPath.Root));
-            Assert.False(type1 == type2);
-            Assert.True(type1 != type2);
-            Assert.False(type1.Equals(type2));
-            Assert.Equal("![A:n, B:n, C:n]", type2.ToString());
-            Assert.False(type1.Accepts(type2));
-            Assert.False(type2.Accepts(type1));
+                type2 = DType.CreateRecord(type1.GetNames(DPath.Root));
+                Assert.False(type1 == type2);
+                Assert.True(type1 != type2);
+                Assert.False(type1.Equals(type2));
+                Assert.Equal("![A:n, B:n, C:n]", type2.ToString());
+                Assert.False(type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.False(type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            }
 
             type = type2;
             type2 = DType.CreateRecord(type1.GetNames(DPath.Root).ToArray());
@@ -888,8 +913,11 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(fError);
             Assert.Equal("*[E:e, N:n, Q:b, Y:*[D:s, E:s, F:b, G:e]]", type7.ToString());
 
-            Assert.False(type7.Accepts(type6));
-            Assert.True(type6.Accepts(type7));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                Assert.False(type7.Accepts(type6, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(type6.Accepts(type7, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            }
 
             type7 = type7.DropMulti(ref fError, DPath.Root, new DName("N"), new DName("E"));
             Assert.False(fError);
@@ -913,20 +941,23 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(fError);
             Assert.Equal("*[A:n, B:n, C:n, X:*[Q:b, Y:*[D:s, E:s]]]", type8.ToString());
 
-            Assert.False(type8.Accepts(type1));
-            Assert.True(type1.Accepts(type8));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                Assert.False(type8.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(type1.Accepts(type8, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            Assert.False(DType.String.Accepts(DType.Number));
+                Assert.False(DType.String.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            // Accepts
-            Assert.True(
-                !DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.Number)
-                    .Accepts(DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.Error)) &&
-                !fError);
-            Assert.True(
-                DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.Number)
-                    .Accepts(DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.ObjNull)) &&
-                !fError);
+                // Accepts
+                Assert.True(
+                    !DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.Number)
+                        .Accepts(DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.Error), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules) &&
+                    !fError);
+                Assert.True(
+                    DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.Number)
+                        .Accepts(DType.EmptyRecord.Add(ref fError, DPath.Root, new DName("A"), DType.ObjNull), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules) &&
+                    !fError);
+            }
 
             // Testing duplicate names in the construction. Last one should win.
             var type11 = DType.CreateTable(
@@ -951,68 +982,96 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%n[A:0, B:1, C:2, D:3]", out DType type) && type.IsEnum);
             Assert.True(DType.TryParse("%n[A:0, B:1, C:2, D:3]", out DType type2) && type2.IsEnum);
 
-            Assert.True(type == type2);
-            Assert.True(type.Accepts(type2));
-            Assert.True(type2.Accepts(type));
-            Assert.False(type.Accepts(DType.Number));
-            Assert.True(DType.Number.Accepts(type));
+            foreach (var usePowerFxV1CompatibilityRules in new[] { false, true })
+            {
+                Assert.True(type == type2);
+                Assert.True(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.False(type.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.TryParse("%n[A:0]", out type2) && type2.IsEnum);
-            Assert.False(type == type2);
-            Assert.True(type.Accepts(type2)); // The enum type with more values accepts an enum value from the type with less values.
-            Assert.False(type2.Accepts(type)); // The enum type with less values does not accept values from the larger enum.
-            Assert.False(type2.Accepts(DType.Number));
-            Assert.True(DType.Number.Accepts(type2));
+                Assert.True(DType.TryParse("%n[A:0]", out type2) && type2.IsEnum);
+                Assert.False(type == type2);
+                Assert.True(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)); // The enum type with more values accepts an enum value from the type with less values.
+                Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)); // The enum type with less values does not accept values from the larger enum.
+                Assert.False(type2.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.TryParse("%s[A:\"letter\"]", out type2) && type2.IsEnum);
-            Assert.False(type == type2);
-            Assert.False(type.Accepts(type2));
-            Assert.False(type2.Accepts(type));
-            Assert.False(type2.Accepts(DType.String));
-            Assert.True(DType.String.Accepts(type2));
+                Assert.True(DType.TryParse("%s[A:\"letter\"]", out type2) && type2.IsEnum);
+                Assert.False(type == type2);
+                Assert.False(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.False(type2.Accepts(DType.String, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.TryParse("%b[A:true, B:false]", out type2) && type2.IsEnum);
-            Assert.False(type == type2);
-            Assert.False(type.Accepts(type2));
-            Assert.False(type2.Accepts(type));
-            Assert.False(type2.Accepts(DType.Boolean));
-            Assert.True(DType.Boolean.Accepts(type2));
+                Assert.True(DType.TryParse("%b[A:true, B:false]", out type2) && type2.IsEnum);
+                Assert.False(type == type2);
+                Assert.False(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.False(type2.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Boolean.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.TryParse("%n[A:12345, B:1, C:2, D:3]", out type2) && type2.IsEnum);
-            Assert.False(type == type2);
-            Assert.False(type.Accepts(type2));
-            Assert.False(type2.Accepts(type));
-            Assert.False(type2.Accepts(DType.Number));
-            Assert.True(DType.Number.Accepts(type2));
+                Assert.True(DType.TryParse("%n[A:12345, B:1, C:2, D:3]", out type2) && type2.IsEnum);
+                Assert.False(type == type2);
+                Assert.False(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.False(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.False(type2.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.True(DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.True(DType.TryParse("%s['Segoe UI':\"segoe ui\", 'bah humbug':\"bah and then humbug\"]", out type2) && type2.IsEnum);
-            Assert.True(DType.String.Accepts(type2));
-            Assert.Equal("%s['Segoe UI':\"segoe ui\", 'bah humbug':\"bah and then humbug\"]", type2.ToString());
+                Assert.True(DType.TryParse("%s['Segoe UI':\"segoe ui\", 'bah humbug':\"bah and then humbug\"]", out type2) && type2.IsEnum);
+                Assert.True(DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                Assert.Equal("%s['Segoe UI':\"segoe ui\", 'bah humbug':\"bah and then humbug\"]", type2.ToString());
+            }
         }
 
-        [Fact]
-        public void TestDefaultSchemaDifference()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestDefaultSchemaDifference(bool usePowerFxV1CompatibilityRules)
         {
             var left = DType.CreateEnum(DType.ObjNull, Enumerable.Empty<KeyValuePair<DName, object>>());
             var right = DType.CreateEnum(DType.Number, Enumerable.Empty<KeyValuePair<DName, object>>());
 
             // Test a failing path
-            Assert.False(left.Accepts(right, out KeyValuePair<string, DType> testSchemaDifference, out DType typeSchemaDifferenceType));
+            Assert.False(
+                left.Accepts(
+                    right, 
+                    out KeyValuePair<string, DType> testSchemaDifference, 
+                    out DType typeSchemaDifferenceType,
+                    exact: true,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(testSchemaDifference.Value, DType.Invalid);
 
             // Test the TreeAccepts path
             left = DType.CreateRecord(Enumerable.Empty<TypedName>());
-            Assert.True(left.Accepts(left, out testSchemaDifference, out typeSchemaDifferenceType));
+            Assert.True(
+                left.Accepts(
+                    left, 
+                    out testSchemaDifference, 
+                    out typeSchemaDifferenceType,
+                    exact: true,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(testSchemaDifference.Value, DType.Invalid);
 
             // Test the most immediate path
             right = DType.ObjNull;
-            Assert.True(left.Accepts(right, out testSchemaDifference, out typeSchemaDifferenceType));
+            Assert.True(
+                left.Accepts(
+                    right, 
+                    out testSchemaDifference,
+                    out typeSchemaDifferenceType,
+                    exact: true,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.Equal(testSchemaDifference.Value, DType.Invalid);
         }
 
-        [Fact]
-        public void TestDTypeSupertype()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void TestDTypeSupertype(bool usePowerFxV1CompatibilityRules)
         {
             // *[A:n,B:s,C:b,D:n]
             var type1 = DType.CreateTable(
@@ -1065,36 +1124,36 @@ namespace Microsoft.PowerFx.Tests
                     new TypedName(DType.ObjNull, new DName("F"))), new DName("C")));
 
             // Output should be *[A:n,B:s,C:*[D:n]]
-            var superType = DType.Supertype(type3, type4);
+            var superType = DType.Supertype(type3, type4, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, C:*[D:n]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type4, type3);
+            superType = DType.Supertype(type4, type3, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, C:*[D:n]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
             // Output should be *[A:n,B:s,D:n]
-            superType = DType.Supertype(type1, type2);
+            superType = DType.Supertype(type1, type2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, D:n]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type2, type1);
+            superType = DType.Supertype(type2, type1, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, D:n]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
             // Table with null value
             // Output should be *[A:n,B:s,C:b,D:n]
-            superType = DType.Supertype(type1, type2s);
+            superType = DType.Supertype(type1, type2s, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, C:b, D:n]", superType.ToString());
             Assert.Equal(4, superType.ChildCount);
-            superType = DType.Supertype(type2s, type1);
+            superType = DType.Supertype(type2s, type1, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, C:b, D:n]", superType.ToString());
             Assert.Equal(4, superType.ChildCount);
 
             // Table with null value
             // Output should be *[A:n,B:s,C:*[D:n,F:d]]
-            superType = DType.Supertype(type3, type4s);
+            superType = DType.Supertype(type3, type4s, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, C:*[D:n, F:d]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type4s, type3);
+            superType = DType.Supertype(type4s, type3, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("*[A:n, B:s, C:*[D:n, F:d]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
@@ -1148,167 +1207,167 @@ namespace Microsoft.PowerFx.Tests
                     new TypedName(DType.Number, new DName("D")),
                     new TypedName(DType.ObjNull, new DName("F"))), new DName("C")));
 
-            superType = DType.Supertype(type5, type6);
+            superType = DType.Supertype(type5, type6, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, D:n]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type6, type5);
+            superType = DType.Supertype(type6, type5, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, D:n]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
             // Record with null value
-            superType = DType.Supertype(type5, type6s);
+            superType = DType.Supertype(type5, type6s, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:b, D:n]", superType.ToString());
             Assert.Equal(4, superType.ChildCount);
-            superType = DType.Supertype(type6s, type5);
+            superType = DType.Supertype(type6s, type5, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:b, D:n]", superType.ToString());
             Assert.Equal(4, superType.ChildCount);
 
-            superType = DType.Supertype(type7, type8);
+            superType = DType.Supertype(type7, type8, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![D:n]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type8, type7);
+            superType = DType.Supertype(type8, type7, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![D:n]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
             // Record with null value
-            superType = DType.Supertype(type7, type8s);
+            superType = DType.Supertype(type7, type8s, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![D:n, F:d]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type8s, type7);
+            superType = DType.Supertype(type8s, type7, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![D:n, F:d]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
-            superType = DType.Supertype(DType.Number, DType.Number);
+            superType = DType.Supertype(DType.Number, DType.Number, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(0, superType.ChildCount);
 
-            superType = DType.Supertype(DType.Number, DType.String);
+            superType = DType.Supertype(DType.Number, DType.String, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Error, superType.Kind);
 
-            superType = DType.Supertype(DType.Unknown, DType.String);
+            superType = DType.Supertype(DType.Unknown, DType.String, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.String, superType.Kind);
 
-            superType = DType.Supertype(DType.String, DType.Unknown);
+            superType = DType.Supertype(DType.String, DType.Unknown, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.String, superType.Kind);
 
-            superType = DType.Supertype(DType.Unknown, DType.Unknown);
+            superType = DType.Supertype(DType.Unknown, DType.Unknown, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Unknown, superType.Kind);
 
-            superType = DType.Supertype(DType.Date, DType.Time);
-            Assert.Equal(DKind.DateTime, superType.Kind);
+            superType = DType.Supertype(DType.Date, DType.Time, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.DateTime, superType.Kind);
 
-            superType = DType.Supertype(DType.DateTime, DType.Time);
-            Assert.Equal(DKind.DateTime, superType.Kind);
+            superType = DType.Supertype(DType.DateTime, DType.Time, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.DateTime, superType.Kind);
 
-            superType = DType.Supertype(DType.DateTime, DType.Date);
-            Assert.Equal(DKind.DateTime, superType.Kind);
+            superType = DType.Supertype(DType.DateTime, DType.Date, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.DateTime, superType.Kind);
 
-            superType = DType.Supertype(DType.Time, DType.DateTime);
-            Assert.Equal(DKind.DateTime, superType.Kind);
+            superType = DType.Supertype(DType.Time, DType.DateTime, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.DateTime, superType.Kind);
 
-            superType = DType.Supertype(DType.Date, DType.DateTime);
-            Assert.Equal(DKind.DateTime, superType.Kind);
+            superType = DType.Supertype(DType.Date, DType.DateTime, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.DateTime, superType.Kind);
 
-            superType = DType.Supertype(DType.Image, DType.PenImage);
-            Assert.Equal(DKind.Image, superType.Kind);
+            superType = DType.Supertype(DType.Image, DType.PenImage, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Image, superType.Kind);
 
-            superType = DType.Supertype(DType.PenImage, DType.Image);
-            Assert.Equal(DKind.Image, superType.Kind);
+            superType = DType.Supertype(DType.PenImage, DType.Image, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Image, superType.Kind);
 
-            superType = DType.Supertype(DType.Image, DType.Media);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Image, DType.Media, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Media, DType.Image);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Media, DType.Image, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Image, DType.Blob);
-            Assert.Equal(DKind.Image, superType.Kind);
+            superType = DType.Supertype(DType.Image, DType.Blob, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Image, superType.Kind);
 
-            superType = DType.Supertype(DType.Blob, DType.Image);
-            Assert.Equal(DKind.Image, superType.Kind);
+            superType = DType.Supertype(DType.Blob, DType.Image, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Image, superType.Kind);
 
-            superType = DType.Supertype(DType.Blob, DType.Media);
-            Assert.Equal(DKind.Media, superType.Kind);
+            superType = DType.Supertype(DType.Blob, DType.Media, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Media, superType.Kind);
 
-            superType = DType.Supertype(DType.Media, DType.Blob);
-            Assert.Equal(DKind.Media, superType.Kind);
+            superType = DType.Supertype(DType.Media, DType.Blob, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Media, superType.Kind);
 
-            superType = DType.Supertype(DType.Image, DType.Hyperlink);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Image, DType.Hyperlink, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Media, DType.Hyperlink);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Media, DType.Hyperlink, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Blob, DType.Hyperlink);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Blob, DType.Hyperlink, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Hyperlink, DType.Image);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Hyperlink, DType.Image, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Hyperlink, DType.Media);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Hyperlink, DType.Media, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Hyperlink, DType.Blob);
-            Assert.Equal(DKind.Hyperlink, superType.Kind);
+            superType = DType.Supertype(DType.Hyperlink, DType.Blob, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Currency, DType.DateTime);
-            Assert.Equal(DKind.Error, superType.Kind);
+            superType = DType.Supertype(DType.Currency, DType.DateTime, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Error, superType.Kind);
 
-            superType = DType.Supertype(DType.Currency, DType.Date);
-            Assert.Equal(DKind.Error, superType.Kind);
+            superType = DType.Supertype(DType.Currency, DType.Date, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Error, superType.Kind);
 
-            superType = DType.Supertype(DType.Currency, DType.Time);
-            Assert.Equal(DKind.Error, superType.Kind);
+            superType = DType.Supertype(DType.Currency, DType.Time, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Error, superType.Kind);
 
-            superType = DType.Supertype(DType.DateTime, DType.Currency);
-            Assert.Equal(DKind.Error, superType.Kind);
+            superType = DType.Supertype(DType.DateTime, DType.Currency, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Error, superType.Kind);
 
-            superType = DType.Supertype(DType.Date, DType.Currency);
-            Assert.Equal(DKind.Error, superType.Kind);
+            superType = DType.Supertype(DType.Date, DType.Currency, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Error, superType.Kind);
 
-            superType = DType.Supertype(DType.Time, DType.Currency);
-            Assert.Equal(DKind.Error, superType.Kind);
+            superType = DType.Supertype(DType.Time, DType.Currency, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Error, superType.Kind);
 
-            superType = DType.Supertype(DType.Guid, DType.String);
-            Assert.Equal(DKind.String, superType.Kind);
+            superType = DType.Supertype(DType.Guid, DType.String, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.String, superType.Kind);
 
-            superType = DType.Supertype(DType.Guid, DType.Number);
-            Assert.Equal(DKind.Error, superType.Kind);
+            superType = DType.Supertype(DType.Guid, DType.Number, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            Assert.Equal(usePowerFxV1CompatibilityRules ? DKind.Error : DKind.Error, superType.Kind);
 
             // ObjNull is compatable with every DType except for Error
-            superType = DType.Supertype(DType.Number, DType.ObjNull);
+            superType = DType.Supertype(DType.Number, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Number, superType.Kind);
 
-            superType = DType.Supertype(DType.String, DType.ObjNull);
+            superType = DType.Supertype(DType.String, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.String, superType.Kind);
 
-            superType = DType.Supertype(DType.Date, DType.ObjNull);
+            superType = DType.Supertype(DType.Date, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Date, superType.Kind);
 
-            superType = DType.Supertype(DType.Time, DType.ObjNull);
+            superType = DType.Supertype(DType.Time, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Time, superType.Kind);
 
-            superType = DType.Supertype(DType.DateTime, DType.ObjNull);
+            superType = DType.Supertype(DType.DateTime, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.DateTime, superType.Kind);
 
-            superType = DType.Supertype(DType.Image, DType.ObjNull);
+            superType = DType.Supertype(DType.Image, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Image, superType.Kind);
 
-            superType = DType.Supertype(DType.PenImage, DType.ObjNull);
+            superType = DType.Supertype(DType.PenImage, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.PenImage, superType.Kind);
 
-            superType = DType.Supertype(DType.Media, DType.ObjNull);
+            superType = DType.Supertype(DType.Media, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Media, superType.Kind);
 
-            superType = DType.Supertype(DType.Blob, DType.ObjNull);
+            superType = DType.Supertype(DType.Blob, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Blob, superType.Kind);
 
-            superType = DType.Supertype(DType.Hyperlink, DType.ObjNull);
+            superType = DType.Supertype(DType.Hyperlink, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Hyperlink, superType.Kind);
 
-            superType = DType.Supertype(DType.Currency, DType.ObjNull);
+            superType = DType.Supertype(DType.Currency, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Currency, superType.Kind);
 
-            superType = DType.Supertype(DType.Unknown, DType.ObjNull);
+            superType = DType.Supertype(DType.Unknown, DType.ObjNull, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Unknown, superType.Kind);
 
             // ![A:t, B:s]
@@ -1321,9 +1380,9 @@ namespace Microsoft.PowerFx.Tests
                 new TypedName(DType.DateTime, new DName("A")),
                 new TypedName(DType.Boolean, new DName("B")));
 
-            superType = DType.Supertype(type9, type10);
+            superType = DType.Supertype(type9, type10, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Record, superType.Kind);
-            Assert.Equal(1, superType.ChildCount); // ![A:n]
+            Assert.Equal(usePowerFxV1CompatibilityRules ? 0 : 1, superType.ChildCount); // ![A:n]
 
             // ![A:n,B:s,C:![D:n,F:d]]
             var type11 = DType.CreateRecord(
@@ -1343,10 +1402,10 @@ namespace Microsoft.PowerFx.Tests
                     new TypedName(DType.Boolean, new DName("D")),
                     new TypedName(DType.String, new DName("F"))), new DName("C")));
 
-            superType = DType.Supertype(type11, type12);
+            superType = DType.Supertype(type11, type12, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type12, type11);
+            superType = DType.Supertype(type12, type11, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
@@ -1368,10 +1427,10 @@ namespace Microsoft.PowerFx.Tests
                     new TypedName(DType.Boolean, new DName("D")),
                     new TypedName(DType.String, new DName("F"))), new DName("C")));
 
-            superType = DType.Supertype(type13, type14);
+            superType = DType.Supertype(type13, type14, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![F:s]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
-            superType = DType.Supertype(type14, type13);
+            superType = DType.Supertype(type14, type13, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![A:n, B:s, C:![F:s]]", superType.ToString());
             Assert.Equal(3, superType.ChildCount);
 
@@ -1387,13 +1446,13 @@ namespace Microsoft.PowerFx.Tests
             // ![A:n,B:s,C:![D:n,F:s]]
             var type16 = DType.CreateRecord(new TypedName(DType.String, new DName("E")));
 
-            superType = DType.Supertype(type15, type16);
+            superType = DType.Supertype(type15, type16, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![E:s]", superType.ToString());
-            superType = DType.Supertype(type16, type15);
+            superType = DType.Supertype(type16, type15, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal("![E:s]", superType.ToString());
 
             // supertype of a record with a table:
-            superType = DType.Supertype(type4, type14);
+            superType = DType.Supertype(type4, type14, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Assert.Equal(DKind.Error, superType.Kind);
 
             foreach (var dType in _dTypes)
@@ -1401,7 +1460,7 @@ namespace Microsoft.PowerFx.Tests
                 // Deferred is subtype of all except unknown and void.
                 if (dType != DType.Unknown && dType != DType.Void)
                 {
-                    superType = DType.Supertype(dType, DType.Deferred);
+                    superType = DType.Supertype(dType, DType.Deferred, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                     Assert.Equal(dType.Kind, superType.Kind);
                 }
             }
@@ -1680,488 +1739,493 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.TryParse("*[\"\"\":n]", out type));
         }
 
-        [Fact]
-        public void TestCoercesTo()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestCoercesTo(bool usePowerFxV1CompatibilityRules)
         {
             // Coercion to string
-            Assert.True(DType.Guid.CoercesTo(DType.String));
-            Assert.True(DType.Boolean.CoercesTo(DType.String));
-            Assert.True(DType.Number.CoercesTo(DType.String));
-            Assert.True(DType.Currency.CoercesTo(DType.String));
-            Assert.False(DType.Color.CoercesTo(DType.String));
-            Assert.True(DType.DateTime.CoercesTo(DType.String));
-            Assert.True(DType.Date.CoercesTo(DType.String));
-            Assert.True(DType.Time.CoercesTo(DType.String));
-            Assert.True(DType.String.CoercesTo(DType.String));
-            Assert.True(DType.Hyperlink.CoercesTo(DType.String));
-            Assert.True(DType.Image.CoercesTo(DType.String));
-            Assert.True(DType.PenImage.CoercesTo(DType.String));
-            Assert.True(DType.Media.CoercesTo(DType.String));
-            Assert.True(DType.Blob.CoercesTo(DType.String));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.String));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.String));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.String));
-            Assert.False(DType.TryParse("%n[A:2]", out DType type) && type.CoercesTo(DType.String));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.String));
-            Assert.True(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.String));
-            Assert.True(DType.ObjNull.CoercesTo(DType.String));
-            Assert.False(DType.Error.CoercesTo(DType.String));
-            Assert.True(DType.Deferred.CoercesTo(DType.String));
-            Assert.False(DType.Void.CoercesTo(DType.String));
+            Assert.True(DType.Guid.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Boolean.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.DateTime.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Date.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Time.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Hyperlink.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Image.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.PenImage.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Media.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Blob.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out DType type) && type.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to number
-            Assert.True(DType.Boolean.CoercesTo(DType.Number));
-            Assert.True(DType.Number.CoercesTo(DType.Number));
-            Assert.True(DType.Currency.CoercesTo(DType.Number));
-            Assert.False(DType.Color.CoercesTo(DType.Number));
-            Assert.True(DType.DateTime.CoercesTo(DType.Number));
-            Assert.True(DType.Date.CoercesTo(DType.Number));
-            Assert.True(DType.Time.CoercesTo(DType.Number));
-            Assert.True(DType.String.CoercesTo(DType.Number));
-            Assert.False(DType.Guid.CoercesTo(DType.Number));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.Number));
-            Assert.False(DType.Image.CoercesTo(DType.Number));
-            Assert.False(DType.PenImage.CoercesTo(DType.Number));
-            Assert.False(DType.Media.CoercesTo(DType.Number));
-            Assert.False(DType.Blob.CoercesTo(DType.Number));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Number));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Number));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Number));
-            Assert.True(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Number));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Number));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Number));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Number));
-            Assert.False(DType.Error.CoercesTo(DType.Number));
-            Assert.True(DType.Deferred.CoercesTo(DType.Number));
-            Assert.False(DType.Void.CoercesTo(DType.Number));
+            Assert.True(DType.Boolean.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.DateTime.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Date.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Time.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to boolean
-            Assert.True(DType.Boolean.CoercesTo(DType.Boolean));
-            Assert.True(DType.Number.CoercesTo(DType.Boolean));
-            Assert.True(DType.Currency.CoercesTo(DType.Boolean));
-            Assert.False(DType.Color.CoercesTo(DType.Boolean));
-            Assert.False(DType.DateTime.CoercesTo(DType.Boolean));
-            Assert.False(DType.Date.CoercesTo(DType.Boolean));
-            Assert.False(DType.Time.CoercesTo(DType.Boolean));
-            Assert.True(DType.String.CoercesTo(DType.Boolean));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.Boolean));
-            Assert.False(DType.Image.CoercesTo(DType.Boolean));
-            Assert.False(DType.PenImage.CoercesTo(DType.Boolean));
-            Assert.False(DType.Media.CoercesTo(DType.Boolean));
-            Assert.False(DType.Blob.CoercesTo(DType.Boolean));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Boolean));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Boolean));
-            Assert.False(DType.Guid.CoercesTo(DType.Boolean));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Boolean));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Boolean));
-            Assert.True(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Boolean));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Boolean));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Boolean));
-            Assert.False(DType.Error.CoercesTo(DType.Boolean));
-            Assert.True(DType.Deferred.CoercesTo(DType.Boolean));
-            Assert.False(DType.Void.CoercesTo(DType.Boolean));
+            Assert.True(DType.Boolean.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to currency
-            Assert.True(DType.Boolean.CoercesTo(DType.Currency));
-            Assert.True(DType.Number.CoercesTo(DType.Currency));
-            Assert.True(DType.Currency.CoercesTo(DType.Currency));
-            Assert.False(DType.Color.CoercesTo(DType.Currency));
-            Assert.False(DType.DateTime.CoercesTo(DType.Currency));
-            Assert.False(DType.Date.CoercesTo(DType.Currency));
-            Assert.False(DType.Time.CoercesTo(DType.Currency));
-            Assert.True(DType.String.CoercesTo(DType.Currency));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.Currency));
-            Assert.False(DType.Image.CoercesTo(DType.Currency));
-            Assert.False(DType.PenImage.CoercesTo(DType.Currency));
-            Assert.False(DType.Media.CoercesTo(DType.Currency));
-            Assert.False(DType.Blob.CoercesTo(DType.Currency));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Currency));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Currency));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Currency));
-            Assert.False(DType.Guid.CoercesTo(DType.Currency));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Currency));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Currency));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Currency));
-            Assert.True(DType.TryParse("%$[A:2]", out type) && type.CoercesTo(DType.Currency));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Currency));
-            Assert.False(DType.Error.CoercesTo(DType.Currency));
-            Assert.True(DType.Deferred.CoercesTo(DType.Currency));
-            Assert.False(DType.Void.CoercesTo(DType.Currency));
+            Assert.True(DType.Boolean.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%$[A:2]", out type) && type.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Currency, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to color
-            Assert.False(DType.Boolean.CoercesTo(DType.Color));
-            Assert.False(DType.Number.CoercesTo(DType.Color));
-            Assert.False(DType.Currency.CoercesTo(DType.Color));
-            Assert.True(DType.Color.CoercesTo(DType.Color));
-            Assert.False(DType.DateTime.CoercesTo(DType.Color));
-            Assert.False(DType.Date.CoercesTo(DType.Color));
-            Assert.False(DType.Time.CoercesTo(DType.Color));
-            Assert.False(DType.String.CoercesTo(DType.Color));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.Color));
-            Assert.False(DType.Image.CoercesTo(DType.Color));
-            Assert.False(DType.PenImage.CoercesTo(DType.Color));
-            Assert.False(DType.Media.CoercesTo(DType.Color));
-            Assert.False(DType.Blob.CoercesTo(DType.Color));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Color));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Color));
-            Assert.False(DType.Guid.CoercesTo(DType.Color));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Color));
-            Assert.True(DType.TryParse("%c[A:2]", out type) && type.CoercesTo(DType.Color));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Color));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Color));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Color));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Color));
-            Assert.False(DType.Error.CoercesTo(DType.Color));
-            Assert.True(DType.Deferred.CoercesTo(DType.Color));
-            Assert.False(DType.Void.CoercesTo(DType.Color));
+            Assert.False(DType.Boolean.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Color.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%c[A:2]", out type) && type.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Color, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to dateTime
-            Assert.False(DType.Boolean.CoercesTo(DType.DateTime));
-            Assert.True(DType.Number.CoercesTo(DType.DateTime));
-            Assert.True(DType.Currency.CoercesTo(DType.DateTime));
-            Assert.False(DType.Color.CoercesTo(DType.DateTime));
-            Assert.True(DType.DateTime.CoercesTo(DType.DateTime));
-            Assert.True(DType.Date.CoercesTo(DType.DateTime));
-            Assert.True(DType.Time.CoercesTo(DType.DateTime));
-            Assert.True(DType.String.CoercesTo(DType.DateTime));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.DateTime));
-            Assert.False(DType.Image.CoercesTo(DType.DateTime));
-            Assert.False(DType.PenImage.CoercesTo(DType.DateTime));
-            Assert.False(DType.Media.CoercesTo(DType.DateTime));
-            Assert.False(DType.Blob.CoercesTo(DType.DateTime));
-            Assert.False(DType.Guid.CoercesTo(DType.DateTime));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.DateTime));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.DateTime));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.DateTime));
-            Assert.True(DType.TryParse("%d[A:2]", out type) && type.CoercesTo(DType.DateTime));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.DateTime));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.DateTime));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.DateTime));
-            Assert.True(DType.ObjNull.CoercesTo(DType.DateTime));
-            Assert.False(DType.Error.CoercesTo(DType.DateTime));
-            Assert.True(DType.Deferred.CoercesTo(DType.DateTime));
-            Assert.False(DType.Void.CoercesTo(DType.DateTime));
+            Assert.False(DType.Boolean.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.DateTime.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Date.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Time.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%d[A:2]", out type) && type.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to image
-            Assert.False(DType.Boolean.CoercesTo(DType.Image));
-            Assert.False(DType.Number.CoercesTo(DType.Image));
-            Assert.False(DType.Currency.CoercesTo(DType.Image));
-            Assert.False(DType.Color.CoercesTo(DType.Image));
-            Assert.False(DType.DateTime.CoercesTo(DType.Image));
-            Assert.False(DType.Date.CoercesTo(DType.Image));
-            Assert.False(DType.Time.CoercesTo(DType.Image));
-            Assert.True(DType.String.CoercesTo(DType.Image));
-            Assert.True(DType.Hyperlink.CoercesTo(DType.Image));
-            Assert.False(DType.Guid.CoercesTo(DType.Image));
-            Assert.True(DType.Image.CoercesTo(DType.Image));
-            Assert.True(DType.PenImage.CoercesTo(DType.Image));
-            Assert.False(DType.Media.CoercesTo(DType.Image));
-            Assert.True(DType.Blob.CoercesTo(DType.Image));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Image));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Image));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Image));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Image));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Image));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Image));
-            Assert.True(DType.TryParse("%i[A:\"hello.jpg\"]", out type) && type.CoercesTo(DType.Image));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Image));
-            Assert.False(DType.Error.CoercesTo(DType.Image));
-            Assert.True(DType.Deferred.CoercesTo(DType.Image));
-            Assert.False(DType.Void.CoercesTo(DType.Image));
+            Assert.False(DType.Boolean.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Hyperlink.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Image.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.PenImage.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Blob.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%i[A:\"hello.jpg\"]", out type) && type.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Image, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to penimage
-            Assert.False(DType.Boolean.CoercesTo(DType.PenImage));
-            Assert.False(DType.Number.CoercesTo(DType.PenImage));
-            Assert.False(DType.Currency.CoercesTo(DType.PenImage));
-            Assert.False(DType.Color.CoercesTo(DType.PenImage));
-            Assert.False(DType.DateTime.CoercesTo(DType.PenImage));
-            Assert.False(DType.Date.CoercesTo(DType.PenImage));
-            Assert.False(DType.Time.CoercesTo(DType.PenImage));
-            Assert.False(DType.String.CoercesTo(DType.PenImage));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.PenImage));
-            Assert.False(DType.Guid.CoercesTo(DType.PenImage));
-            Assert.False(DType.Image.CoercesTo(DType.PenImage));
-            Assert.True(DType.PenImage.CoercesTo(DType.PenImage));
-            Assert.False(DType.Media.CoercesTo(DType.PenImage));
-            Assert.False(DType.Blob.CoercesTo(DType.PenImage));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.PenImage));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.PenImage));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.PenImage));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.PenImage));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.PenImage));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.PenImage));
-            Assert.True(DType.ObjNull.CoercesTo(DType.PenImage));
-            Assert.False(DType.Error.CoercesTo(DType.PenImage));
-            Assert.True(DType.Deferred.CoercesTo(DType.PenImage));
-            Assert.False(DType.Void.CoercesTo(DType.PenImage));
+            Assert.False(DType.Boolean.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.PenImage.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.PenImage, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to media
-            Assert.False(DType.Boolean.CoercesTo(DType.Media));
-            Assert.False(DType.Number.CoercesTo(DType.Media));
-            Assert.False(DType.Currency.CoercesTo(DType.Media));
-            Assert.False(DType.Color.CoercesTo(DType.Media));
-            Assert.False(DType.DateTime.CoercesTo(DType.Media));
-            Assert.False(DType.Date.CoercesTo(DType.Media));
-            Assert.False(DType.Time.CoercesTo(DType.Media));
-            Assert.True(DType.String.CoercesTo(DType.Media));
-            Assert.True(DType.Hyperlink.CoercesTo(DType.Media));
-            Assert.False(DType.Image.CoercesTo(DType.Media));
-            Assert.False(DType.PenImage.CoercesTo(DType.Media));
-            Assert.True(DType.Media.CoercesTo(DType.Media));
-            Assert.True(DType.Blob.CoercesTo(DType.Media));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Media));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Media));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Media));
-            Assert.False(DType.Guid.CoercesTo(DType.Media));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Media));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Media));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Media));
-            Assert.True(DType.TryParse("%m[A:\"hello\"]", out type) && type.CoercesTo(DType.Media));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Media));
-            Assert.False(DType.Error.CoercesTo(DType.Media));
-            Assert.True(DType.Deferred.CoercesTo(DType.Media));
-            Assert.False(DType.Void.CoercesTo(DType.Media));
+            Assert.False(DType.Boolean.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Hyperlink.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Media.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Blob.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%m[A:\"hello\"]", out type) && type.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Media, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to document
-            Assert.False(DType.Boolean.CoercesTo(DType.Blob));
-            Assert.False(DType.Number.CoercesTo(DType.Blob));
-            Assert.False(DType.Currency.CoercesTo(DType.Blob));
-            Assert.False(DType.Color.CoercesTo(DType.Blob));
-            Assert.False(DType.DateTime.CoercesTo(DType.Blob));
-            Assert.False(DType.Date.CoercesTo(DType.Blob));
-            Assert.False(DType.Time.CoercesTo(DType.Blob));
-            Assert.True(DType.String.CoercesTo(DType.Blob));
-            Assert.True(DType.Hyperlink.CoercesTo(DType.Blob));
-            Assert.True(DType.Image.CoercesTo(DType.Blob));
-            Assert.True(DType.PenImage.CoercesTo(DType.Blob));
-            Assert.True(DType.Media.CoercesTo(DType.Blob));
-            Assert.True(DType.Blob.CoercesTo(DType.Blob));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Blob));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Blob));
-            Assert.False(DType.Guid.CoercesTo(DType.Blob));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Blob));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Blob));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Blob));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Blob));
-            Assert.True(DType.TryParse("%o[A:\"hello\"]", out type) && type.CoercesTo(DType.Blob));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Blob));
-            Assert.False(DType.Error.CoercesTo(DType.Blob));
-            Assert.True(DType.Deferred.CoercesTo(DType.Blob));
-            Assert.False(DType.Void.CoercesTo(DType.Blob));
+            Assert.False(DType.Boolean.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Hyperlink.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Image.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.PenImage.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Media.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Blob.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%o[A:\"hello\"]", out type) && type.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Blob, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to hyperlink
-            Assert.False(DType.Boolean.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Number.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Currency.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Color.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.DateTime.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Date.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Time.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.String.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.Hyperlink.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.Image.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.PenImage.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.Media.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.Blob.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Guid.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.TryParse("%h[A:\"hello\"]", out type) && type.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Error.CoercesTo(DType.Hyperlink));
-            Assert.True(DType.Deferred.CoercesTo(DType.Hyperlink));
-            Assert.False(DType.Void.CoercesTo(DType.Hyperlink));
+            Assert.False(DType.Boolean.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Hyperlink.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Image.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.PenImage.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Media.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Blob.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%h[A:\"hello\"]", out type) && type.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Hyperlink, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to table
-            Assert.False(DType.Boolean.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Number.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Currency.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Color.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.DateTime.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Date.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Time.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.String.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Guid.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Image.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.PenImage.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Media.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Blob.CoercesTo(DType.EmptyTable));
-            Assert.True(DType.EmptyTable.CoercesTo(DType.EmptyTable));
-            Assert.True(DType.EmptyRecord.CoercesTo(DType.EmptyTable));
-            Assert.True(DType.TryParse("![A:n]", out type) && type.CoercesTo(DType.EmptyTable));
-            Assert.True(DType.TryParse("![A:n]", out DType type1) && DType.TryParse("*[A:n]", out DType type2) && type1.CoercesTo(type2));
-            Assert.True(DType.TryParse("![A:n, B:s]", out type1) && DType.TryParse("*[A:n]", out type2) && type1.CoercesTo(type2));
-            Assert.True(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:*[B:s]]", out type2) && type1.CoercesTo(type2));
-            Assert.True(DType.TryParse("![A:*[B:![C:n]]]", out type1) && DType.TryParse("*[A:*[B:![C:n]]]", out type2) && type1.CoercesTo(type2));
-            Assert.True(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:*[B:n]]", out type2) && type1.CoercesTo(type2));
-            Assert.True(DType.TryParse("![A:*[B:![C:n]]]", out type1) && DType.TryParse("*[A:*[B:*[C:n]]]", out type2) && type1.CoercesTo(type2));
-            Assert.True(DType.TryParse("![A:![B:s]]", out type1) && DType.TryParse("*[A:*[B:s]]", out type2) && type1.CoercesTo(type2));
+            Assert.False(DType.Boolean.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyTable.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyRecord.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:n]", out type) && type.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:n]", out DType type1) && DType.TryParse("*[A:n]", out DType type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:n, B:s]", out type1) && DType.TryParse("*[A:n]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:*[B:s]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:*[B:![C:n]]]", out type1) && DType.TryParse("*[A:*[B:![C:n]]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:*[B:n]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:*[B:![C:n]]]", out type1) && DType.TryParse("*[A:*[B:*[C:n]]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("![A:![B:s]]", out type1) && DType.TryParse("*[A:*[B:s]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:n]", out type2) && type1.CoercesTo(type2));
-            Assert.False(DType.TryParse("![A:n]", out type1) && DType.TryParse("*[A:n, B:s]", out type2) && type1.CoercesTo(type2));
-            Assert.False(DType.TryParse("![A:*[B:*[C:n]]]", out type1) && DType.TryParse("*[A:*[B:![C:n]]]", out type2) && type1.CoercesTo(type2));
+            Assert.False(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:n]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("![A:n]", out type1) && DType.TryParse("*[A:n, B:s]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("![A:*[B:*[C:n]]]", out type1) && DType.TryParse("*[A:*[B:![C:n]]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
-            Assert.False(DType.EmptyEnum.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.EmptyTable));
-            Assert.True(DType.ObjNull.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Error.CoercesTo(DType.EmptyTable));
-            Assert.True(DType.Deferred.CoercesTo(DType.EmptyTable));
-            Assert.False(DType.Void.CoercesTo(DType.EmptyTable));
+            Assert.False(DType.EmptyEnum.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to record
-            Assert.False(DType.Boolean.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Number.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Currency.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Color.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.DateTime.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Date.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Time.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.String.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Image.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.PenImage.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Media.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Guid.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Blob.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.EmptyRecord));
-            Assert.True(DType.EmptyRecord.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.EmptyEnum.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.EmptyRecord));
-            Assert.True(DType.ObjNull.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Error.CoercesTo(DType.EmptyRecord));
-            Assert.True(DType.Deferred.CoercesTo(DType.EmptyRecord));
-            Assert.False(DType.Void.CoercesTo(DType.EmptyRecord));
+            Assert.False(DType.Boolean.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyRecord.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyEnum.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.EmptyRecord, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to Date
-            Assert.False(DType.Boolean.CoercesTo(DType.Date));
-            Assert.True(DType.Number.CoercesTo(DType.Date));
-            Assert.True(DType.Currency.CoercesTo(DType.Date));
-            Assert.False(DType.Color.CoercesTo(DType.Date));
-            Assert.True(DType.DateTime.CoercesTo(DType.Date));
-            Assert.True(DType.Date.CoercesTo(DType.Date));
-            Assert.True(DType.Time.CoercesTo(DType.Date));
-            Assert.True(DType.String.CoercesTo(DType.Date));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.Date));
-            Assert.False(DType.Image.CoercesTo(DType.Date));
-            Assert.False(DType.PenImage.CoercesTo(DType.Date));
-            Assert.False(DType.Guid.CoercesTo(DType.Date));
-            Assert.False(DType.Media.CoercesTo(DType.Date));
-            Assert.False(DType.Blob.CoercesTo(DType.Date));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Date));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Date));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Date));
-            Assert.True(DType.TryParse("%D[A:2]", out type) && type.CoercesTo(DType.Date));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Date));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Date));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Date));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Date));
-            Assert.False(DType.Error.CoercesTo(DType.Date));
-            Assert.True(DType.Deferred.CoercesTo(DType.Date));
-            Assert.False(DType.Void.CoercesTo(DType.Date));
+            Assert.False(DType.Boolean.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.DateTime.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Date.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Time.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%D[A:2]", out type) && type.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to Time
-            Assert.False(DType.Boolean.CoercesTo(DType.Time));
-            Assert.True(DType.Number.CoercesTo(DType.Time));
-            Assert.True(DType.Currency.CoercesTo(DType.Time));
-            Assert.False(DType.Color.CoercesTo(DType.Time));
-            Assert.True(DType.DateTime.CoercesTo(DType.Time));
-            Assert.True(DType.Date.CoercesTo(DType.Time));
-            Assert.True(DType.Time.CoercesTo(DType.Time));
-            Assert.True(DType.String.CoercesTo(DType.Time));
-            Assert.False(DType.Hyperlink.CoercesTo(DType.Time));
-            Assert.False(DType.Image.CoercesTo(DType.Time));
-            Assert.False(DType.Guid.CoercesTo(DType.Time));
-            Assert.False(DType.PenImage.CoercesTo(DType.Time));
-            Assert.False(DType.Media.CoercesTo(DType.Time));
-            Assert.False(DType.Blob.CoercesTo(DType.Time));
-            Assert.False(DType.EmptyTable.CoercesTo(DType.Time));
-            Assert.False(DType.EmptyRecord.CoercesTo(DType.Time));
-            Assert.True(DType.EmptyEnum.CoercesTo(DType.Time));
-            Assert.True(DType.TryParse("%T[A:2]", out type) && type.CoercesTo(DType.Time));
-            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Time));
-            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Time));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Time));
-            Assert.True(DType.ObjNull.CoercesTo(DType.Time));
-            Assert.False(DType.Error.CoercesTo(DType.Time));
-            Assert.True(DType.Deferred.CoercesTo(DType.Time));
-            Assert.False(DType.Void.CoercesTo(DType.Time));
+            Assert.False(DType.Boolean.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Number.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Currency.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.DateTime.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Date.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Time.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.String.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%T[A:2]", out type) && type.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to Attachment Table type
-            Assert.False(DType.Boolean.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Number.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Currency.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Color.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Guid.CoercesTo(AttachmentTableType));
-            Assert.False(DType.DateTime.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Date.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Time.CoercesTo(AttachmentTableType));
-            Assert.False(DType.String.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Hyperlink.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Image.CoercesTo(AttachmentTableType));
-            Assert.False(DType.PenImage.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Media.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Blob.CoercesTo(AttachmentTableType));
-            Assert.False(DType.EmptyTable.CoercesTo(AttachmentTableType));
-            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentTableType));
-            Assert.True(AttachmentTableType.CoercesTo(AttachmentTableType));
-            Assert.False(DType.EmptyEnum.CoercesTo(AttachmentTableType));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentTableType));
-            Assert.True(DType.ObjNull.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Error.CoercesTo(AttachmentTableType));
-            Assert.True(DType.Deferred.CoercesTo(AttachmentTableType));
-            Assert.False(DType.Void.CoercesTo(AttachmentTableType));
+            Assert.False(DType.Boolean.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(AttachmentTableType.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyEnum.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to Attachment Record type
-            Assert.False(DType.Boolean.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Number.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Currency.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Color.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Guid.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.DateTime.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Date.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Time.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.String.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Hyperlink.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Image.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.PenImage.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Media.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Blob.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.EmptyTable.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentRecordType));
-            Assert.True(AttachmentRecordType.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.EmptyEnum.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentRecordType));
-            Assert.True(DType.ObjNull.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Error.CoercesTo(AttachmentRecordType));
-            Assert.True(DType.Deferred.CoercesTo(AttachmentRecordType));
-            Assert.False(DType.Void.CoercesTo(AttachmentRecordType));
+            Assert.False(DType.Boolean.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Guid.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.String.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(AttachmentRecordType.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyEnum.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             // Coercion to Error type
-            Assert.True(DType.Error.CoercesTo(DType.Error));
+            Assert.True(DType.Error.CoercesTo(DType.Error, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
         }
 
         [Fact]
         public void DTypeTestOptionSetCoercion()
         {
-            Assert.True(OptionSetValueType.Accepts(OptionSetValueType));
-            Assert.True(OptionSetType.CoercesTo(OptionSetType));
+            foreach (var usePFxV1CompatRules in new[] { false, true })
+            {
+                Assert.True(OptionSetValueType.Accepts(OptionSetValueType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(OptionSetType.CoercesTo(OptionSetType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            Assert.False(OptionSetValueType.CoercesTo(DType.Boolean));
-            Assert.True(OptionSetValueType.CoercesTo(DType.String));
+                Assert.False(OptionSetValueType.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+                Assert.True(OptionSetValueType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-            Assert.True(BooleanValuedOptionSetValueType.CoercesTo(DType.Boolean));
+                Assert.True(BooleanValuedOptionSetValueType.CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            }
         }
 
-        private void TestUnion(string t1, string t2, string tResult)
+        private void TestUnion(string t1, string t2, string tResult, bool usePowerFxV1CompatibilityRules)
         {
             DType type1 = TestUtils.DT(t1);
             Assert.True(type1.IsValid);
@@ -2169,155 +2233,157 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(type2.IsValid);
             DType typeResult = TestUtils.DT(tResult);
             Assert.True(typeResult.IsValid);
-            Assert.Equal<DType>(typeResult, DType.Union(type1, type2));
+            Assert.Equal<DType>(typeResult, DType.Union(type1, type2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
         }
 
-        private void TestUnion(DType type1, DType type2, DType typeResult)
+        private void TestUnion(DType type1, DType type2, DType typeResult, bool usePowerFxV1CompatibilityRules)
         {
             Assert.True(type1.IsValid);
             Assert.True(type2.IsValid);
             Assert.True(typeResult.IsValid);
-            Assert.Equal<DType>(typeResult, DType.Union(type1, type2));
+            Assert.Equal<DType>(typeResult, DType.Union(type1, type2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
         }
 
-        [Fact]
-        public void DTypeUnion()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void DTypeUnion(bool usePowerFxV1CompatibilityRules)
         {
-            TestUnion("n", "n", "n");
-            TestUnion("n", "$", "n");
-            TestUnion("n", "c", "e");
-            TestUnion("n", "d", "e");
-            TestUnion("$", "n", "n");
-            TestUnion("$", "d", "e");
-            TestUnion("$", "D", "e");
-            TestUnion("$", "T", "e");
-            TestUnion("c", "n", "e");
-            TestUnion("d", "n", "e");
-            TestUnion("d", "$", "e");
-            TestUnion("n", "o", "e");
-            TestUnion("o", "n", "e");
+            TestUnion("n", "n", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "$", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "c", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "d", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("$", "n", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("$", "d", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("$", "D", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("$", "T", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("c", "n", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("d", "n", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("d", "$", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "o", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("o", "n", "e", usePowerFxV1CompatibilityRules);
 
-            TestUnion("b", "b", "b");
-            TestUnion("b", "n", "e");
-            TestUnion("b", "s", "e");
-            TestUnion("b", "$", "e");
-            TestUnion("b", "o", "e");
-            TestUnion("o", "b", "e");
+            TestUnion("b", "b", "b", usePowerFxV1CompatibilityRules);
+            TestUnion("b", "n", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("b", "s", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("b", "$", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("b", "o", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("o", "b", "e", usePowerFxV1CompatibilityRules);
 
-            TestUnion("p", "$", "e");
-            TestUnion("p", "n", "e");
-            TestUnion("p", "c", "e");
-            TestUnion("p", "b", "e");
-            TestUnion("p", "m", "h");
-            TestUnion("p", "o", "h");
-            TestUnion("o", "p", "h");
+            TestUnion("p", "$", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "n", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "c", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "b", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "m", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "o", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
+            TestUnion("o", "p", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
 
-            TestUnion("s", "s", "s");
-            TestUnion("s", "h", "s");
-            TestUnion("s", "i", "s");
-            TestUnion("s", "m", "s");
-            TestUnion("s", "o", "s");
-            TestUnion("o", "s", "s");
-            TestUnion("s", "g", "s");
-            TestUnion("g", "s", "s");
+            TestUnion("s", "s", "s", usePowerFxV1CompatibilityRules);
+            TestUnion("s", "h", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("s", "i", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("s", "m", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("s", "o", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("o", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("s", "g", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("g", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
 
-            TestUnion("h", "m", "h");
-            TestUnion("h", "s", "s");
-            TestUnion("i", "s", "s");
-            TestUnion("i", "h", "h");
-            TestUnion("i", "m", "h");
-            TestUnion("p", "i", "i");
-            TestUnion("p", "h", "h");
-            TestUnion("p", "s", "s");
+            TestUnion("h", "m", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
+            TestUnion("h", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("i", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("i", "h", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
+            TestUnion("i", "m", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "i", usePowerFxV1CompatibilityRules ? "e" : "i", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "h", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
 
-            TestUnion("c", "c", "c");
-            TestUnion("$", "$", "$");
-            TestUnion("h", "h", "h");
-            TestUnion("i", "i", "i");
-            TestUnion("p", "p", "p");
-            TestUnion("d", "d", "d");
-            TestUnion("m", "m", "m");
-            TestUnion("o", "o", "o");
+            TestUnion("c", "c", "c", usePowerFxV1CompatibilityRules);
+            TestUnion("$", "$", "$", usePowerFxV1CompatibilityRules);
+            TestUnion("h", "h", "h", usePowerFxV1CompatibilityRules);
+            TestUnion("i", "i", "i", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "p", "p", usePowerFxV1CompatibilityRules);
+            TestUnion("d", "d", "d", usePowerFxV1CompatibilityRules);
+            TestUnion("m", "m", "m", usePowerFxV1CompatibilityRules);
+            TestUnion("o", "o", "o", usePowerFxV1CompatibilityRules);
 
-            TestUnion("D", "T", "d");
-            TestUnion("T", "D", "d");
-            TestUnion("d", "T", "d");
-            TestUnion("d", "D", "d");
-            TestUnion("T", "d", "d");
-            TestUnion("D", "d", "d");
-            TestUnion("D", "$", "e");
-            TestUnion("T", "$", "e");
+            TestUnion("D", "T", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
+            TestUnion("T", "D", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
+            TestUnion("d", "T", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
+            TestUnion("d", "D", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
+            TestUnion("T", "d", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
+            TestUnion("D", "d", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
+            TestUnion("D", "$", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("T", "$", "e", usePowerFxV1CompatibilityRules);
 
-            TestUnion("*[]", "*[]", "*[]");
+            TestUnion("*[]", "*[]", "*[]", usePowerFxV1CompatibilityRules);
 
-            TestUnion("*[A:n]", "*[]", "*[A:n]");
-            TestUnion("*[]", "*[A:n]", "*[A:n]");
-            TestUnion("*[A:n]", "*[A:$]", "*[A:n]");
-            TestUnion("*[A:$]", "*[A:n]", "*[A:n]");
+            TestUnion("*[A:n]", "*[]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[]", "*[A:n]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[A:$]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:$]", "*[A:n]", "*[A:n]", usePowerFxV1CompatibilityRules);
 
-            TestUnion("*[A:n]", "*[B:n]", "*[A:n, B:n]");
-            TestUnion("*[A:n]", "*[B:s]", "*[A:n, B:s]");
-            TestUnion("*[A:n]", "*[B:b]", "*[A:n, B:b]");
-            TestUnion("*[A:n]", "X", "*[A:n]");
+            TestUnion("*[A:n]", "*[B:n]", "*[A:n, B:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[B:s]", "*[A:n, B:s]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[B:b]", "*[A:n, B:b]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "X", "*[A:n]", usePowerFxV1CompatibilityRules);
 
-            TestUnion("*[]", "*[A:n, B:b, D:d]", "*[A:n, B:b, D:d]");
-            TestUnion("*[A:n, B:b, D:d]", "*[]", "*[A:n, B:b, D:d]");
-            TestUnion("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]");
-            TestUnion("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]");
-            TestUnion("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]");
+            TestUnion("*[]", "*[A:n, B:b, D:d]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, B:b, D:d]", "*[]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
 
             // Tests for Type DataNull, DataNull is compatable with any data type, regardless of order.
-            TestUnion("N", "N", "N");
-            TestUnion("s", "N", "s");
-            TestUnion("b", "N", "b");
-            TestUnion("n", "N", "n");
-            TestUnion("i", "N", "i");
-            TestUnion("N", "i", "i");
-            TestUnion("$", "N", "$");
-            TestUnion("h", "N", "h");
-            TestUnion("o", "N", "o");
-            TestUnion("c", "N", "c");
-            TestUnion("N", "c", "c");
-            TestUnion("p", "N", "p");
-            TestUnion("m", "N", "m");
-            TestUnion("e", "N", "e");
-            TestUnion("*[]", "N", "*[]");
-            TestUnion("N", "*[]", "*[]");
-            TestUnion("*[A:N]", "*[A:$]", "*[A:$]");
-            TestUnion("*[A:b]", "*[A:N]", "*[A:b]");
-            TestUnion("*[A:N]", "*[A:b]", "*[A:b]");
-            TestUnion("*[A:N]", "*[A:s]", "*[A:s]");
-            TestUnion("*[A:e]", "*[A:N]", "*[A:e]");
-            TestUnion("*[A:n]", "*[A:N]", "*[A:n]");
-            TestUnion("*[A:n, B:b, D:s]", "*[D:N]", "*[A:n, B:b, D:s]");
-            TestUnion("*[A:n, B:b, D:*[A:s]]", "*[D:N]", "*[A:n, B:b, D:*[A:s]]");
+            TestUnion("N", "N", "N", usePowerFxV1CompatibilityRules);
+            TestUnion("s", "N", "s", usePowerFxV1CompatibilityRules);
+            TestUnion("b", "N", "b", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "N", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("i", "N", "i", usePowerFxV1CompatibilityRules);
+            TestUnion("N", "i", "i", usePowerFxV1CompatibilityRules);
+            TestUnion("$", "N", "$", usePowerFxV1CompatibilityRules);
+            TestUnion("h", "N", "h", usePowerFxV1CompatibilityRules);
+            TestUnion("o", "N", "o", usePowerFxV1CompatibilityRules);
+            TestUnion("c", "N", "c", usePowerFxV1CompatibilityRules);
+            TestUnion("N", "c", "c", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "N", "p", usePowerFxV1CompatibilityRules);
+            TestUnion("m", "N", "m", usePowerFxV1CompatibilityRules);
+            TestUnion("e", "N", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("*[]", "N", "*[]", usePowerFxV1CompatibilityRules);
+            TestUnion("N", "*[]", "*[]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:N]", "*[A:$]", "*[A:$]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:b]", "*[A:N]", "*[A:b]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:N]", "*[A:b]", "*[A:b]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:N]", "*[A:s]", "*[A:s]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:e]", "*[A:N]", "*[A:e]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[A:N]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, B:b, D:s]", "*[D:N]", "*[A:n, B:b, D:s]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, B:b, D:*[A:s]]", "*[D:N]", "*[A:n, B:b, D:*[A:s]]", usePowerFxV1CompatibilityRules);
 
             // Nested aggregates
-            TestUnion("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]");
-            TestUnion("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]");
-            TestUnion("*[A:n, Nest:*[X:n, Y:n, Z:b]]", "*[]", "*[A:n, Nest:*[X:n, Y:n, Z:b]]");
-            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:$, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:n, Y:e, Z:b, W:s]]");
-            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "X", "*[A:n, Nest:*[X:n, Y:c, Z:b]]");
+            TestUnion("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]", usePowerFxV1CompatibilityRules);
+            TestUnion("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, Nest:*[X:n, Y:n, Z:b]]", "*[]", "*[A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:$, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:n, Y:e, Z:b, W:s]]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "X", "*[A:n, Nest:*[X:n, Y:c, Z:b]]", usePowerFxV1CompatibilityRules);
 
             // Unresolvable conflicts
-            TestUnion("*[A:n]", "*[A:s]", "*[A:e]");
-            TestUnion("*[A:n, B:b, D:s]", "*[A:n, B:s, D:s]", "*[A:n, B:e, D:s]");
-            TestUnion("*[A:n]", "![B:n]", "e");
+            TestUnion("*[A:n]", "*[A:s]", "*[A:e]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n, B:b, D:s]", "*[A:n, B:s, D:s]", "*[A:n, B:e, D:s]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "![B:n]", "e", usePowerFxV1CompatibilityRules);
 
             //Attachment
             var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
             var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
-            TestUnion(type1, type1, type1);
-            TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"));
-            TestUnion(type2, type2, type2);
-            TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
-            TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable));
+            TestUnion(type1, type1, type1, usePowerFxV1CompatibilityRules);
+            TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"), usePowerFxV1CompatibilityRules);
+            TestUnion(type2, type2, type2, usePowerFxV1CompatibilityRules);
+            TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), usePowerFxV1CompatibilityRules);
+            TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), usePowerFxV1CompatibilityRules);
 
             var typeEncodings = "ebnshdipmgo$cDTlLNZPQqVOX";
             foreach (var type in typeEncodings)
             {
-                TestUnion(type.ToString(), "X", type.ToString());
-                TestUnion(type.ToString(), "-", "e");
+                TestUnion(type.ToString(), "X", type.ToString(), usePowerFxV1CompatibilityRules);
+                TestUnion(type.ToString(), "-", "e", usePowerFxV1CompatibilityRules);
             }
         }
 

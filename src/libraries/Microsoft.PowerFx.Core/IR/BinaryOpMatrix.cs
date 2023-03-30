@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Types;
@@ -20,7 +21,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             return parsedBinaryOp switch
             {
-                BinaryOp.In or BinaryOp.Exactin => GetInOp(parsedBinaryOp, leftType, rightType),
+                BinaryOp.In or BinaryOp.Exactin => GetInOp(binding, parsedBinaryOp, leftType, rightType),
                 BinaryOp.Power => BinaryOpKind.Power,
                 BinaryOp.Concat => BinaryOpKind.Concatenate,
                 BinaryOp.And => BinaryOpKind.And,
@@ -54,7 +55,7 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
-            var kindToUse = leftType.Accepts(rightType) ? leftType.Kind : rightType.Kind;
+            var kindToUse = leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()) ? leftType.Kind : rightType.Kind;
 
             // If there is coercion involved, pick the coerced type.
             if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
@@ -65,7 +66,8 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 kindToUse = rightCoerced.Kind;
             }
-            else if (!leftType.Accepts(rightType) && !rightType.Accepts(leftType))
+            else if (!leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()) &&
+                !rightType.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()))
             {
                 return BinaryOpKind.Invalid;
             } 
@@ -413,12 +415,13 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        private static BinaryOpKind GetInOp(BinaryOp parsedBinaryOp, DType leftType, DType rightType)
+        private static BinaryOpKind GetInOp(TexlBinding binding, BinaryOp parsedBinaryOp, DType leftType, DType rightType)
         {
             if (!rightType.IsAggregate)
             {
-                if ((DType.String.Accepts(rightType) && (DType.String.Accepts(leftType) || leftType.CoercesTo(DType.String))) ||
-                    (rightType.CoercesTo(DType.String) && DType.String.Accepts(leftType)))
+                var usesPFxV1CompatRules = binding.Features.UsesPowerFxV1CompatibilityRules();
+                if ((DType.String.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && (DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) || leftType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules))) ||
+                    (rightType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules)))
                 {
                     return parsedBinaryOp == BinaryOp.In ? BinaryOpKind.InText : BinaryOpKind.ExactInText;
                 }

@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         // Kind has already been handled before
                         ((requiredKindField.Type.Kind == DKind.Number) ? true : field.Name != "Kind") && names.Any(name => name.Name == field.Name)));
 
-                typeValid = CheckType(argument, argumentType, expectedOptionalFieldsRecord, errors, true, out matchedWithCoercion);
+                typeValid = CheckType(context, argument, argumentType, expectedOptionalFieldsRecord, errors, true, out matchedWithCoercion);
             }
             else
             {
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         // Kind has already been handled before
                         field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
-                typeValid = CheckType(argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);
+                typeValid = CheckType(context, argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);
             }
 
             if (!typeValid)

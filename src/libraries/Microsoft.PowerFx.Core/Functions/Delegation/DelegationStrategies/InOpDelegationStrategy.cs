@@ -177,7 +177,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var nodeType = binding.GetType(column);
             var hasEnhancedDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled;
-            return DType.String.Accepts(nodeType) || nodeType.CoercesTo(DType.String) || (hasEnhancedDelegation && nodeType.IsMultiSelectOptionSet() && nodeType.IsTable);
+            var usePowerFxV1CompatibilityRules = binding.Features.UsesPowerFxV1CompatibilityRules();
+            return DType.String.Accepts(nodeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                nodeType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                (hasEnhancedDelegation && nodeType.IsMultiSelectOptionSet() && nodeType.IsTable);
         }
 
         public override bool IsOpSupportedByTable(OperationCapabilityMetadata metadata, TexlNode node, TexlBinding binding)

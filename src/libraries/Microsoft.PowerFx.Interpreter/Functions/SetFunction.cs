@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Interpreter
                     // We have a variable. type check
                     var arg1 = argTypes[1];
 
-                    if (!arg0.Accepts(arg1))
+                    if (!arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()))
                     {
                         errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
                         return;

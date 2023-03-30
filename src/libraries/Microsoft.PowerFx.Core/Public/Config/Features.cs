@@ -51,6 +51,13 @@ namespace Microsoft.PowerFx
         /// </summary>
         RestrictedIsEmptyArguments = 0x20,
 
+        /// <summary>
+        /// Updates parsing and binding logic to comply with the Power Fx V1 release.
+        /// This affects things such as Accepts/Coerces relationships between primitive types,
+        /// enums as option sets, among others.
+        /// </summary>
+        PowerFxV1Compatibility = 0x40,
+
         /// <summary>        
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.

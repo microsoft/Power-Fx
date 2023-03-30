@@ -448,7 +448,7 @@ namespace Microsoft.PowerFx.Intellisense
             foreach (var tName in typeToSuggestFrom.GetRootFieldNames()
                 .Select(field => (Type: typeToSuggestFrom.GetType(field), Name: field)))
             {
-                if (suggestionType.Accepts(tName.Type))
+                if (suggestionType.Accepts(tName.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
                 {
                     var usedName = tName.Name.Value;
                     if (DType.TryGetDisplayNameForColumn(typeToSuggestFrom, usedName, out var maybeDisplayName))

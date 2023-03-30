@@ -532,20 +532,21 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     var value = context.Binding.GetInfo(node).VerifyValue().Data;
                     Contracts.Assert(value != null);
+                    var usePFxV1CompatRules = context.Binding.Features.UsesPowerFxV1CompatibilityRules();
 
-                    if (DType.Color.Accepts(resultType))
+                    if (DType.Color.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new ColorLiteralNode(context.GetIRContext(node), ConvertToColor((double)value));
                     } 
-                    else if (DType.Number.Accepts(resultType))
+                    else if (DType.Number.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new NumberLiteralNode(context.GetIRContext(node), (double)value);
                     }
-                    else if (DType.String.Accepts(resultType))
+                    else if (DType.String.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new TextLiteralNode(context.GetIRContext(node), (string)value);
                     }
-                    else if (DType.Boolean.Accepts(resultType))
+                    else if (DType.Boolean.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new BooleanLiteralNode(context.GetIRContext(node), (bool)value);
                     }
@@ -745,13 +746,13 @@ namespace Microsoft.PowerFx.Core.IR
                 var scope = GetNewScope();
                 foreach (var fromField in fromType.GetNames(DPath.Root))
                 {
-                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
+                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: _features.UsesPowerFxV1CompatibilityRules()))
                     {
                         continue;
                     }
                     else
                     {
-                        var coercionKind = CoercionMatrix.GetCoercionKind(fromField.Type, toFieldType);
+                        var coercionKind = CoercionMatrix.GetCoercionKind(fromField.Type, toFieldType, _features.UsesPowerFxV1CompatibilityRules());
                         if (coercionKind == CoercionKind.None)
                         {
                             continue;
@@ -787,7 +788,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             private IntermediateNode InjectCoercion(IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
             {
-                var coercionKind = CoercionMatrix.GetCoercionKind(fromType, toType);
+                var coercionKind = CoercionMatrix.GetCoercionKind(fromType, toType, context.Binding.Features.UsesPowerFxV1CompatibilityRules());
                 UnaryOpKind unaryOpKind;
                 switch (coercionKind)
                 {
@@ -898,6 +899,9 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
                     case CoercionKind.DateToDateTime:
                         unaryOpKind = UnaryOpKind.DateToDateTime;
+                        break;
+                    case CoercionKind.DateTimeToTime:
+                        unaryOpKind = UnaryOpKind.DateTimeToTime;
                         break;
                     case CoercionKind.DateToTime:
                         unaryOpKind = UnaryOpKind.DateToTime;

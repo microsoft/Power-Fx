@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             if (argumentIndex == 1)
             {
-                if (!DType.DateTime.Accepts(scopeType) || !tryGetEnumSymbol(EnumConstants.DateTimeFormatEnumString, out var enumInfo))
+                if (!DType.DateTime.Accepts(scopeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true) || !tryGetEnumSymbol(EnumConstants.DateTimeFormatEnumString, out var enumInfo))
                 {
                     return EnumerableUtils.Yield<KeyValuePair<string, DType>>();
                 }

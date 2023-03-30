@@ -69,6 +69,13 @@ namespace Microsoft.PowerFx.Core.IR
         UntypedToTime,
         UntypedToDateTime,
         UntypedToColor,
-        UntypedToGUID
+        UntypedToGUID,
+
+        StringToGUID,
+        GUIDToString,
+        BlobToText,
+        ImageToText,
+        MediaToText,
+        PenImageToText,
     }
 }

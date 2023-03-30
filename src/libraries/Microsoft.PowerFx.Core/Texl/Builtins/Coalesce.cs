@@ -75,7 +75,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(args[i], TexlStrings.ErrTypeError);
                 }
 
-                var typeSuper = DType.Supertype(type, typeArg);
+                var typeSuper = DType.Supertype(
+                    type, 
+                    typeArg, 
+                    useLegacyDateTimeAccepts: false, 
+                    usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
 
                 if (!typeSuper.IsError)
                 {
@@ -90,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (!type.IsError)
                 {
                     // Types don't resolve normally, coercion needed
-                    if (typeArg.CoercesTo(type))
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }
