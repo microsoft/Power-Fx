@@ -129,10 +129,10 @@ namespace Microsoft.PowerFx.Tests
 
             RecordType notExpectedTargetType = RecordType.Empty()
                 .Add(new NamedFormulaType("a", FormulaType.Number))
-                .Add(new NamedFormulaType("b", FormulaType.Color));
+                .Add(new NamedFormulaType("b", FormulaType.Hyperlink));
 
             Assert.True(inputType.CanPotentiallyCoerceTo(targetType));
-            Assert.True(inputType.CanPotentiallyCoerceTo(notExpectedTargetType));
+            Assert.False(inputType.CanPotentiallyCoerceTo(notExpectedTargetType));
         }
 
         [Theory]
