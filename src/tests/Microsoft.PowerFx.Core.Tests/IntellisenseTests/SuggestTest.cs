@@ -59,7 +59,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
-        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
+        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax =>
+            PowerFxConfig.BuildWithEnumStore(
+                null,
+                new EnumStoreBuilder().WithDefaultEnums(),
+                new Features { DisableRowScopeDisambiguationSyntax = true });
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
         private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet());

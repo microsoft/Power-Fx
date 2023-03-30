@@ -50,9 +50,10 @@ namespace Microsoft.PowerFx.Core.Parser
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = Features.None)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = null)
         {
             Contracts.AssertValue(tokens);
+            features ??= Features.None;
 
             _depth = 0;
             _curs = new TokenCursor(tokens);
@@ -714,7 +715,7 @@ namespace Microsoft.PowerFx.Core.Parser
                                 goto default;
                             }
 
-                            if (_features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
+                            if (_features.DisableRowScopeDisambiguationSyntax)
                             {
                                 PostError(_curs.TokCur, errKey: TexlStrings.ErrDeprecated);
                             }

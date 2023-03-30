@@ -489,7 +489,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         resultColumnType = coercedType.GetColumnTypeFromSingleColumnTable();
                     }
 
-                    var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    var resultColumnName = context.Features.ConsistentOneColumnTableResult
                         ? ColumnName_Value
                         : inputColumn.Name;
                     returnType = DType.CreateTable(new TypedName(resultColumnType, resultColumnName));
@@ -533,7 +533,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var hasUnits = args.Length == 3;
 
-            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.TimeUnitEnum.OptionSetType :
                 DType.String;
 
@@ -677,7 +677,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.TimeUnitEnum.FormulaType._type :
                 DType.String;
 

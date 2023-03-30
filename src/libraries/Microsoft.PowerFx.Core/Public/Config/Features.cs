@@ -2,77 +2,125 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
-    [Flags]
-#pragma warning disable CA2217 // Do not mark enums with FlagsAttribute
-    public enum Features : int
-#pragma warning restore CA2217 // Do not mark enums with FlagsAttribute
+    public sealed class Features
     {
-        None = 0x0,
-
         /// <summary>
         /// Enable Table syntax to not add "Value:" extra layer.
-        /// Added on 1st July 2022.
         /// </summary>
-        TableSyntaxDoesntWrapRecords = 0x1,
+        internal bool TableSyntaxDoesntWrapRecords { get; set; }
 
         /// <summary>
-        /// Enable functions to consistently return one dimension tables with a "Value" column rather than some other name like "Result"
-        /// Added on 11th July 2022
+        /// Enable functions to consistently return one dimension tables with
+        /// a "Value" column rather than some other name like "Result".
         /// </summary>
-        ConsistentOneColumnTableResult = 0x2,
+        internal bool ConsistentOneColumnTableResult { get; set; }
 
         /// <summary>
         /// Disables support for row-scope disambiguation syntax.
         /// Now,for example user would need to use Filter(A, ThisRecord.Value = 2) or Filter(A As Foo, Foo.Value = 2)
         /// instead of
-        /// Filter(A, A[@Value] = 2)
+        /// Filter(A, A[@Value] = 2).
         /// </summary>
-        DisableRowScopeDisambiguationSyntax = 0x4,
+        internal bool DisableRowScopeDisambiguationSyntax { get; set; }
 
         /// <summary>
-        /// Enable Identifier support for describing column names
-        /// Added on 6th December 2022.
+        /// Enable Identifier support for describing column names.
         /// </summary>
-        SupportColumnNamesAsIdentifiers = 0x8,        
+        internal bool SupportColumnNamesAsIdentifiers { get; set; }        
 
         /// <summary>
         /// Enforces strong-typing for builtin enums, rather than treating
-        /// them as aliases for values of string/number/boolean types
-        /// Added March 2023.
+        /// them as aliases for values of string/number/boolean types.
         /// </summary>
-        StronglyTypedBuiltinEnums = 0x10,
+        internal bool StronglyTypedBuiltinEnums { get; set; }
 
         /// <summary>
         /// Updates the IsEmpty function to only allow table arguments, since it
         /// does not work properly with other types of arguments.
         /// </summary>
-        RestrictedIsEmptyArguments = 0x20,
+        internal bool RestrictedIsEmptyArguments { get; set; }
 
         /// <summary>
         /// Allow delegation for async calls (delegate using awaited call result).
-        /// Added March 2023.
         /// </summary>
-        AllowAsyncDelegation = 0x40,
+        internal bool AllowAsyncDelegation { get; set; }
 
         /// <summary>
         /// Allow delegation for impure nodes.
-        /// Added March 2023.
         /// </summary>
-        AllowImpureNodeDelegation = 0x80,
+        internal bool AllowImpureNodeDelegation { get; set; }
 
         /// <summary>
         /// Updates the FirstN/LastN functions to require a second argument, instead of
         /// defaulting to 1.
         /// </summary>
-        FirstLastNRequiresSecondArguments = 0x100,
+        internal bool FirstLastNRequiresSecondArguments { get; set; }
 
-        /// <summary>        
+        internal bool PowerFxV1CompatibilityRules { get; set; }
+
+        internal static Features None => new Features();
+
+        public static Features PowerFxV1 => new Features
+        {
+            TableSyntaxDoesntWrapRecords = true,
+            ConsistentOneColumnTableResult = true,
+            DisableRowScopeDisambiguationSyntax = true,
+            SupportColumnNamesAsIdentifiers = true,
+            StronglyTypedBuiltinEnums = true,
+            RestrictedIsEmptyArguments = true,
+            AllowAsyncDelegation = true,
+            AllowImpureNodeDelegation = true,
+            FirstLastNRequiresSecondArguments = true,
+            PowerFxV1CompatibilityRules = true,
+        };
+
+        /// <summary>
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.
         /// </summary>
-        All = ~0
+        public static Features All => PowerFxV1;
+
+        internal Features()
+        {
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is not Features other)
+            {
+                return false;
+            }
+
+            return
+                this.AllowAsyncDelegation == other.AllowAsyncDelegation &&
+                this.AllowImpureNodeDelegation == other.AllowImpureNodeDelegation &&
+                this.ConsistentOneColumnTableResult == other.ConsistentOneColumnTableResult &&
+                this.DisableRowScopeDisambiguationSyntax == other.DisableRowScopeDisambiguationSyntax &&
+                this.FirstLastNRequiresSecondArguments == other.FirstLastNRequiresSecondArguments &&
+                this.PowerFxV1CompatibilityRules == other.PowerFxV1CompatibilityRules &&
+                this.StronglyTypedBuiltinEnums == other.StronglyTypedBuiltinEnums &&
+                this.SupportColumnNamesAsIdentifiers == other.SupportColumnNamesAsIdentifiers &&
+                this.TableSyntaxDoesntWrapRecords == other.TableSyntaxDoesntWrapRecords;
+        }
+
+        public override int GetHashCode()
+        {
+            return Hashing.CombineHash(
+                this.AllowAsyncDelegation.GetHashCode(),
+                this.AllowImpureNodeDelegation.GetHashCode(),
+                this.ConsistentOneColumnTableResult.GetHashCode(),
+                this.DisableRowScopeDisambiguationSyntax.GetHashCode(),
+                this.FirstLastNRequiresSecondArguments.GetHashCode(),
+                this.PowerFxV1CompatibilityRules.GetHashCode(),
+                this.StronglyTypedBuiltinEnums.GetHashCode(),
+                this.SupportColumnNamesAsIdentifiers.GetHashCode(),
+                this.TableSyntaxDoesntWrapRecords.GetHashCode());
+        }
     }
 }
