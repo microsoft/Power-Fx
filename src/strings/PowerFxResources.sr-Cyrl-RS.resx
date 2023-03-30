@@ -2937,6 +2937,26 @@
     <value>Сфера</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe – није повезано</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe – освежавање</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe – промене на чекању</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe – упозорење</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe – грешка</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Полупун круг</value>
     
@@ -4863,14 +4883,14 @@
     
   </data>
   <data name="AboutEncodeUrl" xml:space="preserve">
-    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    <value>Кодира ниску URL адресе, замењујући одређене знакове који нису алфанумерички са % и хексадецималним бројем.</value>
     
   </data>
   <data name="EncodeUrlArg1" xml:space="preserve">
-    <value>url</value>
+    <value>URL адреса</value>
     
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
-    <value>A url to be encoded.</value>
+    <value>URL адреса коју треба кодирати.</value>
   </data>
 </root>
