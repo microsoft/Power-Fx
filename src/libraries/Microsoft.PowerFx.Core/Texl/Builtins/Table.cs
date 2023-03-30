@@ -68,27 +68,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    KeyValuePair<string, DType> schemaDifference = new KeyValuePair<string, DType>();
-                    DType schemaDifferenceType = null;
-                    DType coercionType = null;
-
-                    // Deferred and void types are not allowed in tables.
-                    var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
-                    if (isChildTypeAllowedInTable && rowType.Equals(DType.EmptyRecord))
+                    if (rowType.TryUnionWithCoerce(argType, args[i], errors, out var newType, out var needCoercion))
                     {
-                        rowType = argType;
-                    }
-                    else if (isChildTypeAllowedInTable && rowType.CanUnionWith(argType))
-                    {
-                        rowType = DType.Union(ref isUnionError, rowType, argType);
-                    }
-                    else if (isChildTypeAllowedInTable && argType.AggregateCoercesTo(rowType, out var isSafe, out coercionType, out schemaDifference, out schemaDifferenceType))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
+                        rowType = newType;
+                        if (needCoercion)
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
+                        }
                     }
                     else
                     {
-                        errors.Errors(args[i], coercionType, schemaDifference, schemaDifferenceType);
                         isValid = false;
                     }
                 }

@@ -23,4 +23,4 @@ Table({a:1},{a:1},{a:1})
 Table({a:1},{a:44986},{a:1})
 
 >> Table({a:0,b:Date(2023,3,1)}, {a:Date(2023,3,1),b:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")})
-Errors: Error 0-96: The function 'Table' has some invalid arguments.|Error 30-95: Invalid argument type. Expecting a Record value, but of a different schema.|Error 30-95: Missing column. Your formula is missing a column 'b' with a type of 'Date'.
+Errors: Error 0-96: The function 'Table' has some invalid arguments.|Error 30-95: Invalid argument type. Expecting a Record value, but of a different schema.|Error 30-95: Missing column. Your formula is missing a column 'b' with a type of 'Invalid'.

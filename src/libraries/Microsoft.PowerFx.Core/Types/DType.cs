@@ -3061,9 +3061,7 @@ namespace Microsoft.PowerFx.Core.Types
                     if (!isFieldValid && isValid)
                     {
                         var fieldName = string.IsNullOrEmpty(fieldSchemaDifference.Key) ? typedName.Name : fieldSchemaDifference.Key;
-                        var fieldType = string.IsNullOrEmpty(fieldSchemaDifference.Key) ? typedName.Type : fieldSchemaDifference.Value;
-
-                        schemaDifference = new KeyValuePair<string, DType>(fieldName, fieldType);
+                        schemaDifference = new KeyValuePair<string, DType>(fieldName, fieldSchemaDifference.Value);
                         schemaDifferenceType = fieldSchemaDifferenceType;
                     }
 
@@ -3573,6 +3571,69 @@ namespace Microsoft.PowerFx.Core.Types
             // suggestions.
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
+        }
+
+        /// <summary>
+        /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
+        /// </summary>
+        /// <param name="argType">Current table child type.</param>
+        /// <param name="arg">Child node.</param>
+        /// <param name="errors">Error container from caller.</param>
+        /// <param name="returnType">Composed new type.</param>
+        /// <param name="needCoercion">Checks if child node needs to be coerced.</param>
+        /// <returns></returns>
+        public bool TryUnionWithCoerce(DType argType, TexlNode arg, IErrorContainer errors, out DType returnType, out bool needCoercion)
+        {
+            var isValid = true;
+
+            KeyValuePair<string, DType> schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
+            DType schemaDifferenceType = null;
+            DType coercionType = null;
+
+            returnType = null;
+            needCoercion = false;
+
+            // Deferred and void types are not allowed in tables.
+            var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
+
+            if (!isChildTypeAllowedInTable)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTableDoesNotAcceptThisType);
+                return false;
+            }
+
+            if (!IsValid || (IsRecord && Equals(EmptyRecord)))
+            {
+                returnType = argType;
+            }
+            else if (CanUnionWith(argType))
+            {
+                returnType = Union(this, argType);
+            }
+            else if (IsAggregate)
+            {
+                if (argType.AggregateCoercesTo(this, out var isSafe, out coercionType, out schemaDifference, out schemaDifferenceType))
+                {
+                    returnType = coercionType;
+                    needCoercion = true;
+                }
+                else
+                {
+                    errors.Errors(arg, coercionType, schemaDifference, schemaDifferenceType);
+                    isValid = false;
+                }
+            }
+            else if (argType.CoercesTo(this))
+            {
+                returnType = this;
+                needCoercion = true;
+            }
+            else
+            {
+                isValid = false;
+            }
+
+            return isValid;
         }
     }
 }
