@@ -40,24 +40,16 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
         public static bool CanPotentiallyCoerceTo(this FormulaType source, FormulaType target)
         {
-            if (source == FormulaType.Boolean)
+            if (source is RecordType recordType && target is RecordType targetRecordType)
             {
-                return BooleanValue.AllowedListConvertToBoolean.Contains(target);
+                return CanPotentiallyCoerceToRecordType(recordType, targetRecordType);
             }
-            else if (source == FormulaType.String)
+            else if (source is TableType tableType && target is TableType targetTableType)
             {
-                return StringValue.AllowedListConvertToString.Contains(target);
-            }
-            else if (source == FormulaType.Number)
-            {
-                return NumberValue.AllowedListConvertToNumber.Contains(target);
-            }
-            else if (source == FormulaType.DateTime)
-            {
-                return DateTimeValue.AllowedListConvertToDateTime.Contains(target);
+                return CanPotentiallyCoerceToTableType(tableType, targetTableType);
             }
 
-            return false;
+            return CanPotentiallyCoerceToTargetType(source, target);
         }
 
         /// <summary>
@@ -206,13 +198,14 @@ namespace Microsoft.PowerFx
         public static bool TryCoerceTo(this RecordValue value, RecordType targetType, out RecordValue result)
         {
             result = null;
-            var recordResult = new NamedValue[value.Fields.Count()];
-            int i = 0;
+            int n = value.Fields.Count();
+            var recordResult = new NamedValue[n];
 
-            foreach (var field in value.Fields)
+            for (int i = 0; i < n; i++)
             {
-                var fieldValue = value.GetField(field.Name);
-                if (!targetType.TryGetFieldType(field.Name, out FormulaType fieldType))
+                var fieldName = value.Fields.ElementAt(i).Name;
+                var fieldValue = value.GetField(fieldName);
+                if (!targetType.TryGetFieldType(fieldName, out FormulaType fieldType))
                 {
                     return false;
                 }
@@ -222,7 +215,7 @@ namespace Microsoft.PowerFx
                     return false;
                 }
 
-                recordResult[i++] = new NamedValue(field.Name, fieldResult);
+                recordResult[i] = new NamedValue(fieldName, fieldResult);
             }
 
             result = FormulaValue.NewRecordFromFields(recordResult);
@@ -239,17 +232,17 @@ namespace Microsoft.PowerFx
         public static bool TryCoerceTo(this TableValue value, TableType targetType, out TableValue result)
         {
             result = null;
-            var records = new RecordValue[value.Rows.Count()];
-            int i = 0;
+            int n = value.Rows.Count();
+            var records = new RecordValue[n];
 
-            foreach (var row in value.Rows)
+            for (int i = 0; i < n; i++)
             {
-                if (!row.Value.TryCoerceTo(targetType.ToRecord(), out RecordValue recordResult))
+                if (!value.Rows.ElementAt(i).Value.TryCoerceTo(targetType.ToRecord(), out RecordValue recordResult))
                 {
                     return false;
                 }
 
-                records[i++] = recordResult;
+                records[i] = recordResult;
             }
             
             result = FormulaValue.NewTable(targetType.ToRecord(), records.ToArray());
@@ -257,7 +250,70 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Try to convert value to target type.
+        /// Can convert value to source format to record target or not.
+        /// </summary>
+        /// <param name="source">Source type format.</param>
+        /// <param name="target">Target type format.</param>
+        /// <returns>True/False based on whether function can convert from source type to record target type.</returns> 
+        public static bool CanPotentiallyCoerceToRecordType(RecordType source, RecordType target)
+        {
+            foreach (var field in source.GetFieldTypes())
+            {
+                if (!target.TryGetFieldType(field.Name, out FormulaType targetFieldType))
+                {
+                    return false;
+                }
+
+                if (!CanPotentiallyCoerceToTargetType(field.Type, targetFieldType))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Can convert value to source format to table target or not.
+        /// </summary>
+        /// <param name="source">Source type format.</param>
+        /// <param name="target">Target type format.</param>
+        /// <returns>True/False based on whether function can convert from source type to record target type.</returns> 
+        public static bool CanPotentiallyCoerceToTableType(TableType source, TableType target)
+        {
+            return CanPotentiallyCoerceToRecordType(source.ToRecord(), target.ToRecord());
+        }
+
+        /// <summary>
+        /// Can convert value to source format to target or not that not include record or table.
+        /// </summary>
+        /// <param name="source">Source type format.</param>
+        /// <param name="target">Target type format.</param>
+        /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
+        public static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
+        {
+            if (source == FormulaType.Boolean)
+            {
+                return BooleanValue.AllowedListConvertToBoolean.Contains(target);
+            }
+            else if (source == FormulaType.String)
+            {
+                return StringValue.AllowedListConvertToString.Contains(target);
+            }
+            else if (source == FormulaType.Number)
+            {
+                return NumberValue.AllowedListConvertToNumber.Contains(target);
+            }
+            else if (source == FormulaType.DateTime)
+            {
+                return DateTimeValue.AllowedListConvertToDateTime.Contains(target);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Try to convert value to target type that not include record or table.
         /// </summary>
         /// <param name="value">Input value.</param>
         /// <param name="targetType">Target type format.</param>
