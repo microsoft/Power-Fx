@@ -16,8 +16,14 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
     internal sealed class AggregateCoercionNode : IntermediateNode
     {
         public readonly UnaryOpKind Op;
+
+        // The original record. 
         public readonly IntermediateNode Child;
+
+        // The specific fields to be updated. 
+        // If a field is not present, then pull it's value from original Child object.
         public readonly IReadOnlyDictionary<DName, IntermediateNode> FieldCoercions;
+
         public readonly ScopeSymbol Scope;
 
         public AggregateCoercionNode(IRContext irContext, UnaryOpKind op, ScopeSymbol scope, IntermediateNode child, IReadOnlyDictionary<DName, IntermediateNode> fieldCoercions)
