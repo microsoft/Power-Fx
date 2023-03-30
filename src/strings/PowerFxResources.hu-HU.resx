@@ -1852,7 +1852,7 @@
     
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
-    <value>A(z) {0} argumentum nem érvényes dátum- vagy időpontértéket jelent.</value>
+    <value>Az argumentum nem érvényes dátum- vagy időpontértéket jelent.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -2935,6 +2935,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Földgömb</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe – Nincs kapcsolat</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe – Frissítés</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe – Módosítások függőben</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe – Figyelmeztetés</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe – Hiba</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">

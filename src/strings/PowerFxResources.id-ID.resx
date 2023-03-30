@@ -2937,6 +2937,26 @@
     <value>Globe</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Tidak tersambung</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Perubahan tertunda</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Peringatan</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Kesalahan</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Setengah lingkaran terisi</value>
     
