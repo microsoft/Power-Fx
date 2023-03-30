@@ -13,7 +13,10 @@ namespace Microsoft.PowerFx.Core.Texl
     // - just functions that are ported over to Language.Core
     internal class BuiltinFunctionsCore
     {
-        internal static readonly HashSet<string> OtherKnownFunctions = new HashSet<string>()
+        // This is the list of Power Apps functions that aren't supported/implemeted in Power Fx
+        // Binder will recognize these functions names and return a "recognized but not yet supported function" message 
+        // instead of the classic "unknown or unsupported function".
+        internal static readonly IReadOnlyCollection<string> OtherKnownFunctions = new HashSet<string>()
         {
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
             "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "PlainText", "Print", "ReadNFC",
