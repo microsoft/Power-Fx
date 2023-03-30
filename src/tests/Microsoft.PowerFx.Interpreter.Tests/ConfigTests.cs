@@ -869,10 +869,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData(500, "Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3), \"a\", one, 3)))", true)]
         public void AllowedMaxExpressionLengthTest(int maxLength, string expression, bool isSucceeded)
         {
-            var config = new PowerFxConfig();
-            Assert.Equal(1000, config.MaximumExpressionLength);
-
-            config.MaximumExpressionLength = maxLength;
+            var config = new PowerFxConfig
+            {
+                MaximumExpressionLength = maxLength
+            };
 
             var engine = new Engine(config);            
             var opt = engine.GetDefaultParserOptionsCopy();
@@ -888,6 +888,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.False(check.IsSuccess);
                 Assert.False(expression.Length < opt.MaxExpressionLength);
             }
+        }
+
+        [Fact]
+        public void MaxExpressionLenghthTest()
+        {
+            var config = new PowerFxConfig();
+            Assert.Equal(1000, config.MaximumExpressionLength);
         }
 
         private static SymbolTable AddDataverse(string valueName, FormulaValue value)
