@@ -568,17 +568,26 @@ namespace Microsoft.PowerFx
             else if (node.Op == UnaryOpKind.RecordToRecord)
             {
                 var fields = new List<NamedValue>();
+
                 var scopeContext = context.SymbolContext.WithScope(node.Scope);
                 var newScope = scopeContext.WithScopeValues((RecordValue)arg1);
 
-                foreach (var coercion in node.FieldCoercions)
+                var recordSrc = (RecordValue)arg1;
+                foreach (var f2 in recordSrc.Fields)
                 {
                     CheckCancel();
 
-                    var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
-                    var name = coercion.Key;
+                    if (node.FieldCoercions.TryGetValue(new Core.Utils.DName(f2.Name), out var coercion))
+                    {
+                        var newValue = await coercion.Accept(this, context.NewScope(newScope));
 
-                    fields.Add(new NamedValue(name.Value, newValue));
+                        fields.Add(new NamedValue(f2.Name, newValue));
+                    }
+                    else
+                    {
+                        // Existing field, no coercion needed. 
+                        fields.Add(f2);
+                    }
                 }
 
                 return FormulaValue.NewRecordFromFields(fields);

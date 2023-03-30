@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Tests
 
             cts.Cancel();
 
-            await Assert.ThrowsAsync<TaskCanceledException>(async () => { await task; });
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => { await task; });
         }
 
         // Test interleaved concurrent runs. 
