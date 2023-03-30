@@ -187,7 +187,6 @@ namespace Microsoft.PowerFx.Functions
         public static bool TryFloat(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out NumberValue result)
         {
             result = null;
-            
             switch (value)
             {
                 case NumberValue n:
