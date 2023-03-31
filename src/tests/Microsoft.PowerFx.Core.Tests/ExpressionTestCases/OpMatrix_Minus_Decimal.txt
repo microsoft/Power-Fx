@@ -110,8 +110,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> true-Float(2)
 -1
 
+>> true-Float("1e100")
+-1E+100
+
 >> true-"2"
 -1
+
+>> true-"1E+100"
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> true-true
 0
@@ -142,8 +148,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Blank()-Float(2)
 -2
 
+>> Blank()-Float("1e100")
+-1E+100
+
 >> Blank()-"2"
 -2
+
+>> Blank()-"1e100"
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Blank()-true
 -1
@@ -185,6 +197,9 @@ Date(2000,1,1)
 
 >> Date(2000,1,1)-Date(2000,1,1)
 0
+
+>> Date(2001,2,2)-Date(2000,1,1)
+398
 
 >> Date(2000,1,1)-DateTime(2000,1,1,12,0,0)
 #SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1289, expected result: -0.5
@@ -250,6 +265,9 @@ Time(9,0,0,0)
 >> Time(9,0,0)-Time(6,0,0)
 0.125
 
+>> Time(9,0,0)-Date(2000,1,1)
+Errors: Error 11-12: This operation isn't valid on these types: Time, Date.
+
 >> Time(9,0,0)-DateTime(2000,1,1,12,0,0)
 Errors: Error 11-12: This operation isn't valid on these types: Time, DateTime.
 
@@ -300,7 +318,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Untyped
 
 >> ParseJSON("12.00000000000000000000001")-Float(2)
-10.0000000000000000000000001
+10
 
 >> ParseJSON("1e100")-Float(2)
 1E+100

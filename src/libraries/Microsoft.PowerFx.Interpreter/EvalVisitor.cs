@@ -413,8 +413,12 @@ namespace Microsoft.PowerFx
                     return OperatorAddTimeAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.DateDifference:
                     return OperatorDateDifference(this, context, node.IRContext, args);
+                case BinaryOpKind.DateDifferenceDecimal:
+                    return OperatorDateDifferenceDecimal(this, context, node.IRContext, args);
                 case BinaryOpKind.TimeDifference:
                     return OperatorTimeDifference(this, context, node.IRContext, args);
+                case BinaryOpKind.TimeDifferenceDecimal:
+                    return OperatorTimeDifferenceDecimal(this, context, node.IRContext, args);
                 case BinaryOpKind.SubtractDateAndTime:
                     return OperatorSubtractDateAndTime(this, context, node.IRContext, args);
                 case BinaryOpKind.SubtractNumberAndDate:

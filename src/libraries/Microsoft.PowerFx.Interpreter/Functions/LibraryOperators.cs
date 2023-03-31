@@ -289,6 +289,19 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: DateDifference);
 
+        public static readonly AsyncFunctionPtr OperatorDateDifferenceDecimal = StandardErrorHandling<FormulaValue>(
+            "-",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWith(
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
+            checkRuntimeTypes: ExactSequence(
+                DateOrDateTime,
+                DateOrDateTime),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: DateDifferenceDecimal);
+
         public static readonly AsyncFunctionPtr OperatorTimeDifference = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
@@ -301,6 +314,19 @@ namespace Microsoft.PowerFx.Functions
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: TimeDifference);
+
+        public static readonly AsyncFunctionPtr OperatorTimeDifferenceDecimal = StandardErrorHandling<FormulaValue>(
+            "-",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: ReplaceBlankWith(
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
+            checkRuntimeTypes: ExactSequence(
+                ExactValueType<TimeValue>,
+                ExactValueType<TimeValue>),
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: TimeDifferenceDecimal);
 
         public static readonly AsyncFunctionPtr OperatorSubtractDateAndTime = StandardErrorHandling<FormulaValue>(
             "-",
@@ -813,6 +839,26 @@ namespace Microsoft.PowerFx.Functions
 
             var result = arg0.Value.Subtract(arg1.Value);
             return new NumberValue(irContext, result.TotalDays);
+        }
+
+        private static FormulaValue DateDifferenceDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
+
+            DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
+
+            var result = arg0.Subtract(arg1);
+            return new DecimalValue(irContext, (decimal)result.Days);
+        }
+
+        private static FormulaValue TimeDifferenceDecimal(IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (TimeValue)args[0];
+            var arg1 = (TimeValue)args[1];
+
+            var result = arg0.Value.Subtract(arg1.Value);
+            return new DecimalValue(irContext, (decimal)result.TotalDays);
         }
 
         private static FormulaValue SubtractDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

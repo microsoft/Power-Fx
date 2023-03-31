@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -521,24 +522,40 @@ namespace Microsoft.PowerFx.Core.Binding
         // For unary ops, pass DType.ObjNull for the other type
 
         // Result types:
-        // * Type codes in DTypeSpecParser.cs, nif == NumberIsFloat.
+        // * Type codes in DTypeSpecParser.cs
         // * Date/DateTime/Time exceptions for addition are are handled in PostVisitBinaryOpNodeAdditionCore.
+        // * Minus is handled through addition of a negative unary op
+        // * Tests in OpMatrix_{op}_{NumberIsFloatMode}.txt files
         //
-        // Non NumberIsFloat (no flag)                          NumberIsFloat
+        // Non NumberIsFloat (no flag)                     NumberIsFloat
         //    +   | n  s  b  N  D  d  T  w  O  (right)        +   | n  s  b  N  D  d  T  w  O  (right)
         // =======|====================================    =======|====================================
         //      n | n  n  n  n  D  d  T  n  n                   n | n  n  n  n  D  d  T  n  n 
         //      s | n  w  w  w  D  d  T  w  w                   s | n  n  n  n  D  d  T  n  n 
-        //      b | n  w  w  w  D  d  T  w  w                   b | n  n  n  n  D  d  T  w  n 
-        //      N | n  w  w  w  D  d  T  w  w                   N | n  n  n  n  D  d  T  w  n 
+        //      b | n  w  w  w  D  d  T  w  w                   b | n  n  n  n  D  d  T  n  n 
+        //      N | n  w  w  w  D  d  T  w  w                   N | n  n  n  n  D  d  T  n  n 
         //      D | D  D  D  D  e  e  d  D  D                   D | D  D  D  D  e  e  d  D  D 
         //      d | d  d  d  d  e  e  d  d  d                   d | d  d  d  d  e  e  d  d  d 
         //      T | T  T  T  T  d  d  T  T  T                   T | T  T  T  T  d  d  T  T  T 
-        //      w | n  w  w  w  D  d  T  w  w                   w | n  n  w  w  D  d  T  w  n 
+        //      w | n  w  w  w  D  d  T  w  w                   w | n  n  n  n  D  d  T  w  n 
         //      O | n  w  w  w  D  d  T  w  w                   O | n  n  n  n  D  d  T  n  n 
         // (left) |                                        (left) |
         //
-        // Non NumberIsFloat (no flag)                          NumberIsFloat
+        // Non NumberIsFloat (no flag)                     NumberIsFloat
+        //    -   | n  s  b  N  D  d  T  w  O  (right)        -   | n  s  b  N  D  d  T  w  O  (right)
+        // =======|====================================    =======|====================================
+        //      n | n  n  n  n  n  n  n  n  n                   n | n  n  n  n  e  e  e  n  n
+        //      s | n  w  w  w  w  w  w  w  w                   s | n  n  n  n  e  e  e  n  n
+        //      b | n  w  w  w  w  w  w  w  w                   b | n  n  n  n  e  e  e  n  n
+        //      N | n  w  w  w  w  w  w  w  w                   N | n  n  n  n  e  e  e  n  n
+        //      D | n  w  w  w  w  w  w  w  w                   D | D  D  D  D  n  n  d  D  D
+        //      d | n  w  w  w  w  w  w  w  w                   d | d  d  d  d  n  n  d  d  d
+        //      T | n  w  w  w  w  w  w  w  w                   T | T  T  T  T  e  e  n  T  T
+        //      w | n  w  w  w  w  w  w  w  w                   w | n  n  n  n  e  e  e  w  n
+        //      O | n  w  w  w  w  w  w  w  w                   O | n  n  n  n  e  e  e  n  n
+        // (left) |                                        (left) |
+        //
+        // Non NumberIsFloat (no flag)                     NumberIsFloat
         //  *, /  | n  s  b  N  D  d  T  w  O  (right)       *, / | n  s  b  N  D  d  T  w  O  (right)
         // =======|====================================    =======|====================================
         //      n | n  n  n  n  n  n  n  n  n                   n | n  n  n  n  n  n  n  n  n 
@@ -573,11 +590,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     ? DType.Number : DType.Decimal;
             }
 
-            // numberIsFloat, leans toward Number with Decimal being the exception
+            // numberIsFloat, favors Number with Decimal being the exception
             else
             {
-                return (leftType == DType.Decimal && rightType != DType.Number && rightType != DType.String && rightType != DType.UntypedObject) ||
-                       (rightType == DType.Decimal && leftType != DType.Number && rightType != DType.String && rightType != DType.UntypedObject)
+                return (leftType == DType.Decimal && rightType != DType.Number && rightType != DType.String && rightType != DType.Boolean && rightType != DType.ObjNull && rightType != DType.UntypedObject) ||
+                       (rightType == DType.Decimal && leftType != DType.Number && leftType != DType.String && leftType != DType.Boolean && leftType != DType.ObjNull && leftType != DType.UntypedObject)
                     ? DType.Decimal : DType.Number;
             }
         }
@@ -683,7 +700,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             {
                                 // DateTime - DateTime = Number
                                 // DateTime - Date = Number
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
+                                return new BinderCheckTypeResult() { Node = node, NodeType = numberIsFloat ? DType.Number : DType.Decimal };
                             }
                             else
                             {
@@ -710,7 +727,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             if (unary != null && unary.Op == UnaryOp.Minus)
                             {
                                 // Date - Date = Number
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
+                                return new BinderCheckTypeResult() { Node = node, NodeType = numberIsFloat ? DType.Number : DType.Decimal };
                             }
                             else
                             {
@@ -727,7 +744,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             if (unary != null && unary.Op == UnaryOp.Minus)
                             {
                                 // Date - DateTime = Number
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
+                                return new BinderCheckTypeResult() { Node = node, NodeType = numberIsFloat ? DType.Number : DType.Decimal };
                             }
                             else
                             {
@@ -750,7 +767,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             if (unary != null && unary.Op == UnaryOp.Minus)
                             {
                                 // Time - Time = Number
-                                return new BinderCheckTypeResult() { Node = node, NodeType = DType.Number };
+                                return new BinderCheckTypeResult() { Node = node, NodeType = numberIsFloat ? DType.Number : DType.Decimal };
                             }
                             else
                             {
