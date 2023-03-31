@@ -111,3 +111,9 @@ true
 
 >> IfError( If(false, 1, Error({Kind:Date(2023,3,15)})), FirstError.Kind )
 45000
+
+>> Wyz("foo")
+Errors: Error 0-10: 'Wyz' is an unknown or unsupported function.
+
+>> ReadNFC("foo")
+Errors: Error 0-14: 'ReadNFC' is a recognized but not supported function.

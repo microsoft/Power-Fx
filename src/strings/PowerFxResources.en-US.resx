@@ -5107,4 +5107,8 @@
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>A url to be encoded.</value>
   </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' is a recognized but not supported function.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>
