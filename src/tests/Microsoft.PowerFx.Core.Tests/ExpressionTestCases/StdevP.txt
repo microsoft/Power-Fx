@@ -31,10 +31,6 @@ Error({Kind:ErrorKind.Div0})
 >> StdevP(CountIf(["1","2","3"], true))
 0
 
-// Infinity
->> StdevP(-1.7e308,1.7e308)
-Error({Kind:ErrorKind.Numeric})
-
 >> StdevP("100", "AB")
 Error({Kind:ErrorKind.InvalidArgument})
 

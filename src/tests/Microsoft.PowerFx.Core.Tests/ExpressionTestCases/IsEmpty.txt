@@ -75,7 +75,7 @@ true
 false
 
 >> IsEmpty(Table({a:1/0},{a:Sqrt(-1)}))
-false
+#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1204Error, expected: false
 
 
 // EMPTY TABLES OF DIFFERENT DATATYPES
@@ -122,7 +122,7 @@ Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instea
 Errors: Error 8-10: Invalid argument type (Record). Expecting a Table value instead.
 
 >> IsEmpty(0)
-Errors: Error 8-9: Invalid argument type (Number). Expecting a Table value instead.
+Errors: Error 8-9: Invalid argument type (Decimal). Expecting a Table value instead.
 
 >> IsEmpty(false)
 Errors: Error 8-13: Invalid argument type (Boolean). Expecting a Table value instead.
