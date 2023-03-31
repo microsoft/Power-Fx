@@ -89,38 +89,5 @@ namespace Microsoft.PowerFx
         internal Features()
         {
         }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is not Features other)
-            {
-                return false;
-            }
-
-            return
-                this.AllowAsyncDelegation == other.AllowAsyncDelegation &&
-                this.AllowImpureNodeDelegation == other.AllowImpureNodeDelegation &&
-                this.ConsistentOneColumnTableResult == other.ConsistentOneColumnTableResult &&
-                this.DisableRowScopeDisambiguationSyntax == other.DisableRowScopeDisambiguationSyntax &&
-                this.FirstLastNRequiresSecondArguments == other.FirstLastNRequiresSecondArguments &&
-                this.PowerFxV1CompatibilityRules == other.PowerFxV1CompatibilityRules &&
-                this.StronglyTypedBuiltinEnums == other.StronglyTypedBuiltinEnums &&
-                this.SupportColumnNamesAsIdentifiers == other.SupportColumnNamesAsIdentifiers &&
-                this.TableSyntaxDoesntWrapRecords == other.TableSyntaxDoesntWrapRecords;
-        }
-
-        public override int GetHashCode()
-        {
-            return Hashing.CombineHash(
-                this.AllowAsyncDelegation.GetHashCode(),
-                this.AllowImpureNodeDelegation.GetHashCode(),
-                this.ConsistentOneColumnTableResult.GetHashCode(),
-                this.DisableRowScopeDisambiguationSyntax.GetHashCode(),
-                this.FirstLastNRequiresSecondArguments.GetHashCode(),
-                this.PowerFxV1CompatibilityRules.GetHashCode(),
-                this.StronglyTypedBuiltinEnums.GetHashCode(),
-                this.SupportColumnNamesAsIdentifiers.GetHashCode(),
-                this.TableSyntaxDoesntWrapRecords.GetHashCode());
-        }
     }
 }

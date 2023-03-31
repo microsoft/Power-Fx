@@ -359,7 +359,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
 
-            features ??= new Features();
+            features ??= Features.None;
 
             var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule, features: features);
             var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features);
@@ -385,7 +385,7 @@ namespace Microsoft.PowerFx.Core.Binding
             IExternalRule rule = null,
             Features features = null)
         {
-            features ??= new Features();
+            features ??= Features.None;
             return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, updateDisplayNames, ruleScope, forceUpdateDisplayNames, rule, features);
         }
 
@@ -397,7 +397,7 @@ namespace Microsoft.PowerFx.Core.Binding
             DType ruleScope,
             Features features = null)
         {
-            features ??= new Features();
+            features ??= Features.None;
             return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, features);
         }
 
