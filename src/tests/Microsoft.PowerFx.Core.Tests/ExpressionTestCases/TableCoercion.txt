@@ -7,6 +7,9 @@ Table({a:true},{a:false},{a:true})
 >> First( Table({a:0,b:0}, {a:true, b:1})).b
 0
 
+>> First( Table({a:0}, {a:true, b:1})).b
+Blank()
+
 >> Last(Table({a:0,b:0}, {a:true, b:1})).b
 1
 
@@ -23,4 +26,10 @@ Table({a:1},{a:1},{a:1})
 Table({a:1},{a:44986},{a:1})
 
 >> Table({a:0,b:Date(2023,3,1)}, {a:Date(2023,3,1),b:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")})
-Errors: Error 0-96: The function 'Table' has some invalid arguments.|Error 30-95: Invalid argument type. Expecting a Record value, but of a different schema.|Error 30-95: Missing column. Your formula is missing a column 'b' with a type of 'Invalid'.
+Errors: Error 0-96: The function 'Table' has some invalid arguments.
+
+>> Table({A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:"1",d2:4},y:3}})
+Table({A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:1,d2:4},y:3}})
+
+>> Table({y : { x : { a: 1}}}, {y:{x : { a: true, b:2}}} )
+"THIS TEST CASE WILL FAIL"

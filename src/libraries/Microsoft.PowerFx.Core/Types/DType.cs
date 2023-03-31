@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Entities;
@@ -214,7 +215,7 @@ namespace Microsoft.PowerFx.Core.Types
         internal bool IsUniversal => Kind == DKind.Error || Kind == DKind.ObjNull;
 
         // Constructor for the single invalid DType sentinel value.
-        private DType()
+        internal DType()
         {
         }
 
@@ -3583,12 +3584,9 @@ namespace Microsoft.PowerFx.Core.Types
         /// <param name="needCoercion">Checks if child node needs to be coerced.</param>
         /// <returns></returns>
         public bool TryUnionWithCoerce(DType argType, TexlNode arg, IErrorContainer errors, out DType returnType, out bool needCoercion)
-        {
+        {            
+            var fError = false;
             var isValid = true;
-
-            KeyValuePair<string, DType> schemaDifference = new KeyValuePair<string, DType>(null, Invalid);
-            DType schemaDifferenceType = null;
-            DType coercionType = null;
 
             returnType = null;
             needCoercion = false;
@@ -3606,27 +3604,9 @@ namespace Microsoft.PowerFx.Core.Types
             {
                 returnType = argType;
             }
-            else if (CanUnionWith(argType))
+            else if (DTypePowerFx.UnionWithCoerce(ref fError, this, argType, out returnType, out needCoercion))
             {
-                returnType = Union(this, argType);
-            }
-            else if (IsAggregate)
-            {
-                if (argType.AggregateCoercesTo(this, out var isSafe, out coercionType, out schemaDifference, out schemaDifferenceType))
-                {
-                    returnType = coercionType;
-                    needCoercion = true;
-                }
-                else
-                {
-                    errors.Errors(arg, coercionType, schemaDifference, schemaDifferenceType);
-                    isValid = false;
-                }
-            }
-            else if (argType.CoercesTo(this))
-            {
-                returnType = this;
-                needCoercion = true;
+                isValid = !fError;
             }
             else
             {
@@ -3634,6 +3614,49 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             return isValid;
+        }
+    }
+
+    internal class DTypePowerFx : DType
+    {
+        private DTypePowerFx()
+        {
+        }
+
+        public static bool UnionWithCoerce(ref bool fError, DType type1, DType type2, out DType returnType, out bool needCoercion)
+        {
+            returnType = DType.Union(ref fError, type1, type2);
+            needCoercion = false;
+
+            if (fError)
+            {
+                if (type1.IsAggregate && type2.IsAggregate)
+                {
+                    if (type1.Kind != type2.Kind)
+                    {
+                        returnType = DType.Error;
+                        return false;
+                    }
+                }
+
+                if (type1.CoercesTo(type2))
+                {
+                    fError = type1.IsError;
+                    returnType = CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                    needCoercion = true;
+                    return true;
+                }
+
+                if (type2.CoercesTo(type1))
+                {
+                    fError = type2.IsError;
+                    returnType = CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                    needCoercion = true;
+                    return true;
+                }
+            }
+
+            return !returnType.IsError;
         }
     }
 }
