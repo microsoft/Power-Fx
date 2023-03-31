@@ -567,7 +567,7 @@ namespace Microsoft.PowerFx.Core.Tests
                  MaxExpressionLength = 10
             };
 
-            var parseResult = Engine.Parse(expr, opts);
+            var parseResult = Engine.Parse(expr, options: opts);
             Assert.False(parseResult.IsSuccess);
             Assert.True(parseResult.HasError);
 

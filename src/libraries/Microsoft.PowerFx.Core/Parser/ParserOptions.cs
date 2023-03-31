@@ -30,13 +30,26 @@ namespace Microsoft.PowerFx
         /// This primarily determines numeric decimal separator character
         /// as well as chaining operator. 
         /// </summary>
-        public CultureInfo Culture { get; set; }
+        public CultureInfo Culture
+        {
+            get => _culture ?? CultureInfo.InvariantCulture;
+            set => _culture = value ?? CultureInfo.InvariantCulture;
+        }
+
+        private CultureInfo _culture;
 
         /// <summary>
         /// If greater than 0, enforces a maximum length on a single expression. 
         /// It is an immediate parser error if the expression is too long. 
         /// </summary>
         public int MaxExpressionLength { get; set; }
+
+        public ParserOptions(CultureInfo culture = null, bool allowsSideEffects = false, int maxExpressionLength = 0)
+        {
+            Culture = culture;
+            AllowsSideEffects = allowsSideEffects;
+            MaxExpressionLength = maxExpressionLength;
+        }
 
         internal ParseResult Parse(string script)
         {

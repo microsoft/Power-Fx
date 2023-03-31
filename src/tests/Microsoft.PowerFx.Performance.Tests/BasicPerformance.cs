@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [GlobalSetup]
         public void GlobalSetup()
         {
-            _powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            _powerFxConfig = new PowerFxConfig(Features.All);
             _engine = new Engine(_powerFxConfig);
             _parserOptions = new ParserOptions() { AllowsSideEffects = true, Culture = new CultureInfo("en-US") };
             _recalcEngine = new RecalcEngine(_powerFxConfig);

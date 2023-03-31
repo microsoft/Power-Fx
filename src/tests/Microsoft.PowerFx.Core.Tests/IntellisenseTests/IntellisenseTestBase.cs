@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Tests;
@@ -23,7 +24,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <param name="expression"></param>
         /// <param name="contextTypeString"></param>
         /// <returns></returns>
-        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, string contextTypeString = null)
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, CultureInfo culture, string contextTypeString = null)
         {
             RecordType contextType;
             if (contextTypeString != null)
@@ -39,20 +40,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 contextType = RecordType.Empty();
             }
 
-            return Suggest(expression, config, contextType);
+            return Suggest(expression, config, culture, contextType);
         }
 
-        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, RecordType parameterType)
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, CultureInfo culture, RecordType parameterType)
         {
             (var expression2, var cursorPosition) = Decode(expression);
             var symTable = ReadOnlySymbolTable.NewFromRecord(parameterType);
-            return Suggest(expression2, symTable, cursorPosition, config);
+            return Suggest(expression2, symTable, cursorPosition, config, culture);
         }
 
-        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, ReadOnlySymbolTable symTable)
+        internal IIntellisenseResult Suggest(string expression, PowerFxConfig config, CultureInfo culture, ReadOnlySymbolTable symTable)
         {
             (var expression2, var cursorPosition) = Decode(expression);
-            return Suggest(expression2, symTable, cursorPosition, config);
+            return Suggest(expression2, symTable, cursorPosition, config, culture);
         }
 
         // Tests use | to indicate cursor position within an expression string. 
@@ -70,14 +71,14 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return (expression, cursorPosition);
         }
 
-        internal IIntellisenseResult Suggest(string expression, ReadOnlySymbolTable symTable, int cursorPosition, PowerFxConfig config)
+        internal IIntellisenseResult Suggest(string expression, ReadOnlySymbolTable symTable, int cursorPosition, PowerFxConfig config, CultureInfo culture)
         {
             var engine = new Engine(config)
             {
                 SupportedFunctions = new SymbolTable()
             };
 
-            var checkResult = engine.Check(expression, symbolTable: symTable);
+            var checkResult = engine.Check(expression, new ParserOptions(culture), symTable);
             var suggestions = engine.Suggest(checkResult, cursorPosition);
             
             if (suggestions.Exception != null)

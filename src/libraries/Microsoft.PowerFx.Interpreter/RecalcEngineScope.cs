@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx
 
         public string ConvertToDisplay(string expression)
         {
-            return _engine.GetDisplayExpression(expression, _contextType);
+            return _engine.GetDisplayExpression(expression, _contextType, _parserOptions.Culture);
         }
     }
 }

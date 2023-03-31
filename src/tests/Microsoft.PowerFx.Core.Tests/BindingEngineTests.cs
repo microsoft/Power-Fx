@@ -113,8 +113,8 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckParseErrorCommaSeparatedLocale()
         {
-            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo("it-IT")));
-            var result = engine.Parse("3.145");
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Parse("3.145", new ParserOptions(CultureInfo.GetCultureInfo("it-IT")));
 
             Assert.False(result.IsSuccess);
             Assert.StartsWith("Error 2-5: Caratteri non previsti", result.Errors.First().ToString());
@@ -123,8 +123,8 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckParseSuccessCommaSeparatedLocale()
         {
-            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo("de-DE")));
-            var result = engine.Parse("Function(args; separated; by; semicolons) + 123,456");
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Parse("Function(args; separated; by; semicolons) + 123,456", options: new ParserOptions(CultureInfo.GetCultureInfo("de-DE")));
 
             Assert.True(result.IsSuccess);
         }
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckParseSuccessCommaSeparatedLocaleUsingStatic()
         {
-            var result = Engine.Parse("Function(args; separated; by; semicolons) + 123,456", null, CultureInfo.GetCultureInfo("de-DE"));
+            var result = Engine.Parse("Function(args; separated; by; semicolons) + 123,456", options: new ParserOptions(CultureInfo.GetCultureInfo("de-DE")));
 
             Assert.True(result.IsSuccess);
         }
@@ -172,8 +172,8 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("4E88888", "Error 0-7: Numeric value is too large.", "en-US")]
         public void CheckBindError2(string expression, string expected, string locale)
         {
-            var engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo(locale)));
-            var result = engine.Check(expression);
+            var engine = new Engine(new PowerFxConfig());
+            var result = engine.Check(expression, new ParserOptions(CultureInfo.GetCultureInfo(locale)));
 
             Assert.False(result.IsSuccess);
             AssertContainsError(result, expected);

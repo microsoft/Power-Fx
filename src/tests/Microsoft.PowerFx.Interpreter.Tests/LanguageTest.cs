@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("en-US", language.Value);
 
             _defaultCulture = null;
-            TestDefaultCulture();
+            TestDefaultCulture(null);
         }
 
         [Fact]
@@ -63,10 +63,10 @@ namespace Microsoft.PowerFx.Tests
             ConfigTests.RunOnIsolatedThread(_defaultCulture, TestDefaultCulture);
         }
 
-        private void TestDefaultCulture()
+        private void TestDefaultCulture(CultureInfo culture)
         {
-            var engine = new RecalcEngine(new PowerFxConfig(_defaultCulture));
-            var result = engine.Eval("Language()");
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var result = engine.Eval("Language()", options: new ParserOptions(culture));
 
             Assert.Equal("en-US", result.ToObject());
         }

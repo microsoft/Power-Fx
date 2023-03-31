@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx
             var parserOptions = _engine.GetDefaultParserOptionsCopy();
             parserOptions.AllowsSideEffects = true;
 
-            var parse = Engine.Parse(expr, parserOptions, parserOptions.Culture);
+            var parse = Engine.Parse(expr, options: parserOptions);
             if (parse.IsSuccess)
             {
                 if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
