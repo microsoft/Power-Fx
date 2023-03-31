@@ -799,7 +799,7 @@ namespace Microsoft.PowerFx.Functions
             DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0.Subtract(arg1);
-            return new NumberValue(irContext, result.Days);
+            return new NumberValue(irContext, result.TotalDays);
         }
 
         private static FormulaValue TimeDifference(IRContext irContext, FormulaValue[] args)
