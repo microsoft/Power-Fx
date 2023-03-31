@@ -74,17 +74,9 @@ namespace Microsoft.PowerFx
             SupportColumnNamesAsIdentifiers = true,
             StronglyTypedBuiltinEnums = true,
             RestrictedIsEmptyArguments = true,
-            AllowAsyncDelegation = true,
-            AllowImpureNodeDelegation = true,
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
         };
-
-        /// <summary>
-        /// All features enabled
-        /// [USE WITH CAUTION] In using this value, you expose your code to future features.
-        /// </summary>
-        public static Features Experimental => PowerFxV1;
 
         internal Features()
         {

@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 expression,
                 DType.Number,
                 symbol,
-                features: Features.All,
+                features: Features.PowerFxV1,
                 optionSets: new[] { new BooleanOptionSet() });
         }
 

@@ -487,7 +487,7 @@ namespace Microsoft.PowerFx.Tests
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             var apiDoc = testConnector._apiDocument;
-            var config = new PowerFxConfig(Features.All);
+            var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
 
@@ -535,7 +535,7 @@ namespace Microsoft.PowerFx.Tests
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             var apiDoc = testConnector._apiDocument;
-            var config = new PowerFxConfig(Features.All);
+            var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
 

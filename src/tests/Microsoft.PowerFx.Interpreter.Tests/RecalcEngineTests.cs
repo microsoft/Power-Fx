@@ -783,7 +783,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngine_FunctionOrdering1()
         {
-            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.PowerFxV1);
             config.AddFunction(new TestFunctionMultiply());
             config.AddFunction(new TestFunctionSubstract());
 
@@ -799,7 +799,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngine_FunctionOrdering2()
         {
-            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.PowerFxV1);
             config.AddFunction(new TestFunctionSubstract());
             config.AddFunction(new TestFunctionMultiply());
 

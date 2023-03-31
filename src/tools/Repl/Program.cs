@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
-        private static readonly Features _features = Features.All;
+        private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
         {
