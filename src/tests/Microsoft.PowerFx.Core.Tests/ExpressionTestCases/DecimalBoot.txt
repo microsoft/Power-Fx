@@ -1,4 +1,5 @@
-﻿#SKIPFILE:disable:NumberIsFloat
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+#SKIPFILE:disable:NumberIsFloat
 
 // Tests that can't be run in decimal yet and have #SKIP directives
 // Once decimal is done, this #SKIPs can be removed and this file can be removed
@@ -26,11 +27,11 @@ Error({Kind:ErrorKind.Numeric})
 "b"
 
 >> Abs(Table({a:1/0},{a:Power(-3,2)}))
-Table({Value:Error({Kind:ErrorKind.Div0})},{a:9})
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:9})
 
 // Multiple errors
 >> Count(Table({a:1/0},{a:Sqrt(-1)}))
-({Kind:ErrorKind.Div0})
+Error({Kind:ErrorKind.Div0})
 
 // Multiple errors
 >> Count(Table({a:Sqrt(-1)},{a:1/0}))
@@ -49,10 +50,10 @@ Error({Kind:ErrorKind.Numeric})
 
 // Distinct values where expression handles errors
 >> Distinct(Table({a:1},{a:2},{a:If(1/0<2,{a:2}).a},{a:7},{a:Sqrt(-1)},{a:-13},{a:2}), IfError(a,-FirstError.Kind))
-Table({Result:1},{Result:2},{Result:-13},{Result:7},{Result:-24})
+Table({Value:1},{Value:2},{Value:-13},{Value:7},{Value:-24})
 
 // Distinct which ignores columns with errors
 >> Distinct(Table({a:10,b:1/0},{a:9,b:Sqrt(-1)},{a:8,b:3},{a:10,b:1/0},{a:8,b:Ln(-1)}), a)
-Table({Result:10},{Result:9},{Result:8})
+Table({Value:10},{Value:9},{Value:8})
 
 

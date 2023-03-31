@@ -129,8 +129,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                     else if (TryParseDirective(line, "#SKIPFILE:", ref fileSkipFile))
                     {
-                        if ((Regex.IsMatch(line, "[:,]\\s*disable:\\s*NumberIsFloat") && !numberIsFloat) ||
-                            (Regex.IsMatch(line, "[:,]\\s*NumberIsFloat") && numberIsFloat))
+                        if ((Regex.IsMatch(line, @"[:,]\s*disable\s*:\s*NumberIsFloat", RegexOptions.IgnoreCase) && !numberIsFloat) ||
+                            (Regex.IsMatch(line, @"(SKIPFILE:|,)\s*NumberIsFloat", RegexOptions.IgnoreCase) && numberIsFloat))
                         {
                             return;
                         }

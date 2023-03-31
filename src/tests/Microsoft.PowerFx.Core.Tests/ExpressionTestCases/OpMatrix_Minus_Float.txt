@@ -1,0 +1,360 @@
+#SKIPFILE: disable:NumberIsFloat
+
+// MINUS
+
+// Float
+
+>> Float(12)-Float(2)
+10
+
+>> Float("1e100")-Float(2)
+1E+100
+
+>> Float(12)-"2"
+10
+
+>> Float("1e100")-"2"
+1E+100
+
+>> Float(12)-true
+11
+
+>> Float("1e100")-true
+1E+100
+
+>> Float(12)-Blank()
+12
+
+>> Float("1e100")-Blank()
+1E+100
+
+>> Float(12)-Date(2000,1,1)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Float(12)-DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Float(12)-Time(12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Float(12)-Decimal("2.00000000000000000000000000002")
+10
+
+>> Float("1e100")-Decimal("2.00000000000000000000000000002")
+1E+100
+
+>> Float(12)-ParseJSON("2")
+10
+
+>> Float(12)-ParseJSON("1e100")
+-1E+100
+
+>> Float("1e100")-ParseJSON("2")
+1e100
+
+>> Float("1e100")-ParseJSON("1e100")
+0
+
+// Text
+
+>> "12"-Float(2)
+10
+
+>> "1e100"-Float(2)
+1E+100
+
+>> "12"-"2"
+10
+
+>> "1e100"-"2"
+1E+100
+
+>> "12"-true
+11
+
+>> "1e100"-true
+1E+100
+
+>> "12"-Blank()
+12
+
+>> "1e100"-Blank()
+1E+100
+
+>> "12"-Date(2000,1,1)
+Error({Kind:ErrorKind.NotSupported})
+
+>> "12"-DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> "12"-Time(12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> "12"-Decimal("2.000000000000000000000002")
+9.999999999999999999999998
+
+>> "1e100"-Decimal("2.000000000000000000000002")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> "12"-ParseJSON("2")
+10
+
+>> "1e100"-ParseJSON("1e100")
+0
+
+>> "1e100"-ParseJSON("2")
+1E+100
+
+// Boolean
+
+>> true-Float(2)
+-1
+
+>> true-"2"
+-1
+
+>> true-true
+0
+
+>> true-Blank()
+1
+
+>> true-Date(2000,1,1)
+Error({Kind:ErrorKind.NotSupported})
+
+>> true-DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> true-Time(12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> true-Decimal("2.000000000000000000000002")
+-1.000000000000000000000002
+
+>> true-ParseJSON("2")
+-1
+
+>> true-ParseJSON("1e100")
+-1E+100
+
+// Blank
+
+>> Blank()-Float(2)
+-2
+
+>> Blank()-"2"
+-2
+
+>> Blank()-true
+-1
+
+>> Blank()-Blank()
+0
+
+>> Blank()-Date(2000,1,1)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Blank()-DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Blank()-Time(12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Blank()-Decimal("2.000000000000000000000002")
+-2.000000000000000000000002
+
+>> Blank()-ParseJSON("2")
+-2
+
+>> Blank()-ParseJSON("1e100")
+-1E+100
+
+// Date
+
+>> Date(2000,1,1)-Float(2)
+Date(1999,12,30)
+
+>> Date(2000,1,1)-"2"
+Date(1999,12,30)
+
+>> Date(2000,1,1)-true
+Date(1999,12,31)
+
+>> Date(2000,1,1)-Blank()
+Date(2000,1,1)
+
+>> Date(2000,1,1)-Date(2000,1,1)
+0
+
+>> Date(2000,1,1)-DateTime(2000,1,1,12,0,0)
+#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1289, expected result: -0.5
+
+>> Date(2000,1,1)-Time(12,0,0)
+DateTime(1999,12,31,12,0,0,0)
+
+>> Date(2000,1,1)-Decimal("2.000000000000000000000002")
+Date(1999,12,30)
+
+>> Date(2000,1,1)-ParseJSON("2")
+Date(1999,12,30)
+
+>> Date(2000,1,1)-ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// DateTime
+
+>> DateTime(2000,1,1,12,0,0)-Float(2)
+DateTime(1999,12,30,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)-"2"
+DateTime(1999,12,30,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)-true
+DateTime(1999,12,31,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)-Blank()
+DateTime(2000,1,1,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)-Date(2000,1,1)
+#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1289, expected result: 0.5
+
+>> DateTime(2000,1,1,12,0,0)-DateTime(2000,1,1,9,0,0)
+#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1289, expected result: 0.125
+
+>> DateTime(2000,1,1,12,0,0)-Time(12,0,0)
+DateTime(2000,1,1,0,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)-Decimal("2.000000000000000000000002")
+DateTime(1999,12,30,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)-ParseJSON("2")
+DateTime(1999,12,30,12,0,0,0)
+
+>> DateTime(2000,1,1,12,0,0)-ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Time
+
+>> Time(9,0,0)-Float(0.125)
+Time(6,0,0,0)
+
+>> Time(9,0,0)-"0.125"
+Time(6,0,0,0)
+
+>> Text(Time(9,0,0)-true)
+"9:00 AM"
+
+>> Time(9,0,0)-Blank()
+Time(9,0,0,0)
+
+>> Time(9,0,0)-Time(6,0,0)
+0.125
+
+>> Time(9,0,0)-DateTime(2000,1,1,12,0,0)
+Errors: Error 11-12: This operation isn't valid on these types: Time, DateTime.
+
+>> Time(9,0,0)-Time(12,0,0)
+-0.125
+
+>> Time(9,0,0)-Decimal("0.125")
+Time(6,0,0,0)
+
+>> Text(Time(9,0,0)-ParseJSON("2"))
+"9:00 AM"
+
+>> Time(9,0,0)-ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Decimal
+
+>> Decimal("12.000000000000000000000001")-Float(2)
+10
+
+>> Decimal("12.000000000000000000000001")-"2"
+10.000000000000000000000001
+
+>> Decimal("12.000000000000000000000001")-true
+11.000000000000000000000001
+
+>> Decimal("12.000000000000000000000001")-Blank()
+12.000000000000000000000001
+
+>> Decimal("12.000000000000000000000001")-Date(2000,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Decimal("12.000000000000000000000001")-DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Decimal("12.000000000000000000000001")-Time(12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> Decimal("12.000000000000000000000002")-Decimal("2.000000000000000000000001")
+10.000000000000000000000001
+
+>> Decimal("12.000000000000000000000002")-ParseJSON("2")
+10.000000000000000000000002
+
+>> Decimal("12.000000000000000000000002")-ParseJSON("1e100")
+-1E+100
+
+// Untyped
+
+>> ParseJSON("12.00000000000000000000001")-Float(2)
+10.0000000000000000000000001
+
+>> ParseJSON("1e100")-Float(2)
+1E+100
+
+>> ParseJSON("12.00000000000000000000001")-"2"
+10.00000000000000000000001
+
+>> ParseJSON("1e100")-"2"
+1E+100
+
+>> ParseJSON("12.000000000000000000000001")-true
+11.000000000000000000000001
+
+>> ParseJSON("1e100")-true
+1E+100
+
+>> ParseJSON("12.000000000000000000000001")-Blank()
+12.000000000000000000000001
+
+>> ParseJSON("1e100")-Blank()
+1E+100
+
+>> ParseJSON("12.000000000000000000000001")-Date(2000,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> ParseJSON("1e100")-Date(2000,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> ParseJSON("12.000000000000000000000001")-DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> ParseJSON("1e100")-DateTime(2000,1,1,12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> ParseJSON("12.000000000000000000000001")-Time(12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> ParseJSON("1e100")-Time(12,0,0)
+Error({Kind:ErrorKind.NotSupported})
+
+>> ParseJSON("12.000000000000000000000002")-Decimal("2.000000000000000000000000001")
+10.000000000000000000000001999
+
+>> ParseJSON("1e100")-Decimal("2.000000000000000000000000001")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("12.000000000000000000000002")-ParseJSON("2")
+10.000000000000000000000002
+
+>> ParseJSON("1e100")-ParseJSON("2")
+1E+100
+
+>> ParseJSON("12.000000000000000000000002")-ParseJSON("1e100")
+-1E+100
+
+>> ParseJSON("1e100")-ParseJSON("1e100")
+0

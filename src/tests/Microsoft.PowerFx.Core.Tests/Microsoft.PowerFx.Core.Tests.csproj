@@ -47,6 +47,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ExpressionTestCases\OpMatrix_Decimal.txt" />
+    <None Remove="ExpressionTestCases\OpMatrix_Float.txt" />
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />

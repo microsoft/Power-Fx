@@ -318,7 +318,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractNumberAndDate = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<NumberValue>,
                 DateOrDateTime),
@@ -329,7 +331,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractNumberAndTime = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<NumberValue>,
                 ExactValueType<TimeValue>),
