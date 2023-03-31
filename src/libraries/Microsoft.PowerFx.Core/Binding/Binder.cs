@@ -4109,7 +4109,14 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
                     else
                     {
-                        _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction, node.Head.Name.Value);
+                        if (BuiltinFunctionsCore.OtherKnownFunctions.Contains(node.Head.Name.Value, StringComparer.OrdinalIgnoreCase))
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrUnimplementedFunction, node.Head.Name.Value);
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.Error(node, TexlStrings.ErrUnknownFunction, node.Head.Name.Value);
+                        }
                     }
 
                     _txb.SetInfo(node, new CallInfo(node));
