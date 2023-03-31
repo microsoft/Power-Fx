@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             return schema.Type switch
             {
                 FormulaTypeSchema.ParamType.Number => FormulaType.Number,
+                FormulaTypeSchema.ParamType.Decimal => FormulaType.Decimal,
                 FormulaTypeSchema.ParamType.String => FormulaType.String,
                 FormulaTypeSchema.ParamType.Boolean => FormulaType.Boolean,
                 FormulaTypeSchema.ParamType.Date => FormulaType.Date,

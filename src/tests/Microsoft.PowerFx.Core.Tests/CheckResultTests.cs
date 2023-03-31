@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // A non-default culture that  uses comma as a decimal separator
         private static readonly CultureInfo _frCulture = new CultureInfo("fr-FR");
         private static readonly ParserOptions _frCultureOpts = new ParserOptions { Culture = _frCulture };
+        private static readonly ParserOptions _numberIsFloatOpts = new ParserOptions { NumberIsFloat = true };
 
         [Fact]
         public void Ctors()
@@ -160,11 +161,13 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => check.SetBindingInfo());
         }
 
-        [Fact]
-        public void BasicParseErrors2()
+        [Theory]
+        [InlineData("1+", true)]
+        [InlineData("1+", false)]
+        public void BasicParseErrors2(string expr, bool numberIsFloat)
         {
             var check = new CheckResult(new Engine());
-            check.SetText("1+"); // parse error
+            check.SetText(expr, numberIsFloat ? _numberIsFloatOpts : null); // parse error
 
            // Can still try to bind even with parse errors. 
             // But some information like Returntype isn't computed.
@@ -182,7 +185,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Still assign some types
             var node = ((BinaryOpNode)parse.Root).Left;
             var type = check.GetNodeType(node);
-            Assert.Equal(FormulaType.Number, type);
+            Assert.Equal(numberIsFloat ? FormulaType.Number : FormulaType.Decimal, type);
         }
 
         // Ensure we can pass in ParserOptions. 
@@ -197,8 +200,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Same(opts, parse.Options);
 
             Assert.True(check.IsSuccess);
-            var value = ((NumLitNode)parse.Root).ActualNumValue;
-            Assert.Equal(1.234, value);
+            var value = ((DecLitNode)parse.Root).ActualDecValue;
+            Assert.Equal(1.234m, value);
         }
 
         [Fact]
@@ -394,7 +397,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var ir = check.ApplyIR();
             Assert.NotNull(ir);
-            Assert.Equal("AddNumbers:n(1:n, 2:n)", ir.TopNode.ToString());
+            Assert.Equal("AddDecimals:w(1:w, 2:w)", ir.TopNode.ToString());
         }
 
         // IR can only be produced for successful bindings
@@ -461,10 +464,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // CheckResult properly wired up to Apply logging. 
         [Theory]
-        [InlineData("123+abc", "#$number$# + #$firstname$#", true)] // display names
-        [InlineData("123+", "#$number$# + #$error$#", false)] // error 
-        [InlineData("123,456", "#$number$#", true)] // locales 
-        [InlineData("Power(2,3)", "Power(#$number$#)", true)] // functions aren't Pii
+        [InlineData("123+abc", "#$decimal$# + #$firstname$#", true)] // display names
+        [InlineData("123+", "#$decimal$# + #$error$#", false)] // error 
+        [InlineData("123,456", "#$decimal$#", true)] // locales 
+        [InlineData("Power(2,3)", "Power(#$decimal$#)", true)] // functions aren't Pii
         public void TestApplyGetLogging(string expr, string execptedLog, bool success)
         {
             var check = new CheckResult(new Engine());

@@ -15,14 +15,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class FileExpressionEvaluationTests : PowerFxTest
     {
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), false)]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over. a
+            // make sure they build is actually copying them over.affgtgerfere
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner();
+            var runner = new InterpreterRunner() { NumberIsFloat = false };
+            var (result, msg) = runner.RunTestCase(testCase);
+
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+            switch (result)
+            {
+                case TestResult.Pass:
+                    break;
+
+                case TestResult.Fail:
+                    Assert.True(false, prefix + msg);
+                    break;
+
+                case TestResult.Skip:
+                    Skip.If(true, prefix + msg);
+                    break;
+            }
+        }
+
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), true)]
+        public void InterpreterTestCase_NumberIsFloat(ExpressionTestCase testCase)
+        {
+            // This is running against embedded resources, so if you're updating the .txt files,
+            // make sure they build is actually copying them over.
+            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
+
+            var runner = new InterpreterRunner() { NumberIsFloat = true };
             var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
@@ -82,11 +109,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig();
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
-            var runner = new ReplRunner(engine);
+            var runner = new ReplRunner(engine) { NumberIsFloat = true };
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(path);
+            testRunner.AddFile(numberIsFloat: true, path);
 
             var result = testRunner.RunTests();
 
@@ -130,7 +157,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(path);
+            runner.AddDir(numberIsFloat: false, path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);

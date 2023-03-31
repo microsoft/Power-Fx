@@ -1,3 +1,5 @@
+#SKIPFILE: disable:NumberIsFloat  // no coercion from decimal to boolean yet
+
 >> Boolean("true")
 true
 

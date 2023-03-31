@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return propertyInfo?.CanWrite == true;
         }
 
-        internal static InternalSetup Parse(string setupHandlerName)
+        internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
         {
             var iSetup = new InternalSetup
             {
@@ -43,6 +43,11 @@ namespace Microsoft.PowerFx.Core.Tests
                     ConsistentOneColumnTableResult = true
                 }
             };
+
+            if (numberIsFloat)
+            {
+                iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
+            }
 
             if (string.IsNullOrWhiteSpace(setupHandlerName))
             {

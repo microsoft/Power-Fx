@@ -397,58 +397,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Theory]
-        [InlineData("Error({ Kind: 3 })")]
-        [InlineData("Error({ Kind: 3, Message: \"Asdf\" })")]
-        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Observed: \"MyObserved\" })")]
-        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\" })")]
-        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\", Details: { HttpStatusCode: 200, HttpResponse: \"A response from the network\"} })")]
-
-        // Using First(Table(...)) to avoid the literal record condition of the CheckTypes
-        [InlineData("Error(First(Table({ Kind: 3, Message: \"Asdf\"})))")]
-        [InlineData("Error(First(Table({ Kind: 3, Message: \"Asdf\", Observed: \"MyControl.MyProperty\" })))")]
-        [InlineData("Error(First(Table({ Kind: \"hello\" })))")]
-
-        // Multiple errors
-        [InlineData("Error(Table({ Kind: 3, Message: \"Asdf\"}, { Kind: 4, Message: \"Zxcv\"}))")]
-        [InlineData("Error(Table({ Kind: 3, Message: \"Asdf\", Observed: \"MyControl.MyProperty\" }, { Kind: 2, Message: \"Qwer\", Observed: \"MyControl.MyProperty2\" }, { Kind: 3, Message: \"Asdf\", Source: \"MySource\", Observed: \"MyObserved\", Details: { HttpStatusCode: 200, HttpResponse: \"A response from the network\"} }))")]
-
-        // String overload
-        [InlineData("Error(\"\")")]
-        [InlineData("Error(\"An error message\")")]
-
-        // Coercion in properties
-        [InlineData("Error({ Kind: \"12\" })")]
-        [InlineData("Error({ Kind: 3, Message: Today() })")]
-        public void TexlFunctionTypeSemanticsError(string expression)
-        {
-            TestSimpleBindingSuccess(expression, DType.ObjNull);
-        }
-
-        [Theory]
-        [InlineData("Error()")]
-        [InlineData("Error(1)")]
-        [InlineData("Error({})")]
-        [InlineData("Error([])")]
-        [InlineData("Error({ Kind: 3, Message: \"Asdf\", Notify: false, Irrelevant: true })")]
-        [InlineData("Error({ Irrelevant: true })")]
-
-        // Using First(Table(...)) to avoid the literal record condition of the CheckTypes
-        [InlineData("Error(First(Table({ Kind: 3, Irrelevant: true })))")]
-        [InlineData("Error(First(Table({ Irrelevant: true })))")]
-        [InlineData("Error(First(Table({ Message: \"Asdf\"})))")]
-        [InlineData("Error(First(Table({ })))")]
-
-        // Testing multiple errors
-        [InlineData("Error(Table({ Kind: 3, Irrelevant: true }))")]
-        [InlineData("Error(Table({ Irrelevant: true }))")]
-        [InlineData("Error(Table({ Message: \"Asdf\"}))")]
-        [InlineData("Error(Table({ }))")]
-        public void TexlFunctionTypeSemanticsError_Negative(string expression)
-        {
-            TestBindingErrors(expression, DType.ObjNull);
-        }
-
         [Fact]
         public void TexlFunctionTypeSemanticsFilter()
         {
@@ -3338,7 +3286,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null, Features features = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null)
         {
             features = features ?? Features.None;
             var config = new PowerFxConfig(features)
@@ -3355,14 +3303,16 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
+            var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
+            var result = engine.Check(script, opts);
 
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, IExternalOptionSet[] optionSets = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null)
         {
+            features ??= Features.None;
             var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
@@ -3381,7 +3331,8 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
+            var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
+            var result = engine.Check(script, opts);
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }

@@ -322,6 +322,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return ((NumberValue)_value).Value;
             }
 
+            public decimal GetDecimal()
+            {
+                return ((DecimalValue)_value).Value;
+            }
+
+            public string GetUntypedNumber()
+            {
+                return ((StringValue)_value).Value;
+            }
+
             public string GetString()
             {
                 return ((StringValue)_value).Value;
