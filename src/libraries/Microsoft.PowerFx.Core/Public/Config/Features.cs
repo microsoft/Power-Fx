@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx
         /// All features enabled
         /// [USE WITH CAUTION] In using this value, you expose your code to future features.
         /// </summary>
-        public static Features All => PowerFxV1;
+        public static Features Experimental => PowerFxV1;
 
         internal Features()
         {
