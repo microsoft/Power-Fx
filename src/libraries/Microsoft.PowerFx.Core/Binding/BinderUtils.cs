@@ -560,12 +560,12 @@ namespace Microsoft.PowerFx.Core.Binding
         // =======|====================================    =======|====================================
         //      n | n  n  n  n  n  n  n  n  n                   n | n  n  n  n  n  n  n  n  n 
         //      s | n  w  w  w  w  w  w  w  w                   s | n  n  n  n  n  n  n  n  n 
-        //      b | n  w  w  w  w  w  w  w  w                   b | n  n  n  n  n  n  n  w  n 
-        //      N | n  w  w  w  w  w  w  w  w                   N | n  n  n  n  n  n  n  w  n 
-        //      D | n  w  w  w  w  w  w  w  w                   D | n  n  n  n  n  n  n  w  n  
-        //      d | n  w  w  w  w  w  w  w  w                   d | n  n  n  n  n  n  n  w  n  
-        //      T | n  w  w  w  w  w  w  w  w                   T | n  n  n  n  n  n  n  w  n  
-        //      w | n  w  w  w  w  w  w  w  w                   w | n  n  w  w  w  w  w  w  n 
+        //      b | n  w  w  w  w  w  w  w  w                   b | n  n  n  n  n  n  n  n  n 
+        //      N | n  w  w  w  w  w  w  w  w                   N | n  n  n  n  n  n  n  n  n 
+        //      D | n  w  w  w  w  w  w  w  w                   D | n  n  n  n  n  n  n  n  n  
+        //      d | n  w  w  w  w  w  w  w  w                   d | n  n  n  n  n  n  n  n  n  
+        //      T | n  w  w  w  w  w  w  w  w                   T | n  n  n  n  n  n  n  n  n  
+        //      w | n  w  w  w  w  w  w  w  w                   w | n  n  n  n  n  n  n  w  n 
         //      O | n  w  w  w  w  w  w  w  w                   O | n  n  n  n  n  n  n  n  n 
         // (left) |                                        (left) |
 
@@ -593,8 +593,7 @@ namespace Microsoft.PowerFx.Core.Binding
             // numberIsFloat, favors Number with Decimal being the exception
             else
             {
-                return (leftType == DType.Decimal && rightType != DType.Number && rightType != DType.String && rightType != DType.Boolean && rightType != DType.ObjNull && rightType != DType.UntypedObject) ||
-                       (rightType == DType.Decimal && leftType != DType.Number && leftType != DType.String && leftType != DType.Boolean && leftType != DType.ObjNull && leftType != DType.UntypedObject)
+                return leftType == DType.Decimal && rightType == DType.Decimal
                     ? DType.Decimal : DType.Number;
             }
         }
