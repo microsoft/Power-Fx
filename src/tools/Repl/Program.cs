@@ -50,9 +50,14 @@ namespace Microsoft.PowerFx
                 { OptionNumberIsFloat, OptionNumberIsFloat },
                 { OptionLargeCallDepth, OptionLargeCallDepth }
             };
-            foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
+
+            foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                options.Add(feature.ToString(), feature.ToString());
+                if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
+                {
+                    var feature = featureProperty.Name;
+                    options.Add(feature.ToString(), feature.ToString());
+                }
             }
 
             config.SymbolTable.EnableMutationFunctions();
