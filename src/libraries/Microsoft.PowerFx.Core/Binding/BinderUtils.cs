@@ -544,15 +544,15 @@ namespace Microsoft.PowerFx.Core.Binding
         // Non NumberIsFloat (no flag)                     NumberIsFloat
         //    -   | n  s  b  N  D  d  T  w  O  (right)        -   | n  s  b  N  D  d  T  w  O  (right)
         // =======|====================================    =======|====================================
-        //      n | n  n  n  n  n  n  n  n  n                   n | n  n  n  n  e  e  e  n  n
-        //      s | n  w  w  w  w  w  w  w  w                   s | n  n  n  n  e  e  e  n  n
-        //      b | n  w  w  w  w  w  w  w  w                   b | n  n  n  n  e  e  e  n  n
-        //      N | n  w  w  w  w  w  w  w  w                   N | n  n  n  n  e  e  e  n  n
-        //      D | n  w  w  w  w  w  w  w  w                   D | D  D  D  D  n  n  d  D  D
-        //      d | n  w  w  w  w  w  w  w  w                   d | d  d  d  d  n  n  d  d  d
-        //      T | n  w  w  w  w  w  w  w  w                   T | T  T  T  T  e  e  n  T  T
-        //      w | n  w  w  w  w  w  w  w  w                   w | n  n  n  n  e  e  e  w  n
-        //      O | n  w  w  w  w  w  w  w  w                   O | n  n  n  n  e  e  e  n  n
+        //      n | n  n  n  n  e  e  e  n  n                   n | n  n  n  n  e  e  e  n  n
+        //      s | n  w  w  w  e  e  e  w  w                   s | n  n  n  n  e  e  e  n  n
+        //      b | n  w  w  w  e  e  e  w  w                   b | n  n  n  n  e  e  e  n  n
+        //      N | n  w  w  w  e  e  e  w  w                   N | n  n  n  n  e  e  e  n  n
+        //      D | D  D  D  D  w  w  d  D  D                   D | D  D  D  D  n  n  d  D  D
+        //      d | d  d  d  d  w  w  d  d  d                   d | d  d  d  d  n  n  d  d  d
+        //      T | T  T  T  T  e  e  w  T  T                   T | T  T  T  T  e  e  n  T  T
+        //      w | n  w  w  w  e  e  e  w  w                   w | n  n  n  n  e  e  e  w  n
+        //      O | n  w  w  w  e  e  e  w  w                   O | n  n  n  n  e  e  e  n  n
         // (left) |                                        (left) |
         //
         // Non NumberIsFloat (no flag)                     NumberIsFloat

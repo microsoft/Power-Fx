@@ -4,26 +4,26 @@
 
 // Float
 
->> Float(12)-Float(2)
-10
+>> Float(16)-Float(2)
+14
 
 >> Float("1e100")-Float(2)
 1E+100
 
->> Float(12)-"2"
-10
+>> Float(16)-"2"
+14
 
 >> Float("1e100")-"2"
 1E+100
 
->> Float(12)-true
-11
+>> Float(16)-true
+15
 
 >> Float("1e100")-true
 1E+100
 
->> Float(12)-Blank()
-12
+>> Float(16)-Blank()
+16
 
 >> Float("1e100")-Blank()
 1E+100
@@ -37,16 +37,16 @@ Error({Kind:ErrorKind.NotSupported})
 >> Float(12)-Time(12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> Float(12)-Decimal("2.00000000000000000000000000002")
-10
+>> Float(16)-Decimal("2.00000000000000000000000000002")
+14
 
 >> Float("1e100")-Decimal("2.00000000000000000000000000002")
 1E+100
 
->> Float(12)-ParseJSON("2")
-10
+>> Float(16)-ParseJSON("2")
+14
 
->> Float(12)-ParseJSON("1e100")
+>> Float(16)-ParseJSON("1e100")
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Float("1e100")-ParseJSON("2")
@@ -57,47 +57,47 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Text
 
->> "12"-Float(2)
-10
+>> "16"-Float(2)
+14
 
 >> "1e100"-Float(2)
 1E+100
 
->> "12"-"2"
-10
+>> "16"-"2"
+14
 
 >> "1e100"-"2"
 Error({Kind:ErrorKind.InvalidArgument})
 
->> "12"-true
-11
+>> "16"-true
+15
 
 >> "1e100"-true
 Error({Kind:ErrorKind.InvalidArgument})
 
->> "12"-Blank()
-12
+>> "16"-Blank()
+16
 
 >> "1e100"-Blank()
 Error({Kind:ErrorKind.InvalidArgument})
 
->> "12"-Date(2000,1,1)
+>> "16"-Date(2000,1,1)
 Error({Kind:ErrorKind.NotSupported})
 
->> "12"-DateTime(2000,1,1,12,0,0)
+>> "16"-DateTime(2000,1,1,12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> "12"-Time(12,0,0)
+>> "16"-Time(12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> "12"-Decimal("2.000000000000000000000002")
-9.999999999999999999999998
+>> "16"-Decimal("2.000000000000000000000002")
+13.999999999999999999999998
 
 >> "1e100"-Decimal("2.000000000000000000000002")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> "12"-ParseJSON("2")
-10
+>> "16"-ParseJSON("2")
+14
 
 >> "1e100"-ParseJSON("1e100")
 Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
@@ -285,93 +285,93 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Decimal
 
->> Decimal("12.000000000000000000000001")-Float(2)
-10
+>> Decimal("16.000000000000000000000001")-Float(2)
+14
 
->> Decimal("12.000000000000000000000001")-"2"
-10.000000000000000000000001
+>> Decimal("16.000000000000000000000001")-"2"
+14.000000000000000000000001
 
->> Decimal("12.000000000000000000000001")-true
-11.000000000000000000000001
+>> Decimal("16.000000000000000000000001")-true
+15.000000000000000000000001
 
->> Decimal("12.000000000000000000000001")-Blank()
-12.000000000000000000000001
+>> Decimal("16.000000000000000000000001")-Blank()
+16.000000000000000000000001
 
->> Decimal("12.000000000000000000000001")-Date(2000,0,0)
+>> Decimal("16.000000000000000000000001")-Date(2000,1,1)
 Error({Kind:ErrorKind.NotSupported})
 
->> Decimal("12.000000000000000000000001")-DateTime(2000,1,1,12,0,0)
+>> Decimal("16.000000000000000000000001")-DateTime(2000,1,1,12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> Decimal("12.000000000000000000000001")-Time(12,0,0)
+>> Decimal("16.000000000000000000000001")-Time(12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> Decimal("12.000000000000000000000002")-Decimal("2.000000000000000000000001")
-10.000000000000000000000001
+>> Decimal("16.000000000000000000000002")-Decimal("2.000000000000000000000001")
+14.000000000000000000000001
 
->> Decimal("12.000000000000000000000002")-ParseJSON("2")
-10.000000000000000000000002
+>> Decimal("16.000000000000000000000002")-ParseJSON("2")
+14.000000000000000000000002
 
->> Decimal("12.000000000000000000000002")-ParseJSON("1e100")
+>> Decimal("16.000000000000000000000002")-ParseJSON("1e100")
 Error({Kind:ErrorKind.InvalidArgument})
 
 // Untyped
 
->> ParseJSON("12.00000000000000000000001")-Float(2)
-10
+>> ParseJSON("16.00000000000000000000001")-Float(2)
+14
 
 >> ParseJSON("1e100")-Float(2)
 1E+100
 
->> ParseJSON("12.00000000000000000000001")-"2"
-10.00000000000000000000001
+>> ParseJSON("16.00000000000000000000001")-"2"
+14.00000000000000000000001
 
 >> ParseJSON("1e100")-"2"
 Error({Kind:ErrorKind.InvalidArgument})
 
->> ParseJSON("12.000000000000000000000001")-true
-11.000000000000000000000001
+>> ParseJSON("16.000000000000000000000001")-true
+15.000000000000000000000001
 
 >> ParseJSON("1e100")-true
 Error({Kind:ErrorKind.InvalidArgument})
 
->> ParseJSON("12.000000000000000000000001")-Blank()
-12.000000000000000000000001
+>> ParseJSON("16.000000000000000000000001")-Blank()
+16.000000000000000000000001
 
 >> ParseJSON("1e100")-Blank()
 Error({Kind:ErrorKind.InvalidArgument})
 
->> ParseJSON("12.000000000000000000000001")-Date(2000,0,0)
+>> ParseJSON("16.000000000000000000000001")-Date(2000,1,1)
 Error({Kind:ErrorKind.NotSupported})
 
->> ParseJSON("1e100")-Date(2000,0,0)
+>> ParseJSON("1e100")-Date(2000,1,1)
 Error({Kind:ErrorKind.NotSupported})
 
->> ParseJSON("12.000000000000000000000001")-DateTime(2000,1,1,12,0,0)
+>> ParseJSON("16.000000000000000000000001")-DateTime(2000,1,1,12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
 >> ParseJSON("1e100")-DateTime(2000,1,1,12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> ParseJSON("12.000000000000000000000001")-Time(12,0,0)
+>> ParseJSON("16.000000000000000000000001")-Time(12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
 >> ParseJSON("1e100")-Time(12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> ParseJSON("12.000000000000000000000002")-Decimal("2.000000000000000000000000001")
-10.000000000000000000000001999
+>> ParseJSON("16.000000000000000000000002")-Decimal("2.000000000000000000000000001")
+14.000000000000000000000001999
 
 >> ParseJSON("1e100")-Decimal("2.000000000000000000000000001")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> ParseJSON("12.000000000000000000000002")-ParseJSON("2")
-10.000000000000000000000002
+>> ParseJSON("16.000000000000000000000002")-ParseJSON("2")
+14.000000000000000000000002
 
 >> ParseJSON("1e100")-ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> ParseJSON("12.000000000000000000000002")-ParseJSON("1e100")
+>> ParseJSON("16.000000000000000000000002")-ParseJSON("1e100")
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("1e100")-ParseJSON("1e100")
