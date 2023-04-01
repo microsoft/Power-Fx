@@ -608,8 +608,8 @@ namespace Microsoft.PowerFx.Core.Binding
             if (returnType == DType.Decimal)
             {
                 // This is different from Number below as coercion for Date, DateTime, Time is needed since Decimal does not have an Accepts relationship with these types
-                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.Number, DType.String, DType.Boolean, DType.Date, DType.DateTime, DType.Time, DType.UntypedObject);
-                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.Number, DType.String, DType.Boolean, DType.Date, DType.DateTime, DType.Time, DType.UntypedObject);
+                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Decimal, /* coerced: */ DType.Number, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
+                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Decimal, /* coerced: */ DType.Number, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
 
                 // Deferred op decimal or decimal op Deferred
                 if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
@@ -621,8 +621,8 @@ namespace Microsoft.PowerFx.Core.Binding
             }
             else
             {
-                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
-                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.UntypedObject);
+                var resLeft = CheckTypeCore(errorContainer, node.Left, leftType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
+                var resRight = CheckTypeCore(errorContainer, node.Right, rightType, DType.Number, /* coerced: */ DType.Decimal, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
 
                 // Deferred + number or number + Deferred
                 if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)
