@@ -604,7 +604,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("logicalB", "logicalB")]
         public void TestSuggestIdentifier(string txt, string expected)
         {
-            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
             var recalcEngine = new Engine(pfxConfig);
             var rt = RecordType.Empty()
                 .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))

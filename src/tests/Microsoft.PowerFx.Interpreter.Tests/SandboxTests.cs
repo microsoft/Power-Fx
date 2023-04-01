@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void MaxRecursionDepthTest()
         {
-            var config = new PowerFxConfig(null)
+            var config = new PowerFxConfig(null, null)
             {
                 MaxCallDepth = 10
             };
