@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task CustomFunctionErrorTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new CustomFunctionError());
             config.AddFunction(new AsyncCustomFunctionError());
             var engine = new RecalcEngine(config);
@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task NullToBlankTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new NullFunctionReturn());
             var engine = new RecalcEngine(config);
 
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
@@ -168,7 +168,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("TestCustom(0,true,If(false,\"test\"))", "0,True,", false, null)]
         public void CustomFunctionErrorOrBlank(string script, string expectedResult, bool isErrorExpected, string errorMessage)
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
@@ -205,7 +205,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomRecordFunction()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new TestRecordCustomFunction());
 
             // Invalid function
@@ -250,7 +250,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomTableArgFunction()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new TableArgCustomFunction());
 
             var engine = new RecalcEngine(config);
@@ -303,7 +303,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void InvalidDeferredFunctionTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             Assert.Throws<NotSupportedException>(() => config.AddFunction(new InvalidDeferredFunction()));
             Assert.Throws<NotSupportedException>(() => config.AddFunction(new InvalidArgDeferredFunction()));
         }
@@ -337,7 +337,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomFunction_CallBack()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new TestCallbackFunction());
             var engine = new RecalcEngine(config);
 
@@ -362,7 +362,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomFunctionAsync_CallBack()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new WaitFunction());
             config.AddFunction(new HelperFunction(x => FormulaValue.New(x.Value + 1)));
             var engine = new RecalcEngine(config);
@@ -414,7 +414,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomFunctionAsync_CallBack_Invalid()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             Action act = () => config.AddFunction(new InvalidTestCallbackFunction());
             Exception exception = Assert.Throws<InvalidOperationException>(act);
             Assert.Equal("Unknown parameter type: expression, System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.StringValue]]. Only System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.BooleanValue]] is supported", exception.Message);
@@ -435,7 +435,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomMockAndFunction_CallBack()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new MockAnd2ArgFunction());
             var engine = new RecalcEngine(config);
 
@@ -471,7 +471,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void SimpleCustomAsyncFuntion()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
 
             config.AddFunction(new TestCustomAsyncFunction());
             var engine = new RecalcEngine(config);
@@ -492,7 +492,7 @@ namespace Microsoft.PowerFx.Tests
         public async void VerifyCustomFunctionIsAsync()
         {
             var func = new TestCustomWaitAsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -518,7 +518,7 @@ namespace Microsoft.PowerFx.Tests
         public async void VerifyCancellationInAsync()
         {
             var func = new InfiniteAsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -569,7 +569,7 @@ namespace Microsoft.PowerFx.Tests
         public async void InvalidAsyncFunction()
         {
             var func = new TestCustomInvalidAsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
         }
 
@@ -577,7 +577,7 @@ namespace Microsoft.PowerFx.Tests
         public async void InvalidAsync2Function()
         {
             var func = new TestCustomInvalid2AsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
         }
 
@@ -619,7 +619,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomAsyncFuntionUsingCtor()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
 
             config.AddFunction(new TestCtorCustomAsyncFunction());
             var engine = new RecalcEngine(config);
@@ -721,7 +721,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomSetPropertyFunction()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(new TestCustomSetPropFunction());
             var engine = new RecalcEngine(config);
 

@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PadUntypedObject uo = new PadUntypedObject(dt);
             UntypedObjectValue uov = new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), uo);
 
-            PowerFxConfig config = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            PowerFxConfig config = new PowerFxConfig(new CultureInfo("en-US"), Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
 
             engine.UpdateVariable("padTable", uov);

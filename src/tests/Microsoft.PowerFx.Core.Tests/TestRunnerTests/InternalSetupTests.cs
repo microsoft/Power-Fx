@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotNull(iSetup);
             Assert.Null(iSetup.HandlerName);
-            Assert.Equal(Features.ConsistentOneColumnTableResult, iSetup.Features);
+            Assert.False(iSetup.Features.TableSyntaxDoesntWrapRecords);
         }
 
         [Fact]
@@ -116,7 +116,9 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotNull(iSetup);
             Assert.Null(iSetup.HandlerName);
-            Assert.Equal(Features.None, iSetup.Features);
+
+            Assert.False(iSetup.Features.TableSyntaxDoesntWrapRecords);
+            Assert.False(iSetup.Features.ConsistentOneColumnTableResult);
         }
 
         [Fact]
@@ -125,7 +127,8 @@ namespace Microsoft.PowerFx.Core.Tests
             var iSetup = InternalSetup.Parse("SomeHandler,disable:TableSyntaxDoesntWrapRecords,EnableExpressionChaining");
             Assert.Equal(TexlParser.Flags.EnableExpressionChaining, iSetup.Flags);
             Assert.Equal("SomeHandler", iSetup.HandlerName);
-            Assert.Equal(Features.ConsistentOneColumnTableResult, iSetup.Features);
+            Assert.False(iSetup.Features.TableSyntaxDoesntWrapRecords);
+            Assert.True(iSetup.Features.ConsistentOneColumnTableResult);
         }
 
         [Fact]

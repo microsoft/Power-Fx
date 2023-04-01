@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else
             {
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = context.Features.ConsistentOneColumnTableResult
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
             }

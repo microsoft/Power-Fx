@@ -24,17 +24,13 @@ namespace Microsoft.PowerFx.Tests
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private static async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)
         {
-            if (args[0] is NumberValue)
+            if (args[0] is NumberValue n)
             {
-                var n = (NumberValue)args[0];
-
                 var result = FormulaValue.New(n.Value * 2);
                 return result;
             }
-            else if (args[0] is DecimalValue)
+            else if (args[0] is DecimalValue d)
             {
-                var d = (DecimalValue)args[0];
-
                 var result = FormulaValue.New(d.Value * 2m);
                 return result;
             }
@@ -54,7 +50,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -75,7 +71,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -95,7 +91,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -144,7 +140,7 @@ namespace Microsoft.PowerFx.Tests
             var helper = new WaitHelper();
             var func = helper.GetFunction("CustomAsync");
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -183,7 +179,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = WorkerWaitForCancel
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -214,7 +210,7 @@ namespace Microsoft.PowerFx.Tests
             var helper2 = new WaitHelper();
             var func2 = helper2.GetFunction("F2");
 
-            var config1 = new PowerFxConfig(null);
+            var config1 = new PowerFxConfig(null, null);
             config1.AddFunction(func1);
             config1.AddFunction(func2);
             var engine = new RecalcEngine(config1);
