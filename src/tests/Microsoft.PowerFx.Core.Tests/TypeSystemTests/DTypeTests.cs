@@ -299,11 +299,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void AttachmentTypeAcceptanceTest()
         {
-            var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
-            var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
-
             foreach (var usePowerFxV1CompatRules in new[] { false, true })
             {
+                var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
+                var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
+
                 Assert.True(type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatRules));
 
                 type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Unknown.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Number.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.Number.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Number.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Number.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Number.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Number.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -819,16 +819,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(!type1.TryGetType(new DName("D"), out type) && type == typeDefault);
             Assert.True(!type1.TryGetType(DPath.Root.Append(new DName("D")), out type) && type == typeDefault);
 
-            var type2 = DType.CreateTable(
-                new List<TypedName>()
-                {
-                    new TypedName(DType.Number, new DName("B")),
-                    new TypedName(DType.Number, new DName("A")),
-                    new TypedName(DType.Number, new DName("C"))
-                });
-
+            DType type2 = null;
             foreach (var usePFxV1CompatRules in new[] { false, true })
             {
+                type2 = DType.CreateTable(
+                    new List<TypedName>()
+                    {
+                        new TypedName(DType.Number, new DName("B")),
+                        new TypedName(DType.Number, new DName("A")),
+                        new TypedName(DType.Number, new DName("C"))
+                    });
+
                 Assert.True(type1 == type2);
                 Assert.False(type1 != type2);
                 Assert.True(type1.Equals(type2));
@@ -979,11 +980,11 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void EnumDTypeTests()
         {
-            Assert.True(DType.TryParse("%n[A:0, B:1, C:2, D:3]", out DType type) && type.IsEnum);
-            Assert.True(DType.TryParse("%n[A:0, B:1, C:2, D:3]", out DType type2) && type2.IsEnum);
-
             foreach (var usePowerFxV1CompatibilityRules in new[] { false, true })
             {
+                Assert.True(DType.TryParse("%n[A:0, B:1, C:2, D:3]", out DType type) && type.IsEnum);
+                Assert.True(DType.TryParse("%n[A:0, B:1, C:2, D:3]", out DType type2) && type2.IsEnum);
+
                 Assert.True(type == type2);
                 Assert.True(type.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                 Assert.True(type2.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));

@@ -157,6 +157,8 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             foreach (var usePFxV1CompatRules in new[] { false, true })
             {
+                _getter1CalledCount = _getter2CalledCount = 0;
+
                 Assert.True(DType.EmptyRecord.Accepts(_lazyRecord1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
                 Assert.True(DType.EmptyTable.Accepts(_lazyTable1._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
@@ -189,29 +191,30 @@ namespace Microsoft.PowerFx.Core.Tests
             }
         }
 
-        [Fact]
-        public void AcceptsAggregateAllFields()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void AcceptsAggregateAllFields(bool usePFxV1CompatRules)
         {
-            foreach (var usePFxV1CompatRules in new[] { false, true })
-            {
-                Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            _getter1CalledCount = _getter2CalledCount = 0;
 
-                // Must call field getter for each field
-                Assert.Equal(3, _getter1CalledCount);
+            Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-                // Not all fields present
-                Assert.False(_lazyRecord2._type.Accepts(TestUtils.DT("![Qux: n]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            // Must call field getter for each field
+            Assert.Equal(3, _getter1CalledCount);
 
-                // Must call field getter for each field
-                Assert.Equal(2, _getter2CalledCount);
+            // Not all fields present
+            Assert.False(_lazyRecord2._type.Accepts(TestUtils.DT("![Qux: n]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
 
-                _getter1CalledCount = 0;
+            // Must call field getter for each field
+            Assert.Equal(2, _getter2CalledCount);
 
-                Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+            _getter1CalledCount = 0;
 
-                // Running Accepts again doesn't re-run the getter
-                Assert.Equal(0, _getter1CalledCount);
-            }
+            Assert.True(_lazyRecord1._type.Accepts(TestUtils.DT("![Foo:n, Bar: s, Baz:b]"), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
+
+            // Running Accepts again doesn't re-run the getter
+            Assert.Equal(0, _getter1CalledCount);
         }
 
         [Fact]
@@ -219,12 +222,13 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             foreach (var usePFxV1CompatRules in new[] { false, true })
             {
+                _getter1CalledCount = _getter2CalledCount = 0;
                 Assert.True(_lazyRecord1._type.Accepts(_lazyRecord2.GetFieldType("Nested")._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules));
-            }
 
-            // Getter2 only called once, Getter1 never called
-            Assert.Equal(0, _getter1CalledCount);
-            Assert.Equal(1, _getter2CalledCount);
+                // Getter2 only called once, Getter1 never called
+                Assert.Equal(0, _getter1CalledCount);
+                Assert.Equal(1, _getter2CalledCount);
+            }
         }
 
         [Fact]
@@ -284,15 +288,16 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(_lazyRecord1._type, _lazyRecord1._type.ToRecord());
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void Supertype(bool usePowerFxV1CompatibilityRules)
+        [Fact]
+        public void Supertype()
         {
-            Assert.Equal(_lazyRecord1, FormulaType.Build(DType.Supertype(_lazyRecord1._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
-            Assert.Equal(_lazyTable1, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
-            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
-            Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord2._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+            foreach (var usePowerFxV1CompatibilityRules in new[] { false, true })
+            {
+                Assert.Equal(_lazyRecord1, FormulaType.Build(DType.Supertype(_lazyRecord1._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+                Assert.Equal(_lazyTable1, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyTable1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+                Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+                Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
+            }
         }
     }
 }
