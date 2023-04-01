@@ -466,7 +466,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 var expectedParamType = ParamTypes[i];
 
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
-                if (!context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
+                if (!context.Features.StronglyTypedBuiltinEnums && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
                 {
                     expectedParamType = enumSymbol.EnumType.GetEnumSupertype();
                 }
@@ -1344,7 +1344,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
                     {
-                        var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        var resultColumnName = context.Features.ConsistentOneColumnTableResult
                             ? new DName(ColumnName_ValueStr)
                             : argTypes[i].GetNames(DPath.Root).Single().Name;
 
@@ -1352,7 +1352,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                     else
                     {
-                        returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        returnType = context.Features.ConsistentOneColumnTableResult
                             ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
                             : argTypes[i];
                     }

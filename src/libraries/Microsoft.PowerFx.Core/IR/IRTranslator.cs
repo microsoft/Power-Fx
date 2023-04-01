@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Core.IR
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
                 var irContext = context.GetIRContext(node);
 
-                if (!context.Binding.CheckTypesContext.Features.HasTableSyntaxDoesntWrapRecords() || (children.Any() && children.First() is not RecordNode))
+                if (!context.Binding.CheckTypesContext.Features.TableSyntaxDoesntWrapRecords || (children.Any() && children.First() is not RecordNode))
                 {
                     // Let's add "Value:" here                    
                     children = children.Select(childNode =>
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     var arg = node.Args.Children[i];
 
-                    var supportColumnNamesAsIdentifiers = _features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+                    var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
                     if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
                     {
                         var identifierNode = arg.AsFirstName();
@@ -507,7 +507,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case BindKind.Enum:
                         {
                             // If StronglyTypedEnums is disabled, this should have been handled by the DottedName visitor.
-                            Contracts.Assert(context.Binding.Features.HasFlag(Features.StronglyTypedBuiltinEnums));
+                            Contracts.Assert(context.Binding.Features.StronglyTypedBuiltinEnums);
 
                             result = new ResolvedObjectNode(context.GetIRContext(node), info.Data);
                             break;

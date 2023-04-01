@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void DisplayNameTest_DropColumns()
         {
-            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
             var engine = new RecalcEngine(pfxConfig);
 
             var recordType = RecordType.Empty()
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void DisplayNameTest_AddColumns()
         {
-            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
             var engine = new RecalcEngine(pfxConfig);
 
             var recordType = RecordType.Empty()

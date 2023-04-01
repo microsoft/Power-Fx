@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             nodeToCoercedTypeMap = null;
             var fValid = true;
-            if (context.Features.HasFlag(Features.RestrictedIsEmptyArguments))
+            if (context.Features.RestrictedIsEmptyArguments)
             {
                 var typeCheck = CheckType(args[0], argTypes[0], DType.EmptyTable, errors, false, out DType coercionType);
                 if (typeCheck)
