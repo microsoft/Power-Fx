@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the input table
             fValid &= CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref nodeToCoercedTypeMap);
 
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+            returnType = context.Features.ConsistentOneColumnTableResult
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
 
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Typecheck the count table
             fValid &= CheckNumericColumnType(argTypes[1], args[1], context.Features, errors, ref nodeToCoercedTypeMap);
 
-            returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+            returnType = context.Features.ConsistentOneColumnTableResult
                 ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
                 : argTypes[0];
 

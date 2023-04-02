@@ -775,7 +775,7 @@
     
   </data>
   <data name="ErrErrorIrrelevantField" xml:space="preserve">
-    <value>La fonction Error utilise uniquement les champs "Genre", "Message", "Notifier", "Contrôle", and "Propriété".</value>
+    <value>La fonction Error utilise uniquement les champs « Kind », « Message », « Notify », « Control » et « Property ».</value>
     
   </data>
   <data name="AboutIfError" xml:space="preserve">
@@ -2935,6 +2935,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Globe</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Not connected</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Changes pending</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Warning</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Error</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">

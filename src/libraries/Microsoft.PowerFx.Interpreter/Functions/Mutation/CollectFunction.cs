@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Interpreter
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion, context.Features.UsesPowerFxV1CompatibilityRules());
+                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
                 fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Interpreter
                 else
                 {
                     var fUnionError = false;
-                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
+                    itemType = DType.Union(ref fUnionError, itemType, argType, useLegacyDateTimeAccepts: true, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                     if (fUnionError)
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleTypes);
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Interpreter
                     collectionType.ToRecord(), 
                     collectedType, 
                     useLegacyDateTimeAccepts: false, 
-                    usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
+                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                 if (fError)
                 {
                     fValid = false;

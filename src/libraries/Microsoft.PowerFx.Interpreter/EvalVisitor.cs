@@ -110,6 +110,11 @@ namespace Microsoft.PowerFx
             return new NumberValue(node.IRContext, node.LiteralValue);
         }
 
+        public override async ValueTask<FormulaValue> Visit(DecimalLiteralNode node, EvalVisitorContext context)
+        {
+            return new DecimalValue(node.IRContext, node.LiteralValue);
+        }
+
         public override async ValueTask<FormulaValue> Visit(BooleanLiteralNode node, EvalVisitorContext context)
         {
             return new BooleanValue(node.IRContext, node.LiteralValue);
@@ -313,10 +318,17 @@ namespace Microsoft.PowerFx
             {
                 case BinaryOpKind.AddNumbers:
                     return OperatorBinaryAdd(this, context, node.IRContext, args);
+                case BinaryOpKind.AddDecimals:
+                    return OperatorDecimalBinaryAdd(this, context, node.IRContext, args);
                 case BinaryOpKind.MulNumbers:
                     return OperatorBinaryMul(this, context, node.IRContext, args);
+                case BinaryOpKind.MulDecimals:
+                    return OperatorDecimalBinaryMul(this, context, node.IRContext, args);
                 case BinaryOpKind.DivNumbers:
                     return OperatorBinaryDiv(this, context, node.IRContext, args);
+                case BinaryOpKind.DivDecimals:
+                    return OperatorDecimalBinaryDiv(this, context, node.IRContext, args);
+
                 case BinaryOpKind.EqBlob:
 
                 case BinaryOpKind.EqBoolean:
@@ -333,6 +345,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqText:
                 case BinaryOpKind.EqTime:
                 case BinaryOpKind.EqNull:
+                case BinaryOpKind.EqDecimals:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
                 case BinaryOpKind.EqNullUntyped:
                     return OperatorBinaryEqNullUntyped(this, context, node.IRContext, args);
@@ -352,6 +365,7 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.NeqText:
                 case BinaryOpKind.NeqTime:
                 case BinaryOpKind.NeqNull:
+                case BinaryOpKind.NeqDecimals:
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
                 case BinaryOpKind.NeqNullUntyped:
                     return OperatorBinaryNeqNullUntyped(this, context, node.IRContext, args);
@@ -364,6 +378,15 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryLt(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqNumbers:
                     return OperatorBinaryLeq(this, context, node.IRContext, args);
+
+                case BinaryOpKind.GtDecimals:
+                    return OperatorDecimalBinaryGt(this, context, node.IRContext, args);
+                case BinaryOpKind.GeqDecimals:
+                    return OperatorDecimalBinaryGeq(this, context, node.IRContext, args);
+                case BinaryOpKind.LtDecimals:
+                    return OperatorDecimalBinaryLt(this, context, node.IRContext, args);
+                case BinaryOpKind.LeqDecimals:
+                    return OperatorDecimalBinaryLeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.InText:
                     return OperatorTextIn(this, context, node.IRContext, args);
@@ -545,17 +568,26 @@ namespace Microsoft.PowerFx
             else if (node.Op == UnaryOpKind.RecordToRecord)
             {
                 var fields = new List<NamedValue>();
+
                 var scopeContext = context.SymbolContext.WithScope(node.Scope);
                 var newScope = scopeContext.WithScopeValues((RecordValue)arg1);
 
-                foreach (var coercion in node.FieldCoercions)
+                var recordSrc = (RecordValue)arg1;
+                foreach (var f2 in recordSrc.Fields)
                 {
                     CheckCancel();
 
-                    var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
-                    var name = coercion.Key;
+                    if (node.FieldCoercions.TryGetValue(new Core.Utils.DName(f2.Name), out var coercion))
+                    {
+                        var newValue = await coercion.Accept(this, context.NewScope(newScope));
 
-                    fields.Add(new NamedValue(name.Value, newValue));
+                        fields.Add(new NamedValue(f2.Name, newValue));
+                    }
+                    else
+                    {
+                        // Existing field, no coercion needed. 
+                        fields.Add(f2);
+                    }
                 }
 
                 return FormulaValue.NewRecordFromFields(fields);

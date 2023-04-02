@@ -69,13 +69,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(args[1], TexlStrings.ErrSortWrongType);
             }
 
-            var orderExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var orderExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.SortOrderEnum.FormulaType._type :
                 DType.String;
 
             if (args.Length == 3)
             {
-                if (!orderExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (!orderExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     fValid = false;
                     errors.TypeMismatchError(args[2], orderExpectedType, argTypes[2]);

@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                     return isValid;
                 }
 
-                if (!DType.Number.Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (!DType.Number.Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     isValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
@@ -194,13 +194,13 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
                     return false;
                 }
-                else if (!(expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()) || columns.Single().Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules())))
+                else if (!(expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) || columns.Single().Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, errKey, columns.Single().Name.Value);
                     return false;
                 }
 
-                if (!expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (!expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     wasCoerced = true;
                 }

@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
-            var orderExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var orderExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.SortOrderEnum.FormulaType._type :
                 DType.String;
 
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var nextArgIdx = i + 1;
                 if (nextArgIdx < args.Length)
                 {
-                    if (!orderExpectedType.Accepts(argTypes[nextArgIdx], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                    if (!orderExpectedType.Accepts(argTypes[nextArgIdx], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         fValid = false;
                         errors.TypeMismatchError(args[i + 1], argTypes[nextArgIdx], argTypes[2]);
@@ -458,7 +458,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var column = columns.Single();
-            if (nameNode != null && columnType.IsValid && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            if (nameNode != null && columnType.IsValid && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 errors.EnsureError(
                     DocumentErrorSeverity.Severe,

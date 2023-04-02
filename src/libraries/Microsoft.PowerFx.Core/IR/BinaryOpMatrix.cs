@@ -26,9 +26,9 @@ namespace Microsoft.PowerFx.Core.IR
                 BinaryOp.Concat => BinaryOpKind.Concatenate,
                 BinaryOp.And => BinaryOpKind.And,
                 BinaryOp.Or => BinaryOpKind.Or,
-                BinaryOp.Add => GetAddOp(node, leftType, rightType),
-                BinaryOp.Mul => BinaryOpKind.MulNumbers,
-                BinaryOp.Div => BinaryOpKind.DivNumbers,
+                BinaryOp.Add => GetAddOp(node, binding, leftType, rightType),
+                BinaryOp.Mul => binding.GetType(node) == DType.Decimal ? BinaryOpKind.MulDecimals : BinaryOpKind.MulNumbers,
+                BinaryOp.Div => binding.GetType(node) == DType.Decimal ? BinaryOpKind.DivDecimals : BinaryOpKind.DivNumbers,
                 BinaryOp.Equal or
                 BinaryOp.NotEqual or
                 BinaryOp.Less or
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.IR
                 }
             }
 
-            var kindToUse = leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()) ? leftType.Kind : rightType.Kind;
+            var kindToUse = leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ? leftType.Kind : rightType.Kind;
 
             // If there is coercion involved, pick the coerced type.
             if (binding.TryGetCoercedType(node.Left, out var leftCoerced))
@@ -66,8 +66,8 @@ namespace Microsoft.PowerFx.Core.IR
             {
                 kindToUse = rightCoerced.Kind;
             }
-            else if (!leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()) &&
-                !rightType.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()))
+            else if (!leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) &&
+                !rightType.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
             {
                 return BinaryOpKind.Invalid;
             } 
@@ -89,6 +89,25 @@ namespace Microsoft.PowerFx.Core.IR
                             return BinaryOpKind.GtNumbers;
                         case BinaryOp.GreaterEqual:
                             return BinaryOpKind.GeqNumbers;
+                        default:
+                            throw new NotSupportedException();
+                    }
+
+                case DKind.Decimal:
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqDecimals;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqDecimals;
+                        case BinaryOp.Less:
+                            return BinaryOpKind.LtDecimals;
+                        case BinaryOp.LessEqual:
+                            return BinaryOpKind.LeqDecimals;
+                        case BinaryOp.Greater:
+                            return BinaryOpKind.GtDecimals;
+                        case BinaryOp.GreaterEqual:
+                            return BinaryOpKind.GeqDecimals;
                         default:
                             throw new NotSupportedException();
                     }
@@ -298,7 +317,7 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        private static BinaryOpKind GetAddOp(PowerFx.Syntax.BinaryOpNode node, DType leftType, DType rightType)
+        private static BinaryOpKind GetAddOp(PowerFx.Syntax.BinaryOpNode node, TexlBinding binding, DType leftType, DType rightType)
         {
             switch (leftType.Kind)
             {
@@ -372,6 +391,7 @@ namespace Microsoft.PowerFx.Core.IR
                 default:
                     switch (rightType.Kind)
                     {
+                        // Operations with Date/DateTime/Time and Decimal promote the Decimal to float
                         case DKind.Date:
                             if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
                             {
@@ -409,8 +429,16 @@ namespace Microsoft.PowerFx.Core.IR
                             }
 
                         default:
-                            // Number + Number
-                            return BinaryOpKind.AddNumbers;
+                            if (binding.GetType(node) == DType.Decimal)
+                            {
+                                // Decimal + Decimal
+                                return BinaryOpKind.AddDecimals;
+                            }
+                            else
+                            {
+                                // Number + Number
+                                return BinaryOpKind.AddNumbers;
+                            }
                     }
             }
         }
@@ -419,7 +447,7 @@ namespace Microsoft.PowerFx.Core.IR
         {
             if (!rightType.IsAggregate)
             {
-                var usesPFxV1CompatRules = binding.Features.UsesPowerFxV1CompatibilityRules();
+                var usesPFxV1CompatRules = binding.Features.PowerFxV1CompatibilityRules;
                 if ((DType.String.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && (DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) || leftType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules))) ||
                     (rightType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules)))
                 {

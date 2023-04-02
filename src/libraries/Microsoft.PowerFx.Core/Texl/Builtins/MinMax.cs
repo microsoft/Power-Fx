@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 for (var i = 0; i < argTypes.Length; i++)
                 {
-                    if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                    if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.DateTime, allowDupes: true);
                         returnType = DType.DateTime;

@@ -16,8 +16,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData(typeof(double), typeof(NumberType))]
         [InlineData(typeof(int), typeof(NumberType))]
-        [InlineData(typeof(decimal), typeof(NumberType))]
-        [InlineData(typeof(long), typeof(NumberType))]
+        [InlineData(typeof(decimal), typeof(DecimalType))]
+        [InlineData(typeof(long), typeof(DecimalType))]
         [InlineData(typeof(float), typeof(NumberType))]
         [InlineData(typeof(Guid), typeof(GuidType))]
         [InlineData(typeof(bool), typeof(BooleanType))]
@@ -46,8 +46,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 var expr = actualFxType.DefaultExpressionValue();
                 var engine = new Engine(new PowerFxConfig());
-
-                var check = engine.Check(expr);
+                var options = new ParserOptions()
+                {
+                    NumberIsFloat = !(dotnetType == typeof(decimal) || dotnetType == typeof(long))
+                };
+                var check = engine.Check(expr, options);
 
                 Assert.Equal(check.ReturnType, actualFxType);
             }
@@ -165,7 +168,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("s", "m", "UnaryOpKind.TextToMedia")] // Existing, not implemented
         [InlineData("s", "o", "UnaryOpKind.TextToBlob")] // Existing, not implemented
         [InlineData("s", "h", "UnaryOpKind.TextToHyperlink")] // Existing, not implemented
-        [InlineData("s", "n", "function:Value")]
+        [InlineData("s", "n", "function:Float")]
         [InlineData("s", "d", "function:DateTimeValue")]
         [InlineData("s", "D", "function:DateValue")]
         [InlineData("s", "T", "function:TimeValue")]
@@ -201,6 +204,18 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("s", "$", "UnaryOpKind.TextToCurrency")] // new
         [InlineData("$", "b", "UnaryOpKind.CurrencyToBoolean")] // new
         [InlineData("b", "$", "UnaryOpKind.BooleanToCurrency")] // new
+        [InlineData("w", "n", "function:Float")]
+        [InlineData("w", "s", "UnaryOpKind.DecimalToText")]
+        [InlineData("w", "b", "UnaryOpKind.DecimalToBoolean")]
+        [InlineData("w", "d", "UnaryOpKind.DecimalToDateTime")]
+        [InlineData("w", "D", "UnaryOpKind.DecimalToDate")]
+        [InlineData("w", "T", "UnaryOpKind.DecimalToTime")]
+        [InlineData("n", "w", "function:Decimal")]
+        [InlineData("s", "w", "function:Decimal")]
+        [InlineData("b", "w", "UnaryOpKind.BooleanToDecimal")]
+        [InlineData("d", "w", "UnaryOpKind.DateTimeToDecimal")]
+        [InlineData("D", "w", "UnaryOpKind.DateToDecimal")]
+        [InlineData("T", "w", "UnaryOpKind.TimeToDecimal")]
         public void TestTypeCoercion(string fromTypeSpec, string toTypeSpec, string coercionKindStr)
         {
             Assert.True(DType.TryParse(fromTypeSpec, out var fromType));
@@ -227,7 +242,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbolTable = new SymbolTable();
             symbolTable.AddVariable("fromTypeVar", new TestFormulaType(fromType));
             symbolTable.AddVariable("toTypeVar", new TestFormulaType(toType));
-            var config = new PowerFxConfig(Features.PowerFxV1Compatibility)
+            var config = new PowerFxConfig(Features.PowerFxV1)
             {
                 SymbolTable = symbolTable
             };

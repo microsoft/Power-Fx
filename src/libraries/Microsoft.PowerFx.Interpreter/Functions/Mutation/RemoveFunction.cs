@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Functions
                 if (!argType.IsRecord)
                 {
                     // The last arg may be the optional "ALL" parameter.
-                    if (argCount >= 3 && i == argCount - 1 && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                    if (argCount >= 3 && i == argCount - 1 && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         var strNode = (StrLitNode)args[i];
 
@@ -134,8 +134,8 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
-                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
+                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
 
                 // The item schema should be compatible with the collection schema.
                 if (!collectionAcceptsRecord && !recordAcceptsCollection)

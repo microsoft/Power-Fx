@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         type, 
                         typeArg,
                         useLegacyDateTimeAccepts: false,
-                        usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
+                        usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
 
                     if (!typeSuper.IsError)
                     {
@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     else if (!type.IsError)
                     {
                         // Types don't resolve normally, coercion needed
-                        if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                        if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                         {
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                         }

@@ -24,10 +24,20 @@ namespace Microsoft.PowerFx.Tests
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private static async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)
         {
-            var n = (NumberValue)args[0];
-
-            var result = FormulaValue.New(n.Value * 2);
-            return result;
+            if (args[0] is NumberValue n)
+            {
+                var result = FormulaValue.New(n.Value * 2);
+                return result;
+            }
+            else if (args[0] is DecimalValue d)
+            {
+                var result = FormulaValue.New(d.Value * 2m);
+                return result;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
         }
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 
@@ -40,7 +50,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -61,7 +71,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -71,6 +81,26 @@ namespace Microsoft.PowerFx.Tests
 
             var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token);
             Assert.Equal(12.0, result.ToObject());
+        }
+
+        [Fact]
+        public async Task MultipleAsyncDecimal()
+        {
+            var func = new CustomAsyncTexlFunction("CustomAsync", DType.Decimal, DType.Decimal)
+            {
+                _impl = Worker
+            };
+
+            var config = new PowerFxConfig(null, null);
+            config.AddFunction(func);
+
+            var engine = new RecalcEngine(config);
+
+            // Can be invoked. 
+            using var cts = new CancellationTokenSource();
+
+            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token);
+            Assert.Equal(12m, result.ToObject());
         }
 
         // Helper for creating a function that waits, and then returns 2x the result
@@ -110,7 +140,7 @@ namespace Microsoft.PowerFx.Tests
             var helper = new WaitHelper();
             var func = helper.GetFunction("CustomAsync");
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -149,7 +179,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = WorkerWaitForCancel
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -166,7 +196,7 @@ namespace Microsoft.PowerFx.Tests
 
             cts.Cancel();
 
-            await Assert.ThrowsAsync<TaskCanceledException>(async () => { await task; });
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => { await task; });
         }
 
         // Test interleaved concurrent runs. 
@@ -180,7 +210,7 @@ namespace Microsoft.PowerFx.Tests
             var helper2 = new WaitHelper();
             var func2 = helper2.GetFunction("F2");
 
-            var config1 = new PowerFxConfig(null);
+            var config1 = new PowerFxConfig(null, null);
             config1.AddFunction(func1);
             config1.AddFunction(func2);
             var engine = new RecalcEngine(config1);

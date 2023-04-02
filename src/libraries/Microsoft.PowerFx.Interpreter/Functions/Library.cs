@@ -525,6 +525,30 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Dec2Hex)
             },
             {
+                BuiltinFunctionsCore.Decimal,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Decimal.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Decimal)
+            },
+            {
+                BuiltinFunctionsCore.Decimal_UO,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Decimal.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Decimal_UO)
+            },
+            {
                 DistinctInterpreterFunction,
                 StandardErrorHandlingAsync<FormulaValue>(
                     DistinctInterpreterFunction.Name,
@@ -674,6 +698,30 @@ namespace Microsoft.PowerFx.Functions
                         DeferRuntimeValueChecking),
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: FirstN_UO)
+            },
+            {
+                BuiltinFunctionsCore.Float,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Float.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Float)
+            },
+            {
+                BuiltinFunctionsCore.Float_UO,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Float.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Float_UO)
             },
             {
                 BuiltinFunctionsCore.ForAll,
@@ -1733,8 +1781,72 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
             {
+                BuiltinFunctionsCore.LeftST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.MidT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Mid],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
                 BuiltinFunctionsCore.ModT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.RightST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
                 BuiltinFunctionsCore.RoundT,
@@ -1747,6 +1859,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.RoundDownT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.SubstituteT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Substitute],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
                 BuiltinFunctionsCore.TruncT,
@@ -1848,6 +1971,7 @@ namespace Microsoft.PowerFx.Functions
             switch (arg0)
             {
                 case NumberValue _:
+                case DecimalValue _:
                 case DateValue _:
                 case DateTimeValue _:
                 case TimeValue _:

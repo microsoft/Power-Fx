@@ -53,13 +53,13 @@ namespace Microsoft.PowerFx.Syntax
         /// Ensures that the named formulas have been parsed and if not, parses them.
         /// </summary>
         /// <returns>Tuple of IdentToken and formula.</returns>
-        public IEnumerable<(IdentToken token, Formula formula)> EnsureParsed()
+        public IEnumerable<(IdentToken token, Formula formula)> EnsureParsed(TexlParser.Flags flags = TexlParser.Flags.None)
         {
             if (_formulasResult == null)
             {
                 Contracts.AssertValue(Script);
                 Contracts.AssertValueOrNull(Loc);
-                var result = TexlParser.ParseFormulasScript(Script, loc: Loc);
+                var result = TexlParser.ParseFormulasScript(Script, loc: Loc, flags);
                 _formulasResult = result.NamedFormulas;
                 _errors = result.Errors;
                 HasParseErrors = result.HasError;

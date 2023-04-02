@@ -51,6 +51,14 @@ namespace Microsoft.PowerFx.Syntax
         public abstract TResult Visit(NumLitNode node, TContext context);
 
         /// <summary>
+        /// Visit <see cref="DecLitNode" /> leaf node.
+        /// </summary>
+        /// <param name="node">The visited node.</param>
+        /// <param name="context">The context passed to the node.</param>
+        /// <returns>The node visit result.</returns>
+        public abstract TResult Visit(DecLitNode node, TContext context);
+
+        /// <summary>
         /// Visit <see cref="FirstNameNode" /> leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>

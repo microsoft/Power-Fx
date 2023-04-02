@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx
             {
                  Culture = this.Config.CultureInfo,
                  AllowsSideEffects = false,
-                 MaxExpressionLength = 0, // no limit
+                 MaxExpressionLength = Config.MaximumExpressionLength,
             };
         }
 
@@ -308,7 +308,7 @@ namespace Microsoft.PowerFx
             // Anything else should be accomplished with SymbolTables.
             bool useThisRecordForRuleScope = ruleScope != null;
 
-            var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope);
+            var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope, result.Parse.Options.NumberIsFloat);
 
             var binding = TexlBinding.Run(
                 glue,

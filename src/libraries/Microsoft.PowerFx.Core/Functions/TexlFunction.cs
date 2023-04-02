@@ -24,12 +24,12 @@ using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
-using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
@@ -213,8 +213,8 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool ModifiesValues => false;
 
         // This method is used for managing "x-ms-dynamic-values" and "x-ms-dynamic-schema" OpenApi extensions in connectors
-        // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
-        public virtual async Task<List<string>> GetConnectorSuggestionsAsync(CallNode callNode, int argPosition, CancellationToken cts)
+        // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
+        public virtual async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
         {
             return null;
         }
@@ -466,7 +466,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 var expectedParamType = ParamTypes[i];
 
                 // If the strong-enum type flag is disabled, treat an enum option set type as the enum supertype instead
-                if (!context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
+                if (!context.Features.StronglyTypedBuiltinEnums && expectedParamType.OptionSetInfo is EnumSymbol enumSymbol)
                 {
                     expectedParamType = enumSymbol.EnumType.GetEnumSupertype();
                 }
@@ -883,7 +883,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 if (actualType.TryGetType(expectedColumn.Name, out var actualColumnType))
                 {
                     var expectedColumnType = expectedColumn.Type;
-                    if (expectedColumnType.Accepts(actualColumnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: features.UsesPowerFxV1CompatibilityRules()))
+                    if (expectedColumnType.Accepts(actualColumnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules))
                     {
                         continue;
                     }
@@ -976,7 +976,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(errors);
 
             coercionType = null;
-            var usePFxv1CompatRules = context.Features.UsesPowerFxV1CompatibilityRules();
+            var usePFxv1CompatRules = context.Features.PowerFxV1CompatibilityRules;
             if (expectedType.Accepts(
                 nodeType,
                 out var schemaDifference,
@@ -1038,9 +1038,9 @@ namespace Microsoft.PowerFx.Core.Functions
             else
             {
                 var column = columns.Single();
-                if (!expectedType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: features.UsesPowerFxV1CompatibilityRules()))
+                if (!expectedType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules))
                 {
-                    if (SupportsParamCoercion && column.Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: features.UsesPowerFxV1CompatibilityRules()))
+                    if (SupportsParamCoercion && column.Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules))
                     {
                         expectedType = DType.CreateTable(new TypedName(expectedType, column.Name));
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, expectedType);
@@ -1261,7 +1261,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DefaultUnaryOpDelegationStrategy(op, this);
         }
 
-        public ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
+        public virtual ICallNodeDelegatableNodeValidationStrategy GetCallNodeDelegationStrategy()
         {
             return new DelegationValidationStrategy(this);
         }
@@ -1287,12 +1287,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
             isTable = false;
 
-            if (desiredType.Accepts(nodeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            if (desiredType.Accepts(nodeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 return true;
             }
 
-            if (SupportsParamCoercion && nodeType.CoercesTo(desiredType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            if (SupportsParamCoercion && nodeType.CoercesTo(desiredType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 CollectionUtils.Add(ref nodeToCoercedTypeMap, node, desiredType);
                 return true;
@@ -1305,9 +1305,9 @@ namespace Microsoft.PowerFx.Core.Functions
                 foreach (var col in nodeType.GetNames(DPath.Root))
                 {
                     count++;
-                    if (!desiredType.Accepts(col.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                    if (!desiredType.Accepts(col.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
-                        if (SupportsParamCoercion && col.Type.CoercesTo(desiredType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                        if (SupportsParamCoercion && col.Type.CoercesTo(desiredType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                         {
                             desiredType = DType.CreateTable(new TypedName(desiredType, col.Name));
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, node, desiredType);
@@ -1353,7 +1353,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 {
                     if (fValid && nodeToCoercedTypeMap.Any())
                     {
-                        var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        var resultColumnName = context.Features.ConsistentOneColumnTableResult
                             ? new DName(ColumnName_ValueStr)
                             : argTypes[i].GetNames(DPath.Root).Single().Name;
 
@@ -1361,7 +1361,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     }
                     else
                     {
-                        returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                        returnType = context.Features.ConsistentOneColumnTableResult
                             ? DType.CreateTable(new TypedName(desiredType, new DName(ColumnName_ValueStr)))
                             : argTypes[i];
                     }

@@ -12,12 +12,12 @@ namespace Microsoft.PowerFx.Core.Types.Enums
     internal static class BuiltInEnums
     {
         public static readonly EnumSymbol ColorEnum = new EnumSymbol(
-            new DName(EnumConstants.ColorEnumString),
+            new DName(LanguageConstants.ColorEnumString),
             DType.Color,
             ColorTable.InvariantNameToHexMap.Select(kvp => new KeyValuePair<string, object>(kvp.Key, Convert.ToDouble(kvp.Value))));
 
         public static readonly EnumSymbol StartOfWeekEnum = new EnumSymbol(
-            new DName(EnumConstants.StartOfWeekEnumString),
+            new DName(LanguageConstants.StartOfWeekEnumString),
             DType.Number,
             new Dictionary<string, object>()
             {
@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             });
 
         public static readonly EnumSymbol DateTimeFormatEnum = new EnumSymbol(
-            new DName(EnumConstants.DateTimeFormatEnumString),
+            new DName(LanguageConstants.DateTimeFormatEnumString),
             DType.String,
             new Dictionary<string, object>()
             {
@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
             });
 
         public static readonly EnumSymbol TimeUnitEnum = new EnumSymbol(
-            new DName(EnumConstants.TimeUnitEnumString),
+            new DName(LanguageConstants.TimeUnitEnumString),
             DType.String,
             new Dictionary<string, object>()
             {

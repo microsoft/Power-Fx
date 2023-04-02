@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("TopOSDisplay.option_1 <> OptionSet.Option2", "TopOSDisplay.Option1 <> TopOSDisplay.Option2", true, "TopOSDisplay")]
         public void OptionSetDisplayNames(string inputExpression, string outputExpression, bool toDisplay, string optionSetDisplayName)
         {            
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void PowerFxConfigCollisionsThrow()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>() 
             {
                     { "option_1", "Option1" },

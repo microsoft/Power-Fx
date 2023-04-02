@@ -112,11 +112,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     continue;
                 }
-                else if (DType.Boolean.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()))
+                else if (DType.Boolean.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
                 {
                     continue;
                 }
-                else if (!argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: binding.Features.UsesPowerFxV1CompatibilityRules()))
+                else if (!argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     continue;

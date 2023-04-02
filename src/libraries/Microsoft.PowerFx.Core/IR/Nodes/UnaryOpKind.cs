@@ -8,6 +8,8 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         // Value operations
         Negate,
         Percent,
+        NegateDecimal,
+        PercentDecimal,
 
         // Coercion operations
         BooleanToNumber,
@@ -16,6 +18,13 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         TimeToNumber,
         DateTimeToNumber,
         CurrencyToNumber,
+
+        BooleanToDecimal,
+        OptionSetToDecimal,
+        DateToDecimal,
+        TimeToDecimal,
+        DateTimeToDecimal,
+        CurrencyToDecimal,
 
         BlobToHyperlink,
         ImageToHyperlink,
@@ -31,6 +40,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         TextToBlob,
 
         NumberToText,
+        DecimalToText,
         BooleanToText,
         OptionSetToText,
         ViewToText,
@@ -49,6 +59,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         NumberToBoolean,
         TextToBoolean,
+        DecimalToBoolean,
         OptionSetToBoolean,
         CurrencyToBoolean,
 
@@ -64,6 +75,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         TextToDateTime,
         TextToDate,
         TextToTime,
+        DecimalToDateTime,
+        DecimalToDate,
+        DecimalToTime,
 
         DateTimeToTime,
         DateToTime,

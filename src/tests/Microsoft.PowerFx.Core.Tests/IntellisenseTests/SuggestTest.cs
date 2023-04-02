@@ -59,7 +59,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
 
-        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
+        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax =>
+            PowerFxConfig.BuildWithEnumStore(
+                null,
+                new EnumStoreBuilder().WithDefaultEnums(),
+                new Features { DisableRowScopeDisambiguationSyntax = true });
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
         private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet());
@@ -145,7 +149,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("true &|", "&", "&&")]
 
         // UnaryOpNodeSuggestionHandler
-        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
+        [InlineData("Not| false", "Not", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
@@ -161,7 +165,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // FirstNameNodeSuggestionHandler
         [InlineData("Tru|", "true", "Trunc")] // Though it recommends only a boolean, the suggestions are still provided by the first name handler
-        [InlineData("[@Bo|]", "BorderStyle", "VirtualKeyboardMode")]
+        [InlineData("[@In|]", "ErrorKind")]
 
         // FunctionRecordNameSuggestionHandler
         [InlineData("Error({Kin|d:0})", "Kind:")]
@@ -177,13 +181,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("|")]
 
         // AddSuggestionsForEnums
-        [InlineData("Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
-        [InlineData("Value(Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
-        [InlineData("DisplayMode.E|", "Edit", "Disabled", "View")]
-        [InlineData("Disabled|", "DisplayMode.Disabled")]
-        [InlineData("DisplayMode.D|", "Disabled", "Edit")]
-        [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
-        [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
+        [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
+        [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
+        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
+        [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
+        [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]
+        [InlineData("SortOrder|", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
+        [InlineData("$\"Hello {SortOrder|} World!\"", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
 
         [InlineData("Table({F1:1}).|")]
         [InlineData("Table({F1:1},{F1:2}).|")]

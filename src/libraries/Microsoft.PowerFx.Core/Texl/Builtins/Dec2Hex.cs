@@ -135,9 +135,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, DType.Number);
                     }

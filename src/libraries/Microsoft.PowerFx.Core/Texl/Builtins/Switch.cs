@@ -95,8 +95,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             for (var i = 1; i < count - 1; i += 2)
             {
-                if (!argTypes[0].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()) &&
-                    !argTypes[i].Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (!argTypes[0].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
+                    !argTypes[i].Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     // Type mismatch; using CheckType to fill the errors collection
                     var validExpectedType = CheckType(context, args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool _);
@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     type,
                     typeArg,
                     useLegacyDateTimeAccepts: false,
-                    usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
+                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
 
                 if (!typeSuper.IsError)
                 {
@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!type.IsError)
                 {
-                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }

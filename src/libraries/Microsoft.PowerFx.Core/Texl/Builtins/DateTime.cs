@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.StartOfWeekEnumString };
+            return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
     }
 
@@ -263,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.StartOfWeekEnumString };
+            return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
     }
 
@@ -297,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.DateTimeFormatEnumString };
+            return new List<string>() { LanguageConstants.DateTimeFormatEnumString };
         }
 
         public override bool HasSuggestionsForParam(int index)
@@ -383,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -450,7 +450,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -489,7 +489,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         resultColumnType = coercedType.GetColumnTypeFromSingleColumnTable();
                     }
 
-                    var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    var resultColumnName = context.Features.ConsistentOneColumnTableResult
                         ? ColumnName_Value
                         : inputColumn.Name;
                     returnType = DType.CreateTable(new TypedName(resultColumnType, resultColumnName));
@@ -501,7 +501,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
                 }
-                else if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                else if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
@@ -518,9 +518,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.Number.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            else if (!DType.Number.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (type1.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number);
                 }
@@ -533,13 +533,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var hasUnits = args.Length == 3;
 
-            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.TimeUnitEnum.OptionSetType :
                 DType.String;
 
             if (hasUnits)
             {
-                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
                     fValid = false;
@@ -585,7 +585,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -615,7 +615,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -645,9 +645,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of dates
                 fValid &= CheckDateColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.DateTime.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            else if (!DType.DateTime.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                 }
@@ -664,9 +664,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of dates
                 fValid &= CheckDateColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.DateTime.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            else if (!DType.DateTime.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (type1.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.DateTime);
                 }
@@ -677,14 +677,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.TimeUnitEnum.FormulaType._type :
                 DType.String;
 
             var hasUnits = args.Length == 3;
             if (hasUnits)
             {
-                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
                     fValid = false;

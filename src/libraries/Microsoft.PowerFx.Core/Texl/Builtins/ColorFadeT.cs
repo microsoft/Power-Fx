@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.ColorEnumString };
+            return new List<string>() { LanguageConstants.ColorEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of colors.
                 fValid &= CheckColorColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
 
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                returnType = context.Features.ConsistentOneColumnTableResult
                     ? DType.CreateTable(new TypedName(DType.Color, new DName(ColumnName_ValueStr)))
                     : type0;
 
@@ -124,12 +124,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return expectedType == DType.Number ? CheckNumericColumnType(otherType, otherArg, features, errors, ref nodeToCoercedTypeMap) : CheckColorColumnType(otherType, otherArg, features, errors, ref nodeToCoercedTypeMap);
             }
 
-            if (expectedType.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            if (expectedType.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 return true;
             }
 
-            if (otherType.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+            if (otherType.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, expectedType);
                 return true;

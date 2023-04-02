@@ -75,6 +75,9 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(false, "Unsupported type coercion");
                     break;
 
+                case DKind.Decimal:
+                    return GetToDecimalCoercion(fromType, usePowerFxV1CompatibilityRules);
+
                 case DKind.Color:
                     if (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && fromType.OptionSetInfo?.BackingKind == DKind.Color)
                     {
@@ -149,6 +152,7 @@ namespace Microsoft.PowerFx.Core.IR
                 case DKind.Boolean:
                     Contracts.Assert(
                         DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         DType.Currency.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && fromType.OptionSetInfo?.BackingKind == DKind.Boolean),
@@ -156,6 +160,11 @@ namespace Microsoft.PowerFx.Core.IR
                     if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToBoolean;
+                    }
+
+                    if (DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    {
+                        return CoercionKind.DecimalToBoolean;
                     }
 
                     if (DType.Currency.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
@@ -203,12 +212,17 @@ namespace Microsoft.PowerFx.Core.IR
                     Contracts.Assert(
                         DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules),
                         "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToDateTime;
+                    }
+                    else if (DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    {
+                        return CoercionKind.DecimalToDateTime;
                     }
                     else if (DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
@@ -224,13 +238,18 @@ namespace Microsoft.PowerFx.Core.IR
                 case DKind.Time:
                     Contracts.Assert(
                         DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
                         DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules),
                         "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToTime;
+                    }
+                    else if (DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    {
+                        return CoercionKind.DecimalToTime;
                     }
                     else if (DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
@@ -245,14 +264,19 @@ namespace Microsoft.PowerFx.Core.IR
 
                 case DKind.Date:
                     Contracts.Assert(
-                        DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
-                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
+                        DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                        DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                         DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
                         DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules),
                         "Unsupported type coercion");
                     if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.NumberToDate;
+                    }
+                    else if (DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    {
+                        return CoercionKind.DecimalToDate;
                     }
                     else if (DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
@@ -306,6 +330,7 @@ namespace Microsoft.PowerFx.Core.IR
                 DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                 DType.Currency.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                 DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                 DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                 DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || 
                 DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
@@ -317,6 +342,11 @@ namespace Microsoft.PowerFx.Core.IR
             if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {
                 return CoercionKind.TextToNumber;
+            }
+
+            if (DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.DecimalToNumber;
             }
 
             if (DType.Currency.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
@@ -352,6 +382,51 @@ namespace Microsoft.PowerFx.Core.IR
             return CoercionKind.None;
         }
 
+        private static CoercionKind GetToDecimalCoercion(DType fromType, bool usePowerFxV1CompatibilityRules)
+        {
+            Contracts.Assert(
+                DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || DType.Time.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || DType.DateTimeNoTimeZone.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                fromType.IsControl || (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && ((fromType.OptionSetInfo?.BackingKind == DKind.Boolean) || fromType.OptionSetInfo?.BackingKind == DKind.Number)), "Unsupported type coercion");
+
+            if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.NumberToDecimal;
+            }
+
+            if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.TextToDecimal;
+            }
+
+            if (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            {
+                return CoercionKind.BooleanToDecimal;
+            }
+
+            if (fromType.Kind == DKind.DateTime || fromType.Kind == DKind.DateTimeNoTimeZone)
+            {
+                return CoercionKind.DateTimeToDecimal;
+            }
+
+            if (fromType.Kind == DKind.Time)
+            {
+                return CoercionKind.TimeToDecimal;
+            }
+
+            if (fromType.Kind == DKind.Date)
+            {
+                return CoercionKind.DateToDecimal;
+            }
+
+            if (DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && (fromType.OptionSetInfo?.BackingKind == DKind.Number))
+            {
+                return CoercionKind.OptionSetToDecimal;
+            }
+
+            return CoercionKind.None;
+        }
+
         /// <summary>
         /// Resolves the coercion type for any type to a type with <see cref="DKind.Enum"/> kind.
         /// </summary>
@@ -381,6 +456,7 @@ namespace Microsoft.PowerFx.Core.IR
         private static CoercionKind GetToStringCoercion(DType fromType, bool usePowerFxV1CompatibilityRules)
         {
             var acceptsN = DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+            var acceptsW = DType.Decimal.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             var acceptsCurrency = DType.Currency.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             var acceptsDT = DType.DateTime.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             var acceptsD = DType.Date.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
@@ -395,7 +471,7 @@ namespace Microsoft.PowerFx.Core.IR
             var acceptsOS = DType.OptionSetValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             var acceptsV = DType.ViewValue.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             Contracts.Assert(
-                acceptsN || acceptsCurrency || acceptsB ||
+                acceptsN || acceptsW || acceptsCurrency || acceptsB ||
                 acceptsDT || acceptsD || acceptsT ||
                 acceptsS || acceptsG || 
                 acceptsO || acceptsI || acceptsM || acceptsP ||
@@ -422,6 +498,10 @@ namespace Microsoft.PowerFx.Core.IR
             else if (acceptsG)
             {
                 return CoercionKind.GUIDToText;
+            }
+            else if (acceptsW)
+            {
+                return CoercionKind.DecimalToText;
             }
             else if (acceptsT)
             {
@@ -493,6 +573,8 @@ namespace Microsoft.PowerFx.Core.IR
                     return CoercionKind.UntypedToBoolean;
                 case DKind.Number:
                     return CoercionKind.UntypedToNumber;
+                case DKind.Decimal:
+                    return CoercionKind.UntypedToDecimal;
                 case DKind.Date:
                     return CoercionKind.UntypedToDate;
                 case DKind.Time:

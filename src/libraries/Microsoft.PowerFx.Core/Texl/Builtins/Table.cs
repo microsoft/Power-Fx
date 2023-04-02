@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
-                else if (!rowType.CanUnionWith(argType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                else if (!rowType.CanUnionWith(argType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleRecord);
                     isValid = false;
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else
                 {
                     var isUnionError = false;
-                    rowType = DType.Union(ref isUnionError, rowType, argType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules());
+                    rowType = DType.Union(ref isUnionError, rowType, argType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                     Contracts.Assert(!isUnionError);
                     Contracts.Assert(rowType.IsRecord);
                 }

@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
 
-                    returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    returnType = context.Features.ConsistentOneColumnTableResult
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                         : type0;
 
@@ -121,9 +121,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.UsesPowerFxV1CompatibilityRules()))
+                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, DType.Number);
                     }
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
 
-                    returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
+                    returnType = context.Features.ConsistentOneColumnTableResult
                         ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
                         : type0;
                 }
