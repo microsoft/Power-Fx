@@ -50,6 +50,7 @@
 
   <ItemGroup>
     <None Remove="ExpressionTestCases\OpMatrix_Decimal.txt" />
+    <None Remove="ExpressionTestCases\OpMatrix_Eq_Decimal.txt" />
     <None Remove="ExpressionTestCases\OpMatrix_Float.txt" />
   </ItemGroup>
   

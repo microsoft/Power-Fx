@@ -238,9 +238,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                     // Date Diff pulls from nested unary op
                     case BinaryOpKind.DateDifference:
-                    case BinaryOpKind.DateDifferenceDecimal:
                     case BinaryOpKind.TimeDifference:
-                    case BinaryOpKind.TimeDifferenceDecimal:
                         // Validated in Matrix + Binder
                         if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate)
                         {

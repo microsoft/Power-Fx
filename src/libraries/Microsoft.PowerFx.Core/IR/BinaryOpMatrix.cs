@@ -331,7 +331,7 @@ namespace Microsoft.PowerFx.Core.IR
                             throw new NotSupportedException();
                         }
 
-                        return binding.BindingConfig.NumberIsFloat ? BinaryOpKind.DateDifference : BinaryOpKind.DateDifferenceDecimal;
+                        return BinaryOpKind.DateDifference;
                     }
                     else if (rightType == DType.Time)
                     {
@@ -353,7 +353,7 @@ namespace Microsoft.PowerFx.Core.IR
                         if (node.Right.AsUnaryOpLit()?.Op == UnaryOp.Minus)
                         {
                             // Time + '-Time' => in ms
-                            return binding.BindingConfig.NumberIsFloat ? BinaryOpKind.TimeDifference : BinaryOpKind.TimeDifferenceDecimal;
+                            return BinaryOpKind.TimeDifference;
                         }
                         else
                         {
