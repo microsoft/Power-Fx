@@ -882,6 +882,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToHyperlink:
                         unaryOpKind = UnaryOpKind.TextToHyperlink;
                         break;
+                    case CoercionKind.PenImageToHyperlink:
+                        unaryOpKind = UnaryOpKind.PenImageToHyperlink;
+                        break;
                     case CoercionKind.SingleColumnRecordToLargeImage:
                         unaryOpKind = UnaryOpKind.SingleColumnRecordToLargeImage;
                         break;
@@ -894,11 +897,29 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToImage:
                         unaryOpKind = UnaryOpKind.TextToImage;
                         break;
+                    case CoercionKind.HyperlinkToImage:
+                        unaryOpKind = UnaryOpKind.HyperlinkToImage;
+                        break;
+                    case CoercionKind.PenImageToImage:
+                        unaryOpKind = UnaryOpKind.PenImageToImage;
+                        break;
+                    case CoercionKind.BlobToImage:
+                        unaryOpKind = UnaryOpKind.BlobToImage;
+                        break;
                     case CoercionKind.TextToMedia:
                         unaryOpKind = UnaryOpKind.TextToMedia;
                         break;
+                    case CoercionKind.BlobToMedia:
+                        unaryOpKind = UnaryOpKind.BlobToMedia;
+                        break;
+                    case CoercionKind.HyperlinkToMedia:
+                        unaryOpKind = UnaryOpKind.HyperlinkToMedia;
+                        break;
                     case CoercionKind.TextToBlob:
                         unaryOpKind = UnaryOpKind.TextToBlob;
+                        break;
+                    case CoercionKind.HyperlinkToBlob:
+                        unaryOpKind = UnaryOpKind.HyperlinkToBlob;
                         break;
                     case CoercionKind.NumberToText:
                         unaryOpKind = UnaryOpKind.NumberToText;

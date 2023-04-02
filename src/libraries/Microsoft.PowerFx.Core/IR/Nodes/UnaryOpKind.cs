@@ -30,14 +30,22 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         ImageToHyperlink,
         MediaToHyperlink,
         TextToHyperlink,
+        PenImageToHyperlink,
 
         SingleColumnRecordToLargeImage,
         ImageToLargeImage,
         LargeImageToImage,
         TextToImage,
+        PenImageToImage,
+        BlobToImage,
+        HyperlinkToImage,
 
         TextToMedia,
+        BlobToMedia,
+        HyperlinkToMedia,
+
         TextToBlob,
+        HyperlinkToBlob,
 
         NumberToText,
         DecimalToText,

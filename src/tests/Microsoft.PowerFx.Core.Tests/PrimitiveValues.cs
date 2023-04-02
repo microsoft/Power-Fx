@@ -189,8 +189,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("h", "i", "UnaryOpKind.HyperlinkToImage")] // new
         [InlineData("o", "i", "UnaryOpKind.BlobToImage")] // new
         [InlineData("p", "i", "UnaryOpKind.PenImageToImage")] // new
-        [InlineData("h", "i", "UnaryOpKind.HyperlinkToMedia")] // new
-        [InlineData("o", "i", "UnaryOpKind.BlobToMedia")] // new
+        [InlineData("h", "m", "UnaryOpKind.HyperlinkToMedia")] // new
+        [InlineData("o", "m", "UnaryOpKind.BlobToMedia")] // new
         [InlineData("h", "o", "UnaryOpKind.HyperlinkToBlob")] // new
         [InlineData("d", "D", "UnaryOpKind.DateTimeToDate")] // new
         [InlineData("d", "T", "UnaryOpKind.DateTimeToTime")] // new

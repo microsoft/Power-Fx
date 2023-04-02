@@ -54,17 +54,14 @@ namespace Microsoft.PowerFx.Core.IR
                 case DKind.Currency:
                     if (usePowerFxV1CompatibilityRules)
                     {
-                        if (DType.Number.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
+                        switch (fromType.Kind)
                         {
-                            return CoercionKind.NumberToCurrency;
-                        }
-                        else if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
-                        {
-                            return CoercionKind.TextToCurrency;
-                        }
-                        else if (DType.Boolean.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
-                        {
-                            return CoercionKind.BooleanToCurrency;
+                            case DKind.Number:
+                                return CoercionKind.NumberToCurrency;
+                            case DKind.Boolean:
+                                return CoercionKind.BooleanToCurrency;
+                            case DKind.String:
+                                return CoercionKind.TextToCurrency;
                         }
                     }
                     else
@@ -93,7 +90,7 @@ namespace Microsoft.PowerFx.Core.IR
                     break;
 
                 case DKind.Hyperlink:
-                    if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                    if (usePowerFxV1CompatibilityRules)
                     {
                         switch (fromType.Kind)
                         {
@@ -103,8 +100,27 @@ namespace Microsoft.PowerFx.Core.IR
                                 return CoercionKind.ImageToHyperlink;
                             case DKind.Media:
                                 return CoercionKind.MediaToHyperlink;
-                            default:
+                            case DKind.String:
                                 return CoercionKind.TextToHyperlink;
+                            case DKind.PenImage:
+                                return CoercionKind.PenImageToHyperlink;
+                        }
+                    }
+                    else
+                    {
+                        if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                        {
+                            switch (fromType.Kind)
+                            {
+                                case DKind.Blob:
+                                    return CoercionKind.BlobToHyperlink;
+                                case DKind.Image:
+                                    return CoercionKind.ImageToHyperlink;
+                                case DKind.Media:
+                                    return CoercionKind.MediaToHyperlink;
+                                default:
+                                    return CoercionKind.TextToHyperlink;
+                            }
                         }
                     }
 
@@ -117,6 +133,19 @@ namespace Microsoft.PowerFx.Core.IR
                         return CoercionKind.LargeImageToImage;
                     }
 
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        switch (fromType.Kind)
+                        {
+                            case DKind.Blob:
+                                return CoercionKind.BlobToImage;
+                            case DKind.PenImage:
+                                return CoercionKind.PenImageToImage;
+                            case DKind.Hyperlink:
+                                return CoercionKind.HyperlinkToImage;
+                        }
+                    }
+
                     if (fromType.Kind != DKind.Media && fromType.Kind != DKind.Blob && DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TextToImage;
@@ -126,6 +155,17 @@ namespace Microsoft.PowerFx.Core.IR
                     break;
 
                 case DKind.Media:
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        switch (fromType.Kind)
+                        {
+                            case DKind.Blob:
+                                return CoercionKind.BlobToMedia;
+                            case DKind.Hyperlink:
+                                return CoercionKind.HyperlinkToMedia;
+                        }
+                    }
+
                     if (fromType.Kind != DKind.Image && fromType.Kind != DKind.Blob && DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TextToMedia;
@@ -135,6 +175,14 @@ namespace Microsoft.PowerFx.Core.IR
                     break;
 
                 case DKind.Blob:
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        if (fromType.Kind == DKind.Hyperlink)
+                        {
+                            return CoercionKind.HyperlinkToBlob;
+                        }
+                    }
+
                     if (DType.String.Accepts(fromType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return CoercionKind.TextToBlob;

@@ -28,14 +28,22 @@ namespace Microsoft.PowerFx.Core.IR
         ImageToHyperlink,
         MediaToHyperlink,
         TextToHyperlink,
+        PenImageToHyperlink,
 
         SingleColumnRecordToLargeImage,
         ImageToLargeImage,
         LargeImageToImage,
         TextToImage,
+        PenImageToImage,
+        BlobToImage,
+        HyperlinkToImage,
 
+        BlobToMedia,
+        HyperlinkToMedia,
         TextToMedia,
+
         TextToBlob,
+        HyperlinkToBlob,
 
         NumberToText,
         DecimalToText,
