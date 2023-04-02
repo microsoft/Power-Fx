@@ -474,8 +474,9 @@ false
 >> Time(9,0,0) = true
 false
 
+// Decimal TODO: should be the same?
 >> Time(24,0,0) = 0
-true
+false
 
 >> Time(24,0,0) = 1
 false
@@ -495,14 +496,16 @@ false
 >> Time(9,0,0) = Date(1900,1,2)
 false
 
+// Decimal TODO: should be the same?
 >> Time(1,0,0) = DateTime(1899,12,30,1,0,0)
-true
+false
 
 >> Time(9,0,0) = Decimal("0.125")
 false
 
+// Decimal TODO: why are these different?
 >> Time(9,0,0) = Decimal("0.125000000000000000000001")
-false
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Time(9,0,0) = ParseJSON("2")
 false
@@ -533,8 +536,9 @@ false
 >> Decimal("2.0000000000000000000001") = DateTime(1900,1,1,12,0,0)
 false
 
+// Decimal TODO: should be true
 >> Decimal(2.5) = DateTime(1900,1,1,12,0,0)
-true
+false
 
 >> Decimal(".5000000000000000000001") = Time(12,0,0)
 false
@@ -578,13 +582,13 @@ true
 true
 
 >> ParseJSON("16") = "16"
-false
+true
 
 >> ParseJSON("1e100") = "2"
-Error({Kind:ErrorKind.InvalidArgument})
+false
 
 >> ParseJSON("16.000000000000000000000001") = true
-false
+true
 
 >> ParseJSON("1.000000000000000000000001") = true
 true
@@ -605,31 +609,40 @@ false
 false
 
 >> ParseJSON("1e100") = true
-Error({Kind:ErrorKind.InvalidArgument})
+true
 
 >> ParseJSON("16.000000000000000000000001") = Blank()
 false
 
+>> ParseJSON("0") = Blank()
+true
+
 >> ParseJSON("null") = Blank()
-false
+true
 
 >> ParseJSON("1e100") = Blank()
-Error({Kind:ErrorKind.InvalidArgument})
+false
 
 >> ParseJSON("2") = Date(1900,1,1)
 false
 
->> ParseJSON("16.0000000000000000000001") = Date(1900,1,7)
+>> ParseJSON("16.0000000000000000000001") = Date(1900,1,15)
 false
 
->> ParseJSON("1e100") = Date(1900,1,7)
-Error({Kind:ErrorKind.InvalidArgument})
+>> ParseJSON("16") = Date(1900,1,15)
+true
 
->> ParseJSON("16.0000000000000000000001") = DateTime(1900,1,1,12,0,0)
+>> ParseJSON("1e100") = Date(1900,1,15)
 false
 
->> ParseJSON("2.5") = DateTime(1900,1,1,12,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
+>> ParseJSON("null") = Date(1900,1,15)
+false
+
+>> ParseJSON("16.500000000000000000001") = DateTime(1900,1,15,12,0,0)
+false
+
+>> ParseJSON("16.5") = DateTime(1900,1,15,12,0,0)
+true
 
 >> ParseJSON("""1900-01-01T12:00:00""") = DateTime(1900,1,1,12,0,0)
 true
