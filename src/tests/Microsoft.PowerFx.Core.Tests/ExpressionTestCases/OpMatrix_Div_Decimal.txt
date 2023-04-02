@@ -84,6 +84,9 @@ Error({Kind:ErrorKind.Div0})
 >> Float("1e100")/ParseJSON("1e100")
 1
 
+>> Float(3)/ParseJSON("null")
+Error({Kind:ErrorKind.Div0})
+
 // Text
 
 >> "16"/Float(2)
