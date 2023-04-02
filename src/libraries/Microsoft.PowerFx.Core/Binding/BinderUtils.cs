@@ -1218,8 +1218,19 @@ namespace Microsoft.PowerFx.Core.Binding
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resLeftAnd.Coercions.Concat(resRightAnd.Coercions).ToList() };
 
                 case BinaryOp.Concat:
-                    var resLeftConcat = CheckTypeCore(errorContainer, leftNode, usePowerFxV1CompatibilityRules, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
-                    var resRightConcat = CheckTypeCore(errorContainer, rightNode, usePowerFxV1CompatibilityRules, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                    BinderCheckTypeResult resLeftConcat;
+                    BinderCheckTypeResult resRightConcat;
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, true, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                        resRightConcat = CheckTypeCore(errorContainer, rightNode, true, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                    }
+                    else
+                    {
+                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, false, leftType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                        resRightConcat = CheckTypeCore(errorContainer, rightNode, false, rightType, DType.String, /* coerced: */ DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                    }
+
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.String, Coercions = resLeftConcat.Coercions.Concat(resRightConcat.Coercions).ToList() };
 
                 case BinaryOp.Error:

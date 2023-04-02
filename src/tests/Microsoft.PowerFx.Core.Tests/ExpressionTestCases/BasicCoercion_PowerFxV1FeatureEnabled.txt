@@ -1,4 +1,4 @@
-﻿#SETUP: PowerFxV1Compatibility
+﻿#SETUP: PowerFxV1CompatibilityRules
 
 >> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
 "aaaaaaaa-bbbb-cccc-dddd-eeeeffffffff is a GUID"
