@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         [Theory]
         [InlineData("s", "b", "UnaryOpKind.TextToBoolean")]
-        [InlineData("s", "g", "UnaryOpKind.TextToGuid")] // new
+        [InlineData("s", "g", "UnaryOpKind.TextToGUID")] // new
         [InlineData("s", "i", "UnaryOpKind.TextToImage")] // Existing, not implemented
         [InlineData("s", "m", "UnaryOpKind.TextToMedia")] // Existing, not implemented
         [InlineData("s", "o", "UnaryOpKind.TextToBlob")] // Existing, not implemented
@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("d", "s", "function:Text")]
         [InlineData("T", "s", "function:Text")]
         [InlineData("b", "s", "UnaryOpKind.BooleanToText")]
-        [InlineData("g", "s", "UnaryOpKind.GuidToText")] // new
+        [InlineData("g", "s", "UnaryOpKind.GUIDToText")] // new
         [InlineData("o", "s", "UnaryOpKind.BlobToText")] // new
         [InlineData("m", "s", "UnaryOpKind.MediaToText")] // new
         [InlineData("i", "s", "UnaryOpKind.ImageToText")] // Existing, not implemented
@@ -197,6 +197,10 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("D", "d", "UnaryOpKind.DateToDateTime")] // new
         [InlineData("n", "$", "UnaryOpKind.NumberToCurrency")] // new
         [InlineData("$", "n", "UnaryOpKind.CurrencyToNumber")] // new
+        [InlineData("$", "s", "UnaryOpKind.CurrencyToText")] // new
+        [InlineData("s", "$", "UnaryOpKind.TextToCurrency")] // new
+        [InlineData("$", "b", "UnaryOpKind.CurrencyToBoolean")] // new
+        [InlineData("b", "$", "UnaryOpKind.BooleanToCurrency")] // new
         public void TestTypeCoercion(string fromTypeSpec, string toTypeSpec, string coercionKindStr)
         {
             Assert.True(DType.TryParse(fromTypeSpec, out var fromType));

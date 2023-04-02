@@ -1963,17 +1963,34 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
 
                 case DKind.Number:
-                    accepts =
-                        type.Kind == Kind ||
-                        type.Kind == DKind.Currency ||
-                        type.Kind == DKind.Unknown ||
-                        type.Kind == DKind.Deferred ||
-                        (useLegacyDateTimeAccepts &&
-                            (type.Kind == DKind.DateTime ||
-                            type.Kind == DKind.Date ||
-                            type.Kind == DKind.Time ||
-                            type.Kind == DKind.DateTimeNoTimeZone)) ||
-                        (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts =
+                            type.Kind == Kind ||
+                            type.Kind == DKind.Unknown ||
+                            type.Kind == DKind.Deferred ||
+                            (useLegacyDateTimeAccepts &&
+                                (type.Kind == DKind.DateTime ||
+                                type.Kind == DKind.Date ||
+                                type.Kind == DKind.Time ||
+                                type.Kind == DKind.DateTimeNoTimeZone)) ||
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    }
+                    else
+                    {
+                        accepts =
+                            type.Kind == Kind ||
+                            type.Kind == DKind.Currency ||
+                            type.Kind == DKind.Unknown ||
+                            type.Kind == DKind.Deferred ||
+                            (useLegacyDateTimeAccepts &&
+                                (type.Kind == DKind.DateTime ||
+                                type.Kind == DKind.Date ||
+                                type.Kind == DKind.Time ||
+                                type.Kind == DKind.DateTimeNoTimeZone)) ||
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+                    }
+
                     break;
 
                 case DKind.Color:
@@ -3294,6 +3311,7 @@ namespace Microsoft.PowerFx.Core.Types
                 case DKind.Boolean:
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
+                                 (usePowerFxV1CompatibilityRules && Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true)) ||
                                  Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.IsBooleanValued());
                     break;
@@ -3315,6 +3333,7 @@ namespace Microsoft.PowerFx.Core.Types
                     // Ill-formatted strings coerce to null; unsafe.
                     isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
+                                 (usePowerFxV1CompatibilityRules && Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)) ||
                                  Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Boolean.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
@@ -3331,6 +3350,17 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
+                    break;
+                case DKind.Guid:
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        doesCoerce = String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    }
+                    else
+                    {
+                        doesCoerce = Kind == DKind.Guid;
+                    }
+
                     break;
                 case DKind.Hyperlink:
                     if (usePowerFxV1CompatibilityRules)

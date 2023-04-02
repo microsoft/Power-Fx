@@ -1771,6 +1771,33 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.Deferred.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Void.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
+            // Coercion to GUID
+            Assert.False(DType.Boolean.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Number.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Currency.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Color.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.DateTime.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Date.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Time.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(usePowerFxV1CompatibilityRules, DType.String.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Hyperlink.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Image.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.PenImage.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Media.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Blob.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyTable.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.EmptyRecord.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Guid.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.EmptyEnum.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%n[A:2]", out type) && type.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%b[A:true]", out type) && type.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%g[A:\"hello\"]", out type) && type.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.ObjNull.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Error.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.Deferred.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Void.CoercesTo(DType.Guid, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+
             // Coercion to number
             Assert.True(DType.Boolean.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Number.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));

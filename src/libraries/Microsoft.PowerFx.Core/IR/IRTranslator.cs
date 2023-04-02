@@ -918,6 +918,42 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;
                         break;
+                    case CoercionKind.TextToGUID:
+                        unaryOpKind = UnaryOpKind.TextToGUID;
+                        break;
+                    case CoercionKind.GUIDToText:
+                        unaryOpKind = UnaryOpKind.GUIDToText;
+                        break;
+                    case CoercionKind.NumberToCurrency:
+                        unaryOpKind = UnaryOpKind.NumberToCurrency;
+                        break;
+                    case CoercionKind.TextToCurrency:
+                        unaryOpKind = UnaryOpKind.TextToCurrency;
+                        break;
+                    case CoercionKind.CurrencyToNumber:
+                        unaryOpKind = UnaryOpKind.CurrencyToNumber;
+                        break;
+                    case CoercionKind.CurrencyToBoolean:
+                        unaryOpKind = UnaryOpKind.CurrencyToBoolean;
+                        break;
+                    case CoercionKind.BooleanToCurrency:
+                        unaryOpKind = UnaryOpKind.BooleanToCurrency;
+                        break;
+                    case CoercionKind.CurrencyToText:
+                        unaryOpKind = UnaryOpKind.CurrencyToText;
+                        break;
+                    case CoercionKind.MediaToText:
+                        unaryOpKind = UnaryOpKind.MediaToText;
+                        break;
+                    case CoercionKind.ImageToText:
+                        unaryOpKind = UnaryOpKind.ImageToText;
+                        break;
+                    case CoercionKind.BlobToText:
+                        unaryOpKind = UnaryOpKind.BlobToText;
+                        break;
+                    case CoercionKind.PenImageToText:
+                        unaryOpKind = UnaryOpKind.PenImageToText;
+                        break;
                     case CoercionKind.UntypedToText:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
                     case CoercionKind.UntypedToNumber:

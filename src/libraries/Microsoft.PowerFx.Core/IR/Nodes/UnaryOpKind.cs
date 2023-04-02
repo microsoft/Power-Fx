@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
+        CurrencyToNumber,
 
         BlobToHyperlink,
         ImageToHyperlink,
@@ -33,10 +34,23 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         BooleanToText,
         OptionSetToText,
         ViewToText,
+        CurrencyToText,
+        GUIDToText,
+        ImageToText,
+        MediaToText,
+        BlobToText,
+        PenImageToText,
+
+        TextToGUID,
+
+        NumberToCurrency,
+        TextToCurrency,
+        BooleanToCurrency,
 
         NumberToBoolean,
         TextToBoolean,
         OptionSetToBoolean,
+        CurrencyToBoolean,
 
         OptionSetToColor,
 

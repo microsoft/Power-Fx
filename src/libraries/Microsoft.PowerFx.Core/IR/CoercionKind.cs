@@ -71,11 +71,18 @@ namespace Microsoft.PowerFx.Core.IR
         UntypedToColor,
         UntypedToGUID,
 
-        StringToGUID,
-        GUIDToString,
+        TextToGUID,
+        GUIDToText,
         BlobToText,
         ImageToText,
         MediaToText,
         PenImageToText,
+
+        CurrencyToNumber,
+        NumberToCurrency,
+        CurrencyToText,
+        TextToCurrency,
+        CurrencyToBoolean,
+        BooleanToCurrency,
     }
 }
