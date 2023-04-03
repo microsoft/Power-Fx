@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -318,7 +319,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractNumberAndDate = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<NumberValue>,
                 DateOrDateTime),
@@ -329,7 +332,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractNumberAndTime = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<NumberValue>,
                 ExactValueType<TimeValue>),
@@ -799,7 +804,14 @@ namespace Microsoft.PowerFx.Functions
             DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0.Subtract(arg1);
-            return new NumberValue(irContext, result.TotalDays);
+            if (irContext.ResultType == FormulaType.Decimal)
+            {
+                return new DecimalValue(irContext, (decimal)result.TotalDays);
+            }
+            else
+            {
+                return new NumberValue(irContext, result.TotalDays);
+            }
         }
 
         private static FormulaValue TimeDifference(IRContext irContext, FormulaValue[] args)
@@ -808,7 +820,14 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (TimeValue)args[1];
 
             var result = arg0.Value.Subtract(arg1.Value);
-            return new NumberValue(irContext, result.TotalDays);
+            if (irContext.ResultType == FormulaType.Decimal)
+            {
+                return new DecimalValue(irContext, (decimal)result.TotalDays);
+            }
+            else
+            {
+                return new NumberValue(irContext, result.TotalDays);
+            }
         }
 
         private static FormulaValue SubtractDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
