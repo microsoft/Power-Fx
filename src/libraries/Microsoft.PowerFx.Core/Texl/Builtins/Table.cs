@@ -60,10 +60,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 0; i < argTypes.Length; i++)
             {
                 var argType = argTypes[i];
-
-                argType.Features = Features.PowerFxV1;
-                rowType.Features = Features.PowerFxV1;
-
                 var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
 
                 if (!argType.IsRecord)
@@ -78,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    if (DTypePowerFx.TryUnionWithCoerce(rowType, argType, out var newType, out bool coercionNeeded))
+                    if (DType.TryUnionWithCoerce(rowType, argType, out var newType, out bool coercionNeeded))
                     {
                         rowType = newType;
 
@@ -89,6 +85,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                     else
                     {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
                         isValid = false;
                     }
                 }

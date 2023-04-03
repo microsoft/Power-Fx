@@ -5220,22 +5220,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     var childType = _txb.GetType(child);
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
 
-                    exprType.Features = Features.PowerFxV1;
-                    childType.Features = Features.PowerFxV1;
-
                     var isChildTypeAllowedInTable = !childType.IsDeferred && !childType.IsVoid;
 
                     if (!isChildTypeAllowedInTable)
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
                     }
-                    else if (DTypePowerFx.TryUnionWithCoerce(exprType, childType, out var returnType, out var needCoercion))
+                    else if (DType.TryUnionWithCoerce(exprType, childType, out var returnType, out var needCoercion))
                     {
                         exprType = returnType;
                         if (needCoercion)
                         {
                             _txb.SetCoercedType(child, exprType);
                         }
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
                     }
                 }
 

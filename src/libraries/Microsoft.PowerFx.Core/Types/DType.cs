@@ -3582,16 +3582,6 @@ namespace Microsoft.PowerFx.Core.Types
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
         }
-    }
-
-    /// <summary>
-    /// Class to extend DType behaviors without having to change the original class.
-    /// </summary>
-    internal class DTypePowerFx : DType
-    {
-        private DTypePowerFx()
-        {
-        }
 
         /// <summary>
         /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
@@ -3608,6 +3598,9 @@ namespace Microsoft.PowerFx.Core.Types
 
             coercionNeeded = false;
             returnType = null;
+
+            argType1.Features = Features.PowerFxV1;
+            argType2.Features = Features.PowerFxV1;
 
             if (!argType1.IsValid || (argType1.IsRecord && argType1.Equals(DType.EmptyRecord)))
             {
@@ -3627,16 +3620,16 @@ namespace Microsoft.PowerFx.Core.Types
                     fError = false;
 
                     // Union with coercion
-                    returnType = Union(ref fError, argType1, argType2);
+                    returnType = UnionV1(ref fError, argType1, argType2);
                     coercionNeeded = true;
                     isValid = !fError;
-                }                
+                }
             }
 
             return isValid;
         }
 
-        public static DType Union(ref bool fError, DType type1, DType type2)
+        public static DType UnionV1(ref bool fError, DType type1, DType type2)
         {
             type1.AssertValid();
             type2.AssertValid();
@@ -3675,7 +3668,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return Error;
                 }
 
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2), type2.AssociatedDataSources, type2.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCoreV1(ref fError, type1, type2), type2.AssociatedDataSources, type2.DisplayNameProvider);
             }
 
             if (type1.CoercesTo(type2))
@@ -3695,7 +3688,7 @@ namespace Microsoft.PowerFx.Core.Types
             return result;
         }
 
-        protected static DType UnionCore(ref bool fError, DType type1, DType type2)
+        protected static DType UnionCoreV1(ref bool fError, DType type1, DType type2)
         {
             type1.AssertValid();
             Contracts.Assert(type1.IsAggregate);
@@ -3727,7 +3720,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type);
+                    fieldType = UnionV1(ref fError, field1Type, field2Type);
                 }
                 else if (field1Type.IsAggregate || field2Type.IsAggregate)
                 {
@@ -3756,7 +3749,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type);
+                    fieldType = UnionV1(ref fError, field1Type, field2Type);
                 }
 
                 result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);
