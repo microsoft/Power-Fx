@@ -97,6 +97,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
             if (string.IsNullOrEmpty(locale))
             {
+                // $$$ Don't use CurrentUICulture
                 locale = CultureInfo.CurrentUICulture.Name;
                 Contracts.CheckNonEmpty(locale, "locale");
             }
@@ -211,6 +212,7 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 if (string.IsNullOrEmpty(locale))
                 {
+                    // $$$ Don't use CurrentUICulture
                     return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
                 }
 

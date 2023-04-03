@@ -223,17 +223,17 @@ namespace Microsoft.PowerFx.Core.Parser
             return ParseScript(script, Features.None, loc, flags);
         }
 
-        internal static ParseResult ParseScript(string script, Features features, CultureInfo loc = null, Flags flags = Flags.None)
+        internal static ParseResult ParseScript(string script, Features features, CultureInfo culture = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(culture);
 
-            var tokens = TokenizeScript(script, loc, flags);
+            var tokens = TokenizeScript(script, culture, flags);
             var parser = new TexlParser(tokens, flags, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
-            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, loc);
+            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, culture);
         }
 
         public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
@@ -305,15 +305,15 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
-        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags)
+        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo culture, Flags flags)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(culture);
 
             var lexerFlags = flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : TexlLexer.Flags.None;
-            loc ??= CultureInfo.CurrentCulture;
+            culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
-            return TexlLexer.GetLocalizedInstance(loc).LexSource(script, lexerFlags);
+            return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
         }
 
         private TexlNode Parse(ref List<TexlError> errors)

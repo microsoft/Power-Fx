@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx
         {
             return new ParserOptions
             {
-                 Culture = CultureInfo.InvariantCulture,
+                 Culture = null,
                  AllowsSideEffects = false,
                  MaxExpressionLength = Config.MaximumExpressionLength,
             };
@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx
         /// <param name="culture"></param>
         /// <returns></returns>
         public IReadOnlyList<Token> Tokenize(string expressionText, CultureInfo culture = null)
-            => TexlLexer.GetLocalizedInstance(culture ?? CultureInfo.InvariantCulture).GetTokens(expressionText);
+            => TexlLexer.GetLocalizedInstance(culture).GetTokens(expressionText);
 
         /// <summary>
         /// Parse the expression without doing any binding.
@@ -402,7 +402,7 @@ namespace Microsoft.PowerFx
             var ruleScope = this.GetRuleScope();
             var symbolTable = (parameters == null) ? null : SymbolTable.NewFromRecord(parameters);
 
-            return GetInvariantExpressionWorker(expressionText, symbolTable, parseCulture ?? CultureInfo.InvariantCulture);
+            return GetInvariantExpressionWorker(expressionText, symbolTable, parseCulture);
         }
 
         internal string GetInvariantExpressionWorker(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo parseCulture)
@@ -424,13 +424,13 @@ namespace Microsoft.PowerFx
         public string GetDisplayExpression(string expressionText, RecordType parameters, CultureInfo culture = null)
         {
             var symbols = SymbolTable.NewFromRecord(parameters);
-            return GetDisplayExpression(expressionText, symbols, culture ?? CultureInfo.InvariantCulture);
+            return GetDisplayExpression(expressionText, symbols, culture);
         }
 
         public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo culture = null)
         {
             var ruleScope = this.GetRuleScope();
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture ?? CultureInfo.InvariantCulture, Config.Features, toDisplay: true);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
     }
 }

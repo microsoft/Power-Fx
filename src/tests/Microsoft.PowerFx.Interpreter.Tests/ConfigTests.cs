@@ -326,7 +326,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var tr_symbols = new RuntimeConfig();
-
             tr_symbols.AddService(new CultureInfo("tr-TR"));
 
             var textExpression = "Upper(\"indigo\")";
@@ -339,7 +338,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
             Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
         }
 
@@ -351,8 +350,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var us_symbols = new RuntimeConfig();
-
             us_symbols.AddService(new CultureInfo("en-US"));
+
+            var tr_symbols = new RuntimeConfig();
+            tr_symbols.AddService(new CultureInfo("tr-TR"));
 
             var textExpression = "Upper(\"indigo\")";
             var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
@@ -360,18 +361,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(textExpression).GetEvaluator();
 
             Assert.Equal("INDIGO", (check.Eval() as StringValue).Value);
+            Assert.Equal("İNDİGO", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
             Assert.Equal("INDIGO", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
+            Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
             Assert.Equal("10/6/2022 2:19 PM", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
         }
 
         // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo5()
-        {
+        {            
             RunOnIsolatedThread(new CultureInfo("tr-TR"), RecalcEngine_Symbol_CultureInfo5_ThreadProc);
         }
 
@@ -388,16 +391,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Engine will use custom locale (invariant)
             var engine = new RecalcEngine(config);
 
-            var result = engine.Eval(upperExpression);
+            var result = engine.Eval(upperExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("INDIGO INDIGO", (result as StringValue).Value);
 
-            result = engine.Eval(lowerExpression);
+            result = engine.Eval(lowerExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("indigo indigo", (result as StringValue).Value);
 
-            result = engine.Eval(properExpression);
+            result = engine.Eval(properExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("Indigo Indigo", (result as StringValue).Value);
 
-            result = engine.Eval(datetimeExpression);
+            result = engine.Eval(datetimeExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
 
             // Engine will use specified locale (tr-TR)

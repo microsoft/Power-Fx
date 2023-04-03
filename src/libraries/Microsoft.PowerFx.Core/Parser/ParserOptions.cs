@@ -30,13 +30,7 @@ namespace Microsoft.PowerFx
         /// This primarily determines numeric decimal separator character
         /// as well as chaining operator. 
         /// </summary>
-        public CultureInfo Culture
-        {
-            get => _culture ?? CultureInfo.InvariantCulture;
-            set => _culture = value ?? CultureInfo.InvariantCulture;
-        }
-
-        private CultureInfo _culture;
+        public CultureInfo Culture { get; set; }
 
         /// <summary>
         /// If greater than 0, enforces a maximum length on a single expression. 
