@@ -575,7 +575,7 @@ false
 true
 
 >> 1.0000000000000000000000001 > Date(1900,1,0)
-false
+true
 
 >> 1.0000000000000000000000001 < Date(1900,1,0)
 false
@@ -584,17 +584,19 @@ false
 true
 
 >> 1.0000000000000000000000001 <= Date(1900,1,0)
-true
+false
 
 >> Date(1900,1,1)%
 0.02
 
 >> Date(1900,1,1)% * 1.0000000000000000000000001
-0.02
+0.020000000000000000000000002
 
-//-Date(1900,1,1) -- issue https://github.com/microsoft/Power-Fx/issues/1176
+>> -Date(1900,1,1) 
+#SKIP: waiting on issue https://github.com/microsoft/Power-Fx/issues/1176
 
-//(-Date(1900,1,1)) * 1.0000000000000000000000001 -- issue https://github.com/microsoft/Power-Fx/issues/1176
+>> (-Date(1900,1,1)) * 1.0000000000000000000000001 
+#SKIP: waiting on issue https://github.com/microsoft/Power-Fx/issues/1176
 
 >> Date(1900,1,1) * 1.0000000000000000000000001
 2.0000000000000000000000002
@@ -636,10 +638,10 @@ true
 false
 
 >> Date(1900,1,0) < 1.0000000000000000000000001
-false
+true
 
 >> Date(1900,1,0) >= 1.0000000000000000000000001 
-true
+false
 
 >> Date(1900,1,0) <= 1.0000000000000000000000001
 true
@@ -661,7 +663,7 @@ DateTime(1900,1,2,12,0,0,0)
 0.025
 
 >> DateTime(1900,1,1,12,0,0)% * 1.0000000000000000000000001
-0.025
+0.0250000000000000000000000025
 
 //-DateTime(1900,1,1,12,0,0) -- issue https://github.com/microsoft/Power-Fx/issues/1176
 
@@ -707,10 +709,10 @@ true
 false
 
 >> DateTime(1900,1,0,0,0,0) < 1.0000000000000000000000001
-false
+true
 
 >> DateTime(1900,1,0,0,0,0) >= 1.0000000000000000000000001 
-true
+false
 
 >> DateTime(1900,1,0,0,0,0) <= 1.0000000000000000000000001
 true

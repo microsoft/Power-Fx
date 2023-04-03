@@ -1,0 +1,927 @@
+#SKIPFILE: NumberIsFloat
+
+// EQUALS
+
+// In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
+// and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
+// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+
+// Basic Float and Decimal without constructors
+
+>> 1 = 1
+true
+
+>> 1 = 2
+false
+
+>> 1 = 0
+false
+
+>> 1.00000000000000000000000001 = 1.00000000000000000000000001
+true
+
+>> 1.00000000000000000000000001 = 1.00000000000000000000000002
+false
+
+>> 1.00000000000000000000000001 = 1.00000000000000000000000000
+false
+
+// overflow error on decimal
+>> 1E100 = 1E100
+Errors: Error 0-5: Numeric value is too large.|Error 8-13: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
+
+>> 1E100 = 1.1E100
+Errors: Error 0-5: Numeric value is too large.|Error 8-15: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
+
+>> 1E100 = 9.9E99
+Errors: Error 0-5: Numeric value is too large.|Error 8-14: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
+
+// underfow to zero on decimal
+>> 1E-100 = 1E-100
+true
+
+>> 1E-100 = 1.1E-100
+true
+
+>> 1E-100 = 9.9E-101
+true
+
+// Float
+
+>> Float(16) = Float(14)
+false
+
+>> Float(16) = Float(16)
+true
+
+>> Float(16) = Float("1e100")
+false
+
+>> Float(16) = Float(18)
+false
+
+// comp todo: type mismatch error (string and number)
+>> Float(16) = "16"
+false
+
+// comp todo: type mismatch error (string and number)
+>> Float(16) = "16.000000000000000000002"
+false
+
+// comp todo: type mismatch error (string and number)
+>> Float(16) = "14"
+false
+
+// comp todo: type mismatch error (string and number)
+>> Float(16) = "18"
+false
+
+// comp todo: type mismatch error (string and number)
+>> Float(16) = "1e20"
+false
+
+// comp todo: type mismatch error (string and number)
+>> Float(1e20) = "1e20"
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> Float(1) = true
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> Float(1) = false
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> Float(0) = true
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> Float(0) = false
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> Float(2) = true
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> Float(2) = false
+false
+
+>> Float(0) = Blank()
+false
+
+>> Float(1) = Blank()
+false
+
+>> Float(2) = Blank()
+false
+
+>> If(1<0,Float(1)) = Blank()
+true
+
+>> Float(2) = Date(1900,1,1)
+true
+
+>> Value(Date(2000,1,1))
+36526
+
+>> Float(36526) = Date(2000,1,1)
+true
+
+>> Float(36526) = Date(2001,12,12)
+false
+
+>> Value(DateTime(2000,1,1,12,0,0))
+36526.5
+
+>> Float(36526.5) = DateTime(2000,1,1,12,0,0)
+true
+
+>> Float(36526.5) = DateTime(2020,12,20,0,0,0)
+false
+
+>> Value(Time(12,0,0))
+0.5
+
+>> Float(0.5) = Time(12,0,0)
+true
+
+>> Float(0.5) = Time(9,0,0)
+false
+
+// comparison done in floating point, decimal rounded
+>> Float(16) = Decimal("16.000000000000000000002")
+true
+
+>> Float(16) = Decimal("16")
+true
+
+>> Float("1e100") = Decimal("2.00000000000000000000002")
+false
+
+>> Float(16) = ParseJSON("16")
+true
+
+>> Float(16) = ParseJSON("16.0")
+true
+
+>> Float(16) = ParseJSON("1.6e1")
+true
+
+// comparison done in floating point, decimal rounded
+>> Float(16) = ParseJSON("16.0000000000000000000002")
+true
+
+// comparison done in floating point, decimal rounded
+>> Float("16.0000000000000000000002") = ParseJSON("16.0000000000000000000002")
+true
+
+>> Float(16) = ParseJSON("1e100")
+false
+
+>> Float("1e100") = ParseJSON("2")
+false
+
+>> Float("1e100") = ParseJSON("1e100")
+true
+
+// Text - Text can only be compared with other text
+
+// comp todo: type mismatch error (string and number)
+>> "16" = Float(16)
+false
+
+// comp todo: type mismatch error (string and number)
+>> "16" = Float(18)
+false
+
+// comp todo: type mismatch error (string and number)
+>> "16" = Float(14)
+false
+
+// comp todo: type mismatch error (string and number)
+>> "1e100" = Float(2)
+false
+
+// comp todo: type mismatch error (string and number)
+>> "" = Float(0)
+false
+
+>> "16" = "16"
+true
+
+>> "16" = "18"
+false
+
+>> "16" = "14"
+false
+
+>> "16" = "16.00000000000000000000000002"
+false
+
+>> "1e100" = "2"
+false
+
+// comp todo: type mismatch error (string and boolean)
+>> "1" = true
+false
+
+// comp todo: type mismatch error (string and boolean)
+>> "1e100" = true
+false
+
+>> "16" = Blank()
+false
+
+>> "1" = Blank()
+false
+
+>> "0" = Blank()
+false
+
+>> "" = Blank()
+false
+
+>> "1e100" = Blank()
+false
+
+// comp todo: type mismatch error (string and date/datetime/time)
+>> "36526" = Date(2000,1,1)
+false
+
+// comp todo: type mismatch error (string and date/datetime/time)
+>> "36526.5" = DateTime(2000,1,1,12,0,0)
+false
+
+// comp todo: type mismatch error (string and date/datetime/time)
+>> "16" = Time(12,0,0)
+false
+
+// comp todo: type mismatch error (string and number)
+>> "2" = Decimal("2.000000000000000000000002")
+false
+
+// comp todo: type mismatch error (string and number)
+>> "1e100" = Decimal("2.000000000000000000000002")
+false
+
+// string comparisons with ParseJSON of a number are done on the underlying text representation of the number in the JSON, 
+// without roundtripping through float or decimal.  So "16" will not be the same thing as "16.0".
+>> "16" = ParseJSON("16")
+true
+
+>> "16" = ParseJSON("14")
+false
+
+>> "16" = ParseJSON("18")
+false
+
+>> "16" = ParseJSON("16.0")
+false
+
+>> "16" = ParseJSON("1.6e1")
+false
+
+>> "16" = ParseJSON("""16""")
+true
+
+>> "16" = ParseJSON("""14""")
+false
+
+>> "16" = ParseJSON("""18""")
+false
+
+>> "16" = ParseJSON("""16.0""")
+false
+
+>> "16" = ParseJSON("""1.6e1""")
+false
+
+>> "1e100" = ParseJSON("1e100")
+true
+
+>> "1e100" = ParseJSON("1E+100")
+false
+
+>> "1e100" = ParseJSON("""1e100""")
+true
+
+>> "1e100" = ParseJSON("""1E+100""")
+false
+
+>> "true" = ParseJSON("true")
+true
+
+>> "true" = ParseJSON("false")
+false
+
+>> "false" = ParseJSON("false")
+true
+
+>> "false" = ParseJSON("true")
+false
+
+>> "1e100" = ParseJSON("2")
+false
+
+// Boolean
+
+// comp todo: type mismatch error (boolean and number)
+>> true = Float(2)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> true = Float(1)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> true = Float(0)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> false = Float(2)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> false = Float(1)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> false = Float(0)
+false
+
+>> true = Float("1e100")
+false
+
+// comp todo: type mismatch error (string and boolean)
+>> true = "1"
+false
+
+// comp todo: type mismatch error (string and boolean)
+>> false = "0"
+false
+
+// comp todo: type mismatch error (string and boolean)
+>> false = "1"
+false
+
+// comp todo: type mismatch error (string and boolean)
+>> true = "1E+100"
+false
+
+// comp todo: type mismatch error (string and boolean)
+// returns false in Excel
+>> true = "true"
+false
+
+// comp todo: type mismatch error (string and boolean)
+>> false = "false"
+false
+
+>> true = true
+true
+
+>> true = false
+false
+
+>> true = Blank()
+false
+
+>> false = Blank()
+false
+
+// comp todo: type mismatch error (boolean and date/datetime/time)
+>> true = Date(1927,5,18)
+false
+
+// comp todo: type mismatch error (boolean and date/datetime/time)
+>> true = DateTime(1927,5,18,0,0,0)
+false
+
+// comp todo: type mismatch error (boolean and date/datetime/time)
+>> true = Time(12,0,0)
+false
+
+// comp todo: type mismatch error (boolean and date/datetime/time)
+>> false = Date(1927,5,18)
+false
+
+// comp todo: type mismatch error (boolean and date/datetime/time)
+>> false = DateTime(1927,5,18,0,0,0)
+false
+
+// comp todo: type mismatch error (boolean and date/datetime/time)
+>> false = Time(12,0,0)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> true = Decimal("1.000000000000000000000002")
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> true = Decimal(1)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> true = Decimal(0)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> false = Decimal("1.000000000000000000000002")
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> false = Decimal(1)
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> false = Decimal(0)
+false
+
+>> true = ParseJSON("2")
+true
+
+>> true = ParseJSON("1")
+true
+
+>> true = ParseJSON("0")
+false
+
+>> true = ParseJSON("true")
+true
+
+>> true = ParseJSON("false")
+false
+
+>> false = ParseJSON("2")
+false
+
+>> false = ParseJSON("1")
+false
+
+>> false = ParseJSON("0")
+true
+
+>> false = ParseJSON("true")
+false
+
+>> false = ParseJSON("false")
+true
+
+>> true = ParseJSON("1e100")
+true
+
+>> false = ParseJSON("null")
+false
+
+// Blank
+
+>> Blank() = Float(2)
+false
+
+>> Blank() = Float("1e100")
+false
+
+>> Blank() = "2"
+false
+
+>> Blank() = Float(0)
+false
+
+>> Blank() = "1e100"
+false
+
+>> Blank() = true
+false
+
+>> Blank() = Blank()
+true
+
+>> Blank() = Date(2000,1,1)
+false
+
+>> Blank() = DateTime(2000,1,1,12,0,0)
+false
+
+>> Blank() = Time(12,0,0)
+false
+
+>> Blank() = Decimal("2.000000000000000000000002")
+false
+
+>> Blank() = Decimal("0")
+false
+
+>> Blank() = ParseJSON("2")
+false
+
+>> Blank() = ParseJSON("1e100")
+false
+
+>> Blank() = ParseJSON("null")
+true
+
+>> Blank() = ParseJSON("0")
+false
+
+// Date
+
+>> Date(2000,1,1) = Float(2)
+false
+
+>> Date(1900,1,1) = Float(2)
+true
+
+// comp todo: type mismatch error (string and date/datetime)
+>> Date(1900,1,1) = "2"
+false
+
+// comp todo: type mismatch error (boolean and number)
+>> Date(1900,1,0) = true
+false
+
+>> Date(2000,1,1) = Blank()
+false
+
+>> Date(1954,10,3) = Date(1927,5,18)
+false
+
+>> Date(1954,10,3) = Date(1954,10,3)
+true
+
+>> Date(1954,10,3) = Date(1900,1,1)
+false
+
+>> Date(1954,10,3) = DateTime(1954,10,3,0,0,0)
+true
+
+>> Date(1954,10,3) = Now()
+false
+
+>> Date(1954,10,3) = Today()
+false
+
+// comp todo: type mismatch error (date and time)
+>> Date(2000,1,1) = Time(12,0,0)
+false
+
+>> Date(1900,1,1) = Decimal("2.000000000000000000000002")
+false
+
+>> Date(1900,1,1) = ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(2000,1,1) = ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// DateTime
+
+>> DateTime(1900,1,1,12,0,0) = Float(2.5)
+true
+
+// comp todo: type mismatch error (date/datetime and string)
+>> DateTime(1900,1,1,12,0,0) = "2.5"
+false
+
+// comp todo: type mismatch error (date/datetime and boolean)
+>> DateTime(2000,1,1,12,0,0) = true
+false
+
+>> DateTime(2000,1,0,0,0,0) = true
+false
+
+>> DateTime(2000,1,1,12,0,0) = Blank()
+false
+
+>> DateTime(1927,5,18,0,0,0) = Date(1927,5,18)
+true
+
+>> DateTime(1927,5,18,0,0,1) = Date(1927,5,18)
+false
+
+>> DateTime(1900,1,1,0,0,0) = Date(1900,1,1)
+true
+
+>> DateTime(1900,1,1,12,0,0) = Date(1900,1,1)
+false
+
+>> DateTime(1927,5,18,1,2,3) = DateTime(1927,5,18,1,2,3)
+true
+
+>> DateTime(1900,1,1,12,0,0) = Time(12,0,0)
+false
+
+>> DateTime(1900,1,1,12,0,0) = Decimal("2.5000000000000000000002")
+false
+
+>> DateTime(2000,1,1,12,0,0) = ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) = ParseJSON("2.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) = ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) = ParseJSON("""2000-01-01T12:00:00""")
+true
+
+>> DateTime(2000,1,1,12,0,1) = ParseJSON("""2000-01-01T12:00:01""")
+true
+
+>> DateTime(2000,1,1,12,0,0) = ParseJSON("""2000-01-01T12:00:01""")
+false
+
+// Time
+
+>> Time(9,0,0) = Float(0.375)
+true
+
+// comp todo: type mismatch error (time and string)
+>> Time(9,0,0) = "0.375"
+false
+
+// comp todo: type mismatch error (time and boolean)
+>> Time(9,0,0) = true
+false
+
+// comp todo: type mismatch error (time and boolean)
+>> Time(24,0,0) = false
+false
+
+>> Time(24,0,0) = 0
+true
+
+>> Time(24,0,0) = 1
+false
+
+>> Time(9,0,0) = Blank()
+false
+
+>> If(1<0,Time(9,0,0)) = Blank()
+true
+
+>> Time(9,0,0) = Time(9,0,0)
+true
+
+>> Time(9,0,1) = Time(9,0,0)
+false
+
+// comp todo: type mismatch error (time and date)
+>> Time(9,0,0) = Date(1900,1,2)
+false
+
+// comp todo: but we allow time and datetime?
+>> Time(1,0,0) = DateTime(1899,12,30,1,0,0)
+false
+
+>> Time(3,0,0) = Decimal("0.125")
+true
+
+>> Time(3,0,0) = Decimal("0.125000000000000000000001")
+false
+
+>> Time(3,0,0) = ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) = ParseJSON("0.125")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) = ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) = ParseJSON("""03:00:00""")
+true
+
+>> Time(3,0,0) = ParseJSON("""03:00:01""")
+false
+
+>> Time(3,0,1) = ParseJSON("""03:00:01""")
+true
+
+// Decimal
+
+>> Decimal("2.000000000000000000000001") = Float(2)
+true
+
+// comp todo: type mismatch error (number and string)
+>> Decimal("16.000000000000000000000001") = "16"
+false
+
+// comp todo: type mismatch error (number and boolean)
+>> Decimal("1.000000000000000000000001") = true
+false
+
+>> Decimal("0.000000000000000000000001") = Blank()
+false
+
+>> Decimal(0) = Blank()
+false
+
+>> If(1<0,Decimal(1)) = Blank()
+true
+
+>> Decimal("16.0000000000000000000001") = Date(1900,1,15)
+false
+
+>> Decimal("16") = Date(1900,1,15)
+true
+
+>> Decimal(2) = Date(1900,1,1)
+true
+
+>> Decimal("2.0000000000000000000001") = Date(1900,1,1)
+false
+
+>> Decimal(2) = DateTime(1900,1,1,0,0,0)
+true
+
+>> Decimal("2.0000000000000000000001") = DateTime(1900,1,1,12,0,0)
+false
+
+>> Decimal(2.5) = DateTime(1900,1,1,12,0,0)
+true
+
+>> Decimal(".5") = Time(12,0,0)
+true
+
+>> Decimal(".5000000000000000000001") = Time(12,0,0)
+false
+
+>> Decimal("16.000000000000000000000002") = Decimal("16.000000000000000000000001")
+false
+
+>> Decimal("16.000000000000000000000002") = Decimal("16.000000000000000000000002")
+true
+
+>> Decimal("16.000000000000000000000002") = ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Decimal("16.000000000000000000000002") = ParseJSON("16.000000000000000000000002")
+true
+
+>> Decimal("16.000000000000000000000002") = ParseJSON("16.000000000000000000000001")
+false
+
+>> Decimal(16) = ParseJSON("16")
+true
+
+>> Decimal(16) = ParseJSON("16.0")
+true
+
+>> Decimal(16) = ParseJSON("1.6e1")
+true
+
+// Untyped
+
+>> ParseJSON("16.00000000000000000000001") = Float(2)
+false
+
+// comparisons with float are done in float
+>> ParseJSON("16.00000000000000000000001") = Float(16)
+true
+
+>> ParseJSON("1e100") = Float(2)
+false
+
+>> ParseJSON("16.00000000000000000000001") = "2"
+false
+
+>> ParseJSON("16.00000000000000000000001") = "16"
+false
+
+>> ParseJSON("16.00000000000000000000001") =  "16.00000000000000000000001"
+true
+
+>> ParseJSON("16.00000000000000000000001") =  16 + ".00000000000000000000001"
+true
+
+>> ParseJSON("16") = "16"
+true
+
+>> ParseJSON("1e100") = "2"
+false
+
+>> ParseJSON("16.000000000000000000000001") = true
+true
+
+>> ParseJSON("1.000000000000000000000001") = true
+true
+
+>> ParseJSON("0") = true
+false
+
+>> ParseJSON("0") = false
+true
+
+>> ParseJSON("1") = true
+true
+
+>> ParseJSON("1") = false
+false
+
+>> ParseJSON("true") = true
+true
+
+>> ParseJSON("false") = false
+true
+
+>> ParseJSON("false") = true
+false
+
+>> ParseJSON("true") = false
+false
+
+>> ParseJSON("1e100") = true
+true
+
+>> ParseJSON("16.000000000000000000000001") = Blank()
+false
+
+>> ParseJSON("0") = Blank()
+false
+
+>> ParseJSON("null") = Blank()
+true
+
+>> ParseJSON("1e100") = Blank()
+false
+
+>> ParseJSON("2") = Date(1900,1,1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.0000000000000000000001") = Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""1900-01-01""") = Date(1900,1,1)
+true
+
+>> ParseJSON("""1900-01-01T09:00:01""") = Date(1900,1,1)
+#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1299, expected: false
+
+>> ParseJSON("16") = Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100") = Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("null") = Date(1900,1,15)
+false
+
+>> ParseJSON("16.500000000000000000001") = DateTime(1900,1,15,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.5") = DateTime(1900,1,15,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""1900-01-01T12:00:00""") = DateTime(1900,1,1,12,0,0)
+true
+
+>> ParseJSON("""1900-01-01T09:00:00""") = DateTime(1900,1,1,12,0,0)
+false
+
+>> ParseJSON("1e100") = DateTime(1900,1,7,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000001") = Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1") = Time(24,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""12:00:01""") = Time(12,0,1)
+true
+
+>> ParseJSON("""12:00:02""") = Time(12,0,1)
+false
+
+>> ParseJSON("0.250000000000000000000001") = Time(6,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("0.25") = Time(6,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100") = Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("2.000000000000000000000000001") = Decimal("2.000000000000000000000000001")
+true
+
+>> ParseJSON("1e100") = Decimal("2.000000000000000000000000001")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("2.000000000000000000000000001") = ParseJSON("2.000000000000000000000000001")
+Errors: Error 43-44: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("2.000000000000000000000002") = ParseJSON("2")
+Errors: Error 40-41: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("1e100") = ParseJSON("2")
+Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("16.000000000000000000000002") = ParseJSON("1e100")
+Errors: Error 41-42: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("1e100") = ParseJSON("1e100")
+Errors: Error 19-20: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
