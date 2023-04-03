@@ -744,7 +744,7 @@ namespace Microsoft.PowerFx.Core.Binding
             } 
         }
 
-        private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckComparisonArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool numberIsFloat)
         {
             var coercions = new List<BinderCoercionResult>();
 
@@ -844,6 +844,7 @@ namespace Microsoft.PowerFx.Core.Binding
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
                 // Handle DateTime <=> Number comparison by coercing DateTime side to Number
+                // In all situations, mixing anything with Number results in Number
                 if (DType.Number.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
@@ -854,6 +855,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Handle Decimal <=> Number comparison by coercing Decimal side to Number
+                // In all situations, mixing anything with Number results in Number
                 if (DType.Number.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
@@ -864,11 +866,32 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Handle Decimal <=> DateTime comparison by coercing both sides to Number
-                if ((DType.DateTime.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight)) ||
-                    (DType.DateTime.Accepts(typeRight) && DType.Decimal.Accepts(typeLeft)))
+                // Process in Number or Decimal depending on numberIsFloat for consistency with +/- operations
+                if (DType.DateTime.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
                 {
-                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
-                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    if (numberIsFloat)
+                    {
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    }
+                    else
+                    {
+                        // right is already decimal
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Decimal });
+                    }
+                }
+                else if (DType.DateTime.Accepts(typeRight) && DType.Decimal.Accepts(typeLeft))
+                {
+                    if (numberIsFloat)
+                    {
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    }
+                    else
+                    {
+                        // left is already decimal
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Decimal });
+                    }
                 }
 
                 if (DType.DateTime.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
@@ -891,18 +914,18 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (typeLeft.IsUntypedObject && typeRight.Kind == DKind.ObjNull)
             {
-                coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = numberIsFloat ? DType.Number : DType.Decimal });
             }
 
             if (typeRight.IsUntypedObject && typeLeft.Kind == DKind.ObjNull)
             {
-                coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = numberIsFloat ? DType.Number : DType.Decimal });
             }
 
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight)
+        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool numberIsFloat)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -987,6 +1010,7 @@ namespace Microsoft.PowerFx.Core.Binding
             if (!typeLeft.Accepts(typeRight) && !typeRight.Accepts(typeLeft))
             {
                 // Handle DateTime <=> Number comparison
+                // In all situations, mixing anything with Number results in Number
                 if (DType.Number.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
@@ -1011,6 +1035,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Handle Decimal <=> Number comparison
+                // In all situations, mixing anything with Number results in Number
                 if (DType.Number.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
                 {
                     coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
@@ -1023,14 +1048,35 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Handle DateTime <=> Decimal comparison
-                if (DType.Decimal.Accepts(typeLeft) && DType.DateTime.Accepts(typeRight))
+                // Process in Number or Decimal depending on numberIsFloat for consistency with +/- operations
+                if (DType.DateTime.Accepts(typeLeft) && DType.Decimal.Accepts(typeRight))
                 {
-                    coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    if (numberIsFloat)
+                    {
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    }
+                    else
+                    {
+                        // right is already decimal
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Decimal });
+                    }
+
                     return new BinderCheckTypeResult() { Coercions = coercions };
                 }
-                else if (DType.Decimal.Accepts(typeRight) && DType.DateTime.Accepts(typeLeft))
+                else if (DType.DateTime.Accepts(typeRight) && DType.Decimal.Accepts(typeLeft))
                 {
-                    coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                    if (numberIsFloat)
+                    {
+                        coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Number });
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Number });
+                    }
+                    else
+                    {
+                        // left is already decimal
+                        coercions.Add(new BinderCoercionResult() { Node = right, CoercedType = DType.Decimal });
+                    }
+
                     return new BinderCheckTypeResult() { Coercions = coercions };
                 }
 
@@ -1147,7 +1193,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.Equal:
                 case BinaryOp.NotEqual:
-                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
+                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, numberIsFloat);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resEq.Coercions };
 
                 case BinaryOp.Less:
@@ -1157,7 +1203,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Excel's type coercion for inequality operators is inconsistent / borderline wrong, so we can't
                     // use it as a reference. For example, in Excel '2 < TRUE' produces TRUE, but so does '2 < FALSE'.
                     // Sticking to a restricted set of numeric-like types for now until evidence arises to support the need for coercion.
-                    var resOrder = CheckComparisonArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType);
+                    var resOrder = CheckComparisonArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, numberIsFloat);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resOrder.Coercions };
 
                 case BinaryOp.In:

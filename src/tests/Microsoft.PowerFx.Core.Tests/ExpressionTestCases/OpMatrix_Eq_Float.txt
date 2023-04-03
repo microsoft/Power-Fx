@@ -1,4 +1,4 @@
-#SKIPFILE: NumberIsFloat
+#SKIPFILE: disable:NumberIsFloat
 
 // EQUALS
 
@@ -21,30 +21,28 @@ false
 true
 
 >> 1.00000000000000000000000001 = 1.00000000000000000000000002
-false
+true
 
 >> 1.00000000000000000000000001 = 1.00000000000000000000000000
-false
+true
 
-// overflow error on decimal
 >> 1E100 = 1E100
-Errors: Error 0-5: Numeric value is too large.|Error 8-13: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
+true
 
 >> 1E100 = 1.1E100
-Errors: Error 0-5: Numeric value is too large.|Error 8-15: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
+false
 
 >> 1E100 = 9.9E99
-Errors: Error 0-5: Numeric value is too large.|Error 8-14: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
+false
 
-// underfow to zero on decimal
 >> 1E-100 = 1E-100
 true
 
 >> 1E-100 = 1.1E-100
-true
+false
 
 >> 1E-100 = 9.9E-101
-true
+false
 
 // Float
 
@@ -537,8 +535,9 @@ false
 >> Date(2000,1,1) = Time(12,0,0)
 false
 
+// comparison done on floating point due to Date/DateTime/Time
 >> Date(1900,1,1) = Decimal("2.000000000000000000000002")
-false
+true
 
 >> Date(1900,1,1) = ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -583,8 +582,9 @@ true
 >> DateTime(1900,1,1,12,0,0) = Time(12,0,0)
 false
 
+// comparison done on floating point due to Date/DateTime/Time
 >> DateTime(1900,1,1,12,0,0) = Decimal("2.5000000000000000000002")
-false
+true
 
 >> DateTime(2000,1,1,12,0,0) = ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -650,8 +650,9 @@ false
 >> Time(3,0,0) = Decimal("0.125")
 true
 
+// comparison done on floating point due to Date/DateTime/Time
 >> Time(3,0,0) = Decimal("0.125000000000000000000001")
-false
+true
 
 >> Time(3,0,0) = ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -693,8 +694,9 @@ false
 >> If(1<0,Decimal(1)) = Blank()
 true
 
+// comparison done on floating point due to Date/DateTime/Time
 >> Decimal("16.0000000000000000000001") = Date(1900,1,15)
-false
+true
 
 >> Decimal("16") = Date(1900,1,15)
 true
@@ -702,8 +704,9 @@ true
 >> Decimal(2) = Date(1900,1,1)
 true
 
+// comparison done on floating point due to Date/DateTime/Time
 >> Decimal("2.0000000000000000000001") = Date(1900,1,1)
-false
+true
 
 >> Decimal(2) = DateTime(1900,1,1,0,0,0)
 true
@@ -717,8 +720,9 @@ true
 >> Decimal(".5") = Time(12,0,0)
 true
 
+// comparison done on floating point due to Date/DateTime/Time
 >> Decimal(".5000000000000000000001") = Time(12,0,0)
-false
+true
 
 >> Decimal("16.000000000000000000000002") = Decimal("16.000000000000000000000001")
 false
