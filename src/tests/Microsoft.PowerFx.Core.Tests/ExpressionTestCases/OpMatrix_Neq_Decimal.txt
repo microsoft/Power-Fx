@@ -161,6 +161,12 @@ true
 >> Float(16) <> ParseJSON("16")
 false
 
+>> Float(16) <> ParseJSON("16.0")
+false
+
+>> Float(16) <> ParseJSON("1.6e1")
+false
+
 // comparison done in floating point, decimal rounded
 >> Float(16) <> ParseJSON("16.0000000000000000000002")
 false
@@ -258,6 +264,8 @@ true
 >> "1e100" <> Decimal("2.000000000000000000000002")
 true
 
+// string comparisons with ParseJSON of a number are done on the underlying text representation of the number in the JSON, 
+// without roundtripping through float or decimal.  So "16" will not be the same thing as "16.0".
 >> "16" <> ParseJSON("16")
 false
 
@@ -265,6 +273,12 @@ false
 true
 
 >> "16" <> ParseJSON("18")
+true
+
+>> "16" <> ParseJSON("16.0")
+true
+
+>> "16" <> ParseJSON("1.6e1")
 true
 
 >> "16" <> ParseJSON("""16""")
@@ -276,8 +290,23 @@ true
 >> "16" <> ParseJSON("""18""")
 true
 
+>> "16" <> ParseJSON("""16.0""")
+true
+
+>> "16" <> ParseJSON("""1.6e1""")
+true
+
 >> "1e100" <> ParseJSON("1e100")
 false
+
+>> "1e100" <> ParseJSON("1E+100")
+true
+
+>> "1e100" <> ParseJSON("""1e100""")
+false
+
+>> "1e100" <> ParseJSON("""1E+100""")
+true
 
 >> "true" <> ParseJSON("true")
 false
@@ -731,6 +760,15 @@ false
 
 >> Decimal("16.000000000000000000000002") <> ParseJSON("16.000000000000000000000001")
 true
+
+>> Decimal(16) <> ParseJSON("16")
+false
+
+>> Decimal(16) <> ParseJSON("16.0")
+false
+
+>> Decimal(16) <> ParseJSON("1.6e1")
+false
 
 // Untyped
 
