@@ -90,6 +90,80 @@ namespace Microsoft.PowerFx.Types
             throw new InvalidOperationException($"Unsupported type {value.GetType().FullName} as {fxType.GetType().Name}");
         }
 
+        private static bool TryConvertToDecimal(object value, out decimal result)
+        {
+            switch (value)
+            {
+                case ushort x: // UInt16
+                    result = x;
+                    return true;
+                case short x: // Int16
+                    result = x;
+                    return true;
+                case uint x: // UInt32
+                    result = x;
+                    return true;
+                case int x: // Int32
+                    result = x;
+                    return true;
+                case ulong x: // UInt64
+                    result = x;
+                    return true;
+                case long x: // Int64
+                    result = x;
+                    return true;
+                case double x:
+                    result = (decimal)x;
+                    return true;
+                case float x:
+                    result = (decimal)x;
+                    return true;
+                case decimal x:
+                    result = x;
+                    return true;
+                default:
+                    result = 0;
+                    return false;
+            }
+        }
+
+        private static bool TryConvertToDouble(object value, out double result)
+        {
+            switch (value)
+            {
+                case ushort x: // UInt16
+                    result = x;
+                    return true;
+                case short x: // Int16
+                    result = x;
+                    return true;
+                case uint x: // UInt32
+                    result = x;
+                    return true;
+                case int x: // Int32
+                    result = x;
+                    return true;
+                case ulong x: // UInt64
+                    result = x;
+                    return true;
+                case long x: // Int64
+                    result = x;
+                    return true;
+                case double x:
+                    result = x;
+                    return true;
+                case float x:
+                    result = x;
+                    return true;
+                case decimal x:
+                    result = (double)x;
+                    return true;
+                default:
+                    result = 0;
+                    return false;
+            }
+        }
+
         /// <summary>
         /// Marshal from a dotnet primitive to a given Power Fx type. 
         /// Call <see cref="FormulaValue.ToObject"/> to go the other direction and get a dotnet object from a formulavalue. 
@@ -109,28 +183,16 @@ namespace Microsoft.PowerFx.Types
             result = null;
             if (type == FormulaType.Number)
             {
-                if (value is int i)
-                {
-                    result = FormulaValue.New(i);
-                }
-                else if (value is double d)
-                {
-                    result = FormulaValue.New(d);
-                }
-                else if (value is float f)
-                {
-                    result = FormulaValue.New(f);
-                }
+                if (TryConvertToDouble(value, out var num))
+                { 
+                    result = FormulaValue.New(num);
+                }                
             }
             else if (type == FormulaType.Decimal)
             {
-                if (value is decimal dec)
+                if (TryConvertToDecimal(value, out var num))
                 {
-                    result = FormulaValue.New(dec);
-                }
-                else if (value is long l)
-                {
-                    result = FormulaValue.New(l);
+                    result = FormulaValue.New(num);
                 }
             }
             else if (type == FormulaType.String)
