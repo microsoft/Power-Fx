@@ -1,0 +1,33 @@
+#override: BasicCoercion.txt
+
+// Only works with PowerFxV1CompatibilityRules
+>> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
+#skip
+
+// Only works with PowerFxV1CompatibilityRules
+>> If(1<0, GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF"), "11111111-2222-3333-4444-555566666666")
+#skip
+
+// Only works with PowerFxV1CompatibilityRules
+>> If(1<0, Time(1,2,3), Date(2000,1,1))
+#skip
+
+// Result becomes date/time
+>> If(1<0, Time(1,2,3), DateTime(2000,1,1,12,34,56,789))
+DateTime(2000,1,1,12,34,56,789)
+
+// Only works with PowerFxV1CompatibilityRules
+>> If(1<0, Date(2000,1,1), Time(12,0,0))
+#skip
+
+// Result becomes date/time
+>> If(1<0, Date(2000,1,1), DateTime(2134,5,6,12,0,0))
+DateTime(2134,5,6,12,0,0,0)
+
+// Only works with PowerFxV1CompatibilityRules
+>> If(1<0, DateTime(2000,1,1,1,1,1), Time(12,34,56,789))
+#skip
+
+// Only works with PowerFxV1CompatibilityRules
+>> If(1<0, DateTime(2000,1,1,1,1,1), Date(2023,3,27))
+#skip

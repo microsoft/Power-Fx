@@ -334,13 +334,13 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("%n[A:1, B:2]", out DType type) && type.IsEnum && DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.False(DType.Decimal.Accepts(DType.Number, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Decimal.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.False(DType.Decimal.Accepts(DType.Currency, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Decimal.Accepts(DType.Decimal, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Decimal.Accepts(DType.DateTime, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Decimal.Accepts(DType.Date, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Decimal.Accepts(DType.Time, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Decimal.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.TryParse("%w[A:1, B:2]", out type) && type.IsEnum && DType.Number.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.True(DType.TryParse("%w[A:1, B:2]", out type) && type.IsEnum && DType.Decimal.Accepts(type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.True(DType.Boolean.Accepts(DType.Boolean, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Boolean.Accepts(DType.EmptyEnum, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -2004,7 +2004,7 @@ namespace Microsoft.PowerFx.Tests
             // Coercion to dateTime
             Assert.False(DType.Boolean.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Number.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.Currency.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Currency.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Decimal.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Color.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.DateTime.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -2238,7 +2238,7 @@ namespace Microsoft.PowerFx.Tests
             // Coercion to Date
             Assert.False(DType.Boolean.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Number.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.Currency.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Currency.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Decimal.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Color.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.DateTime.CoercesTo(DType.Date, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -2266,7 +2266,7 @@ namespace Microsoft.PowerFx.Tests
             // Coercion to Time
             Assert.False(DType.Boolean.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Number.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.True(DType.Currency.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(!usePowerFxV1CompatibilityRules, DType.Currency.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.Decimal.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Color.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(DType.DateTime.CoercesTo(DType.Time, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -2387,15 +2387,15 @@ namespace Microsoft.PowerFx.Tests
         public void DTypeUnion(bool usePowerFxV1CompatibilityRules)
         {
             TestUnion("n", "n", "n", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "$", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "$", usePowerFxV1CompatibilityRules ? "e" : "n", usePowerFxV1CompatibilityRules);
             TestUnion("n", "w", "e", usePowerFxV1CompatibilityRules);
             TestUnion("n", "c", "e", usePowerFxV1CompatibilityRules);
             TestUnion("n", "d", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("$", "n", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("$", "n", usePowerFxV1CompatibilityRules ? "e" : "n", usePowerFxV1CompatibilityRules);
             TestUnion("$", "d", "e", usePowerFxV1CompatibilityRules);
             TestUnion("$", "D", "e", usePowerFxV1CompatibilityRules);
             TestUnion("$", "T", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("w", "n", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("w", "n", "e", usePowerFxV1CompatibilityRules);
             TestUnion("w", "d", "e", usePowerFxV1CompatibilityRules);
             TestUnion("w", "D", "e", usePowerFxV1CompatibilityRules);
             TestUnion("w", "T", "e", usePowerFxV1CompatibilityRules);
@@ -2464,8 +2464,8 @@ namespace Microsoft.PowerFx.Tests
 
             TestUnion("*[A:n]", "*[]", "*[A:n]", usePowerFxV1CompatibilityRules);
             TestUnion("*[]", "*[A:n]", "*[A:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "*[A:$]", "*[A:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:$]", "*[A:n]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[A:$]", usePowerFxV1CompatibilityRules ? "*[A:e]" : "*[A:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:$]", "*[A:n]", usePowerFxV1CompatibilityRules ? "*[A:e]" : "*[A:n]", usePowerFxV1CompatibilityRules);
             TestUnion("*[A:n]", "*[A:w]", "*[A:e]", usePowerFxV1CompatibilityRules);
             TestUnion("*[A:w]", "*[A:n]", "*[A:e]", usePowerFxV1CompatibilityRules);
 
@@ -2513,7 +2513,11 @@ namespace Microsoft.PowerFx.Tests
             TestUnion("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]", usePowerFxV1CompatibilityRules);
             TestUnion("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
             TestUnion("*[A:n, Nest:*[X:n, Y:n, Z:b]]", "*[]", "*[A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:$, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:n, Y:e, Z:b, W:s]]", usePowerFxV1CompatibilityRules);
+            TestUnion(
+                "*[A:n, Nest:*[X:n, Y:c, Z:b]]", 
+                "*[X:s, Nest:*[X:$, Y:n, W:s]]", 
+                $"*[A:n, X:s, Nest:*[X:{(usePowerFxV1CompatibilityRules ? 'e' : 'n')}, Y:e, Z:b, W:s]]",
+                usePowerFxV1CompatibilityRules);
             TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:w, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:e, Y:e, Z:b, W:s]]", usePowerFxV1CompatibilityRules);
             TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "X", "*[A:n, Nest:*[X:n, Y:c, Z:b]]", usePowerFxV1CompatibilityRules);
 
