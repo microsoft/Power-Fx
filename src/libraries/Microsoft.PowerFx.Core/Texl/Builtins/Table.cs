@@ -59,19 +59,30 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var rowType = DType.EmptyRecord;
             for (var i = 0; i < argTypes.Length; i++)
             {
-                var isUnionError = false;
                 var argType = argTypes[i];
+
+                argType.Features = Features.PowerFxV1;
+                rowType.Features = Features.PowerFxV1;
+
+                var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
+
                 if (!argType.IsRecord)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
+                else if (!isChildTypeAllowedInTable)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                    return false;
+                }
                 else
                 {
-                    if (rowType.TryUnionWithCoerce(argType, args[i], errors, out var newType, out var needCoercion))
+                    if (DTypePowerFx.TryUnionWithCoerce(rowType, argType, out var newType, out bool coercionNeeded))
                     {
                         rowType = newType;
-                        if (needCoercion)
+
+                        if (coercionNeeded)
                         {
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
                         }
@@ -82,7 +93,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
                 }
 
-                Contracts.Assert(!isUnionError);
                 Contracts.Assert(rowType.IsRecord);
             }
 

@@ -204,7 +204,12 @@ namespace Microsoft.PowerFx.Core.Types
         /// the expected type exactly, however, so it is necessary to set this value for a single aggregate DType
         /// and not for the individual field types within.
         /// </summary>
-        public bool AreFieldsOptional { get; set; } = false;
+        public bool AreFieldsOptional { get; set; } = false;        
+        
+        /// <summary>
+        /// Check if DType Union/Coerce should be executed under PowerFxV1 compat rules.
+        /// </summary>
+        public Features Features { get; set; }
 
         #endregion 
 
@@ -2643,7 +2648,7 @@ namespace Microsoft.PowerFx.Core.Types
             return result;
         }
 
-        private static DType UnionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
+        protected static DType UnionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts = false)
         {
             type1.AssertValid();
             Contracts.Assert(type1.IsAggregate);
@@ -3067,6 +3072,10 @@ namespace Microsoft.PowerFx.Core.Types
                     }
 
                     isValid &= isFieldValid;
+                }
+                else if (Features != null && Features.PowerFxV1CompatibilityRules)
+                {
+                    coercionType = coercionType.Add(typedName.Name, typedName.Type);
                 }
                 else if (!typeDest.AreFieldsOptional)
                 {
@@ -3573,90 +3582,187 @@ namespace Microsoft.PowerFx.Core.Types
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
         }
-
-        /// <summary>
-        /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
-        /// </summary>
-        /// <param name="argType">Current table child type.</param>
-        /// <param name="arg">Child node.</param>
-        /// <param name="errors">Error container from caller.</param>
-        /// <param name="returnType">Composed new type.</param>
-        /// <param name="needCoercion">Checks if child node needs to be coerced.</param>
-        /// <returns></returns>
-        public bool TryUnionWithCoerce(DType argType, TexlNode arg, IErrorContainer errors, out DType returnType, out bool needCoercion)
-        {            
-            var fError = false;
-            var isValid = true;
-
-            returnType = null;
-            needCoercion = false;
-
-            // Deferred and void types are not allowed in tables.
-            var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
-
-            if (!isChildTypeAllowedInTable)
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTableDoesNotAcceptThisType);
-                return false;
-            }
-
-            if (!IsValid || (IsRecord && Equals(EmptyRecord)))
-            {
-                returnType = argType;
-            }
-            else if (DTypePowerFx.UnionWithCoerce(ref fError, this, argType, out returnType, out needCoercion))
-            {
-                isValid = !fError;
-            }
-            else
-            {
-                isValid = false;
-            }
-
-            return isValid;
-        }
     }
 
+    /// <summary>
+    /// Class to extend DType behaviors without having to change the original class.
+    /// </summary>
     internal class DTypePowerFx : DType
     {
         private DTypePowerFx()
         {
         }
 
-        public static bool UnionWithCoerce(ref bool fError, DType type1, DType type2, out DType returnType, out bool needCoercion)
+        /// <summary>
+        /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
+        /// </summary>
+        /// <param name="argType1">Current table child type.</param>
+        /// <param name="argType2">Current table child type.</param>
+        /// <param name="returnType">Composed new type.</param>
+        /// <param name="coercionNeeded">True if union with coercion was called.</param>
+        /// <returns></returns>
+        public static bool TryUnionWithCoerce(DType argType1, DType argType2, out DType returnType, out bool coercionNeeded)
         {
-            returnType = DType.Union(ref fError, type1, type2);
-            needCoercion = false;
+            var fError = false;
+            var isValid = true;
 
-            if (fError)
+            coercionNeeded = false;
+            returnType = null;
+
+            if (!argType1.IsValid || (argType1.IsRecord && argType1.Equals(DType.EmptyRecord)))
             {
-                if (type1.IsAggregate && type2.IsAggregate)
-                {
-                    if (type1.Kind != type2.Kind)
-                    {
-                        returnType = DType.Error;
-                        return false;
-                    }
-                }
+                returnType = argType2;
+            }
+            else
+            {
+                // Original union
+                var unionType = DType.Union(ref fError, argType1, argType2);
 
-                if (type1.CoercesTo(type2))
+                if (!fError)
                 {
-                    fError = type1.IsError;
-                    returnType = CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
-                    needCoercion = true;
-                    return true;
+                    returnType = unionType;
                 }
+                else
+                {
+                    fError = false;
 
-                if (type2.CoercesTo(type1))
-                {
-                    fError = type2.IsError;
-                    returnType = CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
-                    needCoercion = true;
-                    return true;
-                }
+                    // Union with coercion
+                    returnType = Union(ref fError, argType1, argType2);
+                    coercionNeeded = true;
+                    isValid = !fError;
+                }                
             }
 
-            return !returnType.IsError;
+            return isValid;
+        }
+
+        public static DType Union(ref bool fError, DType type1, DType type2)
+        {
+            type1.AssertValid();
+            type2.AssertValid();
+
+            // For Lazy Types, union operations must expand the current depth
+            if (type1.IsLazyType)
+            {
+                if (type1 == type2)
+                {
+                    return type1;
+                }
+
+                type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
+            }
+
+            if (type2.IsLazyType)
+            {
+                type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
+            }
+
+            if (type1.IsAggregate && type2.IsAggregate)
+            {
+                if (type1 == ObjNull)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                }
+
+                if (type2 == ObjNull)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                }
+
+                if (type1.Kind != type2.Kind)
+                {
+                    fError = true;
+                    return Error;
+                }
+
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(UnionCore(ref fError, type1, type2), type2.AssociatedDataSources, type2.DisplayNameProvider);
+            }
+
+            if (type1.CoercesTo(type2))
+            {
+                fError |= type1.IsError;
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+            }
+
+            if (type2.CoercesTo(type1))
+            {
+                fError |= type2.IsError;
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+            }
+
+            var result = Supertype(type1, type2);
+            fError = result == Error;
+            return result;
+        }
+
+        protected static DType UnionCore(ref bool fError, DType type1, DType type2)
+        {
+            type1.AssertValid();
+            Contracts.Assert(type1.IsAggregate);
+            type2.AssertValid();
+            Contracts.Assert(type2.IsAggregate);
+
+            var result = type1;
+
+            foreach (var pair in type2.GetNames(DPath.Root))
+            {
+                var field2Name = pair.Name;
+
+                if (!type1.TryGetType(field2Name, out var field1Type))
+                {
+                    result = result.Add(pair);
+                    continue;
+                }
+
+                var field2Type = pair.Type;
+                if (field1Type == field2Type)
+                {
+                    continue;
+                }
+
+                DType fieldType;
+                if (field1Type == ObjNull || field2Type == ObjNull)
+                {
+                    fieldType = field1Type == ObjNull ? field2Type : field1Type;
+                }
+                else if (field1Type.IsAggregate && field2Type.IsAggregate)
+                {
+                    fieldType = Union(ref fError, field1Type, field2Type);
+                }
+                else if (field1Type.IsAggregate || field2Type.IsAggregate)
+                {
+                    var isMatchingExpandType = false;
+                    var expandType = Unknown;
+                    if (field1Type.HasExpandInfo && field2Type.IsAggregate)
+                    {
+                        isMatchingExpandType = IsMatchingExpandType(field1Type, field2Type);
+                        expandType = field1Type;
+                    }
+                    else if (field2Type.HasExpandInfo && field1Type.IsAggregate)
+                    {
+                        isMatchingExpandType = IsMatchingExpandType(field2Type, field1Type);
+                        expandType = field2Type;
+                    }
+
+                    if (!isMatchingExpandType)
+                    {
+                        fieldType = Error;
+                        fError = true;
+                    }
+                    else
+                    {
+                        fieldType = expandType;
+                    }
+                }
+                else
+                {
+                    fieldType = Union(ref fError, field1Type, field2Type);
+                }
+
+                result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);
+            }
+
+            return result;
         }
     }
 }

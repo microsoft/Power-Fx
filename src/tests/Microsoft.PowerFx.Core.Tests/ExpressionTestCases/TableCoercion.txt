@@ -32,4 +32,4 @@ Errors: Error 0-96: The function 'Table' has some invalid arguments.
 Table({A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:1,d2:4},y:3}})
 
 >> Table({y : { x : { a: 1}}}, {y:{x : { a: true, b:2}}} )
-"THIS TEST CASE WILL FAIL"
+Table({y:{x:{a:1,b:Blank()}}},{y:{x:{a:1,b:2}}})
