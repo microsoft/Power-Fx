@@ -67,6 +67,17 @@ namespace Microsoft.PowerFx.Core.Binding
                 path = DPath.Root.Append(leftNodeName).Append(node.Right.Name);
                 return true;
             }
+            else if (node.Left is CallNode call)
+            {
+                var rightNodeName = node.Right.Name;
+                if (binding.TryGetReplacedIdentName(node.Right, out var rename))
+                {
+                    rightNodeName = new DName(rename);
+                }
+
+                path = DPath.Root.Append(rightNodeName);
+                return true;
+            }
 
             path = DPath.Root;
             return false;
