@@ -266,7 +266,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr, setup);
+                var result = await verify.EvalAsync(engine, expr, setup).ConfigureAwait(false);
                 return result;
             }
 
@@ -328,7 +328,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     runtimeConfig.AddService<Governor>(mem);
                 }
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
 
                 // UntypedObjectType type is currently not supported for serialization.
                 if (newValue.Type is UntypedObjectType)
@@ -342,7 +342,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     // Serialization test. Serialized expression must produce an identical result.
                     ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
-                    newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
+                    newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                 }
                 catch (InvalidOperationException e)
                 {
@@ -352,11 +352,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         // Serialization test. Serialized expression must produce an identical result.
                         ParserOptions options = new ParserOptions() { NumberIsFloat = true };
-                        newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
+                        newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                     }
                     else
                     {
-                        throw e;
+                        throw;
                     }
                 }
 
