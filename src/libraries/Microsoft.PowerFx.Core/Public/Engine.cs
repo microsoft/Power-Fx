@@ -310,9 +310,9 @@ namespace Microsoft.PowerFx
         /// Optional hook to customize intellisense. 
         /// </summary>
         /// <returns></returns>
-        private protected virtual IIntellisense CreateIntellisense(CultureInfo culture)
+        private protected virtual IIntellisense CreateIntellisense(CultureInfo parserCulture)
         {
-            return IntellisenseProvider.GetIntellisense(Config, culture);
+            return IntellisenseProvider.GetIntellisense(Config, parserCulture);
         }
 
         public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
