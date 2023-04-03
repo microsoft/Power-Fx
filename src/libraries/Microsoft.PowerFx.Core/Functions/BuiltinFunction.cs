@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public const string ColumnName_SubMatchesStr = "SubMatches";
         public const string ColumnName_StartMatchStr = "StartMatch";
 
-        public static DName GetOneColumnTableResultName(Features f) => f.HasFlag(Features.ConsistentOneColumnTableResult) 
+        public static DName GetOneColumnTableResultName(Features f) => f.ConsistentOneColumnTableResult 
             ? new DName(ColumnName_ValueStr) 
             : new DName(OneColumnTableResultNameStrOld);
 

@@ -4,6 +4,7 @@
 using System;
 using System.Data.SqlTypes;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
 
@@ -25,12 +26,22 @@ namespace Microsoft.PowerFx.Core.Tests
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
+        private static bool TryGetFeaturesProperty(string featureName, out PropertyInfo propertyInfo)
+        {
+            propertyInfo = typeof(Features).GetProperty(featureName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            return propertyInfo?.CanWrite == true;
+        }
+
         internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
         {
             var iSetup = new InternalSetup
             {
                 // Default features
-                Features = Features.TableSyntaxDoesntWrapRecords | Features.ConsistentOneColumnTableResult
+                Features = new Features
+                {
+                    TableSyntaxDoesntWrapRecords = true,
+                    ConsistentOneColumnTableResult = true
+                }
             };
 
             if (numberIsFloat)
@@ -83,25 +94,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     parts.Remove(part);
                 }
-                else if (Enum.TryParse<Features>(partName, out var f))
+                else if (TryGetFeaturesProperty(partName, out var prop))
                 {
                     if (isDisable)
                     {
-                        if (!iSetup.Features.HasFlag(f))
+                        if (!((bool)prop.GetValue(iSetup.Features)))
                         {
                             throw new InvalidOperationException($"Feature {partName} is already disabled");
                         }
 
-                        iSetup.Features &= ~f;
+                        prop.SetValue(iSetup.Features, false);
                     }
                     else
                     {
-                        if (iSetup.Features.HasFlag(f))
+                        if ((bool)prop.GetValue(iSetup.Features))
                         {
                             throw new InvalidOperationException($"Feature {partName} is already enabled");
                         }
 
-                        iSetup.Features |= f;
+                        prop.SetValue(iSetup.Features, true);
                     }
 
                     parts.Remove(part);

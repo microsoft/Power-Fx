@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums());
 
-        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
+        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new Features { DisableRowScopeDisambiguationSyntax = true });
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
         private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet());
@@ -365,10 +365,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.NotNull(context);
 
             var config = Default_DisableRowScopeDisambiguationSyntax;
-            var actualSuggestions = SuggestStrings(expression, config, contextTypeString: context);
+            var actualSuggestions = SuggestStrings(expression, config, null, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
-            actualSuggestions = SuggestStrings(expression, config, contextTypeString: context);
+            actualSuggestions = SuggestStrings(expression, config, null, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 

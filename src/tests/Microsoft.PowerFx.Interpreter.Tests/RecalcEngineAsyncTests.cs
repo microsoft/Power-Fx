@@ -24,17 +24,13 @@ namespace Microsoft.PowerFx.Tests
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private static async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)
         {
-            if (args[0] is NumberValue)
+            if (args[0] is NumberValue n)
             {
-                var n = (NumberValue)args[0];
-
                 var result = FormulaValue.New(n.Value * 2);
                 return result;
             }
-            else if (args[0] is DecimalValue)
+            else if (args[0] is DecimalValue d)
             {
-                var d = (DecimalValue)args[0];
-
                 var result = FormulaValue.New(d.Value * 2m);
                 return result;
             }

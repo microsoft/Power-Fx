@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 returnType = argTypes[0];
             }
 
-            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
 
             // The result type has N fewer columns, as specified by (args[1],args[2],args[3],...)
             var count = args.Length;

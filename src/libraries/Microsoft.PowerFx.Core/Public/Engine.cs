@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Parse the expression without doing any binding.
         /// </summary>
-        public static ParseResult Parse(string expressionText, Features features = Features.None, ParserOptions options = null)
+        public static ParseResult Parse(string expressionText, Features features = null, ParserOptions options = null)
         {
             if (expressionText == null)
             {
@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx
 
             options ??= new ParserOptions();
 
-            var result = options.Parse(expressionText, features);
+            var result = options.Parse(expressionText, features ?? Features.None);
             return result;            
         }
 

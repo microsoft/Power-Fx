@@ -43,9 +43,9 @@ namespace Microsoft.PowerFx
 
         public int MaximumExpressionLength { get; set; }
 
-        private PowerFxConfig(EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
-        {            
-            Features = features;
+        private PowerFxConfig(EnumStoreBuilder enumStoreBuilder, Features features = null)
+        {
+            Features = features ?? Features.None;
             SymbolTable.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
             MaximumExpressionLength = DefaultMaximumExpressionLength;
