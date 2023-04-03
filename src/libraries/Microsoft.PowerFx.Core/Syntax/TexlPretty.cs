@@ -67,6 +67,7 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(node);
 
             var nlt = node.Value;
+            
             // $$$ can't use current culture
             return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("R", CultureInfo.CurrentCulture));
         }
@@ -76,6 +77,7 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(node);
 
             var nlt = node.Value;
+            
             // $$$ can't use current culture
             return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.DecValue.ToString("G29", CultureInfo.CurrentCulture));
         }
