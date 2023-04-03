@@ -18,11 +18,6 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
-    public class Tester
-    {
-            public string Name { get; set; }
-    }
-
     public static class ConsoleRepl
     {
         private static RecalcEngine _engine;
@@ -36,9 +31,11 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
+        private static readonly Features _features = Features.PowerFxV1;
+
         private static void ResetEngine()
         {
-            var config = new PowerFxConfig(Features.PowerFxV1)
+            var config = new PowerFxConfig(_features)
             {
             };
 
@@ -605,6 +602,13 @@ namespace Microsoft.PowerFx
                 {
                     _largeCallDepth = value.Value;
                     ResetEngine();
+                    return value;
+                }
+
+                var featureProperty = typeof(Features).GetProperty(option.Value, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (featureProperty?.CanWrite == true)
+                {
+                    featureProperty.SetValue(_features, value.Value);
                     return value;
                 }
 
