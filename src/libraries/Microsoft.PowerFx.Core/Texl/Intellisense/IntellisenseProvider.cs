@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
-using Microsoft.PowerFx.Core.Types.Enums;
-
 namespace Microsoft.PowerFx.Intellisense
 {
     internal static class IntellisenseProvider
