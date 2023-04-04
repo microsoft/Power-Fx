@@ -1,5 +1,4 @@
-﻿#SETUP:
-
+﻿//Table()
 >> Table({a:0}, {a:true}, {a:2})
 Table({a:0},{a:1},{a:2})
 
@@ -36,12 +35,7 @@ Table({A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:1,d2:4},y:3}})
 >> Table({y : { x : { a: 1}}}, {y:{x : { a: true, b:2}}} )
 Table({y:{x:{a:1,b:Blank()}}},{y:{x:{a:1,b:2}}})
 
-
-
-
-
-
-
+// Tabular
 >> [{a:0}, {a:true}, {a:2}]
 Table({a:0},{a:1},{a:2})
 
