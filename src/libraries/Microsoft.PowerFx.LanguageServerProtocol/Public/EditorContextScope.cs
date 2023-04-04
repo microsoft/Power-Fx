@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx
             var symbols = check._symbols;
             var engine = check.Engine;
 
-            return engine.GetDisplayExpression(expression, symbols);
+            return engine.GetDisplayExpression(expression, symbols, check.ParserCultureInfo);
         }
 
         IIntellisenseResult IPowerFxScope.Suggest(string expression, int cursorPosition)

@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         {
             _parserOptions = new ParserOptions() { AllowsSideEffects = true, Culture = new CultureInfo("en-US") };
 
-            PowerFxConfig powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.PowerFxV1);
+            PowerFxConfig powerFxConfig = new PowerFxConfig(Features.PowerFxV1);
 
             for (int i = 0; i < 10000; i++)
             {
@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [Benchmark]
         public RecalcEngine PvaRecalcEngineConstructorWith10KOptionSets()
         {
-            PowerFxConfig powerFxConfig = new PowerFxConfig(new CultureInfo("en-US"), Features.PowerFxV1);
+            PowerFxConfig powerFxConfig = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = null;
 
             for (int i = 0; i < 10000; i++)

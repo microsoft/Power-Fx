@@ -201,6 +201,7 @@ namespace Microsoft.PowerFx.Syntax
 
         public static TexlLexer GetLocalizedInstance(CultureInfo culture)
         {
+            // this is a safe default value as we only use this value for determining the decimal separator at next line
             culture ??= CultureInfo.InvariantCulture;
 
             // Number decimal separator can be a dot (.), comma (,), arabic comma (Unicode 0x66B) 

@@ -138,10 +138,10 @@ namespace Microsoft.PowerFx.Tests
 
             // Conversions 
             var expr = "ThisRecord.Field";
-            var exprInvariant = engine.GetInvariantExpression(expr, null);
+            var exprInvariant = engine.GetInvariantExpression(expr, null, null);
             Assert.Equal("ThisRecord.new_field", exprInvariant);
 
-            var exprDisplay = engine.GetDisplayExpression(exprInvariant, (RecordType)null);
+            var exprDisplay = engine.GetDisplayExpression(exprInvariant, (RecordType)null, null);
             Assert.Equal(expr, exprDisplay);
         }
 

@@ -171,6 +171,8 @@ namespace Microsoft.PowerFx.Core.Tests
             // We don't want null IEnumerables. 
             // Null gets normalized to empty.
             var internalErrors = (IEnumerable<IDocumentError>)null;
+
+            // $$$ can't use current culture
             var errors = ExpressionError.New(internalErrors, CultureInfo.CurrentCulture);
 
             Assert.Empty(errors);
