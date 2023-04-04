@@ -14,27 +14,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
-        // File expression tests are run TWICE - once with and once without NumberIsFloat
-        //
-        // Most tests are not sensitive to float vs. decimal and will pass in both modes without modification.
-        // If you aren't speficically testing numeric limits, stick to numbers that are less than +/-1E20 which is
-        // a safe range for both float and decimal and practically where most makers will work.  
-        //
-        // For testing large float numbers (for example, 1E100 or 1E300) or high precision decimals
-        // (for example, 1.00000000000000000000001), individual files can be excluded from one of the two modes
-        // with a directive at the top of the file:
-        //   #SKIPFILE: NumberIsFloat          // skips the file if NumberIsFloat is enabled (float mode)
-        //   #SKIPFILE: disable:NumberIsFloat  // skips the file if NumberIsFloat is disabled (decimal mode)
-        //
-        // Skipped files do not show up in the list of skipped tests, tests are skipped before being added in TxtFileData.
-        // The intent of SKIPFILE is to be a permanent mode selection for tests that are range/precision sensitive.
-
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), false)]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over.
+            // make sure they build is actually copying them over.affgtgerfere
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
             var runner = new InterpreterRunner() { NumberIsFloat = false };
