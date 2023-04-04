@@ -60,26 +60,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             for (var i = 0; i < argTypes.Length; i++)
             {
                 var argType = argTypes[i];
+                var isChildTypeAllowedInTable = !argType.IsDeferred && !argType.IsVoid;
+
                 if (!argType.IsRecord)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                 }
-                else if (!rowType.CanUnionWith(argType))
+                else if (!isChildTypeAllowedInTable)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrIncompatibleRecord);
-                    isValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                    return false;
                 }
                 else
                 {
-                    var isUnionError = false;
-                    rowType = DType.Union(ref isUnionError, rowType, argType);
-                    Contracts.Assert(!isUnionError);
-                    Contracts.Assert(rowType.IsRecord);
+                    if (DType.TryUnionWithCoerce(rowType, argType, out var newType, out bool coercionNeeded))
+                    {
+                        rowType = newType;
+
+                        if (coercionNeeded)
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], rowType);
+                        }
+                    }
+                    else
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTableDoesNotAcceptThisType);
+                        isValid = false;
+                    }
                 }
+
+                Contracts.Assert(rowType.IsRecord);
             }
 
-            Contracts.Assert(rowType.IsRecord);
             returnType = rowType.ToTable();
 
             return isValid;
