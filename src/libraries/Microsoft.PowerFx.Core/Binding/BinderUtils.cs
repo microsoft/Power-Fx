@@ -69,13 +69,19 @@ namespace Microsoft.PowerFx.Core.Binding
             }
             else if (node.Left is CallNode call)
             {
+                var leftNodeName = call.Head.Name;
+                if (binding.TryGetReplacedIdentName(call.Head, out var possibleRename))
+                {
+                    leftNodeName = new DName(possibleRename);
+                }
+
                 var rightNodeName = node.Right.Name;
                 if (binding.TryGetReplacedIdentName(node.Right, out var rename))
                 {
                     rightNodeName = new DName(rename);
                 }
 
-                path = DPath.Root.Append(rightNodeName);
+                path = DPath.Root.Append(leftNodeName).Append(rightNodeName);
                 return true;
             }
 
