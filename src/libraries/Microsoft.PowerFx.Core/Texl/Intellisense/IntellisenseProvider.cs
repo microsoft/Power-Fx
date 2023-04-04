@@ -26,9 +26,9 @@ namespace Microsoft.PowerFx.Intellisense
             new Intellisense.RecordNodeSuggestionHandler(),
         };
 
-        internal static IIntellisense GetIntellisense(PowerFxConfig config, CultureInfo culture)
+        internal static IIntellisense GetIntellisense(PowerFxConfig config)
         {
-            return new Intellisense(config, culture, config.EnumStore, SuggestionHandlers);
+            return new Intellisense(config, config.EnumStore, SuggestionHandlers);
         }
     }
 }

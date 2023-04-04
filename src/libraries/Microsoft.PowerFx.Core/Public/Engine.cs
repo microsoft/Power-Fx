@@ -310,9 +310,9 @@ namespace Microsoft.PowerFx
         /// Optional hook to customize intellisense. 
         /// </summary>
         /// <returns></returns>
-        private protected virtual IIntellisense CreateIntellisense(CultureInfo parserCulture)
+        private protected virtual IIntellisense CreateIntellisense()
         {
-            return IntellisenseProvider.GetIntellisense(Config, parserCulture);
+            return IntellisenseProvider.GetIntellisense(Config);
         }
 
         public IIntellisenseResult Suggest(string expression, RecordType parameterType, int cursorPosition)
@@ -336,7 +336,7 @@ namespace Microsoft.PowerFx
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = this.CreateIntellisense(checkResult.ParserCultureInfo);
+            var intellisense = this.CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;
@@ -355,7 +355,7 @@ namespace Microsoft.PowerFx
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
             var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = CreateIntellisense(checkResult.ParserCultureInfo);
+            var intellisense = CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;

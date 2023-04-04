@@ -22,15 +22,13 @@ namespace Microsoft.PowerFx.Intellisense
     {
         protected readonly IReadOnlyList<ISuggestionHandler> _suggestionHandlers;
         protected readonly IEnumStore _enumStore;
-        protected readonly PowerFxConfig _config;
-        protected readonly CultureInfo _culture;
+        protected readonly PowerFxConfig _config;        
 
-        public Intellisense(PowerFxConfig config, CultureInfo culture, IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
+        public Intellisense(PowerFxConfig config, IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
             Contracts.AssertValue(suggestionHandlers);
 
-            _config = config;
-            _culture = culture;
+            _config = config;            
             _enumStore = enumStore;
             _suggestionHandlers = suggestionHandlers;
         }
@@ -59,7 +57,7 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
 
-                return Finalize(context, intellisenseData);
+                return Finalize(context, intellisenseData, formula.Loc);
             }
             catch (Exception ex)
             {
@@ -262,7 +260,7 @@ namespace Microsoft.PowerFx.Intellisense
             }
         }
 
-        private IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData)
+        private IIntellisenseResult Finalize(IIntellisenseContext context, IntellisenseData.IntellisenseData intellisenseData, CultureInfo culture)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(intellisenseData);
@@ -282,9 +280,9 @@ namespace Microsoft.PowerFx.Intellisense
                 handler.Run(context, intellisenseData, resultSuggestions);
             }
 
-            intellisenseData.Suggestions.Sort(_culture);
-            intellisenseData.SubstringSuggestions.Sort(_culture);
-            resultSuggestions.Sort(new IntellisenseSuggestionComparer(_culture));
+            intellisenseData.Suggestions.Sort(culture);
+            intellisenseData.SubstringSuggestions.Sort(culture);
+            resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
 
             return new IntellisenseResult(intellisenseData, resultSuggestions);
         }
