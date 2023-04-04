@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
+            var functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
             testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
 
             foreach (ConnectorFunction function in functions)
