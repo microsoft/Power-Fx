@@ -63,10 +63,10 @@ Blank()
 >> Sum([4,5],Blank())
 Blank()
 
-> Sum(If(1<0,[1,2,3]),4)
+>> Sum(If(1<0,[1,2,3]),4)
 Blank()
 
-> Sum(If(1<0,[1,2,3]),Blank())
+>> Sum(If(1<0,[1,2,3]),Blank())
 Blank()
 
 >> Average(Blank(),1)
