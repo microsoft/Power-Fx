@@ -1,0 +1,564 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
+// text coercions
+
+>> Round(Cos(["3.2","2.5","1.9"]),10)
+Table({Value:-0.9982947758},{Value:-0.8011436155},{Value:-0.3232895669})
+
+>> Round(Cos(Table({num:"3.2"},{num:"2.5"},{num:"1.9"})),10)
+Table({num:-0.9982947758},{num:-0.8011436155},{num:-0.3232895669})
+
+>> Round(Sin(["3.2","2.5","1.9"]),10)
+Table({Value:-0.0583741434},{Value:0.5984721441},{Value:0.9463000877})
+
+>> Round(Sin(Table({num:"3.2"},{num:"2.5"},{num:"1.9"})),10)
+Table({num:-0.0583741434},{num:0.5984721441},{num:0.9463000877})
+
+>> Round(Tan(["3.2","2.5","1.9"]),10)
+Table({Value:0.0584738545},{Value:-0.7470222972},{Value:-2.9270975147})
+
+>> Round(Tan(Table({num:"3.2"},{num:"2.5"},{num:"1.9"})),10)
+Table({num:0.0584738545},{num:-0.7470222972},{num:-2.9270975147})
+
+>> Len(["3.2","2.5","1.9"])
+Table({Result:3},{Result:3},{Result:3})
+
+>> Len(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}))
+Table({Result:3},{Result:3},{Result:3})
+
+>> Int(["3.2","2.5","1.9"])
+Table({Value:3},{Value:2},{Value:1})
+
+>> Int(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}))
+Table({num:3},{num:2},{num:1})
+
+>> Round(Acos(["0.2","0.5","-0.5"]),10)
+Table({Value:1.369438406},{Value:1.0471975512},{Value:2.0943951024})
+
+>> Round(Acos(Table({num:"0.2"},{num:"0.5"},{num:"-0.5"})),10)
+Table({num:1.369438406},{num:1.0471975512},{num:2.0943951024})
+
+>> Round(Atan(["3.2","2.5","1.9"]),10)
+Table({Value:1.2679114584},{Value:1.1902899497},{Value:1.0863183978})
+
+>> Round(Atan(Table({num:"3.2"},{num:"2.5"},{num:"1.9"})),10)
+Table({num:1.2679114584},{num:1.1902899497},{num:1.0863183978})
+
+>> Round(Asin(["0.2","0.5","-0.5"]),10)
+Table({Value:0.2013579208},{Value:0.5235987756},{Value:-0.5235987756})
+
+>> Round(Asin(Table({num:"0.2"},{num:"0.5"},{num:"-0.5"})),10)
+Table({num:0.2013579208},{num:0.5235987756},{num:-0.5235987756})
+
+>> Sqrt(["16","9","4"])
+Table({Value:4},{Value:3},{Value:2})
+
+>> Sqrt(Table({num:"16"},{num:"9"},{num:"4"}))
+Table({num:4},{num:3},{num:2})
+
+>> Round(Radians(["16","9","4"]),10)
+Table({Value:0.2792526803},{Value:0.1570796327},{Value:0.0698131701})
+
+>> Round(Radians(Table({num:"16"},{num:"9"},{num:"4"})),10)
+Table({num:0.2792526803},{num:0.1570796327},{num:0.0698131701})
+
+>> Round(Degrees(["16","9","4"]),8)
+Table({Value:916.73247221},{Value:515.66201562},{Value:229.18311805})
+
+>> Round(Degrees(Table({num:"16"},{num:"9"},{num:"4"})),8)
+Table({num:916.73247221},{num:515.66201562},{num:229.18311805})
+
+>> Round(Ln(["16","9","4"]),10)
+Table({Value:2.7725887222},{Value:2.1972245773},{Value:1.3862943611})
+
+>> Round(Ln(Table({num:"16"},{num:"9"},{num:"4"})),10)
+Table({num:2.7725887222},{num:2.1972245773},{num:1.3862943611})
+
+>> Char(["65","70","80"])
+Table({Result:"A"},{Result:"F"},{Result:"P"})
+
+>> Char(Table({num:"65"},{num:"70"},{num:"80"}))
+Table({Result:"A"},{Result:"F"},{Result:"P"})
+
+>> Round(Exp(["16","9","4"]),4)
+Table({Value:8886110.5205},{Value:8103.0839},{Value:54.5982})
+
+>> Round(Exp(Table({num:"16"},{num:"9"},{num:"4"})),4)
+Table({num:8886110.5205},{num:8103.0839},{num:54.5982})
+
+>> Abs(["16","9","4"])
+Table({Value:16},{Value:9},{Value:4})
+
+>> Abs(Table({num:"16"},{num:"9"},{num:"4"}))
+Table({num:16},{num:9},{num:4})
+
+>> Trunc(["3.2","2.5","1.9"])
+Table({Value:3},{Value:2},{Value:1})
+
+>> Trunc(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}))
+Table({num:3},{num:2},{num:1})
+
+>> Trunc(["3.2","2.5","1.9"],0)
+Table({Value:3},{Value:2},{Value:1})
+
+>> Trunc(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),0)
+Table({num:3},{num:2},{num:1})
+
+>> Trunc(["3.2","2.5","1.9"],["0"])
+Table({Value:3},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Trunc(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),["0"])
+Table({num:3},{num:Error({Kind:ErrorKind.NotApplicable})},{num:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Trunc(["3.2","2.5","1.9"],["1","1","1"])
+Table({Value:3.2},{Value:2.5},{Value:1.9})
+
+>> Trunc(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),["1","1","1"])
+Table({num:3.2},{num:2.5},{num:1.9})
+
+>> RoundDown(["3.2","2.5","1.9"],0)
+Table({Value:3},{Value:2},{Value:1})
+
+>> RoundDown(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),0)
+Table({num:3},{num:2},{num:1})
+
+>> RoundDown(["3.2","2.5","1.9"],["1","1","1"])
+Table({Value:3.2},{Value:2.5},{Value:1.9})
+
+>> RoundDown(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),Table({digs:"1"},{digs:"1"},{digs:"1"}))
+Table({num:3.2},{num:2.5},{num:1.9})
+
+>> RoundDown(["3.2","2.5","1.9"],["1","0","1"])
+Table({Value:3.2},{Value:2},{Value:1.9})
+
+>> RoundDown(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({num:3.2},{num:2},{num:1.9})
+
+>> RoundDown("3.2",["1","0","1"])
+Table({Result:3.2},{Result:3},{Result:3.2})
+
+>> RoundDown("3.2",Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({Result:3.2},{Result:3},{Result:3.2})
+
+>> RoundDown(["3.2"],["1","0","1"])
+Table({Value:3.2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> RoundDown(Table({num:"3.2"}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({num:3.2},{num:Error({Kind:ErrorKind.NotApplicable})},{num:Error({Kind:ErrorKind.NotApplicable})})
+
+>> RoundUp(["3.2","2.5","1.9"],0)
+Table({Value:4},{Value:3},{Value:2})
+
+>> RoundUp(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),0)
+Table({num:4},{num:3},{num:2})
+
+>> RoundUp(["3.2","2.5","1.9"],["1","1","1"])
+Table({Value:3.2},{Value:2.5},{Value:1.9})
+
+>> RoundUp(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),Table({digs:"1"},{digs:"1"},{digs:"1"}))
+Table({num:3.2},{num:2.5},{num:1.9})
+
+>> RoundUp(["3.2","2.5","1.9"],["1","0","1"])
+Table({Value:3.2},{Value:3},{Value:1.9})
+
+>> RoundUp(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({num:3.2},{num:3},{num:1.9})
+
+>> RoundUp("3.2",["1","0","1"])
+Table({Result:3.2},{Result:4},{Result:3.2})
+
+>> RoundUp("3.2",Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({Result:3.2},{Result:4},{Result:3.2})
+
+>> RoundUp(["3.2"],["1","0","1"])
+Table({Value:3.2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> RoundUp(Table({num:"3.2"}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({num:3.2},{num:Error({Kind:ErrorKind.NotApplicable})},{num:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Round(["3.2","2.5","1.9"],0)
+Table({Value:3},{Value:3},{Value:2})
+
+>> Round(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),0)
+Table({num:3},{num:3},{num:2})
+
+>> Round(["3.2","2.5","1.9"],["1","1","1"])
+Table({Value:3.2},{Value:2.5},{Value:1.9})
+
+>> Round(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),Table({digs:"1"},{digs:"1"},{digs:"1"}))
+Table({num:3.2},{num:2.5},{num:1.9})
+
+>> Round(["3.2","2.5","1.9"],["1","0","1"])
+Table({Value:3.2},{Value:3},{Value:1.9})
+
+>> Round(Table({num:"3.2"},{num:"2.5"},{num:"1.9"}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({num:3.2},{num:3},{num:1.9})
+
+>> Round("3.2",["1","0","1"])
+Table({Result:3.2},{Result:3},{Result:3.2})
+
+>> Round("3.2",Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({Result:3.2},{Result:3},{Result:3.2})
+
+>> Round(["3.2"],["1","0","1"])
+Table({Value:3.2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Round(Table({num:"3.2"}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({num:3.2},{num:Error({Kind:ErrorKind.NotApplicable})},{num:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([3,5,3],["321","456","783"])
+Table({Result:1},{Result:2},{Result:3})
+
+>> Find(Table({num:3},{num:5},{num:3}),["321","456","783"])
+Table({Result:1},{Result:2},{Result:3})
+
+>> Find([3,5,3],["321","456","783"],2)
+Table({Result:Blank()},{Result:2},{Result:3})
+
+>> Find(Table({num:3},{num:5},{num:3}),["321","456","783"],2)
+Table({Result:Blank()},{Result:2},{Result:3})
+
+>> Find([3,5,3],["321","456","783"],[2,1,2])
+Table({Result:Blank()},{Result:2},{Result:3})
+
+>> Find(Table({num:3},{num:5},{num:3}),["321","456","783"],[2,1,2])
+Table({Result:Blank()},{Result:2},{Result:3})
+
+>> Concatenate([234,456,331],954)
+Table({Result:"234954"},{Result:"456954"},{Result:"331954"})
+
+>> Concatenate(Table({num:234},{num:456},{num:331}),954)
+Table({Result:"234954"},{Result:"456954"},{Result:"331954"})
+
+>> Concatenate(Table({num:234},{num:456},{num:331}),[453,234,123])
+Table({Result:"234453"},{Result:"456234"},{Result:"331123"})
+
+>> Mod(["123","456","789"],4)
+Table({Result:3},{Result:0},{Result:1})
+
+>> Mod(Table({input:"123"},{input:"456"},{input:"789"}),4)
+Table({Result:3},{Result:0},{Result:1})
+
+>> Mod(["123","456","789"],[3,4,5])
+Table({Result:0},{Result:0},{Result:4})
+
+>> Mod(Table({input:"123"},{input:"456"},{input:"789"}),[3,4,5])
+Table({Result:0},{Result:0},{Result:4})
+
+>> Mod(["123","456","789"],["3","4","5"])
+Table({Result:0},{Result:0},{Result:4})
+
+>> Mod(Table({input:"123"},{input:"456"},{input:"789"}),["3","4","5"])
+Table({Result:0},{Result:0},{Result:4})
+
+>> Mod(Table({input:"123"},{input:"456"},{input:"789"}),Table({div:"3"},{div:"4"},{div:"5"}))
+Table({Result:0},{Result:0},{Result:4})
+
+>> Mod(123,["3","4","5"])
+Table({Result:0},{Result:3},{Result:3})
+
+>> Mod(123,Table({div:"3"},{div:"4"},{div:"5"}))
+Table({Result:0},{Result:3},{Result:3})
+
+>> Mod([123],["3","4","5"])
+Table({Result:0},{Result:Error({Kind:ErrorKind.NotApplicable})},{Result:Error({Kind:ErrorKind.NotApplicable})})
+
+// Boolean coercions
+
+>> Round(Cos([true,false,Blank()]),10)
+Table({Value:0.5403023059},{Value:1},{Value:1})
+
+>> Round(Cos(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:0.5403023059},{bool:1},{bool:1})
+
+>> Round(Sin([true,false,Blank()]),10)
+Table({Value:0.8414709848},{Value:0},{Value:0})
+
+>> Round(Sin(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:0.8414709848},{bool:0},{bool:0})
+
+>> Round(Tan([true,false,Blank()]),10)
+Table({Value:1.5574077247},{Value:0},{Value:0})
+
+>> Round(Tan(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:1.5574077247},{bool:0},{bool:0})
+
+>> Len([true,false,Blank()])
+Table({Result:4},{Result:5},{Result:0})
+
+>> Len(Table({bool:true},{bool:false},{bool:Blank()}))
+Table({Result:4},{Result:5},{Result:0})
+
+>> Int([true,false,Blank()])
+Table({Value:1},{Value:0},{Value:0})
+
+>> Int(Table({bool:true},{bool:false},{bool:Blank()}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> Round(Acos([true,false,Blank()]),10)
+Table({Value:0},{Value:1.5707963268},{Value:1.5707963268})
+
+>> Round(Acos(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:0},{bool:1.5707963268},{bool:1.5707963268})
+
+>> Round(Atan([true,false,Blank()]),10)
+Table({Value:0.7853981634},{Value:0},{Value:0})
+
+>> Round(Atan(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:0.7853981634},{bool:0},{bool:0})
+
+>> Round(Asin([true,false,Blank()]),10)
+Table({Value:1.5707963268},{Value:0},{Value:0})
+
+>> Round(Asin(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:1.5707963268},{bool:0},{bool:0})
+
+>> Sqrt([true,false,Blank()])
+Table({Value:1},{Value:0},{Value:0})
+
+>> Sqrt(Table({bool:true},{bool:false},{bool:Blank()}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> Round(Radians([true,false,Blank()]),10)
+Table({Value:0.0174532925},{Value:0},{Value:0})
+
+>> Round(Radians(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:0.0174532925},{bool:0},{bool:0})
+
+>> Round(Degrees([true,false,Blank()]),9)
+Table({Value:57.295779513},{Value:0},{Value:0})
+
+>> Round(Degrees(Table({bool:true},{bool:false},{bool:Blank()})),9)
+Table({bool:57.295779513},{bool:0},{bool:0})
+
+>> Ln([true,false,Blank()])
+Table({Value:0},{Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})})
+
+>> Ln(Table({bool:true},{bool:false},{bool:Blank()}))
+Table({bool:0},{bool:Error({Kind:ErrorKind.Numeric})},{bool:Error({Kind:ErrorKind.Numeric})})
+
+>> Round(Exp([true,false,Blank()]),10)
+Table({Value:2.7182818285},{Value:1},{Value:1})
+
+>> Round(Exp(Table({bool:true},{bool:false},{bool:Blank()})),10)
+Table({bool:2.7182818285},{bool:1},{bool:1})
+
+>> Abs([true,false,Blank()])
+Table({Value:1},{Value:0},{Value:0})
+
+>> Abs(Table({bool:true},{bool:false},{bool:Blank()}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> Trunc([true,false,Blank()])
+Table({Value:1},{Value:0},{Value:0})
+
+>> Trunc(Table({bool:true},{bool:false},{bool:Blank()}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> Trunc([true,false,Blank()],0)
+Table({Value:1},{Value:0},{Value:0})
+
+>> Trunc(Table({bool:true},{bool:false},{bool:Blank()}),0)
+Table({bool:1},{bool:0},{bool:0})
+
+>> Trunc([true,false,Blank()],["0"])
+Table({Value:1},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Trunc(Table({bool:true},{bool:false},{bool:Blank()}),["0"])
+Table({bool:1},{bool:Error({Kind:ErrorKind.NotApplicable})},{bool:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Trunc([true,false,Blank()],["1","1","1"])
+Table({Value:1},{Value:0},{Value:0})
+
+>> Trunc(Table({bool:true},{bool:false},{bool:Blank()}),["1","1","1"])
+Table({bool:1},{bool:0},{bool:0})
+
+>> RoundDown([true,false,Blank()],0)
+Table({Value:1},{Value:0},{Value:0})
+
+>> RoundDown(Table({bool:true},{bool:false},{bool:Blank()}),0)
+Table({bool:1},{bool:0},{bool:0})
+
+>> RoundDown([true,false,Blank()],["1","1","1"])
+Table({Value:1},{Value:0},{Value:0})
+
+>> RoundDown(Table({bool:true},{bool:false},{bool:Blank()}),Table({digs:"1"},{digs:"1"},{digs:"1"}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> RoundDown([true,false,Blank()],["1","0","1"])
+Table({Value:1},{Value:0},{Value:0})
+
+>> RoundDown(Table({bool:true},{bool:false},{bool:Blank()}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> RoundDown(true,["1","0","1"])
+Table({Result:1},{Result:1},{Result:1})
+
+>> RoundDown(true,Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({Result:1},{Result:1},{Result:1})
+
+>> RoundDown([true],["1","0","1"])
+Table({Value:1},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> RoundUp([true,false,Blank()],0)
+Table({Value:1},{Value:0},{Value:0})
+
+>> RoundUp(Table({bool:true},{bool:false},{bool:Blank()}),0)
+Table({bool:1},{bool:0},{bool:0})
+
+>> RoundUp([true,false,Blank()],["1","1","1"])
+Table({Value:1},{Value:0},{Value:0})
+
+>> RoundUp(Table({bool:true},{bool:false},{bool:Blank()}),Table({digs:"1"},{digs:"1"},{digs:"1"}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> RoundUp([true,false,Blank()],["1","0","1"])
+Table({Value:1},{Value:0},{Value:0})
+
+>> RoundUp(Table({bool:true},{bool:false},{bool:Blank()}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> RoundUp(false,["1","0","1"])
+Table({Result:0},{Result:0},{Result:0})
+
+>> RoundUp(false,Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({Result:0},{Result:0},{Result:0})
+
+>> Round([true,false,Blank()],0)
+Table({Value:1},{Value:0},{Value:0})
+
+>> Round(Table({bool:true},{bool:false},{bool:Blank()}),0)
+Table({bool:1},{bool:0},{bool:0})
+
+>> Round([true,false,Blank()],["1","1","1"])
+Table({Value:1},{Value:0},{Value:0})
+
+>> Round(Table({bool:true},{bool:false},{bool:Blank()}),Table({digs:"1"},{digs:"1"},{digs:"1"}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> Round([true,false,Blank()],["1","0","1"])
+Table({Value:1},{Value:0},{Value:0})
+
+>> Round(Table({bool:true},{bool:false},{bool:Blank()}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({bool:1},{bool:0},{bool:0})
+
+>> Round(false,["1","0","1"])
+Table({Result:0},{Result:0},{Result:0})
+
+>> Round(false,Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({Result:0},{Result:0},{Result:0})
+
+>> Round([false],["1","0","1"])
+Table({Value:0},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Round(Table({bool:true}),Table({digs:"1"},{digs:"0"},{digs:"1"}))
+Table({bool:1},{bool:Error({Kind:ErrorKind.NotApplicable})},{bool:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Find([true,false,Blank()],["321","456","783"])
+Table({Result:Blank()},{Result:Blank()},{Result:1})
+
+>> Find(Table({bool:true},{bool:false},{bool:Blank()}),["321","456","783"])
+Table({Result:Blank()},{Result:Blank()},{Result:1})
+
+>> Find([true,false,Blank()],["321","456","783"],2)
+Table({Result:Blank()},{Result:Blank()},{Result:2})
+
+>> Find(Table({bool:true},{bool:false},{bool:Blank()}),["321","456","783"],2)
+Table({Result:Blank()},{Result:Blank()},{Result:2})
+
+>> Find([true,false,Blank()],["321","456","783"],[2,1,2])
+Table({Result:Blank()},{Result:Blank()},{Result:2})
+
+>> Find(Table({bool:true},{bool:false},{bool:Blank()}),["321","456","783"],[2,1,2])
+Table({Result:Blank()},{Result:Blank()},{Result:2})
+
+>> Concatenate([true,false,Blank()],954)
+Table({Result:"true954"},{Result:"false954"},{Result:"954"})
+
+>> Concatenate(Table({bool:true},{bool:false},{bool:Blank()}),954)
+Table({Result:"true954"},{Result:"false954"},{Result:"954"})
+
+>> Concatenate(Table({bool:true},{bool:false},{bool:Blank()}),[453,234,123])
+Table({Result:"true453"},{Result:"false234"},{Result:"123"})
+
+>> Mod([true,false,Blank()],4)
+Table({Result:1},{Result:0},{Result:0})
+
+>> Mod(Table({input:true},{input:false},{input:Blank()}),4)
+Table({Result:1},{Result:0},{Result:0})
+
+// Left, Mid, Right
+
+>> Left([123,456,789],["2","1","2"])
+Table({Value:"12"},{Value:"4"},{Value:"78"})
+
+>> Left(Table({num:123},{num:456},{num:789}),["2","1","2"])
+Table({num:"12"},{num:"4"},{num:"78"})
+
+>> Left([123,456,789],[false,true,Blank()])
+Table({Value:""},{Value:"4"},{Value:""})
+
+>> Left(Table({num:123},{num:456},{num:789}),[false,true,Blank()])
+Table({num:""},{num:"4"},{num:""})
+
+>> Left([true,false,Blank()],[false,true,Blank()])
+Table({Value:""},{Value:"f"},{Value:""})
+
+>> Left(Table({bool:true},{bool:false},{bool:Blank()}),[false,true,Blank()])
+Table({bool:""},{bool:"f"},{bool:""})
+
+>> Right([123,456,789],["2","1","2"])
+Table({Value:"23"},{Value:"6"},{Value:"89"})
+
+>> Right(Table({num:123},{num:456},{num:789}),["2","1","2"])
+Table({num:"23"},{num:"6"},{num:"89"})
+
+>> Right([123,456,789],[false,true,Blank()])
+Table({Value:""},{Value:"6"},{Value:""})
+
+>> Right(Table({num:123},{num:456},{num:789}),[false,true,Blank()])
+Table({num:""},{num:"6"},{num:""})
+
+>> Right([true,false,Blank()],[false,true,Blank()])
+Table({Value:""},{Value:"e"},{Value:""})
+
+>> Right(Table({bool:true},{bool:false},{bool:Blank()}),[false,true,Blank()])
+Table({bool:""},{bool:"e"},{bool:""})
+
+>> Mid([123,456,789],["2","1","3"])
+Table({Value:"23"},{Value:"456"},{Value:"9"})
+
+>> Mid(Table({num:123},{num:456},{num:789}),["2","1","3"])
+Table({num:"23"},{num:"456"},{num:"9"})
+
+>> Mid([123,456,789],[false,true,Blank()])
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"456"},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid(Table({num:123},{num:456},{num:789}),[false,true,Blank()])
+Table({num:Error({Kind:ErrorKind.InvalidArgument})},{num:"456"},{num:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid([true,false,Blank()],[false,true,Blank()])
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"false"},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid(Table({bool:true},{bool:false},{bool:Blank()}),[false,true,Blank()])
+Table({bool:Error({Kind:ErrorKind.InvalidArgument})},{bool:"false"},{bool:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid([123,456,789],["1","2","3"],["2","1","3"])
+Table({Value:"12"},{Value:"5"},{Value:"9"})
+
+>> Mid(Table({num:123},{num:456},{num:789}),["1","2","3"],["2","1","3"])
+Table({num:"12"},{num:"5"},{num:"9"})
+
+>> Mid([123,456,789],[false,true,Blank()],["2","1","2"])
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"4"},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid(Table({num:123},{num:456},{num:789}),[false,true,Blank()],["2","1","2"])
+Table({num:Error({Kind:ErrorKind.InvalidArgument})},{num:"4"},{num:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid([true,false,Blank()],[false,true,Blank()],["2","3","2"])
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"fal"},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid(Table({bool:true},{bool:false},{bool:Blank()}),[false,true,Blank()],["2","3","2"])
+Table({bool:Error({Kind:ErrorKind.InvalidArgument})},{bool:"fal"},{bool:Error({Kind:ErrorKind.InvalidArgument})})
+
+

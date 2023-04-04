@@ -79,11 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                    returnType = context.Features.ConsistentOneColumnTableResult
-                        ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                        : type0;
+                    fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
 
                     // Check arg1 below.
                     otherArg = args[1];
@@ -121,17 +117,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(otherType, otherArg, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(otherType))
+                else if (!CheckType(otherArg, otherType, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
                 {
-                    if (otherType.CoercesTo(DType.Number))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, DType.Number);
-                    }
-                    else
-                    {
                         fValid = false;
                         errors.EnsureError(DocumentErrorSeverity.Severe, otherArg, TexlStrings.ErrTypeError);
-                    }
                 }
             }
             else
@@ -141,11 +130,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                    returnType = context.Features.ConsistentOneColumnTableResult
-                        ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                        : type0;
+                    fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
                 }
                 else
                 {

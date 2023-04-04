@@ -60,13 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 0; i < count; i++)
             {
-                var typeChecks = CheckType(args[i], argTypes[i], DType.String, errors, true, out DType coercionType);
-                if (typeChecks && coercionType != null)
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
-                }
-
-                fArgsValid &= typeChecks;
+                fArgsValid &= CheckType(args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
             }
 
             if (!fArgsValid)
@@ -133,8 +127,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                fArgsValid &= CheckParamIsTypeOrSingleColumnTable(DType.String, args[i], argTypes[i], errors, out var isTable, ref nodeToCoercedTypeMap);
-                hasTableArg |= isTable;
+                if (argTypes[i].IsTable && argTypes[i] != DType.ObjNull)
+                {
+                    fArgsValid &= CheckStringColumnType(argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
+                    hasTableArg |= true;
+                }
+                else
+                {
+                    fArgsValid &= CheckType(args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
+                }
             }
 
             fArgsValid &= hasTableArg;
@@ -146,7 +147,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
 
-            return hasTableArg && fArgsValid;
+            return fArgsValid;
         }
     }
 }

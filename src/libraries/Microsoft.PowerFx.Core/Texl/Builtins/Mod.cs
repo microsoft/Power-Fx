@@ -72,20 +72,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var arg1 = args[1];
 
             // Arg0 should be either a number or a column of number (coercion is ok).
-            bool matchedWithCoercion;
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of numbers.
                 fValid &= CheckNumericColumnType(type0, arg0, errors, ref nodeToCoercedTypeMap);
             }
-            else if (CheckType(arg0, type0, DType.Number, DefaultErrorContainer, out matchedWithCoercion))
-            {
-                if (matchedWithCoercion)
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, arg0, DType.Number);
-                }
-            }
-            else
+            else if (!CheckType(arg0, type0, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, arg0, TexlStrings.ErrNumberExpected);
@@ -96,14 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 fValid &= CheckNumericColumnType(type1, arg1, errors, ref nodeToCoercedTypeMap);
             }
-            else if (CheckType(arg1, type1, DType.Number, DefaultErrorContainer, out matchedWithCoercion))
-            {
-                if (matchedWithCoercion)
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, arg1, DType.Number);
-                }
-            }
-            else
+            else if (!CheckType(arg1, type1, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrNumberExpected);

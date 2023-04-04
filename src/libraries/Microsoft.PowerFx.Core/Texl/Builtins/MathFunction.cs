@@ -67,19 +67,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
-
-            if (nodeToCoercedTypeMap?.Any() ?? false)
-            {
-                // Now set the coerced type to a table with numeric column type with the same name as in the argument.
-                returnType = nodeToCoercedTypeMap[arg];
-            }
-            else
-            {
-                returnType = argType;
-            }
-
-            returnType = context.Features.ConsistentOneColumnTableResult ? DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features))) : returnType;
+            fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap, context, out returnType);
 
             if (!fValid)
             {
