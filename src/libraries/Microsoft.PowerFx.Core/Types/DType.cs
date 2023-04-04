@@ -1821,7 +1821,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// Whether or not <see cref="DType"/>'s absense of columns that are defined in <paramref name="type"/>
         /// should affect acceptance.
         /// </param>
-        /// <param name="useLegacyDateTimeAccepts"></param>
+        /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
         /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
         /// permissive Accepts relationships).</param>
         /// <returns>
@@ -1855,9 +1855,9 @@ namespace Microsoft.PowerFx.Core.Types
         /// Whether or not <see cref="DType"/>'s absense of columns that are defined in <paramref name="type"/>
         /// should affect acceptance.
         /// </param>
-        /// <param name="useLegacyDateTimeAccepts"></param>
+        /// <param name="useLegacyDateTimeAccepts">Legacy rules for accepting date/time types.</param>
         /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
-        /// primitive Accepts relationships).</param>
+        /// permissive Accepts relationships).</param>
         /// <returns>
         /// True if <see cref="DType"/> accepts <paramref name="type"/>, false otherwise.
         /// </returns>
@@ -1972,11 +1972,6 @@ namespace Microsoft.PowerFx.Core.Types
                             type.Kind == Kind ||
                             type.Kind == DKind.Unknown ||
                             type.Kind == DKind.Deferred ||
-                            (useLegacyDateTimeAccepts &&
-                                (type.Kind == DKind.DateTime ||
-                                type.Kind == DKind.Date ||
-                                type.Kind == DKind.Time ||
-                                type.Kind == DKind.DateTimeNoTimeZone)) ||
                             (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                     }
                     else
@@ -3376,10 +3371,6 @@ namespace Microsoft.PowerFx.Core.Types
                     if (usePowerFxV1CompatibilityRules)
                     {
                         doesCoerce = String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
-                    }
-                    else
-                    {
-                        doesCoerce = Kind == DKind.Guid;
                     }
 
                     break;
