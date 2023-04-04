@@ -48,6 +48,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             Assert.Equal("ExecuteProcedure_V2", function.OriginalName); // OperationId
+            Assert.Equal("important", function.Visibility);
             Assert.Equal(4, function.ArityMax);
             Assert.Equal(4, function.ArityMin);
 
@@ -177,6 +178,32 @@ namespace Microsoft.PowerFx.Connectors.Tests
             (0..3).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
             (0..3).ForAll(i => Assert.Null(parameters.Parameters[i].ParameterNames));
             Assert.False(parameters.IsCompleted);
+        }
+
+        [Fact]
+        public void ConnectorWizardTest_TestAllFunctions()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
+                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "5edb9a6d-a246-e5e5-ad3c-957055a691ce",     // environment
+                    "49f20efc201f4594bd99f971dd3a97d9",         // connectionId
+                    () => "eyJ0eXAiO...",
+                    httpClient)
+            {
+                SessionId = "c4d30b5e-b18d-425f-8fdc-0fd6939d42c7"
+            };
+
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            var functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
+            testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
+
+            foreach (ConnectorFunction function in functions)
+            {
+                ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>());
+                Assert.NotNull(parameters);
+            }
         }
 
         private void CheckParameters(ConnectorParameterWithSuggestions[] parameters)
