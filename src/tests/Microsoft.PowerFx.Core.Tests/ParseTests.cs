@@ -789,6 +789,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 10; b = 3213d 123123asdf;; c = 23;", "c")]
         [InlineData("a = 10; b = 321;3;d ;;;123123asdf;; c = 23;", "c")]
         [InlineData("a = 10; b = in'valid ; c = 20; d = also(invalid; e = 44;", "e")]
+        [InlineData("a = 10; b = 30; c = in'valid ; d = (10; e = 42;", "e")]
         public void TestFormulaParseRestart(string script, string key)
         {
             var formulasResult = TexlParser.ParseFormulasScript(script);
