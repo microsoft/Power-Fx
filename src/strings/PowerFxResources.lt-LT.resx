@@ -567,6 +567,24 @@
     <value>Sujungia kelias teksto reikšmes į vieną.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Konvertuoja tekstą, kuris išreiškia skaičių, į dešimtainio skaičiaus reikšmę.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kalbos kodas, naudojamas konvertuojant reikšmę.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Teksto reikšmė, kurią reikia konvertuoti į dešimtainio skaičiaus reikšmę.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Konvertuoja tekstą, kuris išreiškia skaičių, į „float“ reikšmę.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kalbos kodas, naudojamas konvertuojant reikšmę.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Teksto reikšmė, kurią reikia konvertuoti į „float“ reikšmę.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekstas</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Gaublys – Neprijungta</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Gaublys – Atnaujinti</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Gaublys – Laukiantys keitimai</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Gaublys – Įspėjimas</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Gaublys – Klaida</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL, kuris bus užkoduotas.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>„{0}“ funkcija yra atpažįstama, bet nepalaikoma.</value>
+    
   </data>
 </root>

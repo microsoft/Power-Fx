@@ -567,6 +567,24 @@
     <value>कई पाठ मानों को एक पाठ मान में जोड़ता है.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>किसी संख्या को दर्शाने वाले 'टेक्स्ट' को दशमलव मान में बदलता है.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>मान परिवर्तित करते समय उपयोग किया जाने वाला भाषा कोड.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>दशमलव मान में परिवर्तित किए जाने वाला टेक्स्ट मान.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>किसी संख्या का प्रतिनिधित्व करने वाले 'टेक्स्ट' को फ़्लोट मान में परिवर्तित करता है.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>मान परिवर्तित करते समय उपयोग किया जाने वाला भाषा कोड.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>फ़्लोट मान में परिवर्तित किए जाने वाला टेक्स्ट मान.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>पाठ</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>ग्लोब - कनेक्ट डे नहीं</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>ग्लोब - ताज़ा करें</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>ग्लोब - परिवर्तन लंबित हैं</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>ग्लोब - चेतावनी</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>ग्लोब - त्रुटि</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>एन्कोड किया जाने वाला URL.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>{0}' मान्यता प्राप्त लेकिन समर्थित फ़ंक्शन नहीं है.</value>
+    
   </data>
 </root>

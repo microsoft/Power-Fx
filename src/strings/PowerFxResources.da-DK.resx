@@ -567,6 +567,24 @@
     <value>Forbinder adskillige tekstværdier til én tekstværdi.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Konverterer en 'tekst', der repræsenterer et tal, til en numerisk værdi.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Sprogkode, der skal anvendes, når du konverterer værdien.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Tekstværdien, der skal konverteres til en decimalværdi.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Konverterer en 'tekst', der repræsenterer et tal, til en flydende værdi.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Sprogkode, der skal anvendes, når du konverterer værdien.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Tekstværdien, der skal konverteres til en flydende værdi.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En URL-adresse, der skal kodes.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' er en genkendt, men ikke understøttet funktion.</value>
+    
   </data>
 </root>

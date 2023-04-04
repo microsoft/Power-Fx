@@ -567,6 +567,24 @@
     <value>Slår sammen flere tekstverdier til én tekstverdi.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Konverterer en tekst som representerer et tall, til en desimalverdi.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Språkkoden som skal brukes ved konvertering av verdien.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Tekstverdien som skal konverteres til en desimalverdi.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Konverterer en tekst som representerer et tall, til en flyttallsverdi.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Språkkoden som skal brukes ved konvertering av verdien.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Tekstverdien som skal konverteres til en flyttallsverdi.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Klode – ikke tilkoblet</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Klode – oppdater</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Klode – ventende endringer</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Klode – advarsel</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Klode – feil</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En nettadresse som skal kodes.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>{0} er en gjenkjent, men ikke støttet funksjon.</value>
+    
   </data>
 </root>

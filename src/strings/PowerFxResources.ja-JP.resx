@@ -567,6 +567,24 @@
     <value>複数のテキスト値を 1 つのテキスト値に結合します。</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>数値を表す 'テキスト' を10 進値に変換します。</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>値の変換に使う言語コード。</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>10 進値に変換するテキスト値です。</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>数値を表す 'テキスト' を浮動小数値に変換します。</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>値の変換に使う言語コード。</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>浮動小数値に変換するテキスト値です。</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>テキスト</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>エンコードされる URL です。</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' は認識されましたが、サポートされない関数です。</value>
+    
   </data>
 </root>

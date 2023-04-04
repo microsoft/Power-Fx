@@ -567,6 +567,24 @@
     <value>Savieno vairākas teksta vērtība vienā teksta vērtībā.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Pārvērš "tekstu", kas attēlo skaitli, par decimāldaļskaitļa vērtību.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Valodas kods, ko izmantot, pārvēršot vērtību.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Teksts, kas jāpārvērš par decimāldaļskaitļa vērtību.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Pārvērš "tekstu", kas attēlo skaitli, par peldošu vērtību.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Valodas kods, ko izmantot, pārvēršot vērtību.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Teksts, kas jāpārvērš par peldošu vērtību.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>teksts</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globuss — Nav savienots</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globuss — Atsvaidzināšana</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globuss — Izmaiņas statusā “Gaida”</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globuss — Brīdinājums</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globuss — Kļūda</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Vietrādis URL, kas jākodē.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' ir atpazīta, taču neatbalstīta funkcija.</value>
+    
   </data>
 </root>
