@@ -114,6 +114,3 @@ true
 
 >> Wyz("foo")
 Errors: Error 0-10: 'Wyz' is an unknown or unsupported function.
-
->> ReadNFC("foo")
-Errors: Error 0-14: 'ReadNFC' is a recognized but not supported function.

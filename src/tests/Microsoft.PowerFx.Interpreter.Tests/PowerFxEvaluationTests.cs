@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr, setup);
+                var result = await verify.EvalAsync(engine, expr, setup).ConfigureAwait(false);
                 return result;
             }
 
@@ -331,7 +331,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     runtimeConfig.AddService<Governor>(mem);
                 }
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
 
                 // UntypedObjectType type is currently not supported for serialization.
                 if (newValue.Type is UntypedObjectType)
@@ -339,10 +339,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(newValue);
                 }
 
-                // Decimal TODO: This seems impossible without type information?  Float("1e300") will produce result that can't be serialized if treated as a decimal.
-                // Serialization test. Serialized expression must produce an identical result.
-                ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
-                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig);
+                FormulaValue newValueDeserialized;
+
+                try
+                {
+                    // Serialization test. Serialized expression must produce an identical result.
+                    ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
+                    newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                }
+                catch (InvalidOperationException e)
+                {
+                    // If we failed because of range limitations with decimal, retry with NumberIsFloat enabled
+                    // This is for tests that return 1e100 as a result, verifying proper floating point operation
+                    if (!NumberIsFloat && e.Message.Contains("value is too large"))
+                    {
+                        // Serialization test. Serialized expression must produce an identical result.
+                        ParserOptions options = new ParserOptions() { NumberIsFloat = true };
+                        newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
 
                 return new RunResult(newValueDeserialized, newValue);
             }
