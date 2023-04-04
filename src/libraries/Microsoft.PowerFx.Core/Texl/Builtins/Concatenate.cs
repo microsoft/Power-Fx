@@ -127,6 +127,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Type check the args
             for (var i = 0; i < count; i++)
             {
+                // The check for null on the next line is a special case for Concatenate, to retain prior behavior
+                // See UntypedBlankAsTable.txt for more examples
                 if (argTypes[i].IsTable && argTypes[i] != DType.ObjNull)
                 {
                     fArgsValid &= CheckStringColumnType(argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
