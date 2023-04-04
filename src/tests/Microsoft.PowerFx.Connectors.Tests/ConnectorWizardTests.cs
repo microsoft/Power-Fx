@@ -179,6 +179,32 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(parameters.IsCompleted);
         }
 
+        [Fact]
+        public void ConnectorWizardTest_TestAllFunctions()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
+                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "5edb9a6d-a246-e5e5-ad3c-957055a691ce",     // environment
+                    "49f20efc201f4594bd99f971dd3a97d9",         // connectionId
+                    () => "eyJ0eXAiO...",
+                    httpClient)
+            {
+                SessionId = "c4d30b5e-b18d-425f-8fdc-0fd6939d42c7"
+            };
+
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            var functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
+            testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
+
+            foreach (ConnectorFunction function in functions)
+            {
+                ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>());
+                Assert.NotNull(parameters);
+            }
+        }
+
         private void CheckParameters(ConnectorParameterWithSuggestions[] parameters)
         {
             Assert.Equal(4, parameters.Length);
