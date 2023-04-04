@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(inputExp);
             Assert.True(check.IsSuccess);
 
-            var utcResult = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+            var utcResult = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
             Assert.Equal(expectedDateTimeUTC, utcResult.ToObject());
         }
     }

@@ -1991,7 +1991,7 @@ namespace Microsoft.PowerFx.Functions
 
             var childContext = context.SymbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
+            return await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -2005,7 +2005,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<BooleanValue>(args[i], context, args[i].IRContext);
+                var res = await runner.EvalArgAsync<BooleanValue>(args[i], context, args[i].IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {
@@ -2014,7 +2014,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var trueBranch = args[i + 1];
 
-                        var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
+                        var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                         return MaybeAdjustToCompileTimeType(trueBranchResult, irContext);
                     }
                 }
@@ -2031,7 +2031,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
+                    var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                     
                     return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
@@ -2073,7 +2073,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], context, args[i].IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], context, args[i].IRContext).ConfigureAwait(false);
 
                 if (res.IsError)
                 {
@@ -2110,7 +2110,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(new InMemoryRecordValue(IRContext.NotInSource(ifErrorScopeParamType), scopeVariables));
 
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
@@ -2121,7 +2121,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
             }
 
@@ -2198,7 +2198,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length - 1; i += 2)
             {
                 var match = (LambdaFormulaValue)args[i];
-                var matchValue = await match.EvalAsync();
+                var matchValue = await match.EvalAsync().ConfigureAwait(false);
 
                 if (matchValue is ErrorValue mve)
                 {
@@ -2212,7 +2212,7 @@ namespace Microsoft.PowerFx.Functions
                 if (equal)
                 {
                     var lambda = (LambdaFormulaValue)args[i + 1];
-                    var result = await lambda.EvalAsync();
+                    var result = await lambda.EvalAsync().ConfigureAwait(false);
                     if (errors.Count != 0)
                     {
                         return ErrorValue.Combine(irContext, errors);
@@ -2230,7 +2230,7 @@ namespace Microsoft.PowerFx.Functions
             if ((args.Length - 4) % 2 == 0)
             {
                 var lambda = (LambdaFormulaValue)args[args.Length - 1];
-                var result = await lambda.EvalAsync();
+                var result = await lambda.EvalAsync().ConfigureAwait(false);
                 if (errors.Count != 0)
                 {
                     return ErrorValue.Combine(irContext, errors);
@@ -2266,7 +2266,7 @@ namespace Microsoft.PowerFx.Functions
             foreach (var row in rowsAsync)
             {
                 runner.CheckCancel();
-                rows.Add(await row);
+                rows.Add(await row.ConfigureAwait(false));
             }
 
             var errorRows = rows.OfType<ErrorValue>();

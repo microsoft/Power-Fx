@@ -154,10 +154,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                     else
                     {
                         isValid = false;
-                        if (coercedArgs != null)
-                        {
-                            coercedArgs.Clear();
-                        }
+                        coercedArgs?.Clear();
                     }
 
                     return isValid;
@@ -167,11 +164,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 {
                     if (!CheckStringColumnType(argTypes[0], args[0], errors, ref coercedArgs))
                     {
-                        isValid = false;
-                        if (coercedArgs != null)
-                        {
-                            coercedArgs.Clear();
-                        }
+                        isValid = false;                        
+                        coercedArgs?.Clear();                        
                     }
 
                     return isValid;
@@ -180,11 +174,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 if (!DType.Number.Accepts(argTypes[0]))
                 {
                     isValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
-                    if (coercedArgs != null)
-                    {
-                        coercedArgs.Clear();
-                    }
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);                    
+                    coercedArgs?.Clear();                    
                 }
 
                 return isValid;

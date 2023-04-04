@@ -492,7 +492,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
             Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
             Assert.True(recalcEngine.Check("foo(Float(1))").IsSuccess);
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await recalcEngine.EvalAsync("foo(False)", CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await recalcEngine.EvalAsync("foo(False)", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact]
@@ -908,7 +908,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
             
-            var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues);
+            var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(expected, result.ToObject());
         }
 
@@ -1117,7 +1117,7 @@ namespace Microsoft.PowerFx.Tests
 
             try
             {
-                await engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values);
+                await engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).ConfigureAwait(false);
                 Assert.False(true); // should have thrown on illegal IRandomService service.
             }
             catch (InvalidOperationException e)
@@ -1141,24 +1141,24 @@ namespace Microsoft.PowerFx.Tests
             var symValues = symTable.CreateValues();
             symValues.Set(slot, FormulaValue.New(10));
 
-            var result1 = await eval.EvalAsync(CancellationToken.None, symValues);
+            var result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
 
             // Adding a variable is ok. 
             var slotY = symTable.AddVariable("y", FormulaType.Number);
-            result1 = await eval.EvalAsync(CancellationToken.None, symValues);
+            result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
 
             // Executing an existing IR fails if it uses a deleted variable.
             symTable.RemoveVariable("x");
-            await Assert.ThrowsAsync<InvalidOperationException>(() => eval.EvalAsync(CancellationToken.None, symValues));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
 
             // Even re-adding with same type still fails. 
             // (somebody could have re-added with a different type)
             var slot2 = symTable.AddVariable("x", FormulaType.Number);
             symValues.Set(slot2, FormulaValue.New(20));
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => eval.EvalAsync(CancellationToken.None, symValues));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         // execute w/ missing var (never adding to SymValues)

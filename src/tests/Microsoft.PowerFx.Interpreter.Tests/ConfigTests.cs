@@ -37,10 +37,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var locals = new SymbolValues()
                 .Add("local", FormulaValue.New(3));
 
-            var result = await engine.EvalAsync(
-                "local+global",
-                CancellationToken.None,
-                runtimeConfig: locals);
+            var result = await engine.EvalAsync("local+global", CancellationToken.None, runtimeConfig: locals).ConfigureAwait(false);
 
             Assert.Equal(5.0, result.ToObject());
         }
@@ -57,10 +54,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Per expression.
             var engine = new RecalcEngine();
-            var result = await engine.EvalAsync(
-                "Func1(3)",
-                CancellationToken.None,
-                symbolTable: s1);
+            var result = await engine.EvalAsync("Func1(3)", CancellationToken.None, symbolTable: s1).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
         }
 
@@ -98,7 +92,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
-            var eval = await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: r1);
+            var eval = await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: r1).ConfigureAwait(false);
             Assert.Equal(expected, eval.ToObject());
 
             var actualInvariantExpression = engine.GetInvariantExpression(expression, null);
@@ -127,7 +121,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Functions are already captured from the symbols 
             // don't need to be re-added.
-            var result = await run.EvalAsync(CancellationToken.None);
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
         }
 
@@ -183,7 +177,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             s1.RemoveFunction("Multiply");
             var expr = check.GetEvaluator();
 
-            var result = await expr.EvalAsync(CancellationToken.None);
+            var result = await expr.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
 
             // Rebinding  fails because we removed the func. 
@@ -198,7 +192,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(6.0, result.ToObject());
 
             // But rebinding will pickup new ... 
-            result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s1);
+            result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s1).ConfigureAwait(false);
             Assert.Equal(8.0, result.ToObject());
         }
 
@@ -216,11 +210,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             // Multiply was shadowed
-            var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s21);
+            var result = await engine.EvalAsync("Multiply(2)", CancellationToken.None, symbolTable: s21).ConfigureAwait(false);
             Assert.Equal(2 * 4.0, result.ToObject());
 
             // Func1 was not shadowed, so inherit. 
-            result = await engine.EvalAsync("Func1(2)", CancellationToken.None, symbolTable: s21);
+            result = await engine.EvalAsync("Func1(2)", CancellationToken.None, symbolTable: s21).ConfigureAwait(false);
             Assert.Equal(2 * 2.0, result.ToObject());
         }
 
@@ -252,21 +246,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
             var expr = "Func1(1) & Multiply(2)";
 
-            var result3 = await engine.EvalAsync(
-                expr,
-                CancellationToken.None,
-                symbolTable: s3Common); // 1*2 & 2*3  = "26"
+            var result3 = await engine.EvalAsync(expr, CancellationToken.None, symbolTable: s3Common).ConfigureAwait(false); // 1*2 & 2*3  = "26"
             Assert.Equal("26", result3.ToObject());
 
-            var result4 = await engine.EvalAsync(
-                expr,
-                CancellationToken.None,
-                symbolTable: s4Common); // 1*2 & 2*4  = "28"            
+            var result4 = await engine.EvalAsync(expr, CancellationToken.None, symbolTable: s4Common).ConfigureAwait(false); // 1*2 & 2*4  = "28"            
             Assert.Equal("28", result4.ToObject());
         }
 
         [Fact]
-        public void RecalcEngine_Symbol_CultureInfo()
+        public async void RecalcEngine_Symbol_CultureInfo()
         {
             var us_Symbols = new RuntimeConfig();
             var us_Culture = new CultureInfo("en-US");
@@ -285,8 +273,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             Assert.Equal(1.0m, engine.EvalAsync("1.0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).Result.ToObject());
-            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("1.0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols));
-            Assert.ThrowsAsync<InvalidOperationException>(() => engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("1.0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).ConfigureAwait(false)).ConfigureAwait(false);
             Assert.Equal(2.0m, engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result.ToObject());
 
             Assert.Equal("2/01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
@@ -651,7 +639,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 var runtime = new RuntimeConfig();
                 runtime.AddService(new UserFunction.Runtime { _name = name });
-                var result = await expr.EvalAsync(CancellationToken.None, runtime);
+                var result = await expr.EvalAsync(CancellationToken.None, runtime)
+                ;
 
                 var expected = name + "3";
                 var actual = result.ToObject();
@@ -696,11 +685,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             // Pass RuntimeConfig directly through eval.
-            var result = await engine.EvalAsync(
-                "User(3)",
-                CancellationToken.None,
-                symbolTable: s1,
-                runtimeConfig: runtime);
+            var result = await engine.EvalAsync("User(3)", CancellationToken.None, symbolTable: s1, runtimeConfig: runtime).ConfigureAwait(false);
 
             Assert.Equal("Bill3", result.ToObject());
         }
@@ -726,11 +711,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             // Pass RuntimeConfig directly through eval.
-            var result = await engine.EvalAsync(
-                "User(x)",
-                CancellationToken.None,
-                symbolTable: s1,
-                runtimeConfig: r12);
+            var result = await engine.EvalAsync("User(x)", CancellationToken.None, symbolTable: s1, runtimeConfig: r12).ConfigureAwait(false);
 
             Assert.Equal("Bill3", result.ToObject());
         }
@@ -745,7 +726,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check("p1", symbolTable: s1);
 
             var eval = check.GetEvaluator();
-            var result = await eval.EvalAsync(CancellationToken.None);
+            var result = await eval.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal(12.0, result.ToObject());
         }
@@ -835,7 +816,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
 
             var eval = check.GetEvaluator();
-            var result = await eval.EvalAsync(CancellationToken.None);
+            var result = await eval.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal(33.0, result.ToObject());
         }

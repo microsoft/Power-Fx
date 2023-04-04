@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Tests
                     }
                 }
 
-                var content = await httpContent.ReadAsStringAsync();
+                var content = await httpContent.ReadAsStringAsync().ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(content))
                 {
                     _log.AppendLine($" [body] {content}");
