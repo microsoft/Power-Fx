@@ -55,6 +55,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         EqNull,
         EqDecimals,
         EqNullUntyped,
+        EqPolymorphic,
 
         NeqNumbers,
         NeqBoolean,
@@ -75,6 +76,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         NeqNull,
         NeqDecimals,
         NeqNullUntyped,
+        NeqPolymorphic,
 
         LtNumbers,
         LeqNumbers,

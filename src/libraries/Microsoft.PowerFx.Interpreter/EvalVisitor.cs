@@ -349,7 +349,8 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryEq(this, context, node.IRContext, args);
                 case BinaryOpKind.EqNullUntyped:
                     return OperatorBinaryEqNullUntyped(this, context, node.IRContext, args);
-
+                case BinaryOpKind.EqPolymorphic:
+                    return OperatorBinaryEqPolymorphic(this, context, node.IRContext, args);
                 case BinaryOpKind.NeqBlob:
                 case BinaryOpKind.NeqBoolean:
                 case BinaryOpKind.NeqColor:
@@ -369,6 +370,8 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
                 case BinaryOpKind.NeqNullUntyped:
                     return OperatorBinaryNeqNullUntyped(this, context, node.IRContext, args);
+                case BinaryOpKind.NeqPolymorphic:
+                    return OperatorBinaryNeqPolymorphic(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
                     return OperatorBinaryGt(this, context, node.IRContext, args);

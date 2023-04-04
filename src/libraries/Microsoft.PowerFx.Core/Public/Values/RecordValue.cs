@@ -28,6 +28,18 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
+        /// <summary>
+        /// Unique key associated to each record in application.
+        /// NOTE: If two table has a same record instance, then the key should be same.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public virtual bool TryGetPrimaryKey(out string key)
+        {
+            key = default;
+            return false;
+        }
+
         private IEnumerable<NamedValue> GetFields()
         {
             foreach (var fieldName in Type.FieldNames)
