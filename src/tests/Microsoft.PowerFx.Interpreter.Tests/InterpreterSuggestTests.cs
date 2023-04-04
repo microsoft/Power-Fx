@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, config, null, parameterType);
+            var intellisense = Suggest(expression, config, culture: null, parameterType);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
