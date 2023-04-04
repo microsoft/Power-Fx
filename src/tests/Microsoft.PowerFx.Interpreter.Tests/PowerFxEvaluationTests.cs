@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class ExpressionEvaluationTests : PowerFxTest
     {
-        internal static Dictionary<string, Func<PowerFxConfig, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
+        internal static Dictionary<string, Func<PowerFxConfig, bool, (RecalcEngine engine, RecordValue parameters)>> SetupHandlers = new ()
         {
             { "OptionSetTestSetup", OptionSetTestSetup },
             { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
@@ -31,12 +31,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "AllEnumsSetup", AllEnumsSetup },
         };
                 
-        private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config)
+        private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config, bool numberIsFloat)
         {
             return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(config.CultureInfo, new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config)
+        private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config, bool numberIsFloat)
         {
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return (new RecalcEngine(config), parameters);
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) OptionSetSortTestSetup(PowerFxConfig config)
+        private static (RecalcEngine engine, RecordValue parameters) OptionSetSortTestSetup(PowerFxConfig config, bool numberIsFloat)
         {
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return (new RecalcEngine(config), null);
         }
 
-        private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config)
+        private static (RecalcEngine engine, RecordValue parameters) MutationFunctionsTestSetup(PowerFxConfig config, bool numberIsFloat)
         {
             /*
              * Record r1 => {![Field1:n, Field2:s, Field3:d, Field4:b]}
@@ -116,15 +116,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              * Table t2(rwr1, rwr2, rwr3)
              */
 
+            var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
+
+            Func<double, FormulaValue> newNumber = number => 
+                numberIsFloat ? FormulaValue.New(number) : FormulaValue.New((decimal)number);
+
             var rType = RecordType.Empty()
-                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field1", numberType, "DisplayNameField1"))
                 .Add(new NamedFormulaType("Field2", FormulaType.String, "DisplayNameField2"))
                 .Add(new NamedFormulaType("Field3", FormulaType.DateTime, "DisplayNameField3"))
                 .Add(new NamedFormulaType("Field4", FormulaType.Boolean, "DisplayNameField4"));
 
             var r1Fields = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(1)),
+                new NamedValue("Field1", newNumber(1)),
                 new NamedValue("Field2", FormulaValue.New("earth")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("1/1/2022").Date)),
                 new NamedValue("Field4", FormulaValue.New(true))
@@ -132,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var r2Fields = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(2)),
+                new NamedValue("Field1", newNumber(2)),
                 new NamedValue("Field2", FormulaValue.New("moon")),
                 new NamedValue("Field3", FormulaValue.New(DateTime.Parse("2/1/2022").Date)),
                 new NamedValue("Field4", FormulaValue.New(false))
@@ -146,12 +151,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
 #pragma warning disable SA1117 // Parameters should be on same line or separate lines
             var recordWithRecordType = RecordType.Empty()
-                .Add(new NamedFormulaType("Field1", FormulaType.Number, "DisplayNameField1"))
+                .Add(new NamedFormulaType("Field1", numberType, "DisplayNameField1"))
                 .Add(new NamedFormulaType("Field2", RecordType.Empty()
-                    .Add(new NamedFormulaType("Field2_1", FormulaType.Number, "DisplayNameField2_1"))
+                    .Add(new NamedFormulaType("Field2_1", numberType, "DisplayNameField2_1"))
                     .Add(new NamedFormulaType("Field2_2", FormulaType.String, "DisplayNameField2_2"))
                     .Add(new NamedFormulaType("Field2_3", RecordType.Empty()
-                        .Add(new NamedFormulaType("Field2_3_1", FormulaType.Number, "DisplayNameField2_3_1"))
+                        .Add(new NamedFormulaType("Field2_3_1", numberType, "DisplayNameField2_3_1"))
                         .Add(new NamedFormulaType("Field2_3_2", FormulaType.String, "DisplayNameField2_3_2")),
                     "DisplayNameField2_3")),
                 "DisplayNameField2"))
@@ -160,14 +165,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields1 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(1)),
+                new NamedValue("Field1", newNumber(1)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(121)),
+                    new NamedValue("Field2_1", newNumber(121)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(1231)),
+                        new NamedValue("Field2_3_1", newNumber(1231)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -176,14 +181,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields2 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(2)),
+                new NamedValue("Field1", newNumber(2)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(221)),
+                    new NamedValue("Field2_1", newNumber(221)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(2231)),
+                        new NamedValue("Field2_3_1", newNumber(2231)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -192,14 +197,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var recordWithRecordFields3 = new List<NamedValue>()
             {
-                new NamedValue("Field1", FormulaValue.New(3)),
+                new NamedValue("Field1", newNumber(3)),
                 new NamedValue("Field2", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                 {
-                    new NamedValue("Field2_1", FormulaValue.New(321)),
+                    new NamedValue("Field2_1", newNumber(321)),
                     new NamedValue("Field2_2", FormulaValue.New("2_2")),
                     new NamedValue("Field2_3", FormulaValue.NewRecordFromFields(new List<NamedValue>()
                     {
-                        new NamedValue("Field2_3_1", FormulaValue.New(3231)),
+                        new NamedValue("Field2_3_1", newNumber(3231)),
                         new NamedValue("Field2_3_2", FormulaValue.New("common")),
                     }))
                 })),
@@ -240,8 +245,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal class InterpreterRunner : BaseRunner
         {
             // For async tests, run in special mode. 
+
             // This does _not_ change evaluation semantics, but does verify .Result isn't called by checking
+
             // task completion status.. 
+
             private async Task<FormulaValue> RunVerifyAsync(string expr, PowerFxConfig config, InternalSetup setup)
             {
                 var verify = new AsyncVerify();
@@ -258,7 +266,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 engine.UpdateVariable("varNumber", 9999);
 
                 // Run in special mode that ensures we're not calling .Result
-                var result = await verify.EvalAsync(engine, expr, setup);
+                var result = await verify.EvalAsync(engine, expr, setup).ConfigureAwait(false);
                 return result;
             }
 
@@ -266,7 +274,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 RecalcEngine engine;
                 RecordValue parameters;
-                var iSetup = InternalSetup.Parse(setupHandlerName);
+                var iSetup = InternalSetup.Parse(setupHandlerName, NumberIsFloat);
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
 
@@ -282,7 +290,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                         throw new SetupHandlerNotFoundException();
                     }
 
-                    (engine, parameters) = handler(config);
+                    (engine, parameters) = handler(config, NumberIsFloat);
                 }
                 else
                 {
@@ -320,7 +328,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     runtimeConfig.AddService<Governor>(mem);
                 }
 
-                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+                var newValue = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
 
                 // UntypedObjectType type is currently not supported for serialization.
                 if (newValue.Type is UntypedObjectType)
@@ -328,10 +336,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(newValue);
                 }
 
-                // Serialization test. Serialized expression must produce an identical result.
-                var newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, runtimeConfig: runtimeConfig);
+                FormulaValue newValueDeserialized;
 
-                return new RunResult(newValueDeserialized);
+                try
+                {
+                    // Serialization test. Serialized expression must produce an identical result.
+                    ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
+                    newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                }
+                catch (InvalidOperationException e)
+                {
+                    // If we failed because of range limitations with decimal, retry with NumberIsFloat enabled
+                    // This is for tests that return 1e100 as a result, verifying proper floating point operation
+                    if (!NumberIsFloat && e.Message.Contains("value is too large"))
+                    {
+                        // Serialization test. Serialized expression must produce an identical result.
+                        ParserOptions options = new ParserOptions() { NumberIsFloat = true };
+                        newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                return new RunResult(newValueDeserialized, newValue);
             }
         }
 
@@ -340,7 +369,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         internal class ReplRunner : BaseRunner
         {
             private readonly RecalcEngine _engine;
-            public ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
             public ReplRunner(RecalcEngine engine)
             {
@@ -349,12 +377,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                if (TryMatchSet(expr, out var runResult))
+                if (TryMatchSet(expr, out var runResult, NumberIsFloat))
                 {
                     return runResult;
                 }
 
-                var check = _engine.Check(expr, _opts);
+                ParserOptions opts = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
+
+                var check = _engine.Check(expr, opts);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
@@ -365,11 +395,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             // Pattern match for Set(x,y) so that we can define the variable
-            public bool TryMatchSet(string expr, out RunResult runResult)
+            public bool TryMatchSet(string expr, out RunResult runResult, bool numberIsFloat = false)
             {
-                var parserOptions = new ParserOptions { AllowsSideEffects = true };
+                var parserOptions = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
 
-                var parse = _engine.Parse(expr);
+                var parse = _engine.Parse(expr, parserOptions);
                 if (parse.IsSuccess)
                 {
                     if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
@@ -387,7 +417,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                                     var arg1 = call.Args.ChildNodes[1];
                                     var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
 
-                                    var check = _engine.Check(arg1expr);
+                                    var check = _engine.Check(arg1expr, parserOptions);
                                     if (check.IsSuccess)
                                     {
                                         var arg1Type = check.ReturnType;

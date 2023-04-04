@@ -1852,7 +1852,7 @@
     
   </data>
   <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
-    <value>Аргумент представляет собой недопустимое значение даты или времени</value>
+    <value>Аргумент представляет собой недопустимое значение даты или времени.</value>
     
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
@@ -1876,7 +1876,7 @@
     
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
-    <value>Тип этого выражения "{0}" не соответствует ожидаемому типу "{0}". Обнаруженный тип: "{1}".</value>
+    <value>Тип этого выражения не соответствует ожидаемому типу "{0}". Обнаруженный тип: "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2935,6 +2935,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Земной шар</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Земной шар — подключено</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Земной шар — обновление</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Земной шар — ожидаются изменения</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Земной шар — предупреждение</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Земной шар — ошибка</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">

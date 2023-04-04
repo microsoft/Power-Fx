@@ -1,0 +1,59 @@
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+#SKIPFILE:disable:NumberIsFloat
+
+// Tests that can't be run in decimal yet and have #SKIP directives
+// Once decimal is done, this #SKIPs can be removed and this file can be removed
+
+>> Boolean(If(1/0<2,[1]))
+Error({Kind:ErrorKind.Div0})
+
+>> Boolean(If(1<0,[1]))
+Blank()
+
+>> Boolean(Filter([1,2,3], Value > 10))
+Table()
+
+>> With({ C2: Filter(Table({F1 : 0}), false),C3: Filter(Table({F1 : 0}), false)},ForAll(Sequence(5),Collect(C2, { F1: ThisRecord.Value }));ForAll(Sequence(CountRows(C2)),Collect(C3, Index(C2, ThisRecord.Value)));Patch(C2, First(C2), { F1 : 99});Patch(C3, Last(C2), { F1 : 88});Concat(C2, F1) & "," & Concat(C3, F1));
+"992345,123488"
+
+>> ForAll(Boolean([3, 1/0, 0, Sqrt(-1)]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
+Table({Value:"true"},{Value:"ErrorKind=13"},{Value:"false"},{Value:"ErrorKind=24"})
+
+>> Switch(2,1,"a",Sqrt(-1),"b","c")
+Error({Kind:ErrorKind.Numeric})
+
+// Errors not evaluated are not returned
+>> Switch(2,1,"a",2,"b",Sqrt(-1),"c","d")
+"b"
+
+>> Abs(Table({a:1/0},{a:Power(-3,2)}))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:9})
+
+// Multiple errors
+>> Count(Table({a:1/0},{a:Sqrt(-1)}))
+Error({Kind:ErrorKind.Div0})
+
+// Multiple errors
+>> Count(Table({a:Sqrt(-1)},{a:1/0}))
+Error({Kind:ErrorKind.Numeric})
+
+// All error values
+>> CountA(Table({a:1/0},{a:Sqrt(-1)}))
+Error({Kind:ErrorKind.Div0})
+
+// All error values
+>> CountA(Table({a:Sqrt(-1)},{a:1/0}))
+Error({Kind:ErrorKind.Numeric})
+
+>> CountRows(Table({a:1/0},{a:Sqrt(-1)}))
+2
+
+// Distinct values where expression handles errors
+>> Distinct(Table({a:1},{a:2},{a:If(1/0<2,{a:2}).a},{a:7},{a:Sqrt(-1)},{a:-13},{a:2}), IfError(a,-FirstError.Kind))
+Table({Value:1},{Value:2},{Value:-13},{Value:7},{Value:-24})
+
+// Distinct which ignores columns with errors
+>> Distinct(Table({a:10,b:1/0},{a:9,b:Sqrt(-1)},{a:8,b:3},{a:10,b:1/0},{a:8,b:Ln(-1)}), a)
+Table({Value:10},{Value:9},{Value:8})
+
+

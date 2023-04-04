@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx
     public sealed class PowerFxConfig
     {
         internal static readonly int DefaultMaxCallDepth = 20;
+        internal static readonly int DefaultMaximumExpressionLength = 1000;
 
         /// <summary>
         /// Global symbols. Additional symbols beyond default function set. 
@@ -42,12 +43,15 @@ namespace Microsoft.PowerFx
 
         public int MaxCallDepth { get; set; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
+        public int MaximumExpressionLength { get; set; }
+
+        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = null)
         {
             CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
-            Features = features;
+            Features = features ?? Features.None; // should we default to PowerFxV1?
             SymbolTable.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
+            MaximumExpressionLength = DefaultMaximumExpressionLength;
         }
 
         /// <summary>

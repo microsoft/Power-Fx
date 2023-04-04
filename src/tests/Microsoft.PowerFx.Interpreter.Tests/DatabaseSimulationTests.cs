@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             using (var cts = new CancellationTokenSource(500))
             {
                 // Won't complete - should throw cancellation task 
-                await Assert.ThrowsAsync<TaskCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
             }
         }
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.Options;
@@ -30,7 +31,7 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
-        private static Features _features = Features.All;
+        private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
         {
@@ -49,9 +50,14 @@ namespace Microsoft.PowerFx
                 { OptionNumberIsFloat, OptionNumberIsFloat },
                 { OptionLargeCallDepth, OptionLargeCallDepth }
             };
-            foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
+
+            foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                options.Add(feature.ToString(), feature.ToString());
+                if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
+                {
+                    var feature = featureProperty.Name;
+                    options.Add(feature.ToString(), feature.ToString());
+                }
             }
 
             config.SymbolTable.EnableMutationFunctions();
@@ -83,11 +89,11 @@ namespace Microsoft.PowerFx
             var version = typeof(RecalcEngine).Assembly.GetName().Version.ToString();
             Console.WriteLine($"Microsoft Power Fx Console Formula REPL, Version {version}");
 
-            foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
+            foreach (var propertyInfo in typeof(Features).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
             {
-                if ((_engine.Config.Features & feature) == feature && feature != Features.None)
+                if (propertyInfo.PropertyType == typeof(bool) && ((bool)propertyInfo.GetValue(_engine.Config.Features)) == true)
                 {
-                    enabled.Append(" " + feature.ToString());
+                    enabled.Append(" " + propertyInfo.Name);
                 }
             }
 
@@ -196,7 +202,7 @@ namespace Microsoft.PowerFx
                     //                      <ident>( <ident> : <type>, ... ) : <type> { <formula>; <formula>; ... }
                     else if (Regex.IsMatch(expr, @"^\s*\w+\((\s*\w+\s*\:\s*\w+\s*,?)*\)\s*\:\s*\w+\s*(\=|\{).*$", RegexOptions.Singleline))
                     {
-                        var res = _engine.DefineFunctions(expr);
+                        var res = _engine.DefineFunctions(expr, _numberIsFloat);
                         if (res.Errors.Count() > 0)
                         {
                             throw new Exception("Error: " + res.Errors.First());
@@ -206,7 +212,7 @@ namespace Microsoft.PowerFx
                     // eval and print everything else
                     else
                     {
-                        var opts = new ParserOptions() { AllowsSideEffects = true };
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var result = _engine.Eval(expr, options: opts);
 
                         if (output != null)
@@ -599,21 +605,18 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                foreach (Features feature in (Features[])Enum.GetValues(typeof(Features)))
+                var featureProperty = typeof(Features).GetProperty(option.Value, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (featureProperty?.CanWrite == true)
                 {
-                    if (option.Value.ToLower(CultureInfo.InvariantCulture) == feature.ToString().ToLower(CultureInfo.InvariantCulture))
-                    {
-                        _features = _features & ~feature | (value.Value ? feature : Features.None);
-                        ResetEngine();
-                        return value;
-                    }
+                    featureProperty.SetValue(_features, value.Value);
+                    return value;
                 }
 
                 return FormulaValue.NewError(new ExpressionError()
                 {
-                    Kind = ErrorKind.InvalidArgument,
-                    Severity = ErrorSeverity.Critical,
-                    Message = $"Invalid option name: {option.Value}."
+                        Kind = ErrorKind.InvalidArgument,
+                        Severity = ErrorSeverity.Critical,
+                        Message = $"Invalid option name: {option.Value}."
                 });
             }
         }

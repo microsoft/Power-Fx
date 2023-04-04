@@ -158,6 +158,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     {
                         if (args[i].Kind == NodeKind.BoolLit ||
                             args[i].Kind == NodeKind.NumLit ||
+                            args[i].Kind == NodeKind.DecLit ||
                             args[i].Kind == NodeKind.StrLit)
                         {
                             errors.EnsureError(DocumentErrorSeverity.Warning, args[i], TexlStrings.WarnLiteralPredicate);

@@ -178,10 +178,20 @@ namespace Microsoft.PowerFx.Syntax
         // Check 1..N arguments to identify if there is an AsyncWithNoSideEffects expression.
         internal bool HasArgumentAsyncWithNoSideEffects(TexlBinding binding, int firstArgument = 0)
         {
-            // check if the CallNode has any async arguments.
+            // check if the CallNode has any async arguments with no side effects.
             // some functions don't need to look at all
             // arguments (e.g. Filter and LookUp where the first arg is a data source)
             return Args.Children.Skip(firstArgument).Any(x => binding.IsAsyncWithNoSideEffects(x));
+        }
+
+        // Does the CallNode have an argument/expression that is async
+        // Check 1..N arguments to identify if there is an Async expression.
+        internal bool HasAsyncArgument(TexlBinding binding, int firstArgument = 0)
+        {
+            // check if the CallNode has any async arguments.
+            // some functions don't need to look at all
+            // arguments (e.g. Filter and LookUp where the first arg is a data source)
+            return Args.Children.Skip(firstArgument).Any(x => binding.IsAsync(x));
         }
     }
 }

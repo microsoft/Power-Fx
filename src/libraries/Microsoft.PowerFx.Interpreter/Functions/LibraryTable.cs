@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -249,7 +250,7 @@ namespace Microsoft.PowerFx.Functions
                         return error;
                     }
 
-                    if (field is NumberValue)
+                    if (field is NumberValue || field is DecimalValue)
                     {
                         count++;
                     }
@@ -467,11 +468,12 @@ namespace Microsoft.PowerFx.Functions
                 pairs.Add(await pair);
             }
 
-            bool allNumbers = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
+            bool allNumbers = true, allDecimals = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
 
             foreach (var (row, sortValue) in pairs)
             {
                 allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(sortValue);
+                allDecimals &= IsValueTypeErrorOrBlank<DecimalValue>(sortValue);
                 allStrings &= IsValueTypeErrorOrBlank<StringValue>(sortValue);
                 allBooleans &= IsValueTypeErrorOrBlank<BooleanValue>(sortValue);
                 allDatetimes &= IsValueTypeErrorOrBlank<DateTimeValue>(sortValue);
@@ -484,7 +486,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            if (!(allNumbers || allStrings || allBooleans || allDatetimes || allDates || allOptionSets))
+            if (!(allNumbers || allDecimals || allStrings || allBooleans || allDatetimes || allDates || allOptionSets))
             {
                 return CommonErrors.RuntimeTypeMismatch(irContext);
             }
@@ -498,6 +500,10 @@ namespace Microsoft.PowerFx.Functions
             if (allNumbers)
             {
                 return SortValueType<NumberValue, double>(pairs, irContext, compareToResultModifier);
+            }
+            else if (allDecimals)
+            {
+                return SortValueType<DecimalValue, decimal>(pairs, irContext, compareToResultModifier);
             }
             else if (allStrings)
             {

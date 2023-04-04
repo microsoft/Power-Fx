@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // These tests are exercising 'x-ms-dynamic-values' extension property
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            PowerFxConfig config = new PowerFxConfig(Features.All);
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
 
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
@@ -97,7 +98,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 "
             };
 
-            Assert.Equal(expectedNetwork, networkTrace);
+            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
         [Theory]        
@@ -116,7 +117,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             // These tests are exercising 'x-ms-dynamic-schema' extension property
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            PowerFxConfig config = new PowerFxConfig(Features.All);
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
 
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
@@ -162,7 +163,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
 ";           
 
-            Assert.Equal(expectedNetwork, networkTrace);
+            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
     }
 }

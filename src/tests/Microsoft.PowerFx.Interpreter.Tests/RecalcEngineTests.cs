@@ -162,6 +162,22 @@ namespace Microsoft.PowerFx.Tests
             AssertUpdate("B-->0;");
         }
 
+        [Fact]
+        public void BasicRecalcDecimal()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", 15m);
+            engine.SetFormula("B", "A*2", OnUpdate);
+            AssertUpdate("B-->30;");
+
+            engine.UpdateVariable("A", 20m);
+            AssertUpdate("B-->40;");
+
+            // Ensure we can update to null. 
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Decimal));
+            AssertUpdate("B-->0;");
+        }
+
         // depend on grand child directly 
         [Fact]
         public void Recalc2()
@@ -247,7 +263,7 @@ namespace Microsoft.PowerFx.Tests
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
 
-            engine.UpdateVariable("A", 1);
+            engine.UpdateVariable("A", 1m);
             engine.SetFormula("B", "A*2", OnUpdate);
             AssertUpdate("B-->2;");
 
@@ -314,18 +330,29 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void DefFunc()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var recalcEngine = new RecalcEngine(config);
 
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Number, y:Number): Number = x * y;").Errors;
             Assert.False(enumerable.Any());
-            Assert.Equal(17.0, recalcEngine.Eval("foo(3,4) + 5").ToObject());
+            Assert.Equal(17.0, recalcEngine.Eval("foo(Float(3),Float(4)) + 5").ToObject());
+        }
+
+        [Fact]
+        public void DefFuncDecimal()
+        {
+            var config = new PowerFxConfig(null, null);
+            var recalcEngine = new RecalcEngine(config);
+
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Decimal, y:Decimal): Decimal = x * y;").Errors;
+            Assert.False(enumerable.Any());
+            Assert.Equal(17m, recalcEngine.Eval("foo(3,4) + 5").ToObject());
         }
 
         [Fact]
         public void DefFuncWithErrorsAndVerifySpans()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var recalcEngine = new RecalcEngine(config);
 
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("func1(x:Number/*comment*/): Number = x * 10;\nfunc2(x:Number): Number = y1 * 10;").Errors;
@@ -349,18 +376,29 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void DefRecursiveFunc()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var recalcEngine = new RecalcEngine(config);
-            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Number):Number = If(x=0,foo(1),If(x=1,foo(2),If(x=2,2));").Errors;
-            var result = recalcEngine.Eval("foo(0)");
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Number):Number = If(x=0,foo(1),If(x=1,foo(2),If(x=2,Float(2)));", numberIsFloat: true).Errors;
+            var result = recalcEngine.Eval("foo(Float(0))");
             Assert.Equal(2.0, result.ToObject());
+            Assert.False(enumerable.Any());
+        }
+
+        [Fact]
+        public void DefRecursiveFuncDecimal()
+        {
+            var config = new PowerFxConfig(null, null);
+            var recalcEngine = new RecalcEngine(config);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(x:Decimal):Decimal = If(x=0,foo(1),If(x=1,foo(2),If(x=2,2));").Errors;
+            var result = recalcEngine.Eval("foo(0)");
+            Assert.Equal(2m, result.ToObject());
             Assert.False(enumerable.Any());
         }
 
         [Fact]
         public void DefSimpleRecursiveFunc()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var recalcEngine = new RecalcEngine(config);
             Assert.False(recalcEngine.DefineFunctions("foo():Blank = foo();").Errors.Any());
             var result = recalcEngine.Eval("foo()");
@@ -370,7 +408,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void DefHailstoneSequence()
         {
-            var config = new PowerFxConfig(null)
+            var config = new PowerFxConfig(null, null)
             {
                 MaxCallDepth = 100
             };
@@ -378,13 +416,27 @@ namespace Microsoft.PowerFx.Tests
             var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
 
             Assert.False(recalcEngine.DefineFunctions($"hailstone(x:Number):Number = {body};").Errors.Any());
-            Assert.Equal(1.0, recalcEngine.Eval("hailstone(192)").ToObject());
+            Assert.Equal(1.0, recalcEngine.Eval("hailstone(Float(192))").ToObject());
+        }
+
+        [Fact]
+        public void DefHailstoneSequenceDecimal()
+        {
+            var config = new PowerFxConfig(null, null)
+            {
+                MaxCallDepth = 100
+            };
+            var recalcEngine = new RecalcEngine(config);
+            var body = @"If(Not(x = 1), If(Mod(x, 2)=0, hailstone(x/2), hailstone(3*x+1)), x)";
+
+            Assert.False(recalcEngine.DefineFunctions($"hailstone(x:Decimal):Decimal = {body};").Errors.Any());
+            Assert.Equal(1m, recalcEngine.Eval("hailstone(192)").ToObject());
         }
 
         [Fact]
         public void DefMutualRecursionFunc()
         {
-            var config = new PowerFxConfig(null)
+            var config = new PowerFxConfig(null, null)
             {
                 MaxCallDepth = 100
             };
@@ -392,15 +444,33 @@ namespace Microsoft.PowerFx.Tests
             var bodyEven = @"If(number = 0, true, odd(Abs(number)-1))";
             var bodyOdd = @"If(number = 0, false, even(Abs(number)-1))";
 
+            var opts = new ParserOptions() { NumberIsFloat = true };
             Assert.False(recalcEngine.DefineFunctions($"odd(number:Number):Boolean = {bodyOdd}; even(number:Number):Boolean = {bodyEven};").Errors.Any());
-            Assert.Equal(true, recalcEngine.Eval("odd(17)").ToObject());
-            Assert.Equal(false, recalcEngine.Eval("even(17)").ToObject());
+            Assert.Equal(true, recalcEngine.Eval("odd(17)", options: opts).ToObject());
+            Assert.Equal(false, recalcEngine.Eval("even(17)", options: opts).ToObject());
+        }
+
+        [Fact]
+        public void DefMutualRecursionFuncDecimal()
+        {
+            var config = new PowerFxConfig(null, null)
+            {
+                MaxCallDepth = 100
+            };
+            var recalcEngine = new RecalcEngine(config);
+            var bodyEven = @"If(number = 0, true, odd(If(number<0,-number,number)-1))";
+            var bodyOdd = @"If(number = 0, false, even(If(number<0,-number,number)-1))";
+
+            var opts = new ParserOptions() { NumberIsFloat = false };
+            Assert.False(recalcEngine.DefineFunctions($"odd(number:Decimal):Boolean = {bodyOdd}; even(number:Decimal):Boolean = {bodyEven};").Errors.Any());
+            Assert.Equal(true, recalcEngine.Eval("odd(17)", options: opts).ToObject());
+            Assert.Equal(false, recalcEngine.Eval("even(17)", options: opts).ToObject());
         }
 
         [Fact]
         public async void RedefinitionError()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var recalcEngine = new RecalcEngine(config);
             Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("foo():Blank = foo(); foo():Number = x + 1;"));
         }
@@ -408,7 +478,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void UDFBodySyntaxErrorTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var recalcEngine = new RecalcEngine(config);
             Assert.True(recalcEngine.DefineFunctions("foo():Blank = x[").Errors.Any());
         }
@@ -416,12 +486,12 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void UDFIncorrectParametersTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             var recalcEngine = new RecalcEngine(config);
             Assert.False(recalcEngine.DefineFunctions("foo(x:Number):Number = x + 1;").Errors.Any());
             Assert.False(recalcEngine.Check("foo(False)").IsSuccess);
             Assert.False(recalcEngine.Check("foo(Table( { Value: \"Strawberry\" }, { Value: \"Vanilla\" } ))").IsSuccess);
-            Assert.True(recalcEngine.Check("foo(1)").IsSuccess);
+            Assert.True(recalcEngine.Check("foo(Float(1))").IsSuccess);
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await recalcEngine.EvalAsync("foo(False)", CancellationToken.None));
         }
 
@@ -673,7 +743,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngineMutateConfig()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.SymbolTable.AddFunction(BuiltinFunctionsCore.Blank);
 
             var recalcEngine = new Engine(config)
@@ -704,7 +774,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngine_AddFunction_Twice()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
             config.AddFunction(BuiltinFunctionsCore.Blank);
 
             Assert.Throws<ArgumentException>(() => config.AddFunction(BuiltinFunctionsCore.Blank));
@@ -713,7 +783,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngine_FunctionOrdering1()
         {
-            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.PowerFxV1);
             config.AddFunction(new TestFunctionMultiply());
             config.AddFunction(new TestFunctionSubstract());
 
@@ -729,7 +799,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RecalcEngine_FunctionOrdering2()
         {
-            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.All);
+            var config = new PowerFxConfig(new CultureInfo("en-US"), Features.PowerFxV1);
             config.AddFunction(new TestFunctionSubstract());
             config.AddFunction(new TestFunctionMultiply());
 
@@ -791,7 +861,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void OptionSetChecks()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -868,7 +938,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void OptionSetResultType()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
 
             var optionSet = new OptionSet("FooOs", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -888,7 +958,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void OptionSetChecksWithMakeUniqueCollision()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig(null, null);
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -919,46 +989,58 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void UDFRecursionLimitTest()
         {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null, null));
             recalcEngine.DefineFunctions("Foo(x: Number): Number = Foo(x);");
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(1)"));
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Foo(Float(1))"));
         }
 
         [Fact]
         public void UDFRecursionWorkingTest()
         {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
-            recalcEngine.DefineFunctions("Foo(x: Number): Number = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
-            Assert.Equal(1.0, recalcEngine.Eval("Foo(5)").ToObject());
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null, null));
+            recalcEngine.DefineFunctions("Foo(x: Number): Number = If(x = 1, Float(1), If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
+            Assert.Equal(1.0, recalcEngine.Eval("Foo(Float(5))").ToObject());
+        }
+
+        [Fact]
+        public void UDFRecursionWorkingTestDecimal()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null, null));
+            recalcEngine.DefineFunctions("Foo(x: Decimal): Decimal = If(x = 1, 1, If(Mod(x, 2) = 0, Foo(x/2), Foo(x*3 + 1)));");
+            Assert.Equal(1m, recalcEngine.Eval("Foo(Decimal(5))").ToObject());
         }
 
         [Fact]
         public void IndirectRecursionTest()
         {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig(null)
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null, null)
             {
                 MaxCallDepth = 81
             });
+            var opts = new ParserOptions()
+            {
+                NumberIsFloat = true
+            };
             recalcEngine.DefineFunctions(
                 "A(x: Number): Number = If(Mod(x, 2) = 0, B(x/2), B(x));" +
                 "B(x: Number): Number = If(Mod(x, 3) = 0, C(x/3), C(x));" +
                 "C(x: Number): Number = If(Mod(x, 5) = 0, D(x/5), D(x));" +
                 "D(x: Number): Number { If(Mod(x, 7) = 0, F(x/7), F(x)) };" +
-                "F(x: Number): Number { If(x = 1, 1, A(x+1)) };");
-            Assert.Equal(1.0, recalcEngine.Eval("A(12654)").ToObject());
+                "F(x: Number): Number { If(x = 1, 1, A(x+1)) };", numberIsFloat: true);
+            Assert.Equal(1.0, recalcEngine.Eval("A(12654)", options: opts).ToObject());
         }
 
         [Fact]
         public void DoubleDefinitionTest()
         {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null, null));
             Assert.Throws<InvalidOperationException>(() => recalcEngine.DefineFunctions("Foo(): Number = 10; Foo(x: Number): String = \"hi\";"));
         }
 
         [Fact]
         public void TestNumberBinding()
         {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null, null));
             Assert.True(recalcEngine.DefineFunctions("Foo(): String = 10;").Errors.Any());
         }
 
@@ -996,10 +1078,10 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void TestMultiReturn()
         {
-            var recalcEngine = new RecalcEngine(new PowerFxConfig(null));
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(null, null));
             var str = "Foo(x: Number): Number { 1+1; 2+2; };";
-            recalcEngine.DefineFunctions(str);
-            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true }).ToObject());
+            recalcEngine.DefineFunctions(str, numberIsFloat: true);
+            Assert.Equal(4.0, recalcEngine.Eval("Foo(1)", null, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }).ToObject());
         }
 
         [Fact]
@@ -1136,7 +1218,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        #region Test
+#region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
 
@@ -1152,6 +1234,6 @@ namespace Microsoft.PowerFx.Tests
 
             _updates.Append($"{name}-->{str};");
         }
-        #endregion
+#endregion
     }
 }

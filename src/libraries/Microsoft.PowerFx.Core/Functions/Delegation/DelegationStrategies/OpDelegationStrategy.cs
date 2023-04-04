@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 && !binding.IsRowScope(node)
                 && binding.GetType(node).IsTable 
                 && binding.GetType(node).IsColumn
-                && (binding.Features.HasFlag(Features.AllowAsyncDelegation) || !binding.IsAsync(node))
+                && (binding.Features.AllowAsyncDelegation || !binding.IsAsync(node))
                 && opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
             {
                 return true;
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                     {
                         var kind = node.Kind;
 
-                        if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit)
+                        if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit && kind != NodeKind.DecLit)
                         {
                             var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "NodeKind {0} unsupported.", kind);
                             SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
