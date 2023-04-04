@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Interpreter
         [InlineData("Date(2022, 11, 10) + X", "D")]
         [InlineData("Time(0, 0, 0) + X", "T")]
 
-        [InlineData("X * 1", "n")]
+        [InlineData("X * 1", "X")]
         [InlineData("And(X, 1=1)", "b")]
         [InlineData("X&\"test\"", "s")]
         [InlineData("X = 1", "b")]
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Interpreter
             symbolTable.AddVariable("N", FormulaType.Number, mutable: true);
             symbolTable.AddVariable("XM", FormulaType.Deferred, mutable: true);
 
-            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable);
+            TestDeferredTypeBindingWarning(script, Features.None, TestUtils.DT(expectedReturnType), symbolTable, numberIsFloat: true);
         }
 
         [Theory]
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Interpreter
             Assert.Throws<NotSupportedException>(() => TableType.Empty().Add(new NamedFormulaType("someName", FormulaType.Deferred)));
         }
 
-        private void TestDeferredTypeBindingWarning(string script, Features features, DType expected, SymbolTable symbolTable = null)
+        private void TestDeferredTypeBindingWarning(string script, Features features, DType expected, SymbolTable symbolTable = null, bool numberIsFloat = false)
         {
             var config = new PowerFxConfig(features)
             {
@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Interpreter
             config.EnableParseJSONFunction();
 
             var engine = new RecalcEngine(config);
-            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true });
+            var result = engine.Check(script, options: new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = numberIsFloat });
             
             Assert.True(result.IsSuccess);
 

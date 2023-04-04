@@ -276,16 +276,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             TableType type = (TableType)value.Type;
 
             TableType typeExpected = TableType.Empty()
-                .Add(new NamedFormulaType("Value", FormulaType.Number));
+                .Add(new NamedFormulaType("Value", FormulaType.Decimal));
             Assert.Equal(typeExpected, type);
 
             // Another way to compare
             var field1 = type.GetFieldTypes().First();
             Assert.Equal("Value", field1.Name);
-            Assert.Equal(FormulaType.Number, field1.Type);
+            Assert.Equal(FormulaType.Decimal, field1.Type);
 
             RecordValue row0 = value.Rows.First().Value;
-            Assert.Equal(1.0, row0.GetField("Value").ToObject());
+            Assert.Equal(1m, row0.GetField("Value").ToObject());
 
             var len = value.Rows.Count();
             Assert.Equal(3, len);
@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Converts to single column 
             var obj = value.ToObject();
 
-            Assert.Equal(new[] { 1.0, 2.0, 3.0 }, (ICollection)obj);
+            Assert.Equal(new[] { 1m, 2m, 3m }, (ICollection)obj);
 
             var resultStr = value.Dump();
             Assert.Equal("Table({Value:1},{Value:2},{Value:3})", resultStr);

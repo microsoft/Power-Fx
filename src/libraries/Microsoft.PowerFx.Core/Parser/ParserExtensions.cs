@@ -14,9 +14,14 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             var parserOptions = new ParserOptions();
 
-            if ((flags & TexlParser.Flags.EnableExpressionChaining) != 0)
+            if (flags.HasFlag(TexlParser.Flags.EnableExpressionChaining))
             {
                 parserOptions.AllowsSideEffects = true; 
+            }
+
+            if (flags.HasFlag(TexlParser.Flags.NumberIsFloat))
+            {
+                parserOptions.NumberIsFloat = true;
             }
 
             return parserOptions; 

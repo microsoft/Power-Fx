@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
@@ -150,7 +151,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
-            PowerFxConfig pfxConfig = new PowerFxConfig(Features.All);
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language_Response.json");
 
@@ -219,7 +220,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
-            PowerFxConfig pfxConfig = new PowerFxConfig(Features.All);
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
 
@@ -279,6 +280,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             public void Visit(NumberValue value)
+            {
+                Result = value.Value.ToString();
+            }
+
+            public void Visit(DecimalValue value)
             {
                 Result = value.Value.ToString();
             }

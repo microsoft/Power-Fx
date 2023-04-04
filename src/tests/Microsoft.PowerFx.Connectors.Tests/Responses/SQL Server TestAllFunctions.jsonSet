@@ -1,0 +1,135 @@
+{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/procedures","value":[
+    {
+      "Name":"[dbo].[sp_1]","DisplayName":"[dbo].[sp_1]"
+    },{
+      "Name":"[dbo].[sp_2]","DisplayName":"[dbo].[sp_2]"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    {
+      "Name":"[dbo].[Customers]","DisplayName":"Customers"
+    },{
+      "Name":"[dbo].[Orders]","DisplayName":"Orders"
+    },{
+      "Name":"[dbo].[Products]","DisplayName":"Products"
+    },{
+      "Name":"[sys].[database_firewall_rules]","DisplayName":"sys.database_firewall_rules"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    {
+      "Name":"[dbo].[Customers]","DisplayName":"Customers"
+    },{
+      "Name":"[dbo].[Orders]","DisplayName":"Orders"
+    },{
+      "Name":"[dbo].[Products]","DisplayName":"Products"
+    },{
+      "Name":"[sys].[database_firewall_rules]","DisplayName":"sys.database_firewall_rules"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    {
+      "Name":"[dbo].[Customers]","DisplayName":"Customers"
+    },{
+      "Name":"[dbo].[Orders]","DisplayName":"Orders"
+    },{
+      "Name":"[dbo].[Products]","DisplayName":"Products"
+    },{
+      "Name":"[sys].[database_firewall_rules]","DisplayName":"sys.database_firewall_rules"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    {
+      "Name":"[dbo].[Customers]","DisplayName":"Customers"
+    },{
+      "Name":"[dbo].[Orders]","DisplayName":"Orders"
+    },{
+      "Name":"[dbo].[Products]","DisplayName":"Products"
+    },{
+      "Name":"[sys].[database_firewall_rules]","DisplayName":"sys.database_firewall_rules"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/procedures","value":[
+    {
+      "Name":"[dbo].[sp_1]","DisplayName":"[dbo].[sp_1]"
+    },{
+      "Name":"[dbo].[sp_2]","DisplayName":"[dbo].[sp_2]"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    {
+      "Name":"[dbo].[Customers]","DisplayName":"Customers"
+    },{
+      "Name":"[dbo].[Orders]","DisplayName":"Orders"
+    },{
+      "Name":"[dbo].[Products]","DisplayName":"Products"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#datasets('default')/tables","value":[
+    
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}~|~{
+  "@odata.context":"https://sql-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#servers","value":[
+    {
+      "Name":"default","DisplayName":"Use connection settings (pfxdev-sql.database.windows.net)"
+    }
+  ]
+}

@@ -86,6 +86,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter TextArg3 = (b) => StringResources.Get("TextArg3", b);
 
         public static StringGetter AboutValue = (b) => StringResources.Get("AboutValue", b);
+        public static StringGetter AboutFloat = (b) => StringResources.Get("AboutFloat", b);
+        public static StringGetter AboutDecimal = (b) => StringResources.Get("AboutDecimal", b);
         public static StringGetter ValueArg1 = (b) => StringResources.Get("ValueArg1", b);
         public static StringGetter ValueArg2 = (b) => StringResources.Get("ValueArg2", b);
 
@@ -523,6 +525,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrRuleNestedTooDeeply = new ErrorResourceKey("ErrRuleNestedTooDeeply");
         public static ErrorResourceKey ErrInvalidDot = new ErrorResourceKey("ErrInvalidDot");
         public static ErrorResourceKey ErrUnknownFunction = new ErrorResourceKey("ErrUnknownFunction");
+        public static ErrorResourceKey ErrUnimplementedFunction = new ErrorResourceKey("ErrUnimplementedFunction");
         public static ErrorResourceKey ErrUnknownNamespaceFunction = new ErrorResourceKey("ErrUnknownNamespaceFunction");
         public static ErrorResourceKey ErrBadArity = new ErrorResourceKey("ErrBadArity");
         public static ErrorResourceKey ErrBadArityRange = new ErrorResourceKey("ErrBadArityRange");
@@ -546,6 +549,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnRowScopeOneToNExpandNumberOfCalls = new ErrorResourceKey("WrnRowScopeOneToNExpandNumberOfCalls");
         public static ErrorResourceKey ErrInvalidSchemaNeedStringCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedStringCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedNumCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedNumCol_Col");
+        public static ErrorResourceKey ErrInvalidSchemaNeedDecCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedDecCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedDateCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedDateCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedColorCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedColorCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedCol = new ErrorResourceKey("ErrInvalidSchemaNeedCol");

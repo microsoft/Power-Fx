@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
-            var orderExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var orderExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.SortOrderEnum.FormulaType._type :
                 DType.String;
 

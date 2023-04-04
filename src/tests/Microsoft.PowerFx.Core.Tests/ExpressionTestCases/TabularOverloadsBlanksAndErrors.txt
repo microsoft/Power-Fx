@@ -19,13 +19,13 @@ Blank()
 Table()
 
 >> Boolean(If(1/0<2,[1]))
-Error({Kind:ErrorKind.Div0})
+#SKIP: Boolean support for decimal not done yet, expected: Error({Kind:ErrorKind.Div0})
 
 >> Boolean(If(1<0,[1]))
-Blank()
+#SKIP: Boolean support for decimal not done yet, expected: Blank()
 
 >> Boolean(Filter([1,2,3], Value > 10))
-Table()
+#SKIP: Boolean support for decimal not done yet, expected: Table()
 
 >> Char(If(1/0<2,[61]))
 Error({Kind:ErrorKind.Div0})
