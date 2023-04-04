@@ -75,6 +75,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 BinderUtils.TryConvertNodeToDPath(binding, dottedNameNode, out DPath result))
             {
                 Assert.Equal(expected, result.ToString());
+                return;
             }
 
             Assert.True(false);
