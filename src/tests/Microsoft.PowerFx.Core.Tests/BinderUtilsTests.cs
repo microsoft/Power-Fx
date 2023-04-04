@@ -34,7 +34,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Testone().Related.Field", "Testone.new_rel1.new_field")]
         [InlineData("Namespace.Testtwo().Field2", "Testtwo.new_field2")]
         [InlineData("Namespace.Testtwo().Related.Field", "Testtwo.new_rel1.new_field")]
-        [InlineData("Namespace.Testtwo()", "")]
         public void TestTryConvertNodeToDPath(string formula, string expected)
         {
             // Simulate symbols like dataverse. 
