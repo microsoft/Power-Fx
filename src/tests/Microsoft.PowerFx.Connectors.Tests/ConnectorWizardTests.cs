@@ -48,6 +48,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             Assert.Equal("ExecuteProcedure_V2", function.OriginalName); // OperationId
+            Assert.Equal("important", function.Visibility);
             Assert.Equal(4, function.ArityMax);
             Assert.Equal(4, function.ArityMin);
 

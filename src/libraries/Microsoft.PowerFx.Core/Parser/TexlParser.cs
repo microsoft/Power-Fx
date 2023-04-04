@@ -285,18 +285,29 @@ namespace Microsoft.PowerFx.Core.Parser
                             var result = ParseExpr(Precedence.None);
 
                             namedFormulas.Add(new KeyValuePair<IdentToken, TexlNode>(thisIdentifier.As<IdentToken>(), result));
+
+                            // If the result was an error, keep moving cursor until end of named formula expression
+                            if (result.Kind == NodeKind.Error)
+                            {
+                                while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                                {
+                                    _curs.TokMove();
+                                }
+                            }
                         }
 
                         _curs.TokMove();
                     }
                     else
                     {
-                        break;
+                        _curs.TokMove();
+                        continue;
                     }
                 }
                 else
                 {
-                    break;
+                    _curs.TokMove();
+                    continue;
                 }
 
                 ParseTrivia();
@@ -649,6 +660,13 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.False:
                             PostError(_curs.TokCur, TexlStrings.ErrOperatorExpected);
                             tok = _curs.TokMove();
+
+                            // Stop recursing if we reach a semicolon
+                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            {
+                                return node;
+                            }
+
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Error);
                             node = MakeBinary(BinaryOp.Error, node, leftTrivia, tok, rightTrivia, right);
@@ -873,6 +891,9 @@ namespace Microsoft.PowerFx.Core.Parser
                     return new SelfNode(ref _idNext, _curs.TokMove());
 
                 case TokKind.Eof:
+                    return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
+
+                case TokKind.Semicolon:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
 
                 case TokKind.Error:

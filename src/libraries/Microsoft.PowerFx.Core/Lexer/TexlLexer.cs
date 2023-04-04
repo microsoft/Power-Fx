@@ -1266,6 +1266,7 @@ namespace Microsoft.PowerFx.Syntax
                 // Delimited identifier.
                 NextChar();
                 var ichStrMin = CurrentPos;
+                var semicolonIndex = -1;
 
                 // Accept any characters up to the next unescaped identifier delimiter.
                 // String will be corrected in the IdentToken if needed.
@@ -1273,6 +1274,18 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     if (Eof)
                     {
+                        // Ident was never closed, tokenize ident up to semicolon
+                        if (semicolonIndex != -1)
+                        {
+                            CurrentPos = ichStrMin;
+                            _sb.Length = 0;
+                            while (CurrentPos < semicolonIndex)
+                            {
+                                _sb.Append(CurrentChar);
+                                NextChar();
+                            }
+                        }
+
                         break;
                     }
 
@@ -1299,6 +1312,25 @@ namespace Microsoft.PowerFx.Syntax
                         // Don't include the new line in the identifier
                         fDelimiterEnd = false;
                         break;
+                    }
+                    else if (CurrentChar.ToString() == PunctuatorSemicolonInvariant)
+                    {
+                        // This is to enable parser restarting
+                        // Don't know if semicolon is end of identifier so we will store for fallback
+                        // Some locales use ;;, so we check for match and move shift 2 characters instead of 1
+                        if (_lex.TryGetPunctuator(CurrentChar.ToString(), out TokKind tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                        }
+                        else if (_lex.TryGetPunctuator(CurrentChar.ToString() + _text[Math.Min(CurrentPos + 1, _charCount)].ToString(), out tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                            _sb.Append(CurrentChar);
+                            NextChar();
+                        }
+
+                        _sb.Append(CurrentChar);
+                        NextChar();
                     }
                     else
                     {
