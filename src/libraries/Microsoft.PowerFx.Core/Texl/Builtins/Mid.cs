@@ -75,17 +75,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else
             {
                 returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
-                if (!DType.String.Accepts(type0))
+                if (!CheckType(args[0], type0, DType.String, errors, ref nodeToCoercedTypeMap))
                 {
-                    if (type0.CoercesTo(DType.String))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.String);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrStringExpected);
-                    }
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrStringExpected);
                 }
             }
 
@@ -94,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
             }
-            else if (!CheckType(args[1], type1, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+            else if (!CheckType(args[1], type1, DType.Number, errors, ref nodeToCoercedTypeMap))
             { 
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
@@ -108,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     fValid &= CheckNumericColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!CheckType(args[2], type2, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                else if (!CheckType(args[2], type2, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
                     fValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrNumberExpected);

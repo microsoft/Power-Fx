@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure we have a one-column table of numerics
                 fValid &= CheckNumericColumnType(otherType, otherArg, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!CheckType(otherArg, otherType, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+            else if (!CheckType(otherArg, otherType, DType.Number, errors, ref nodeToCoercedTypeMap))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, otherArg, TexlStrings.ErrTypeError);

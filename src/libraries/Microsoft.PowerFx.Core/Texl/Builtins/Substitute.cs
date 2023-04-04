@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     fValid &= CheckNumericColumnType(type3, args[3], errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!CheckType(args[3], type3, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                else if (!CheckType(args[3], type3, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
                     fValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);

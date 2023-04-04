@@ -1350,7 +1350,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
                 else
                 {
-                    fValid &= CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap);
+                    fValid &= CheckType(args[i], argTypes[i], DType.Number, errors, ref nodeToCoercedTypeMap);
                 }
             }
 

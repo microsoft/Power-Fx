@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
             }
-            else if (!CheckType(args[1], type1, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+            else if (!CheckType(args[1], type1, DType.Number, errors, ref nodeToCoercedTypeMap))
             { 
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 fValid &= CheckNumericColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
             }
-            else if (!CheckType(args[2], type2, DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+            else if (!CheckType(args[2], type2, DType.Number, errors, ref nodeToCoercedTypeMap))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrNumberExpected);
