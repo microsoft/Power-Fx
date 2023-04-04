@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Types
@@ -164,6 +165,16 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        internal static ErrorValue OverflowError(IRContext irContext)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = "Overflow",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Numeric
+            });
+        }
+
         /// <summary>
         /// Marshal from a dotnet primitive to a given Power Fx type. 
         /// Call <see cref="FormulaValue.ToObject"/> to go the other direction and get a dotnet object from a formulavalue. 
@@ -181,21 +192,31 @@ namespace Microsoft.PowerFx.Types
             }
 
             result = null;
-            if (type == FormulaType.Number)
+
+            try
             {
-                if (TryConvertToDouble(value, out var num))
-                { 
-                    result = FormulaValue.New(num);
-                }                
-            }
-            else if (type == FormulaType.Decimal)
-            {
-                if (TryConvertToDecimal(value, out var num))
+                if (type == FormulaType.Number)
                 {
-                    result = FormulaValue.New(num);
+                    if (TryConvertToDouble(value, out var num))
+                    {
+                        result = FormulaValue.New(num);
+                    }
+                }
+                else if (type == FormulaType.Decimal)
+                {
+                    if (TryConvertToDecimal(value, out var num))
+                    {
+                        result = FormulaValue.New(num);
+                    }
                 }
             }
-            else if (type == FormulaType.String)
+            catch (OverflowException)
+            {
+                result = OverflowError(IRContext.NotInSource(type));
+                return true;
+            }
+
+            if (type == FormulaType.String)
             {
                 result = FormulaValue.New((string)value);
             }
