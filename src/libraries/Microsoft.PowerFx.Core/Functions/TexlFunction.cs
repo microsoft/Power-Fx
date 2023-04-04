@@ -1372,12 +1372,14 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TransportSchemas.FunctionInfo Info(string locale)
         {
+            // $$$ can't use CurrentUILanguageName
             // If the locale has changed, we want to reset the function info to one of the new locale
             if (CurrentLocaleInfo.CurrentUILanguageName == _cachedLocaleName && _cachedFunctionInfo != null)
             {
                 return _cachedFunctionInfo;
             }
 
+            // $$$ can't use CurrentUILanguageName
             _cachedLocaleName = CurrentLocaleInfo.CurrentUILanguageName;
             return _cachedFunctionInfo = new TransportSchemas.FunctionInfo()
             {
@@ -1385,6 +1387,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 Detail = Description,
                 Signatures = GetSignatures().Select(signature => new FunctionSignature()
                 {
+                    // $$$ can't use current culture
                     Label = Name + (signature == null ?
                         "()" :
                         ("(" + string.Join(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),

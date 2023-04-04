@@ -940,19 +940,23 @@ namespace Microsoft.PowerFx.Functions
             var maxNumber = (1L << 39) - 1;
 
             var number = Math.Floor(args[0].Value);
-            var places = (int)Math.Floor(args[1].Value);
+            int? places = null;
+            if (args.Length > 1)
+            {
+                places = (int)Math.Floor(args[1].Value);
+            }
 
             if (number < minNumber || number > maxNumber)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            // places need to be non-negative and 10 or less
-            if (places < 0 || places > 10)
+            // places need to be non-negative and between 1 and 10
+            if (places != null && (places < 1 || places > 10))
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Places should be between 0 and 10",
+                    Message = $"Places should be between 1 and 10",
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Numeric
                 });
@@ -975,7 +979,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // places need to be greater or equal to length of hexadecimal when number is positive
-            if (places != 0 && result.Length > places && number > 0)
+            if (result.Length > places && number > 0)
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {

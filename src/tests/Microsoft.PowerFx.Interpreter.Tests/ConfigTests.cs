@@ -322,11 +322,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo3()
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
             var tr_symbols = new RuntimeConfig();
-
             tr_symbols.AddService(new CultureInfo("tr-TR"));
 
             var textExpression = "Upper(\"indigo\")";
@@ -339,7 +338,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
             Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
         }
 
@@ -347,12 +346,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo4()
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
             var engine = new RecalcEngine(config);
 
             var us_symbols = new RuntimeConfig();
-
             us_symbols.AddService(new CultureInfo("en-US"));
+
+            var tr_symbols = new RuntimeConfig();
+            tr_symbols.AddService(new CultureInfo("tr-TR"));
 
             var textExpression = "Upper(\"indigo\")";
             var datetimeExpression = "Text(DateTimeValue(\"Perşembe 06 Ekim 2022 14:19:06\", \"tr-TR\"))";
@@ -360,24 +361,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(textExpression).GetEvaluator();
 
             Assert.Equal("INDIGO", (check.Eval() as StringValue).Value);
+            Assert.Equal("İNDİGO", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
             Assert.Equal("INDIGO", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
+            Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
             Assert.Equal("10/6/2022 2:19 PM", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
         }
 
         // Verify if text is transformed using the correct culture info (PowerFxConfig and global settings)
         [Fact]
         public void RecalcEngine_Symbol_CultureInfo5()
-        {
+        {            
             RunOnIsolatedThread(new CultureInfo("tr-TR"), RecalcEngine_Symbol_CultureInfo5_ThreadProc);
         }
 
-        private void RecalcEngine_Symbol_CultureInfo5_ThreadProc()
+        private void RecalcEngine_Symbol_CultureInfo5_ThreadProc(CultureInfo culture)
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
 
             var upperExpression = "Upper(\"INDIGO inDigo\")";
             var lowerExpression = "Lower(\"INDIGO inDigo\")";
@@ -388,28 +391,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Engine will use custom locale (invariant)
             var engine = new RecalcEngine(config);
 
-            var result = engine.Eval(upperExpression);
+            var result = engine.Eval(upperExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("INDIGO INDIGO", (result as StringValue).Value);
 
-            result = engine.Eval(lowerExpression);
+            result = engine.Eval(lowerExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("indigo indigo", (result as StringValue).Value);
 
-            result = engine.Eval(properExpression);
+            result = engine.Eval(properExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("Indigo Indigo", (result as StringValue).Value);
 
-            result = engine.Eval(datetimeExpression);
+            result = engine.Eval(datetimeExpression, options: new ParserOptions(CultureInfo.InvariantCulture));
             Assert.Equal("10/06/2022 14:19", (result as StringValue).Value);
 
-            // Engine will use thread locale (tr-TR)
+            // Engine will use specified locale (tr-TR)
+            // Threading shouldn't matter
             var engine2 = new RecalcEngine(new PowerFxConfig());
 
-            result = engine2.Eval(upperExpression);
+            result = engine2.Eval(upperExpression, options: new ParserOptions(culture));
             Assert.Equal("INDIGO İNDİGO", (result as StringValue).Value);
 
-            result = engine2.Eval(lowerExpression);
+            result = engine2.Eval(lowerExpression, options: new ParserOptions(culture));
             Assert.Equal("ındıgo indigo", (result as StringValue).Value);
 
-            result = engine2.Eval(properExpression);
+            result = engine2.Eval(properExpression, options: new ParserOptions(culture));
             Assert.Equal("Indıgo İndigo", (result as StringValue).Value);
         }
 
@@ -421,12 +425,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RunOnIsolatedThread(new CultureInfo("bg-BG"), RecalcEngine_Symbol_CultureInfo6_ThreadProc);
         }
 
-        private void RecalcEngine_Symbol_CultureInfo6_ThreadProc()
+        private void RecalcEngine_Symbol_CultureInfo6_ThreadProc(CultureInfo culture)
         {
             const string formula = "Concatenate(\"Hello\", \" World!\")";
             var defaultCulture = CultureInfo.CreateSpecificCulture("en");
-            var engine = new RecalcEngine(new PowerFxConfig(defaultCulture));
-            var result = engine.Eval(formula);
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var result = engine.Eval(formula, options: new ParserOptions(defaultCulture));
 
             var helloWorld = Assert.IsType<string>(result.ToObject());
             Assert.Equal("Hello World!", helloWorld);
@@ -437,11 +441,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestDoNotUseCulture()
         {
             // Ignore thread's current culture. 
-            RunOnIsolatedThread(new DoNotUseCulture(), () =>
+            RunOnIsolatedThread(new DoNotUseCulture(), (CultureInfo culture) =>
             {
                 var engine = new Engine();
                 var check = new CheckResult(engine);
-                check.SetText("1+2"); // will pull from CurrentThread. 
+                check.SetText("1+2", new ParserOptions(culture)); // will pull from local var
 
                 // Verify DoNotUseCulture works.
                 Assert.Throws<NotImplementedException>(() => check.ApplyParse());
@@ -462,14 +466,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         // Test Parse and errors 
-        private void MultiCulture1ThreadProc()
+        private void MultiCulture1ThreadProc(CultureInfo culture)
         {
             var cultureParse = new CultureInfo("fr-FR"); // has commas as decimal separator
 
             var engine = new RecalcEngine();
-
-            // By default, engine is picking up culture from current thread. 
-            Assert.Same(_doNotUseCulture, engine.Config.CultureInfo);
 
             var check = new CheckResult(engine);
             check.SetText("1+2,4 + missing", new ParserOptions { Culture = cultureParse });
@@ -499,9 +500,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             AssertErrors(null, "Le nom n’est pas valide. « missing » n’est pas reconnu.");
             AssertErrors(CultureInfo.InvariantCulture, "Name isn't valid. 'missing' isn't recognized.");
             AssertErrors(new CultureInfo("bg-BG"), "Името не е валидно. „missing“ не е разпознато.");
-
-            // Ensure nobody adjusted current thread. 
-            Assert.Same(Thread.CurrentThread.CurrentCulture, _doNotUseCulture);
         }
 
         [Fact]
@@ -510,7 +508,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RunOnIsolatedThread(_doNotUseCulture, MultiCulture2ThreadProc);
         }
 
-        private void MultiCulture2ThreadProc()
+        private void MultiCulture2ThreadProc(CultureInfo culture)
         {
             var cultureParse = new CultureInfo("fr-FR"); // has commas as decimal separator
 
@@ -547,9 +545,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             AssertRun(new CultureInfo("fr-FR"), "INDIGO 12,345"); // french
             AssertRun(new CultureInfo("tr-TR"), "İNDİGO 12,345"); // turkish I 
             AssertRun(new CultureInfo("en-US"), "INDIGO 12.345"); // en-US
-
-            // Ensure nobody adjusted current thread. 
-            Assert.Same(Thread.CurrentThread.CurrentCulture, _doNotUseCulture);
         }
 
         // Verify that an engine with a specific culture can evaluate an invariant formula
@@ -559,10 +554,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var fr_culture = new CultureInfo("fr-FR");
             var invariant_culture = CultureInfo.InvariantCulture;
 
-            var engine = new RecalcEngine(new PowerFxConfig(fr_culture));
+            var engine = new RecalcEngine(new PowerFxConfig());
 
             var fr_formula = "Concatenate(\"My \";\"french \";\"formula\")";
-            var invariant_formula = engine.GetInvariantExpression(fr_formula, RecordType.Empty());
+            var invariant_formula = engine.GetInvariantExpression(fr_formula, RecordType.Empty(), fr_culture);
 
             var fr_ParserOptions = new ParserOptions() { Culture = fr_culture };
             var invariant_ParserOptions = new ParserOptions() { Culture = invariant_culture };
@@ -909,16 +904,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Run on an isolated thread.
         // Useful for testing per-thread properties
-        internal static void RunOnIsolatedThread(CultureInfo culture, Action worker)
+        internal static void RunOnIsolatedThread(CultureInfo culture, Action<CultureInfo> worker)
         {
             Exception exception = null;
 
             var t = new Thread(() =>
             {
                 try
-                {
-                    Thread.CurrentThread.CurrentCulture = culture;
-                    worker();
+                {                    
+                    worker(culture);
                 }
                 catch (Exception ex)
                 {
