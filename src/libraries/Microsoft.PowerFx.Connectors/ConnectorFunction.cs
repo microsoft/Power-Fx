@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
@@ -38,6 +40,8 @@ namespace Microsoft.PowerFx.Connectors
         public HttpMethod HttpMethod { get; }
 
         internal OpenApiOperation Operation { get; }
+
+        public string Visibility => Operation.Extensions.TryGetValue("x-ms-visibility", out IOpenApiExtension openExt) && openExt is OpenApiString str ? str.Value : null;
 
         public FormulaType ReturnType => Operation.GetReturnType();
 
