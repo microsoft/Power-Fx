@@ -261,6 +261,9 @@ Table({Value:0},{Value:3},{Value:3})
 >> Mod([123],["3","4","5"])
 Table({Value:0},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
+>> Mod(Table({arg1:10},{arg1:22},{arg1:33}),Table({arg2:3},{arg2:4},{arg2:5}))
+Table({Value:1},{Value:2},{Value:3})
+
 // Boolean coercions
 
 >> Round(Cos([true,false,Blank()]),10)
@@ -485,6 +488,9 @@ Table({Value:1},{Value:0},{Value:0})
 >> Mod(Table({input:true},{input:false},{input:Blank()}),4)
 Table({Value:1},{Value:0},{Value:0})
 
+>> Mod([true,false,Blank()],[4])
+Table({Value:1},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
 // Left, Mid, Right
 
 >> Left([123,456,789],["2","1","2"])
@@ -558,3 +564,75 @@ Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"fal"},{Value:Error
 
 >> Mid(Table({bool:true},{bool:false},{bool:Blank()}),[false,true,Blank()],["2","3","2"])
 Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"fal"},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Power(3,3)
+27
+
+>> Power([1,2,3],3)
+Table({Value:1},{Value:8},{Value:27})
+
+>> Power(Table({num:1},{num:2},{num:3}),3)
+Table({Value:1},{Value:8},{Value:27})
+
+>> Power([1,2],[3])
+Table({Value:1},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Power(Table({num:1},{num:2}),[3])
+Table({Value:1},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Power(Table({num1:1},{num1:2}),Table({num2:3}))
+Table({Value:1},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Power(10,[2,3])
+Table({Value:100},{Value:1000})
+
+>> Power(10,Table({num:2},{num:3}))
+Table({Value:100},{Value:1000})
+
+>> Log([100,10,1])
+Table({Value:2},{Value:1},{Value:0})
+
+>> Log(Table({num:100},{num:10},{num:1}))
+Table({Value:2},{Value:1},{Value:0})
+
+>> Log([100,10,1],10)
+Table({Value:2},{Value:1},{Value:0})
+
+>> Log(Table({num:100},{num:10},{num:1}),10)
+Table({Value:2},{Value:1},{Value:0})
+
+>> Log([100,10,1],[10])
+Table({Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Log(Table({num:100},{num:10},{num:1}),[10])
+Table({Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Log([100,10,1],Table({num:10}))
+Table({Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Log(Table({num1:100},{num1:10}),Table({num2:10}))
+Table({Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Log([100,10,1],[10,10,10])
+Table({Value:2},{Value:1},{Value:0})
+
+>> Log(Table({num:100},{num:10},{num:1}),[10,10,10])
+Table({Value:2},{Value:1},{Value:0})
+
+>> Log(256,4)
+4
+
+>> Log(256,[4,2])
+Table({Value:4},{Value:8})
+
+>> Log([262144,256],[4,2])
+Table({Value:9},{Value:8})
+
+>> Log([262144,256],[4,2,3])
+Table({Value:9},{Value:8},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Log([262144,256],[4])
+Table({Value:9},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Log([65536,256],2)
+Table({Value:16},{Value:8})

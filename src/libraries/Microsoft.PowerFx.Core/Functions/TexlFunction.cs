@@ -1320,54 +1320,6 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DelegationValidationStrategy(this);
         }
 
-        protected bool CheckAllParamsAreTypeOrSingleColumnTableNumber(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-
-            var fValid = true;
-            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
-
-            returnType = DType.Invalid;
-
-            // Type check the args
-            for (var i = 0; i < args.Length; i++)
-            {
-                if (argTypes[i].IsTable)
-                {
-                    // If there are any table args, the return type depends on the first such arg.
-                    if (returnType == DType.Invalid)
-                    {
-                        fValid &= CheckNumericColumnType(argTypes[i], args[i], errors, ref nodeToCoercedTypeMap, context, out returnType);
-                    }
-                    else
-                    {
-                        fValid &= CheckNumericColumnType(argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
-                    }
-                }
-                else
-                {
-                    fValid &= CheckType(args[i], argTypes[i], DType.Number, errors, ref nodeToCoercedTypeMap);
-                }
-            }
-
-            // If the returnType hasn't been set, we are working with only scalars.
-            if (returnType == DType.Invalid)
-            {
-                returnType = DType.Number;
-            }
-
-            if (!fValid)
-            {
-                nodeToCoercedTypeMap = null;
-            }
-
-            return fValid;
-        }
-
         #endregion
 
         internal TransportSchemas.FunctionInfo Info(string locale)
