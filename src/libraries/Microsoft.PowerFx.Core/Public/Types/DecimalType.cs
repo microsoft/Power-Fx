@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Types
 
         internal override void DefaultExpressionValue(StringBuilder sb)
         {
-            sb.Append("0");
+            sb.Append("Decimal(0)");
         }
     }
 }
