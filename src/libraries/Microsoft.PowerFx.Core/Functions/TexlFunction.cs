@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -968,7 +967,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            var typeChecks = CheckType(node, nodeType, expectedType, errors, true, out DType coercionType);
+            var typeChecks = CheckType(node, nodeType, expectedType, errors, coerceIfSupported: true, out DType coercionType);
 
             if (coercionType != null)
             {
@@ -1055,7 +1054,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (!expectedType.Accepts(colType))
             {
-                if (SupportsParamCoercion && column.Type.CoercesTo(expectedType))
+                if (SupportsParamCoercion && colType.CoercesTo(expectedType))
                 {
                     returnType = DType.CreateTable(new TypedName(expectedType, column.Name));
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, returnType);

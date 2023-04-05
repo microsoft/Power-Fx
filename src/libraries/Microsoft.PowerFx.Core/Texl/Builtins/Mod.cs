@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Mod(number:n|*[n], divisor:n|*[n])
     internal sealed class ModTFunction : MathTwoArgTableFunction
     {
-        public override bool InConsistentTableResultFixedName => true;
+        protected override bool InConsistentTableResultFixedName => true;
 
         public ModTFunction()
             : base("Mod", TexlStrings.AboutModT, 2)

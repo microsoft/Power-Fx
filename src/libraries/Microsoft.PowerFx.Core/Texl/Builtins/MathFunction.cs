@@ -110,10 +110,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         // Before ConsistentOneColumnTableResult, this function would always return a fixed name "Result" (Mod)
-        public virtual bool InConsistentTableResultFixedName => false;
+        protected virtual bool InConsistentTableResultFixedName => false;
 
         // Before ConsistentOneColumnTableResult, this function would use the second argument name if a table (Log, Power)
-        public virtual bool InConsistentTableResultUseSecondArg => false;
+        protected virtual bool InConsistentTableResultUseSecondArg => false;
 
         public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity)
             : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, minArity, 2)
