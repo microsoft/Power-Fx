@@ -150,7 +150,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 0.5
 
 >> IfError(1, 1/0, Time(12,0,0))
-0.5
+Time(12,0,0,0)
 
 // Number-DateTime
 >> IfError(1/0, DateTime(2022,8,1,12,0,0))
@@ -235,3 +235,6 @@ Errors: Error 8-9: Name isn't valid. 'a' isn't recognized.|Error 0-13: The funct
 
 >> IfError( 1, "one", If(true,1,{a:1}), "two", "three")
 "three"
+
+>> IfError(1/0, 2, Time(12, 0, 0), 2)
+Time(0,0,0,0)

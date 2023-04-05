@@ -98,59 +98,78 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fArgsValid = true;
 
-            // if count is 2, then first argument can be returned.
-            var type = count == 2 ? argTypes[0] : ReturnType;
+            /*
+            If we were to write IfError(v1, f1, v2, f2, ..., vn, fn) in a try...catch way, it would look something like:
+                
+            var result
+            try {
+                result = v1();
+            } catch {
+                return f1();
+            }
+            try {
+                result = v2();
+            } catch {
+                return f2();
+            }
+            ...
+            try {
+                result = vn();
+            } catch {
+                return fn();  // omit this last catch if there is an odd number of arguments
+            }
+            return result;
 
-            for (var i = 1; i < count;)
+            In this case, we prefer the type of the last v_i as the return type.
+            */
+
+            var prefereedTypeIndex = (count % 2) == 0 ? count - 2 : count - 1;
+            var type = argTypes[prefereedTypeIndex];
+            if (type.IsError)
+            {
+                errors.EnsureError(args[prefereedTypeIndex], TexlStrings.ErrTypeError);
+                fArgsValid = false;
+            }
+
+            for (var i = count - 1; i >= 0; i -= 2)
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
 
                 var typeSuper = DType.Supertype(type, typeArg);
+
                 if (!typeSuper.IsError)
                 {
-                    type = typeSuper;
+                    // If preferred type was error or null (due to Blank or Error) assign new type in hierarchy
+                    if (type.IsError || type == DType.ObjNull)
+                    {
+                        type = typeSuper;
+                    }
                 }
-                else if (typeArg.IsVoid)
+                else
                 {
-                    type = DType.Void;
-                }
-                else if (typeArg.IsError)
-                {
-                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                    fArgsValid = false;
-                }
-                else if (!type.IsError)
-                {
-                    // Types don't resolve normally, coercion needed
-                    if (typeArg.CoercesTo(type))
+                    if (typeArg.IsVoid)
+                    {
+                        type = DType.Void;
+                    }
+                    else if (typeArg.IsError)
+                    {
+                        errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                        fArgsValid = false;
+                    }
+                    else if (!type.IsError && typeArg.CoercesTo(type))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }
                     else
                     {
-                        // If the types are incompatible, the result type is void.
                         type = DType.Void;
                     }
                 }
-                else if (typeArg.Kind != DKind.Unknown)
-                {
-                    type = typeArg;
-                    fArgsValid = false;
-                }
 
-                i += 2;
-
-                // In an IfError expression, not all expressions can be returned to the caller:
-                // 1. If there is an even number of arguments, only the fallbacks or the last
-                //   value (the next-to-last argument) can be returned:
-                //   IfError(v1, f1, v2, f2, v3, f3) --> possible values to be returned are f1, f2, f3 or v3
-                // 2. If there is an odd number of arguments, only the fallbacks or the last
-                //   value (the last argument) can be returned:
-                //   IfError(v1, f1, v2, f2, v3) --> possible values to be returned are f1, f2 or v3
-                if (i == count || i == count - 1)
+                if ((count % 2) != 0 && i == count - 1)
                 {
-                    i--;
+                    i++;
                 }
             }
 
