@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
