@@ -31,7 +31,6 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
