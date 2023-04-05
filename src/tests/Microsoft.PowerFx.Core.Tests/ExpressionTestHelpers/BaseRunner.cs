@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 Expected = "true"
             };
 
-            var (result, msg) = await RunAsync2(case2);
+            var (result, msg) = await RunAsync2(case2).ConfigureAwait(false);
             if (result == TestResult.Fail)
             {
                 msg += " (IsError() followup call)";
@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             try
             {
-                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName);
+                runResult = await RunAsyncInternal(testCase.Input, testCase.SetupHandlerName).ConfigureAwait(false);
                 result = runResult.Value;
                 originalResult = runResult.OriginalValue;
 
@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Tests
             if (result is not ErrorValue && expected.StartsWith("Error") && IsError(result) && testCase.Input != null)
             {
                 // If they override IsError, then do additional checks. 
-                return await RunErrorCaseAsync(testCase);
+                return await RunErrorCaseAsync(testCase).ConfigureAwait(false);
             }
 
             // If the actual result is not an error, we'll fail with a mismatch below

@@ -43,14 +43,14 @@ namespace Microsoft.PowerFx.Functions
         {
             var clearFunction = new ClearFunction();
 
-            var cleared = await clearFunction.InvokeAsync(args, cancellationToken);
+            var cleared = await clearFunction.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
 
             if (cleared is ErrorValue)
             {
                 return cleared;
             }
 
-            return await base.InvokeAsync(args, cancellationToken);
+            return await base.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
         }
     }
 }
