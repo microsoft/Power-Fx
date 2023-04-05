@@ -107,6 +107,8 @@ namespace Microsoft.PowerFx
             _irnode = irnode;
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
+
+            // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 

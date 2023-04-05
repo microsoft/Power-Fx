@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,7 +83,7 @@ namespace Microsoft.PowerFx.Tests
                 rtConfig.AddService(setup.TimeZoneInfo);
             }
 
-            var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(), runtimeConfig: rtConfig);
+            var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(new CultureInfo("en-US")), runtimeConfig: rtConfig);
 
             var i = 0;
             while (HasOutanding)

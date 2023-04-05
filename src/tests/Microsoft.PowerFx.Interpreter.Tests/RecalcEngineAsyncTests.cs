@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Tests
             var helper = new WaitHelper();
             var func = helper.GetFunction("CustomAsync");
 
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = WorkerWaitForCancel
             };
 
-            var config = new PowerFxConfig(null, null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx.Tests
             var helper2 = new WaitHelper();
             var func2 = helper2.GetFunction("F2");
 
-            var config1 = new PowerFxConfig(null, null);
+            var config1 = new PowerFxConfig();
             config1.AddFunction(func1);
             config1.AddFunction(func2);
             var engine = new RecalcEngine(config1);

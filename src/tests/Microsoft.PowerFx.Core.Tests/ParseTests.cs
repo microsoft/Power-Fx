@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Syntax;
@@ -567,7 +568,7 @@ namespace Microsoft.PowerFx.Core.Tests
                  MaxExpressionLength = 10
             };
 
-            var parseResult = Engine.Parse(expr, opts);
+            var parseResult = Engine.Parse(expr, options: opts);
             Assert.False(parseResult.IsSuccess);
             Assert.True(parseResult.HasError);
 
@@ -808,6 +809,46 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
 
             Assert.True(result.HasError);
+        }
+
+        [Theory]
+        [InlineData("a = 10ads; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = );", "b")]
+        [InlineData("a = 10; b = 123; c = 10);", "b")]
+        [InlineData("3r(09 = 10; b = 123; c = 10;", "b")]
+        [InlineData("a = 10; b = (123 ; c = 20;", "c")]
+        [InlineData("a = 10; b = in'valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in(valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in)valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in{valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in}valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in'valid", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf; c = 23;", "c")]
+        [InlineData("a = 10; b = 3213d 123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = 321;3;d ;;;123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = in'valid ; c = 20; d = also(invalid; e = 44;", "e")]
+        [InlineData("a = 10; b = 30; c = in'valid ; d = (10; e = 42;", "e")]
+        public void TestFormulaParseRestart(string script, string key)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script);
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+        }
+
+        [Theory]
+        [InlineData("a = 10;; b = in'valid ;; c = 20", "c")]
+        [InlineData("a = 10;; b = in'valid ;; c = 20;; d = also(invalid;; e = 44;;", "e")]
+        public void TestFormulaParseRestart2(string script, string key)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script, new CultureInfo("fr-FR"));
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
         }
     }
 }

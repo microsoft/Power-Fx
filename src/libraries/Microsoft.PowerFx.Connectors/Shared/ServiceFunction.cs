@@ -123,6 +123,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                 var optionFormat = new StringBuilder(TexlLexer.PunctuatorCurlyOpen);
                 string sep = "";
+
+                // $$$ can't use current culture
                 string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                 foreach (var option in optionalParamInfo)
                 {
