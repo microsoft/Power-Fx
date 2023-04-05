@@ -21,14 +21,14 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(1, t1.Count());
 
             // succeeds
-            await t1.AppendAsync(r2, CancellationToken.None);
+            await t1.AppendAsync(r2, CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal(2, t1.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
             var t2 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t2.AppendAsync(r2, CancellationToken.None);
+            var result = await t2.AppendAsync(r2, CancellationToken.None).ConfigureAwait(false);
 
             Assert.True(result.IsError);
             Assert.Equal("AppendAsync is not supported on this table instance.", result.Error.Errors[0].Message);
@@ -42,15 +42,15 @@ namespace Microsoft.PowerFx.Core.Tests
             var t1 = FormulaValue.NewTable(r1.Type, r1);
 
             // succeeds
-            await t1.AppendAsync(r2, CancellationToken.None);
-            await t1.RemoveAsync(new RecordValue[] { r1 }, false, CancellationToken.None);
+            await t1.AppendAsync(r2, CancellationToken.None).ConfigureAwait(false);
+            await t1.RemoveAsync(new RecordValue[] { r1 }, false, CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal(1, t1.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
             var t2 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t2.RemoveAsync(new RecordValue[] { r1 }, false, CancellationToken.None);
+            var result = await t2.RemoveAsync(new RecordValue[] { r1 }, false, CancellationToken.None).ConfigureAwait(false);
 
             Assert.True(result.IsError);
             Assert.Equal("RemoveAsync is not supported on this table instance.", result.Error.Errors[0].Message);
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var t1 = FormulaValue.NewTable(r1.Type, r1);
 
             // succeeds
-            await t1.PatchAsync(r1, r2, CancellationToken.None);
+            await t1.PatchAsync(r1, r2, CancellationToken.None).ConfigureAwait(false);
 
             var firstRecord = t1.Index(1);
 
@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1 };
             var t2 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t2.PatchAsync(r1, r2, CancellationToken.None);
+            var result = await t2.PatchAsync(r1, r2, CancellationToken.None).ConfigureAwait(false);
 
             Assert.True(result.IsValue);
 
@@ -94,14 +94,14 @@ namespace Microsoft.PowerFx.Core.Tests
             // Mutable
             var t1 = FormulaValue.NewTable(r1.Type, new List<RecordValue>() { r1, r2 });
 
-            await t1.ClearAsync(CancellationToken.None);
+            await t1.ClearAsync(CancellationToken.None).ConfigureAwait(false);
 
             Assert.Equal(0, t1.Count());
 
             // Immutable
             IEnumerable<RecordValue> source = new RecordValue[] { r1, r2 };
             var t2 = FormulaValue.NewTable(r1.Type, source);
-            var result = await t2.ClearAsync(CancellationToken.None);
+            var result = await t2.ClearAsync(CancellationToken.None).ConfigureAwait(false);
 
             Assert.True(result.IsError);
             Assert.Equal("ClearAsync is not supported on this table instance.", result.Error.Errors[0].Message);

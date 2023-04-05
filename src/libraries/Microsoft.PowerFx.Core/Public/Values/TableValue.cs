@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Types
 
             // IR has already resolved to logical names because of 
             // RequiresDataSourceScope, ArgMatchesDatasourceType on function.
-            return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
+            return await PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
         }
 
         public override object ToObject()
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Types
                 {
                     if (val.IsValue)
                     {
-                        await foreach (var field in val.Value.GetFieldsAsync(CancellationToken.None))
+                        await foreach (var field in val.Value.GetFieldsAsync(CancellationToken.None).ConfigureAwait(false))
                         {
                             return field.Value.ToObject();
                         }
