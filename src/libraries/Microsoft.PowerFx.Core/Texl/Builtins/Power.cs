@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX function: Power
     internal sealed class PowerTFunction : MathTwoArgTableFunction
     {
-        public override bool NonConsistentUseSecondArg => true;
+        public override bool InConsistentTableResultUseSecondArg => true;
 
         public PowerTFunction()
             : base("Power", TexlStrings.AboutPowerT, 2)

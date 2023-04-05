@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Log
     internal sealed class LogTFunction : MathTwoArgTableFunction
     {
-        public override bool NonConsistentUseSecondArg => true;
+        public override bool InConsistentTableResultUseSecondArg => true;
 
         public LogTFunction()
             : base("Log", TexlStrings.AboutLogT, 1)

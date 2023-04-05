@@ -1067,9 +1067,10 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
             }
 
-            if (context != null && context.Features.ConsistentOneColumnTableResult)
+            if (context?.Features.ConsistentOneColumnTableResult == true)
             {
-                // Note that DateTime retains the subtype and does not snap to expectedType
+                // Note that DateTime retains the subtype and does not snap to expectedType.
+                // For example, DateAdd([Date(2000,1,1)],3) should return *[Value:D] and not *[Value:d]
                 returnType = DType.CreateTable(new TypedName(expectedType == DType.DateTime ? colType : expectedType, new DName(ColumnName_ValueStr)));
             }
 

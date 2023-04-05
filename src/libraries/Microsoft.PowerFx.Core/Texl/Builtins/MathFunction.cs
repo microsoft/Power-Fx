@@ -110,10 +110,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         // Before ConsistentOneColumnTableResult, this function would always return a fixed name "Result" (Mod)
-        public virtual bool NonConsistentFixedName => false;
+        public virtual bool InConsistentTableResultFixedName => false;
 
         // Before ConsistentOneColumnTableResult, this function would use the second argument name if a table (Log, Power)
-        public virtual bool NonConsistentUseSecondArg => false;
+        public virtual bool InConsistentTableResultUseSecondArg => false;
 
         public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity)
             : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, minArity, 2)
@@ -130,6 +130,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.MathTFuncArg1, TexlStrings.MathTFuncArg2 };
         }
 
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "_T");
+        }
+
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -138,7 +143,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.Assert(args.Length >= 1 && args.Length <= 2);
             Contracts.AssertValue(errors);
-            Contracts.Assert(!NonConsistentFixedName || !NonConsistentUseSecondArg);
+            Contracts.Assert(!InConsistentTableResultFixedName || !InConsistentTableResultUseSecondArg);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
@@ -155,7 +160,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    if (NonConsistentFixedName)
+                    if (InConsistentTableResultFixedName)
                     {
                         fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
                         returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
@@ -172,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (type1.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    if (NonConsistentUseSecondArg)
+                    if (InConsistentTableResultUseSecondArg)
                     {
                         fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap, context, out returnType);
                     }
