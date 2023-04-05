@@ -16,25 +16,25 @@ Blank()
 Table({Value:"ab"},{Value:"de"})
 
 >> Left(["abc","def"],Blank())
-Blank()
+#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
 
 >> Left("abcd",[2,3])
 Table({Value:"ab"},{Value:"abc"})
 
 >> Left(Blank(),[2,3])
-Blank()
+#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
 
 >> Right(["abc","def"],2)
 Table({Value:"bc"},{Value:"ef"})
 
 >> Right(["abc","def"],Blank())
-Blank()
+#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
 
 >> Right("abc",[2,3])
 Table({Value:"bc"},{Value:"abc"})
 
 >> Right(Blank(),[2,3])
-Blank()
+#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
 
 >> Mid(["abc","def"],2)
 Table({Value:"bc"},{Value:"ef"})
