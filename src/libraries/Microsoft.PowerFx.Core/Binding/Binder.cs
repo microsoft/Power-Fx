@@ -5226,17 +5226,40 @@ namespace Microsoft.PowerFx.Core.Binding
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
                     }
-                    else if (DType.TryUnionWithCoerce(exprType, childType, out var returnType, out var needCoercion))
-                    {
-                        exprType = returnType;
-                        if (needCoercion)
+
+                    if (_txb.Features.PowerFxV1CompatibilityRules)
+                    {                        
+                        if (DType.TryUnionWithCoerce(exprType, childType, out var returnType, out var needCoercion))
                         {
-                            _txb.SetCoercedType(child, exprType);
+                            exprType = returnType;
+                            if (needCoercion)
+                            {
+                                _txb.SetCoercedType(child, exprType);
+                            }
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
                         }
                     }
                     else
                     {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        if (!exprType.IsValid)
+                        {
+                            exprType = childType;
+                        }
+                        else if (exprType.CanUnionWith(childType))
+                        {
+                            exprType = DType.Union(exprType, childType);
+                        }
+                        else if (childType.CoercesTo(exprType))
+                        {
+                            _txb.SetCoercedType(child, exprType);
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        }
                     }
                 }
 
