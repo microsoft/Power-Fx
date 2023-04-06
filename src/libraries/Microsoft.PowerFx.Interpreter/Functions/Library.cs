@@ -1808,6 +1808,10 @@ namespace Microsoft.PowerFx.Functions
                             new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
+                BuiltinFunctionsCore.LogT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Log], ReplaceBlankWithZero))
+            },
+            {
                 BuiltinFunctionsCore.MidT,
                 NoErrorHandling(
                     MultiSingleColumnTable(
@@ -1820,6 +1824,10 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.ModT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.PowerT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Power], ReplaceBlankWithZero))
             },
             {
                 BuiltinFunctionsCore.RightST,
