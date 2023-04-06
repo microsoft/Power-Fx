@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         protected override bool InConsistentTableResultFixedName => true;
 
         public ModTFunction()
-            : base("Mod", TexlStrings.AboutModT, 2)
+            : base("Mod", TexlStrings.AboutModT, minArity: 2)
         {
         }
 

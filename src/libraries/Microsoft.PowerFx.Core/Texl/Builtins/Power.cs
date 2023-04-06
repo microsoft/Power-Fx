@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         protected override bool InConsistentTableResultUseSecondArg => true;
 
         public PowerTFunction()
-            : base("Power", TexlStrings.AboutPowerT, 2)
+            : base("Power", TexlStrings.AboutPowerT, minArity: 2)
         {
         }
 

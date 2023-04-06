@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         protected override bool InConsistentTableResultUseSecondArg => true;
 
         public LogTFunction()
-            : base("Log", TexlStrings.AboutLogT, 1)
+            : base("Log", TexlStrings.AboutLogT, minArity: 1)
         {
         }
 

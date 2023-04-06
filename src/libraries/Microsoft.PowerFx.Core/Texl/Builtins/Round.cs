@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundTableFunction : MathTwoArgTableFunction
     {
         public RoundTableFunction()
-            : base("Round", TexlStrings.AboutRoundT, 2)
+            : base("Round", TexlStrings.AboutRoundT, minArity: 2)
         {
         }
 
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundUpTableFunction : MathTwoArgTableFunction
     {
         public RoundUpTableFunction()
-            : base("RoundUp", TexlStrings.AboutRoundUpT, 2)
+            : base("RoundUp", TexlStrings.AboutRoundUpT, minArity: 2)
         {
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class RoundDownTableFunction : MathTwoArgTableFunction
     {
         public RoundDownTableFunction()
-            : base("RoundDown", TexlStrings.AboutRoundDownT, 2)
+            : base("RoundDown", TexlStrings.AboutRoundDownT, minArity: 2)
         {
         }
 

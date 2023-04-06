@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TruncTableFunction : MathTwoArgTableFunction
     {
         public TruncTableFunction()
-            : base("Trunc", TexlStrings.AboutTruncT, 1)
+            : base("Trunc", TexlStrings.AboutTruncT, minArity: 1)
         {
         }
 
