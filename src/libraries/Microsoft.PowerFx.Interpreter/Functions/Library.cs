@@ -2227,7 +2227,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return result;
+                        return MaybeAdjustToCompileTimeType(result, irContext);
                     }
                 }
             }
@@ -2245,7 +2245,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else
                 {
-                    return result;
+                    return MaybeAdjustToCompileTimeType(result, irContext);
                 }
             }
 
