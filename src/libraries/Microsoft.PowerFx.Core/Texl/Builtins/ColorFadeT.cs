@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 otherArg = args[1];
                 otherType = type1;
 
-                fValid &= CheckOtherType(context, otherType, otherArg, DType.Number, errors, ref nodeToCoercedTypeMap, context.Features);
+                fValid &= CheckOtherType(context, otherType, otherArg, DType.Number, errors, ref nodeToCoercedTypeMap);
 
                 Contracts.Assert(returnType.IsTable);
                 Contracts.Assert(!fValid || returnType.IsColumn);
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 otherArg = args[0];
                 otherType = type0;
 
-                fValid &= CheckOtherType(context, otherType, otherArg, DType.Color, errors, ref nodeToCoercedTypeMap, context.Features);
+                fValid &= CheckOtherType(context, otherType, otherArg, DType.Color, errors, ref nodeToCoercedTypeMap);
 
                 Contracts.Assert(returnType.IsTable);
                 Contracts.Assert(!fValid || returnType.IsColumn);
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fValid;
         }
 
-        private bool CheckOtherType(CheckTypesContext context, DType otherType, TexlNode otherArg, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, Features features)
+        private bool CheckOtherType(CheckTypesContext context, DType otherType, TexlNode otherArg, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.Assert(otherType.IsValid);
             Contracts.AssertValue(otherArg);
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (otherType.IsTable)
             {
                 // Ensure we have a one-column table of numerics/color values based on expected type.
-                return expectedType == DType.Number ? CheckNumericColumnType(otherType, otherArg, features, errors, ref nodeToCoercedTypeMap) : CheckColorColumnType(otherType, otherArg, features, errors, ref nodeToCoercedTypeMap);
+                return expectedType == DType.Number ? CheckNumericColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap) : CheckColorColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap);
             }
 
             if (expectedType.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))

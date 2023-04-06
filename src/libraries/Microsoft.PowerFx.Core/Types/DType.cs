@@ -1946,7 +1946,7 @@ namespace Microsoft.PowerFx.Core.Types
                             type.Kind == Kind ||
                             type.Kind == DKind.Unknown ||
                             type.Kind == DKind.Deferred ||
-                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true));
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                     }
                     else
                     {
@@ -1960,7 +1960,7 @@ namespace Microsoft.PowerFx.Core.Types
                             type.Kind == DKind.Unknown ||
                             type.Kind == DKind.Deferred ||
                             type.Kind == DKind.Guid ||
-                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false));
+                            (type.Kind == DKind.Enum && Accepts(type.GetEnumSupertype(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
                     }
 
                     break;

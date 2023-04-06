@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
-            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
+            fArgsValid &= ScopeInfo.CheckInput(context.Features, args[0], argTypes[0], errors, out var typeScope);
 
             Contracts.Assert(typeScope.IsRecord);
             returnType = typeScope.ToTable();
