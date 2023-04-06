@@ -97,8 +97,7 @@ namespace Microsoft.PowerFx.Tests
             var expr = CreateMemoryExpression(nWidth, nDepth);
 
             // Ensure governor traps excessive memory usage. 
-            await Assert.ThrowsAsync<GovernorException>(async () =>
-                    await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
+            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
 
 #if false // https://github.com/microsoft/Power-Fx/issues/971
             // Still traps without the pre-poll. 
@@ -107,8 +106,7 @@ namespace Microsoft.PowerFx.Tests
             var gov2 = new TestIgnorePrePollGovernor(DefaultMemorySizeBytes);
             runtimeConfig.AddService<Governor>(gov2);
 
-            await Assert.ThrowsAsync<MyException>(async () =>
-                    await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
+            await Assert.ThrowsAsync<MyException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
 #endif
         }
 
@@ -127,19 +125,18 @@ namespace Microsoft.PowerFx.Tests
             var smallExpr = CreateMemoryExpression(1, 1); // should b eok
 
             // Governor allows basic expressions
-            var result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig);
+            var result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             mem.Poll();
 
             // Ensure governor traps excessive memory usage. 
-            await Assert.ThrowsAsync<GovernorException>(async () =>
-                    await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
+            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
 
             // Since Governor is cumulative, even the small evaluations now fails
             Assert.Throws<GovernorException>(() => mem.Poll());
 
             // But creating a new one works. 
             runtimeConfig.AddService<Governor>(new SingleThreadedGovernor(DefaultMemorySizeBytes));
-            result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig);
+            result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
         }
 
         private class TestIgnorePrePollGovernor : SingleThreadedGovernor
@@ -170,10 +167,7 @@ namespace Microsoft.PowerFx.Tests
             cts.CancelAfter(5);
 
             // Eval may never return.             
-            await Assert.ThrowsAsync<OperationCanceledException>(async () =>
-            {
-                await engine.EvalAsync(expr, cts.Token);
-            });
+            await Assert.ThrowsAsync<OperationCanceledException>(async () => await engine.EvalAsync(expr, cts.Token).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         // Substitute(source, match, replace) // all instances 

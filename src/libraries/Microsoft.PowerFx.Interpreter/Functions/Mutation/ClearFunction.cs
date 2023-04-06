@@ -72,7 +72,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var datasource = (TableValue)args[0];
-            var ret = await datasource.ClearAsync(cancellationToken);
+            var ret = await datasource.ClearAsync(cancellationToken).ConfigureAwait(false);
 
             return ret.ToFormulaValue();
         }

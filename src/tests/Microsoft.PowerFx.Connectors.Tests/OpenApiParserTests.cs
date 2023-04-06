@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);

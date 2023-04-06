@@ -14,17 +14,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Power(number:n, number:n):n
     // Equivalent DAX function: Power
-    internal sealed class PowerFunction : BuiltinFunction
+    internal sealed class PowerFunction : MathTwoArgFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
-        {
-            return base.GetGenericArgPreprocessor(index);
-        }
-
-        public override bool IsSelfContained => true;
-
         public PowerFunction()
-            : base("Power", TexlStrings.AboutPower, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
+            : base("Power", TexlStrings.AboutPower, 2)
         {
         }
 
@@ -36,37 +29,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Power(number:n|*[n], number:n|*[n]):*[n]
     // Equivalent DAX function: Power
-    internal sealed class PowerTFunction : BuiltinFunction
+    internal sealed class PowerTFunction : MathTwoArgTableFunction
     {
-        public override bool IsSelfContained => true;
+        protected override bool InConsistentTableResultUseSecondArg => true;
 
         public PowerTFunction()
-            : base("Power", TexlStrings.AboutPowerT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 2, 2)
+            : base("Power", TexlStrings.AboutPowerT, minArity: 2)
         {
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.PowerTFuncArg1, TexlStrings.PowerTFuncArg2 };
-        }
-
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(context, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-            return fValid;
         }
     }
 }
