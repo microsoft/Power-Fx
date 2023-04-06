@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var result = _impl(args);
-            return await result;
+            return await result.ConfigureAwait(false);
         }
     }
 
@@ -372,7 +372,7 @@ namespace Microsoft.PowerFx
                 }
                 else if (arg is LambdaFormulaValue lambda)
                 {
-                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
+                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync().ConfigureAwait(false);
                     arg = argLambda;
                 }
 
@@ -409,7 +409,7 @@ namespace Microsoft.PowerFx
                 var resultType = result.GetType().GenericTypeArguments[0];
                 try
                 {
-                    result = await Unwrap(result, resultType);
+                    result = await Unwrap(result, resultType).ConfigureAwait(false);
                 }
                 catch (CustomFunctionErrorException customFunctionErrorException)
                 {
@@ -435,7 +435,7 @@ namespace Microsoft.PowerFx
             var helper = Activator.CreateInstance(t1);
             var t2 = (Helper)helper;
 
-            FormulaValue result = await t2.Unwrap(obj);
+            FormulaValue result = await t2.Unwrap(obj).ConfigureAwait(false);
 
             return result;
         }

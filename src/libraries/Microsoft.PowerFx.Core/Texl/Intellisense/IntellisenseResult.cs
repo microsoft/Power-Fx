@@ -88,6 +88,8 @@ namespace Microsoft.PowerFx.Intellisense
                     var signatureIndex = 0;
                     var argumentSeparator = string.Empty;
                     var highlightedFuncParamDescription = string.Empty;
+
+                    // $$$ can't use current culture
                     var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                     var funcDisplayString = new StringBuilder(func.Name);
                     funcDisplayString.Append('(');
@@ -200,6 +202,7 @@ namespace Microsoft.PowerFx.Intellisense
             string parameterString;
             if (parameters != null)
             {
+                // $$$ Need to remove usage of CurrentLocaleListSeparator
                 parameterString = string.Join($"{LocalizationUtils.CurrentLocaleListSeparator} ", parameters.Select(parameter => parameter.Label));
             }
             else

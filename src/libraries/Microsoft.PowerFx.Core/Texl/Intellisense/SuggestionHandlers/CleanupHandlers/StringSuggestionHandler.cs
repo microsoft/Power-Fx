@@ -58,6 +58,8 @@ namespace Microsoft.PowerFx.Intellisense
                     if (script[i] != suggestion.Text[j])
                     {
                         var curChar = script.Substring(i, 1);
+
+                        // $$$ can't use current culture
                         if (curChar != TexlLexer.PunctuatorParenClose && curChar != TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator)
                         {
                             found = false;

@@ -531,7 +531,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var eval = check.GetEvaluator();
 
             // Fails when trying a row-scope symbol values 
-            await Assert.ThrowsAsync<ArgumentException>(() => eval.EvalAsync(CancellationToken.None, record));
+            await Assert.ThrowsAsync<ArgumentException>(async () => await eval.EvalAsync(CancellationToken.None, record).ConfigureAwait(false)).ConfigureAwait(false);
 
             // Succeeds when trying  a symbol values associated with the original symbol table.
             var symValues = new SymbolValues(symTable1);
@@ -606,7 +606,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.NotSame(symTable1, symValues2.SymbolTable);
 
             // Catch and proactively get error. 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2).ConfigureAwait(false)).ConfigureAwait(false);
 
             // Works when we pass in right symbol values (tied to what we checked against)
             var symValues1 = symTable1.CreateValues();
@@ -621,7 +621,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             // Succeeds since eval will get the symbol table from values 
-            await engine.EvalAsync("1+2", CancellationToken.None, runtimeConfig: symValue);
+            await engine.EvalAsync("1+2", CancellationToken.None, runtimeConfig: symValue).ConfigureAwait(false);
 
             // Check() without binding to a symbol table
             var check = engine.Check("1+2");
@@ -630,10 +630,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var run = check.GetEvaluator();
 
             // Succeeds, no extra SymbolValues
-            await run.EvalAsync(CancellationToken.None, new RuntimeConfig());
+            await run.EvalAsync(CancellationToken.None, new RuntimeConfig()).ConfigureAwait(false);
 
             // Fails, extra symbol Values 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, new RuntimeConfig(symValue)));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, new RuntimeConfig(symValue)).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         // Demonstrate how to use ThisItem in a loop.
@@ -701,7 +701,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var opts = new ParserOptions { AllowsSideEffects = true };
 
                 var runtimeConfig = new RuntimeConfig(symValuesAll);
-                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: runtimeConfig);
+                var result = await engine.EvalAsync("Set(counter, ThisItem);counter", CancellationToken.None, options: opts, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
                 Assert.Equal(5.0, result.ToObject());
 

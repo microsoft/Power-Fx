@@ -113,19 +113,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type = ReturnType;
             nodeToCoercedTypeMap = null;
 
-            // Are we on a behavior property?
-            var isBehavior = context.AllowsSideEffects;
-
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);
             for (var i = 2; i < count;)
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
-                if (typeArg.IsError)
-                {
-                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                }
 
                 var typeSuper = DType.Supertype(
                     type,
@@ -137,9 +130,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     type = typeSuper;
                 }
-                else if (type.Kind == DKind.Unknown)
+                else if (typeArg.IsVoid)
                 {
-                    type = typeSuper;
+                    type = DType.Void;
+                }
+                else if (typeArg.IsError)
+                {
+                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
                     fArgsValid = false;
                 }
                 else if (!type.IsError)
@@ -148,15 +145,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }
-                    else if (!isBehavior)
+                    else
                     {
-                        errors.EnsureError(
-                            DocumentErrorSeverity.Severe,
-                            nodeArg,
-                            TexlStrings.ErrBadType_ExpectedType_ProvidedType,
-                            type.GetKindString(),
-                            typeArg.GetKindString());
-                        fArgsValid = false;
+                        // If the types are incompatible, the result type is void.
+                        type = DType.Void;
                     }
                 }
                 else if (typeArg.Kind != DKind.Unknown)

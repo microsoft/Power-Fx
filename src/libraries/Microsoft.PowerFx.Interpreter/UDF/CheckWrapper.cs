@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Interpreter.UDF
 
             ParserOptions = new ParserOptions()
             {
-                Culture = _engine.Config.CultureInfo,
+                Culture = parseResult?.Options?.Culture,
                 AllowsSideEffects = isImperative,
                 NumberIsFloat = numberIsFloat,
             };

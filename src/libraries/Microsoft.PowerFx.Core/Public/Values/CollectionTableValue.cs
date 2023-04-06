@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Types
             if (_sourceList == null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                return await base.AppendAsync(record, cancellationToken);
+                return await base.AppendAsync(record, cancellationToken).ConfigureAwait(false);
             }
 
             var item = MarshalInverse(record);
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Types
 
             if (_sourceList == null)
             {
-                return await base.ClearAsync(cancellationToken);
+                return await base.ClearAsync(cancellationToken).ConfigureAwait(false);
             }
 
             _sourceList.Clear();
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Types
 
             if (_sourceList == null)
             {
-                return await base.RemoveAsync(recordsToRemove, all, cancellationToken);
+                return await base.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
             }
 
             foreach (RecordValue recordToRemove in recordsToRemove)
@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Types
 
                     var dRecord = Marshal(item);
 
-                    if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken))
+                    if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
                     {
                         deleteList.Add(item);
 
@@ -172,12 +172,12 @@ namespace Microsoft.PowerFx.Types
 
         protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
-            var actual = await FindAsync(baseRecord, cancellationToken);
+            var actual = await FindAsync(baseRecord, cancellationToken).ConfigureAwait(false);
 
             if (actual != null)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                return await actual.UpdateFieldsAsync(changeRecord, cancellationToken);
+                return await actual.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
             }
             else
             {
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (var current in Rows)
             {
-                if (await MatchesAsync(current.Value, baseRecord, cancellationToken))
+                if (await MatchesAsync(current.Value, baseRecord, cancellationToken).ConfigureAwait(false))
                 {
                     return current.Value;
                 }
@@ -214,9 +214,9 @@ namespace Microsoft.PowerFx.Types
         {
             var ret = true;
 
-            await foreach (var baseRecordField in baseRecord.GetFieldsAsync(cancellationToken))
+            await foreach (var baseRecordField in baseRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
-                var currentFieldValue = await currentRecord.GetFieldAsync(baseRecordField.Value.Type, baseRecordField.Name, cancellationToken);
+                var currentFieldValue = await currentRecord.GetFieldAsync(baseRecordField.Value.Type, baseRecordField.Name, cancellationToken).ConfigureAwait(false);
 
                 if (currentFieldValue is BlankValue && baseRecordField.Value is BlankValue)
                 {
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
-                    ret = await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken);
+                    ret = await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false);
                 }
                 else
                 {

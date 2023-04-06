@@ -2,15 +2,15 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Linq;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
 {
-    public class PrimitiveTests
+    public class PrimitiveValueConversionsTests
     {
         // Test how .net types marshal to FormulaType
         [Theory]
@@ -126,6 +126,65 @@ namespace Microsoft.PowerFx.Core.Tests
             var value2 = PrimitiveValueConversions.Marshal(null, typeof(int));
             Assert.IsType<BlankValue>(value2);
             Assert.IsType<NumberType>(value2.Type);
+        }
+
+        [Theory]
+        [InlineData((ushort)123)] // Uint16
+        [InlineData((short)123)] // int16
+        [InlineData(123U)] // Uint32
+        [InlineData(123)] // int32
+        [InlineData(123UL)] // Uint64
+        [InlineData(123L)] // int64
+        [InlineData(123f)] // Single
+        [InlineData(123d)] // Double        
+        public void TryMarshalNumberTest(object value)
+        {
+            // To double 
+            var ok = PrimitiveValueConversions.TryMarshal(value, FormulaType.Number, out var result);
+            Assert.True(ok);
+
+            var expected = Convert.ToDouble(value);
+            Assert.Equal(expected, result.ToObject());
+            Assert.IsType<NumberValue>(result);
+            Assert.Equal(FormulaType.Number, result.Type);
+
+            // To decimal 
+            ok = PrimitiveValueConversions.TryMarshal(value, FormulaType.Decimal, out result);
+            Assert.True(ok);
+
+            var expected2 = Convert.ToDecimal(value);
+            Assert.Equal(expected2, result.ToObject());
+            Assert.IsType<DecimalValue>(result);
+            Assert.Equal(FormulaType.Decimal, result.Type);
+        }
+
+        [Fact]
+        public void TryMarshalOverflowNumberTest()
+        {
+            object value = double.MaxValue;
+            var ok = PrimitiveValueConversions.TryMarshal(value, FormulaType.Decimal, out var result);
+            Assert.True(ok);
+
+            Assert.IsType<ErrorValue>(result);
+            var error = ((ErrorValue)result).Errors.First();
+            Assert.Equal(ErrorKind.Numeric, error.Kind);
+            Assert.Equal(FormulaType.Decimal, result.Type);
+        }
+
+        [Theory]
+        [InlineData("5")] // string, not parsing. 
+        [InlineData(true)]        
+        public void TryMarshalFailNumberTest(object value)
+        {
+            // Not a parse. 
+            // Also more strict than just Fx coercion. 
+            var ok = PrimitiveValueConversions.TryMarshal(value, FormulaType.Number, out var result);
+            Assert.False(ok);
+            Assert.Null(result);
+
+            ok = PrimitiveValueConversions.TryMarshal(value, FormulaType.Decimal, out result);
+            Assert.False(ok);
+            Assert.Null(result);
         }
 
         [Fact]

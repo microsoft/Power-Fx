@@ -14,18 +14,11 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
-    // Abstract base for all scalar flavors of round (Round, RoundUp, RoundDown)
-    internal abstract class ScalarRoundingFunction : BuiltinFunction
+    // Round(number:n, digits:n)
+    internal sealed class RoundScalarFunction : MathTwoArgFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
-        {
-            return base.GetGenericArgPreprocessor(index);
-        }
-
-        public override bool IsSelfContained => true;
-
-        public ScalarRoundingFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, 2, 2, DType.Number, DType.Number)
+        public RoundScalarFunction()
+            : base("Round", TexlStrings.AboutRound, 2)
         {
         }
 
@@ -35,13 +28,39 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
-    // Abstract base for all overloads of round that take table arguments
-    internal abstract class TableRoundingFunction : BuiltinFunction
+    // RoundUp(number:n, digits:n)
+    internal sealed class RoundUpScalarFunction : MathTwoArgFunction
     {
-        public override bool IsSelfContained => true;
+        public RoundUpScalarFunction()
+            : base("RoundUp", TexlStrings.AboutRoundUp, 2)
+        {
+        }
 
-        public TableRoundingFunction(string name, TexlStrings.StringGetter description)
-            : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, 2, 2)
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.RoundArg1, TexlStrings.RoundArg2 };
+        }
+    }
+
+    // RoundDown(number:n, digits:n)
+    internal sealed class RoundDownScalarFunction : MathTwoArgFunction
+    {
+        public RoundDownScalarFunction()
+            : base("RoundDown", TexlStrings.AboutRoundDown, 2)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.RoundArg1, TexlStrings.RoundArg2 };
+        }
+    }
+
+    // Round(number:n|*[n], digits:n|*[n])
+    internal sealed class RoundTableFunction : MathTwoArgTableFunction
+    {
+        public RoundTableFunction()
+            : base("Round", TexlStrings.AboutRoundT, minArity: 2)
         {
         }
 
@@ -49,154 +68,33 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.RoundTArg1, TexlStrings.RoundTArg2 };
         }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-            Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
-
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-            var type0 = argTypes[0];
-            var type1 = argTypes[1];
-
-            var otherType = DType.Invalid;
-            TexlNode otherArg = null;
-
-            // At least one of the arguments has to be a table.
-            if (type0.IsTable)
-            {
-                // Ensure we have a one-column table of numerics
-                fValid &= CheckNumericColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
-
-                if (nodeToCoercedTypeMap?.Any() ?? false)
-                {
-                    // Now set the coerced type to a table with numeric column type with the same name as in the argument.
-                    returnType = nodeToCoercedTypeMap[args[0]];
-                }
-                else
-                {
-                    returnType = type0;
-                }
-
-                returnType = context.Features.ConsistentOneColumnTableResult
-                    ? DType.CreateTable(new TypedName(DType.Number, new DName(ColumnName_ValueStr)))
-                    : returnType;
-
-                // Check arg1 below.
-                otherArg = args[1];
-                otherType = type1;
-            }
-            else if (type1.IsTable)
-            {
-                // Ensure we have a one-column table of numerics
-                fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
-
-                // Since the 1st arg is not a table, make a new table return type *[Result:n] or
-                // *[Value:n] if the consistent return schema flag is enabled
-                returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
-
-                // Check arg0 below.
-                otherArg = args[0];
-                otherType = type0;
-            }
-            else
-            {
-                Contracts.Assert(returnType.IsTable);
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
-
-                // Both args are invalid. No need to continue.
-                return false;
-            }
-
-            Contracts.Assert(otherType.IsValid);
-            Contracts.AssertValue(otherArg);
-            Contracts.Assert(returnType.IsTable);
-            Contracts.Assert(!fValid || returnType.IsColumn);
-
-            if (otherType.IsTable)
-            {
-                // Ensure we have a one-column table of numerics
-                fValid &= CheckNumericColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap);
-            }
-            else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-            {
-                if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, DType.Number);
-                }
-                else
-                {
-                    fValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, otherArg, TexlStrings.ErrTypeError);
-                }
-            }
-
-            return fValid;
-        }
-    }
-
-    // Round(number:n, digits:n)
-    internal sealed class RoundScalarFunction : ScalarRoundingFunction
-    {
-        public RoundScalarFunction()
-            : base("Round", TexlStrings.AboutRound)
-        {
-        }
-    }
-
-    // RoundUp(number:n, digits:n)
-    internal sealed class RoundUpScalarFunction : ScalarRoundingFunction
-    {
-        public RoundUpScalarFunction()
-            : base("RoundUp", TexlStrings.AboutRoundUp)
-        {
-        }
-    }
-
-    // RoundDown(number:n, digits:n)
-    internal sealed class RoundDownScalarFunction : ScalarRoundingFunction
-    {
-        public RoundDownScalarFunction()
-            : base("RoundDown", TexlStrings.AboutRoundDown)
-        {
-        }
-    }
-
-    // Round(number:n|*[n], digits:n|*[n])
-    internal sealed class RoundTableFunction : TableRoundingFunction
-    {
-        public RoundTableFunction()
-            : base("Round", TexlStrings.AboutRoundT)
-        {
-        }
     }
 
     // RoundUp(number:n|*[n], digits:n|*[n])
-    internal sealed class RoundUpTableFunction : TableRoundingFunction
+    internal sealed class RoundUpTableFunction : MathTwoArgTableFunction
     {
         public RoundUpTableFunction()
-            : base("RoundUp", TexlStrings.AboutRoundUpT)
+            : base("RoundUp", TexlStrings.AboutRoundUpT, minArity: 2)
         {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.RoundTArg1, TexlStrings.RoundTArg2 };
         }
     }
 
     // RoundDown(number:n|*[n], digits:n|*[n])
-    internal sealed class RoundDownTableFunction : TableRoundingFunction
+    internal sealed class RoundDownTableFunction : MathTwoArgTableFunction
     {
         public RoundDownTableFunction()
-            : base("RoundDown", TexlStrings.AboutRoundDownT)
+            : base("RoundDown", TexlStrings.AboutRoundDownT, minArity: 2)
         {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            yield return new[] { TexlStrings.RoundTArg1, TexlStrings.RoundTArg2 };
         }
     }
 }

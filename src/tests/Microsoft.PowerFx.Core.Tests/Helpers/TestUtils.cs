@@ -174,8 +174,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 if (!DType.Number.Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     isValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
-                    coercedArgs?.Clear();
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);                    
+                    coercedArgs?.Clear();                    
                 }
 
                 return isValid;

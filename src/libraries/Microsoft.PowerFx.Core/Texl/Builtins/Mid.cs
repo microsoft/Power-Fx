@@ -70,27 +70,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings
-                fValid &= CheckStringColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
-
-                // Borrow the return type from the 1st arg
-                returnType = context.Features.ConsistentOneColumnTableResult
-                    ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                    : type0;
+                fValid &= CheckStringColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
                 returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
-                if (!DType.String.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (!CheckType(context, args[0], type0, DType.String, errors, ref nodeToCoercedTypeMap))
                 {
-                    if (type0.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.String);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrStringExpected);
-                    }
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrStringExpected);
                 }
             }
 
@@ -99,17 +87,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.Number.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-            {
-                if (type1.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number);
-                }
-                else
-                {
-                    fValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
-                }
+            else if (!CheckType(context, args[1], type1, DType.Number, errors, ref nodeToCoercedTypeMap))
+            { 
+                fValid = false;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
             }
 
             // Arg2 should be either a number or a column of numbers, if it exists.
@@ -120,17 +101,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     fValid &= CheckNumericColumnType(type2, args[2], context.Features, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                else if (!CheckType(context, args[2], type2, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
-                    if (type2.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrNumberExpected);
-                    }
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrNumberExpected);
                 }
             }
 

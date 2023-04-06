@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx
 
             Text = text;
 
-            ErrorMessageLocale = errorMessageLocale ?? CultureInfo.CurrentCulture;
+            ErrorMessageLocale = errorMessageLocale ?? CultureInfo.CurrentCulture; // $$$ can't use current culture
         }
 
         internal string ParseErrorText => !HasError ? string.Empty : string.Join("\r\n", _errors.Select((err, i) =>

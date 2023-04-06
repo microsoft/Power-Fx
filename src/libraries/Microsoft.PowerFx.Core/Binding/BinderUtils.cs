@@ -67,6 +67,23 @@ namespace Microsoft.PowerFx.Core.Binding
                 path = DPath.Root.Append(leftNodeName).Append(node.Right.Name);
                 return true;
             }
+            else if (node.Left is CallNode call)
+            {
+                var leftNodeName = call.Head.Name;
+                if (binding.TryGetReplacedIdentName(call.Head, out var possibleRename))
+                {
+                    leftNodeName = new DName(possibleRename);
+                }
+
+                var rightNodeName = node.Right.Name;
+                if (binding.TryGetReplacedIdentName(node.Right, out var rename))
+                {
+                    rightNodeName = new DName(rename);
+                }
+
+                path = DPath.Root.Append(leftNodeName).Append(rightNodeName);
+                return true;
+            }
 
             path = DPath.Root;
             return false;
@@ -744,7 +761,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Regular Addition
                             return CheckDecimalBinaryOp(errorContainer, node, usePowerFxV1CompatibilityRules, leftType, rightType, numberIsFloat);
                     }
-            }
+            } 
         }
 
         private static bool IsAcceptedByDateOrTime(DType type, bool usePowerFxV1CompatibilityRules)
@@ -882,7 +899,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Handle Decimal <=> DateTime comparison by coercing both sides to Number
                 // Process in Number or Decimal depending on numberIsFloat for consistency with +/- operations
-                if (DType.DateTime.Accepts(typeLeft, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && DType.Decimal.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                if (IsAcceptedByDateOrTime(typeLeft, usePowerFxV1CompatibilityRules) &&
+                    DType.Decimal.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     if (numberIsFloat)
                     {
@@ -895,7 +913,8 @@ namespace Microsoft.PowerFx.Core.Binding
                         coercions.Add(new BinderCoercionResult() { Node = left, CoercedType = DType.Decimal });
                     }
                 }
-                else if (DType.DateTime.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && DType.Decimal.Accepts(typeLeft, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                else if (IsAcceptedByDateOrTime(typeRight, usePowerFxV1CompatibilityRules) &&
+                    DType.Decimal.Accepts(typeLeft, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     if (numberIsFloat)
                     {
@@ -1127,6 +1146,7 @@ namespace Microsoft.PowerFx.Core.Binding
         //      ! | b  b  b  b  e  e  e  b  b                   ! | b  b  b  b  e  e  e  b  b
         //      - | n  w  w  w  w  w  w  w  w                   - | n  n  n  n  n  n  n  w  n 
         //      % | n  w  w  w  w  w  w  w  w                   % | n  n  n  n  n  n  n  w  n 
+
         internal static BinderCheckTypeResult CheckUnaryOpCore(IErrorContainer errorContainer, UnaryOpNode node, bool usePowerFxV1CompatibilityRules, DType childType, bool numberIsFloat)
         {
             Contracts.AssertValue(node);

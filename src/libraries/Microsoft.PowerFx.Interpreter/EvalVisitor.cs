@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx
         {
             if (arg is LambdaFormulaValue lambda)
             {
-                arg = await lambda.EvalInRowScopeAsync(context);
+                arg = await lambda.EvalInRowScopeAsync(context).ConfigureAwait(false);
             }
 
             return arg switch
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx
                 var name = field.Key;
                 var value = field.Value;
 
-                var rhsValue = await value.Accept(this, context);
+                var rhsValue = await value.Accept(this, context).ConfigureAwait(false);
                 fields.Add(new NamedValue(name.Value, rhsValue));
             }
 
@@ -145,7 +145,7 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(LazyEvalNode node, EvalVisitorContext context)
         {
-            var val = await node.Child.Accept(this, context);
+            var val = await node.Child.Accept(this, context).ConfigureAwait(false);
             return val;
         }
 
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx
             var arg0 = node.Args[0];
             var arg1 = node.Args[1];
 
-            var newValue = await arg1.Accept(this, context);
+            var newValue = await arg1.Accept(this, context).ConfigureAwait(false);
 
             // Binder has already ensured this is a first name node as well as mutable symbol. 
             if (arg0 is ResolvedObjectNode obj)
@@ -202,12 +202,12 @@ namespace Microsoft.PowerFx
                 return null;
             }
 
-            var source = await r.From.Accept(this, context);
+            var source = await r.From.Accept(this, context).ConfigureAwait(false);
             var fieldName = r.Field.Value;
-            var newValue = await arg1.Accept(this, context);
+            var newValue = await arg1.Accept(this, context).ConfigureAwait(false);
 
             var args = new FormulaValue[] { source, FormulaValue.New(fieldName), newValue };
-            var result = await setPropFunc.InvokeAsync(args, _cancellationToken);
+            var result = await setPropFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
 
             return result;
         }
@@ -216,13 +216,13 @@ namespace Microsoft.PowerFx
         {
             CheckCancel();
 
-            var setResult = await TryHandleSet(node, context.IncrementStackDepthCounter());
+            var setResult = await TryHandleSet(node, context.IncrementStackDepthCounter()).ConfigureAwait(false);
             if (setResult != null)
             {
                 return setResult;
             }
 
-            var setPropResult = await TryHandleSetProperty(node, context.IncrementStackDepthCounter());
+            var setPropResult = await TryHandleSetProperty(node, context.IncrementStackDepthCounter()).ConfigureAwait(false);
             if (setPropResult != null)
             {
                 return setPropResult;
@@ -243,7 +243,7 @@ namespace Microsoft.PowerFx
 
                 if (!isLambda)
                 {
-                    args[i] = await child.Accept(this, context.IncrementStackDepthCounter());
+                    args[i] = await child.Accept(this, context.IncrementStackDepthCounter()).ConfigureAwait(false);
                 }
                 else
                 {
@@ -256,17 +256,17 @@ namespace Microsoft.PowerFx
             FormulaValue result;
             if (func is IAsyncTexlFunction asyncFunc)
             {
-                result = await asyncFunc.InvokeAsync(args, _cancellationToken);
+                result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
-                result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment());
+                result = await udtf.InvokeAsync(args, _cancellationToken, context.StackDepthCounter.Increment()).ConfigureAwait(false);
             }
             else if (func is CustomTexlFunction customTexlFunc)
             {
                 // If custom function throws an exception, don't catch it - let it propagate up to the host.
-                result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken);
+                result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
             }
             else
             {               
@@ -306,10 +306,10 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, EvalVisitorContext context)
         {
-            var arg1 = await node.Left.Accept(this, context);
+            var arg1 = await node.Left.Accept(this, context).ConfigureAwait(false);
             var arg2 = await node.Right.Accept(this, context);
             var args = new FormulaValue[] { arg1, arg2 };
-            return await VisitBinaryOpNode(node, context, args);
+            return await VisitBinaryOpNode(node, context, args).ConfigureAwait(false);
         }
 
         private ValueTask<FormulaValue> VisitBinaryOpNode(BinaryOpNode node, EvalVisitorContext context, FormulaValue[] args)
@@ -349,7 +349,8 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryEq(this, context, node.IRContext, args);
                 case BinaryOpKind.EqNullUntyped:
                     return OperatorBinaryEqNullUntyped(this, context, node.IRContext, args);
-
+                case BinaryOpKind.EqPolymorphic:
+                    return OperatorBinaryEqPolymorphic(this, context, node.IRContext, args);
                 case BinaryOpKind.NeqBlob:
                 case BinaryOpKind.NeqBoolean:
                 case BinaryOpKind.NeqColor:
@@ -369,6 +370,8 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryNeq(this, context, node.IRContext, args);
                 case BinaryOpKind.NeqNullUntyped:
                     return OperatorBinaryNeqNullUntyped(this, context, node.IRContext, args);
+                case BinaryOpKind.NeqPolymorphic:
+                    return OperatorBinaryNeqPolymorphic(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
                     return OperatorBinaryGt(this, context, node.IRContext, args);
@@ -506,12 +509,12 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(UnaryOpNode node, EvalVisitorContext context)
         {
-            var arg1 = await node.Child.Accept(this, context);
+            var arg1 = await node.Child.Accept(this, context).ConfigureAwait(false);
             var args = new FormulaValue[] { arg1 };
 
             if (UnaryOps.TryGetValue(node.Op, out var unaryOp))
             {
-                return await unaryOp(this, context, node.IRContext, args);
+                return await unaryOp(this, context, node.IRContext, args).ConfigureAwait(false);
             }
 
             return CommonErrors.NotYetImplementedError(node.IRContext, $"Unary op {node.Op}");
@@ -519,7 +522,7 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(AggregateCoercionNode node, EvalVisitorContext context)
         {
-            var arg1 = await node.Child.Accept(this, context);
+            var arg1 = await node.Child.Accept(this, context).ConfigureAwait(false);
 
             if (arg1 is BlankValue || arg1 is ErrorValue)
             {
@@ -546,7 +549,7 @@ namespace Microsoft.PowerFx
                             var record = row.Value;
                             var newScope = scopeContext.WithScopeValues(record);
 
-                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope));
+                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
                             var name = coercion.Key;
                             fields.Add(new NamedValue(name.Value, newValue));
                         }
@@ -579,7 +582,7 @@ namespace Microsoft.PowerFx
 
                     if (node.FieldCoercions.TryGetValue(new Core.Utils.DName(f2.Name), out var coercion))
                     {
-                        var newValue = await coercion.Accept(this, context.NewScope(newScope));
+                        var newValue = await coercion.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
 
                         fields.Add(new NamedValue(f2.Name, newValue));
                     }
@@ -625,7 +628,7 @@ namespace Microsoft.PowerFx
 
         public override async ValueTask<FormulaValue> Visit(RecordFieldAccessNode node, EvalVisitorContext context)
         {
-            var left = await node.From.Accept(this, context);
+            var left = await node.From.Accept(this, context).ConfigureAwait(false);
 
             if (left is BlankValue)
             {
@@ -638,7 +641,7 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
-            var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken);
+            var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);
 
             return val;
         }
@@ -674,7 +677,7 @@ namespace Microsoft.PowerFx
             {
                 CheckCancel();
 
-                fv = await iNode.Accept(this, context);
+                fv = await iNode.Accept(this, context).ConfigureAwait(false);
 
                 if (fv is ErrorValue ev)
                 {

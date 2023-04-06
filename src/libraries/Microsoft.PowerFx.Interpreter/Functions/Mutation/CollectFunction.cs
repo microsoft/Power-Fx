@@ -253,7 +253,7 @@ namespace Microsoft.PowerFx.Interpreter
             var recordValueCopy = FormulaValue.NewRecordFromFields(recordValue.Fields);
 
             cancellationToken.ThrowIfCancellationRequested();
-            var result = await tableValue.AppendAsync(recordValueCopy, cancellationToken);
+            var result = await tableValue.AppendAsync(recordValueCopy, cancellationToken).ConfigureAwait(false);
 
             return result.ToFormulaValue();
         }

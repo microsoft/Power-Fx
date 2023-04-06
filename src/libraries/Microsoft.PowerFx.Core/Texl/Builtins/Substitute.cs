@@ -71,11 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings
-                fValid &= CheckStringColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
-
-                returnType = context.Features.ConsistentOneColumnTableResult
-                    ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                    : type0;
+                fValid &= CheckStringColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
@@ -140,17 +136,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     fValid &= CheckNumericColumnType(type3, args[3], context.Features, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(type3, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                else if (!CheckType(context, args[3], type3, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
-                    if (type3.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[3], DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
-                    }
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
                 }
             }
 

@@ -312,6 +312,17 @@ namespace Microsoft.PowerFx.Core.IR
                             throw new NotSupportedException();
                     }
 
+                case DKind.Polymorphic:
+                    switch (node.Op)
+                    {
+                        case BinaryOp.NotEqual:
+                            return BinaryOpKind.NeqPolymorphic;
+                        case BinaryOp.Equal:
+                            return BinaryOpKind.EqPolymorphic;
+                        default: 
+                            throw new NotSupportedException();
+                    }
+
                 default:
                     throw new NotSupportedException("Not supported comparison op on type " + kindToUse.ToString());
             }

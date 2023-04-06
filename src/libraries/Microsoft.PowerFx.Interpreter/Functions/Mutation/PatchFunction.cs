@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (arg is RecordValue record)
                 {
-                    await foreach (var field in record.GetFieldsAsync(cancellationToken))
+                    await foreach (var field in record.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
                     {
                         retFields[field.Name] = field.Value;
                     }
@@ -229,13 +229,13 @@ namespace Microsoft.PowerFx.Functions
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken));
+            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken).ConfigureAwait(false));
 
             var datasource = (TableValue)args[0];
             var baseRecord = (RecordValue)args[1];
 
             cancellationToken.ThrowIfCancellationRequested();
-            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken);
+            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
 
             return ret.ToFormulaValue();
         }

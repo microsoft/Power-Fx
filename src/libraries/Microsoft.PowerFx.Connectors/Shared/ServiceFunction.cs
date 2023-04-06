@@ -123,6 +123,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                 var optionFormat = new StringBuilder(TexlLexer.PunctuatorCurlyOpen);
                 string sep = "";
+
+                // $$$ can't use current culture
                 string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                 foreach (var option in optionalParamInfo)
                 {
@@ -290,7 +292,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
         {
-            if (argPosition >= 0)
+            if (argPosition >= 0 && MaxArity > 0 && _requiredParameters.Length > MaxArity - 1)
             {
                 ConnectorDynamicValue cdv = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicValue;
 
@@ -306,9 +308,9 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                     if (result is RecordValue rv)
                     {
-                        if (!string.IsNullOrEmpty(cdv.ValueCollection) && !string.IsNullOrEmpty(cdv.ValuePath))
+                        if (!string.IsNullOrEmpty(cdv.ValuePath))
                         {
-                            FormulaValue collection = rv.GetField(cdv.ValueCollection);
+                            FormulaValue collection = rv.GetField(cdv.ValueCollection ?? "value");
 
                             if (collection is TableValue tv)
                             {
@@ -327,7 +329,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                         }
                         else
                         {
-                            throw new NotImplementedException($"Valuecollection is null");
+                            throw new NotImplementedException($"ValuePath is null");
                         }
                     }                    
 
@@ -501,7 +503,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                 throw new InvalidOperationException($"Function {Name} can't be invoked."); 
             }
 
-            var result = await _invoker.InvokeAsync(args, cancellationToken);
+            var result = await _invoker.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
