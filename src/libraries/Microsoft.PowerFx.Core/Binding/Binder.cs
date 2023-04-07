@@ -5225,6 +5225,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (!isChildTypeAllowedInTable)
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        continue;
                     }
 
                     if (_txb.Features.PowerFxV1CompatibilityRules)
