@@ -130,8 +130,13 @@ namespace Microsoft.PowerFx.Core.IR
 
                 var children = node.Children.Select(child => child.Accept(this, context)).ToArray();
                 var irContext = context.GetIRContext(node);
+                var childrenAreRecords = node.ChildNodes.Any(c =>
+                {
+                    var childType = context.Binding.GetType(c);
+                    return childType.Kind != DKind.ObjNull && childType.IsRecord;
+                });
 
-                if (!context.Binding.CheckTypesContext.Features.TableSyntaxDoesntWrapRecords || (children.Any() && children.First() is not RecordNode))
+                if (!context.Binding.CheckTypesContext.Features.TableSyntaxDoesntWrapRecords || !childrenAreRecords)
                 {
                     // Let's add "Value:" here                    
                     children = children.Select(childNode =>
