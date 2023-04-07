@@ -1,0 +1,65 @@
+﻿// Primitives
+>> [1,2,3]
+Table({Value:1},{Value:2},{Value:3})
+
+>> [false,true]
+Table({Value:false},{Value:true})
+
+>> ["a", "b"]
+Table({Value:"a"},{Value:"b"})
+
+>> [Date(2021,1,1),Date(2022,2,2)]
+Table({Value:Date(2021,1,1)},{Value:Date(2022,2,2)})
+
+>> [Time(12,34,56),Time(12,0,0)]
+Table({Value:Time(12,34,56,0)},{Value:Time(12,0,0,0)})
+
+>> [DateTime(2021,2,3,12,34,56),DateTime(2023,4,6,8,10,12,14)]
+Table({Value:DateTime(2021,2,3,12,34,56,0)},{Value:DateTime(2023,4,6,8,10,12,14)})
+
+// Primitives with Blank()
+>> [Blank(),1,2,3]
+Table({Value:Blank()},{Value:1},{Value:2},{Value:3})
+
+>> [Blank(),false,true]
+Table({Value:Blank()},{Value:false},{Value:true})
+
+>> [Blank(),"a", "b"]
+Table({Value:Blank()},{Value:"a"},{Value:"b"})
+
+>> [Blank(),Date(2021,1,1),Date(2022,2,2)]
+Table({Value:Blank()},{Value:Date(2021,1,1)},{Value:Date(2022,2,2)})
+
+>> [Blank(),Time(12,34,56),Time(12,0,0)]
+Table({Value:Blank()},{Value:Time(12,34,56,0)},{Value:Time(12,0,0,0)})
+
+>> [Blank(),DateTime(2021,2,3,12,34,56),DateTime(2023,4,6,8,10,12,14)]
+Table({Value:Blank()},{Value:DateTime(2021,2,3,12,34,56,0)},{Value:DateTime(2023,4,6,8,10,12,14)})
+
+// Table with Blank()
+>> [Blank(),Table({a:1},{a:2}),Table({a:11},{a:12})]
+Table({Value:Blank()},{Value:Table({a:1},{a:2})},{Value:Table({a:11},{a:12})})
+
+// Records - do not wrap in {Value:X}
+>> [{a:1},{a:2}]
+Table({a:1},{a:2})
+
+>> [{a:1,b:10},{a:2,b:20}]
+Table({a:1,b:10},{a:2,b:20})
+
+// Records with Blank() - do not wrap in {Value:X}
+>> [Blank(),{a:1},{a:2}]
+Table(Blank(),{a:1},{a:2})
+
+>> [Blank(),{a:1,b:10},{a:2,b:20}]
+Table(Blank(),{a:1,b:10},{a:2,b:20})
+
+// Records with expressions - do not wrap in {Value:X}
+>> [If(1<0,{a:1},{a:2}), If(1>0,{a:3},{a:4})]
+Table({a:2},{a:3})
+
+>> [If(1<0,{a:1}), If(1>0,{a:3},{a:4})]
+Table(Blank(),{a:3})
+
+>> [If(1/0<2,{a:1}), If(1>0,{a:3},{a:4})]
+Table(Error({Kind:ErrorKind.Div0}),{a:3})
