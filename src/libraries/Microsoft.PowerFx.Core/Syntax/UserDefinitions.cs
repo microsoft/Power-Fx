@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -39,30 +40,32 @@ namespace Microsoft.PowerFx.Syntax
         /// May be null if the script is to be parsed in the current locale.
         /// </summary>
         private readonly CultureInfo _loc;
+        private readonly bool _numberAsFloat;
 
-        private UserDefinitions(string script, INameResolver nameResolver, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null)
+        private UserDefinitions(string script, INameResolver nameResolver, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false)
         {
             _script = script ?? throw new ArgumentNullException(nameof(script));
             _nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
             _userDefinitionSemanticsHandler = userDefinitionSemanticsHandler;
             _loc = loc;
+            _numberAsFloat = numberAsFloat;
         }
 
-        public static ParseUserDefinitionResult Parse(string script, CultureInfo loc = null)
+        public static ParseUserDefinitionResult Parse(string script, bool numberAsFloat = false, CultureInfo loc = null)
         {
-            return TexlParser.ParseUserDefinitionScript(script, loc);
+            return TexlParser.ParseUserDefinitionScript(script, numberAsFloat, loc);
         }
 
-        public static bool ProcessUserDefnitions(string script, INameResolver nameResolver, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null)
+        public static bool ProcessUserDefnitions(string script, INameResolver nameResolver, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false)
         {
-            var userDefinitions = new UserDefinitions(script, nameResolver, userDefinitionSemanticsHandler, loc);
+            var userDefinitions = new UserDefinitions(script, nameResolver, userDefinitionSemanticsHandler, loc, numberAsFloat);
 
             return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
         }
 
         public bool ProcessUserDefnitions(out UserDefinitionResult userDefinitionResult)
         {
-            var parseResult = TexlParser.ParseUserDefinitionScript(_script, _loc);
+            var parseResult = TexlParser.ParseUserDefinitionScript(_script, _numberAsFloat, _loc);
 
             if (parseResult.HasErrors)
             {
