@@ -632,7 +632,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return null;
+                childContext = context.SymbolContext.WithScopeValues(row.Error);
             }
 
             // Filter evals to a boolean 

@@ -55,3 +55,6 @@ Error({Kind:ErrorKind.Div0})
 
 >> Filter(Table({a:1},{a:2},If(1<0,{a:3}),{a:4},{a:5}), IsBlank(a) Or a > 0)
 Table({a:1},{a:2},Blank(),{a:4},{a:5})
+
+>> CountIf(Filter([{a:1},If(1/0<2,{a:2}),{a:3}], IsError(a)), true)
+1
