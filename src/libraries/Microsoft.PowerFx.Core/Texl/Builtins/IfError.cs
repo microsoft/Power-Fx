@@ -123,11 +123,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             In this case, we prefer the type of the last v_i as the return type.
             */
 
-            var prefereedTypeIndex = (count % 2) == 0 ? count - 2 : count - 1;
-            var type = argTypes[prefereedTypeIndex];
+            var preferredTypeIndex = (count % 2) == 0 ? count - 2 : count - 1;
+            var type = argTypes[preferredTypeIndex];
             if (type.IsError)
             {
-                errors.EnsureError(args[prefereedTypeIndex], TexlStrings.ErrTypeError);
+                errors.EnsureError(args[preferredTypeIndex], TexlStrings.ErrTypeError);
                 fArgsValid = false;
             }
 
