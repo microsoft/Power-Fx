@@ -567,6 +567,24 @@
     <value>Joins several text values into one text value.</value>
     <comment>Description of 'Concatenate' function.</comment>
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>The text value to convert to a Decimal value.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Float value.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>The text value to convert to a Float value.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
@@ -1446,6 +1464,14 @@
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>input</value>
     <comment>function_parameter - First parameter to generic math functions - the column in a table on which the function will be applied.</comment>
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    <comment>function_parameter - Second parameter to generic math functions - the second number on which the function will be applied.</comment>
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    <comment>function_parameter - Second parameter to generic math functions - the second column in a table on which the function will be applied.</comment>
   </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Returns the specified number of characters from the start of a text value.</value>
@@ -2984,6 +3010,26 @@
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Globe</value>
     <comment>Icon control name representing an globe object. Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe value.</comment>
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Not connected</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Not connected value.</comment>
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Refresh value.</comment>
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Changes pending</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Changes pending value.</comment>
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Warning</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Warning value.</comment>
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Error</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Error value.</comment>
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Half filled circle</value>
@@ -5088,5 +5134,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>A url to be encoded.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' is a recognized but not supported function.</value>
+    <comment>Error Message.</comment>
   </data>
 </root>

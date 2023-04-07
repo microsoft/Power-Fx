@@ -14,19 +14,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Log(number:n, [base:n]):n
     // Equivalent Excel function: Log
-    internal sealed class LogFunction : BuiltinFunction
+    internal sealed class LogFunction : MathTwoArgFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
-        {
-            return base.GetGenericArgPreprocessor(index);
-        }
-
-        public override bool IsSelfContained => true;
-
         public override bool HasPreciseErrors => true;
 
         public LogFunction()
-            : base("Log", TexlStrings.AboutLog, FunctionCategories.MathAndStat, DType.Number, 0, 1, 2, DType.Number, DType.Number)
+            : base("Log", TexlStrings.AboutLog, 1)
         {
         }
 
@@ -39,37 +32,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
     // Log(number:n|*[n], [base:n|*[n]]):*[n]
     // Equivalent Excel function: Log
-    internal sealed class LogTFunction : BuiltinFunction
+    internal sealed class LogTFunction : MathTwoArgTableFunction
     {
-        public override bool IsSelfContained => true;
+        protected override bool InConsistentTableResultUseSecondArg => true;
 
         public LogTFunction()
-            : base("Log", TexlStrings.AboutLogT, FunctionCategories.MathAndStat, DType.EmptyTable, 0, 1, 2)
+            : base("Log", TexlStrings.AboutLogT, minArity: 1)
         {
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { TexlStrings.MathFuncArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-        {
-            Contracts.AssertValue(args);
-            Contracts.AssertAllValues(args);
-            Contracts.AssertValue(argTypes);
-            Contracts.Assert(args.Length == argTypes.Length);
-            Contracts.AssertValue(errors);
-
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            fValid &= CheckAllParamsAreTypeOrSingleColumnTable(context, DType.Number, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-            return fValid;
+            yield return new[] { TexlStrings.MathTFuncArg1 };
+            yield return new[] { TexlStrings.MathTFuncArg1, TexlStrings.LogBase };
         }
     }
 }

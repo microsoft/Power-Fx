@@ -517,12 +517,36 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Dec2Hex,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Dec2Hex.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Dec2Hex)
+            },
+            {
+                BuiltinFunctionsCore.Decimal,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Decimal.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Decimal)
+            },
+            {
+                BuiltinFunctionsCore.Decimal_UO,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Decimal.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Decimal_UO)
             },
             {
                 DistinctInterpreterFunction,
@@ -676,6 +700,30 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: FirstN_UO)
             },
             {
+                BuiltinFunctionsCore.Float,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Float.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Float)
+            },
+            {
+                BuiltinFunctionsCore.Float_UO,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Float.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueTypeOrBlank<UntypedObjectValue>,
+                        ExactValueTypeOrBlank<StringValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Float_UO)
+            },
+            {
                 BuiltinFunctionsCore.ForAll,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.ForAll.Name,
@@ -826,6 +874,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.IsBlankOrErrorOptionSetValue,
                 NoErrorHandling(IsBlankOrError)
+            },
+            {
+                BuiltinFunctionsCore.IsEmpty,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.IsEmpty.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsEmpty)
             },
             {
                 BuiltinFunctionsCore.IsError,
@@ -1722,8 +1781,80 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Find], DoNotReplaceBlank))
             },
             {
+                BuiltinFunctionsCore.LeftST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LeftTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Left],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.LogT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Log], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.MidT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Mid],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
                 BuiltinFunctionsCore.ModT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Mod], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.PowerT,
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Power], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.RightST,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTS,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
+            },
+            {
+                BuiltinFunctionsCore.RightTT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Right],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
                 BuiltinFunctionsCore.RoundT,
@@ -1736,6 +1867,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.RoundDownT,
                 NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithZero))
+            },
+            {
+                BuiltinFunctionsCore.SubstituteT,
+                NoErrorHandling(
+                    MultiSingleColumnTable(
+                        SimpleFunctionImplementations[BuiltinFunctionsCore.Substitute],
+                        ReplaceBlankWith(
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty),
+                            new NumberValue(IRContext.NotInSource(FormulaType.Number), 0))))
             },
             {
                 BuiltinFunctionsCore.TruncT,
@@ -1814,12 +1956,30 @@ namespace Microsoft.PowerFx.Functions
             return false;
         }
 
+        private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is BlankValue)
+            {
+                return new BooleanValue(irContext, true);
+            }
+
+            if (args[0] is TableValue tv)
+            {
+                return new BooleanValue(irContext, !tv.Rows.Any());
+            }
+            else
+            {
+                return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
         public static FormulaValue IsNumeric(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var arg0 = args[0];
             switch (arg0)
             {
                 case NumberValue _:
+                case DecimalValue _:
                 case DateValue _:
                 case DateTimeValue _:
                 case TimeValue _:
@@ -1839,7 +1999,7 @@ namespace Microsoft.PowerFx.Functions
 
             var childContext = context.SymbolContext.WithScopeValues(arg0);
 
-            return await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
+            return await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
@@ -1853,7 +2013,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<BooleanValue>(args[i], context, args[i].IRContext);
+                var res = await runner.EvalArgAsync<BooleanValue>(args[i], context, args[i].IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {
@@ -1862,7 +2022,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         var trueBranch = args[i + 1];
 
-                        var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext)).ToFormulaValue();
+                        var trueBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(trueBranch, context, trueBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                         return MaybeAdjustToCompileTimeType(trueBranchResult, irContext);
                     }
                 }
@@ -1879,7 +2039,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
+                    var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                     
                     return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
@@ -1921,7 +2081,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], context, args[i].IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(args[i], context, args[i].IRContext).ConfigureAwait(false);
 
                 if (res.IsError)
                 {
@@ -1958,7 +2118,7 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(new InMemoryRecordValue(IRContext.NotInSource(ifErrorScopeParamType), scopeVariables));
 
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
@@ -1969,7 +2129,7 @@ namespace Microsoft.PowerFx.Functions
                 if (i + 2 == args.Length - 1)
                 {
                     var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext)).ToFormulaValue();
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
             }
 
@@ -2046,7 +2206,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length - 1; i += 2)
             {
                 var match = (LambdaFormulaValue)args[i];
-                var matchValue = await match.EvalAsync();
+                var matchValue = await match.EvalAsync().ConfigureAwait(false);
 
                 if (matchValue is ErrorValue mve)
                 {
@@ -2060,14 +2220,14 @@ namespace Microsoft.PowerFx.Functions
                 if (equal)
                 {
                     var lambda = (LambdaFormulaValue)args[i + 1];
-                    var result = await lambda.EvalAsync();
+                    var result = await lambda.EvalAsync().ConfigureAwait(false);
                     if (errors.Count != 0)
                     {
                         return ErrorValue.Combine(irContext, errors);
                     }
                     else
                     {
-                        return result;
+                        return MaybeAdjustToCompileTimeType(result, irContext);
                     }
                 }
             }
@@ -2078,14 +2238,14 @@ namespace Microsoft.PowerFx.Functions
             if ((args.Length - 4) % 2 == 0)
             {
                 var lambda = (LambdaFormulaValue)args[args.Length - 1];
-                var result = await lambda.EvalAsync();
+                var result = await lambda.EvalAsync().ConfigureAwait(false);
                 if (errors.Count != 0)
                 {
                     return ErrorValue.Combine(irContext, errors);
                 }
                 else
                 {
-                    return result;
+                    return MaybeAdjustToCompileTimeType(result, irContext);
                 }
             }
 
@@ -2114,7 +2274,7 @@ namespace Microsoft.PowerFx.Functions
             foreach (var row in rowsAsync)
             {
                 runner.CheckCancel();
-                rows.Add(await row);
+                rows.Add(await row.ConfigureAwait(false));
             }
 
             var errorRows = rows.OfType<ErrorValue>();

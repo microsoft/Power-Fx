@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
@@ -155,8 +156,32 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("x=1;y=2;", "1", "2")]
-        public void GetNamedFormulasTest(string script, string expectedX, string expectedY)
+        [InlineData("x=1;y=2;", "1", "1", "2", "2")]
+        [InlineData("x=1.00000000000000000000000001;y=2.00000000000000000000000001;", "1", "1.00000000000000000000000001", "2", "2.00000000000000000000000001")]
+        [InlineData("x=1e-100;y=1e-100;", "1E-100", "1e-100", "1E-100", "1e-100")]
+        public void GetNamedFormulasTest(string script, string expectedX, string scriptX, string expectedY, string scriptY)
+        {
+            var namedFormula = new NamedFormulas(script);
+            var formulas = namedFormula.EnsureParsed(TexlParser.Flags.NumberIsFloat);
+            formulas.OrderBy(formula => formula.formula.Script);
+
+            Assert.NotNull(formulas);
+
+            Assert.Equal(expectedX, formulas.ElementAt(0).formula.ParseTree.ToString());
+            Assert.Equal(expectedY, formulas.ElementAt(1).formula.ParseTree.ToString());
+
+            Assert.Equal(NodeKind.NumLit, formulas.ElementAt(0).formula.ParseTree.Kind);
+            Assert.Equal(NodeKind.NumLit, formulas.ElementAt(1).formula.ParseTree.Kind);
+
+            Assert.Equal(scriptX, formulas.ElementAt(0).formula.Script);
+            Assert.Equal(scriptY, formulas.ElementAt(1).formula.Script);
+        }
+
+        [Theory]
+        [InlineData("x=1;y=2;", "1", "1", "2", "2")]
+        [InlineData("x=1.00000000000000000000000001;y=2.00000000000000000000000001;", "1.00000000000000000000000001", "1.00000000000000000000000001", "2.00000000000000000000000001", "2.00000000000000000000000001")]
+        [InlineData("x=1e-100;y=1e-100;", "0", "1e-100", "0", "1e-100")]
+        public void GetNamedFormulasTest_Decimal(string script, string expectedX, string scriptX, string expectedY, string scriptY)
         {
             var namedFormula = new NamedFormulas(script);
             var formulas = namedFormula.EnsureParsed();
@@ -164,8 +189,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.NotNull(formulas);
 
-            Assert.Equal(expectedX, formulas.ElementAt(0).formula.Script);
-            Assert.Equal(expectedY, formulas.ElementAt(1).formula.Script);
+            Assert.Equal(expectedX, formulas.ElementAt(0).formula.ParseTree.ToString());
+            Assert.Equal(expectedY, formulas.ElementAt(1).formula.ParseTree.ToString());
+
+            Assert.Equal(NodeKind.DecLit, formulas.ElementAt(0).formula.ParseTree.Kind);
+            Assert.Equal(NodeKind.DecLit, formulas.ElementAt(1).formula.ParseTree.Kind);
+
+            Assert.Equal(scriptX, formulas.ElementAt(0).formula.Script);
+            Assert.Equal(scriptY, formulas.ElementAt(1).formula.Script);
         }
     }
 }

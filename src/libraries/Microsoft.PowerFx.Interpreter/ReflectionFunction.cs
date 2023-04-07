@@ -134,15 +134,15 @@ namespace Microsoft.PowerFx
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var result = _impl(args);
-            return await result;
+            return await result.ConfigureAwait(false);
         }
     }
 
     /// <summary>
     /// Base class for importing a C# function into Power Fx. 
     /// Dervied class should follow this convention:
-    /// - class name should folow this convention: "[Method Name]" + "Function"
-    /// - it should have a public static  method 'Execute'. this class will reflect over that signature to import to power fx. 
+    /// - class name should folow this convention: "[Method Name]" + "Function" + optional postfix for function orevloading
+    /// - it should have a public static  method 'Execute'. this class will reflect over that signature to import to Power Fx. 
     /// </summary>
     public abstract class ReflectionFunction
     {
@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx
             {
                 var t = GetType();
                 var suffix = "Function";
-                var name = t.Name.Substring(0, t.Name.Length - suffix.Length);
+                var name = t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
                 var returnType = GetType(m.ReturnType);
                 var paramTypes = new List<FormulaType>();
@@ -372,7 +372,7 @@ namespace Microsoft.PowerFx
                 }
                 else if (arg is LambdaFormulaValue lambda)
                 {
-                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
+                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync().ConfigureAwait(false);
                     arg = argLambda;
                 }
 
@@ -409,7 +409,7 @@ namespace Microsoft.PowerFx
                 var resultType = result.GetType().GenericTypeArguments[0];
                 try
                 {
-                    result = await Unwrap(result, resultType);
+                    result = await Unwrap(result, resultType).ConfigureAwait(false);
                 }
                 catch (CustomFunctionErrorException customFunctionErrorException)
                 {
@@ -435,7 +435,7 @@ namespace Microsoft.PowerFx
             var helper = Activator.CreateInstance(t1);
             var t2 = (Helper)helper;
 
-            FormulaValue result = await t2.Unwrap(obj);
+            FormulaValue result = await t2.Unwrap(obj).ConfigureAwait(false);
 
             return result;
         }

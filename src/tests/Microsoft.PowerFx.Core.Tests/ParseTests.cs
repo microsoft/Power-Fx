@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Syntax;
@@ -45,10 +46,50 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("-123456789")]
         [InlineData("123456789.987654321", "123456789.98765433")]
         [InlineData("-123456789.987654321", "-123456789.98765433")]
+        [InlineData("1.00000000000000000000001", "1")]
         [InlineData("2.E5", "200000")]
         public void TexlParseNumericLiterals(string script, string expected = null)
         {
-            TestRoundtrip(script, expected);
+            TestRoundtrip(script, expected, NodeKind.Error, null, TexlParser.Flags.NumberIsFloat);
+        }
+
+        [Theory]
+        [InlineData("0")]
+        [InlineData("-0")]
+        [InlineData("1")]
+        [InlineData("-1")]
+        [InlineData("1.0", "1")]
+        [InlineData("-1.0", "-1")]
+        [InlineData("1.123456789")]
+        [InlineData("-1.123456789")]
+        [InlineData("0.0", "0")]
+        [InlineData("0.000000", "0")]
+        [InlineData("0.000001", "1E-06")]
+        [InlineData("0.123456789")]
+        [InlineData("-0.0", "-0")]
+        [InlineData("-0.000000", "-0")]
+        [InlineData("-0.000001", "-1E-06")]
+        [InlineData("-0.123456789")]
+        [InlineData("0.99999999")]
+        [InlineData("9.99999999")]
+        [InlineData("-0.99999999")]
+        [InlineData("-9.99999999")]
+        [InlineData("-100")]
+        [InlineData("10e4", "100000")]
+        [InlineData("10e-4", "0.001")]
+        [InlineData("10e+4", "100000")]
+        [InlineData("-10e4", "-100000")]
+        [InlineData("-10e-4", "-0.001")]
+        [InlineData("-10e+4", "-100000")]
+        [InlineData("123456789")]
+        [InlineData("-123456789")]
+        [InlineData("123456789.987654321", "123456789.987654321")]
+        [InlineData("-123456789.987654321", "-123456789.987654321")]
+        [InlineData("1.00000000000000000000001", "1.00000000000000000000001")]
+        [InlineData("2.E5", "200000")]
+        public void TexlParseDecimalLiterals(string script, string expected = null)
+        {
+            TestRoundtrip(script, expected, NodeKind.Error, null, TexlParser.Flags.None);
         }
 
         [Theory]
@@ -527,7 +568,7 @@ namespace Microsoft.PowerFx.Core.Tests
                  MaxExpressionLength = 10
             };
 
-            var parseResult = Engine.Parse(expr, opts);
+            var parseResult = Engine.Parse(expr, options: opts);
             Assert.False(parseResult.IsSuccess);
             Assert.True(parseResult.HasError);
 
@@ -768,6 +809,46 @@ namespace Microsoft.PowerFx.Core.Tests
             var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
 
             Assert.True(result.HasError);
+        }
+
+        [Theory]
+        [InlineData("a = 10ads; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = 20;", "c")]
+        [InlineData("a = (; b = 123; c = );", "b")]
+        [InlineData("a = 10; b = 123; c = 10);", "b")]
+        [InlineData("3r(09 = 10; b = 123; c = 10;", "b")]
+        [InlineData("a = 10; b = (123 ; c = 20;", "c")]
+        [InlineData("a = 10; b = in'valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in(valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in)valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in{valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in}valid ; c = 20;", "c")]
+        [InlineData("a = 10; b = in'valid", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf", "a")]
+        [InlineData("a = 10; b = 3213d 123123asdf; c = 23;", "c")]
+        [InlineData("a = 10; b = 3213d 123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = 321;3;d ;;;123123asdf;; c = 23;", "c")]
+        [InlineData("a = 10; b = in'valid ; c = 20; d = also(invalid; e = 44;", "e")]
+        [InlineData("a = 10; b = 30; c = in'valid ; d = (10; e = 42;", "e")]
+        public void TestFormulaParseRestart(string script, string key)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script);
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+        }
+
+        [Theory]
+        [InlineData("a = 10;; b = in'valid ;; c = 20", "c")]
+        [InlineData("a = 10;; b = in'valid ;; c = 20;; d = also(invalid;; e = 44;;", "e")]
+        public void TestFormulaParseRestart2(string script, string key)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script, new CultureInfo("fr-FR"));
+            Assert.True(formulasResult.HasError);
+
+            // Parser restarted, and found 'c' correctly
+            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
         }
     }
 }

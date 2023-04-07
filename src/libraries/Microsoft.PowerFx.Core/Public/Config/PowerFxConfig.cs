@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx
     public sealed class PowerFxConfig
     {
         internal static readonly int DefaultMaxCallDepth = 20;
+        internal static readonly int DefaultMaximumExpressionLength = 1000;
 
         /// <summary>
         /// Global symbols. Additional symbols beyond default function set. 
@@ -34,34 +35,28 @@ namespace Microsoft.PowerFx
         [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
 
-        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);
-
-        public CultureInfo CultureInfo { get; }
+        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);        
 
         public Features Features { get; }
 
         public int MaxCallDepth { get; set; }
 
-        private PowerFxConfig(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features = Features.None)
+        public int MaximumExpressionLength { get; set; }
+
+        private PowerFxConfig(EnumStoreBuilder enumStoreBuilder, Features features = null)
         {
-            CultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
-            Features = features;
+            Features = features ?? Features.None;
             SymbolTable.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
+            MaximumExpressionLength = DefaultMaximumExpressionLength;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
-        /// </summary>
-        /// <param name="cultureInfo">Culture to use.</param>      
-        public PowerFxConfig(CultureInfo cultureInfo = null)
-            : this(cultureInfo, Features.None)
+        /// </summary>          
+        public PowerFxConfig()
+            : this(Features.None)
         {
-        }
-
-        internal PowerFxConfig WithCulture(CultureInfo newCulture)
-        {
-            return new PowerFxConfig(newCulture, Features) { SymbolTable = this.SymbolTable };
         }
 
         /// <summary>
@@ -75,44 +70,34 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
-        /// </summary>
-        /// <param name="cultureInfo">Culture to use.</param>
-        /// <param name="features">Features to use.</param>
-        public PowerFxConfig(CultureInfo cultureInfo, Features features)
-            : this(cultureInfo, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library), features)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.
-        /// </summary>
+        /// </summary>        
         /// <param name="features">Features to use.</param>
         public PowerFxConfig(Features features)
-            : this(null, features)
+            : this(new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library), features)
         {
         }
 
         /// <summary>
         /// Stopgap until Enum Store is refactored. Do not rely on, this will be removed. 
         /// </summary>
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder)
+        internal static PowerFxConfig BuildWithEnumStore(EnumStoreBuilder enumStoreBuilder)
         {
-            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, Features.None);
+            return BuildWithEnumStore(enumStoreBuilder, Features.None);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, Features features)
+        internal static PowerFxConfig BuildWithEnumStore(EnumStoreBuilder enumStoreBuilder, Features features)
         {
-            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, BuiltinFunctionsCore._library, features: features);
+            return BuildWithEnumStore(enumStoreBuilder, BuiltinFunctionsCore._library, features: features);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet coreFunctions)
+        internal static PowerFxConfig BuildWithEnumStore(EnumStoreBuilder enumStoreBuilder, TexlFunctionSet coreFunctions)
         {
-            return BuildWithEnumStore(cultureInfo, enumStoreBuilder, coreFunctions, Features.None);
+            return BuildWithEnumStore(enumStoreBuilder, coreFunctions, Features.None);
         }
 
-        internal static PowerFxConfig BuildWithEnumStore(CultureInfo cultureInfo, EnumStoreBuilder enumStoreBuilder, TexlFunctionSet coreFunctions, Features features)
+        internal static PowerFxConfig BuildWithEnumStore(EnumStoreBuilder enumStoreBuilder, TexlFunctionSet coreFunctions, Features features)
         {
-            var config = new PowerFxConfig(cultureInfo, enumStoreBuilder, features);
+            var config = new PowerFxConfig(enumStoreBuilder, features);
 
             config.AddFunctions(coreFunctions);
 

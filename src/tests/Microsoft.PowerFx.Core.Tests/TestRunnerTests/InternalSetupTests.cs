@@ -100,13 +100,47 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Fact]
-        public void InternalSetup_Parse_TableSyntaxDoesntWrapRecordsFlags()
+        public void InternalSetup_Parse_DisableTableSyntaxDoesntWrapRecordsFlags()
         {
-            var iSetup = InternalSetup.Parse($"TableSyntaxDoesntWrapRecords");
+            var iSetup = InternalSetup.Parse($"disable:TableSyntaxDoesntWrapRecords");
 
             Assert.NotNull(iSetup);
             Assert.Null(iSetup.HandlerName);
-            Assert.Equal(Features.TableSyntaxDoesntWrapRecords, iSetup.Features);
+            Assert.False(iSetup.Features.TableSyntaxDoesntWrapRecords);
+        }
+
+        [Fact]
+        public void InternalSetup_Parse_DisableMultipleFlags()
+        {
+            var iSetup = InternalSetup.Parse($"disable:TableSyntaxDoesntWrapRecords,disable:ConsistentOneColumnTableResult");
+
+            Assert.NotNull(iSetup);
+            Assert.Null(iSetup.HandlerName);
+
+            Assert.False(iSetup.Features.TableSyntaxDoesntWrapRecords);
+            Assert.False(iSetup.Features.ConsistentOneColumnTableResult);
+        }
+
+        [Fact]
+        public void InternalSetup_Parse_EnablingAndDisablingFeatures()
+        {
+            var iSetup = InternalSetup.Parse("SomeHandler,disable:TableSyntaxDoesntWrapRecords,EnableExpressionChaining");
+            Assert.Equal(TexlParser.Flags.EnableExpressionChaining, iSetup.Flags);
+            Assert.Equal("SomeHandler", iSetup.HandlerName);
+            Assert.False(iSetup.Features.TableSyntaxDoesntWrapRecords);
+            Assert.True(iSetup.Features.ConsistentOneColumnTableResult);
+        }
+
+        [Fact]
+        public void InternalSetup_Parse_EnableFlagAlreadyEnabled()
+        {
+            Assert.Throws<InvalidOperationException>(() => InternalSetup.Parse($"TableSyntaxDoesntWrapRecords"));
+        }
+
+        [Fact]
+        public void InternalSetup_Parse_DisableFlagAlreadyDisabled()
+        {
+            Assert.Throws<InvalidOperationException>(() => InternalSetup.Parse($"disable:EnableExpressionChaining"));
         }
 
         [Fact]

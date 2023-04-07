@@ -32,6 +32,8 @@ namespace Microsoft.PowerFx
         public RecalcEngineWorker(RecalcEngine parent, CultureInfo cultureInfo = null)
         {
             _parent = parent;
+
+            // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 

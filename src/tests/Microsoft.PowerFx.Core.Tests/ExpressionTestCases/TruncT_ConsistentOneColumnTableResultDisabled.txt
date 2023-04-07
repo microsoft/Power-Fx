@@ -1,3 +1,6 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+#SKIPFILE: disable:NumberIsFloat   // waiting on https://github.com/microsoft/Power-Fx/pull/1256
+
 // Trunc(Number_or_table, [digits_or_table]), toward zero
 // Results should match RoundDown.txt
 

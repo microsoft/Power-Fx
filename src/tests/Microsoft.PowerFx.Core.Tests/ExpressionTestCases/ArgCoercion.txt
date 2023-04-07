@@ -41,3 +41,18 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Hour(If(false, "hi", Blank()))
 0
+
+// Ensure record coercion doesn't prevent us from accessing non-coerced fields. 
+>> Last([{a:1,b:2}, {a:"1", b: 3}]).b
+3
+
+// extra nesting, a.x coerces. 
+>> Last([{a: { x:1},b:2}, {a:{x:"1"}, b: 3}]).b
+3
+
+// Coerce to 1st element in list; so middle element shouldn't impact  
+>> Last([{a:1,b:2}, {a:2, b: "2"}, {a:"1", b: 3}]).b
+3
+
+>> Last([ {a:2}, {a:true, b:true, c:20}, {a:2, b:2, c:true} ]).c
+true

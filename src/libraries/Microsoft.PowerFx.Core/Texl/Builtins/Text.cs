@@ -52,8 +52,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var arg0Type = argTypes[0];
 
             var isValidString = true;
-            var isValidNumber = CheckType(arg0, arg0Type, DType.Number, DefaultErrorContainer, out var matchedWithCoercion);
-            var arg0CoercedType = matchedWithCoercion ? DType.Number : DType.Invalid;
+            var isValidNumber = false;
+            var matchedWithCoercion = false;
+            DType arg0CoercedType = null;
+
+            if (!DType.Decimal.Accepts(arg0Type) && (checkTypesContext.NumberIsFloat || DType.Number.Accepts(arg0Type)))
+            {
+                isValidNumber = CheckType(arg0, arg0Type, DType.Number, DefaultErrorContainer, out matchedWithCoercion);
+                arg0CoercedType = matchedWithCoercion ? DType.Number : DType.Invalid;
+            }
+            else
+            {
+                isValidNumber = CheckType(arg0, arg0Type, DType.Decimal, DefaultErrorContainer, out matchedWithCoercion);
+                arg0CoercedType = matchedWithCoercion ? DType.Decimal : DType.Invalid;
+            }
 
             if (!isValidNumber || matchedWithCoercion)
             {
@@ -100,7 +112,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return isValid;
             }
 
-            if (!DType.String.Accepts(argTypes[1]))
+            if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1]))
+            {
+                // Coerce enum values to string
+                CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
+            }
+            else if (!DType.String.Accepts(argTypes[1]))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
                 isValid = false;
@@ -173,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.DateTimeFormatEnumString };
+            return new List<string>() { LanguageConstants.DateTimeFormatEnumString };
         }
     }
 

@@ -1,0 +1,13 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
+>> Int([0, 230])
+Table({Value:0},{Value:230})
+
+>> Int([14.123456, 45.7, 3*0.415])
+Table({Value:14},{Value:45},{Value:1})
+
+>>Int(Table({a: -14.123456}, {a: -45.7}, {a: -3*0.415}))
+Table({a:-15},{a:-46},{a:-2})
+
+>>Int(Table({a: false}, {a: true}))
+Table({a:0},{a:1})

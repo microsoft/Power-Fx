@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
@@ -150,7 +151,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
-            PowerFxConfig pfxConfig = new PowerFxConfig(Features.All);
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language_Response.json");
 
@@ -170,7 +171,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -210,7 +211,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
  [body] {{""kind"":""Conversation"",""analysisInput"":{{""conversationItem"":{{""id"":""0"",""participantId"":""0"",""language"":""en-us"",""modality"":""text"",""text"":""Book me a flight for Munich""}}}},""parameters"":{{""projectName"":""project1"",""deploymentName"":""deploy1"",""verbose"":true,""stringIndexType"":""TextElement_V8""}}}}
 ";
 
-            Assert.Equal(expectedInput, input);
+            Assert.Equal(expectedInput.Replace("\r\n", "\n").Replace("\r", "\n"), input.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
         [Fact]
@@ -219,7 +220,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
-            PowerFxConfig pfxConfig = new PowerFxConfig(Features.All);
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
 
@@ -239,7 +240,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -279,6 +280,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             public void Visit(NumberValue value)
+            {
+                Result = value.Value.ToString();
+            }
+
+            public void Visit(DecimalValue value)
             {
                 Result = value.Value.ToString();
             }

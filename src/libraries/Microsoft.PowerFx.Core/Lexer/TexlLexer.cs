@@ -24,7 +24,10 @@ namespace Microsoft.PowerFx.Syntax
         [Flags]
         public enum Flags
         {
-            None,
+            None = 0,
+
+            // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
+            NumberIsFloat = 1 << 0
         }
 
         // Locale-invariant syntax.
@@ -198,6 +201,7 @@ namespace Microsoft.PowerFx.Syntax
 
         public static TexlLexer GetLocalizedInstance(CultureInfo culture)
         {
+            // this is a safe default value as we only use this value for determining the decimal separator at next line
             culture ??= CultureInfo.InvariantCulture;
 
             // Number decimal separator can be a dot (.), comma (,), arabic comma (Unicode 0x66B) 
@@ -338,12 +342,12 @@ namespace Microsoft.PowerFx.Syntax
             return tokens;
         }
 
-        public List<Token> GetTokens(string text)
+        public List<Token> GetTokens(string text, Flags flags = Flags.None)
         {
             Contracts.AssertValue(text);
 
             Token tok;
-            var impl = new LexerImpl(this, text, new StringBuilder(), Flags.None);
+            var impl = new LexerImpl(this, text, new StringBuilder(), flags);
             var tokens = new List<Token>();
             while ((tok = impl.GetNextToken()) != null)
             {
@@ -851,6 +855,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly int _charCount;
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly Stack<LexerMode> _modeStack;
+            private readonly bool _numberIsFloat;
 
             private int _currentTokenPos; // The start of the current token.
 
@@ -864,6 +869,8 @@ namespace Microsoft.PowerFx.Syntax
                 _text = text;
                 _charCount = _text.Length;
                 _sb = sb;
+
+                _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
@@ -1180,15 +1187,30 @@ namespace Microsoft.PowerFx.Syntax
                     }
                 }
 
-                // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
-                if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value) || double.IsNaN(value) || double.IsInfinity(value))
+                if (_numberIsFloat)
                 {
-                    return isCorrect ?
-                        new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
-                        new ErrorToken(GetTextSpan());
-                }
+                    // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
+                    if (!double.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value) || double.IsNaN(value) || double.IsInfinity(value))
+                    {
+                        return isCorrect ?
+                            new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
+                            new ErrorToken(GetTextSpan());
+                    }
 
-                return new NumLitToken(value, GetTextSpan());
+                    return new NumLitToken(value, GetTextSpan());
+                }
+                else
+                {
+                    // Parsing in the current culture, to allow the CLR to correctly parse non-arabic numerals.
+                    if (!decimal.TryParse(_sb.ToString(), NumberStyles.Float, _lex._numberFormatInfo, out var value))
+                    {
+                        return isCorrect ?
+                            new ErrorToken(GetTextSpan(), TexlStrings.ErrNumberTooLarge) :
+                            new ErrorToken(GetTextSpan());
+                    }
+
+                    return new DecLitToken(value, GetTextSpan());
+                }
             }
 
             private bool IsSign(char ch)
@@ -1244,6 +1266,7 @@ namespace Microsoft.PowerFx.Syntax
                 // Delimited identifier.
                 NextChar();
                 var ichStrMin = CurrentPos;
+                var semicolonIndex = -1;
 
                 // Accept any characters up to the next unescaped identifier delimiter.
                 // String will be corrected in the IdentToken if needed.
@@ -1251,6 +1274,18 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     if (Eof)
                     {
+                        // Ident was never closed, tokenize ident up to semicolon
+                        if (semicolonIndex != -1)
+                        {
+                            CurrentPos = ichStrMin;
+                            _sb.Length = 0;
+                            while (CurrentPos < semicolonIndex)
+                            {
+                                _sb.Append(CurrentChar);
+                                NextChar();
+                            }
+                        }
+
                         break;
                     }
 
@@ -1277,6 +1312,25 @@ namespace Microsoft.PowerFx.Syntax
                         // Don't include the new line in the identifier
                         fDelimiterEnd = false;
                         break;
+                    }
+                    else if (CurrentChar.ToString() == PunctuatorSemicolonInvariant)
+                    {
+                        // This is to enable parser restarting
+                        // Don't know if semicolon is end of identifier so we will store for fallback
+                        // Some locales use ;;, so we check for match and move shift 2 characters instead of 1
+                        if (_lex.TryGetPunctuator(CurrentChar.ToString(), out TokKind tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                        }
+                        else if (_lex.TryGetPunctuator(CurrentChar.ToString() + _text[Math.Min(CurrentPos + 1, _charCount)].ToString(), out tid) && tid == TokKind.Semicolon)
+                        {
+                            semicolonIndex = semicolonIndex == -1 ? CurrentPos : semicolonIndex;
+                            _sb.Append(CurrentChar);
+                            NextChar();
+                        }
+
+                        _sb.Append(CurrentChar);
+                        NextChar();
                     }
                     else
                     {

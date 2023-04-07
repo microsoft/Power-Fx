@@ -14,15 +14,57 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
+        // File expression tests are run TWICE - once with and once without NumberIsFloat
+        //
+        // Most tests are not sensitive to float vs. decimal and will pass in both modes without modification.
+        // If you aren't speficically testing numeric limits, stick to numbers that are less than +/-1E20 which is
+        // a safe range for both float and decimal and practically where most makers will work.  
+        //
+        // For testing large float numbers (for example, 1E100 or 1E300) or high precision decimals
+        // (for example, 1.00000000000000000000001), individual files can be excluded from one of the two modes
+        // with a directive at the top of the file:
+        //   #SKIPFILE: NumberIsFloat          // skips the file if NumberIsFloat is enabled (float mode)
+        //   #SKIPFILE: disable:NumberIsFloat  // skips the file if NumberIsFloat is disabled (decimal mode)
+        //
+        // Skipped files do not show up in the list of skipped tests, tests are skipped before being added in TxtFileData.
+        // The intent of SKIPFILE is to be a permanent mode selection for tests that are range/precision sensitive.
+
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner))]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), false)]
         public void InterpreterTestCase(ExpressionTestCase testCase)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over. a
+            // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner();
+            var runner = new InterpreterRunner() { NumberIsFloat = false };
+            var (result, msg) = runner.RunTestCase(testCase);
+
+            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
+            switch (result)
+            {
+                case TestResult.Pass:
+                    break;
+
+                case TestResult.Fail:
+                    Assert.True(false, prefix + msg);
+                    break;
+
+                case TestResult.Skip:
+                    Skip.If(true, prefix + msg);
+                    break;
+            }
+        }
+
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), true)]
+        public void InterpreterTestCase_NumberIsFloat(ExpressionTestCase testCase)
+        {
+            // This is running against embedded resources, so if you're updating the .txt files,
+            // make sure they build is actually copying them over.
+            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
+
+            var runner = new InterpreterRunner() { NumberIsFloat = true };
             var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
@@ -82,11 +124,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig();
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
-            var runner = new ReplRunner(engine);
+            var runner = new ReplRunner(engine) { NumberIsFloat = true };
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(path);
+            testRunner.AddFile(numberIsFloat: true, path);
 
             var result = testRunner.RunTests();
 
@@ -130,7 +172,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(path);
+            runner.AddDir(numberIsFloat: false, path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);

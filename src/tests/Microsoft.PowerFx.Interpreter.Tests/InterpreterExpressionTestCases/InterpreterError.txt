@@ -1,0 +1,3 @@
+// Function implemented in other hosts, not in the C# interpreter
+>> ReadNFC()
+Errors: Error 0-9: 'ReadNFC' is a recognized but not supported function.

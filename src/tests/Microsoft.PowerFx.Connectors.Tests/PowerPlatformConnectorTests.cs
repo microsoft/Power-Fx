@@ -66,10 +66,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response.json");
 
-            var result = await engine.EvalAsync(
-                "MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp",
-                CancellationToken.None);
-
+            var result = await engine.EvalAsync("MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp", CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(53.0, result.ToObject()); // from response
 
             // PowerPlatform Connectors transform the request significantly from what was in the swagger. 
@@ -124,7 +121,7 @@ namespace Microsoft.PowerFx.Tests
             // Now execute it...
             var engine = new RecalcEngine(config);
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
-            var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None);
+            var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(result);
 
@@ -153,7 +150,7 @@ namespace Microsoft.PowerFx.Tests
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
-            var result2 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),FirstError.Message)", CancellationToken.None);
+            var result2 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),FirstError.Message)", CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(result2);
             Assert.IsType<StringValue>(result2);
@@ -170,7 +167,7 @@ namespace Microsoft.PowerFx.Tests
             }
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
-            var result3 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),CountRows(AllErrors))", CancellationToken.None);
+            var result3 = await engine.EvalAsync($"IfError(Text(TestConnector12.GenerateError({{error: {statusCode}}})),CountRows(AllErrors))", CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(result3);
             Assert.IsType<StringValue>(result3);
@@ -228,10 +225,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);                        
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
-            var result = await engine.EvalAsync(
-                @"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size",
-                CancellationToken.None,
-                options: new ParserOptions() { AllowsSideEffects = true });
+            var result = await engine.EvalAsync(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
 
             dynamic res = result.ToObject();
             var size = (double)res;
@@ -392,7 +386,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc, client);           
             var engine = new RecalcEngine(config);            
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");            
-            var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None);
+            var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("+33 799 999 999", (result as StringValue).Value);
@@ -420,7 +414,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc, client);
             var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
-            var result = await engine.EvalAsync(@"Office365Users.MyProfileV2().mobilePhone", CancellationToken.None);
+            var result = await engine.EvalAsync(@"Office365Users.MyProfileV2().mobilePhone", CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("+33 799 999 999", (result as StringValue).Value);
@@ -448,7 +442,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc, client);
             var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\Office365_DirectsV2.json");
-            var result = await engine.EvalAsync(@"First(Office365Users.DirectReportsV2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None);
+            var result = await engine.EvalAsync(@"First(Office365Users.DirectReportsV2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("Paris", (result as StringValue).Value);
@@ -476,7 +470,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc, client);
             var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\Office365_SearchV2.json");
-            var result = await engine.EvalAsync(@"First(Office365Users.SearchUserV2({searchTerm:""Doe"", top: 3}).value).DisplayName", CancellationToken.None);
+            var result = await engine.EvalAsync(@"First(Office365Users.SearchUserV2({searchTerm:""Doe"", top: 3}).value).DisplayName", CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("John Doe", (result as StringValue).Value);
@@ -487,7 +481,7 @@ namespace Microsoft.PowerFx.Tests
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             var apiDoc = testConnector._apiDocument;
-            var config = new PowerFxConfig(Features.All);
+            var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
 
@@ -505,7 +499,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server GetProceduresV2.json");
-            var result = await engine.EvalAsync(@"SQL.GetProceduresV2(""pfxdev-sql.database.windows.net"", ""connectortest"")", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true });
+            var result = await engine.EvalAsync(@"SQL.GetProceduresV2(""pfxdev-sql.database.windows.net"", ""connectortest"")", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
 
             var record = result as RecordValue;
             Assert.NotNull(record);
@@ -535,7 +529,7 @@ namespace Microsoft.PowerFx.Tests
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             var apiDoc = testConnector._apiDocument;
-            var config = new PowerFxConfig(Features.All);
+            var config = new PowerFxConfig(Features.PowerFxV1);
 
             using var httpClient = new HttpClient(testConnector);
 
@@ -553,7 +547,7 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
-            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true });
+            FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
 

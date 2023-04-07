@@ -97,6 +97,10 @@ namespace Microsoft.PowerFx.Core.Texl
         {
         }
 
+        public override void Visit(DecLitNode node)
+        {
+        }
+
         public override void Visit(StrLitNode node)
         {
         }

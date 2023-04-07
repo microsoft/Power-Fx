@@ -50,12 +50,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static ErrorValue OverflowError(IRContext irContext)
         {
-            return new ErrorValue(irContext, new ExpressionError()
-            {
-                Message = "Overflow",
-                Span = irContext.SourceContext,
-                Kind = ErrorKind.Numeric
-            });
+            return PrimitiveValueConversions.OverflowError(irContext);
         }
 
         public static ErrorValue BadLanguageCode(IRContext irContext, string languageCode)

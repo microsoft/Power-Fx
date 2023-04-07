@@ -27,45 +27,47 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// Test case wherein the presence of the `|` character indicates cursor position.  See
         /// <see cref="TestSuggest"/> for more details.
         /// </param>
+        /// <param name="config"></param>
+        /// <param name="culture"></param>
         /// <param name="contextTypeString">
         /// The type that defines names and types that are valid in <see cref="expression"/>.
         /// </param>
         /// <returns>
         /// List of string representing suggestions.
         /// </returns>
-        private string[] SuggestStrings(string expression, PowerFxConfig config, string contextTypeString = null)
+        private string[] SuggestStrings(string expression, PowerFxConfig config, CultureInfo culture = null, string contextTypeString = null)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, config, contextTypeString);
+            var intellisense = Suggest(expression, config, culture ?? CultureInfo.InvariantCulture, contextTypeString);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType context)
+        private string[] SuggestStrings(string expression, PowerFxConfig config, CultureInfo culture, RecordType context)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, config, context);
+            var intellisense = Suggest(expression, config, culture ?? CultureInfo.InvariantCulture, context);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        private string[] SuggestStrings(string expression, PowerFxConfig config, ReadOnlySymbolTable symTable)
+        private string[] SuggestStrings(string expression, PowerFxConfig config, CultureInfo culture, ReadOnlySymbolTable symTable)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, config, symTable);
+            var intellisense = Suggest(expression, config, culture ?? CultureInfo.InvariantCulture, symTable);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
-        internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums());
+        internal static PowerFxConfig Default => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums());
 
-        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithDefaultEnums(), Features.DisableRowScopeDisambiguationSyntax);
+        internal static PowerFxConfig Default_DisableRowScopeDisambiguationSyntax => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new Features { DisableRowScopeDisambiguationSyntax = true });
 
         // No enums, no functions. Adding functions will add back in associated enums, so to be truly empty, ensure no functions. 
-        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet());
+        private PowerFxConfig EmptyEverything => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet());
 
         // No extra enums, but standard functions (which will include some enums).
-        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library));
+        private PowerFxConfig MinimalEnums => PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithRequiredEnums(BuiltinFunctionsCore._library));
 
         /// <summary>
         /// Compares expected suggestions with suggestions made by PFx Intellisense for a given
@@ -145,7 +147,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("true &|", "&", "&&")]
 
         // UnaryOpNodeSuggestionHandler
-        [InlineData("Not| false", "Not", "NotificationType", "NotificationType.Error", "NotificationType.Information", "NotificationType.Success", "NotificationType.Warning", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported", "Icon.Note", "Icon.Notebook")]
+        [InlineData("Not| false", "Not", "ErrorKind.FileNotFound", "ErrorKind.NotApplicable", "ErrorKind.NotFound", "ErrorKind.NotSupported")]
         [InlineData("| Not false")]
         [InlineData("Not |")]
 
@@ -161,7 +163,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // FirstNameNodeSuggestionHandler
         [InlineData("Tru|", "true", "Trunc")] // Though it recommends only a boolean, the suggestions are still provided by the first name handler
-        [InlineData("[@Bo|]", "BorderStyle", "VirtualKeyboardMode")]
+        [InlineData("[@In|]", "ErrorKind")]
 
         // FunctionRecordNameSuggestionHandler
         [InlineData("Error({Kin|d:0})", "Kind:")]
@@ -177,13 +179,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("|")]
 
         // AddSuggestionsForEnums
-        [InlineData("Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
-        [InlineData("Value(Edit|", "DataSourceInfo.EditPermission", "DisplayMode.Edit", "ErrorKind.EditPermissions", "FormMode.Edit", "Icon.Edit", "RecordInfo.EditPermission", "SelectedState.Edit")]
-        [InlineData("DisplayMode.E|", "Edit", "Disabled", "View")]
-        [InlineData("Disabled|", "DisplayMode.Disabled")]
-        [InlineData("DisplayMode.D|", "Disabled", "Edit")]
-        [InlineData("DisplayMode|", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
-        [InlineData("$\"Hello {DisplayMode|} World!\"", "DisplayMode", "DisplayMode.Disabled", "DisplayMode.Edit", "DisplayMode.View")]
+        [InlineData("Monday|", "StartOfWeek.Monday", "StartOfWeek.MondayZero")]
+        [InlineData("Value(Missing|", "ErrorKind.MissingRequired")]
+        [InlineData("ErrorKind.Inv|", "InvalidArgument", "InvalidFunctionUsage")]
+        [InlineData("Quota|", "ErrorKind.QuotaExceeded")]
+        [InlineData("DateTimeFormat.h|", "ShortDate", "ShortTime", "ShortTime24", "ShortDateTime", "ShortDateTime24")]
+        [InlineData("SortOrder|", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
+        [InlineData("$\"Hello {SortOrder|} World!\"", "SortOrder", "SortOrder.Ascending", "SortOrder.Descending")]
 
         [InlineData("Table({F1:1}).|")]
         [InlineData("Table({F1:1},{F1:2}).|")]
@@ -250,7 +252,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                     { "Field1", 1 },
                     { "Field2", 2 },
                 }));
-            var config = PowerFxConfig.BuildWithEnumStore(CultureInfo.InvariantCulture, enumStoreBuilder);
+            var config = PowerFxConfig.BuildWithEnumStore(enumStoreBuilder);
 
             var result = SuggestStrings("Fiel|", config);
             Assert.Equal(2, result.Length);
@@ -273,7 +275,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestIntellisenseFunctionParameterDescription(string expression, int expectedOverloadCount, string expectedDescription, string expectedDisplayText)
         {
             var context = "![tbl1:*[col1:n,col2:n]]";
-            var result = Suggest(expression, Default, context);
+            var result = Suggest(expression, Default, null, context);
             Assert.Equal(expectedOverloadCount, result.FunctionOverloads.Count());
             var currentOverload = result.FunctionOverloads.ToArray()[result.CurrentFunctionOverloadIndex];
             Assert.Equal(expectedDisplayText, currentOverload.DisplayText.Text);
@@ -288,9 +290,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             var context = $"![{string.Join(",", names.Split(',').Select(s => $"variable{s}:n"))}]";
             var expectedSuggestions = expectedOrder.Split(',').Select(s => "variable" + s).ToArray();
-            var config = PowerFxConfig.BuildWithEnumStore(new CultureInfo(culture), new EnumStoreBuilder().WithDefaultEnums());
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums());
 
-            var result = Suggest("variabl|", config, context);
+            var result = Suggest("variabl|", config, new CultureInfo(culture), context);
             var suggestions = result.Suggestions.ToList();
 
             Assert.Equal(expectedSuggestions.Length, suggestions.Count);
@@ -325,7 +327,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestNonEmptySuggest(string expression, string context = null)
         {
             var config = Default;
-            var actualSuggestions = SuggestStrings(expression, Default, context);
+            var actualSuggestions = SuggestStrings(expression, Default, contextTypeString: context);
             Assert.True(actualSuggestions.Length > 0);
 
             actualSuggestions = SuggestStrings(expression, config);
@@ -348,10 +350,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.NotNull(context);
 
             var config = Default;
-            var actualSuggestions = SuggestStrings(expression, config, context);
+            var actualSuggestions = SuggestStrings(expression, config, contextTypeString: context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
-            actualSuggestions = SuggestStrings(expression, config, context);
+            actualSuggestions = SuggestStrings(expression, config, contextTypeString: context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -363,10 +365,10 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.NotNull(context);
 
             var config = Default_DisableRowScopeDisambiguationSyntax;
-            var actualSuggestions = SuggestStrings(expression, config, context);
+            var actualSuggestions = SuggestStrings(expression, config, null, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
-            actualSuggestions = SuggestStrings(expression, config, context);
+            actualSuggestions = SuggestStrings(expression, config, null, context);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -381,17 +383,16 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public void TestSuggestLazyTypes(string expression, bool requiresExpansion, params string[] expectedSuggestions)
         {
             var lazyInstance = new LazyRecursiveRecordType();
-            var config = PowerFxConfig.BuildWithEnumStore(
-                null,
+            var config = PowerFxConfig.BuildWithEnumStore(                
                 new EnumStoreBuilder(),
                 new TexlFunctionSet(new[] { BuiltinFunctionsCore.EndsWith, BuiltinFunctionsCore.Filter, BuiltinFunctionsCore.Table }));
-            var actualSuggestions = SuggestStrings(expression, config, lazyInstance);
+            var actualSuggestions = SuggestStrings(expression, config, null, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
 
             // Intellisense requires iterating the field names for some operations
             Assert.Equal(requiresExpansion, lazyInstance.EnumerableIterated);
 
-            actualSuggestions = SuggestStrings(expression, config, lazyInstance);
+            actualSuggestions = SuggestStrings(expression, config, null, lazyInstance);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -412,7 +413,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             });
 
             var config = new PowerFxConfig();
-            var actualSuggestions = SuggestStrings(expression, config, symTable);
+            var actualSuggestions = SuggestStrings(expression, config, null, symTable);
             Assert.Equal(expectedSuggestions, actualSuggestions);
         }
 
@@ -445,12 +446,12 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(recordType, allowThisRecord: true, allowMutable: true, debugName: $"RowScope");
             var config = new PowerFxConfig();
-            var actualSuggestions = SuggestStrings(expression, config, rowScopeSymbols);
+            var actualSuggestions = SuggestStrings(expression, config, null, rowScopeSymbols);
             Assert.Equal(expected, actualSuggestions);
 
             // No suggestion when allowThisRecord is false.
             rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(recordType, allowThisRecord: false, allowMutable: true, debugName: $"RowScope");
-            actualSuggestions = SuggestStrings(expression, config, rowScopeSymbols);
+            actualSuggestions = SuggestStrings(expression, config, null, rowScopeSymbols);
             Assert.Empty(actualSuggestions);
         }
 

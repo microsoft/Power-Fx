@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
+
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
     internal sealed class TextLiteralNode : IntermediateNode
@@ -20,7 +23,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         public override string ToString()
         {
-            return $"Text({LiteralValue})";
+            return $"\"{CharacterUtils.ExcelEscapeString(LiteralValue)}\":s";
         }
     }
 }

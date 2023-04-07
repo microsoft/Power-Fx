@@ -10,5 +10,7 @@ namespace Microsoft.PowerFx
         string FullName { get; }
 
         string Email { get; }
+
+        string Id { get; }
     }
 }

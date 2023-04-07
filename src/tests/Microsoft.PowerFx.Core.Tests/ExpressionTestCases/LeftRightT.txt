@@ -1,0 +1,92 @@
+>> Left("Hello world", [4, 5])
+Table({Value:"Hell"},{Value:"Hello"})
+
+>> Right("Hello world", [3, 5])
+Table({Value:"rld"},{Value:"world"})
+
+>> Left(["Hello", "world"], [4, 5])
+Table({Value:"Hell"},{Value:"world"})
+
+>> Right(["Hello", "world"], [2, 4])
+Table({Value:"lo"},{Value:"orld"})
+
+>> Left(["Hello", "world"], 3)
+Table({Value:"Hel"},{Value:"wor"})
+
+>> Right(["Hello", "world"], 3)
+Table({Value:"llo"},{Value:"rld"})
+
+>> Left(["Hello", "world"], [0, -1])
+Table({Value:""},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Right(["Hello", "world"], [0, -1])
+Table({Value:""},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+// #### Empty tables
+>> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Left(emptyTable, 1))
+Table()
+
+>> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Right(emptyTable, 1))
+Table()
+
+>> With({emptyTable:Filter([1], Value > 10)}, Left("Hello", emptyTable))
+Table()
+
+>> With({emptyTable:Filter([1], Value > 10)}, Right("Hello", emptyTable))
+Table()
+
+>> Left(["Hello", "world"], [2])
+Table({Value:"He"},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Right(["Hello", "world"], [2])
+Table({Value:"lo"},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+// ##### Blank arguments
+>> Left(If(1<0,"Hello world"), [4, 5])
+Table({Value:""},{Value:""})
+
+>> Left(If(1<0,["Hello", "world"]), [4, 5])
+Blank()
+
+>> Left(["Hello", "world"], If(1<0,2))
+Table({Value:""},{Value:""})
+
+>> Left(["Hello", "world"], If(1<0,[2]))
+Blank()
+
+>> Right(If(1<0,"Hello world"), [4, 5])
+Table({Value:""},{Value:""})
+
+>> Right(If(1<0,["Hello", "world"]), [4, 5])
+Blank()
+
+>> Right(["Hello", "world"], If(1<0,2))
+Table({Value:""},{Value:""})
+
+>> Right(["Hello", "world"], If(1<0,[2]))
+Blank()
+
+// ##### Error arguments
+>> Left(If(1/0<2,"Hello world"), [4, 5])
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Left(If(1/0<2,["Hello", "world"]), [4, 5])
+Error({Kind:ErrorKind.Div0})
+
+>> Left(["Hello", "world"], If(1/0<2,2))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Left(["Hello", "world"], If(1/0<2,[2]))
+Error({Kind:ErrorKind.Div0})
+
+>> Right(If(1/0<2,"Hello world"), [4, 5])
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Right(If(1/0<2,["Hello", "world"]), [4, 5])
+Error({Kind:ErrorKind.Div0})
+
+>> Right(["Hello", "world"], If(1/0<2,2))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Right(["Hello", "world"], If(1/0<2,[2]))
+Error({Kind:ErrorKind.Div0})

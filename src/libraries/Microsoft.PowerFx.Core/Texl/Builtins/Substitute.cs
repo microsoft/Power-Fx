@@ -71,11 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings
-                fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                    ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                    : type0;
+                fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
@@ -140,17 +136,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     fValid &= CheckNumericColumnType(type3, args[3], errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(type3))
+                else if (!CheckType(args[3], type3, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
-                    if (type3.CoercesTo(DType.Number))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[3], DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
-                    }
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
                 }
             }
 

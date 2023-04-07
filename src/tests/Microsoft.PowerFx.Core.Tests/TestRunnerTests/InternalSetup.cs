@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Data.SqlTypes;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
 
@@ -24,9 +26,28 @@ namespace Microsoft.PowerFx.Core.Tests
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
-        internal static InternalSetup Parse(string setupHandlerName)
+        private static bool TryGetFeaturesProperty(string featureName, out PropertyInfo propertyInfo)
         {
-            var iSetup = new InternalSetup();
+            propertyInfo = typeof(Features).GetProperty(featureName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            return propertyInfo?.CanWrite == true;
+        }
+
+        internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
+        {
+            var iSetup = new InternalSetup
+            {
+                // Default features
+                Features = new Features
+                {
+                    TableSyntaxDoesntWrapRecords = true,
+                    ConsistentOneColumnTableResult = true
+                }
+            };
+
+            if (numberIsFloat)
+            {
+                iSetup.Flags |= TexlParser.Flags.NumberIsFloat;
+            }
 
             if (string.IsNullOrWhiteSpace(setupHandlerName))
             {
@@ -37,19 +58,63 @@ namespace Microsoft.PowerFx.Core.Tests
 
             foreach (var part in parts.ToArray())
             {
+                var isDisable = false;
+                var partName = part;
+                if (part.StartsWith("disable:", StringComparison.OrdinalIgnoreCase))
+                {
+                    isDisable = true;
+                    partName = part.Substring("disable:".Length);
+                }
+
                 if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
                     iSetup.DisableMemoryChecks = true;
                     parts.Remove(part);
                 }
-                else if (Enum.TryParse<TexlParser.Flags>(part, out var flag))
+                else if (Enum.TryParse<TexlParser.Flags>(partName, out var flag))
                 {
-                    iSetup.Flags |= flag;
+                    if (isDisable)
+                    {
+                        if (!iSetup.Flags.HasFlag(flag))
+                        {
+                            throw new InvalidOperationException($"Flag {partName} is already disabled");
+                        }
+
+                        iSetup.Flags &= ~flag;
+                    }
+                    else
+                    {
+                        if (iSetup.Flags.HasFlag(flag))
+                        {
+                            throw new InvalidOperationException($"Flag {partName} is already enabled");
+                        }
+
+                        iSetup.Flags |= flag;
+                    }
+
                     parts.Remove(part);
                 }
-                else if (Enum.TryParse<Features>(part, out var f))
+                else if (TryGetFeaturesProperty(partName, out var prop))
                 {
-                    iSetup.Features |= f;
+                    if (isDisable)
+                    {
+                        if (!((bool)prop.GetValue(iSetup.Features)))
+                        {
+                            throw new InvalidOperationException($"Feature {partName} is already disabled");
+                        }
+
+                        prop.SetValue(iSetup.Features, false);
+                    }
+                    else
+                    {
+                        if ((bool)prop.GetValue(iSetup.Features))
+                        {
+                            throw new InvalidOperationException($"Feature {partName} is already enabled");
+                        }
+
+                        prop.SetValue(iSetup.Features, true);
+                    }
+
                     parts.Remove(part);
                 }
                 else if (part.StartsWith("TimeZoneInfo", StringComparison.OrdinalIgnoreCase))

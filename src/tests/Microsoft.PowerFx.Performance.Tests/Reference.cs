@@ -39,6 +39,7 @@ namespace Microsoft.PowerFx.Performance.Tests
         [GlobalSetup]
         public void GlobalSetup()
         {
+            // $$$ can't use current culture
             CultureInfo.CurrentCulture = new CultureInfo("en-US");
         }
 

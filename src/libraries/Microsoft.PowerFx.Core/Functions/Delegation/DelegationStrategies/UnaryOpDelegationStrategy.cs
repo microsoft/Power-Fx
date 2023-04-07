@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            if (!IsValidNode(node, binding))
+            if (!IsValidAsyncOrImpureNode(node, binding))
             {
                 return false;
             }

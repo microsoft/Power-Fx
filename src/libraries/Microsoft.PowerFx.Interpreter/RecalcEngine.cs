@@ -43,11 +43,14 @@ namespace Microsoft.PowerFx
             _symbolValues = new SymbolValues(_symbolTable);
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
-            EngineSymbols = _symbolTable;
+            base.EngineSymbols = _symbolTable;
 
             // Add Builtin functions that aren't yet in the shared library. 
             SupportedFunctions = _interpreterSupportedFunctions;
         }
+
+        // Expose publicly. 
+        public new ReadOnlySymbolTable EngineSymbols => base.EngineSymbols; 
 
         // Set of default functions supported by the interpreter. 
         private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);
@@ -88,6 +91,21 @@ namespace Microsoft.PowerFx
         public void UpdateVariable(string name, double value)
         {
             UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
+        }
+
+        public void UpdateVariable(string name, decimal value)
+        {
+            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+        }
+
+        public void UpdateVariable(string name, int value)
+        {
+            UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
+        }
+
+        public void UpdateVariable(string name, long value)
+        {
+            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
         }
 
         /// <summary>
@@ -141,13 +159,13 @@ namespace Microsoft.PowerFx
             var symbolValues = ReadOnlySymbolValues.NewFromRecord(parameters);
             var runtimeConfig = new RuntimeConfig(symbolValues);
 
-            return await EvalAsync(expressionText, cancellationToken, options, null, runtimeConfig);
+            return await EvalAsync(expressionText, cancellationToken, options, null, runtimeConfig).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig)
         {
             var runtimeConfig2 = new RuntimeConfig(runtimeConfig);
-            return await EvalAsync(expressionText, cancellationToken, runtimeConfig: runtimeConfig2);
+            return await EvalAsync(expressionText, cancellationToken, runtimeConfig: runtimeConfig2).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, RuntimeConfig runtimeConfig = null)
@@ -165,13 +183,13 @@ namespace Microsoft.PowerFx
             var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
             var eval = check.GetEvaluator(stackMarker);
 
-            var result = await eval.EvalAsync(cancellationToken, runtimeConfig);
+            var result = await eval.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
             return result;
         }
 
-        public DefineFunctionsResult DefineFunctions(string script)
+        public DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
-            var parsedUDFS = new Core.Syntax.ParsedUDFs(script);
+            var parsedUDFS = new Core.Syntax.ParsedUDFs(script, numberIsFloat: numberIsFloat);
             var result = parsedUDFS.GetParsed();
             var errors = result.Errors?.ToList();
             var comments = new List<Syntax.CommentToken>();
@@ -181,6 +199,7 @@ namespace Microsoft.PowerFx
                 new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script),
                 udf.ReturnType.GetFormulaType(),
                 udf.IsImperative,
+                udf.NumberIsFloat,
                 udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType())).ToArray())).ToArray();
 
             return DefineFunctions(udfDefinitions);
@@ -199,7 +218,7 @@ namespace Microsoft.PowerFx
                 record = record.Add(p);
             }
 
-            var check = new CheckWrapper(this, definition.ParseResult, record, definition.IsImperative);
+            var check = new CheckWrapper(this, definition.ParseResult, record, definition.IsImperative, definition.NumberIsFloat);
 
             var func = new UserDefinedTexlFunction(definition.Name, definition.ReturnType, definition.Parameters, check);
 

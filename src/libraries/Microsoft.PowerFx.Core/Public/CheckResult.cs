@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx
 
             _expression = expression;
             _parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
-            this.ParserCultureInfo = _parserOptions.Culture;
+            ParserCultureInfo = _parserOptions.Culture;
 
             return this;
         }
@@ -287,7 +287,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public IEnumerable<ExpressionError> GetErrorsInLocale(CultureInfo culture)
         {
-            culture ??= _defaultErrorCulture ?? this.ParserCultureInfo;
+            culture ??= _defaultErrorCulture ?? ParserCultureInfo;
 
             foreach (var error in this._errors)
             {
@@ -535,6 +535,14 @@ namespace Microsoft.PowerFx
             return _irresult;
         }
 
+        // pretty print IR for debugging purposes, used by the Console REPL
+        public string PrintIR()
+        {
+            var topNode = this.ApplyIR().TopNode;
+            var topStr = topNode.ToString();
+            return topStr;
+        }
+
         /// <summary>
         /// Gets the type of a syntax node. Must call <see cref="ApplyBinding"/> first. 
         /// </summary>
@@ -551,7 +559,9 @@ namespace Microsoft.PowerFx
             return FormulaType.Build(type);
         }
 
-        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this.Binding, flags);
+        // Called by language server to get custom tokens.
+        // If binding is available, returns context sensitive tokens.  $$$
+        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this._binding, flags);
 
         private string _expressionInvariant;
 

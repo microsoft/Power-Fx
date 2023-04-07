@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             IExpressionEvaluator run = check.GetEvaluator();
 
-            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig);
+            FormulaValue result = await run.EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
             Assert.IsType<InMemoryRecordValue>(result);
         }
 
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             using (var cts = new CancellationTokenSource(500))
             {
                 // Won't complete - should throw cancellation task 
-                await Assert.ThrowsAsync<TaskCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig));
+                await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
@@ -111,10 +111,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 if (PatchDelay > 0)
                 {
-                    await Task.Delay(PatchDelay, cancellationToken);
+                    await Task.Delay(PatchDelay, cancellationToken).ConfigureAwait(false);
                 }
 
-                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken);
+                return await base.PatchCoreAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
             }
         }
 

@@ -192,43 +192,55 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbolTableOriginal = new Engine(new PowerFxConfig()).SupportedFunctions;
             var symbolTableCopy1 = symbolTableOriginal.GetMutableCopyOfFunctions();
             var symbolTableCopy2 = symbolTableOriginal.GetMutableCopyOfFunctions();
+            var symbolTableCopy3 = symbolTableOriginal.GetMutableCopyOfFunctions();
 
             var originalCount = symbolTableOriginal.Functions.Count();
             var copyCount1 = symbolTableCopy1.Functions.Count();
             var copyCount2 = symbolTableCopy2.Functions.Count();
+            var copyCount3 = symbolTableCopy2.Functions.Count();
 
             Assert.Equal(copyCount1, originalCount);
             Assert.Equal(copyCount2, originalCount);
+            Assert.Equal(copyCount3, originalCount);
 
             symbolTableCopy1.RemoveFunction("Abs");
             symbolTableCopy2.RemoveFunction("Day");
+            symbolTableCopy3.RemoveFunction("Cos");
 
             Assert.Equal(originalCount, symbolTableOriginal.Functions.Count());
             Assert.Equal(copyCount1 - 2, symbolTableCopy1.Functions.Count());
             Assert.Equal(copyCount2 - 1, symbolTableCopy2.Functions.Count());
+            Assert.Equal(copyCount3 - 2, symbolTableCopy3.Functions.Count());
 
             Assert.NotEqual(copyCount1, symbolTableCopy1.Functions.Count());
             Assert.NotEqual(copyCount2, symbolTableCopy2.Functions.Count());
+            Assert.NotEqual(copyCount3, symbolTableCopy3.Functions.Count());
 
             Assert.True(symbolTableOriginal.Functions.AnyWithName("Abs"));
             Assert.True(symbolTableOriginal.Functions.AnyWithName("Day"));
             Assert.True(symbolTableOriginal.Functions.AnyWithName("Text"));
-            Assert.True(symbolTableOriginal.Functions.AnyWithName("Value"));
+            Assert.True(symbolTableOriginal.Functions.AnyWithName("Cos"));
 
             Assert.True(symbolTableCopy1.Functions.AnyWithName("Day"));
             Assert.True(symbolTableCopy1.Functions.AnyWithName("Text"));
-            Assert.True(symbolTableCopy1.Functions.AnyWithName("Value"));
+            Assert.True(symbolTableCopy1.Functions.AnyWithName("Cos"));
 
             Assert.True(symbolTableCopy2.Functions.AnyWithName("Abs"));
             Assert.True(symbolTableCopy2.Functions.AnyWithName("Text"));
-            Assert.True(symbolTableCopy2.Functions.AnyWithName("Value"));
+            Assert.True(symbolTableCopy2.Functions.AnyWithName("Cos"));
+
+            Assert.True(symbolTableCopy3.Functions.AnyWithName("Abs"));
+            Assert.True(symbolTableCopy3.Functions.AnyWithName("Day"));
+            Assert.True(symbolTableCopy3.Functions.AnyWithName("Text"));
 
             Assert.False(symbolTableCopy1.Functions.AnyWithName("Abs"));
             Assert.False(symbolTableCopy2.Functions.AnyWithName("Day"));
+            Assert.False(symbolTableCopy3.Functions.AnyWithName("Cos"));
 
             // Check if nothing else has been copied
             Assert.Empty(symbolTableCopy1.SymbolNames);
             Assert.Empty(symbolTableCopy2.SymbolNames);
+            Assert.Empty(symbolTableCopy3.SymbolNames);
         }
 
         [Theory]
