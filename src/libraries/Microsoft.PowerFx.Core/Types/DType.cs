@@ -2722,16 +2722,33 @@ namespace Microsoft.PowerFx.Core.Types
                     type2.DisplayNameProvider);
             }
 
-            if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+            if (usePowerFxV1CompatibilityRules)
             {
-                fError |= type1.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
-            }
+                if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                {
+                    fError |= type1.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                }
 
-            if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || type2.CoercesTo(type1, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                {
+                    fError |= type2.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                }
+            }
+            else
             {
-                fError |= type2.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                {
+                    fError |= type1.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                }
+
+                if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
+                {
+                    fError |= type2.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                }
             }
 
             var result = Supertype(type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
@@ -3174,6 +3191,10 @@ namespace Microsoft.PowerFx.Core.Types
 
                     isValid &= isFieldValid;
                 }
+                else if (usePowerFxV1CompatibilityRules)
+                {
+                    coercionType = coercionType.Add(typedName.Name, typedName.Type);
+                }
                 else if (!typeDest.AreFieldsOptional)
                 {
                     isValid = false; // If the name doesn't exist, it is valid only if it is optional
@@ -3262,11 +3283,11 @@ namespace Microsoft.PowerFx.Core.Types
             }
 
             var subtypeCoerces = SubtypeCoercesTo(
-                typeDest, 
-                ref isSafe, 
-                out coercionType, 
-                ref schemaDifference, 
-                ref schemaDifferenceType, 
+                typeDest,
+                ref isSafe,
+                out coercionType,
+                ref schemaDifference,
+                ref schemaDifferenceType,
                 usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
             if (subtypeCoerces.HasValue)
             {
@@ -3402,9 +3423,9 @@ namespace Microsoft.PowerFx.Core.Types
                     }
                     else
                     {
-                        doesCoerce = Kind != DKind.Media && 
-                            Kind != DKind.Blob && 
-                            Kind != DKind.Guid 
+                        doesCoerce = Kind != DKind.Media &&
+                            Kind != DKind.Blob &&
+                            Kind != DKind.Guid
                             && String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                     }
 
@@ -3419,7 +3440,7 @@ namespace Microsoft.PowerFx.Core.Types
                     }
                     else
                     {
-                        doesCoerce = Kind != DKind.Image && 
+                        doesCoerce = Kind != DKind.Image &&
                             Kind != DKind.PenImage &&
                             Kind != DKind.Blob &&
                             Kind != DKind.Guid &&
@@ -3439,7 +3460,7 @@ namespace Microsoft.PowerFx.Core.Types
                     }
                     else
                     {
-                        doesCoerce = Kind != DKind.Guid && 
+                        doesCoerce = Kind != DKind.Guid &&
                             String.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
                     }
 
@@ -3451,8 +3472,8 @@ namespace Microsoft.PowerFx.Core.Types
                     return CoercesTo(
                         typeDest.GetEnumSupertype(),
                         out isSafe,
-                        out coercionType, 
-                        out schemaDifference, 
+                        out coercionType,
+                        out schemaDifference,
                         out schemaDifferenceType,
                         aggregateCoercion: true,
                         isTopLevelCoercion: false,
@@ -3504,9 +3525,9 @@ namespace Microsoft.PowerFx.Core.Types
                 }
 
                 return CoercesTo(
-                    expectedType, 
-                    out var coercionIsSafe, 
-                    aggregateCoercion, 
+                    expectedType,
+                    out var coercionIsSafe,
+                    aggregateCoercion,
                     isTopLevelCoercion: false,
                     usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && (!safeCoercionRequired || coercionIsSafe);
             }
@@ -3549,11 +3570,11 @@ namespace Microsoft.PowerFx.Core.Types
                 if (TryGetType(typedName.Name, out var thisFieldType))
                 {
                     if (!thisFieldType.TryGetCoercionSubType(
-                        typedName.Type, 
-                        out var thisFieldCoercionType, 
-                        out var thisFieldCoercionNeeded, 
-                        safeCoercionRequired, 
-                        aggregateCoercion, 
+                        typedName.Type,
+                        out var thisFieldCoercionType,
+                        out var thisFieldCoercionNeeded,
+                        safeCoercionRequired,
+                        aggregateCoercion,
                         usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
                         return false;
@@ -3793,6 +3814,49 @@ namespace Microsoft.PowerFx.Core.Types
             // suggestions.
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
+        }
+
+        /// <summary>
+        /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
+        /// </summary>
+        /// <param name="argType1">Current table child type.</param>
+        /// <param name="argType2">Current table child type.</param>
+        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
+        /// permissive Accepts relationships).</param>
+        /// <param name="returnType">Composed new type.</param>
+        /// <param name="coercionNeeded">True if union with coercion was called.</param>
+        /// <returns></returns>
+        public static bool TryUnionWithCoerce(DType argType1, DType argType2, bool usePowerFxV1CompatibilityRules, out DType returnType, out bool coercionNeeded)
+        {
+            var fError = false;
+
+            coercionNeeded = false;
+            returnType = null;
+
+            if (!argType1.IsValid || (argType1.IsRecord && argType1.Equals(DType.EmptyRecord)))
+            {
+                returnType = argType2;
+            }
+            else
+            {
+                // Original union
+                var unionType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+
+                if (!fError)
+                {
+                    returnType = unionType;
+                }
+                else
+                {
+                    fError = false;
+
+                    // Union with coercion
+                    returnType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    coercionNeeded = !fError;
+                }
+            }
+
+            return !fError;
         }
     }
 }

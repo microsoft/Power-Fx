@@ -5232,21 +5232,45 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     // Deferred and void types are not allowed in tables.
                     var isChildTypeAllowedInTable = !childType.IsDeferred && !childType.IsVoid;
-                    if (isChildTypeAllowedInTable && !exprType.IsValid)
-                    {
-                        exprType = childType;
-                    }
-                    else if (isChildTypeAllowedInTable && exprType.CanUnionWith(childType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
-                    {
-                        exprType = DType.Union(exprType, childType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules);
-                    }
-                    else if (isChildTypeAllowedInTable && childType.CoercesTo(exprType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
-                    {
-                        _txb.SetCoercedType(child, exprType);
-                    }
-                    else
+                    if (!isChildTypeAllowedInTable)
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        continue;
+                    }
+
+                    if (usePFxV1CompatRules)
+                    {
+                        if (DType.TryUnionWithCoerce(exprType, childType, usePowerFxV1CompatibilityRules: true, out var returnType, out var needCoercion))
+                        {
+                            exprType = returnType;
+                            if (needCoercion)
+                            {
+                                _txb.SetCoercedType(child, exprType);
+                            }
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        }
+                    }
+                    else // legacy logic, not using PFx V1 compat rules
+                    {
+                        if (!exprType.IsValid)
+                        {
+                            exprType = childType;
+                        }
+                        else if (exprType.CanUnionWith(childType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false))
+                        {
+                            exprType = DType.Union(exprType, childType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false);
+                        }
+                        else if (childType.CoercesTo(exprType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                        {
+                            _txb.SetCoercedType(child, exprType);
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        }
                     }
                 }
 

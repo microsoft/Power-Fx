@@ -56,7 +56,7 @@ Errors: Error 3-17: Invalid argument type (Date). Expecting a Boolean value inst
 
 // This is a string without the PowerFxV1CompatibilityRules feature
 >> If(1<0, GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF"), "11111111-2222-3333-4444-555566666666")
-"11111111-2222-3333-4444-555566666666
+"11111111-2222-3333-4444-555566666666"
 
 >> If(1<0, Time(1,2,3), Date(2000,1,1))
 DateTime(2000,1,1,0,0,0,0)
