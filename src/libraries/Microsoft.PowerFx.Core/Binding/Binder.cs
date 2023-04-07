@@ -5253,8 +5253,9 @@ namespace Microsoft.PowerFx.Core.Binding
                             _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
                         }
                     }
-                    else // legacy logic, not using PFx V1 compat rules
+                    else
                     {
+                        // legacy logic, not using PFx V1 compat rules
                         if (!exprType.IsValid)
                         {
                             exprType = childType;

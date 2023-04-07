@@ -2196,7 +2196,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(DType.TryParse("![A:![B:s]]", out type1) && DType.TryParse("*[A:*[B:s]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.False(DType.TryParse("![A:*[B:s]]", out type1) && DType.TryParse("*[A:n]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.False(DType.TryParse("![A:n]", out type1) && DType.TryParse("*[A:n, B:s]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(usePowerFxV1CompatibilityRules, DType.TryParse("![A:n]", out type1) && DType.TryParse("*[A:n, B:s]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.TryParse("![A:*[B:*[C:n]]]", out type1) && DType.TryParse("*[A:*[B:![C:n]]]", out type2) && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
 
             Assert.False(DType.EmptyEnum.CoercesTo(DType.EmptyTable, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -2307,8 +2307,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.PenImage.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Media.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Blob.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.False(DType.EmptyTable.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(usePowerFxV1CompatibilityRules, DType.EmptyTable.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(usePowerFxV1CompatibilityRules, DType.EmptyRecord.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(AttachmentTableType.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.EmptyEnum.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentTableType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -2334,7 +2334,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(DType.Media.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.Blob.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.EmptyTable.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
-            Assert.False(DType.EmptyRecord.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
+            Assert.Equal(usePowerFxV1CompatibilityRules, DType.EmptyRecord.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.True(AttachmentRecordType.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.EmptyEnum.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
             Assert.False(DType.TryParse("%s[A:\"hello\"]", out type) && type.CoercesTo(AttachmentRecordType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
@@ -2387,8 +2387,8 @@ namespace Microsoft.PowerFx.Tests
         public void DTypeUnion(bool usePowerFxV1CompatibilityRules)
         {
             TestUnion("n", "n", "n", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "$", usePowerFxV1CompatibilityRules ? "e" : "n", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "w", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "$", "n", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "w", usePowerFxV1CompatibilityRules ? "n" : "e", usePowerFxV1CompatibilityRules);
             TestUnion("n", "c", "e", usePowerFxV1CompatibilityRules);
             TestUnion("n", "d", "e", usePowerFxV1CompatibilityRules);
             TestUnion("$", "n", usePowerFxV1CompatibilityRules ? "e" : "n", usePowerFxV1CompatibilityRules);
