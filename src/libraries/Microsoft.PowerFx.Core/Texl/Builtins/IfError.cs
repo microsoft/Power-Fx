@@ -121,6 +121,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return result;
 
             In this case, we prefer the type of the last v_i as the return type.
+            Possible return values are:
+            Even case: f1, f2, ..., vn, fn
+            Odd case: f1, f2, ..., vn
             */
 
             var preferredTypeIndex = (count % 2) == 0 ? count - 2 : count - 1;
@@ -136,7 +139,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
 
-                var typeSuper = DType.Supertype(type, typeArg);
+                var typeSuper = type.IsError ? typeArg : DType.Supertype(type, typeArg);
 
                 if (!typeSuper.IsError)
                 {
@@ -175,73 +178,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = type;
             return fArgsValid;
-        }
-
-        // In behavior properties, the arg type is irrelevant if nothing actually depends
-        // on the output type of IfError (see If.cs, Switch.cs)
-        private bool IsArgTypeInconsequential(TexlNode arg)
-        {
-            Contracts.AssertValue(arg);
-            Contracts.Assert(arg.Parent is ListNode);
-            Contracts.Assert(arg.Parent.Parent is CallNode);
-            Contracts.Assert(arg.Parent.Parent.AsCall().Head.Name == Name);
-
-            var call = arg.Parent.Parent.AsCall().VerifyValue();
-
-            // Pattern: OnSelect = IfError(arg1, arg2, ... argK)
-            // Pattern: OnSelect = IfError(arg1, IfError(arg1, arg2,...), ... argK)
-            // ...etc.
-            var ancestor = call;
-            while (ancestor.Head.Name == Name)
-            {
-                if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
-                {
-                    return true;
-                }
-
-                // Deal with the possibility that the ancestor may be contributing to a chain.
-                // This also lets us cover the following patterns:
-                // Pattern: OnSelect = X; IfError(arg1, arg2); Y; Z
-                // Pattern: OnSelect = X; IfError(arg1;arg11;...;arg1k, arg2;arg21;...;arg2k); Y; Z
-                // ...etc.
-                VariadicOpNode chainNode;
-                if ((chainNode = ancestor.Parent.AsVariadicOp()) != null && chainNode.Op == VariadicOp.Chain)
-                {
-                    // Top-level chain in a behavior rule.
-                    if (chainNode.Parent == null)
-                    {
-                        return true;
-                    }
-
-                    // A chain nested within a larger non-call structure.
-                    if (!(chainNode.Parent is ListNode) || !(chainNode.Parent.Parent is CallNode))
-                    {
-                        return false;
-                    }
-
-                    // Only the last chain segment is consequential.
-                    var numSegments = chainNode.Children.Length;
-                    if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
-                    {
-                        return true;
-                    }
-
-                    // The node is in the last segment of a chain nested within a larger invocation.
-                    ancestor = chainNode.Parent.Parent.AsCall();
-                    continue;
-                }
-
-                // Walk up the parent chain to the outer invocation.
-                if (!(ancestor.Parent is ListNode) || !(ancestor.Parent.Parent is CallNode))
-                {
-                    return false;
-                }
-
-                ancestor = ancestor.Parent.Parent.AsCall();
-            }
-
-            // Exhausted all supported patterns.
-            return false;
         }
 
         public override bool IsLambdaParam(int index)
