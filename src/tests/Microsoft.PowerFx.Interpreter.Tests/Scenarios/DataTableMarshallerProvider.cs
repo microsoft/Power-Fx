@@ -40,6 +40,8 @@ namespace Microsoft.PowerFx.Tests
 
         public int MarshalNumberOfCalls { get; set; } = 0;
 
+        public override bool InMemory => true;
+
         public DataTableValue(DataTable dataTable)
             : base(ComputeType(dataTable), new DataTableWrapper(dataTable))
         {

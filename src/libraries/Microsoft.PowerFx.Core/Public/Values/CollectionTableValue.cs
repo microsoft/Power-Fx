@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -19,12 +20,15 @@ namespace Microsoft.PowerFx.Types
     public abstract class CollectionTableValue<T> : TableValue
     {
         // Required - basic enumeration. This is the source object. 
-        private readonly IEnumerable<T> _enumerator; // required. supports enumeration;
+        private IEnumerable<T> _enumerator; // required. supports enumeration;
+
+        // Async implementation
+        private IAsyncEnumerable<T> _asyncEnumerable;        
 
         // Additional capabilities. 
-        private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
-        private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
-        private readonly ICollection<T> _sourceList; // maybe null. supports mutation;
+        private IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
+        private IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
+        private ICollection<T> _sourceList; // maybe null. supports mutation;
 
         public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)
@@ -32,10 +36,35 @@ namespace Microsoft.PowerFx.Types
             RecordType = recordType;
         }
 
+        public CollectionTableValue(RecordType recordType, bool inMemory, IAsyncEnumerable<T> source)
+            : base(IRContext.NotInSource(recordType.ToTable()))
+        {
+            RecordType = recordType;
+
+            if (inMemory)
+            {
+                Init(source.ToListAsync().ConfigureAwait(false).GetAwaiter().GetResult());
+            }
+            else
+            {
+                _enumerator = null;
+                _asyncEnumerable = source;
+                _sourceIndex = null;
+                _sourceCount = null;
+                _sourceList = null;
+            }
+        }
+
         internal CollectionTableValue(IRContext irContext, IEnumerable<T> source)
-         : base(irContext)
+            : base(irContext)
+        {
+            Init(source);
+        }
+
+        private void Init(IEnumerable<T> source)
         {
             _enumerator = source ?? throw new ArgumentNullException(nameof(source));
+            _asyncEnumerable = null;
 
             _sourceIndex = source as IReadOnlyList<T>;
             _sourceCount = source as IReadOnlyCollection<T>;
@@ -60,10 +89,30 @@ namespace Microsoft.PowerFx.Types
         {
             get
             {
-                foreach (var item in _enumerator)
+                if (_enumerator != null)
                 {
-                    var record = Marshal(item);
-                    yield return record;
+                    foreach (var item in _enumerator)
+                    {
+                        var record = Marshal(item);
+                        yield return record;
+                    }
+                }
+                else
+                {
+                    IAsyncEnumerator<T> asyncEnumerator = _asyncEnumerable.GetAsyncEnumerator();
+
+                    try
+                    {                        
+                        while (asyncEnumerator.MoveNextAsync().GetAwaiter().GetResult())
+                        {
+                            var record = Marshal(asyncEnumerator.Current);
+                            yield return record;
+                        }
+                    }
+                    finally
+                    {
+                        asyncEnumerator.DisposeAsync().GetAwaiter().GetResult();
+                    }
                 }
             }
         }
@@ -249,6 +298,21 @@ namespace Microsoft.PowerFx.Types
             }
 
             return ret;
+        }
+    }
+
+    public static class AsyncEnumerableExtensions
+    {
+        public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items, CancellationToken cancellationToken = default)
+        {
+            var results = new List<T>();
+
+            await foreach (var item in items.WithCancellation(cancellationToken).ConfigureAwait(false))
+            {
+                results.Add(item);
+            }
+
+            return results;
         }
     }
 }

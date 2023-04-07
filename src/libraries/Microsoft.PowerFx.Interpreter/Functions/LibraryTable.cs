@@ -3,11 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -22,19 +22,19 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
 
-            var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false);
-            var row = rows.FirstOrDefault();
-
-            if (row != null)
+            await foreach (DValue<RecordValue> row in FilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false))
             {
-                if (args.Length == 2)
+                if (row != null)
                 {
-                    return row.ToFormulaValue() ?? new BlankValue(irContext);
-                }
-                else
-                {
-                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    return await arg2.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+                    if (args.Length == 2)
+                    {
+                        return row.ToFormulaValue() ?? new BlankValue(irContext);
+                    }
+                    else
+                    {
+                        var childContext = context.SymbolContext.WithScopeValues(row.Value);
+                        return await arg2.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+                    }
                 }
             }
 
@@ -385,10 +385,10 @@ namespace Microsoft.PowerFx.Functions
                 {
                 }
             }
+            
+            var rowsAsync = FilterAsync(runner, context, arg0.Rows, arg1);
 
-            var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false);
-
-            return new InMemoryTableValue(irContext, rows);
+            return new InMemoryTableValue(irContext, rowsAsync, arg0.InMemory);
         }
 
         public static FormulaValue IndexTable(IRContext irContext, FormulaValue[] args)
@@ -430,7 +430,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
 
             var values = arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1));
-            
+
             var pairs = new List<(DValue<RecordValue> row, FormulaValue distinctValue)>();
 
             foreach (var pair in values)
@@ -613,30 +613,21 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));
         }
 
-        private static async Task<DValue<RecordValue>> LazyFilterRowAsync(
-           EvalVisitor runner,
-           EvalVisitorContext context,
-           DValue<RecordValue> row,
-           LambdaFormulaValue filter)
+        private static async IAsyncEnumerable<DValue<RecordValue>> FilterRowAsync(EvalVisitor runner, EvalVisitorContext context, DValue<RecordValue> row, LambdaFormulaValue filter, [EnumeratorCancellation] CancellationToken cts = default)
         {
-            SymbolContext childContext;
+            SymbolContext childContext = null;
 
             // Issue #263 Filter should be able to handle empty rows
-            if (row.IsValue)
-            {
-                childContext = context.SymbolContext.WithScopeValues(row.Value);
-            }
-            else if (row.IsBlank)
-            {
-                childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
-            }
-            else
-            {
-                return null;
-            }
+            childContext = row.IsValue ? context.SymbolContext.WithScopeValues(row.Value)
+                         : row.IsBlank ? context.SymbolContext.WithScopeValues(RecordValue.Empty())
+                         : row.IsError ? context.SymbolContext.WithScopeValues(row.Error)
+                         : null;
+
+            cts.ThrowIfCancellationRequested();
 
             // Filter evals to a boolean 
             var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+
             var include = false;
             if (result is BooleanValue booleanValue)
             {
@@ -644,40 +635,31 @@ namespace Microsoft.PowerFx.Functions
             }
             else if (result is ErrorValue errorValue)
             {
-                return DValue<RecordValue>.Of(errorValue);
+                yield return DValue<RecordValue>.Of(errorValue);
             }
 
             if (include)
             {
-                return row;
+                yield return row;
             }
 
-            return null;
+            yield return null;
         }
 
-        private static async Task<DValue<RecordValue>[]> LazyFilterAsync(
-            EvalVisitor runner,
-            EvalVisitorContext context,
-            IEnumerable<DValue<RecordValue>> sources,
-            LambdaFormulaValue filter,
-            int topN = int.MaxValue)
+        private static async IAsyncEnumerable<DValue<RecordValue>> FilterAsync(EvalVisitor runner, EvalVisitorContext context, IEnumerable<DValue<RecordValue>> sources, LambdaFormulaValue filter, int topN = int.MaxValue)
         {
-            var results = new List<DValue<RecordValue>>();
-
-            // Filter needs to allow running in parallel. 
             foreach (var row in sources)
             {
                 runner.CheckCancel();
 
-                var task = LazyFilterRowAsync(runner, context, row, filter);
-                
-                results.Add(await task.ConfigureAwait(false));
+                await foreach (DValue<RecordValue> filteredRow in FilterRowAsync(runner, context, row, filter).WithCancellation(runner.CancellationToken).ConfigureAwait(false))
+                {
+                    if (filteredRow != null)
+                    {
+                        yield return filteredRow;
+                    }
+                }
             }
-                        
-            // Remove all nulls. 
-            var final = results.Where(x => x != null);
-
-            return final.ToArray();
         }
 
         // AddColumns accepts pairs of args. 

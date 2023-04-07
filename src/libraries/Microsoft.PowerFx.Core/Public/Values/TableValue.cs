@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx.Types
 
         public abstract IEnumerable<DValue<RecordValue>> Rows { get; }
 
+        public abstract bool InMemory { get; }
+
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
 
         public new TableType Type => (TableType)base.Type;

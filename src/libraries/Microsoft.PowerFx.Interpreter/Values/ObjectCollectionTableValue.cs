@@ -13,6 +13,8 @@ namespace Microsoft.PowerFx.Types
         // Convert T --> RecordValue
         private readonly ITypeMarshaller _rowMarshaller;
 
+        public override bool InMemory => true;
+
         internal ObjectCollectionTableValue(IRContext irContext, IEnumerable<T> source, ITypeMarshaller rowMarshaller)
             : base(irContext, source)
         {

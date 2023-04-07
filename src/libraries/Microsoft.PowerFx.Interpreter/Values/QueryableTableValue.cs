@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 
@@ -10,14 +10,14 @@ namespace Microsoft.PowerFx.Types
 {
     public abstract class QueryableTableValue : TableValue
     {
-        private Lazy<Task<List<DValue<RecordValue>>>> _lazyTaskRows;
+        private IAsyncEnumerable<DValue<RecordValue>> _cachedRows;
 
-        private Lazy<Task<List<DValue<RecordValue>>>> NewLazyTaskRowsInstance => new Lazy<Task<List<DValue<RecordValue>>>>(() => GetRowsAsync());
+        public sealed override bool InMemory => false;
 
         internal QueryableTableValue(IRContext irContext)
             : base(irContext)
         {
-            _lazyTaskRows = NewLazyTaskRowsInstance;
+            _cachedRows = null;
         }
 
         internal abstract TableValue Filter(LambdaFormulaValue lambda, EvalVisitor runner, EvalVisitorContext context);
@@ -26,19 +26,32 @@ namespace Microsoft.PowerFx.Types
 
         internal abstract TableValue FirstN(int n);
 
-        // internal abstract TableValue SortByColumns(FormulaValue[]);
+        protected abstract IAsyncEnumerable<DValue<RecordValue>> GetRowsAsync();
+        
+        public sealed override IEnumerable<DValue<RecordValue>> Rows
+        {
+            get
+            {
+                _cachedRows ??= GetRowsAsync();
+                ConfiguredCancelableAsyncEnumerable<DValue<RecordValue>>.Enumerator e = _cachedRows.ConfigureAwait(false).GetAsyncEnumerator();
 
-        public bool HasCachedRows => _lazyTaskRows.IsValueCreated;
-
-        protected abstract Task<List<DValue<RecordValue>>> GetRowsAsync();
-
-        // Not the best, but doesn't require major breaking changes to TableValue
-        public sealed override IEnumerable<DValue<RecordValue>> Rows =>
-            _lazyTaskRows.Value.GetAwaiter().GetResult();
+                try
+                {
+                    while (e.MoveNextAsync().GetAwaiter().GetResult())
+                    {
+                        yield return e.Current;
+                    }
+                }
+                finally
+                {
+                    e.DisposeAsync().GetAwaiter().GetResult();
+                }
+            }
+        }
 
         protected void Refresh()
         {
-            _lazyTaskRows = NewLazyTaskRowsInstance;
+            _cachedRows = null;
         }
     }
 }

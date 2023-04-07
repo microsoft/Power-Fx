@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return new TestODataTableValue((TableType)Type, odataParamsNew);
         }
 
-        protected override Task<List<DValue<RecordValue>>> GetRowsAsync()
+        protected override IAsyncEnumerable<DValue<RecordValue>> GetRowsAsync()
         {
             throw new NotImplementedException();
         }

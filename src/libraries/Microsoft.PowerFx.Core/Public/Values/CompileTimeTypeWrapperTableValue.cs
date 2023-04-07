@@ -8,6 +8,10 @@ namespace Microsoft.PowerFx.Types
     //    First(Table({a:1},{b:2})), result is a record with both fields a and b. 
     internal class CompileTimeTypeWrapperTableValue : CollectionTableValue<DValue<RecordValue>>
     {
+        public override bool InMemory => _inMemory;
+
+        private readonly bool _inMemory;
+
         public static TableValue AdjustType(TableType expectedType, TableValue inner)
         {
             if (expectedType.Equals(inner.Type))
@@ -21,6 +25,7 @@ namespace Microsoft.PowerFx.Types
         private CompileTimeTypeWrapperTableValue(TableType type, TableValue inner)
             : base(type.ToRecord(), inner.Rows)
         {
+            _inMemory = inner.InMemory;
         }
 
         protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)

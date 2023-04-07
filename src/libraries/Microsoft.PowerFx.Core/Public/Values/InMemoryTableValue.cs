@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
@@ -16,12 +17,26 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly RecordType _recordType;
 
-        internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
+        public override bool InMemory => _inMemory;
+
+        private readonly bool _inMemory;
+
+        internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records, bool inMemory = true)
             : base(irContext, records.ToList())
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
+            _inMemory = inMemory;
+        }
+
+        internal InMemoryTableValue(IRContext irContext, IAsyncEnumerable<DValue<RecordValue>> records, bool inMemory = true)
+            : base(((TableType)irContext.ResultType).ToRecord(), inMemory, records)
+        {
+            Contract.Assert(IRContext.ResultType is TableType);
+            var tableType = (TableType)IRContext.ResultType;
+            _recordType = tableType.ToRecord();
+            _inMemory = inMemory;
         }
 
         protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)
@@ -50,6 +65,8 @@ namespace Microsoft.PowerFx.Types
     internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>
     {
         private readonly RecordType _recordType;
+
+        public override bool InMemory => true;        
 
         internal RecordsOnlyTableValue(IRContext irContext, IEnumerable<RecordValue> records)
             : base(irContext, records)
