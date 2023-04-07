@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Core.Functions
     internal class UserDefinedFunction : TexlFunction
     {
         private readonly bool _isImperative;
+        private readonly IdentToken _returnTypeToken;
+        private readonly ISet<UDFArg> _args;
 
         public TexlNode UdfBody { get; }
 
@@ -34,6 +36,51 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             UdfBody = udfBody;
             _isImperative = isImperative;
+        }
+
+        public UserDefinedFunction(DName udfName, IdentToken returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
+            : this(udfName.Value, returnType.GetFormulaType(), body, isImperative, args.Select(a => a.VarType.GetFormulaType()).ToArray())
+        {
+            this._returnTypeToken = returnType;
+            this._args = args;
+        }
+
+        public TexlBinding Bind(INameResolver nameResolver, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler)
+        {
+            var glue = new Glue2DocumentBinderGlue();
+            var parametersRecordType = CheckParameters(out var errors);
+            var bindingConfig = new BindingConfig(this._isImperative);
+
+            // TODO: Create a new name resolver
+            var binding = TexlBinding.Run(glue, UdfBody, ReadOnlySymbolTable.Compose(nameResolver as ReadOnlySymbolTable, ReadOnlySymbolTable.NewFromRecord(parametersRecordType)), bindingConfig);
+
+            CheckTypesOnDeclaration(binding.CheckTypesContext, _args, _returnTypeToken, binding.ResultType, binding.ErrorContainer);
+            userDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(binding, _args, binding.ErrorContainer);
+            binding.ErrorContainer.MergeErrors(errors);
+
+            return binding;
+        }
+
+        private RecordType CheckParameters(out List<TexlError> errors)
+        {
+            var record = RecordType.Empty();
+            var argsAlreadySeen = new HashSet<string>();
+            errors = new List<TexlError>();
+
+            foreach (var arg in _args)
+            {
+                if (!argsAlreadySeen.Add(arg.VarIdent.Name))
+                {
+                    errors.Add(new TexlError(arg.VarIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.VarIdent.Name));
+                }
+                else
+                {
+                    argsAlreadySeen.Add(arg.VarIdent.Name);
+                    record = record.Add(new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType()));
+                }
+            }
+
+            return record;
         }
 
         /// <summary>
