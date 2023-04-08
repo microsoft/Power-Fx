@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             if (index == 1)
             {
-                return ArgPreprocessor.ReplaceBlankWithZeroAndTruncate;
+                return ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate;
             }
 
             return ArgPreprocessor.None;

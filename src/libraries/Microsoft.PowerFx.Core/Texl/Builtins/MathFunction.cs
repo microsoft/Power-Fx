@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -19,19 +20,50 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetGenericArgPreprocessor(index);
+            return _nativeDecimal ? ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
         }
 
         public override bool IsSelfContained => true;
 
-        public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
-            : base(name, description, fc, DType.Number, 0, 1, 1, DType.Number)
+        // This function natively supports decimal inputs with decimal outputs, without coercion to float.
+        // Most math functions, for example Sin, Cos, Degrees, etc. coerce their input to floating point
+        // and return a floating point output.
+        private readonly bool _nativeDecimal = false;
+
+        public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
+            : base(name, description, fc, nativeDecimal ? DType.Unknown : DType.Number, 0, 1, 1, nativeDecimal ? DType.Unknown : DType.Number)
         {
+            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.MathFuncArg1 };
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.Assert(args.Length == 1);
+            Contracts.AssertValue(errors);
+
+            var fValid = true;
+            nodeToCoercedTypeMap = null;
+
+            returnType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, argTypes[0]);
+
+            fValid &= CheckType(args[0], argTypes[0], returnType, errors, ref nodeToCoercedTypeMap);
+
+            if (!fValid)
+            { 
+                nodeToCoercedTypeMap = null;
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
+            }
+
+            return fValid;
         }
     }
 
@@ -39,9 +71,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
+        // This function natively supports decimal inputs with decimal outputs, without coercion to float.
+        // Most math functions, for example Sin, Cos, Degrees, etc. coerce their input to floating point
+        // and return a floating point output.
+        private readonly bool _nativeDecimal = false;
+
+        public MathOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
             : base(name, description, fc, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
+            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -68,7 +106,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap, context, out returnType);
+
+            if (argType.IsTable)
+            {
+                fValid &= TryGetSingleColumn(argType, arg, errors, out var column);
+                var returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column.Type);
+                fValid &= CheckColumnType(argType, arg, column, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
+            }
 
             if (!fValid)
             {
@@ -84,14 +128,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return base.GetGenericArgPreprocessor(index);
+            return _nativeDecimal ? ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
         }
 
         public override bool IsSelfContained => true;
 
-        public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity)
-            : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, minArity, 2, DType.Number, DType.Number)
+        // This function natively supports decimal inputs with decimal outputs, without coercion to float.
+        // Most math functions, for example Sin, Cos, Degrees, etc. coerce their input to floating point
+        // and return a floating point output.
+        private readonly bool _nativeDecimal = false;
+
+        public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false)
+            : base(name, description, FunctionCategories.MathAndStat, nativeDecimal ? DType.Unknown : DType.Number, 0, minArity, 2, nativeDecimal ? DType.Unknown : DType.Number, nativeDecimal ? DType.Unknown : DType.Number)
         {
+            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -103,11 +153,46 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             yield return new[] { TexlStrings.MathTFuncArg1, TexlStrings.MathTFuncArg2 };
         }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            Contracts.AssertValue(args);
+            Contracts.AssertAllValues(args);
+            Contracts.AssertValue(argTypes);
+            Contracts.Assert(args.Length == argTypes.Length);
+            Contracts.Assert(args.Length >= MinArity && args.Length <= MaxArity);
+            Contracts.AssertValue(errors);
+
+            var fValid = true;
+            nodeToCoercedTypeMap = null;
+
+            returnType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, argTypes[0]);
+
+            if (!CheckType(args[0], argTypes[0], returnType, errors, ref nodeToCoercedTypeMap))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
+                fValid = false;
+            }
+
+            if (args.Length == 2 && 
+                !CheckType(args[1], argTypes[1], returnType, errors, ref nodeToCoercedTypeMap))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
+                fValid = false;
+            }
+
+            return fValid;
+        }
     }
 
     internal abstract class MathTwoArgTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
+
+        // This function natively supports decimal inputs with decimal outputs, without coercion to float.
+        // Most math functions, for example Sin, Cos, Degrees, etc. coerce their input to floating point
+        // and return a floating point output.
+        private readonly bool _nativeDecimal = false;
 
         // Before ConsistentOneColumnTableResult, this function would always return a fixed name "Result" (Mod)
         protected virtual bool InConsistentTableResultFixedName => false;
@@ -115,9 +200,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // Before ConsistentOneColumnTableResult, this function would use the second argument name if a table (Log, Power)
         protected virtual bool InConsistentTableResultUseSecondArg => false;
 
-        public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity)
+        public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false)
             : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, minArity, 2)
         {
+            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -145,6 +231,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(!InConsistentTableResultFixedName || !InConsistentTableResultUseSecondArg);
 
+            DType returnScalarType;
+
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
             Contracts.Assert(returnType.IsTable);
 
@@ -157,17 +245,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 TexlNode otherArg = null;
 
                 // At least one of the arguments has to be a table.
-                if (type0.IsTable)
+                if (type0.IsTable)    
                 {
+                    fValid &= TryGetSingleColumn(type0, args[0], errors, out var column0);
+                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column0.Type);
+
                     // Ensure we have a one-column table of numerics
                     if (InConsistentTableResultFixedName)
                     {
-                        fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-                        returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
+                        fValid &= CheckColumnType(type0, args[0], column0, returnScalarType, errors, ref nodeToCoercedTypeMap);
+                        returnType = DType.CreateTable(new TypedName(returnScalarType, GetOneColumnTableResultName(context.Features)));
                     }
                     else
                     {
-                        fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
+                        fValid &= CheckColumnType(type0, args[0], column0, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
                     }
 
                     // Check arg1 below.
@@ -176,17 +267,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (type1.IsTable)
                 {
+                    fValid &= TryGetSingleColumn(type1, args[1], errors, out var column1);
+                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, type0);
+
                     // Ensure we have a one-column table of numerics
                     if (InConsistentTableResultUseSecondArg)
                     {
-                        fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap, context, out returnType);
+                        fValid &= CheckColumnType(type1, args[1], column1, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
                     }
                     else
                     {
-                        fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+                        fValid &= CheckColumnType(type1, args[1], column1, returnScalarType, errors, ref nodeToCoercedTypeMap);
 
                         // Since the 1st arg is not a table, make a new table return type *[Result:n]
-                        returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
+                        returnType = DType.CreateTable(new TypedName(returnScalarType, GetOneColumnTableResultName(context.Features)));
                     }
 
                     // Check arg0 below.
@@ -211,9 +305,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (otherType.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(otherType, otherArg, errors, ref nodeToCoercedTypeMap);
+                    fValid &= TryGetSingleColumn(otherType, otherArg, errors, out var otherColumn);
+                    fValid &= CheckColumnType(otherType, otherArg, otherColumn, returnScalarType, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!CheckType(otherArg, otherType, DType.Number, errors, ref nodeToCoercedTypeMap))
+                else if (!CheckType(otherArg, otherType, returnScalarType, errors, ref nodeToCoercedTypeMap))
                 {
                     fValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, otherArg, TexlStrings.ErrTypeError);
@@ -223,10 +318,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var type0 = argTypes[0];
 
-                if (type0.IsTable)
+                if (type0.IsTable)                    
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
+                    fValid &= TryGetSingleColumn(type0, args[0], errors, out var oneArgColumn);
+                    returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, oneArgColumn.Type);
+                    fValid &= CheckColumnType(type0, args[0], oneArgColumn, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
                 }
                 else
                 {

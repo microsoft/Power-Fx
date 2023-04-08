@@ -5,14 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
@@ -338,7 +342,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
                 // based on the function.
-                args = AttachArgPreprocessor(args, func);
+                args = AttachArgPreprocessor(args, func, node, context);
 
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
@@ -347,7 +351,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
-            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func)
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlCallNode node, IRTranslatorContext context)
             {
                 var len = args.Count;
                 List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
@@ -359,14 +363,25 @@ namespace Microsoft.PowerFx.Core.IR
 
                     switch (argPreprocessor)
                     {
-                        case ArgPreprocessor.ReplaceBlankWithZero:
-                            convertedNode = ReplaceBlankWithZero(args[i]);
+                        case ArgPreprocessor.ReplaceBlankWithFloatZero:
+                            convertedNode = ReplaceBlankWithFloatZero(args[i]);
                             break;
-                        case ArgPreprocessor.ReplaceBlankWithZeroAndTruncate:
-                            convertedNode = ReplaceBlankWithZeroAndTruncatePreProcessor(args[i]);
+                        case ArgPreprocessor.ReplaceBlankWithDecimalZero:
+                            convertedNode = ReplaceBlankWithDecimalZero(args[i]);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate:
+                            convertedNode = ReplaceBlankWithFloatZeroAndTruncatePreProcessor(args[i]);
                             break;
                         case ArgPreprocessor.ReplaceBlankWithEmptyString:
                             convertedNode = BlankToEmptyString(args[i]);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithCallZero_Scalar:
+                            var callIRContext_Scalar = context.GetIRContext(node);
+                            convertedNode = ReplaceBlankWithCallTypedZero_Scalar(args[i], callIRContext_Scalar.ResultType);
+                            break;
+                        case ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable:
+                            var callIRContext_SCT = context.GetIRContext(node);
+                            convertedNode = ReplaceBlankWithCallTypedZero_Scalar(args[i], ((TableType)callIRContext_SCT.ResultType).SingleColumnFieldType);
                             break;
                         default:
                             convertedNode = args[i];
@@ -382,26 +397,127 @@ namespace Microsoft.PowerFx.Core.IR
             /// <summary>
             /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
             /// </summary>
-            private static IntermediateNode ReplaceBlankWithZero(IntermediateNode arg)
+            private static IntermediateNode ReplaceBlankWithFloatZero(IntermediateNode arg)
             {
+                IntermediateNode zeroLitNode;
+                IRContext convertedIRContext;
+
                 if (arg is NumberLiteralNode)
                 {
                     return arg;
                 }
 
                 // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
-                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
-                var zeroNumLitNode = new NumberLiteralNode(convertedIRContext, 0);
-                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroNumLitNode);
+                convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithFloatDecimal(IntermediateNode arg)
+            {
+                IntermediateNode zeroLitNode;
+                IRContext convertedIRContext;
+
+                if (arg is DecimalLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.ResultType is not a Decimal but a Blank.
+                convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
+                zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithDecimalZero(IntermediateNode arg)
+            {
+                IntermediateNode zeroLitNode;
+                IRContext convertedIRContext;
+
+                if (arg is DecimalLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
+                convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
+                zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithArgTypedZero(IntermediateNode arg)
+            {
+                IntermediateNode zeroLitNode;
+                IRContext convertedIRContext;
+
+                if (arg is NumberLiteralNode || arg is DecimalLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
+                if (arg.IRContext.ResultType == FormulaType.Number)
+                {
+                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                    zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
+                }
+                else
+                {
+                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
+                    zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                }
+
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
+                return convertedNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithCallTypedZero_Scalar(IntermediateNode arg, FormulaType returnType)
+            {
+                IntermediateNode zeroLitNode;
+                IRContext convertedIRContext;
+
+                if (arg is NumberLiteralNode || arg is DecimalLiteralNode)
+                {
+                    return arg;
+                }
+
+                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
+                if (returnType == FormulaType.Number)
+                {
+                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                    zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
+                }
+                else
+                {
+                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
+                    zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                }
+
+                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
                 return convertedNode;
             }
 
             /// <summary>
             /// Wraps node arg => Truc(Coalesce(arg , 0)).
             /// </summary>
-            private static IntermediateNode ReplaceBlankWithZeroAndTruncatePreProcessor(IntermediateNode arg)
+            private static IntermediateNode ReplaceBlankWithFloatZeroAndTruncatePreProcessor(IntermediateNode arg)
             {
-                var blankToZeroNode = ReplaceBlankWithZero(arg);
+                var blankToZeroNode = ReplaceBlankWithFloatZero(arg);
                 var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
                 return truncateNode;
             }

@@ -11,6 +11,8 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
+// Decimal TODO : float arguments for second arg and for first arg in sequence
+
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Trunc(number:n, digits:n)
@@ -18,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TruncFunction : MathTwoArgFunction
     {
         public TruncFunction()
-            : base("Trunc", TexlStrings.AboutTrunc, 1)
+            : base("Trunc", TexlStrings.AboutTrunc, minArity: 1, nativeDecimal: true)
         {
         }
 
@@ -32,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class TruncTableFunction : MathTwoArgTableFunction
     {
         public TruncTableFunction()
-            : base("Trunc", TexlStrings.AboutTruncT, minArity: 1)
+            : base("Trunc", TexlStrings.AboutTruncT, minArity: 1, nativeDecimal: true)
         {
         }
 

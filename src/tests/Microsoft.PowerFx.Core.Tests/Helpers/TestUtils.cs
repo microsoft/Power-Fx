@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 var wasCoerced = false;
                 if (CheckNumericTableOverload)
                 {
-                    if (CheckColumnType(argTypes[0], args[0], DType.Number, errors, TexlStrings.ErrInvalidSchemaNeedNumCol_Col, ref wasCoerced))
+                    if (CheckColumnType(argTypes[0], args[0], DType.Number, errors, ref wasCoerced))
                     {
                         if (wasCoerced)
                         {
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 return isValid;
             }
 
-            private bool CheckColumnType(DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ErrorResourceKey errKey, ref bool wasCoerced)
+            private bool CheckColumnType(DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ref bool wasCoerced)
             {
                 Contracts.Assert(type.IsValid);
                 Contracts.AssertValue(arg);
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 }
                 else if (!(expectedType.Accepts(columns.Single().Type) || columns.Single().Type.CoercesTo(expectedType)))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, errKey, columns.Single().Name.Value);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, expectedType.GetKindString(), columns.Single().Name.Value);
                     return false;
                 }
 

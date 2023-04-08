@@ -163,6 +163,88 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
     }
 
+    // Boolean(arg:w)
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanWFunction : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        // Reusing BooleanN strings as they are generic for numbers
+        public BooleanWFunction()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanN, FunctionCategories.Text, DType.Boolean, 0, 1, 1, DType.Decimal)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            // Reusing BooleanN strings as they are generic for numbers
+            yield return new[] { TexlStrings.BooleanNArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "W");
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            return StringResources.TryGet("AboutBooleanN_" + paramName, out paramDescription);
+        }
+    }
+
+    // Boolean(E:*[n])
+    // Corresponding Excel and DAX function: Boolean
+    internal sealed class BooleanWFunction_T : BuiltinFunction
+    {
+        public override bool IsSelfContained => true;
+
+        public override bool SupportsParamCoercion => false;
+
+        // Reusing BooleanN strings as they are generic for numbers
+        public BooleanWFunction_T()
+            : base(BooleanFunction.BooleanInvariantFunctionName, TexlStrings.AboutBooleanNT, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
+        {
+        }
+
+        public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+        {
+            // Reusing BooleanN strings as they are generic for numbers
+            yield return new[] { TexlStrings.BooleanNTArg1 };
+        }
+
+        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
+        {
+            return GetUniqueTexlRuntimeName(suffix: "W_T");
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType.IsTable);
+
+            var arg = args[0];
+            var argType = argTypes[0];
+            fValid &= CheckColumnType(argType, arg, DType.Decimal, errors, ref nodeToCoercedTypeMap);
+
+            var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
+            returnType = rowType.ToTable();
+
+            return fValid;
+        }
+
+        public override bool TryGetParamDescription(string paramName, out string paramDescription)
+        {
+            Contracts.AssertNonEmpty(paramName);
+
+            // Reusing BooleanN strings as they are generic for numbers
+            return StringResources.TryGet("AboutBooleanNT_" + paramName, out paramDescription);
+        }
+    }
+
     // Boolean(arg:b)
     // Corresponding Excel and DAX function: Boolean
     internal sealed class BooleanBFunction : BuiltinFunction
