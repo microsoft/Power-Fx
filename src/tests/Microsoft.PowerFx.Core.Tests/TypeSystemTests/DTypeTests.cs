@@ -2381,166 +2381,410 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal<DType>(typeResult, DType.Union(type1, type2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules));
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void DTypeUnion(bool usePowerFxV1CompatibilityRules)
+        [Fact]
+        public void DTypeUnion_LegacyPowerFxV1CompatibilityRulesDisabled()
         {
-            TestUnion("n", "n", "n", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "$", "n", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "w", usePowerFxV1CompatibilityRules ? "n" : "e", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "c", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "d", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("$", "n", usePowerFxV1CompatibilityRules ? "e" : "n", usePowerFxV1CompatibilityRules);
-            TestUnion("$", "d", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("$", "D", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("$", "T", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("w", "n", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("w", "d", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("w", "D", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("w", "T", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("c", "n", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("d", "n", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("d", "$", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("d", "w", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "o", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("o", "n", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("n", "n", "n", false);
+            TestUnion("n", "w", "e", false);
+            TestUnion("n", "c", "e", false);
+            TestUnion("n", "d", "e", false);
+            TestUnion("w", "n", "e", false);
+            TestUnion("w", "d", "e", false);
+            TestUnion("w", "D", "e", false);
+            TestUnion("w", "T", "e", false);
+            TestUnion("c", "n", "e", false);
+            TestUnion("d", "n", "e", false);
+            TestUnion("d", "w", "e", false);
+            TestUnion("n", "o", "e", false);
+            TestUnion("o", "n", "e", false);
 
-            TestUnion("b", "b", "b", usePowerFxV1CompatibilityRules);
-            TestUnion("b", "n", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("b", "s", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("b", "$", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("b", "w", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("b", "o", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("o", "b", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("b", "b", "b", false);
+            TestUnion("b", "n", "e", false);
+            TestUnion("b", "s", "e", false);
+            TestUnion("b", "w", "e", false);
+            TestUnion("b", "o", "e", false);
+            TestUnion("o", "b", "e", false);
 
-            TestUnion("p", "$", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "w", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "n", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "c", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "b", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "m", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "o", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
-            TestUnion("o", "p", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
+            TestUnion("p", "w", "e", false);
+            TestUnion("p", "n", "e", false);
+            TestUnion("p", "c", "e", false);
+            TestUnion("p", "b", "e", false);
+            TestUnion("p", "m", "h", false);
+            TestUnion("p", "o", "h", false);
+            TestUnion("o", "p", "h", false);
 
-            TestUnion("s", "s", "s", usePowerFxV1CompatibilityRules);
-            TestUnion("s", "h", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("s", "i", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("s", "m", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("s", "o", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("o", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("s", "g", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("g", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("s", "s", "s", false);
+            TestUnion("s", "h", "s", false);
+            TestUnion("s", "i", "s", false);
+            TestUnion("s", "m", "s", false);
+            TestUnion("s", "o", "s", false);
+            TestUnion("o", "s", "s", false);
+            TestUnion("s", "g", "s", false);
+            TestUnion("g", "s", "s", false);
 
-            TestUnion("h", "m", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
-            TestUnion("h", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("i", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
-            TestUnion("i", "h", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
-            TestUnion("i", "m", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "i", usePowerFxV1CompatibilityRules ? "e" : "i", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "h", usePowerFxV1CompatibilityRules ? "e" : "h", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "s", usePowerFxV1CompatibilityRules ? "e" : "s", usePowerFxV1CompatibilityRules);
+            TestUnion("h", "m", "h", false);
+            TestUnion("h", "s", "s", false);
+            TestUnion("i", "s", "s", false);
+            TestUnion("i", "h", "h", false);
+            TestUnion("i", "m", "h", false);
+            TestUnion("p", "i", "i", false);
+            TestUnion("p", "h", "h", false);
+            TestUnion("p", "s", "s", false);
 
-            TestUnion("c", "c", "c", usePowerFxV1CompatibilityRules);
-            TestUnion("$", "$", "$", usePowerFxV1CompatibilityRules);
-            TestUnion("w", "w", "w", usePowerFxV1CompatibilityRules);
-            TestUnion("h", "h", "h", usePowerFxV1CompatibilityRules);
-            TestUnion("i", "i", "i", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "p", "p", usePowerFxV1CompatibilityRules);
-            TestUnion("d", "d", "d", usePowerFxV1CompatibilityRules);
-            TestUnion("m", "m", "m", usePowerFxV1CompatibilityRules);
-            TestUnion("o", "o", "o", usePowerFxV1CompatibilityRules);
+            TestUnion("c", "c", "c", false);
+            TestUnion("w", "w", "w", false);
+            TestUnion("h", "h", "h", false);
+            TestUnion("i", "i", "i", false);
+            TestUnion("p", "p", "p", false);
+            TestUnion("d", "d", "d", false);
+            TestUnion("m", "m", "m", false);
+            TestUnion("o", "o", "o", false);
 
-            TestUnion("D", "T", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
-            TestUnion("T", "D", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
-            TestUnion("d", "T", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
-            TestUnion("d", "D", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
-            TestUnion("T", "d", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
-            TestUnion("D", "d", usePowerFxV1CompatibilityRules ? "e" : "d", usePowerFxV1CompatibilityRules);
-            TestUnion("D", "$", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("T", "$", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("D", "T", "d", false);
+            TestUnion("T", "D", "d", false);
+            TestUnion("d", "T", "d", false);
+            TestUnion("d", "D", "d", false);
+            TestUnion("T", "d", "d", false);
+            TestUnion("D", "d", "d", false);
+            TestUnion("D", "w", "e", false);
+            TestUnion("T", "w", "e", false);
 
-            TestUnion("*[]", "*[]", "*[]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[]", "*[]", "*[]", false);
 
-            TestUnion("*[A:n]", "*[]", "*[A:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[]", "*[A:n]", "*[A:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "*[A:$]", usePowerFxV1CompatibilityRules ? "*[A:e]" : "*[A:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:$]", "*[A:n]", usePowerFxV1CompatibilityRules ? "*[A:e]" : "*[A:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "*[A:w]", "*[A:e]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:w]", "*[A:n]", "*[A:e]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[]", "*[A:n]", false);
+            TestUnion("*[]", "*[A:n]", "*[A:n]", false);
+            TestUnion("*[A:n]", "*[A:w]", "*[A:e]", false);
+            TestUnion("*[A:w]", "*[A:n]", "*[A:e]", false);
 
-            TestUnion("*[A:n]", "*[B:n]", "*[A:n, B:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "*[B:s]", "*[A:n, B:s]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "*[B:b]", "*[A:n, B:b]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "*[B:w]", "*[A:n, B:w]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "X", "*[A:n]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[B:n]", "*[A:n, B:n]", false);
+            TestUnion("*[A:n]", "*[B:s]", "*[A:n, B:s]", false);
+            TestUnion("*[A:n]", "*[B:b]", "*[A:n, B:b]", false);
+            TestUnion("*[A:n]", "*[B:w]", "*[A:n, B:w]", false);
+            TestUnion("*[A:n]", "X", "*[A:n]", false);
 
-            TestUnion("*[]", "*[A:n, B:b, D:d]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, B:b, D:d]", "*[]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[]", "*[A:n, B:b, D:d]", "*[A:n, B:b, D:d]", false);
+            TestUnion("*[A:n, B:b, D:d]", "*[]", "*[A:n, B:b, D:d]", false);
+            TestUnion("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]", false);
+            TestUnion("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]", false);
+            TestUnion("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]", false);
 
             // Tests for Type DataNull, DataNull is compatable with any data type, regardless of order.
-            TestUnion("N", "N", "N", usePowerFxV1CompatibilityRules);
-            TestUnion("s", "N", "s", usePowerFxV1CompatibilityRules);
-            TestUnion("b", "N", "b", usePowerFxV1CompatibilityRules);
-            TestUnion("n", "N", "n", usePowerFxV1CompatibilityRules);
-            TestUnion("i", "N", "i", usePowerFxV1CompatibilityRules);
-            TestUnion("N", "i", "i", usePowerFxV1CompatibilityRules);
-            TestUnion("$", "N", "$", usePowerFxV1CompatibilityRules);
-            TestUnion("w", "N", "w", usePowerFxV1CompatibilityRules);
-            TestUnion("h", "N", "h", usePowerFxV1CompatibilityRules);
-            TestUnion("o", "N", "o", usePowerFxV1CompatibilityRules);
-            TestUnion("c", "N", "c", usePowerFxV1CompatibilityRules);
-            TestUnion("N", "c", "c", usePowerFxV1CompatibilityRules);
-            TestUnion("p", "N", "p", usePowerFxV1CompatibilityRules);
-            TestUnion("m", "N", "m", usePowerFxV1CompatibilityRules);
-            TestUnion("e", "N", "e", usePowerFxV1CompatibilityRules);
-            TestUnion("*[]", "N", "*[]", usePowerFxV1CompatibilityRules);
-            TestUnion("N", "*[]", "*[]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:N]", "*[A:$]", "*[A:$]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:N]", "*[A:w]", "*[A:w]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:b]", "*[A:N]", "*[A:b]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:N]", "*[A:b]", "*[A:b]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:N]", "*[A:s]", "*[A:s]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:e]", "*[A:N]", "*[A:e]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "*[A:N]", "*[A:n]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, B:b, D:s]", "*[D:N]", "*[A:n, B:b, D:s]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, B:b, D:*[A:s]]", "*[D:N]", "*[A:n, B:b, D:*[A:s]]", usePowerFxV1CompatibilityRules);
+            TestUnion("N", "N", "N", false);
+            TestUnion("s", "N", "s", false);
+            TestUnion("b", "N", "b", false);
+            TestUnion("n", "N", "n", false);
+            TestUnion("i", "N", "i", false);
+            TestUnion("N", "i", "i", false);
+            TestUnion("w", "N", "w", false);
+            TestUnion("h", "N", "h", false);
+            TestUnion("o", "N", "o", false);
+            TestUnion("c", "N", "c", false);
+            TestUnion("N", "c", "c", false);
+            TestUnion("p", "N", "p", false);
+            TestUnion("m", "N", "m", false);
+            TestUnion("e", "N", "e", false);
+            TestUnion("*[]", "N", "*[]", false);
+            TestUnion("N", "*[]", "*[]", false);
+            TestUnion("*[A:N]", "*[A:w]", "*[A:w]", false);
+            TestUnion("*[A:b]", "*[A:N]", "*[A:b]", false);
+            TestUnion("*[A:N]", "*[A:b]", "*[A:b]", false);
+            TestUnion("*[A:N]", "*[A:s]", "*[A:s]", false);
+            TestUnion("*[A:e]", "*[A:N]", "*[A:e]", false);
+            TestUnion("*[A:n]", "*[A:N]", "*[A:n]", false);
+            TestUnion("*[A:n, B:b, D:s]", "*[D:N]", "*[A:n, B:b, D:s]", false);
+            TestUnion("*[A:n, B:b, D:*[A:s]]", "*[D:N]", "*[A:n, B:b, D:*[A:s]]", false);
 
             // Nested aggregates
-            TestUnion("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]", usePowerFxV1CompatibilityRules);
-            TestUnion("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, Nest:*[X:n, Y:n, Z:b]]", "*[]", "*[A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
-            TestUnion(
-                "*[A:n, Nest:*[X:n, Y:c, Z:b]]", 
-                "*[X:s, Nest:*[X:$, Y:n, W:s]]", 
-                $"*[A:n, X:s, Nest:*[X:{(usePowerFxV1CompatibilityRules ? 'e' : 'n')}, Y:e, Z:b, W:s]]",
-                usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:w, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:e, Y:e, Z:b, W:s]]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "X", "*[A:n, Nest:*[X:n, Y:c, Z:b]]", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]", false);
+            TestUnion("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]", false);
+            TestUnion("*[A:n, Nest:*[X:n, Y:n, Z:b]]", "*[]", "*[A:n, Nest:*[X:n, Y:n, Z:b]]", false);
+            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:w, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:e, Y:e, Z:b, W:s]]", false);
+            TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "X", "*[A:n, Nest:*[X:n, Y:c, Z:b]]", false);
 
             // Unresolvable conflicts
-            TestUnion("*[A:n]", "*[A:s]", "*[A:e]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n, B:b, D:s]", "*[A:n, B:s, D:s]", "*[A:n, B:e, D:s]", usePowerFxV1CompatibilityRules);
-            TestUnion("*[A:n]", "![B:n]", "e", usePowerFxV1CompatibilityRules);
+            TestUnion("*[A:n]", "*[A:s]", "*[A:e]", false);
+            TestUnion("*[A:n, B:b, D:s]", "*[A:n, B:s, D:s]", "*[A:n, B:e, D:s]", false);
+            TestUnion("*[A:n]", "![B:n]", "e", false);
 
             //Attachment
             var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
             var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
-            TestUnion(type1, type1, type1, usePowerFxV1CompatibilityRules);
-            TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"), usePowerFxV1CompatibilityRules);
-            TestUnion(type2, type2, type2, usePowerFxV1CompatibilityRules);
-            TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), usePowerFxV1CompatibilityRules);
-            TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), usePowerFxV1CompatibilityRules);
+            TestUnion(type1, type1, type1, false);
+            TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"), false);
+            TestUnion(type2, type2, type2, false);
+            TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), false);
+            TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), false);
 
             var typeEncodings = "ebnshdipmgo$wcDTlLNZPQqVOXw";
             foreach (var type in typeEncodings)
             {
-                TestUnion(type.ToString(), "X", type.ToString(), usePowerFxV1CompatibilityRules);
-                TestUnion(type.ToString(), "-", "e", usePowerFxV1CompatibilityRules);
+                TestUnion(type.ToString(), "X", type.ToString(), false);
+                TestUnion(type.ToString(), "-", "e", false);
             }
+        }
+
+        [Theory]
+
+        // First is number
+        [InlineData("n", "n", "n")]
+        [InlineData("n", "$", "n")]
+        [InlineData("n", "w", "n")]
+        [InlineData("n", "c", "e")]
+        [InlineData("n", "d", "n")]
+        [InlineData("n", "D", "n")]
+        [InlineData("n", "T", "n")]
+        [InlineData("n", "s", "n")]
+        [InlineData("n", "g", "e")]
+        [InlineData("n", "b", "n")]
+        [InlineData("n", "i", "e")]
+        [InlineData("n", "o", "e")]
+        [InlineData("n", "m", "e")]
+        [InlineData("n", "h", "e")]
+
+        // First is decimal
+        [InlineData("w", "n", "w")]
+        [InlineData("w", "$", "w")]
+        [InlineData("w", "w", "w")]
+        [InlineData("w", "c", "e")]
+        [InlineData("w", "d", "w")]
+        [InlineData("w", "D", "w")]
+        [InlineData("w", "T", "w")]
+        [InlineData("w", "s", "w")]
+        [InlineData("w", "g", "e")]
+        [InlineData("w", "b", "w")]
+        [InlineData("w", "i", "e")]
+        [InlineData("w", "o", "e")]
+        [InlineData("w", "m", "e")]
+        [InlineData("w", "h", "e")]
+
+        // First is currency
+        [InlineData("$", "n", "$")]
+        [InlineData("$", "$", "$")]
+        [InlineData("$", "w", "$")]
+        [InlineData("$", "c", "e")]
+        [InlineData("$", "d", "e")]
+        [InlineData("$", "D", "e")]
+        [InlineData("$", "T", "e")]
+        [InlineData("$", "s", "$")]
+        [InlineData("$", "g", "e")]
+        [InlineData("$", "b", "$")]
+        [InlineData("$", "i", "e")]
+        [InlineData("$", "o", "e")]
+        [InlineData("$", "m", "e")]
+        [InlineData("$", "h", "e")]
+
+        // First is boolean
+        [InlineData("b", "n", "b")]
+        [InlineData("b", "$", "b")]
+        [InlineData("b", "w", "b")]
+        [InlineData("b", "c", "e")]
+        [InlineData("b", "d", "e")]
+        [InlineData("b", "D", "e")]
+        [InlineData("b", "T", "e")]
+        [InlineData("b", "s", "b")]
+        [InlineData("b", "g", "e")]
+        [InlineData("b", "b", "b")]
+        [InlineData("b", "i", "e")]
+        [InlineData("b", "o", "e")]
+        [InlineData("b", "m", "e")]
+        [InlineData("b", "h", "e")]
+
+        // First is string
+        [InlineData("s", "n", "s")]
+        [InlineData("s", "$", "s")]
+        [InlineData("s", "w", "s")]
+        [InlineData("s", "c", "e")]
+        [InlineData("s", "d", "s")]
+        [InlineData("s", "D", "s")]
+        [InlineData("s", "T", "s")]
+        [InlineData("s", "s", "s")]
+        [InlineData("s", "g", "s")]
+        [InlineData("s", "b", "s")]
+        [InlineData("s", "i", "s")]
+        [InlineData("s", "o", "s")]
+        [InlineData("s", "m", "s")]
+        [InlineData("s", "h", "s")]
+
+        // First is guid
+        [InlineData("g", "n", "e")]
+        [InlineData("g", "$", "e")]
+        [InlineData("g", "w", "e")]
+        [InlineData("g", "c", "e")]
+        [InlineData("g", "d", "e")]
+        [InlineData("g", "D", "e")]
+        [InlineData("g", "T", "e")]
+        [InlineData("g", "s", "g")]
+        [InlineData("g", "g", "g")]
+        [InlineData("g", "b", "e")]
+        [InlineData("g", "i", "e")]
+        [InlineData("g", "o", "e")]
+        [InlineData("g", "m", "e")]
+        [InlineData("g", "h", "e")]
+
+        // First is color
+        [InlineData("c", "n", "e")]
+        [InlineData("c", "$", "e")]
+        [InlineData("c", "w", "e")]
+        [InlineData("c", "c", "c")]
+        [InlineData("c", "d", "e")]
+        [InlineData("c", "D", "e")]
+        [InlineData("c", "T", "e")]
+        [InlineData("c", "s", "e")]
+        [InlineData("c", "g", "e")]
+        [InlineData("c", "b", "e")]
+        [InlineData("c", "i", "e")]
+        [InlineData("c", "o", "e")]
+        [InlineData("c", "m", "e")]
+        [InlineData("c", "h", "e")]
+
+        // First is media
+        [InlineData("m", "n", "e")]
+        [InlineData("m", "$", "e")]
+        [InlineData("m", "w", "e")]
+        [InlineData("m", "c", "e")]
+        [InlineData("m", "d", "e")]
+        [InlineData("m", "D", "e")]
+        [InlineData("m", "T", "e")]
+        [InlineData("m", "s", "m")]
+        [InlineData("m", "g", "e")]
+        [InlineData("m", "b", "e")]
+        [InlineData("m", "i", "e")]
+        [InlineData("m", "o", "m")]
+        [InlineData("m", "m", "m")]
+        [InlineData("m", "h", "m")]
+
+        // First is image
+        [InlineData("i", "n", "e")]
+        [InlineData("i", "$", "e")]
+        [InlineData("i", "w", "e")]
+        [InlineData("i", "c", "e")]
+        [InlineData("i", "d", "e")]
+        [InlineData("i", "D", "e")]
+        [InlineData("i", "T", "e")]
+        [InlineData("i", "s", "i")]
+        [InlineData("i", "g", "e")]
+        [InlineData("i", "b", "e")]
+        [InlineData("i", "i", "i")]
+        [InlineData("i", "o", "i")]
+        [InlineData("i", "m", "e")]
+        [InlineData("i", "h", "i")]
+
+        // First is blob
+        [InlineData("o", "n", "e")]
+        [InlineData("o", "$", "e")]
+        [InlineData("o", "w", "e")]
+        [InlineData("o", "c", "e")]
+        [InlineData("o", "d", "e")]
+        [InlineData("o", "D", "e")]
+        [InlineData("o", "T", "e")]
+        [InlineData("o", "s", "o")]
+        [InlineData("o", "g", "e")]
+        [InlineData("o", "b", "e")]
+        [InlineData("o", "i", "o")]
+        [InlineData("o", "o", "o")]
+        [InlineData("o", "m", "o")]
+        [InlineData("o", "h", "o")]
+
+        // First is hyperlink
+        [InlineData("h", "n", "e")]
+        [InlineData("h", "$", "e")]
+        [InlineData("h", "w", "e")]
+        [InlineData("h", "c", "e")]
+        [InlineData("h", "d", "e")]
+        [InlineData("h", "D", "e")]
+        [InlineData("h", "T", "e")]
+        [InlineData("h", "s", "h")]
+        [InlineData("h", "g", "e")]
+        [InlineData("h", "b", "e")]
+        [InlineData("h", "i", "h")]
+        [InlineData("h", "o", "h")]
+        [InlineData("h", "m", "h")]
+        [InlineData("h", "h", "h")]
+        public void DTypeUnion_PowerFxV1CompatRules_Primitives(string type1, string type2, string typeResult)
+        {
+            TestUnion(type1, type2, typeResult, true);
+
+            //TestUnion("*[]", "*[]", "*[]", usePowerFxV1CompatibilityRules);
+
+            //TestUnion("*[A:n]", "*[]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[]", "*[A:n]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "*[A:$]", usePowerFxV1CompatibilityRules ? "*[A:e]" : "*[A:n]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:$]", "*[A:n]", usePowerFxV1CompatibilityRules ? "*[A:e]" : "*[A:n]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "*[A:w]", "*[A:e]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:w]", "*[A:n]", "*[A:e]", usePowerFxV1CompatibilityRules);
+
+            //TestUnion("*[A:n]", "*[B:n]", "*[A:n, B:n]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "*[B:s]", "*[A:n, B:s]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "*[B:b]", "*[A:n, B:b]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "*[B:w]", "*[A:n, B:w]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "X", "*[A:n]", usePowerFxV1CompatibilityRules);
+
+            //TestUnion("*[]", "*[A:n, B:b, D:d]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, B:b, D:d]", "*[]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, B:b, D:d]", "*[A:n, B:b]", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, B:b, D:d]", "*[X:s, Y:n]", "*[A:n, B:b, D:d, X:s, Y:n]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, B:b, D:d]", "X", "*[A:n, B:b, D:d]", usePowerFxV1CompatibilityRules);
+
+            //// Tests for Type DataNull, DataNull is compatable with any data type, regardless of order.
+            //TestUnion("N", "N", "N", usePowerFxV1CompatibilityRules);
+            //TestUnion("s", "N", "s", usePowerFxV1CompatibilityRules);
+            //TestUnion("b", "N", "b", usePowerFxV1CompatibilityRules);
+            //TestUnion("n", "N", "n", usePowerFxV1CompatibilityRules);
+            //TestUnion("i", "N", "i", usePowerFxV1CompatibilityRules);
+            //TestUnion("N", "i", "i", usePowerFxV1CompatibilityRules);
+            //TestUnion("$", "N", "$", usePowerFxV1CompatibilityRules);
+            //TestUnion("w", "N", "w", usePowerFxV1CompatibilityRules);
+            //TestUnion("h", "N", "h", usePowerFxV1CompatibilityRules);
+            //TestUnion("o", "N", "o", usePowerFxV1CompatibilityRules);
+            //TestUnion("c", "N", "c", usePowerFxV1CompatibilityRules);
+            //TestUnion("N", "c", "c", usePowerFxV1CompatibilityRules);
+            //TestUnion("p", "N", "p", usePowerFxV1CompatibilityRules);
+            //TestUnion("m", "N", "m", usePowerFxV1CompatibilityRules);
+            //TestUnion("e", "N", "e", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[]", "N", "*[]", usePowerFxV1CompatibilityRules);
+            //TestUnion("N", "*[]", "*[]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:N]", "*[A:$]", "*[A:$]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:N]", "*[A:w]", "*[A:w]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:b]", "*[A:N]", "*[A:b]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:N]", "*[A:b]", "*[A:b]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:N]", "*[A:s]", "*[A:s]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:e]", "*[A:N]", "*[A:e]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "*[A:N]", "*[A:n]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, B:b, D:s]", "*[D:N]", "*[A:n, B:b, D:s]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, B:b, D:*[A:s]]", "*[D:N]", "*[A:n, B:b, D:*[A:s]]", usePowerFxV1CompatibilityRules);
+
+            //// Nested aggregates
+            //TestUnion("*[A:*[A:![X:n, Y:b]]]", "*[A:*[A:![Z:s]]]", "*[A:*[A:![X:n, Y:b, Z:s]]]", usePowerFxV1CompatibilityRules);
+            //TestUnion("![A:n, Nest:*[X:n, Y:n, Z:b]]", "![]", "![A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, Nest:*[X:n, Y:n, Z:b]]", "*[]", "*[A:n, Nest:*[X:n, Y:n, Z:b]]", usePowerFxV1CompatibilityRules);
+            //TestUnion(
+            //    "*[A:n, Nest:*[X:n, Y:c, Z:b]]", 
+            //    "*[X:s, Nest:*[X:$, Y:n, W:s]]", 
+            //    $"*[A:n, X:s, Nest:*[X:{(usePowerFxV1CompatibilityRules ? 'e' : 'n')}, Y:e, Z:b, W:s]]",
+            //    usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "*[X:s, Nest:*[X:w, Y:n, W:s]]", "*[A:n, X:s, Nest:*[X:e, Y:e, Z:b, W:s]]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, Nest:*[X:n, Y:c, Z:b]]", "X", "*[A:n, Nest:*[X:n, Y:c, Z:b]]", usePowerFxV1CompatibilityRules);
+
+            //// Unresolvable conflicts
+            //TestUnion("*[A:n]", "*[A:s]", "*[A:e]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n, B:b, D:s]", "*[A:n, B:s, D:s]", "*[A:n, B:e, D:s]", usePowerFxV1CompatibilityRules);
+            //TestUnion("*[A:n]", "![B:n]", "e", usePowerFxV1CompatibilityRules);
+
+            ////Attachment
+            //var type1 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("DisplayName")))));
+            //var type2 = DType.CreateAttachmentType(DType.CreateAttachmentType(DType.CreateTable(new TypedName(DType.String, new DName("Name")))));
+            //TestUnion(type1, type1, type1, usePowerFxV1CompatibilityRules);
+            //TestUnion(type1, type2, TestUtils.DT("*[DisplayName:s, Name:s]"), usePowerFxV1CompatibilityRules);
+            //TestUnion(type2, type2, type2, usePowerFxV1CompatibilityRules);
+            //TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), usePowerFxV1CompatibilityRules);
+            //TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), usePowerFxV1CompatibilityRules);
+
+            //var typeEncodings = "ebnshdipmgo$wcDTlLNZPQqVOXw";
+            //foreach (var type in typeEncodings)
+            //{
+            //    TestUnion(type.ToString(), "X", type.ToString(), usePowerFxV1CompatibilityRules);
+            //    TestUnion(type.ToString(), "-", "e", usePowerFxV1CompatibilityRules);
+            //}
         }
 
         [Fact]
