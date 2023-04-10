@@ -39,17 +39,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var checkName = engine.Check("User.FullName");
             Assert.True(checkName.IsSuccess);
-            var nameResult = await checkName.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+            var nameResult = await checkName.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
             Assert.Equal(userInfo.FullName ?? string.Empty, nameResult.ToObject());
 
             var checkEmail = engine.Check("User.Email");
             Assert.True(checkEmail.IsSuccess);
-            var emailResult = await checkEmail.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+            var emailResult = await checkEmail.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
             Assert.Equal(userInfo.Email ?? string.Empty, emailResult.ToObject());
 
             var checkId = engine.Check("User.Id");
             Assert.True(checkId.IsSuccess);
-            var idResult = await checkId.GetEvaluator().EvalAsync(CancellationToken.None, rc);
+            var idResult = await checkId.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
             Assert.Equal(userInfo.Id ?? string.Empty, idResult.ToObject());
         }
 
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check("User.FullName");
             Assert.True(check.IsSuccess);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await check.GetEvaluator().EvalAsync(CancellationToken.None, rc));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

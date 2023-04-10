@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             };
 
             var function = Activator.CreateInstance(type) as IAsyncTexlFunction;
-            var result = await function.InvokeAsync(args, CancellationToken.None);
+            var result = await function.InvokeAsync(args, CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<ErrorValue>(result);
         }

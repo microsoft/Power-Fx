@@ -38,6 +38,17 @@ namespace Microsoft.PowerFx
         /// </summary>
         public int MaxExpressionLength { get; set; }
 
+        public ParserOptions()
+        {
+        }
+
+        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0)
+        {
+            Culture = culture;
+            AllowsSideEffects = allowsSideEffects;
+            MaxExpressionLength = maxExpressionLength;
+        }
+
         internal ParseResult Parse(string script)
         {
             return Parse(script, Features.None);

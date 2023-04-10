@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (LambdaFormulaValue)args[1];
             var arg2 = (LambdaFormulaValue)(args.Length > 2 ? args[2] : null);
 
-            var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1);
+            var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false);
             var row = rows.FirstOrDefault();
 
             if (row != null)
@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     var childContext = context.SymbolContext.WithScopeValues(row.Value);
-                    return await arg2.EvalInRowScopeAsync(context.NewScope(childContext));
+                    return await arg2.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
                 }
             }
 
@@ -128,7 +128,7 @@ namespace Microsoft.PowerFx.Functions
 
             var tableType = (TableType)irContext.ResultType;
             var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-            var rows = await LazyAddColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, newColumns);
+            var rows = await LazyAddColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, newColumns).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
         }
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Functions
 
             var tableType = (TableType)irContext.ResultType;
             var recordIRContext = new IRContext(irContext.SourceContext, tableType.ToRecord());
-            var rows = await LazyDropColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, args.Skip(1).ToArray());
+            var rows = await LazyDropColumnsAsync(runner, context, sourceArg.Rows, recordIRContext, args.Skip(1).ToArray()).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
         }
@@ -159,7 +159,7 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
-                        var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext));
+                        var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
                         fields.Add(new NamedValue(column.Name, value));
                     }
 
@@ -328,7 +328,7 @@ namespace Microsoft.PowerFx.Functions
                     var include = true;
                     for (var i = 0; i < filters.Length; i++)
                     {
-                        var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext));
+                        var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
                         if (result is ErrorValue error)
                         {
@@ -386,7 +386,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1);
+            var rows = await LazyFilterAsync(runner, context, arg0.Rows, arg1).ConfigureAwait(false);
 
             return new InMemoryTableValue(irContext, rows);
         }
@@ -419,7 +419,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var childContext = context.SymbolContext.WithScopeValues(row.Value);
-            var lambdaValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext));
+            var lambdaValue = await lambda.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
             return (row, lambdaValue);
         }
@@ -436,7 +436,7 @@ namespace Microsoft.PowerFx.Functions
             foreach (var pair in values)
             {
                 runner.CheckCancel();
-                pairs.Add(await pair);
+                pairs.Add(await pair.ConfigureAwait(false));
             }
 
             return DistinctValueType(pairs, irContext);
@@ -465,7 +465,7 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var pair in arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))
             {
-                pairs.Add(await pair);
+                pairs.Add(await pair.ConfigureAwait(false));
             }
 
             bool allNumbers = true, allDecimals = true, allStrings = true, allBooleans = true, allDatetimes = true, allDates = true, allOptionSets = true;
@@ -632,11 +632,11 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                return null;
+                childContext = context.SymbolContext.WithScopeValues(row.Error);
             }
 
             // Filter evals to a boolean 
-            var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext));
+            var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
             var include = false;
             if (result is BooleanValue booleanValue)
             {
@@ -671,7 +671,7 @@ namespace Microsoft.PowerFx.Functions
 
                 var task = LazyFilterRowAsync(runner, context, row, filter);
                 
-                results.Add(await task);
+                results.Add(await task.ConfigureAwait(false));
             }
                         
             // Remove all nulls. 

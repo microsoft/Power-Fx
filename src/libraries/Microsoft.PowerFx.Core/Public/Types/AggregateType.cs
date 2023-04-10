@@ -113,12 +113,7 @@ namespace Microsoft.PowerFx.Types
 
         private protected DType AddFieldToType(NamedFormulaType field)
         {
-            var displayNameProvider = _type.DisplayNameProvider;
-            if (displayNameProvider == null)
-            {
-                displayNameProvider = new SingleSourceDisplayNameProvider();
-            }
-
+            var displayNameProvider = _type.DisplayNameProvider ?? new SingleSourceDisplayNameProvider();
             if (displayNameProvider is SingleSourceDisplayNameProvider singleSourceDisplayNameProvider)
             {
                 if (field.DisplayName != default)

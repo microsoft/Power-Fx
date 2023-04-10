@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var runtimeConfig = new RuntimeConfig();
                 runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21 });
 
-                var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+                var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
             
                 Assert.Equal(expected, res.ToObject());
             }
@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runtimeConfig = new RuntimeConfig();
             runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21 });
 
-            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
             Assert.IsType<ErrorValue>(res);
             Assert.NotNull(((ErrorValue)res).Errors.Where((error) => error.Kind.Equals(ErrorKind.InvalidArgument)));
         }
@@ -211,7 +211,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var runtimeConfig = new RuntimeConfig();
 
-            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig);
+            var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
             Assert.IsType<ErrorValue>(res);
             Assert.NotNull(((ErrorValue)res).Errors.Where((error) => error.Kind.Equals(ErrorKind.Custom)));
         }
@@ -227,15 +227,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public FormulaValue GetUserObject(IServiceProvider serviceProvider)
         {
             var cache = new TypeMarshallerCache();
-            var user = (User)serviceProvider.GetService(typeof(User));
-            
-            // if user object was not added via service provider.
-            if (user == null)
-            {
-                // this exception is catch by Fx, and converted to an error.
-                throw new CustomFunctionErrorException("User was not added to service");
-            }
 
+            // this exception is caught by Fx, and converted to an error.
+            var user = (User)serviceProvider.GetService(typeof(User)) ?? throw new CustomFunctionErrorException("User was not added to service");            
             var userFV = cache.Marshal(user);
             return userFV;
         }

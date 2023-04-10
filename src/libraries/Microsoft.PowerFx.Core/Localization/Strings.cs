@@ -233,6 +233,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutSqrtT = (b) => StringResources.Get("AboutSqrtT", b);
         public static StringGetter MathFuncArg1 = (b) => StringResources.Get("MathFuncArg1", b);
         public static StringGetter MathTFuncArg1 = (b) => StringResources.Get("MathTFuncArg1", b);
+        public static StringGetter MathFuncArg2 = (b) => StringResources.Get("MathFuncArg2", b);
+        public static StringGetter MathTFuncArg2 = (b) => StringResources.Get("MathTFuncArg2", b);
 
         public static StringGetter AboutInt = (b) => StringResources.Get("AboutInt", b);
         public static StringGetter AboutIntT = (b) => StringResources.Get("AboutIntT", b);

@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Types
         {
             var allowedFields = _fields.Where(kvp => Type.TryGetFieldType(kvp.Key, out _));
 
-            return await UpdateAllowedFieldsAsync(changeRecord, allowedFields, cancellationToken);
+            return await UpdateAllowedFieldsAsync(changeRecord, allowedFields, cancellationToken).ConfigureAwait(false);
         }
     }
 }

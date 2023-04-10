@@ -123,6 +123,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                 var optionFormat = new StringBuilder(TexlLexer.PunctuatorCurlyOpen);
                 string sep = "";
+
+                // $$$ can't use current culture
                 string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                 foreach (var option in optionalParamInfo)
                 {
@@ -501,7 +503,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                 throw new InvalidOperationException($"Function {Name} can't be invoked."); 
             }
 
-            var result = await _invoker.InvokeAsync(args, cancellationToken);
+            var result = await _invoker.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)

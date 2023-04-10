@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             // Cache miss - get the result. 
-            var result = await getter();
+            var result = await getter().ConfigureAwait(false);
 
             if (requestKey != null)
             {

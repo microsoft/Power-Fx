@@ -187,7 +187,7 @@ namespace Microsoft.PowerFx.Functions
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
             cancellationToken.ThrowIfCancellationRequested();
-            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken);
+            var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
 
             return ret.ToFormulaValue();
         }

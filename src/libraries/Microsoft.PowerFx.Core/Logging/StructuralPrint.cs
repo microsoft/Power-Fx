@@ -268,6 +268,7 @@ namespace Microsoft.PowerFx.Core.Logging
                             .With(node.Children[i].Accept(this, Precedence.None));
                         if (i != count - 1)
                         {
+                            // $$$ can't use current culture
                             result = result.With(SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator));
                         }
                     }
@@ -333,6 +334,7 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
+            // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
@@ -352,6 +354,7 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
+            // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
@@ -384,6 +387,7 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
 
+            // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)

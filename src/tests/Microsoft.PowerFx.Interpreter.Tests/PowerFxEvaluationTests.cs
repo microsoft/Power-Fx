@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 
         private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config, bool numberIsFloat)
         {
-            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(config.CultureInfo, new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
+            return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
         }
 
         private static (RecalcEngine engine, RecordValue parameters) OptionSetTestSetup(PowerFxConfig config, bool numberIsFloat)
@@ -280,7 +281,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
                 {
-                    return new RunResult(await RunVerifyAsync(expr, config, iSetup));
+                    return new RunResult(await RunVerifyAsync(expr, config, iSetup).ConfigureAwait(false));
                 }
 
                 if (iSetup.HandlerName != null)
@@ -304,7 +305,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 var symbolTable = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
-                var check = engine.Check(expr, options: iSetup.Flags.ToParserOptions(), symbolTable: symbolTable);
+
+                // These tests are only run in en-US locale for now
+                var check = engine.Check(expr, options: iSetup.Flags.ToParserOptions(new CultureInfo("en-US")), symbolTable: symbolTable);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);

@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, config, parameterType);
+            var intellisense = Suggest(expression, config, culture: null, parameterType);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
         public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunctionSet());
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {

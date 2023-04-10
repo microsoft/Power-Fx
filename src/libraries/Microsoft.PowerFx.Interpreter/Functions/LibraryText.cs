@@ -75,37 +75,46 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
+                if (first)
+                {
+                    first = false;
+                }
+                else
+                {
+                    sb.Append(separator);
+                }
+
+                SymbolContext childContext;
                 if (row.IsValue)
                 {
-                    if (first)
-                    {
-                        first = false;
-                    }
-                    else
-                    {
-                        sb.Append(separator);
-                    }
-
-                    var childContext = context.SymbolContext.WithScopeValues(row.Value);
-
-                    var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
-
-                    string str;
-                    if (result is ErrorValue ev)
-                    {
-                        return ev;
-                    }
-                    else if (result is BlankValue)
-                    {
-                        str = string.Empty;
-                    }
-                    else
-                    {
-                        str = ((StringValue)result).Value;
-                    }
-
-                    sb.Append(str);
+                    childContext = context.SymbolContext.WithScopeValues(row.Value);
                 }
+                else if (row.IsBlank)
+                {
+                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
+                }
+                else
+                {
+                    childContext = context.SymbolContext.WithScopeValues(row.Error);
+                }
+
+                var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+
+                string str;
+                if (result is ErrorValue ev)
+                {
+                    return ev;
+                }
+                else if (result is BlankValue)
+                {
+                    str = string.Empty;
+                }
+                else
+                {
+                    str = ((StringValue)result).Value;
+                }
+
+                sb.Append(str);
             }
 
             return new StringValue(irContext, sb.ToString());
@@ -683,7 +692,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, context, arg.IRContext);
+                var res = await runner.EvalArgAsync<ValidFormulaValue>(arg, context, arg.IRContext).ConfigureAwait(false);
 
                 if (res.IsValue)
                 {
