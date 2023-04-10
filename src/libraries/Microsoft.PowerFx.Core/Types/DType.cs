@@ -2439,7 +2439,7 @@ namespace Microsoft.PowerFx.Core.Types
         public static DType Union(DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
         {
             var fError = false;
-            return Union(ref fError, type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
+            return Union(ref fError, type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, usePowerFxV1CompatibilityRules);
         }
 
         public bool CanUnionWith(DType type, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
@@ -2677,7 +2677,7 @@ namespace Microsoft.PowerFx.Core.Types
             return false;
         }
 
-        public static DType Union(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
+        public static DType Union(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce = false)
         {
             type1.AssertValid();
             type2.AssertValid();
@@ -2717,58 +2717,43 @@ namespace Microsoft.PowerFx.Core.Types
                 }
 
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(
-                    UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules),
+                    UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce),
                     type2.AssociatedDataSources,
                     type2.DisplayNameProvider);
             }
 
-            if (usePowerFxV1CompatibilityRules)
+            if (type1 == Unknown)
             {
-                if (type1 == Unknown)
-                {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
-                }
-
-                if (type2 == Unknown)
-                {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
-                }
-
-                if (type1 == ObjNull)
-                {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
-                }
-
-                if (type2 == ObjNull)
-                {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
-                }
-
-                if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
-                {
-                    fError |= type1.IsError;
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
-                }
-
-                if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || type2.CoercesTo(type1, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
-                {
-                    fError |= type2.IsError;
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
-                }
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
             }
-            else
-            {
-                if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
-                {
-                    fError |= type1.IsError;
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
-                }
 
-                if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
-                {
-                    fError |= type2.IsError;
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
-                }
+            if (type2 == Unknown)
+            {
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+            }
+
+            if (type1 == ObjNull)
+            {
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+            }
+
+            if (type2 == ObjNull)
+            {
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+            }
+
+            if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) 
+                || (allowCoerce && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+            {
+                fError |= type1.IsError;
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+            }
+
+            if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                (allowCoerce && type2.CoercesTo(type1, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+            {
+                fError |= type2.IsError;
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
             }
 
             var result = Supertype(type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
@@ -2776,7 +2761,7 @@ namespace Microsoft.PowerFx.Core.Types
             return result;
         }
 
-        private static DType UnionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules)
+        private static DType UnionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce)
         {
             type1.AssertValid();
             Contracts.Assert(type1.IsAggregate);
@@ -2808,7 +2793,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce);
                 }
                 else if (field1Type.IsAggregate || field2Type.IsAggregate)
                 {
@@ -2837,7 +2822,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce);
                 }
 
                 result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);
@@ -3860,7 +3845,7 @@ namespace Microsoft.PowerFx.Core.Types
             else
             {
                 // Original union
-                var unionType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false);
+                var unionType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: false);
 
                 if (!fError)
                 {
@@ -3871,7 +3856,7 @@ namespace Microsoft.PowerFx.Core.Types
                     fError = false;
 
                     // Union with coercion
-                    returnType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    returnType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: true);
                     coercionNeeded = !fError;
                 }
             }

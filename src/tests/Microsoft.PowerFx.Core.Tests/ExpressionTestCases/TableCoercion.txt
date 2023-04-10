@@ -78,4 +78,4 @@ Table({y:{x:{a:1,b:Blank()}}},{y:{x:{a:1,b:2}}})
 1
 
 >> Last([ {a:"str"}, {a:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")} ]).a
-GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")
+"5cc45615-f759-4a53-b225-d3a2497f60ad"
