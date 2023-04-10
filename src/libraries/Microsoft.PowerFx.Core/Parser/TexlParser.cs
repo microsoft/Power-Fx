@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Parser
             return parser.ParseUDFs(script);
         }
 
-        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, CultureInfo loc = null)
+        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, bool numberAsFloat, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
             var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
 
-            return parser.ParseUDFsAndNamedFormulas(script);
+            return parser.ParseUDFsAndNamedFormulas(script, numberAsFloat);
         }
 
         private ParseUDFsResult ParseUDFs(string script)
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script)
+        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, bool numberAsFloat)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, numberAsFloat));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -330,7 +330,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         var result = ParseExpr(Precedence.None);
                         ParseTrivia();
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, numberAsFloat));
                     }
                     else
                     {
