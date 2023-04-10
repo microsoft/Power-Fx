@@ -185,7 +185,11 @@ namespace Microsoft.PowerFx.Types
                 DType typeUnion = DType.EmptyRecord;
                 foreach (var record in records)
                 {
-                    typeUnion = DType.Union(GuaranteeRecord(record).IRContext.ResultType._type, typeUnion, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+                    typeUnion = DType.Union(
+                        GuaranteeRecord(record).IRContext.ResultType._type, 
+                        typeUnion, 
+                        useLegacyDateTimeAccepts: false, 
+                        usePowerFxV1CompatibilityRules: false /* Use more strict union rules */);
                 }
 
                 if (typeUnion.HasErrors)

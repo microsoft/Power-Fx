@@ -2724,6 +2724,26 @@ namespace Microsoft.PowerFx.Core.Types
 
             if (usePowerFxV1CompatibilityRules)
             {
+                if (type1 == Unknown)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                }
+
+                if (type2 == Unknown)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                }
+
+                if (type1 == ObjNull)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                }
+
+                if (type2 == ObjNull)
+                {
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                }
+
                 if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) || type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                 {
                     fError |= type1.IsError;
@@ -3840,7 +3860,7 @@ namespace Microsoft.PowerFx.Core.Types
             else
             {
                 // Original union
-                var unionType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                var unionType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: false);
 
                 if (!fError)
                 {
@@ -3851,7 +3871,7 @@ namespace Microsoft.PowerFx.Core.Types
                     fError = false;
 
                     // Union with coercion
-                    returnType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                    returnType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
                     coercionNeeded = !fError;
                 }
             }
