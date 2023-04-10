@@ -567,6 +567,24 @@
     <value>여러 텍스트 값을 하나의 텍스트 값으로 결합합니다.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>숫자를 나타내는 '텍스트'를 10진수 값으로 변환합니다.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>값을 변환할 때 사용할 언어 코드입니다.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>10진수 값으로 변환할 텍스트 값입니다.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>숫자를 나타내는 '텍스트'를 float 값으로 변환합니다.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>값을 변환할 때 사용할 언어 코드입니다.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>float 값으로 변환할 텍스트 값입니다.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>텍스트</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globe - 연결되어 있지 않음</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globe - 새로 고침</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globe - 변경 내용 보류 중</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globe - 경고</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globe - 오류</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>인코딩할 URL입니다.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}'은(는) 인식되었지만 지원되지 않는 함수입니다.</value>
+    
   </data>
 </root>

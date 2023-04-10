@@ -567,6 +567,24 @@
     <value>Une varios valores de texto en un único valor de texto.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Convierte un "texto" que representa un número en un valor decimal.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>El código de idioma que se usará al convertir el valor.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>El valor de texto que se convertirá en un valor numérico.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Convierte un "texto" que representa un número en un valor flotante.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>El código de idioma que se usará al convertir el valor.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>El valor de texto que se convertirá en un valor flotante.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>texto</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globo: sin conexión</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globo: actualizar</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globo: cambios pendientes</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globo: advertencia</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globo: error</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Dirección URL que codificará.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>"{0}" es una función reconocida pero no admitida.</value>
+    
   </data>
 </root>
