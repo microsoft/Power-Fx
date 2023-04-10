@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // first argument is the count, but does not determine the type of result
             // second argument (if present) determines the type and all other args are coerced to this type
             var returnScalarType = args.Length == 1 ? 
-                            DType.Number : // Decimal TODO (context.NumberIsFloat ? DType.Number : DType.Decimal) :
+                            (context.NumberIsFloat ? DType.Number : DType.Decimal) :
                             DetermineNumericFunctionReturnType(nativeDecimal: true, context.NumberIsFloat, argTypes[1]);
             returnType = DType.CreateTable(new TypedName(returnScalarType, new DName("Value")));
 

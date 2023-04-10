@@ -11,8 +11,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
-// Decimal TODO : float arguments for second arg and for first arg in sequence
-
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Trunc(number:n, digits:n)
