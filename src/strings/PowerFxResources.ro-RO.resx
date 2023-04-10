@@ -567,6 +567,24 @@
     <value>Unește mai multe valori text într-o singură valoare text.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Convertește un „text” care reprezintă un număr, la o valoare zecimală.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Codul de limbă de utilizat la conversia valorii.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Valoarea text de convertit la o valoare zecimală.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Convertește un „text” care reprezintă un număr, la o valoare float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Codul de limbă de utilizat la conversia valorii.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Valoarea text de convertit la o valoare float.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Un URL de codificat.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>„{0}” este o funcție recunoscută, dar nu este acceptată.</value>
+    
   </data>
 </root>

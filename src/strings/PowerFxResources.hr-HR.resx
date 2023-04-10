@@ -567,6 +567,24 @@
     <value>Spaja nekoliko tekstnih vrijednosti u jednu tekstnu vrijednost.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Pretvara „tekst” koji predstavlja broj u decimalnu vrijednost.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Šifra jezika koja će se upotrijebiti prilikom pretvaranja vrijednosti.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Tekstna vrijednost koja se pretvara u decimalnu vrijednost.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Pretvara „tekst” koji predstavlja broj u vrijednost Float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Šifra jezika koja će se upotrijebiti prilikom pretvaranja vrijednosti.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Tekstna vrijednost koja se pretvara u vrijednost Float.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL koji treba kodirati.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>„{0}” je prepoznata, ali ne i podržana funkcija.</value>
+    
   </data>
 </root>

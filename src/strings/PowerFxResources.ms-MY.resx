@@ -567,6 +567,24 @@
     <value>Mencantumkan beberapa nilai teks ke dalam satu nilai teks.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Menukar 'teks' yang mewakili nombor kepada nilai Perpuluhan.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kod bahasa untuk digunakan semasa menukar nilai.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Nilai teks untuk ditukar kepada nilai Perpuluhan.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Menukar 'teks' yang mewakili nombor pada nilai Apungan.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kod bahasa untuk digunakan semasa menukar nilai.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Nilai teks untuk ditukar kepada nilai Apungan.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>teks</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Url untuk dikodkan.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' ialah fungsi yang dikenali tetapi tidak disokong.</value>
+    
   </data>
 </root>
