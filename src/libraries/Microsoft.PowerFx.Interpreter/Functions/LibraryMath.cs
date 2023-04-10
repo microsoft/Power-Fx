@@ -895,15 +895,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
         {
-            double digits;
+            int digits;
 
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                digits = numberDigs.Value;
+                digits = (int)numberDigs.Value;
             }
             else if (args.Length == 2 && args[1] is DecimalValue decimalDigs)
             {
-                digits = (double)decimalDigs.Value;
+                digits = (int)decimalDigs.Value;
             }
             else
             { 
@@ -922,12 +922,11 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.UnreachableCodeError(irContext);
         }
 
-        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double digits, RoundType rt = RoundType.Default)
+        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, int dg, RoundType rt = RoundType.Default)
         {
             var number = num.Value;
             var s = number < 0 ? -1d : 1d;
             var n = number * s;
-            var dg = digits < 0 ? (int)Math.Ceiling(digits) : (int)Math.Floor(digits);
 
             if (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d)
             {
@@ -951,43 +950,92 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.UnreachableCodeError(irContext);
         }
 
-        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double digits, RoundType rt = RoundType.Default)
+        // The algorithm for Decimal is different from that of Float because with less range we are going out of our way to avoid overflow
+        // At the time of this writing, the version of .NET being targeted only supports two varieties of MidpointRounding
+        // In the future, some of this can be replaced with built in support in decimal.Round()
+        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, int digits, RoundType roundType = RoundType.Default)
         {
-            // Decimal TODO: explore a better algorithm that doesn't overflow as often, but in general overflow is unavoidable
-            // Decimal TODO: avoids immutable field check, but don't want to recreate array for each call
+            // Decimal TODO: This should be moved out as a static member, but tests complain
             IReadOnlyList<decimal> decPow10 = new decimal[]
             {
-                1e-29m, 1e-28m, 1e-27m, 1e-26m, 1e-25m, 1e-24m, 1e-23m, 1e-22m, 1e-21m, 1e-20m,
-                1e-19m, 1e-18m, 1e-17m, 1e-16m, 1e-15m, 1e-14m, 1e-13m, 1e-12m, 1e-11m, 1e-10m,
-                1e-09m, 1e-08m, 1e-07m, 1e-06m, 1e-05m, 1e-04m, 1e-03m, 1e-02m, 1e-01m, 1e-00m,
-                1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m, 1e+10m,
-                1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m, 1e+20m,
-                1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
+                    1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
+                    1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
+                    1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
             };
 
-            var number = dec.Value;
-            var s = number < 0 ? -1m : 1m;
-            var n = number * s;
-            var dg = digits < 0 ? (int)Math.Ceiling(digits) : (int)Math.Floor(digits);
+            IReadOnlyList<decimal> decNegPow10 = new decimal[]
+            {
+                    1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
+                    1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
+                    1e-20m, 1e-21m, 1e-22m, 1e-23m, 1e-24m, 1e-25m, 1e-26m, 1e-27m, 1e-28m
+            };
 
-            // Decimal TODO: shouldn't this return zero, here and above for double?
-            if (dg < -29 || dg > 29)
+            var signedNumber = dec.Value;
+            var sign = signedNumber < 0 ? -1m : 1m;
+            var unsignedNumber = signedNumber < 0 ? -signedNumber : signedNumber;
+
+            if (digits < -28)
+            {
+                return new DecimalValue(irContext, 0m);
+            }
+            else if (digits > 28)
             {
                 return dec;
             }
 
-            var m = decPow10[dg + 29];
-
             try
             {
-                switch (rt)
+                switch (roundType)
                 {
                     case RoundType.Default:
-                        return new DecimalValue(irContext, s * decimal.Floor((n + (1 / (2 * m))) * m) / m);
+                        if (digits >= 0)
+                        {
+                            return new DecimalValue(irContext, decimal.Round(signedNumber, digits, MidpointRounding.AwayFromZero));
+                        }
+                        else
+                        {
+                            // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
+                            var scale = decPow10[-digits];
+                            return new DecimalValue(irContext, decimal.Round(signedNumber / scale, 0, MidpointRounding.AwayFromZero) * scale);
+                        }
+
                     case RoundType.Down:
-                        return new DecimalValue(irContext, s * decimal.Floor(n * m) / m);
+                        if (digits == 0)
+                        {
+                            // this could be covered by the below dg < 0 case, but this is an important scenario to optimize
+                            // Trunc with no second argument comes here
+                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber));
+                        }
+                        else if (digits < 0)
+                        {
+                            // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
+                            var scale = decPow10[-digits];
+                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber / scale) * scale);
+                        }
+                        else
+                        {
+                            // uses the system Round to avoid overflow and then correct if the result was rounded up
+                            var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
+                            return new DecimalValue(irContext, sign * (unsignedRound > unsignedNumber ? unsignedRound - decNegPow10[digits] : unsignedRound));
+                        }
+
                     case RoundType.Up:
-                        return new DecimalValue(irContext, s * decimal.Ceiling(n * m) / m);
+                        if (digits == 0)
+                        {
+                            // this could be covered by the below dg < 0 case, but this is an important scenario to optimize
+                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber));
+                        }
+                        else if (digits < 0)
+                        {
+                            var scale = decPow10[-digits];
+                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber / scale) * scale);
+                        }
+                        else
+                        {
+                            // uses the system Round to avoid overflow and then correct if the result was rounded down
+                            var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
+                            return new DecimalValue(irContext, sign * (unsignedRound < unsignedNumber ? unsignedRound + decNegPow10[digits] : unsignedRound));
+                        }
                 }
             }
             catch (OverflowException)
@@ -1007,15 +1055,15 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundUp(IRContext irContext, FormulaValue[] args)
         {
-            double digits;
+            int digits;
 
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                digits = numberDigs.Value;
+                digits = (int)numberDigs.Value;
             }
             else if (args.Length == 2 && args[1] is DecimalValue decimalDigs)
             {
-                digits = (double)decimalDigs.Value;
+                digits = (int)decimalDigs.Value;
             }
             else
             {
@@ -1036,16 +1084,16 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
         {
-            double digits;
+            int digits;
 
             // Trunc uses RoundDown as the implementation, and Trunc's second argument is optional
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                digits = numberDigs.Value;
+                digits = (int)numberDigs.Value;
             }
             else if (args.Length == 2 && args[1] is DecimalValue decimalDigs)
             {
-                digits = (double)decimalDigs.Value;
+                digits = (int)decimalDigs.Value;
             }
             else if (args.Length == 1)
             {
