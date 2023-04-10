@@ -2515,7 +2515,7 @@ namespace Microsoft.PowerFx.Tests
             TestUnion(DType.Unknown, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), false);
             TestUnion(DType.ObjNull, type1, type1.LazyTypeProvider.GetExpandedType(type1.IsTable), false);
 
-            var typeEncodings = "ebnshdipmgo$wcDTlLNZPQqVOXw";
+            var typeEncodings = "ebnshdipmgo$wcDTlLZPQqVOXw";
             foreach (var type in typeEncodings)
             {
                 TestUnion(type.ToString(), "X", type.ToString(), false);
@@ -2764,11 +2764,11 @@ namespace Microsoft.PowerFx.Tests
             TestUnion("*[A:n, B:b, D:s]", "*[D:N]", "*[A:n, B:b, D:s]", usePFxV1CompatRules);
             TestUnion("*[A:n, B:b, D:*[A:s]]", "*[D:N]", "*[A:n, B:b, D:*[A:s]]", usePFxV1CompatRules);
 
-            TestUnion("N", "X", usePFxV1CompatRules ? "X" : "N", usePFxV1CompatRules);
+            TestUnion("N", "X", "X", usePFxV1CompatRules);
             TestUnion("X", "N", "X", usePFxV1CompatRules);
 
-            TestUnion("-", "N", usePFxV1CompatRules ? "-" : "e", usePFxV1CompatRules);
-            TestUnion("N", "-", usePFxV1CompatRules ? "-" : "e", usePFxV1CompatRules);
+            TestUnion("-", "N", "-", usePFxV1CompatRules);
+            TestUnion("N", "-", "-", usePFxV1CompatRules);
         }
 
         [Theory]
@@ -2784,7 +2784,7 @@ namespace Microsoft.PowerFx.Tests
                 TestUnion("?", type, type, usePFxV1CompatRules);
             }
 
-            TestUnion("?", "N", usePFxV1CompatRules ? "N" : "?", usePFxV1CompatRules);
+            TestUnion("?", "N", "N", usePFxV1CompatRules);
             TestUnion("N", "?", "N", usePFxV1CompatRules);
         }
 
