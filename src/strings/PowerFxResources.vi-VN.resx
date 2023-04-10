@@ -567,6 +567,24 @@
     <value>Kết hợp vài giá trị văn bản thành một giá trị văn bản.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Số thập phân.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Giá trị văn bản cần chuyển đổi sang giá trị Số thập phân.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Giá trị văn bản cần chuyển đổi sang giá trị Float.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>văn_bản</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Quả địa cầu - Không được kết nối</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Quả cầu - Làm mới</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Quả địa cầu – Các thay đổi đang chờ xử lý</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Quả cầu - Cảnh báo</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Quả địa cầu - Lỗi</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL sẽ được mã hóa.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>"{0}" là một hàm được công nhận nhưng không được hỗ trợ.</value>
+    
   </data>
 </root>

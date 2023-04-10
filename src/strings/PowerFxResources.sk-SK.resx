@@ -567,6 +567,24 @@
     <value>Spojí niekoľko textových hodnôt do jednej textovej hodnoty.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Skonvertuje text predstavujúci číslo na desatinnú hodnotu.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kód jazyka, ktorý sa používa pri konverzii na hodnotu.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Textová hodnota, ktorá sa má konvertovať na desatinnú hodnotu.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Skonvertuje text predstavujúci číslo na hodnotu s pohyblivou desatinnou čiarkou.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kód jazyka, ktorý sa používa pri konverzii na hodnotu.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Textová hodnota, ktorá sa má konvertovať na hodnotu s pohyblivou desatinnou čiarkou.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globe – nepripojené</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globe – obnovenie</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globe – čakajúce zmeny</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globe – upozornenie</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globe – chyba</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL adresa, ktorá sa má kódovať.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>{0} je rozpoznaná, ale nepodporovaná funkcia.</value>
+    
   </data>
 </root>

@@ -567,6 +567,24 @@
     <value>Több szöveges értéket egyesít egyetlen szöveges értékben.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Számértékké alakítja a számot jelölő decimális értéket.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Az érték konvertálása során használandó nyelvkód.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>A decimális értékké alakítandó szöveges érték.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Számértékké alakítja a számot jelölő lebegő értéket.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Az érték konvertálása során használandó nyelvkód.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>A lebegő értékké alakítandó szöveges érték.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>szöveg</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>A kódolandó URL-cím.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>A(z) '{0}' egy felismert, de nem támogatott függvény.</value>
+    
   </data>
 </root>

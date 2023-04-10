@@ -567,6 +567,24 @@
     <value>Liittää useita tekstiarvoja yhdeksi tekstiarvoksi.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Muuntaa lukua edustavan text-merkkijonon desimaaliarvoksi.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Arvon muuntamisessa käytettävä kielikoodi.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Desimaaliarvoksi muunnettava tekstiarvo.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Muuntaa lukua edustavan text-merkkijonon liukulukuarvoksi.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Arvon muuntamisessa käytettävä kielikoodi.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Liukulukuarvoksi muunnettava tekstiarvo.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>teksti</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Koodattava URL-osoite.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>{0} on tunnistettu toiminto, mutta sitä ei tueta.</value>
+    
   </data>
 </root>
