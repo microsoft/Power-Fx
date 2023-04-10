@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -141,36 +143,40 @@ namespace Microsoft.PowerFx
 
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
-            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
-                false,
-                _allSymbols,
-                runtimeConfig?.Values,
-                _globals);
-
-            IServiceProvider innerServices = null;
-            if (_cultureInfo != null)
-            {
-                var temp = new BasicServiceProvider();
-                temp.AddService(_cultureInfo);
-                innerServices = temp;
-            }
-
-            var runtimeConfig2 = new RuntimeConfig
-            {
-                Values = symbolValues,
-                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
-            };
-
-            var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
-
             try
             {
+                ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
+                    false,
+                    _allSymbols,
+                    runtimeConfig?.Values,
+                    _globals);
+
+                IServiceProvider innerServices = null;
+                if (_cultureInfo != null)
+                {
+                    var temp = new BasicServiceProvider();
+                    temp.AddService(_cultureInfo);
+                    innerServices = temp;
+                }
+
+                var runtimeConfig2 = new RuntimeConfig
+                {
+                    Values = symbolValues,
+                    ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
+                };
+
+                var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
+
                 var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker)).ConfigureAwait(false);
                 return newValue;
             }
             catch (MaxCallDepthException maxCallDepthException)
             {
                 return maxCallDepthException.ToErrorValue(_irnode.IRContext);
+            }
+            catch (MissingSymbolValuesException missingSymbolValuesException)
+            {
+                return missingSymbolValuesException.ToErrorValue(_irnode.IRContext);
             }
         }
 
