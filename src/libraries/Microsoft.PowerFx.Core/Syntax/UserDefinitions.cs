@@ -32,8 +32,6 @@ namespace Microsoft.PowerFx.Syntax
         /// A script containing one or more UDFs.
         /// </summary>
         private readonly string _script;
-        private readonly INameResolver _nameResolver;
-        private readonly IUserDefinitionSemanticsHandler _userDefinitionSemanticsHandler;
 
         /// <summary>
         /// The language settings used for parsing this script.
@@ -42,11 +40,9 @@ namespace Microsoft.PowerFx.Syntax
         private readonly CultureInfo _loc;
         private readonly bool _numberAsFloat;
 
-        private UserDefinitions(string script, INameResolver nameResolver, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false)
+        private UserDefinitions(string script, CultureInfo loc = null, bool numberAsFloat = false)
         {
             _script = script ?? throw new ArgumentNullException(nameof(script));
-            _nameResolver = nameResolver ?? throw new ArgumentNullException(nameof(nameResolver));
-            _userDefinitionSemanticsHandler = userDefinitionSemanticsHandler;
             _loc = loc;
             _numberAsFloat = numberAsFloat;
         }
@@ -56,9 +52,9 @@ namespace Microsoft.PowerFx.Syntax
             return TexlParser.ParseUserDefinitionScript(script, numberAsFloat, loc);
         }
 
-        public static bool ProcessUserDefnitions(string script, INameResolver nameResolver, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false)
+        public static bool ProcessUserDefnitions(string script, out UserDefinitionResult userDefinitionResult, CultureInfo loc = null, bool numberAsFloat = false)
         {
-            var userDefinitions = new UserDefinitions(script, nameResolver, userDefinitionSemanticsHandler, loc, numberAsFloat);
+            var userDefinitions = new UserDefinitions(script, loc, numberAsFloat);
 
             return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
         }
