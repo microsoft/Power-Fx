@@ -179,15 +179,7 @@ namespace Microsoft.PowerFx
             var parameterSymbols = runtimeConfig?.Values?.SymbolTable;
             var symbolsAll = ReadOnlySymbolTable.Compose(parameterSymbols, symbolTable);
 
-            if (Config.Features.BlankKeyword)
-            {
-                if (options == null)
-                {
-                    options = new ParserOptions();
-                }
-
-                options.BlankKeyword = true;
-            }
+            options ??= new ParserOptions() { BlankKeyword = Config.Features.BlankKeyword };
 
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();

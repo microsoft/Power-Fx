@@ -1248,7 +1248,7 @@ namespace Microsoft.PowerFx.Syntax
                     return new KeyToken(tid, spanTok);
                 }
 
-                // "blank" is a keyword abut handled separately because it only enabled with a flag.
+                // "blank" is a keyword but handled separately because it only enabled with a flag.
                 // Someday when it becomes permanent and moved into the keywords list, this code can be eliminated.
                 else if (_blankKeyword && str == "blank" && !fDelimiterStart)
                 {
