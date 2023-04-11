@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return false;
             }
 
-            if (t.IsPrimitive || t.IsEnum)
+            if (t.IsPrimitive || t.IsEnum || t == typeof(decimal))
             {
                 return true;
             }

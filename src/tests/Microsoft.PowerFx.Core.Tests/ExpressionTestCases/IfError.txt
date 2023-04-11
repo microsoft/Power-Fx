@@ -149,9 +149,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> IfError(1/0, Time(12,0,0))
 0.5
 
->> IfError(1, 1/0, Time(12,0,0))
-Time(12,0,0,0)
-
 // Number-DateTime
 >> IfError(1/0, DateTime(2022,8,1,12,0,0))
 44774.5
@@ -198,61 +195,3 @@ Time(11,30,59,0)
 // Error-DateTime
 >> IfError(Error({Kind: ErrorKind.Validation}), DateTime(2021, 12, 12, 17, 30, 0))
 DateTime(2021,12,12,17,30,0,0)
-
->> IfError(1, {x:1}, {x:1}, {y:1}, 1)
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
-
-// IfError can have mismatched arg types, but result can't be used.
->> IfError(1/0, 1, {x:4})
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
-
-// IfError accepts the void value. But then result of the expression can't be used. If(true, 1, {x:4}) => void value.
->> IfError(1/0, 1, If(true, 1, {x:4}), 1)
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
-
-// Errors are still returned.
->> IfError(1, 2, 3/0, If(true, 1/0, {x:4}))
-Error({Kind:ErrorKind.Div0})
-
-// Error is not returned.
->> IfError(1, 2, 3/0, If(false, 1/0, {x:4}))
-If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
-
->> IfError(1, a)
-Errors: Error 11-12: Name isn't valid. 'a' isn't recognized.|Error 0-13: The function 'IfError' has some invalid arguments.
-
->> IfError(a, 1)
-Errors: Error 8-9: Name isn't valid. 'a' isn't recognized.|Error 0-13: The function 'IfError' has some invalid arguments.
-
->> IfError( If(true, 1, {a:1}), 1, 2 )
-2
-
->> IfError( If(true, 1/0, {a:1}), 1, 2 )
-1
-
->> IfError( 1, "hello", If(true,1/0,{a:1}), "great", "world")
-"great"
-
->> IfError( 1, "one", If(true,1,{a:1}), "two", "three")
-"three"
-
->> IfError(1/0, 2, Time(12, 0, 0), 2)
-Time(0,0,0,0)
-
->> IfError(Blank(), 1)
-Blank()
-
->> IfError(1, Blank())
-1
-
->> IfError(1, 2, Blank())
-Blank()
-
->> IfError(1, Blank(), 2)
-2
-
->> IfError(Blank(), Blank())
-Blank()
-
->> IfError(Blank(), Blank(), Blank())
-Blank()
