@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Visibility => Operation.Extensions.TryGetValue("x-ms-visibility", out IOpenApiExtension openExt) && openExt is OpenApiString str ? str.Value : null;
 
-        public FormulaType ReturnType => Operation.GetReturnType();
+        public FormulaType ReturnType => Operation.GetReturnType(NumberIsFloat);
 
         public bool IsBehavior => OpenApiParser.IsSafeHttpMethod(HttpMethod);
 
@@ -57,7 +57,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public int ArityMax => ArgumentMapper.ArityMax;
 
-        internal ArgumentMapper ArgumentMapper => _argumentMapper ??= new ArgumentMapper(Operation.Parameters, Operation);
+        public bool NumberIsFloat { get; }
+
+        internal ArgumentMapper ArgumentMapper => _argumentMapper ??= new ArgumentMapper(Operation.Parameters, Operation, NumberIsFloat);
 
         internal bool HasServiceFunction => _serviceFunction != null;
 
@@ -67,12 +69,13 @@ namespace Microsoft.PowerFx.Connectors
         private ConnectorParameter[] _optionalParameters;
         internal ServiceFunction _serviceFunction;
 
-        public ConnectorFunction(OpenApiOperation openApiOperation, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false)
+        public ConnectorFunction(OpenApiOperation openApiOperation, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
             OperationPath = operationPath ?? throw new ArgumentNullException(nameof(operationPath));
             HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
+            NumberIsFloat = numberIsFloat;
 
             if (httpClient != null)
             {
