@@ -153,29 +153,26 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false)
         {
-            if (_serviceFunction == null)
-            {
-                IAsyncTexlFunction invoker = null;
-                string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
-                DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
-                Namespace = func_ns;
+            IAsyncTexlFunction invoker = null;
+            string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
+            DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
+            Namespace = func_ns;
 
-                if (httpClient != null)
-                {
-                    var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, cache);
-                    invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
-                }
+            if (httpClient != null)
+            {
+                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, cache);
+                invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
+            }
 
 #pragma warning disable SA1117 // parameters should be on same line or all on different lines
 
-                _serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
-                    ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), "action", ArgumentMapper._parameterTypes)
-                {
-                    _invoker = invoker
-                };
+            _serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
+                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), "action", ArgumentMapper._parameterTypes)
+            {
+                _invoker = invoker
+            };
 
 #pragma warning restore SA1117
-            }
 
             return _serviceFunction;
         }
