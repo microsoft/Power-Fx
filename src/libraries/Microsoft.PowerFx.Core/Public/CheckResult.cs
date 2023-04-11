@@ -452,18 +452,14 @@ namespace Microsoft.PowerFx
                             throw new NotImplementedException();
                         }
 
-                        if (StringValue.AllowedListConvertToString.Contains(this.ReturnType))
-                        {
-                            this.ReturnType = FormulaType.String;
-                        }
-                        else
+                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
                         {
                             notCoerceToType = true;
                         }
                     }
 
-                    var sameType = this._expectedReturnType == this.ReturnType;
-                    if (notCoerceToType || !sameType)
+                    var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
+                    if (!valid)
                     {
                         _errors.Add(new ExpressionError
                         {
