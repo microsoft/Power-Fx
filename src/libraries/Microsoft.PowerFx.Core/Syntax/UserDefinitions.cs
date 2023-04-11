@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Syntax
             foreach (var udf in uDFs)
             {
                 var udfName = udf.Ident.Name;
-                var func = new UserDefinedFunction(udfName, udf.ReturnType, udf.Body, udf.IsImperative, udf.Args);
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType, udf.Body, udf.IsImperative, udf.Args);
 
                 if (texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName))
                 {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -34,15 +35,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsSelfContained => !_isImperative;
 
-        public UserDefinedFunction(string name, FormulaType returnType, TexlNode udfBody, bool isImperative, params FormulaType[] paramTypes)
-            : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.MathAndStat, returnType._type, 0, paramTypes.Length, paramTypes.Length, Array.ConvertAll(paramTypes, x => x._type))
-        {
-            UdfBody = udfBody;
-            _isImperative = isImperative;
-        }
-
-        public UserDefinedFunction(DName udfName, IdentToken returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
-            : this(udfName.Value, returnType.GetFormulaType(), body, isImperative, args.Select(a => a.VarType.GetFormulaType()).ToArray())
+        public UserDefinedFunction(string name, IdentToken returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
+        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnType.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.VarType.GetFormulaType()._type).ToArray())
         {
             this._returnTypeToken = returnType;
             this._args = args;
