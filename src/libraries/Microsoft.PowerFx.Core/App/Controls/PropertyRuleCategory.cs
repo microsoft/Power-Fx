@@ -27,6 +27,9 @@ namespace Microsoft.PowerFx.Core.App.Controls
         /// </summary>
         Unknown = 6,
         Formulas = 7,
+
+        // This will be used to represent user defined functions
+        Functions = 8,
     }
 
     /// <summary>
