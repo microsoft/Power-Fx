@@ -5119,4 +5119,8 @@
     <value>'{0}' is a recognized but not supported function.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Type conversion failed because the given value was of type '{0}', expected '{1}' type.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>
