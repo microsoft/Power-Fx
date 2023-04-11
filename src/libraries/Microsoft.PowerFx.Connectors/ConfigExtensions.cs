@@ -25,7 +25,8 @@ namespace Microsoft.PowerFx
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
         /// <param name="httpClient">Required iff we want to invoke the API. A client to invoke the endpoints described in the api document. This must handle auth or any other tranforms the API expects.</param>
         /// <param name="cache">A cache to avoid redundant HTTP gets.</param>
-        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
+        /// <param name="numberIsFloat">Number is float.</param>
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false)
         {
             if (functionNamespace == null)
             {
@@ -42,13 +43,13 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(openApiDocument));
             }
 
-            var functions = OpenApiParser.Parse(functionNamespace, openApiDocument, httpClient, cache);
+            List<ServiceFunction> functions = OpenApiParser.Parse(functionNamespace, openApiDocument, httpClient, cache, numberIsFloat);
             foreach (ServiceFunction function in functions)
             {
                 config.AddFunction(function);
             }
 
-            var functionInfos = functions.ConvertAll(function => new FunctionInfo(function));
+            List<FunctionInfo> functionInfos = functions.ConvertAll(function => new FunctionInfo(function));
             return functionInfos;
         }
 

@@ -31,13 +31,13 @@ namespace Microsoft.PowerFx.Types
 
         public async ValueTask<FormulaValue> EvalAsync()
         {
-            return await EvalInRowScopeAsync(_context);
+            return await EvalInRowScopeAsync(_context).ConfigureAwait(false);
         }
 
         public async ValueTask<FormulaValue> EvalInRowScopeAsync(EvalVisitorContext context)
         {
             _runner.CheckCancel();
-            var result = await _tree.Accept(_runner, context);
+            var result = await _tree.Accept(_runner, context).ConfigureAwait(false);
             return result;
         }
 

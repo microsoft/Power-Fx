@@ -567,6 +567,24 @@
     <value>Hiermee worden verschillende tekstwaarden samengevoegd in één tekstwaarde.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Hiermee wordt een 'text' in de vorm van een getal geconverteerd naar een decimale waarde.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>De taalcode die moet worden gebruikt bij het converteren van de waarde.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>De tekstwaarde die moet worden geconverteerd naar een decimale waarde.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Hiermee wordt een 'text' in de vorm van een getal geconverteerd naar een drijvende waarde.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>De taalcode die moet worden gebruikt bij het converteren van de waarde.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>De tekstwaarde die moet worden geconverteerd naar een drijvende waarde.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Een URL die moet worden gecodeerd.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>{0} is een herkende maar niet ondersteunde functie.</value>
+    
   </data>
 </root>

@@ -526,7 +526,7 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in rowsAsync)
             {
-                rows.Add(await row);
+                rows.Add(await row.ConfigureAwait(false));
             }
 
             var errorRows = rows.OfType<ErrorValue>();

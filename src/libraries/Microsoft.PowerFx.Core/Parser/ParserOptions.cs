@@ -43,7 +43,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public int MaxExpressionLength { get; set; }
 
-        public ParserOptions(CultureInfo culture = null, bool allowsSideEffects = false, int maxExpressionLength = 0)
+        public ParserOptions()
+        {
+        }
+
+        public ParserOptions(CultureInfo culture, bool allowsSideEffects = false, int maxExpressionLength = 0)
         {
             Culture = culture;
             AllowsSideEffects = allowsSideEffects;

@@ -567,6 +567,24 @@
     <value>Spojí několik textových hodnot do jedné textové hodnoty.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Převede „text“, který představuje číslo, na desetinnou hodnotu.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kód jazyka, který se má použít při převodu hodnoty.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Textová hodnota, kterou chcete převést na desetinnou hodnotu.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Převede „text“, který představuje číslo, na plovoucí hodnotu.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kód jazyka, který se má použít při převodu hodnoty.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Textová hodnota, kterou chcete převést na plovoucí hodnotu.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globe - Nepřipojeno</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globe - Obnovit</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globe - Čekající změny</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globe - Varování</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globe - Chyba</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Adresa URL, která má být zakódována.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' je rozpoznaná, ale nepodporovaná funkce.</value>
+    
   </data>
 </root>

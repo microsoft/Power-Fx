@@ -47,13 +47,13 @@ namespace Microsoft.PowerFx
             // If we eval with a RecordValue, we must have called Check with a RecordType. 
             var parameterType = ((ParsedExpression)expr)._parameterSymbolTable;
             var runtimeConfig = SymbolValues.NewFromRecord(parameterType, parameters);
-            return await expr.EvalAsync(cancellationToken, new RuntimeConfig(runtimeConfig));
+            return await expr.EvalAsync(cancellationToken, new RuntimeConfig(runtimeConfig)).ConfigureAwait(false);
         }
 
         public static async Task<FormulaValue> EvalAsync(this IExpressionEvaluator expr, CancellationToken cancellationToken, ReadOnlySymbolValues symbolValues)
         {
             var runtimeConfig = new RuntimeConfig(symbolValues);
-            return await expr.EvalAsync(cancellationToken, runtimeConfig);
+            return await expr.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx
             var evalVisitor = new EvalVisitor(runtimeConfig, cancellationToken);
             try
             {
-                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker));
+                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker)).ConfigureAwait(false);
                 return newValue;
             }
             catch (MaxCallDepthException maxCallDepthException)
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx
 
             try
             {
-                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker));
+                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker)).ConfigureAwait(false);
                 return newValue;
             }
             catch (MaxCallDepthException maxCallDepthException)
@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx
             // We don't catch the max call depth exception here becuase someone could swallow the error with an "IfError" check.
             // Instead we only catch at the top of parsed expression, which is the above function.
             var ev2 = new EvalVisitor(runtimeConfig2, cancel);
-            var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), stackMarker));
+            var newValue = await _irnode.Accept(ev2, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), stackMarker)).ConfigureAwait(false);
             return newValue;
         }
     }

@@ -119,3 +119,12 @@ Errors: Error 23-28: Name isn't valid. 'Value' isn't recognized.
 
 >> LookUp([1, 2, 3] As X, X.Value > 2, Value)
 Errors: Error 36-41: Name isn't valid. 'Value' isn't recognized.
+
+>> LookUp(Table({x:1}, Error({Kind:ErrorKind.Custom}), {x:3}), ThisRecord.x = 3)
+Error({Kind:ErrorKind.Custom})
+
+>> LookUp( [{a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}], IsError(a) && IfError(a, FirstError.Kind) > 20 )
+Error({Kind:ErrorKind.Numeric})
+
+>> IfError( LookUp( [{a:1},If(1/0<2,{a:2}),{a:3},If(Sqrt(-1)<0,{a:4}),{a:5}], IsError(a) && IfError(a, FirstError.Kind) > 20 ).a, FirstError.Kind )
+24

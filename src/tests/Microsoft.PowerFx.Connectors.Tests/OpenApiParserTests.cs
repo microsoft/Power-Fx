@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                                                     ("prediction", Extensions.MakeRecordType(
                                                         ("entities", Extensions.MakeTableType(
                                                             ("category", FormulaType.String),
-                                                            ("confidenceScore", FormulaType.Number),
+                                                            ("confidenceScore", FormulaType.Decimal),
                                                             ("extraInformation", FormulaType.UntypedObject), // property has a discriminator
                                                             ("length", FormulaType.Number),
                                                             ("offset", FormulaType.Number),
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                                                             ("text", FormulaType.String))),
                                                         ("intents", Extensions.MakeTableType(
                                                             ("category", FormulaType.String),
-                                                            ("confidenceScore", FormulaType.Number))),
+                                                            ("confidenceScore", FormulaType.Decimal))),
                                                         ("projectKind", FormulaType.String),
                                                         ("topIntent", FormulaType.String))),
                                                         ("query", FormulaType.String))));
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[19];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
-            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:n, extraInformation:O, length:n, offset:n, resolutions:O, text:s], intents:*[category:s, confidenceScore:n], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
+            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:n, offset:n, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
             RecalcEngine engine = new RecalcEngine(pfxConfig);
 
@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[13];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
-            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:n, extraInformation:O, length:n, multipleResolutions:b, offset:n, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:n], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
+            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:n, multipleResolutions:b, offset:n, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
             RecalcEngine engine = new RecalcEngine(pfxConfig);
 
@@ -240,7 +240,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None);
+            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);

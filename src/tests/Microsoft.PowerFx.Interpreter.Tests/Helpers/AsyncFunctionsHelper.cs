@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Tests
         {
             // all previous instances must have finished before this completes.
             // But it's fine for them to start in paralle. 
-            await WaitFor(x);            
+            await WaitFor(x).ConfigureAwait(false);            
         }
     }
 }

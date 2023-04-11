@@ -79,7 +79,7 @@ Errors: Error 0-41: The function 'IsBlankOrError' has some invalid arguments.|Er
 Errors: Error 11-34: Invalid argument type.|Error 0-36: The function 'IsNumeric' has some invalid arguments.
 
 >> If( true, With({a:1},Switch(a, 1, { prop:"complex" }, "scalar")) )
-{prop:"complex"}
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
 
 >> If( true, With({a:1},Switch(a, 1, 1/0, { prop:"complex" })) )
 Error({Kind:ErrorKind.Div0})

@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// Convenience method to create a value from a json representation. 
         /// </summary>
-        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null)
+        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Types
                 using MemoryStream jsonMemStream = new MemoryStream();
                 JsonElement propBag = document.RootElement;
 
-                return FromJson(propBag, formulaType);
+                return FromJson(propBag, formulaType, numberIsFloat);
             }
             catch
             {
@@ -44,7 +44,8 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="element"></param>
         /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
-        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null)
+        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>
+        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
         {            
             if (formulaType is UntypedObjectType uot)
             {
@@ -59,11 +60,11 @@ namespace Microsoft.PowerFx.Types
                     return FormulaValue.NewBlank(formulaType);
 
                 case JsonValueKind.Number:
-                    if (formulaType is NumberType)
+                    if ((skipTypeValidation && numberIsFloat) || formulaType is NumberType)
                     {
                         return NumberValue.New(element.GetDouble());
                     }
-                    else if (skipTypeValidation || formulaType is DecimalType)
+                    else if ((skipTypeValidation && !numberIsFloat) || formulaType is DecimalType)
                     {
                         return DecimalValue.New(element.GetDecimal());
                     }
@@ -105,7 +106,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Object:
                     if (skipTypeValidation || formulaType is RecordType)
                     {
-                        return RecordFromJsonObject(element, formulaType as RecordType);
+                        return RecordFromJsonObject(element, formulaType as RecordType, numberIsFloat);
                     }
                     else
                     {
@@ -115,7 +116,7 @@ namespace Microsoft.PowerFx.Types
                 case JsonValueKind.Array:
                     if (skipTypeValidation || formulaType is TableType)
                     {
-                        return TableFromJsonArray(element, formulaType as TableType);
+                        return TableFromJsonArray(element, formulaType as TableType, numberIsFloat);
                     }                    
                     else
                     {
@@ -128,7 +129,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Json objects parse to records. 
-        private static RecordValue RecordFromJsonObject(JsonElement element, RecordType recordType)
+        private static RecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, bool numberIsFloat = false)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
@@ -147,7 +148,7 @@ namespace Microsoft.PowerFx.Types
                     fieldType = null;
                 }
 
-                var paValue = FromJson(value, fieldType);
+                var paValue = FromJson(value, fieldType, numberIsFloat);
                 fields.Add(new NamedValue(name, paValue));
                 type = type.Add(new NamedFormulaType(name, paValue.IRContext.ResultType));
             }
@@ -159,7 +160,7 @@ namespace Microsoft.PowerFx.Types
         // Parse json. 
         // [1,2,3]  is a single column table, actually equivalent to: 
         // [{Value : 1, Value: 2, Value :3 }]
-        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType)
+        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, bool numberIsFloat = false)
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
@@ -170,7 +171,7 @@ namespace Microsoft.PowerFx.Types
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 JsonElement element = array[i];
-                var val = GuaranteeRecord(FromJson(element, ft));
+                var val = GuaranteeRecord(FromJson(element, ft, numberIsFloat));
 
                 records.Add(val);
             }

@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Tests
         public async Task WaitFor(int i)
         {
             var tsc = Get(i);
-            await tsc.Task;
+            await tsc.Task.ConfigureAwait(false);
         }
 
         public void Complete(int i)
@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Tests
 
         public async Task<double> Worker(double d)
         {
-            var result = await Worker(new FormulaValue[] { FormulaValue.New(d) }, CancellationToken.None);
+            var result = await Worker(new FormulaValue[] { FormulaValue.New(d) }, CancellationToken.None).ConfigureAwait(false);
             return ((NumberValue)result).Value;
         }
 
@@ -66,14 +66,14 @@ namespace Microsoft.PowerFx.Tests
 
             if (_verify != null)
             {
-                await _verify.BeginAsyncCall(i);
+                await _verify.BeginAsyncCall(i).ConfigureAwait(false);
             }
 
             for (var x = 0; x < i; x++)
             {
                 cancel.ThrowIfCancellationRequested();
 
-                await OnWaitPolicyAsync(x);
+                await OnWaitPolicyAsync(x).ConfigureAwait(false);
             }
 
             Complete(i);

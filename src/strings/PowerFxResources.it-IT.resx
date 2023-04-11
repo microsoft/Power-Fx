@@ -567,6 +567,24 @@
     <value>Unisce diversi valori di testo in un unico valore di testo.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Converte un valore "testo" che rappresenta un numero in un valore decimale.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Codice della lingua da usare per la conversione del valore.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Valore di testo da convertire in un valore decimale.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Converte un valore "testo" che rappresenta un numero in un valore float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Codice della lingua da usare per la conversione del valore.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Valore di testo da convertire in un valore float.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>testo</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL da codificare.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>"{0}" è una funzione riconosciuta ma non supportata.</value>
+    
   </data>
 </root>

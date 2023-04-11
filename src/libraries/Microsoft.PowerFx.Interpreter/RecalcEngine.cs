@@ -161,13 +161,13 @@ namespace Microsoft.PowerFx
             var symbolValues = ReadOnlySymbolValues.NewFromRecord(parameters);
             var runtimeConfig = new RuntimeConfig(symbolValues);
 
-            return await EvalAsync(expressionText, cancellationToken, options, null, runtimeConfig);
+            return await EvalAsync(expressionText, cancellationToken, options, null, runtimeConfig).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig)
         {
             var runtimeConfig2 = new RuntimeConfig(runtimeConfig);
-            return await EvalAsync(expressionText, cancellationToken, runtimeConfig: runtimeConfig2);
+            return await EvalAsync(expressionText, cancellationToken, runtimeConfig: runtimeConfig2).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ParserOptions options = null, ReadOnlySymbolTable symbolTable = null, RuntimeConfig runtimeConfig = null)
@@ -195,7 +195,7 @@ namespace Microsoft.PowerFx
             var stackMarker = new StackDepthCounter(Config.MaxCallDepth);
             var eval = check.GetEvaluator(stackMarker);
 
-            var result = await eval.EvalAsync(cancellationToken, runtimeConfig);
+            var result = await eval.EvalAsync(cancellationToken, runtimeConfig).ConfigureAwait(false);
             return result;
         }
 

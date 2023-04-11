@@ -120,19 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
-
-            if (nodeToCoercedTypeMap?.Any() ?? false)
-            {
-                // Now set the coerced type to a table with numeric column type with the same name as in the argument.
-                returnType = nodeToCoercedTypeMap[args[0]];
-            }
-            else
-            {
-                returnType = context.Features.ConsistentOneColumnTableResult
-                ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
-            }
+            fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
 
             return fValid;
         }

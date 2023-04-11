@@ -567,6 +567,24 @@
     <value>Объединяет несколько текстовых значений в одно текстовое значение.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Преобразует "текст", который представляет число, в десятичное значение.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Код языка, используемый при преобразовании значения.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Текстовое значение для преобразования в десятичное значение.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Преобразует "текст", который представляет число, в число с плавающей точкой.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Код языка, используемый при преобразовании значения.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Текстовое значение для преобразования в число с плавающей точкой.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>текст</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL-адрес, который следует закодировать.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>Функция "{0}" распознана, но она не поддерживается.</value>
+    
   </data>
 </root>

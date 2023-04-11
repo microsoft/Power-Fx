@@ -3254,7 +3254,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                         return;
                     }
-                    
+
                     // Validate that the name exists in the enum type
                     if (leftType.TryGetEnumValue(nameRhs, out value))
                     {
@@ -5220,23 +5220,47 @@ namespace Microsoft.PowerFx.Core.Binding
                     var childType = _txb.GetType(child);
                     isSelfContainedConstant &= _txb.IsSelfContainedConstant(child);
 
-                    // Deferred and void types are not allowed in tables.
                     var isChildTypeAllowedInTable = !childType.IsDeferred && !childType.IsVoid;
-                    if (isChildTypeAllowedInTable && !exprType.IsValid)
+
+                    if (!isChildTypeAllowedInTable)
                     {
-                        exprType = childType;
+                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        continue;
                     }
-                    else if (isChildTypeAllowedInTable && exprType.CanUnionWith(childType))
-                    {
-                        exprType = DType.Union(exprType, childType);
-                    }
-                    else if (isChildTypeAllowedInTable && childType.CoercesTo(exprType))
-                    {
-                        _txb.SetCoercedType(child, exprType);
+
+                    if (_txb.Features.PowerFxV1CompatibilityRules)
+                    {                        
+                        if (DType.TryUnionWithCoerce(exprType, childType, out var returnType, out var needCoercion))
+                        {
+                            exprType = returnType;
+                            if (needCoercion)
+                            {
+                                _txb.SetCoercedType(child, exprType);
+                            }
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        }
                     }
                     else
                     {
-                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        if (!exprType.IsValid)
+                        {
+                            exprType = childType;
+                        }
+                        else if (exprType.CanUnionWith(childType))
+                        {
+                            exprType = DType.Union(exprType, childType);
+                        }
+                        else if (childType.CoercesTo(exprType))
+                        {
+                            _txb.SetCoercedType(child, exprType);
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, child, TexlStrings.ErrTableDoesNotAcceptThisType);
+                        }
                     }
                 }
 

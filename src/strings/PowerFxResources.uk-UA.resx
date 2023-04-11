@@ -567,6 +567,24 @@
     <value>Об’єднує кілька текстових значень в одне.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Перетворює "текст", що представляє число, на десяткове значення.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Мовний код, який слід використовувати під час перетворення значення.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Текстове значення, яке потрібно перетворити на десяткове.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Перетворює "текст", що представляє число, на значення з плаваючою комою.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Мовний код, який слід використовувати під час перетворення значення.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Текстове значення, яке потрібно перетворити на значення з плаваючою комою.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>текст</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Глобус – не підключено</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Глобус – оновлення</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Глобус – відкладені зміни</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Глобус – попередження</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Глобус – помилка</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL-адреса, яку потрібно закодувати.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>"{0}" є розпізнаною, але непідтримуваною функцією.</value>
+    
   </data>
 </root>

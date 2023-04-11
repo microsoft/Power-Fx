@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                FormulaValue result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
+                FormulaValue result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray()).ConfigureAwait(false);
                 ErrorValue finiteError = FiniteResultCheck(functionName, irContext, result);
 
                 return finiteError ?? result;
@@ -246,8 +246,8 @@ namespace Microsoft.PowerFx.Functions
                         NamedValue namedValue;
                         namedValue = value switch
                         {
-                            T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
-                            BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv })),
+                            T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t }).ConfigureAwait(false)),
+                            BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv }).ConfigureAwait(false)),
                             ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
                             _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
                         };
@@ -404,7 +404,7 @@ namespace Microsoft.PowerFx.Functions
                             }
                         });
 
-                        var rowResult = await targetFunction(runner, context, IRContext.NotInSource(itemType), blankValuesReplaced.ToArray());
+                        var rowResult = await targetFunction(runner, context, IRContext.NotInSource(itemType), blankValuesReplaced.ToArray()).ConfigureAwait(false);
                         var namedValue = new NamedValue(columnNameStr, rowResult);
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
