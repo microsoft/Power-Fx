@@ -458,8 +458,8 @@ namespace Microsoft.PowerFx
                         }
                     }
 
-                    var sameType = this._expectedReturnType == this.ReturnType;
-                    if (notCoerceToType || !sameType)
+                    var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
+                    if (!valid)
                     {
                         _errors.Add(new ExpressionError
                         {
