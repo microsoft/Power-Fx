@@ -91,6 +91,8 @@ namespace Microsoft.PowerFx.Syntax
         // Keywords are not locale-specific, populate keyword dictionary statically
         private static readonly IReadOnlyDictionary<string, TokKind> _keywords = new Dictionary<string, TokKind>()
         {
+            // Someday when KeywordBlank becomes a permanent addition to the language, it belongs here.
+            // But while it is an optional keyword, it is handled separately.
             { KeywordTrue, TokKind.True },
             { KeywordFalse, TokKind.False },
             { KeywordIn, TokKind.In },
@@ -1245,6 +1247,9 @@ namespace Microsoft.PowerFx.Syntax
 
                     return new KeyToken(tid, spanTok);
                 }
+
+                // "blank" is a keyword abut handled separately because it only enabled with a flag.
+                // Someday when it becomes permanent and moved into the keywords list, this code can be eliminated.
                 else if (_blankKeyword && str == "blank" && !fDelimiterStart)
                 {
                     return new KeyToken(TokKind.Blank, spanTok);

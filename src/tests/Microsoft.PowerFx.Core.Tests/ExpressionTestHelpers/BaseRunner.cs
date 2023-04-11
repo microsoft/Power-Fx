@@ -211,7 +211,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         if (NumberIsFloat)
                         {
-                            expected = Regex.Replace(expected, "(\\s|'|\\()Decimal(\\s|'|\\))", "$1Number$2");
+                            expected = Regex.Replace(expected, "(\\s|'|\\()Decimal(\\s|'|\\)|\\.)", "$1Number$2");
                         }
 
                         if (actualStr.Contains(expected))

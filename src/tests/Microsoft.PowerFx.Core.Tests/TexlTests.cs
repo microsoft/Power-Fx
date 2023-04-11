@@ -2259,6 +2259,18 @@ namespace Microsoft.PowerFx.Core.Tests
             TestBindingErrors("Blank(\"null\")", TestUtils.DT("N"));
         }
 
+        [Fact]
+        public void TestBlankKeyword_Positive()
+        {
+            TestSimpleBindingSuccess("blank", TestUtils.DT("N"), features: Features.PowerFxV1);
+        }
+
+        [Fact]
+        public void TestBlankKeyword_Negative()
+        {
+            TestBindingErrors("blank", TestUtils.DT("e"));
+        }
+
         [Theory]
         [InlineData("With({A: 1, B: \"test\"}, B & \" \" & A)", "![A:n, B:s]", "s")]
         [InlineData("With({table: [{name: \"first\"},{name: \"first\"}]}, ForAll(table, Value))", "![table:*[value:s]]", "*[name:s]")]
