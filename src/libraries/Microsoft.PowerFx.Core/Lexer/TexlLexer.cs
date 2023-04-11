@@ -27,7 +27,10 @@ namespace Microsoft.PowerFx.Syntax
             None = 0,
 
             // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
-            NumberIsFloat = 1 << 0
+            NumberIsFloat = 1 << 0,
+
+            // Enable the "blank" keyword to return an untyped blank value, as if Blank() had been called
+            BlankKeyword = 2 << 0
         }
 
         // Locale-invariant syntax.
@@ -41,6 +44,7 @@ namespace Microsoft.PowerFx.Syntax
         public const string KeywordOr = "Or";
         public const string KeywordNot = "Not";
         public const string KeywordAs = "As";
+        public const string KeywordBlank = "blank";
         public const string PunctuatorDecimalSeparatorInvariant = ".";
         public const string PunctuatorCommaInvariant = ",";
         public const string PunctuatorSemicolonInvariant = ";";
@@ -371,6 +375,7 @@ namespace Microsoft.PowerFx.Syntax
                 case TokKind.KeyNot:
                 case TokKind.KeyOr:
                 case TokKind.As:
+                case TokKind.Blank:
                     result = true;
                     break;
                 default:
@@ -856,6 +861,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly Stack<LexerMode> _modeStack;
             private readonly bool _numberIsFloat;
+            private readonly bool _blankKeyword;
 
             private int _currentTokenPos; // The start of the current token.
 
@@ -871,6 +877,7 @@ namespace Microsoft.PowerFx.Syntax
                 _sb = sb;
 
                 _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
+                _blankKeyword = flags.HasFlag(TexlLexer.Flags.BlankKeyword);
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
@@ -1237,6 +1244,10 @@ namespace Microsoft.PowerFx.Syntax
                     }
 
                     return new KeyToken(tid, spanTok);
+                }
+                else if (_blankKeyword && str == "blank" && !fDelimiterStart)
+                {
+                    return new KeyToken(TokKind.Blank, spanTok);
                 }
 
                 return new IdentToken(str, spanTok, fDelimiterStart, fDelimiterEnd);

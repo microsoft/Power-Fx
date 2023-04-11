@@ -25,6 +25,11 @@ namespace Microsoft.PowerFx.Core.Parser
                 parserOptions.NumberIsFloat = true;
             }
 
+            if (flags.HasFlag(TexlParser.Flags.BlankKeyword))
+            {
+                parserOptions.BlankKeyword = true;
+            }
+
             return parserOptions; 
         }
     }

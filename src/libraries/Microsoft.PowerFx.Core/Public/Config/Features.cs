@@ -62,6 +62,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool FirstLastNRequiresSecondArguments { get; set; }
 
+        /// <summary>
+        /// Enable the "blank" keyword as a replacement for calling "Blank()".
+        /// </summary>
+        internal bool BlankKeyword { get; set; }
+
         internal bool PowerFxV1CompatibilityRules { get; set; }
 
         internal static Features None => new Features();
@@ -76,6 +81,7 @@ namespace Microsoft.PowerFx
             RestrictedIsEmptyArguments = true,
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
+            BlankKeyword = true,
         };
 
         internal Features()

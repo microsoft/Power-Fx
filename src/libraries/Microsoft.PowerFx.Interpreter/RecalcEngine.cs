@@ -7,7 +7,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
@@ -176,6 +178,16 @@ namespace Microsoft.PowerFx
             // and hence don't require a corresponnding runtime Symbol Value. 
             var parameterSymbols = runtimeConfig?.Values?.SymbolTable;
             var symbolsAll = ReadOnlySymbolTable.Compose(parameterSymbols, symbolTable);
+
+            if (Config.Features.BlankKeyword)
+            {
+                if (options == null)
+                {
+                    options = new ParserOptions();
+                }
+
+                options.BlankKeyword = true;
+            }
 
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
