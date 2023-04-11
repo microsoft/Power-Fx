@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Check if table arg referrs to a connected data source.
             var tableArg = args[1];
-            var ads = argTypes[1].AssociatedDataSources.FirstOrDefault();
+            var ads = argTypes[1].AssociatedDataSources?.FirstOrDefault();
 
             if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
                 (IsExternalSource(ads) &&
