@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Connectors
         public static bool IsInternal(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue("x-ms-visibility", out var openApiExt) && openApiExt is OpenApiString openApiStr && openApiStr.Value == "internal";
 
         // See https://swagger.io/docs/specification/data-models/data-types/
-        public static (FormulaType, RecordType) ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0)
+        public static (FormulaType, RecordType) ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0, bool numberIsFloat = false)
         {
             if (chain == null)
             {
@@ -221,8 +221,8 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case "float":
-                        case "double":
-                            return (FormulaType.Number, null);
+                        case "double":                                                        
+                            return numberIsFloat ? (FormulaType.Number, null) : (FormulaType.Decimal, null);
 
                         case null:
                             return (FormulaType.Decimal, null);
@@ -266,7 +266,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     chain.Push(innerA);
-                    (FormulaType elementType, RecordType rt) = schema.Items.ToFormulaType(chain, level + 1);
+                    (FormulaType elementType, RecordType rt) = schema.Items.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
                     chain.Pop();
 
                     if (rt != null)
@@ -330,7 +330,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             chain.Push(innerO);
-                            (FormulaType propType, RecordType innerHiddenRecord) = kv.Value.ToFormulaType(chain, level + 1);
+                            (FormulaType propType, RecordType innerHiddenRecord) = kv.Value.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
                             chain.Pop();
 
                             if (innerHiddenRecord != null)
@@ -379,7 +379,7 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public static FormulaType GetReturnType(this OpenApiOperation op)
+        public static FormulaType GetReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
             var responses = op.Responses;
             if (!responses.TryGetValue("200", out OpenApiResponse response))
@@ -413,7 +413,7 @@ namespace Microsoft.PowerFx.Connectors
                         return FormulaType.Blank;
                     }
 
-                    (FormulaType responseType, RecordType hiddenRecordType) = openApiMediaType.Schema.ToFormulaType();
+                    (FormulaType responseType, RecordType hiddenRecordType) = openApiMediaType.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
 
                     if (hiddenRecordType != null)
                     {
