@@ -209,6 +209,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             var check = editorContextScope.Check("123");
 
             Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
         }
 
         private class MyEmptyHandler : CodeFixHandler
