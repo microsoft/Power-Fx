@@ -59,6 +59,13 @@ namespace Microsoft.PowerFx
 
         public string MessageKey { get; set; }
 
+        public object[] MessageArgs
+        {
+            get => _messageArgs;
+            
+            set => _messageArgs = value;
+        }
+
         /// <summary>
         /// A warning does not prevent executing the error. See <see cref="Severity"/> for more details.
         /// </summary>

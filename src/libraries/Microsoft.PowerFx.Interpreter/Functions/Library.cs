@@ -139,6 +139,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: SingleArgTrig(Math.Asin))
             },
             {
+                BuiltinFunctionsCore.AsType,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    BuiltinFunctionsCore.Asin.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<FormulaValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: AsType)
+            },
+            {
                 BuiltinFunctionsCore.Atan,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Atan.Name,

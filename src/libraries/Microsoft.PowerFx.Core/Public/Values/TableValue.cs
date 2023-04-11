@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -37,6 +38,29 @@ namespace Microsoft.PowerFx.Types
         public bool IsColumn => IRContext.ResultType._type.IsColumn;
 
         public new TableType Type => (TableType)base.Type;
+
+        /// <summary>
+        /// Casts <paramref name="record"/> to the table's record type.
+        /// </summary>
+        /// <param name="record"> Record to cast.</param>
+        /// <param name="cancellationToken"></param>
+        public virtual DValue<RecordValue> CastRecord(RecordValue record, CancellationToken cancellationToken)
+        {
+            if (record.Type == Type.ToRecord())
+            {
+                return DValue<RecordValue>.Of(record);
+            }
+
+            var error = new ErrorValue(IRContext, new ExpressionError()
+            {
+                MessageKey = TexlStrings.InvalidCast.Key,
+                Span = IRContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument,
+                MessageArgs = new object[] { record.Type, Type.ToRecord() }
+            });
+
+            return DValue<RecordValue>.Of(error);
+        }
 
         public TableValue(RecordType recordType)
             : this(IRContext.NotInSource(recordType.ToTable()))
