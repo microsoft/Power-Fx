@@ -52,6 +52,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues;
         private readonly WeakReference<IService> _parentService;
         private readonly string _actionName;
+        private readonly bool _numberIsFloat;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;        
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
@@ -63,7 +64,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
             DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
             Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string actionName = "", params DType[] paramTypes)
+            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -112,7 +113,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _signatures.Add(_orderedRequiredParams);
             _parameterDefaultValues = parameterDefaultValues;
             _actionName = actionName;
-            _requiredParameters = requiredParamInfo;            
+            _requiredParameters = requiredParamInfo;
+            _numberIsFloat = numberIsFloat;
 
             if (arityMax > arityMin)
             {
