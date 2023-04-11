@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx.Connectors
         public List<OpenApiParameter> OpenApiParameters;
         public List<OpenApiParameter> OpenApiBodyParameters;
         public bool SchemaLessBody = false;
+        public bool NumberIsFloat = false;
 
         #region ServiceFunction args
 
@@ -55,12 +56,13 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool HasBodyParameter => Operation.RequestBody != null;
 
-        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiOperation operation)
+        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiOperation operation, bool numberIsFloat = false)
         {
             OpenApiParameters = parameters.ToList();
             OpenApiBodyParameters = new List<OpenApiParameter>();
             Operation = operation;
             ContentType = OpenApiExtensions.ContentType_ApplicationJson; // default
+            NumberIsFloat = numberIsFloat;
 
             // Hidden-Required parameters exist in the following conditions:
             // 1. required parameter
@@ -94,7 +96,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 string name = param.Name;
-                (FormulaType paramType, RecordType hiddenRecordType) = param.Schema.ToFormulaType();
+                (FormulaType paramType, RecordType hiddenRecordType) = param.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
                 
                 ConnectorDynamicValue connectorDynamicValue = GetDynamicValue(param);
                 string summary = GetSummary(param);
@@ -183,7 +185,7 @@ namespace Microsoft.PowerFx.Connectors
                                 bodyParameter = new OpenApiParameter() { Schema = prop.Value, Name = prop.Key, Description = "Body", Required = required };
                                 OpenApiBodyParameters.Add(bodyParameter);
 
-                                (FormulaType formulaType, RecordType hiddenFormulaType) = prop.Value.ToFormulaType();
+                                (FormulaType formulaType, RecordType hiddenFormulaType) = prop.Value.ToFormulaType(numberIsFloat: numberIsFloat);
                                 (hiddenRequired ? hiddenRequiredBodyParams : required ? requiredBodyParams : optionalBodyParams).Add(new KeyValuePair<string, ConnectorSchemaInternal>(prop.Key, new ConnectorSchemaInternal(prop.Value, formulaType, summary, null, connectorDynamicSchema)));
 
                                 if (hiddenFormulaType != null)
@@ -198,7 +200,7 @@ namespace Microsoft.PowerFx.Connectors
                             bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
 
                             OpenApiBodyParameters.Add(bodyParameter);
-                            (FormulaType formulaType, RecordType hiddenRecordType) = schema.ToFormulaType();
+                            (FormulaType formulaType, RecordType hiddenRecordType) = schema.ToFormulaType(numberIsFloat: numberIsFloat);
                             (requestBody.Required ? requiredParams : optionalParams).Add(new ConnectorParameterInternal(bodyParameter, formulaType, summary, null, connectorDynamicSchema));
 
                             if (hiddenRecordType != null)
