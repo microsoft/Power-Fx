@@ -91,8 +91,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var ads = argTypes[1].AssociatedDataSources?.FirstOrDefault();
 
             if (!binding.TryGetFirstNameInfo(tableArg.Id, out var tableInfo) ||
-                !IsExternalSource(ads) ||
-                !IsExternalSource(tableInfo.Data))
+                !(IsExternalSource(ads) ||
+                IsExternalSource(tableInfo.Data)))
             {
                 errors.EnsureError(tableArg, TexlStrings.ErrAsTypeAndIsTypeExpectConnectedDataSource);
             }
