@@ -185,20 +185,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static readonly IReadOnlyList<decimal> _decPow10 = new decimal[]
-        {
-            1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
-            1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
-            1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
-        };
-
-        private static readonly IReadOnlyList<decimal> _decNegPow10 = new decimal[]
-        {
-            1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
-            1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
-            1e-20m, 1e-21m, 1e-22m, 1e-23m, 1e-24m, 1e-25m, 1e-26m, 1e-27m, 1e-28m
-        };
-
         private class MinNumberAgg : IAggregator
         {
             protected double _minValue = double.MaxValue;
@@ -964,14 +950,14 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.UnreachableCodeError(irContext);
         }
 
-        private static IReadOnlyList<decimal> decPow10 = new decimal[]
+        private static readonly IReadOnlyList<decimal> DecPow10 = new decimal[]
         {
             1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
             1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
             1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
         };
 
-        private static IReadOnlyList<decimal> decNegPow10 = new decimal[]
+        private static readonly IReadOnlyList<decimal> DecNegPow10 = new decimal[]
         {
             1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
             1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
@@ -1008,7 +994,7 @@ namespace Microsoft.PowerFx.Functions
                         else
                         {
                             // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
-                            var scale = decPow10[-digits];
+                            var scale = DecPow10[-digits];
                             return new DecimalValue(irContext, decimal.Round(signedNumber / scale, 0, MidpointRounding.AwayFromZero) * scale);
                         }
 
@@ -1022,14 +1008,14 @@ namespace Microsoft.PowerFx.Functions
                         else if (digits < 0)
                         {
                             // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
-                            var scale = decPow10[-digits];
+                            var scale = DecPow10[-digits];
                             return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber / scale) * scale);
                         }
                         else
                         {
                             // uses the system Round to avoid overflow and then correct if the result was rounded up
                             var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
-                            return new DecimalValue(irContext, sign * (unsignedRound > unsignedNumber ? unsignedRound - decNegPow10[digits] : unsignedRound));
+                            return new DecimalValue(irContext, sign * (unsignedRound > unsignedNumber ? unsignedRound - DecNegPow10[digits] : unsignedRound));
                         }
 
                     case RoundType.Up:
@@ -1040,14 +1026,14 @@ namespace Microsoft.PowerFx.Functions
                         }
                         else if (digits < 0)
                         {
-                            var scale = decPow10[-digits];
+                            var scale = DecPow10[-digits];
                             return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber / scale) * scale);
                         }
                         else
                         {
                             // uses the system Round to avoid overflow and then correct if the result was rounded down
                             var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
-                            return new DecimalValue(irContext, sign * (unsignedRound < unsignedNumber ? unsignedRound + decNegPow10[digits] : unsignedRound));
+                            return new DecimalValue(irContext, sign * (unsignedRound < unsignedNumber ? unsignedRound + DecNegPow10[digits] : unsignedRound));
                         }
                 }
             }
