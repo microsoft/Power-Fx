@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             this._returnTypeToken = returnType;
             this._args = args;
+            this._isImperative = isImperative;
         }
 
         public TexlBinding Bind(INameResolver nameResolver, IBinderGlue documentBinderGlue, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null)
