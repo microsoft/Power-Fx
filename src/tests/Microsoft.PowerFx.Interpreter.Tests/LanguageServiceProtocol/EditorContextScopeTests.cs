@@ -199,6 +199,18 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
             Assert.Equal("Microsoft.PowerFx.Tests.LanguageServiceProtocol.EditorContextScopeTests+MyHandler", name);
         }
 
+        [Fact]
+        public void CheckExpectedReturnValueNumber()
+        {
+            var editorContextScope = new EditorContextScope(
+                            (expr) => new CheckResult(
+                                    new Engine()).SetText(expr).SetBindingInfo().SetExpectedReturnValue(FormulaType.String, true));
+
+            var check = editorContextScope.Check("123");
+
+            Assert.True(check.IsSuccess);
+        }
+
         private class MyEmptyHandler : CodeFixHandler
         {
             public override void OnCodeActionApplied(string actionId)
