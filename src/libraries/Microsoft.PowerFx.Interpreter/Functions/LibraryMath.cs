@@ -950,26 +950,25 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.UnreachableCodeError(irContext);
         }
 
+        private static IReadOnlyList<decimal> decPow10 = new decimal[]
+        {
+            1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
+            1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
+            1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
+        };
+
+        private static IReadOnlyList<decimal> decNegPow10 = new decimal[]
+        {
+            1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
+            1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
+            1e-20m, 1e-21m, 1e-22m, 1e-23m, 1e-24m, 1e-25m, 1e-26m, 1e-27m, 1e-28m
+        };
+
         // The algorithm for Decimal is different from that of Float because with less range we are going out of our way to avoid overflow
         // At the time of this writing, the version of .NET being targeted only supports two varieties of MidpointRounding
         // In the future, some of this can be replaced with built in support in decimal.Round()
         internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, int digits, RoundType roundType = RoundType.Default)
         {
-            // Decimal TODO: This should be moved out as a static member, but tests complain
-            IReadOnlyList<decimal> decPow10 = new decimal[]
-            {
-                    1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
-                    1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
-                    1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
-            };
-
-            IReadOnlyList<decimal> decNegPow10 = new decimal[]
-            {
-                    1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
-                    1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
-                    1e-20m, 1e-21m, 1e-22m, 1e-23m, 1e-24m, 1e-25m, 1e-26m, 1e-27m, 1e-28m
-            };
-
             var signedNumber = dec.Value;
             var sign = signedNumber < 0 ? -1m : 1m;
             var unsignedNumber = signedNumber < 0 ? -signedNumber : signedNumber;
