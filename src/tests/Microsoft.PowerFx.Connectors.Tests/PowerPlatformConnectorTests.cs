@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Tests
             testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response.json");
 
             var result = await engine.EvalAsync("MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp", CancellationToken.None).ConfigureAwait(false);
-            Assert.Equal(53.0, result.ToObject()); // from response
+            Assert.Equal(53.0m, result.ToObject()); // from response
 
             // PowerPlatform Connectors transform the request significantly from what was in the swagger. 
             // Some of this information comes from setting passed into connector client. 

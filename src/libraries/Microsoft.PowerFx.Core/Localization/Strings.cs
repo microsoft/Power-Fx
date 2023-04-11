@@ -649,5 +649,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
 
         public static ErrorResourceKey OptionSetOptionNotSupported = new ErrorResourceKey("OptionSetOptionNotSupported");
+
+        public static ErrorResourceKey InvalidCast = new ErrorResourceKey("InvalidCast");
     }
 }
