@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx
         public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, EvalVisitorContext context)
         {
             var arg1 = await node.Left.Accept(this, context).ConfigureAwait(false);
-            var arg2 = await node.Right.Accept(this, context);
+            var arg2 = await node.Right.Accept(this, context).ConfigureAwait(false);
             var args = new FormulaValue[] { arg1, arg2 };
             return await VisitBinaryOpNode(node, context, args).ConfigureAwait(false);
         }

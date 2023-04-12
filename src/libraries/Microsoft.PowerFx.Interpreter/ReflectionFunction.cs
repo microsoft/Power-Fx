@@ -453,7 +453,7 @@ namespace Microsoft.PowerFx
             public override async Task<FormulaValue> Unwrap(object obj)
             {
                 var t = (Task<T>)obj;
-                var result = await t;
+                var result = await t.ConfigureAwait(false);
                 return result;
             }
         }
