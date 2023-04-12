@@ -1189,6 +1189,38 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DisambiguationTest()
+        {
+            var expr = "ThisRecord.Field2";
+
+            var engine = new RecalcEngine();
+            
+            // Setup Global "Task", and RowScope with "Task" field.
+            var record = FormulaValue.NewRecordFromFields(
+                new NamedValue("Task", FormulaValue.New("_fieldTask")),
+                new NamedValue("Field2", FormulaValue.New("_field2")));
+
+            var globals = new SymbolTable();
+            var slot = globals.AddVariable("Task", FormulaType.Number);
+            
+            var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type);
+
+            var symbols = ReadOnlySymbolTable.Compose(globals, rowScope);
+                        
+            // Values 
+            var rowValues = ReadOnlySymbolValues.NewFromRecord(rowScope, record);
+            var globalValues = globals.CreateValues();
+            globalValues.Set(slot, FormulaValue.New(111));
+
+            var runtimeConfig = new RuntimeConfig
+            {
+                Values = symbols.CreateValues(globalValues, rowValues)
+            };
+
+            var result = engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).Result;
+        }
+
+        [Fact]
         public void GetVariableRecalcEngine()
         {
             var config = new PowerFxConfig();
