@@ -7,6 +7,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
@@ -14,6 +15,11 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public static class Extensions
     {
+        public static string GetCompactIRString(this CheckResult check)
+        {
+            return PrettyPrintIRVisitor.ToString(check);
+        }
+
         public static void AddBehaviorFunction(this PowerFxConfig config)
         {
             config.AddFunction(new BehaviorFunction());
