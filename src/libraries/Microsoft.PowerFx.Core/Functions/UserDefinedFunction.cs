@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             foreach (var arg in _args)
             {
-                if (!argsAlreadySeen.Add(arg.VarIdent.Name))
+                if (argsAlreadySeen.Contains(arg.VarIdent.Name))
                 {
                     errors.Add(new TexlError(arg.VarIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.VarIdent.Name));
                 }
@@ -91,16 +91,16 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Perform sub-expression type checking and produce a return type for the function declaration, this is only applicable for UDFs.
         /// </summary>
-        public static void CheckTypesOnDeclaration(CheckTypesContext context, IEnumerable<UDFArg> uDFArgs, IdentToken returnType, DType actualBodyReturnType, IErrorContainer errorContainer)
+        public static void CheckTypesOnDeclaration(CheckTypesContext context, IEnumerable<UDFArg> uDFArgs, IdentToken returnTypeToken, DType actualBodyReturnType, IErrorContainer errorContainer)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(uDFArgs);
-            Contracts.AssertValue(returnType);
+            Contracts.AssertValue(returnTypeToken);
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(errorContainer);
 
-            CheckParameters(uDFArgs, errorContainer);
-            CheckReturnType(returnType, actualBodyReturnType, errorContainer);
+            CheckParameterTypes(uDFArgs, errorContainer);
+            CheckReturnType(returnTypeToken, actualBodyReturnType, errorContainer);
         }
 
         private static void CheckReturnType(IdentToken returnType, DType actualBodyReturnType, IErrorContainer errorContainer)
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
         }
 
-        private static void CheckParameters(IEnumerable<UDFArg> args, IErrorContainer errorContainer)
+        private static void CheckParameterTypes(IEnumerable<UDFArg> args, IErrorContainer errorContainer)
         {
             foreach (var arg in args)
             {
