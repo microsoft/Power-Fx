@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -62,16 +62,23 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, out FormulaValue result)
         {
+            bool canCoerce = false;
             if (value is RecordValue recordValue && targetType is RecordType recordType)
             {
-                return TryCoerceTo(recordValue, recordType, out result);
+                canCoerce = recordValue.TryCoerceToRecord(recordType, out RecordValue recordResult);
+                result = recordResult;
             }
             else if (value is TableValue tableValue && targetType is TableType tableType)
             {
-                return TryCoerceTo(tableValue, tableType, out result);
+                canCoerce = tableValue.TryCoerceToTable(tableType, out TableValue tableResult);
+                result = tableResult;
+            }
+            else
+            {
+                canCoerce = TryCoerceToTargetType(value, targetType, out result);
             }
 
-            return TryCoerceToTargetType(value, targetType, out result);
+            return canCoerce;
         }
         
         /// <summary>
@@ -219,7 +226,7 @@ namespace Microsoft.PowerFx
         /// <param name="targetType">Target type.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to Record type.</returns> 
-        public static bool TryCoerceTo(this RecordValue value, RecordType targetType, out RecordValue result)
+        public static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, out RecordValue result)
         {
             result = null;
             int n = value.Fields.Count();
@@ -234,12 +241,24 @@ namespace Microsoft.PowerFx
                     return false;
                 }
 
-                if (!TryCoerceToTargetType(fieldValue, fieldType, out FormulaValue fieldResult))
+                if (fieldType is RecordType recordType)
                 {
-                    return false;
-                }
+                    if (!TryCoerceTo(fieldValue, fieldType, out FormulaValue fieldRecordResult))
+                    {
+                        return false;
+                    }
 
-                recordResult[i] = new NamedValue(fieldName, fieldResult);
+                    recordResult[i] = new NamedValue(fieldName, fieldRecordResult);
+                }
+                else
+                {
+                    if (!TryCoerceToTargetType(fieldValue, fieldType, out FormulaValue fieldResult))
+                    {
+                        return false;
+                    }
+
+                    recordResult[i] = new NamedValue(fieldName, fieldResult);
+                }
             }
 
             result = FormulaValue.NewRecordFromFields(recordResult);
@@ -253,7 +272,7 @@ namespace Microsoft.PowerFx
         /// <param name="targetType">Target type.</param>
         /// <param name="result">Result value.</param>
         /// <returns>True/False based on whether function can convert from original type to Table type.</returns> 
-        public static bool TryCoerceTo(this TableValue value, TableType targetType, out TableValue result)
+        public static bool TryCoerceToTable(this TableValue value, TableType targetType, out TableValue result)
         {
             result = null;
             int n = value.Rows.Count();
@@ -261,7 +280,7 @@ namespace Microsoft.PowerFx
 
             for (int i = 0; i < n; i++)
             {
-                if (!value.Rows.ElementAt(i).Value.TryCoerceTo(targetType.ToRecord(), out RecordValue recordResult))
+                if (!value.Rows.ElementAt(i).Value.TryCoerceToRecord(targetType.ToRecord(), out RecordValue recordResult))
                 {
                     return false;
                 }
@@ -288,7 +307,7 @@ namespace Microsoft.PowerFx
                     return false;
                 }
 
-                if (!CanPotentiallyCoerceToTargetType(field.Type, targetFieldType))
+                if (!CanPotentiallyCoerceTo(field.Type, targetFieldType))
                 {
                     return false;
                 }
@@ -314,7 +333,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Source type format.</param>
         /// <param name="target">Target type format.</param>
         /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
-        public static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
+        private static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
         {
             if (source == FormulaType.Boolean)
             {

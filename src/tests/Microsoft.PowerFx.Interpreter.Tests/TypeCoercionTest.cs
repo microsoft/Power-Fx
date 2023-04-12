@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using Microsoft.PowerFx;
@@ -155,7 +156,7 @@ namespace Microsoft.PowerFx.Tests
                 .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
                 .Add(new NamedFormulaType(fieldName2, expectedFieldType2));
 
-            bool isSucceeded = inputRecord.TryCoerceTo(targetType, out RecordValue result);
+            bool isSucceeded = inputRecord.TryCoerceToRecord(targetType, out RecordValue result);
             if (expectedSucceeded)
             {
                 Assert.True(isSucceeded);
@@ -167,15 +168,32 @@ namespace Microsoft.PowerFx.Tests
                 Assert.False(isSucceeded);
                 Assert.Null(result);
             }
+        }
 
-            Assert.False(inputRecord.TryCoerceTo(RecordType.Empty(), out RecordValue res));
+        [Fact]
+        public void TryCoerceToNestedRecordTest()
+        {
+            RecordValue record1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("b", FormulaValue.New("1")));
+            RecordValue expectedRecord1 = FormulaValue.NewRecordFromFields(
+                new NamedValue("b", FormulaValue.New(1)));
+            RecordValue inputRecord = FormulaValue.NewRecordFromFields(new NamedValue("a", record1));
 
-            RecordType notExpectedTargetType = RecordType.Empty()
-                .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
-                .Add(new NamedFormulaType(fieldName2, FormulaType.Hyperlink));
+            RecordType inputtype1 = RecordType.Empty()
+                .Add(new NamedFormulaType("b", FormulaType.String));
+            RecordType inputType = RecordType.Empty()
+                .Add(new NamedFormulaType("a", inputtype1));
 
-            Assert.False(inputRecord.TryCoerceTo(notExpectedTargetType, out RecordValue nullResult));
-            Assert.Null(nullResult);
+            RecordType type1 = RecordType.Empty()
+                .Add(new NamedFormulaType("b", FormulaType.Number));          
+            RecordType targetType = RecordType.Empty()
+                .Add(new NamedFormulaType("a", type1));
+
+            bool isSucceeded = inputRecord.TryCoerceToRecord(targetType, out RecordValue result);
+            
+            Assert.True(isSucceeded);
+            Assert.True(inputType.CanPotentiallyCoerceTo(targetType));
+            Assert.Equal(expectedRecord1.ToObject(), result.GetField("a").ToObject());
         }
 
         [Theory]
@@ -203,26 +221,20 @@ namespace Microsoft.PowerFx.Tests
                 .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
                 .Add(new NamedFormulaType(fieldName2, expectedFieldType2));
 
-            bool isSucceeded = tableValue.TryCoerceTo(targetType.ToTable(), out TableValue result);
+            bool isSucceeded = tableValue.TryCoerceToTable(targetType.ToTable(), out TableValue result);
 
             if (expectedSucceeded)
             {
                 Assert.True(isSucceeded);
-                int i = 0;
 
-                foreach (var row in result.Rows)
-                {
-                    if (i++ == 0)
-                    {
-                        Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, row.Value.GetField(fieldName1).ToObject());
-                        Assert.Equal(FormulaValue.New(bool.Parse(field2)).Value, row.Value.GetField(fieldName2).ToObject());
-                    }
-                    else
-                    {
-                        Assert.Equal(FormulaValue.New(double.Parse(field3)).Value, row.Value.GetField(fieldName1).ToObject());
-                        Assert.Equal(FormulaValue.New(bool.Parse(field4)).Value, row.Value.GetField(fieldName2).ToObject());
-                    }
-                }
+                var table = result.Rows.ToArray();
+                var row0 = table[0];
+                Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, row0.Value.GetField(fieldName1).ToObject());
+                Assert.Equal(FormulaValue.New(bool.Parse(field2)).Value, row0.Value.GetField(fieldName2).ToObject());
+
+                var row1 = table[1];
+                Assert.Equal(FormulaValue.New(double.Parse(field3)).Value, row1.Value.GetField(fieldName1).ToObject());
+                Assert.Equal(FormulaValue.New(bool.Parse(field4)).Value, row1.Value.GetField(fieldName2).ToObject());
             }
             else
             {
