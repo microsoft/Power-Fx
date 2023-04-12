@@ -28,6 +28,18 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
+        /// <summary>
+        /// Unique key associated to each record in application.
+        /// NOTE: If two table has a same record instance, then the key should be same.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public virtual bool TryGetPrimaryKey(out string key)
+        {
+            key = default;
+            return false;
+        }
+
         private IEnumerable<NamedValue> GetFields()
         {
             foreach (var fieldName in Type.FieldNames)
@@ -41,7 +53,7 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (var fieldName in Type.FieldNames)
             {
-                var formulaValue = await GetFieldAsync(fieldName, cancellationToken);
+                var formulaValue = await GetFieldAsync(fieldName, cancellationToken).ConfigureAwait(false);
                 yield return new NamedValue(fieldName, formulaValue);
             }
         }
@@ -95,7 +107,7 @@ namespace Microsoft.PowerFx.Types
                 fieldType = FormulaType.Blank;
             }
 
-            return await GetFieldAsync(fieldType, fieldName, cancellationToken);
+            return await GetFieldAsync(fieldType, fieldName, cancellationToken).ConfigureAwait(false);
         }
 
         // Create an exception object for when the host violates the TryGetField() contract. 
@@ -112,7 +124,7 @@ namespace Microsoft.PowerFx.Types
 
         internal async Task<FormulaValue> GetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
         {
-            var (res, result) = await TryGetFieldAsync(fieldType, fieldName, cancellationToken);
+            var (res, result) = await TryGetFieldAsync(fieldType, fieldName, cancellationToken).ConfigureAwait(false);
             if (res)
             {
                 if (result == null)

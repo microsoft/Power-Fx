@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx
 
             _expression = expression;
             _parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
-            this.ParserCultureInfo = _parserOptions.Culture;
+            ParserCultureInfo = _parserOptions.Culture;
 
             return this;
         }
@@ -287,7 +287,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public IEnumerable<ExpressionError> GetErrorsInLocale(CultureInfo culture)
         {
-            culture ??= _defaultErrorCulture ?? this.ParserCultureInfo;
+            culture ??= _defaultErrorCulture ?? ParserCultureInfo;
 
             foreach (var error in this._errors)
             {
@@ -458,8 +458,8 @@ namespace Microsoft.PowerFx
                         }
                     }
 
-                    var sameType = this._expectedReturnType == this.ReturnType;
-                    if (notCoerceToType || !sameType)
+                    var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
+                    if (!valid)
                     {
                         _errors.Add(new ExpressionError
                         {

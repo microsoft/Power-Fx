@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbol.AddConstant("r1", r1);
 
             var engine = new RecalcEngine();
-            var resultCount = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol);
+            var resultCount = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
 
             Assert.Equal(expected, listT.Count);
         }

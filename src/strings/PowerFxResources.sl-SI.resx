@@ -567,6 +567,24 @@
     <value>Združi več besedilnih vrednosti v eno besedilno vrednost.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Pretvori »besedilo«, ki predstavlja številko, v decimalno vrednost.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Koda jezika, ki bo uporabljena pri pretvorbi vrednosti.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Vrednost besedila, ki jo želite pretvoriti v decimalno vrednost.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Pretvori »besedilo«, ki predstavlja številko, v vrednost s plavajočo vejico.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Koda jezika, ki bo uporabljena pri pretvorbi vrednosti.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Vrednost besedila, ki jo želite pretvoriti v vrednost s plavajočo vejico.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>besedilo</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globus – brez povezave</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globus – osvežitev</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globus – spremembe v čakanju</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globus – opozorilo</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globus – napaka</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Naslov URL, ki bo kodiran.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>Funkcija »{0}« je prepoznana, vendar ni podprta.</value>
+    
   </data>
 </root>

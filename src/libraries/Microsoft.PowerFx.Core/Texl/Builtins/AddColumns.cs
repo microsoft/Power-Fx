@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0].Parent.CastList().Parent.CastCall(), TexlStrings.ErrBadArityOdd, count);
             }
 
-            var supportColumnNamesAsIdentifiers = context.Features.HasFlag(Features.SupportColumnNamesAsIdentifiers);
+            var supportColumnNamesAsIdentifiers = context.Features.SupportColumnNamesAsIdentifiers;
 
             for (var i = 1; i < count; i += 2)
             {

@@ -52,6 +52,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly Dictionary<string, Tuple<string, DType>> _parameterDefaultValues;
         private readonly WeakReference<IService> _parentService;
         private readonly string _actionName;
+        private readonly bool _numberIsFloat;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;        
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
@@ -63,7 +64,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
             DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
             Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string actionName = "", params DType[] paramTypes)
+            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -112,7 +113,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _signatures.Add(_orderedRequiredParams);
             _parameterDefaultValues = parameterDefaultValues;
             _actionName = actionName;
-            _requiredParameters = requiredParamInfo;            
+            _requiredParameters = requiredParamInfo;
+            _numberIsFloat = numberIsFloat;
 
             if (arityMax > arityMin)
             {
@@ -123,6 +125,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                 var optionFormat = new StringBuilder(TexlLexer.PunctuatorCurlyOpen);
                 string sep = "";
+
+                // $$$ can't use current culture
                 string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
                 foreach (var option in optionalParamInfo)
                 {
@@ -290,7 +294,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
         {
-            if (argPosition >= 0)
+            if (argPosition >= 0 && MaxArity > 0 && _requiredParameters.Length > MaxArity - 1)
             {
                 ConnectorDynamicValue cdv = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicValue;
 
@@ -306,9 +310,9 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                     if (result is RecordValue rv)
                     {
-                        if (!string.IsNullOrEmpty(cdv.ValueCollection) && !string.IsNullOrEmpty(cdv.ValuePath))
+                        if (!string.IsNullOrEmpty(cdv.ValuePath))
                         {
-                            FormulaValue collection = rv.GetField(cdv.ValueCollection);
+                            FormulaValue collection = rv.GetField(cdv.ValueCollection ?? "value");
 
                             if (collection is TableValue tv)
                             {
@@ -327,7 +331,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                         }
                         else
                         {
-                            throw new NotImplementedException($"Valuecollection is null");
+                            throw new NotImplementedException($"ValuePath is null");
                         }
                     }                    
 
@@ -501,7 +505,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                 throw new InvalidOperationException($"Function {Name} can't be invoked."); 
             }
 
-            var result = await _invoker.InvokeAsync(args, cancellationToken);
+            var result = await _invoker.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)

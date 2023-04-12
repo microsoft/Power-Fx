@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx.Connectors
         public List<OpenApiParameter> OpenApiParameters;
         public List<OpenApiParameter> OpenApiBodyParameters;
         public bool SchemaLessBody = false;
+        public bool NumberIsFloat = false;
 
         #region ServiceFunction args
 
@@ -55,12 +56,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool HasBodyParameter => Operation.RequestBody != null;
 
-        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiOperation operation)
+        // numberIsFloat = numbers are stored as C# double when set to true, otherwise they are stored as C# decimal
+        public ArgumentMapper(IEnumerable<OpenApiParameter> parameters, OpenApiOperation operation, bool numberIsFloat = false)
         {
             OpenApiParameters = parameters.ToList();
             OpenApiBodyParameters = new List<OpenApiParameter>();
             Operation = operation;
             ContentType = OpenApiExtensions.ContentType_ApplicationJson; // default
+            NumberIsFloat = numberIsFloat;
 
             // Hidden-Required parameters exist in the following conditions:
             // 1. required parameter
@@ -94,7 +97,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
 
                 string name = param.Name;
-                (FormulaType paramType, RecordType hiddenRecordType) = param.Schema.ToFormulaType();
+                (FormulaType paramType, RecordType hiddenRecordType) = param.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
                 
                 ConnectorDynamicValue connectorDynamicValue = GetDynamicValue(param);
                 string summary = GetSummary(param);
@@ -106,7 +109,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 HttpFunctionInvoker.VerifyCanHandle(param.In);
 
-                if (param.Schema.TryGetDefaultValue(paramType, out FormulaValue defaultValue))
+                if (param.Schema.TryGetDefaultValue(paramType, out FormulaValue defaultValue, numberIsFloat: numberIsFloat))
                 {
                     _parameterDefaultValues[name] = (defaultValue, paramType._type);
                 }
@@ -183,7 +186,7 @@ namespace Microsoft.PowerFx.Connectors
                                 bodyParameter = new OpenApiParameter() { Schema = prop.Value, Name = prop.Key, Description = "Body", Required = required };
                                 OpenApiBodyParameters.Add(bodyParameter);
 
-                                (FormulaType formulaType, RecordType hiddenFormulaType) = prop.Value.ToFormulaType();
+                                (FormulaType formulaType, RecordType hiddenFormulaType) = prop.Value.ToFormulaType(numberIsFloat: numberIsFloat);
                                 (hiddenRequired ? hiddenRequiredBodyParams : required ? requiredBodyParams : optionalBodyParams).Add(new KeyValuePair<string, ConnectorSchemaInternal>(prop.Key, new ConnectorSchemaInternal(prop.Value, formulaType, summary, null, connectorDynamicSchema)));
 
                                 if (hiddenFormulaType != null)
@@ -198,7 +201,7 @@ namespace Microsoft.PowerFx.Connectors
                             bodyParameter = new OpenApiParameter() { Schema = schema, Name = bodyName, Description = "Body", Required = requestBody.Required };
 
                             OpenApiBodyParameters.Add(bodyParameter);
-                            (FormulaType formulaType, RecordType hiddenRecordType) = schema.ToFormulaType();
+                            (FormulaType formulaType, RecordType hiddenRecordType) = schema.ToFormulaType(numberIsFloat: numberIsFloat);
                             (requestBody.Required ? requiredParams : optionalParams).Add(new ConnectorParameterInternal(bodyParameter, formulaType, summary, null, connectorDynamicSchema));
 
                             if (hiddenRecordType != null)
@@ -219,9 +222,9 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x)).Union(requiredBodyParams.ConvertAll(x => Convert(x))).ToArray();
-            HiddenRequiredParamInfo = hiddenRequiredParams.ConvertAll(x => Convert(x)).Union(hiddenRequiredBodyParams.ConvertAll(x => Convert(x))).ToArray();
-            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x)).Union(optionalBodyParams.ConvertAll(x => Convert(x))).ToArray();
+            RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(requiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
+            HiddenRequiredParamInfo = hiddenRequiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(hiddenRequiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
+            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
 
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.
@@ -523,22 +526,22 @@ namespace Microsoft.PowerFx.Connectors
             return parameterTypes;
         }
 
-        private static ServiceFunctionParameterTemplate Convert(ConnectorParameterInternal internalParameter)
+        private static ServiceFunctionParameterTemplate Convert(ConnectorParameterInternal internalParameter, bool numberIsFloat)
         {
             DType paramType = internalParameter.Type._type;
             TypedName typedName = new TypedName(paramType, new DName(internalParameter.OpenApiParameter.Name));
 
-            internalParameter.OpenApiParameter.Schema.TryGetDefaultValue(internalParameter.Type, out FormulaValue defaultValue);
+            internalParameter.OpenApiParameter.Schema.TryGetDefaultValue(internalParameter.Type, out FormulaValue defaultValue, numberIsFloat: numberIsFloat);
 
             return new ServiceFunctionParameterTemplate(internalParameter.Type, typedName, internalParameter.OpenApiParameter.Description, internalParameter.Summary, defaultValue, internalParameter.DynamicValue, internalParameter.DynamicSchema);
         }
 
-        private static ServiceFunctionParameterTemplate Convert(KeyValuePair<string, ConnectorSchemaInternal> internalParameter)
+        private static ServiceFunctionParameterTemplate Convert(KeyValuePair<string, ConnectorSchemaInternal> internalParameter, bool numberIsFloat)
         {
             DType paramType = internalParameter.Value.Type._type;
             TypedName typedName = new TypedName(paramType, new DName(internalParameter.Key));
 
-            internalParameter.Value.Schema.TryGetDefaultValue(internalParameter.Value.Type, out FormulaValue defaultValue);
+            internalParameter.Value.Schema.TryGetDefaultValue(internalParameter.Value.Type, out FormulaValue defaultValue, numberIsFloat: numberIsFloat);
 
             return new ServiceFunctionParameterTemplate(internalParameter.Value.Type, typedName, "Body", internalParameter.Value.Summary, defaultValue, internalParameter.Value.DynamicValue, internalParameter.Value.DynamicSchema);
         }

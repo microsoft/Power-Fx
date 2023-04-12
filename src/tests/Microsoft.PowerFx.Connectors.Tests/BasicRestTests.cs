@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Tests
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(testConnector._apiDocument).OrderBy(cf => cf.Name).ToList();
             string funcName = new Regex(@"Test.([^(]+)").Match(fxQuery).Groups[1].Value;
-            Assert.Equal("*[date:s, index:n, summary:s, temperatureC:n, temperatureF:n]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
+            Assert.Equal("*[date:s, index:w, summary:s, temperatureC:w, temperatureF:w]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
 
             var config = new PowerFxConfig();
             using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Tests
             var checkResult = engine.Check(fxQuery, options: _optionsPost);
             Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost);
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost).ConfigureAwait(false);
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponse("55");
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None));            
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false));            
         }
 
         // We can bind without calling.

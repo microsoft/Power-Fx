@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Interpreter
             // because Eval wants a Record rather than a resolved arg array.                 
             var parameters = FormulaValue.NewRecordFromFields(UDFHelper.Zip(_parameterNames.ToArray(), args));
 
-            var result = await GetExpression().EvalAsyncInternal(parameters, cancel, stackMarker);
+            var result = await GetExpression().EvalAsyncInternal(parameters, cancel, stackMarker).ConfigureAwait(false);
 
             return result;
         }

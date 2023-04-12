@@ -65,11 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of colors.
-                fValid &= CheckColorColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                    ? DType.CreateTable(new TypedName(DType.Color, new DName(ColumnName_ValueStr)))
-                    : type0;
+                fValid &= CheckColorColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
 
                 // Check arg1 below.
                 otherArg = args[1];

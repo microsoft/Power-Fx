@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [InlineData("If(true, If(true, 0, 1)|)", 8)]
         [InlineData("Filter|", 9)]
         [InlineData("|", 10)]
-        public void TestSignatureHelp(string expression, int helpId) => CheckSignatureHelpTest(Suggest(expression, SuggestTests.Default).SignatureHelp, helpId);
+        public void TestSignatureHelp(string expression, int helpId) => CheckSignatureHelpTest(Suggest(expression, SuggestTests.Default, CultureInfo.InvariantCulture).SignatureHelp, helpId);
 
         [Fact]
         public void TestRegenerateSignatureHelpIsOff() => Assert.False(RegenerateSignatureHelp);

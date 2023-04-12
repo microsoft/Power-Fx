@@ -567,6 +567,24 @@
     <value>Ενώνει διάφορες τιμές κειμένου σε μία τιμή κειμένου.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Μετατρέπει ένα "κείμενο" που αντιπροσωπεύει έναν αριθμό σε δεκαδική τιμή.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Κωδικός γλώσσας για χρήση κατά τη μετατροπή της τιμής.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Μετατρέπει σε "κείμενο" που αντιπροσωπεύει έναν αριθμό σε τιμή κινητής υποδιαστολής.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Κωδικός γλώσσας για χρήση κατά τη μετατροπή της τιμής.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε τιμή κινητής υποδιαστολής.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>κείμενο</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globe - Δεν είναι συνδεδεμένο</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globe - Ανανέωση</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globe - Αλλαγές σε εκκρεμότητα</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globe - Προειδοποίηση</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globe - Σφάλμα</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Μια διεύθυνση URL για κωδικοποίηση.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>Το '{0}' είναι μια αναγνωρισμένη αλλά μη υποστηριζόμενη συνάρτηση.</value>
+    
   </data>
 </root>

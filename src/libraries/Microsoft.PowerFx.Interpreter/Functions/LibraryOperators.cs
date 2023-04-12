@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -157,6 +158,15 @@ namespace Microsoft.PowerFx.Functions
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: AreEqualNullUntyped);
 
+        public static readonly AsyncFunctionPtr OperatorBinaryEqPolymorphic = StandardErrorHandling<FormulaValue>(
+            "=",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactValueTypeOrBlank<RecordValue>,
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: AreEqualPolymorphic);
+
         public static readonly AsyncFunctionPtr OperatorBinaryNeq = StandardErrorHandling<FormulaValue>(
             "<>",
             expandArguments: NoArgExpansion,
@@ -174,6 +184,15 @@ namespace Microsoft.PowerFx.Functions
             checkRuntimeValues: DeferRuntimeValueChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
             targetFunction: NotEqualNullUntyped);
+
+        public static readonly AsyncFunctionPtr OperatorBinaryNeqPolymorphic = StandardErrorHandling<FormulaValue>(
+            "<>",
+            expandArguments: NoArgExpansion,
+            replaceBlankValues: DoNotReplaceBlank,
+            checkRuntimeTypes: ExactValueTypeOrBlank<RecordValue>,
+            checkRuntimeValues: DeferRuntimeValueChecking,
+            returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+            targetFunction: NotEqualPolymorphic);
 
         public static readonly AsyncFunctionPtr OperatorTextIn = StandardErrorHandling(
             "in",
@@ -318,7 +337,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractNumberAndDate = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                new DateValue(IRContext.NotInSource(FormulaType.Date), _epoch)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<NumberValue>,
                 DateOrDateTime),
@@ -329,7 +350,9 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorSubtractNumberAndTime = StandardErrorHandling<FormulaValue>(
             "-",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: DoNotReplaceBlank,
+            replaceBlankValues: ReplaceBlankWith(
+                new NumberValue(IRContext.NotInSource(FormulaType.Number), 0),
+                new TimeValue(IRContext.NotInSource(FormulaType.Time), TimeSpan.Zero)),
             checkRuntimeTypes: ExactSequence(
                 ExactValueType<NumberValue>,
                 ExactValueType<TimeValue>),
@@ -649,6 +672,20 @@ namespace Microsoft.PowerFx.Functions
             return new BooleanValue(irContext, uo2.Impl.Type == FormulaType.Blank);
         }
 
+        private static BooleanValue AreEqualPolymorphic(IRContext irContext, FormulaValue[] args)
+        {
+            var result = false;
+            if (args[0] is RecordValue arg1 && 
+                arg1.TryGetPrimaryKey(out var arg1Key) && 
+                args[1] is RecordValue arg2 &&
+                arg2.TryGetPrimaryKey(out var arg2Key))
+            {
+                result = arg1Key.Equals(arg2Key, StringComparison.Ordinal);
+            }
+
+            return new BooleanValue(irContext, result); 
+        }
+
         private static BooleanValue NotEqual(IRContext irContext, FormulaValue[] args)
         {
             var arg1 = args[0];
@@ -675,6 +712,11 @@ namespace Microsoft.PowerFx.Functions
 
             var uo2 = (UntypedObjectValue)arg2;
             return new BooleanValue(irContext, uo2.Impl.Type != FormulaType.Blank);
+        }
+
+        private static BooleanValue NotEqualPolymorphic(IRContext irContext, FormulaValue[] args)
+        {
+            return new BooleanValue(irContext, !AreEqualPolymorphic(irContext, args).Value);
         }
 
         // See in_SS in JScript membershipReplacementFunctions
@@ -799,7 +841,14 @@ namespace Microsoft.PowerFx.Functions
             DateTime arg1 = runner.GetNormalizedDateTime(args[1]);
 
             var result = arg0.Subtract(arg1);
-            return new NumberValue(irContext, result.Days);
+            if (irContext.ResultType == FormulaType.Decimal)
+            {
+                return new DecimalValue(irContext, (decimal)result.TotalDays);
+            }
+            else
+            {
+                return new NumberValue(irContext, result.TotalDays);
+            }
         }
 
         private static FormulaValue TimeDifference(IRContext irContext, FormulaValue[] args)
@@ -808,7 +857,14 @@ namespace Microsoft.PowerFx.Functions
             var arg1 = (TimeValue)args[1];
 
             var result = arg0.Value.Subtract(arg1.Value);
-            return new NumberValue(irContext, result.TotalDays);
+            if (irContext.ResultType == FormulaType.Decimal)
+            {
+                return new DecimalValue(irContext, (decimal)result.TotalDays);
+            }
+            else
+            {
+                return new NumberValue(irContext, result.TotalDays);
+            }
         }
 
         private static FormulaValue SubtractDateAndTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)

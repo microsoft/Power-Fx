@@ -53,10 +53,11 @@ namespace Microsoft.PowerFx.Core.Parser
         // collected by the next call to ParseTrivia.
         private ITexlSource _extraTrivia;
 
-        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = Features.None)
+        private TexlParser(IReadOnlyList<Token> tokens, Flags flags, Features features = null)
         {
             Contracts.AssertValue(tokens);
 
+            features ??= Features.None;
             _depth = 0;
             _curs = new TokenCursor(tokens);
             _flagsMode = new Stack<Flags>();
@@ -222,17 +223,17 @@ namespace Microsoft.PowerFx.Core.Parser
             return ParseScript(script, Features.None, loc, flags);
         }
 
-        internal static ParseResult ParseScript(string script, Features features, CultureInfo loc = null, Flags flags = Flags.None)
+        internal static ParseResult ParseScript(string script, Features features, CultureInfo culture = null, Flags flags = Flags.None)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(culture);
 
-            var tokens = TokenizeScript(script, loc, flags);
+            var tokens = TokenizeScript(script, culture, flags);
             var parser = new TexlParser(tokens, flags, features);
             List<TexlError> errors = null;
             var parsetree = parser.Parse(ref errors);
 
-            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, loc);
+            return new ParseResult(parsetree, errors, errors?.Any() ?? false, parser._comments, parser._before, parser._after, script, culture);
         }
 
         public static ParseFormulasResult ParseFormulasScript(string script, CultureInfo loc = null, Flags flags = Flags.None)
@@ -284,18 +285,29 @@ namespace Microsoft.PowerFx.Core.Parser
                             var result = ParseExpr(Precedence.None);
 
                             namedFormulas.Add(new KeyValuePair<IdentToken, TexlNode>(thisIdentifier.As<IdentToken>(), result));
+
+                            // If the result was an error, keep moving cursor until end of named formula expression
+                            if (result.Kind == NodeKind.Error)
+                            {
+                                while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                                {
+                                    _curs.TokMove();
+                                }
+                            }
                         }
 
                         _curs.TokMove();
                     }
                     else
                     {
-                        break;
+                        _curs.TokMove();
+                        continue;
                     }
                 }
                 else
                 {
-                    break;
+                    _curs.TokMove();
+                    continue;
                 }
 
                 ParseTrivia();
@@ -304,15 +316,15 @@ namespace Microsoft.PowerFx.Core.Parser
             return new ParseFormulasResult(namedFormulas, _errors);
         }
 
-        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo loc, Flags flags)
+        private static IReadOnlyList<Token> TokenizeScript(string script, CultureInfo culture, Flags flags)
         {
             Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValueOrNull(culture);
 
             var lexerFlags = flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : TexlLexer.Flags.None;
-            loc ??= CultureInfo.CurrentCulture;
+            culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
-            return TexlLexer.GetLocalizedInstance(loc).LexSource(script, lexerFlags);
+            return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
         }
 
         private TexlNode Parse(ref List<TexlError> errors)
@@ -648,6 +660,13 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.False:
                             PostError(_curs.TokCur, TexlStrings.ErrOperatorExpected);
                             tok = _curs.TokMove();
+
+                            // Stop recursing if we reach a semicolon
+                            if (_curs.TidCur == TokKind.Semicolon && _flagsMode.Peek().HasFlag(Flags.NamedFormulas))
+                            {
+                                return node;
+                            }
+
                             rightTrivia = ParseTrivia();
                             right = ParseExpr(Precedence.Error);
                             node = MakeBinary(BinaryOp.Error, node, leftTrivia, tok, rightTrivia, right);
@@ -718,7 +737,7 @@ namespace Microsoft.PowerFx.Core.Parser
                                 goto default;
                             }
 
-                            if (_features.HasFlag(Features.DisableRowScopeDisambiguationSyntax))
+                            if (_features.DisableRowScopeDisambiguationSyntax)
                             {
                                 PostError(_curs.TokCur, errKey: TexlStrings.ErrDeprecated);
                             }
@@ -872,6 +891,9 @@ namespace Microsoft.PowerFx.Core.Parser
                     return new SelfNode(ref _idNext, _curs.TokMove());
 
                 case TokKind.Eof:
+                    return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
+
+                case TokKind.Semicolon:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
 
                 case TokKind.Error:

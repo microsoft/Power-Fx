@@ -567,6 +567,24 @@
     <value>Hainbat testu-balio konbinatzen ditu testu-balio bakarrean.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Zenbaki bat adierazten duen "text" elementu bat balio hamartar balio bihurtzen du.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Balioa bihurtzean erabiliko den hizkuntza-kodea.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Balio hamartar balio bihurtuko den testu-balioa.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Zenbaki bat adierazten duen "text" elementu bat balio higikari bihurtzen du.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Balioa bihurtzean erabiliko den hizkuntza-kodea.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Balio higikari bihurtuko den testu-balioa.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>testua</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Globe - Konektatu gabe</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Globe - Freskatzen</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Globe - Zain dauden aldaketak</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Globe - Abisua</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Globe - Errorea</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Kodetu nahi duzun URLa.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' funtzio ezagutzen da, baina ez da onartzen.</value>
+    
   </data>
 </root>

@@ -24,17 +24,13 @@ namespace Microsoft.PowerFx.Tests
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private static async Task<FormulaValue> Worker(FormulaValue[] args, CancellationToken cancel)
         {
-            if (args[0] is NumberValue)
+            if (args[0] is NumberValue n)
             {
-                var n = (NumberValue)args[0];
-
                 var result = FormulaValue.New(n.Value * 2);
                 return result;
             }
-            else if (args[0] is DecimalValue)
+            else if (args[0] is DecimalValue d)
             {
-                var d = (DecimalValue)args[0];
-
                 var result = FormulaValue.New(d.Value * 2m);
                 return result;
             }
@@ -54,7 +50,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -62,7 +58,7 @@ namespace Microsoft.PowerFx.Tests
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
 
-            var result = await engine.EvalAsync("CustomAsync(3)", cts.Token);
+            var result = await engine.EvalAsync("CustomAsync(3)", cts.Token).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
         }
 
@@ -75,7 +71,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -83,7 +79,7 @@ namespace Microsoft.PowerFx.Tests
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
 
-            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token);
+            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token).ConfigureAwait(false);
             Assert.Equal(12.0, result.ToObject());
         }
 
@@ -95,7 +91,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = Worker
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -103,7 +99,7 @@ namespace Microsoft.PowerFx.Tests
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
 
-            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token);
+            var result = await engine.EvalAsync("If(CustomAsync(3)=6, CustomAsync(1)+CustomAsync(5), 99)", cts.Token).ConfigureAwait(false);
             Assert.Equal(12m, result.ToObject());
         }
 
@@ -115,7 +111,7 @@ namespace Microsoft.PowerFx.Tests
             public async Task<FormulaValue> Worker2(FormulaValue[] args, CancellationToken cancel)
             {
                 await Task.Yield();
-                var result = await _waiter.Task;
+                var result = await _waiter.Task.ConfigureAwait(false);
 
                 var n = ((NumberValue)result).Value;
                 var x = FormulaValue.New(n * 2);
@@ -144,7 +140,7 @@ namespace Microsoft.PowerFx.Tests
             var helper = new WaitHelper();
             var func = helper.GetFunction("CustomAsync");
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -156,12 +152,12 @@ namespace Microsoft.PowerFx.Tests
             await Task.Yield();
 
             // custom func is blocking on our waiter
-            await Task.Delay(TimeSpan.FromMilliseconds(5));
+            await Task.Delay(TimeSpan.FromMilliseconds(5)).ConfigureAwait(false);
             Assert.False(task.IsCompleted);
 
             helper.SetResult(15);
 
-            var result = await task;
+            var result = await task.ConfigureAwait(false);
 
             Assert.Equal(30.0, result.ToObject());
         }
@@ -169,7 +165,7 @@ namespace Microsoft.PowerFx.Tests
         private static async Task<FormulaValue> WorkerWaitForCancel(FormulaValue[] args, CancellationToken cancel)
         {
             // Block forever until cancellation. 
-            await Task.Delay(-1, cancel); // throws TaskCanceledException
+            await Task.Delay(-1, cancel).ConfigureAwait(false); // throws TaskCanceledException
 
             throw new InvalidOperationException($"Shouldn't get here");
         }
@@ -183,7 +179,7 @@ namespace Microsoft.PowerFx.Tests
                 _impl = WorkerWaitForCancel
             };
 
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -195,12 +191,12 @@ namespace Microsoft.PowerFx.Tests
             await Task.Yield();
 
             // custom func is blocking on our waiter
-            await Task.Delay(TimeSpan.FromMilliseconds(5));
+            await Task.Delay(TimeSpan.FromMilliseconds(5)).ConfigureAwait(false);
             Assert.False(task.IsCompleted);
 
             cts.Cancel();
 
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => { await task; });
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => { await task.ConfigureAwait(false); }).ConfigureAwait(false);
         }
 
         // Test interleaved concurrent runs. 
@@ -214,7 +210,7 @@ namespace Microsoft.PowerFx.Tests
             var helper2 = new WaitHelper();
             var func2 = helper2.GetFunction("F2");
 
-            var config1 = new PowerFxConfig(null);
+            var config1 = new PowerFxConfig();
             config1.AddFunction(func1);
             config1.AddFunction(func2);
             var engine = new RecalcEngine(config1);
@@ -228,8 +224,8 @@ namespace Microsoft.PowerFx.Tests
             helper1.SetResult(333);
             helper2.SetResult(444);
 
-            var result1 = await task1;
-            var result2 = await task2;
+            var result1 = await task1.ConfigureAwait(false);
+            var result2 = await task2.ConfigureAwait(false);
 
             Assert.Equal(333.0 * 2, result1.ToObject());
             Assert.Equal(444.0 * 2, result2.ToObject());
@@ -241,15 +237,15 @@ namespace Microsoft.PowerFx.Tests
         {
             var helper = new WaitForFunctionsHelper(null);
 
-            var result = await helper.Worker(0);
+            var result = await helper.Worker(0).ConfigureAwait(false);
             Assert.Equal(0, result);
 
-            var result1 = await helper.Worker(1);
+            var result1 = await helper.Worker(1).ConfigureAwait(false);
             Assert.Equal(1, result1);
 
             // WaitFor(3) fails if WaitFor(2) wasn't called. 
             // Must do WaitFor() in order.
-            await Assert.ThrowsAsync<InvalidOperationException>(() => helper.Worker(3));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await helper.Worker(3).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         // Veriy Async() function infrastructure
@@ -258,16 +254,16 @@ namespace Microsoft.PowerFx.Tests
         {
             var helper = new AsyncFunctionsHelper(null);
 
-            var result = await helper.Worker(0);
+            var result = await helper.Worker(0).ConfigureAwait(false);
             Assert.Equal(0, result);
 
             // Async(2) won't complete until Async(1) is called. 
             var task2 = helper.Worker(2);
             Assert.False(task2.IsCompleted);
 
-            await helper.Worker(1);
+            await helper.Worker(1).ConfigureAwait(false);
 
-            var result2 = await task2;
+            var result2 = await task2.ConfigureAwait(false);
             Assert.Equal(2, result2);
         }
     }

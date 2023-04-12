@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 && !binding.IsRowScope(node)
                 && binding.GetType(node).IsTable 
                 && binding.GetType(node).IsColumn
-                && (binding.Features.HasFlag(Features.AllowAsyncDelegation) || !binding.IsAsync(node))
+                && (binding.Features.AllowAsyncDelegation || !binding.IsAsync(node))
                 && opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
             {
                 return true;

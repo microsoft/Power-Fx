@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var arg in faultyArs)
             {
-                var result = await function.InvokeAsync(new FormulaValue[] { arg }, CancellationToken.None);
+                var result = await function.InvokeAsync(new FormulaValue[] { arg }, CancellationToken.None).ConfigureAwait(false);
 
                 if (arg is ErrorValue)
                 {

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -35,6 +37,17 @@ namespace Microsoft.PowerFx.Tests
         public HttpResponseMessage _nextResponse;
 #pragma warning restore CA2213 // Disposable fields should be disposed
 
+        public string[] Responses = Array.Empty<string>();
+        public int CurrentResponse = 0;
+        public bool ResponseSetMode = false;
+
+        public void SetResponseSet(string filename)
+        {
+            Responses = Helpers.ReadAllText(filename).Split("~|~").ToArray();
+            CurrentResponse = 0;
+            ResponseSetMode = true;
+        }
+
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
             if (string.IsNullOrEmpty(filename))
@@ -48,13 +61,16 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponse(string text, HttpStatusCode status = HttpStatusCode.OK)
         {
-            Assert.Null(_nextResponse);
+            Assert.Null(_nextResponse);            
+            _nextResponse = GetResponseMessage(text, status);
+        }
 
-            var response = new HttpResponseMessage(status)
+        public HttpResponseMessage GetResponseMessage(string text, HttpStatusCode status)
+        {
+            return new HttpResponseMessage(status)
             {
                 Content = new StringContent(text, Encoding.UTF8, OpenApiExtensions.ContentType_ApplicationJson)
             };
-            _nextResponse = response;
         }
 
         protected override void Dispose(bool disposing)
@@ -89,14 +105,14 @@ namespace Microsoft.PowerFx.Tests
                     }
                 }
 
-                var content = await httpContent.ReadAsStringAsync();
+                var content = await httpContent.ReadAsStringAsync().ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(content))
                 {
                     _log.AppendLine($" [body] {content}");
                 }
             }
 
-            var response = _nextResponse;
+            var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse++], HttpStatusCode.OK) : _nextResponse;
             response.RequestMessage = request;
             _nextResponse = null;
             return response;

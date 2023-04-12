@@ -478,22 +478,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of dates/dateTimes. Since dateTime is the supertype, checking
                 // for DateTime alone is sufficient.
-                fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                if (fValid)
-                {
-                    var inputColumn = type0.GetNames(DPath.Root).Single();
-                    var resultColumnType = inputColumn.Type;
-                    if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
-                    {
-                        resultColumnType = coercedType.GetColumnTypeFromSingleColumnTable();
-                    }
-
-                    var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                        ? ColumnName_Value
-                        : inputColumn.Name;
-                    returnType = DType.CreateTable(new TypedName(resultColumnType, resultColumnName));
-                }
+                fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
@@ -533,7 +518,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var hasUnits = args.Length == 3;
 
-            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.TimeUnitEnum.OptionSetType :
                 DType.String;
 
@@ -677,7 +662,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            var arg2ExpectedType = context.Features.HasFlag(Features.StronglyTypedBuiltinEnums) ?
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
                 BuiltInEnums.TimeUnitEnum.FormulaType._type :
                 DType.String;
 

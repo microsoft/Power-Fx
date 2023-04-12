@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.
+// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx
     {
         internal static FormattingInfo CreateFormattingInfo() => new FormattingInfo()
         {
+            // $$$ can't use current culture
             CultureInfo = CultureInfo.CurrentCulture,
             CancellationToken = CancellationToken.None,
             TimeZoneInfo = TimeZoneInfo.Local

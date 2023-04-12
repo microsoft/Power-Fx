@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
         {
-            var text = await response.Content.ReadAsStringAsync();
+            var text = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var statusCode = (int)response.StatusCode;
 
             if (statusCode < 300)
