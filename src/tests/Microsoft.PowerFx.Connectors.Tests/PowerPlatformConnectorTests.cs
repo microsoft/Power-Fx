@@ -127,9 +127,9 @@ namespace Microsoft.PowerFx.Tests
 
             if (statusCode < 300)
             {
-                Assert.IsType<NumberValue>(result);
+                Assert.IsType<DecimalValue>(result);
 
-                var nv = (NumberValue)result;
+                var nv = (DecimalValue)result;
 
                 Assert.Equal(statusCode, nv.Value);
             }
@@ -139,7 +139,7 @@ namespace Microsoft.PowerFx.Tests
 
                 var ev = (ErrorValue)result;
 
-                Assert.Equal(FormulaType.Number, ev.Type);
+                Assert.Equal(FormulaType.Decimal, ev.Type);
                 Assert.Equal(1, ev.Errors.Count);
 
                 var err = ev.Errors[0];

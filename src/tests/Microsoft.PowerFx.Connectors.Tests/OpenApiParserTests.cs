@@ -126,8 +126,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                                                             ("category", FormulaType.String),
                                                             ("confidenceScore", FormulaType.Decimal),
                                                             ("extraInformation", FormulaType.UntypedObject), // property has a discriminator
-                                                            ("length", FormulaType.Number),
-                                                            ("offset", FormulaType.Number),
+                                                            ("length", FormulaType.Decimal),
+                                                            ("offset", FormulaType.Decimal),
                                                             ("resolutions", FormulaType.UntypedObject),      // property has a discriminator
                                                             ("text", FormulaType.String))),
                                                         ("intents", Extensions.MakeTableType(
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
             ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[19];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
-            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:n, offset:n, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
+            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, offset:w, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
             RecalcEngine engine = new RecalcEngine(pfxConfig);
 
@@ -238,7 +238,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[13];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
-            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:n, multipleResolutions:b, offset:n, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
+            Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, multipleResolutions:b, offset:w, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
             RecalcEngine engine = new RecalcEngine(pfxConfig);
 
