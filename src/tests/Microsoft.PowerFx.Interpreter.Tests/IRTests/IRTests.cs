@@ -14,7 +14,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
-namespace Microsoft.PowerFx.Interpreter.Tests
+namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
 {
     public class IRTests
     {
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             checkResult.ThrowOnErrors();
 
             var runtimeConfig = new SymbolValues(symbols) { DebugName = "SV1" };
-            runtimeConfig.Set(slot, TableValue.NewTable(tableType.ToRecord()));
+            runtimeConfig.Set(slot, FormulaValue.NewTable(tableType.ToRecord()));
 
             var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
             Assert.IsNotType<ErrorValue>(evalResult);
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             checkResult.ThrowOnErrors();
 
             var runtimeConfig = new SymbolValues(symbols) { DebugName = "SV1" };
-            runtimeConfig.Set(slot, TableValue.NewTable(tableType.ToRecord()));
+            runtimeConfig.Set(slot, FormulaValue.NewTable(tableType.ToRecord()));
 
             var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
             Assert.IsNotType<ErrorValue>(evalResult);
