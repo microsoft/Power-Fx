@@ -1043,7 +1043,7 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             IEnumerable<TypedName> columns;
 
-            column = new TypedName();
+            column = default;
 
             if (!type.IsTable || (columns = type.GetNames(DPath.Root)).Count() != 1)
             {
