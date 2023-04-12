@@ -61,13 +61,13 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ArgumentMapper ArgumentMapper => _argumentMapper ??= new ArgumentMapper(Operation.Parameters, Operation, NumberIsFloat);
 
-        internal bool HasServiceFunction => _serviceFunction != null;
+        internal bool HasServiceFunction => _defaultServiceFunction != null;
 
         private ArgumentMapper _argumentMapper;
         private ConnectorParameter[] _requiredParameters;
         private ConnectorParameter[] _hiddenRequiredParameters;
         private ConnectorParameter[] _optionalParameters;
-        internal ServiceFunction _serviceFunction;
+        internal readonly ServiceFunction _defaultServiceFunction;
 
         public ConnectorFunction(OpenApiOperation openApiOperation, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
         {
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (httpClient != null)
             {
-                GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError);
+                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError);
             }
         }
 
@@ -93,8 +93,8 @@ namespace Microsoft.PowerFx.Connectors
 
             if (HasServiceFunction)
             {
-                int index = Math.Min(knownParameters.Length, _serviceFunction.MaxArity - 1);
-                ConnectorSuggestions suggestions = _serviceFunction.GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                int index = Math.Min(knownParameters.Length, _defaultServiceFunction.MaxArity - 1);
+                ConnectorSuggestions suggestions = _defaultServiceFunction.GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 error = suggestions == null || suggestions.Error != null;
 
@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false)
-        {
+        {            
             IAsyncTexlFunction invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
             DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
@@ -169,15 +169,15 @@ namespace Microsoft.PowerFx.Connectors
 
 #pragma warning disable SA1117 // parameters should be on same line or all on different lines
 
-            _serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
-                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), "action", ArgumentMapper._parameterTypes)
+            ServiceFunction serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
+                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), "action", NumberIsFloat, ArgumentMapper._parameterTypes)
             {
                 _invoker = invoker
             };
 
 #pragma warning restore SA1117
-
-            return _serviceFunction;
+            
+            return serviceFunction;
         }
 
         public async Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
