@@ -73,6 +73,54 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
+        public void ParseJsonNumber_NumberIsFloat()
+        {
+            string expr = "17";
+            FormulaValue fv = FormulaValueJSON.FromJson(expr, numberIsFloat: true);
+            Assert.NotNull(fv);
+            Assert.True(fv is NumberValue);
+
+            NumberValue wv = (NumberValue)fv;
+            Assert.Equal(17, wv.Value);
+            Assert.Equal("n", wv.Type.ToStringWithDisplayNames());
+
+            // for the rest of these tests with explicit typing, numberIsFloat should have no effect,
+            // the results should be the same as above
+            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, FormulaType.Number, numberIsFloat: true);
+            Assert.NotNull(fv2);
+            Assert.True(fv2 is NumberValue);
+            NumberValue nv = (NumberValue)fv2;
+            Assert.Equal(17, nv.Value);
+            Assert.Equal("n", nv.Type.ToStringWithDisplayNames());
+
+            FormulaValue wv2 = FormulaValueJSON.FromJson(expr, FormulaType.Decimal, numberIsFloat: true);
+            Assert.NotNull(wv2);
+            Assert.True(wv2 is DecimalValue);
+            Assert.Equal(17m, ((DecimalValue)wv2).Value);
+            Assert.Equal("w", wv2.Type.ToStringWithDisplayNames());
+
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty(), numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, RecordType.Empty(), numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color, numberIsFloat: true));
+
+            FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType(), numberIsFloat: true);
+            Assert.NotNull(fv3);
+            Assert.True(fv3 is UntypedObjectValue);
+            Assert.NotNull(((UntypedObjectValue)fv3).Impl);
+
+            Assert.Equal(17d, ((UntypedObjectValue)fv3).Impl.GetDouble());
+            Assert.Equal(17m, ((UntypedObjectValue)fv3).Impl.GetDecimal());
+
+            FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType(), numberIsFloat: true);
+            Assert.NotNull(fv4);
+            Assert.True(fv4 is NumberValue);
+            Assert.Equal(17, ((NumberValue)fv4).Value);
+        }
+
+        [Fact]
         public void ParseJsonString()
         {
             string expr = @"""abc""";
@@ -290,6 +338,83 @@ namespace Microsoft.PowerFx.Json.Tests
         }
 
         [Fact]
+        public void ParseJsonRecord_NumberIsFloat()
+        {
+            string expr = @"{""a"": true, ""b"": ""str"", ""c"": 17.5, ""d"": null, ""e"": [ 1, 2 ], ""f"": { ""g"": 7 } }";
+            FormulaValue fv = FormulaValueJSON.FromJson(expr, numberIsFloat: true);
+            Assert.NotNull(fv);
+            Assert.True(fv is RecordValue);
+
+            RecordValue rv = (RecordValue)fv;
+            Assert.Equal(6, rv.Fields.Count());
+            Assert.Equal("![a:b, b:s, c:n, d:N, e:*[Value:n], f:![g:n]]", rv.Type.ToStringWithDisplayNames());
+            Assert.True(rv.GetField("a") is BooleanValue);
+            Assert.True(((BooleanValue)rv.GetField("a")).Value);
+            Assert.True(rv.GetField("b") is StringValue);
+            Assert.Equal("str", ((StringValue)rv.GetField("b")).Value);
+            Assert.True(rv.GetField("c") is NumberValue);
+            Assert.Equal(17.5d, ((NumberValue)rv.GetField("c")).Value);
+            Assert.True(rv.GetField("d") is BlankValue);
+            Assert.True(rv.GetField("e") is TableValue);
+            TableValue array = (TableValue)rv.GetField("e");
+            Assert.Equal("*[Value:n]", array.Type.ToStringWithDisplayNames());
+            Assert.Equal(1, ((NumberValue)array.Index(1).Value.GetField("Value")).Value);
+            Assert.Equal(2, ((NumberValue)array.Index(2).Value.GetField("Value")).Value);
+            Assert.True(rv.GetField("f") is RecordValue);
+            RecordValue innerRecord = (RecordValue)rv.GetField("f");
+            Assert.True(innerRecord.GetField("g") is NumberValue);
+            Assert.Equal(7, ((NumberValue)innerRecord.GetField("g")).Value);
+
+            // for the rest of these tests with explicit typing, numberIsFloat should have no effect,
+            // the results should be the same as above
+            FormulaValue fv2 = FormulaValueJSON.FromJson(expr, rv.Type, numberIsFloat: true);
+            Assert.NotNull(fv2);
+            Assert.True(fv2 is RecordValue);
+
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, TableType.Empty(), numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Number, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Decimal, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.String, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Boolean, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Guid, numberIsFloat: true));
+            Assert.Throws<NotImplementedException>(() => FormulaValueJSON.FromJson(expr, FormulaType.Color, numberIsFloat: true));
+
+            FormulaValue fv3 = FormulaValueJSON.FromJson(expr, new UntypedObjectType(), numberIsFloat: true);
+            Assert.NotNull(fv3);
+            Assert.True(fv3 is UntypedObjectValue);
+            UntypedObjectValue uo = (UntypedObjectValue)fv3;
+            Assert.NotNull(uo.Impl);
+
+            Assert.True(uo.Impl.TryGetProperty("a", out IUntypedObject a));
+            Assert.True(a.GetBoolean());
+            Assert.True(uo.Impl.TryGetProperty("b", out IUntypedObject b));
+            Assert.Equal("str", b.GetString());
+            Assert.True(uo.Impl.TryGetProperty("c", out IUntypedObject c));
+            Assert.Equal(17.5d, c.GetDouble());
+            Assert.Equal(17.5m, c.GetDecimal());
+            Assert.True(uo.Impl.TryGetProperty("d", out IUntypedObject d));
+            Assert.Null(d.GetString());
+            Assert.True(uo.Impl.TryGetProperty("e", out IUntypedObject e));
+            Assert.Equal(2, e.GetArrayLength());
+            Assert.Equal(1d, e[0].GetDouble());
+            Assert.Equal(2d, e[1].GetDouble());
+            Assert.Equal(1m, e[0].GetDecimal());
+            Assert.Equal(2m, e[1].GetDecimal());
+            Assert.True(uo.Impl.TryGetProperty("f", out IUntypedObject f));
+            Assert.True(f.TryGetProperty("g", out IUntypedObject g));
+            Assert.Equal(7, g.GetDouble());
+            Assert.Equal(7m, g.GetDecimal());
+
+            FormulaValue fv4 = FormulaValueJSON.FromJson(expr, new BlankType(), numberIsFloat: true);
+            Assert.NotNull(fv4);
+            Assert.True(fv4 is RecordValue);
+
+            rv = (RecordValue)fv4;
+            Assert.Equal(6, rv.Fields.Count());
+            Assert.Equal("![a:b, b:s, c:n, d:N, e:*[Value:n], f:![g:n]]", rv.Type.ToStringWithDisplayNames());
+        }
+
+        [Fact]
         public void ParseJsonEmptyArray()
         {
             string expr = "[]";
@@ -395,7 +520,8 @@ namespace Microsoft.PowerFx.Json.Tests
                 switch (expected[i])
                 {
                     case double:
-                        Assert.Equal(expected[i], array[i].GetDouble()); 
+                        Assert.Equal(expected[i], array[i].GetDouble());
+                        Assert.Equal(expected[i], (double)array[i].GetDecimal());
                         break;
                     case string:
                         Assert.Equal(expected[i], array[i].GetString());

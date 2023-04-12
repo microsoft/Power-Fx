@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -528,6 +530,22 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
+        public static async ValueTask<FormulaValue> AsType(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (RecordValue)args[0];
+            var arg1 = (TableValue)args[1];
+
+            try
+            {
+                var result = arg1.CastRecord(arg0, runner.CancellationToken);
+                return result.ToFormulaValue();
+            }
+            catch (CustomFunctionErrorException e)
+            {
+                return new ErrorValue(irContext, e.ExpressionError);
             }
         }
 

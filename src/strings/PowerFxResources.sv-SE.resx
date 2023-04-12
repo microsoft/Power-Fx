@@ -567,6 +567,24 @@
     <value>Kopplar flera textvärden till ett textvärde.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Konverterar en text som motsvarar ett tal till ett decimalvärde.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Språkkoden som ska användas vid konvertering av värdet.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Textvärdet som ska konverteras till ett decimalvärde.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Konverterar en text som motsvarar ett tal till ett flyttalsvärde.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Språkkoden som ska användas vid konvertering av värdet.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>The text value to convert to a Float value.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     
@@ -2938,23 +2956,23 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Globe - Not connected</value>
+    <value>Glob – inte ansluten</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
-    <value>Globe - Refresh</value>
+    <value>Glob – uppdatera</value>
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globe - Changes pending</value>
+    <value>Glob – väntande ändringar</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
-    <value>Globe - Warning</value>
+    <value>Glob – varning</value>
     
   </data>
   <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
-    <value>Globe - Error</value>
+    <value>Glob – fel</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>En url som ska kodas.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' is a recognized but not supported function.</value>
+    
   </data>
 </root>

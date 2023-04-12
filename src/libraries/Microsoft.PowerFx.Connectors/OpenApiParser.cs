@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient = null, bool throwOnError = false)
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
         {
             if (openApiDocument == null)
             {
@@ -53,19 +53,19 @@ namespace Microsoft.PowerFx.Connectors
                     
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError);
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError, numberIsFloat: numberIsFloat);
 
                     functions.Add(connectorFunction);
-                    sFunctions.Add(connectorFunction._serviceFunction);
+                    sFunctions.Add(connectorFunction._defaultServiceFunction);
                 }
             }
 
             // post processing for ConnectorDynamicValue, identify service functions
             foreach (ConnectorFunction cf in functions)
             {
-                if (cf._serviceFunction != null)
+                if (cf._defaultServiceFunction != null)
                 {
-                    foreach (ServiceFunctionParameterTemplate sfpt in cf._serviceFunction._requiredParameters)
+                    foreach (ServiceFunctionParameterTemplate sfpt in cf._defaultServiceFunction._requiredParameters)
                     {
                         if (sfpt.ConnectorDynamicValue != null)
                         {
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
+        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false)
         {
             if (openApiDocument == null)
             {
@@ -124,9 +124,9 @@ namespace Microsoft.PowerFx.Connectors
                     // We need to remove invalid chars to be consistent with Power Apps
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
 
-                    FormulaType returnType = op.GetReturnType();
+                    FormulaType returnType = op.GetReturnType(numberIsFloat);
                     string opPath = basePath != null && basePath != "/" ? basePath + path : path;
-                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op);
+                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, numberIsFloat);
                     IAsyncTexlFunction invoker = null;
 
                     if (httpClient != null)
@@ -167,7 +167,8 @@ namespace Microsoft.PowerFx.Connectors
                         argMapper.OptionalParamInfo,
                         argMapper.RequiredParamInfo,
                         parameterDefaultValues,                        
-                        "action", //  funcTemplate.ActionName,??                        
+                        "action", //  funcTemplate.ActionName,??
+                        numberIsFloat,
                         argMapper._parameterTypes)
                     {
                         _invoker = invoker

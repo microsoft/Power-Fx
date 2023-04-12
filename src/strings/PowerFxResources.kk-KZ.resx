@@ -567,6 +567,24 @@
     <value>Бірнеше мәтіндік мәндерді бір мәтіндік мәнге біріктіреді.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Санды білдіретін "мәтінді" ондық мәнге түрлендіреді.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Мәнді түрлендіргенде пайдаланылатын тіл коды.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Ондық мәнге түрлендіретін мәтін мәні.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Санды білдіретін "мәтінді" қалқымалы мәнге түрлендіреді.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Мәнді түрлендіргенде пайдаланылатын тіл коды.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Қалқымалы мәнге түрлендіретін мәтін мәні.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>мәтін</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>Кодталатын URL.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>"{0}" — танылған, бірақ қолдау көрсетілмейтін функция.</value>
+    
   </data>
 </root>
