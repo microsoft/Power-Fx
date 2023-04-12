@@ -2144,20 +2144,18 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(new InMemoryRecordValue(IRContext.NotInSource(ifErrorScopeParamType), scopeVariables));
 
-                    var errorHandlingBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    return MaybeAdjustToCompileTimeType(errorHandlingBranchResult, irContext);
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
 
                 if (i + 1 == args.Length - 1)
                 {
-                    return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
+                    return res.ToFormulaValue();
                 }
 
                 if (i + 2 == args.Length - 1)
                 {
-                    var otherwiseBranch = args[i + 2];
-                    var otherwiseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(otherwiseBranch, context, otherwiseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    return MaybeAdjustToCompileTimeType(otherwiseBranchResult, irContext);
+                    var falseBranch = args[i + 2];
+                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
                 }
             }
 
