@@ -32,7 +32,6 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
@@ -956,19 +955,15 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Return the data type, either Decimal or Number, that should be the return type for a function
         // if the provided argument was the first type encountered.
-        protected DType DetermineNumericFunctionReturnType(bool nativeDecimal, bool numberIsFloat, DType argType)
+        protected static DType DetermineNumericFunctionReturnType(bool nativeDecimal, bool numberIsFloat, DType argType)
         {
             // when numberIsFloat, favor Number, return type is always Number except when operand is Decimal
             // when !numberIsFloat, favor Decimal, return type is only Number operand is Number
             // should match the logic in CheckDecimalBinaryOp in BinderUtils.cs
-#if false
-            return DType.Number;
-#else
             return !nativeDecimal ||
                    (numberIsFloat && argType != DType.Decimal) ||
                    (!numberIsFloat && argType == DType.Number)
                         ? DType.Number : DType.Decimal;
-#endif
         }
 
         protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, out bool matchedWithCoercion)

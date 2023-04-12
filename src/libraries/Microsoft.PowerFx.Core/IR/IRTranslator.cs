@@ -16,7 +16,6 @@ using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using BinaryOpNode = Microsoft.PowerFx.Core.IR.Nodes.BinaryOpNode;
@@ -377,6 +376,9 @@ namespace Microsoft.PowerFx.Core.IR
                         case ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate:
                             convertedNode = ReplaceBlankWithFloatZeroAndTruncatePreProcessor(args[i]);
                             break;
+                        case ArgPreprocessor.ReplaceBlankWithDecimalZeroAndTruncate:
+                            convertedNode = ReplaceBlankWithDecimalZeroAndTruncatePreProcessor(args[i]);
+                            break;
                         case ArgPreprocessor.ReplaceBlankWithEmptyString:
                             convertedNode = BlankToEmptyString(args[i]);
                             break;
@@ -404,37 +406,14 @@ namespace Microsoft.PowerFx.Core.IR
             /// </summary>
             private static IntermediateNode ReplaceBlankWithFloatZero(IntermediateNode arg)
             {
-                IntermediateNode zeroLitNode;
-                IRContext convertedIRContext;
-
                 if (arg is NumberLiteralNode)
                 {
                     return arg;
                 }
 
                 // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
-                convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
-                zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
-                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
-                return convertedNode;
-            }
-
-            /// <summary>
-            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
-            /// </summary>
-            private static IntermediateNode ReplaceBlankWithFloatDecimal(IntermediateNode arg)
-            {
-                IntermediateNode zeroLitNode;
-                IRContext convertedIRContext;
-
-                if (arg is DecimalLiteralNode)
-                {
-                    return arg;
-                }
-
-                // need a new context since when arg is Blank IRContext.ResultType is not a Decimal but a Blank.
-                convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
-                zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
+                var zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
                 return convertedNode;
             }
@@ -444,46 +423,14 @@ namespace Microsoft.PowerFx.Core.IR
             /// </summary>
             private static IntermediateNode ReplaceBlankWithDecimalZero(IntermediateNode arg)
             {
-                IntermediateNode zeroLitNode;
-                IRContext convertedIRContext;
-
                 if (arg is DecimalLiteralNode)
                 {
                     return arg;
                 }
 
                 // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
-                convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
-                zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
-                var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
-                return convertedNode;
-            }
-
-            /// <summary>
-            /// Wraps node arg => Coalesce(arg , 0) when arg is not Number Literal.
-            /// </summary>
-            private static IntermediateNode ReplaceBlankWithArgTypedZero(IntermediateNode arg)
-            {
-                IntermediateNode zeroLitNode;
-                IRContext convertedIRContext;
-
-                if (arg is NumberLiteralNode || arg is DecimalLiteralNode)
-                {
-                    return arg;
-                }
-
-                // need a new context since when arg is Blank IRContext.ResultType is not a Number but a Blank.
-                if (arg.IRContext.ResultType == FormulaType.Number)
-                {
-                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
-                    zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
-                }
-                else
-                {
-                    convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
-                    zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
-                }
-
+                var convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
+                var zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
                 return convertedNode;
             }
@@ -507,10 +454,14 @@ namespace Microsoft.PowerFx.Core.IR
                     convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Number);
                     zeroLitNode = new NumberLiteralNode(convertedIRContext, 0d);
                 }
-                else
+                else if (returnType == FormulaType.Decimal)
                 {
                     convertedIRContext = new IRContext(arg.IRContext.SourceContext, FormulaType.Decimal);
                     zeroLitNode = new DecimalLiteralNode(convertedIRContext, 0m);
+                }
+                else
+                {
+                    throw new NotImplementedException("Unexpcted type");
                 }
 
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
@@ -518,11 +469,21 @@ namespace Microsoft.PowerFx.Core.IR
             }
 
             /// <summary>
-            /// Wraps node arg => Truc(Coalesce(arg , 0)).
+            /// Wraps node arg => Trunc(Coalesce(arg , Float(0))).
             /// </summary>
             private static IntermediateNode ReplaceBlankWithFloatZeroAndTruncatePreProcessor(IntermediateNode arg)
             {
                 var blankToZeroNode = ReplaceBlankWithFloatZero(arg);
+                var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
+                return truncateNode;
+            }
+
+            /// <summary>
+            /// Wraps node arg => Trunc(Coalesce(arg , Decimal(0))).
+            /// </summary>
+            private static IntermediateNode ReplaceBlankWithDecimalZeroAndTruncatePreProcessor(IntermediateNode arg)
+            {
+                var blankToZeroNode = ReplaceBlankWithDecimalZero(arg);
                 var truncateNode = new CallNode(blankToZeroNode.IRContext, BuiltinFunctionsCore.Trunc, blankToZeroNode);
                 return truncateNode;
             }

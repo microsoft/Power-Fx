@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -108,10 +109,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var argType = argTypes[0];
 
             if (argType.IsTable)
-            {
+            { 
                 fValid &= TryGetSingleColumn(argType, arg, errors, out var column);
                 var returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column.Type);
                 fValid &= CheckColumnType(argType, arg, column, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
+            }
+            else
+            {
+                fValid = false;
+                Contracts.Assert(returnType.IsTable);
+                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrTypeError);
             }
 
             if (!fValid)

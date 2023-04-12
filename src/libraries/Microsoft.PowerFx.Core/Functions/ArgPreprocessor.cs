@@ -14,11 +14,12 @@ namespace Microsoft.PowerFx.Core.Functions
         ReplaceBlankWithFloatZero = 1,
         ReplaceBlankWithDecimalZero = 2,
         ReplaceBlankWithFloatZeroAndTruncate = 3,
-        ReplaceBlankWithEmptyString = 4,
+        ReplaceBlankWithDecimalZeroAndTruncate = 4,
+        ReplaceBlankWithEmptyString = 5,
 
         // CallZero is a Zero in the same type as the return type of the function call.
         // Scalar and SingleColumnTable is for a function that returns a scalar number or a single column table of numbers, respectively.
-        ReplaceBlankWithCallZero_Scalar = 5,
-        ReplaceBlankWithCallZero_SingleColumnTable = 6,
+        ReplaceBlankWithCallZero_Scalar = 6,
+        ReplaceBlankWithCallZero_SingleColumnTable = 7,
     }
 }
