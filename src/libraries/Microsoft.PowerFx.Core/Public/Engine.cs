@@ -61,6 +61,11 @@ namespace Microsoft.PowerFx
         internal TexlFunctionSet Functions => CreateResolverInternal().Functions;
 
         /// <summary>
+        /// List of transforms to apply to an IR. 
+        /// </summary>
+        internal readonly List<Core.IR.IRTransform> IRTransformList = new List<Core.IR.IRTransform>();
+        
+        /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>        
 #pragma warning disable CS0618 // Type or member is obsolete
