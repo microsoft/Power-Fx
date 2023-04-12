@@ -1207,6 +1207,26 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(default, type);
         }
 
+        [Fact]
+        public void ComparisonWithMismatchedTypes()
+        {
+            foreach ((Features f, ErrorSeverity es) in new[] 
+            { 
+                (Features.PowerFxV1, ErrorSeverity.Severe), 
+                (Features.None, ErrorSeverity.Warning) 
+            })
+            {
+                var config = new PowerFxConfig(f);
+                var engine = new RecalcEngine(config);
+
+                CheckResult cr = engine.Check(@"If(2 = ""2"", 3, 4 )");
+                ExpressionError firstError = cr.Errors.First();
+
+                Assert.Equal(es, firstError.Severity);
+                Assert.Equal("Incompatible types for comparison. These types can't be compared: Decimal, Text.", firstError.Message);
+            }
+        } 
+
         private class TestRandService : IRandomService
         {
             public double _value = 0.5;
