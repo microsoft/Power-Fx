@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponse("55");
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false));            
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);            
         }
 
         // We can bind without calling.
