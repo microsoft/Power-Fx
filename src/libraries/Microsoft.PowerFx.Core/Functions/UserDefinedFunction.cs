@@ -144,25 +144,29 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
             {
-                if (_functionNameResolver != null)
+                var functionsFromGlobalNameResolver = _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
+                if (_functionNameResolver == null)
                 {
-                    return _functionNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
+                    return functionsFromGlobalNameResolver;
                 }
                 else
                 {
-                    return _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
+                    var functions = _functionNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
+                    return functions.Any() ? functions : functionsFromGlobalNameResolver;
                 }
             }
 
             public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
             {
-                if (_functionNameResolver != null)
+                var functionsFromGlobalNameResolver = _globalNameResolver.LookupFunctionsInNamespace(nameSpace);
+                if (_functionNameResolver == null) 
                 {
-                    return _functionNameResolver.LookupFunctionsInNamespace(nameSpace);
+                    return functionsFromGlobalNameResolver;
                 }
                 else
                 {
-                    return _globalNameResolver.LookupFunctionsInNamespace(nameSpace);
+                    var functions = _functionNameResolver.LookupFunctionsInNamespace(nameSpace);
+                    return functions.Any() ? functions : functionsFromGlobalNameResolver;
                 }
             }
 
