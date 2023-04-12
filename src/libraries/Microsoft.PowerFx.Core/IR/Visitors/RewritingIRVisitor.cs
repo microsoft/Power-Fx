@@ -8,41 +8,58 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.IR
 {
-    // Common helper for IR Rewriting. 
-    // IR trees are immutable, so we need to walk and rewrite the tree to include any new nodes.
-    // Only return new nodes if needed, so if there are no changes, the original object instances are returned.
-    internal abstract class RewritingIRVisitor<TRet, TCtx> : IRNodeVisitor<TRet, TCtx>
+    /// <summary>
+    /// Common helper for rewriting an IR tree. 
+    /// 
+    /// IR trees are immutable, so we need to walk and rewrite the tree to include any new nodes.
+    /// [1] Only return new nodes if needed, 
+    /// so if there is no rewrite on a node, then ensure: object.ReferenceEquals(Ret(Materialize(node)), node) == true.
+    /// [2] Caller is responsible for ensuring that the new nodes have the exact same type as existing nodes. 
+    /// Called must inject any coercions if there are type changes. 
+    /// [3] The visitor can also take in an error container to add new errors. 
+    /// </summary>
+    /// <typeparam name="TResult">The Intermediate Node tagged with additional information.</typeparam>
+    /// <typeparam name="TContext">A context top passed to each node.</typeparam>
+    internal abstract class RewritingIRVisitor<TResult, TContext> : IRNodeVisitor<TResult, TContext>
     {
-        protected abstract IntermediateNode Materialize(TRet ret);
+        /// <summary>
+        /// Convert a tagged result back to an intermediate node.        
+        /// </summary>
+        /// <param name="ret"></param>
+        /// <returns></returns>
+        protected abstract IntermediateNode Materialize(TResult ret);
 
-        protected abstract TRet Ret(IntermediateNode node);
+        /// <summary>
+        /// Called to wrap a node as the return type.
+        /// </summary>
+        protected abstract TResult Ret(IntermediateNode node);
 
-        public override TRet Visit(TextLiteralNode node, TCtx context)
+        public override TResult Visit(TextLiteralNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(NumberLiteralNode node, TCtx context)
+        public override TResult Visit(NumberLiteralNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(DecimalLiteralNode node, TCtx context)
+        public override TResult Visit(DecimalLiteralNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(BooleanLiteralNode node, TCtx context)
+        public override TResult Visit(BooleanLiteralNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(ColorLiteralNode node, TCtx context)
+        public override TResult Visit(ColorLiteralNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(RecordNode node, TCtx context)
+        public override TResult Visit(RecordNode node, TContext context)
         {
             var newFields = VisitDict(node.Fields, context);
 
@@ -57,7 +74,7 @@ namespace Microsoft.PowerFx.Core.IR
 
         // Visit each field. If no changes, then return null, signalling to caller to just pass the origina dictionary. 
         // If anything changes, return a new dictionary with the updates. 
-        private IReadOnlyDictionary<DName, IntermediateNode> VisitDict(IReadOnlyDictionary<DName, IntermediateNode> fields, TCtx context)
+        private IReadOnlyDictionary<DName, IntermediateNode> VisitDict(IReadOnlyDictionary<DName, IntermediateNode> fields, TContext context)
         {
             // Dictionary order is arbitrary, so just make a copy upfront rather than enumerate multiple times. 
             Dictionary<DName, IntermediateNode> newFields = new Dictionary<DName, IntermediateNode>();
@@ -83,12 +100,12 @@ namespace Microsoft.PowerFx.Core.IR
             return null;
         }
 
-        public override TRet Visit(ErrorNode node, TCtx context)
+        public override TResult Visit(ErrorNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(LazyEvalNode node, TCtx context)
+        public override TResult Visit(LazyEvalNode node, TContext context)
         {
             var newChild = Materialize(node.Child.Accept(this, context));
 
@@ -100,12 +117,12 @@ namespace Microsoft.PowerFx.Core.IR
             return Ret(new LazyEvalNode(node.IRContext, newChild));
         }
 
-        public override TRet Visit(CallNode node, TCtx context)
+        public override TResult Visit(CallNode node, TContext context)
         {
             // Derived visitor gets first chance. 
             // Can callback to base if it doesn't handle. 
 
-            TRet arg0 = default;
+            TResult arg0 = default;
             if (node.Args.Count > 0)
             {
                 arg0 = node.Args[0].Accept(this, context);
@@ -116,7 +133,7 @@ namespace Microsoft.PowerFx.Core.IR
 
         // Return null if no change. 
         // Else returns a new copy ofthe list with changes. 
-        private IList<IntermediateNode> VisitList(IList<IntermediateNode> list, TCtx context, TRet arg0 = default)
+        private IList<IntermediateNode> VisitList(IList<IntermediateNode> list, TContext context, TResult arg0 = default)
         {
             List<IntermediateNode> newArgs = null;
 
@@ -145,7 +162,7 @@ namespace Microsoft.PowerFx.Core.IR
         }
 
         // Pass in arg0 is we already called Accept on it.
-        public TRet Visit(CallNode node, TCtx context, TRet arg0)
+        public TResult Visit(CallNode node, TContext context, TResult arg0)
         {
             var newArgs = VisitList(node.Args, context, arg0);
 
@@ -166,7 +183,7 @@ namespace Microsoft.PowerFx.Core.IR
             }
         }
 
-        public override TRet Visit(BinaryOpNode node, TCtx context)
+        public override TResult Visit(BinaryOpNode node, TContext context)
         {
             var newLeft = Materialize(node.Left.Accept(this, context));
             var newRight = Materialize(node.Right.Accept(this, context));
@@ -182,7 +199,7 @@ namespace Microsoft.PowerFx.Core.IR
             return Ret(newNode);
         }
 
-        public override TRet Visit(UnaryOpNode node, TCtx context)
+        public override TResult Visit(UnaryOpNode node, TContext context)
         {
             var newChild = Materialize(node.Child.Accept(this, context));
             if (ReferenceEquals(newChild, node.Child))
@@ -194,12 +211,12 @@ namespace Microsoft.PowerFx.Core.IR
             return Ret(newNode);
         }
 
-        public override TRet Visit(ScopeAccessNode node, TCtx context)
+        public override TResult Visit(ScopeAccessNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(RecordFieldAccessNode node, TCtx context)
+        public override TResult Visit(RecordFieldAccessNode node, TContext context)
         {
             var newFrom = Materialize(node.From.Accept(this, context));
             if (ReferenceEquals(newFrom, node.From))
@@ -211,17 +228,17 @@ namespace Microsoft.PowerFx.Core.IR
             return Ret(newNode);
         }
 
-        public override TRet Visit(ResolvedObjectNode node, TCtx context)
+        public override TResult Visit(ResolvedObjectNode node, TContext context)
         {
             return Ret(node);
         }
 
-        public override TRet Visit(SingleColumnTableAccessNode node, TCtx context)
+        public override TResult Visit(SingleColumnTableAccessNode node, TContext context)
         {
             throw new NotImplementedException();
         }
 
-        public override TRet Visit(ChainingNode node, TCtx context)
+        public override TResult Visit(ChainingNode node, TContext context)
         {
             var newArgs = VisitList(node.Nodes, context);
             if (newArgs == null)
@@ -233,7 +250,7 @@ namespace Microsoft.PowerFx.Core.IR
             return Ret(newNode);
         }
 
-        public override TRet Visit(AggregateCoercionNode node, TCtx context)
+        public override TResult Visit(AggregateCoercionNode node, TContext context)
         {
             IntermediateNode newChild = Materialize(node.Child.Accept(this, context));
 

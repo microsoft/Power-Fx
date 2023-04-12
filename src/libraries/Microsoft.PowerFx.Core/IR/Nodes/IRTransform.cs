@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.IR
         /// <summary>
         /// Describe the transform.
         /// </summary>
-        public string DebugName { get; private set;  }
+        public string DebugName { get;  }
 
         /// <summary>
         /// Given a tree, transform to a new tree. 

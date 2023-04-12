@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Logging;
@@ -67,6 +68,26 @@ namespace Microsoft.PowerFx.Tests
             {
                 Assert.Equal(expected, objActual);
             }
+        }
+
+        // When we don't rewrite, preserve the same object reference identity 
+        [Fact]
+        public void PreserveObjectReference()
+        {
+            var expr = "Sum(1, { x : 4}.x)";
+
+            var engine = new Engine();
+            var check = new CheckResult(engine)
+                .SetText(expr)
+                .SetBindingInfo();
+            var ir = check.ApplyIR();
+
+            var errors = new List<ExpressionError>();
+            var t = new NopTransform(); 
+            var before = ir.TopNode;
+            var after = t.Transform(before, errors);
+
+            Assert.Same(before, after);
         }
 
         // Errors 
@@ -143,6 +164,30 @@ namespace Microsoft.PowerFx.Tests
                 _sb.Append(";");
 
                 return node;
+            }
+        }
+
+        // Nop visitor - doesn't make any changes. 
+        private class NopTransform : IRTransform
+        {
+            public override IntermediateNode Transform(IntermediateNode node, ICollection<ExpressionError> errors)
+            {
+                var v = new NopVisitor();
+                var ret = node.Accept(v, null);
+                return ret;
+            }
+
+            private class NopVisitor : RewritingIRVisitor<IntermediateNode, object>
+            {                
+                protected override IntermediateNode Materialize(IntermediateNode ret)
+                {
+                    return ret;
+                }
+
+                protected override IntermediateNode Ret(IntermediateNode node)
+                {
+                    return node;
+                }
             }
         }
 
