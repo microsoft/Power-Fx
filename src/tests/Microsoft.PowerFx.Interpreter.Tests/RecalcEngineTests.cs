@@ -1188,10 +1188,16 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(10.0, result2.ToObject());
         }
 
-        [Fact]
-        public void DisambiguationTest()
+        [Theory]
+        [InlineData("ThisRecord.Field2", "_field2")] // row scope, no conflcit
+        [InlineData("Task", "_fieldTask")] // row scope, with a conflict
+        [InlineData("[@Task]", "_globalTask")] // row scope
+        [InlineData("[@Task] & Task", "_globalTask_fieldTask")] // both in same expression
+        public void DisambiguationTest(string expr, object expected)
         {
-            var expr = "ThisRecord.Field2";
+            //var expr = "ThisRecord.Field2"; // "_field2"
+            //var expr = "Task"; // _fieldTask
+            // var expr = "[@Task]"; // 111
 
             var engine = new RecalcEngine();
             
@@ -1201,16 +1207,17 @@ namespace Microsoft.PowerFx.Tests
                 new NamedValue("Field2", FormulaValue.New("_field2")));
 
             var globals = new SymbolTable();
-            var slot = globals.AddVariable("Task", FormulaType.Number);
+            var slot = globals.AddVariable("Task", FormulaType.String);
             
-            var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type);
+            var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type, allowThisRecord: true);
 
-            var symbols = ReadOnlySymbolTable.Compose(globals, rowScope);
+            // ensure rowScope is listed first since that should get higher priority 
+            var symbols = ReadOnlySymbolTable.Compose(rowScope, globals); 
                         
             // Values 
             var rowValues = ReadOnlySymbolValues.NewFromRecord(rowScope, record);
             var globalValues = globals.CreateValues();
-            globalValues.Set(slot, FormulaValue.New(111));
+            globalValues.Set(slot, FormulaValue.New("_globalTask"));
 
             var runtimeConfig = new RuntimeConfig
             {
@@ -1218,6 +1225,7 @@ namespace Microsoft.PowerFx.Tests
             };
 
             var result = engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).Result;
+            Assert.Equal(expected, result.ToObject());
         }
 
         [Fact]
