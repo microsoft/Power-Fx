@@ -1190,15 +1190,22 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
         [InlineData("ThisRecord.Field2", "_field2")] // row scope, no conflcit
-        [InlineData("Task", "_fieldTask")] // row scope, with a conflict
+        [InlineData("Task", "_fieldTask")] // row scope wins the conflict, it's closer.         
         [InlineData("[@Task]", "_globalTask")] // row scope
         [InlineData("[@Task] & Task", "_globalTask_fieldTask")] // both in same expression
-        public void DisambiguationTest(string expr, object expected)
-        {
-            //var expr = "ThisRecord.Field2"; // "_field2"
-            //var expr = "Task"; // _fieldTask
-            // var expr = "[@Task]"; // 111
+        [InlineData("[@Task] & ThisRecord.Task", "_globalTask_fieldTask")] // both, fully unambiguous. 
+        [InlineData("With({Task : true}, Task)", true)] // With() wins, shadows rowscope. 
+        [InlineData("With({Task : true}, ThisRecord.Task)", true)] // With() also has ThisRecord, shadows previous rowscope.
+        [InlineData("With({Task : true}, [@Task])", "_globalTask")] // Globals.
+        [InlineData("With({Task : true} As T2, Task)", "_fieldTask")] // As avoids the conflict. 
+        [InlineData("With({Task : true} As T2, ThisRecord.Task)", "_fieldTask")] // As avoids the conflict. 
+        [InlineData("With({Task : true} As T2, ThisRecord.Field2)", "_field2")] // As avoids the conflict. 
 
+        // Errors
+        [InlineData("[@Field2]")] // error, doesn't exist in global scope. 
+        [InlineData("With({Task : true}, ThisRecord.Field2)")] // Error. ThisRecord doesn't union, it refers exclusively to With().
+        public void DisambiguationTest(string expr, object expected = null)
+        {            
             var engine = new RecalcEngine();
             
             // Setup Global "Task", and RowScope with "Task" field.
@@ -1224,7 +1231,17 @@ namespace Microsoft.PowerFx.Tests
                 Values = symbols.CreateValues(globalValues, rowValues)
             };
 
-            var result = engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).Result;
+            var check = engine.Check(expr, symbolTable: symbols); // never throws
+
+            if (expected == null)
+            {
+                Assert.False(check.IsSuccess);
+                return;
+            }
+
+            var run = check.GetEvaluator();
+            var result = run.Eval(runtimeConfig);
+            
             Assert.Equal(expected, result.ToObject());
         }
 
