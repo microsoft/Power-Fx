@@ -1286,7 +1286,9 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Round.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: NumberOrDecimal,
+                    checkRuntimeTypes: ExactSequence(
+                        NumberOrDecimal,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Round)
@@ -1297,7 +1299,9 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.RoundUp.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: NumberOrDecimal,
+                    checkRuntimeTypes: ExactSequence(
+                        NumberOrDecimal,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RoundUp)
@@ -1308,7 +1312,9 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.RoundDown.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: NumberOrDecimal,
+                    checkRuntimeTypes: ExactSequence(
+                        NumberOrDecimal,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RoundDown)
@@ -1330,7 +1336,10 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Sequence.Name,
                     expandArguments: SequenceFunctionExpandArgs,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: NumberOrDecimal,
+                    checkRuntimeTypes: ExactSequence(
+                        ExactValueType<NumberValue>,
+                        NumberOrDecimal,
+                        NumberOrDecimal),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Sequence)
@@ -1600,7 +1609,9 @@ namespace Microsoft.PowerFx.Functions
                     BuiltinFunctionsCore.Trunc.Name,
                     expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: NumberOrDecimal,
+                    checkRuntimeTypes: ExactSequence(
+                        NumberOrDecimal,
+                        ExactValueType<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RoundDown)
@@ -1884,15 +1895,15 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.RoundT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithCallZero))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Round], ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(1)))
             },
             {
                 BuiltinFunctionsCore.RoundUpT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundUp], ReplaceBlankWithCallZero))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundUp], ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(1)))
             },
             {
                 BuiltinFunctionsCore.RoundDownT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithCallZero))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(1)))
             },
             {
                 BuiltinFunctionsCore.SubstituteT,
@@ -1907,7 +1918,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.TruncT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithCallZero))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(1)))
             },
         };
 

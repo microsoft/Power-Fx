@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
@@ -816,15 +817,23 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
+        // Sequence( count:n, start:(n|w), step:(n|w) ) where start and step must be the same type
         public static FormulaValue Sequence(IRContext irContext, FormulaValue[] args)
         {
-            if (args[0] is NumberValue countN && args[1] is NumberValue startN && args[2] is NumberValue stepN)
+            int count = (int)((NumberValue)args[0]).Value;
+
+            if (count < 0)
             {
-                return SequenceFloat(irContext, countN, startN, stepN);
+                return CommonErrors.ArgumentOutOfRange(irContext);
             }
-            else if (args[0] is DecimalValue countW && args[1] is DecimalValue startW && args[2] is DecimalValue stepW)
+
+            if (args[1] is NumberValue startN && args[2] is NumberValue stepN)
             {
-                return SequenceDecimal(irContext, countW, startW, stepW);
+                return SequenceFloat(irContext, count, startN, stepN);
+            }
+            else if (args[1] is DecimalValue startW && args[2] is DecimalValue stepW)
+            {
+                return SequenceDecimal(irContext, count, startW, stepW);
             }
             else
             {
@@ -832,29 +841,19 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        public static FormulaValue SequenceFloat(IRContext irContext, NumberValue count, NumberValue start, NumberValue step)
+        public static FormulaValue SequenceFloat(IRContext irContext, int count, NumberValue start, NumberValue step)
         {
-            if (count.Value < 0)
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
-
-            var rows = LazySequenceFloat(count.Value, start.Value, step.Value).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
+            var rows = LazySequenceFloat(count, start.Value, step.Value).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
-        public static FormulaValue SequenceDecimal(IRContext irContext, DecimalValue count, DecimalValue start, DecimalValue step)
+        public static FormulaValue SequenceDecimal(IRContext irContext, int count, DecimalValue start, DecimalValue step)
         {
-            if (count.Value < 0)
-            {
-                return CommonErrors.ArgumentOutOfRange(irContext);
-            }
-
-            var rows = LazySequenceDecimal(count.Value, start.Value, step.Value).Select(n => new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), n));
+            var rows = LazySequenceDecimal(count, start.Value, step.Value).Select(n => new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), n));
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
-        private static IEnumerable<double> LazySequenceFloat(double records, double start, double step)
+        private static IEnumerable<double> LazySequenceFloat(int records, double start, double step)
         {
             var x = start;
             for (var i = 1; i <= records; i++)
@@ -864,7 +863,7 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static IEnumerable<decimal> LazySequenceDecimal(decimal records, decimal start, decimal step)
+        private static IEnumerable<decimal> LazySequenceDecimal(int records, decimal start, decimal step)
         {
             var x = start;
             for (var i = 1; i <= records; i++)
@@ -913,10 +912,6 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
                 digits = (int)numberDigs.Value;
-            }
-            else if (args.Length == 2 && args[1] is DecimalValue decimalDigs)
-            {
-                digits = (int)decimalDigs.Value;
             }
             else
             {
@@ -1073,10 +1068,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 digits = (int)numberDigs.Value;
             }
-            else if (args.Length == 2 && args[1] is DecimalValue decimalDigs)
-            {
-                digits = (int)decimalDigs.Value;
-            }
             else
             {
                 return CommonErrors.UnreachableCodeError(irContext);
@@ -1104,10 +1095,6 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
                 digits = (int)numberDigs.Value;
-            }
-            else if (args.Length == 2 && args[1] is DecimalValue decimalDigs)
-            {
-                digits = (int)decimalDigs.Value;
             }
             else if (args.Length == 1)
             {

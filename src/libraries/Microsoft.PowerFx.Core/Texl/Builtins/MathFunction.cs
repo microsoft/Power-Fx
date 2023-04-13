@@ -135,7 +135,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return _nativeDecimal ? ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
+            return _nativeDecimal && (index == 0 || !_secondArgFloat) ? 
+                        ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
         }
 
         public override bool IsSelfContained => true;
@@ -145,10 +146,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // and return a floating point output.
         private readonly bool _nativeDecimal = false;
 
-        public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false)
-            : base(name, description, FunctionCategories.MathAndStat, nativeDecimal ? DType.Unknown : DType.Number, 0, minArity, 2, nativeDecimal ? DType.Unknown : DType.Number, nativeDecimal ? DType.Unknown : DType.Number)
+        // For _nativeDecimal functions, the second argument is always a float and doesn't impact the return type
+        // Used by Round* and Trunc.  Could help with overload resolution in the future, with one less difference.
+        private readonly bool _secondArgFloat = false;
+
+        public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false, bool secondArgFloat = false)
+            : base(name, description, FunctionCategories.MathAndStat, nativeDecimal ? DType.Unknown : DType.Number, 0, minArity, 2, nativeDecimal ? DType.Unknown : DType.Number, nativeDecimal && !secondArgFloat ? DType.Unknown : DType.Number)
         {
             _nativeDecimal = nativeDecimal;
+            _secondArgFloat = secondArgFloat;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -182,7 +188,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             if (args.Length == 2 && 
-                !CheckType(args[1], argTypes[1], returnType, errors, ref nodeToCoercedTypeMap))
+                !CheckType(args[1], argTypes[1], _secondArgFloat ? DType.Number : returnType, errors, ref nodeToCoercedTypeMap))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
                 fValid = false;
@@ -201,16 +207,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         // and return a floating point output.
         private readonly bool _nativeDecimal = false;
 
+        // For _nativeDecimal functions, the second argument is always a float and doesn't impact the return type
+        // Used by Round* and Trunc.  Could help with overload resolution in the future, with one less difference.
+        private readonly bool _secondArgFloat = false;
+
         // Before ConsistentOneColumnTableResult, this function would always return a fixed name "Result" (Mod)
         protected virtual bool InConsistentTableResultFixedName => false;
 
         // Before ConsistentOneColumnTableResult, this function would use the second argument name if a table (Log, Power)
         protected virtual bool InConsistentTableResultUseSecondArg => false;
 
-        public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false)
+        public MathTwoArgTableFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false, bool secondArgFloat = false)
             : base(name, description, FunctionCategories.Table, DType.EmptyTable, 0, minArity, 2)
         {
             _nativeDecimal = nativeDecimal;
+            _secondArgFloat = secondArgFloat;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -250,6 +261,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 var otherType = DType.Invalid;
                 TexlNode otherArg = null;
+                DType otherDesiredScalarType;
 
                 // At least one of the arguments has to be a table.
                 if (type0.IsTable)    
@@ -271,20 +283,22 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Check arg1 below.
                     otherArg = args[1];
                     otherType = type1;
+                    otherDesiredScalarType = _secondArgFloat ? DType.Number : returnScalarType;
                 }
                 else if (type1.IsTable)
                 {
                     fValid &= TryGetSingleColumn(type1, args[1], errors, out var column1);
                     returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, type0);
+                    var secondArgScalarType = _secondArgFloat ? DType.Number : returnScalarType;
 
                     // Ensure we have a one-column table of numerics
                     if (InConsistentTableResultUseSecondArg)
                     {
-                        fValid &= CheckColumnType(type1, args[1], column1, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                        fValid &= CheckColumnType(type1, args[1], column1, secondArgScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
                     }
                     else
                     {
-                        fValid &= CheckColumnType(type1, args[1], column1, returnScalarType, errors, ref nodeToCoercedTypeMap);
+                        fValid &= CheckColumnType(type1, args[1], column1, secondArgScalarType, errors, ref nodeToCoercedTypeMap);
 
                         // Since the 1st arg is not a table, make a new table return type *[Result:n]
                         returnType = DType.CreateTable(new TypedName(returnScalarType, GetOneColumnTableResultName(context.Features)));
@@ -293,6 +307,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Check arg0 below.
                     otherArg = args[0];
                     otherType = type0;
+                    otherDesiredScalarType = returnScalarType;
                 }
                 else
                 {
@@ -313,9 +328,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(otherType, otherArg, errors, out var otherColumn);
-                    fValid &= CheckColumnType(otherType, otherArg, otherColumn, returnScalarType, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckColumnType(otherType, otherArg, otherColumn, otherDesiredScalarType, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!CheckType(otherArg, otherType, returnScalarType, errors, ref nodeToCoercedTypeMap))
+                else if (!CheckType(otherArg, otherType, otherDesiredScalarType, errors, ref nodeToCoercedTypeMap))
                 {
                     fValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, otherArg, TexlStrings.ErrTypeError);

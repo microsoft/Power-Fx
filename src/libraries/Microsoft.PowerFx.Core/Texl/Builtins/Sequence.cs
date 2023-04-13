@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override ArgPreprocessor GetArgPreprocessor(int index)
         {
-            return ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable;
+            return index == 0 ? ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate : ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable;
         }
 
         public override bool IsSelfContained => true;
@@ -46,15 +46,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
             var fArgsValid = true;
 
-            // first argument is the count, but does not determine the type of result
-            // second argument (if present) determines the type and all other args are coerced to this type
+            // first argument is:
+            //   * the count argument
+            //   * required
+            //   * always a float, which could help with overload resolution in the future
+            //   * does not determine the type of result (that's on the second arg)
+            //   * is always an integer, as it is truncated by the argpreprocessor and the runtime
+            if (!CheckType(args[0], argTypes[0], DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
+                fArgsValid = false;
+            }
+
+            // second argument (if present) determines the type and step arg is coerced to this type
             var returnScalarType = args.Length == 1 ? 
                             (context.NumberIsFloat ? DType.Number : DType.Decimal) :
                             DetermineNumericFunctionReturnType(nativeDecimal: true, context.NumberIsFloat, argTypes[1]);
             returnType = DType.CreateTable(new TypedName(returnScalarType, new DName("Value")));
 
-            // Ensure that all the arguments are numeric/coercible to numeric.
-            for (var i = 0; i < argTypes.Length; i++)
+            // Ensure that start and step arguments are numeric/coercible to numeric.
+            for (var i = 1; i < argTypes.Length; i++)
             {
                 if (!CheckType(args[i], argTypes[i], returnScalarType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
                 {

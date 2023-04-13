@@ -525,6 +525,22 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
+        private static Func<IRContext, int, FormulaType, FormulaValue> ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(params int[] indices)
+        {
+            var indicesToReplace = new HashSet<int>(indices);
+            return (irContext, index, callType) =>
+            {
+                if (indicesToReplace.Contains(index) || callType is NumberType)
+                {
+                    return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+                }
+                else
+                {
+                    return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
+                }
+            };
+        }
+
         private static Func<IRContext, int, FormulaType, FormulaValue> ReplaceBlankWithFloatZeroForSpecificIndices(params int[] indices)
         {
             var indicesToReplace = new HashSet<int>(indices);
