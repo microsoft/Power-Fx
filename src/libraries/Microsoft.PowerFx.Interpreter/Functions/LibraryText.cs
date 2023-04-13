@@ -852,6 +852,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
+
             var startIndexValue = (int)arg2;
 
             if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
