@@ -907,11 +907,11 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
         {
-            int digits;
+            double digits;
 
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                digits = (int)numberDigs.Value;
+                digits = numberDigs.Value;
             }
             else
             {
@@ -930,11 +930,15 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.UnreachableCodeError(irContext);
         }
 
-        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, int dg, RoundType rt = RoundType.Default)
+        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default)
         {
             var number = num.Value;
             var s = number < 0 ? -1d : 1d;
             var n = number * s;
+
+            int dg = doubleDigs > int.MaxValue ? int.MaxValue :
+                          doubleDigs < int.MinValue ? int.MinValue :
+                                (int)doubleDigs;
 
             if (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d)
             {
@@ -975,11 +979,15 @@ namespace Microsoft.PowerFx.Functions
         // The algorithm for Decimal is different from that of Float because with less range we are going out of our way to avoid overflow
         // At the time of this writing, the version of .NET being targeted only supports two varieties of MidpointRounding
         // In the future, some of this can be replaced with built in support in decimal.Round()
-        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, int digits, RoundType roundType = RoundType.Default)
+        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double doubleDigs, RoundType roundType = RoundType.Default)
         {
             var signedNumber = dec.Value;
             var sign = signedNumber < 0 ? -1m : 1m;
             var unsignedNumber = signedNumber < 0 ? -signedNumber : signedNumber;
+
+            int digits = doubleDigs > int.MaxValue ? int.MaxValue : 
+                               doubleDigs < int.MinValue ? int.MinValue : 
+                                    (int)doubleDigs;
 
             if (digits < -28)
             {
@@ -1062,11 +1070,11 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundUp(IRContext irContext, FormulaValue[] args)
         {
-            int digits;
+            double digits;
 
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                digits = (int)numberDigs.Value;
+                digits = numberDigs.Value;
             }
             else
             {
@@ -1089,12 +1097,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
         {
-            int digits;
+            double digits;
 
             // Trunc uses RoundDown as the implementation, and Trunc's second argument is optional
             if (args.Length == 2 && args[1] is NumberValue numberDigs)
             {
-                digits = (int)numberDigs.Value;
+                digits = numberDigs.Value;
             }
             else if (args.Length == 1)
             {
