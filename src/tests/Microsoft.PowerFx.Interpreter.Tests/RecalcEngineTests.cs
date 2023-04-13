@@ -1191,7 +1191,7 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData("ThisRecord.Field2", "_field2")] // row scope, no conflcit
         [InlineData("Task", "_fieldTask")] // row scope wins the conflict, it's closer.         
-        [InlineData("[@Task]", "_globalTask")] // row scope
+        [InlineData("[@Task]", "_globalTask")] // global scope
         [InlineData("[@Task] & Task", "_globalTask_fieldTask")] // both in same expression
         [InlineData("[@Task] & ThisRecord.Task", "_globalTask_fieldTask")] // both, fully unambiguous. 
         [InlineData("With({Task : true}, Task)", true)] // With() wins, shadows rowscope. 
