@@ -120,7 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
+            fValid &= CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
 
             return fValid;
         }
