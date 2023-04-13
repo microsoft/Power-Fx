@@ -28,9 +28,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-#pragma warning disable CS0618 // Type or member is obsolete
-            Converters = { new LanguageServerProtocol.FormulaTypeJsonConverter() }
-#pragma warning restore CS0618
+            Converters = 
+            { 
+                new FormulaTypeJsonConverter(new DefinedTypeSymbolTable()) 
+            }
         };
 
         protected List<string> _sendToClientData;
@@ -1117,7 +1118,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("{\"A\": 1 }", "A+2", typeof(DecimalType))]
         [InlineData("{}", "\"hi\"", typeof(StringType))]
         [InlineData("{}", "", typeof(BlankType))]
-        [InlineData("{}", "{ A: 1 }", typeof(KnownRecordType))]
+        [InlineData("{}", "{ A: 1 }", typeof(UserDefinedRecordType))]
         [InlineData("{}", "[1, 2, 3]", typeof(TableType))]
         [InlineData("{}", "true", typeof(BooleanType))]
         public void TestPublishExpressionType(string context, string expression, System.Type expectedType)
@@ -1177,12 +1178,12 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData(false, "{}", "{ A: 1 }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Decimal""}}}")]
-        [InlineData(false, "{}", "[1, 2]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Decimal""}}}")]
-        [InlineData(true, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""A"":{""Type"":""Decimal""},""B"":{""Type"":""Boolean""}}}")]
-        [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Decimal""},""B"":{""Type"":""Boolean""}}}}}")]
-        [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Decimal""},""B"":{""Type"":""Record"",""Fields"":{""C"":{""Type"":""Record"",""Fields"":{""D"":{""Type"":""String""}}},""E"":{""Type"":""Boolean""}}}}}")]
-        [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Decimal""}}}")]
+        [InlineData(false, "{}", "{ A: 1 }", @"{""type"":{""name"":""Record""},""fields"":{""A"":{""type"":{""name"":""Decimal""}}}}")]
+        [InlineData(false, "{}", "[1, 2]", @"{""type"":{""name"":""Record"",""isTable"":true},""fields"":{""Value"":{""type"":{""name"":""Decimal""}}}}")]
+        [InlineData(true, "{}", "[{ A: 1 }, { B: true }]", @"{""type"":{""name"":""Record"",""isTable"":true},""fields"":{""A"":{""type"":{""name"":""Decimal""}},""B"":{""type"":{""name"":""Boolean""}}}}")]
+        [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", @"{""type"":{""name"":""Record"",""isTable"":true},""fields"":{""Value"":{""type"":{""name"":""Record""},""fields"":{""A"":{""type"":{""name"":""Decimal""}},""B"":{""type"":{""name"":""Boolean""}}}}}}")]
+        [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""type"":{""name"":""Record""},""fields"":{""A"":{""type"":{""name"":""Decimal""}},""B"":{""type"":{""name"":""Record""},""fields"":{""C"":{""type"":{""name"":""Record""},""fields"":{""D"":{""type"":{""name"":""Text""}}}},""E"":{""type"":{""name"":""Boolean""}}}}}}")]
+        [InlineData(false, "{}", "{ type: 123 }", @"{""type"":{""name"":""Record""},""fields"":{""type"":{""type"":{""name"":""Decimal""}}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
             Init(new Features { TableSyntaxDoesntWrapRecords = tableSyntaxDoesntWrapRecords });

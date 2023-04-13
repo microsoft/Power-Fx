@@ -29,4 +29,8 @@
     <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.PowerFx.Json\Microsoft.PowerFx.Json.csproj" />
+  </ItemGroup>
+
 </Project>

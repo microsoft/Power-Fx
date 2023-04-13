@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Text.Json;
+using Microsoft.PowerFx.Core;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol
 {
@@ -16,9 +17,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Converters =
             {
                 // Serialize types without accounting for any defined type names
-#pragma warning disable CS0618 // Type or member is obsolete. This will be cleaned up when the formula bar is ready to accept the updated schema.
-                new FormulaTypeJsonConverter()
-#pragma warning restore CS0618
+                new FormulaTypeJsonConverter(new DefinedTypeSymbolTable())
             }
         };
 
