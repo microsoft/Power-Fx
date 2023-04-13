@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = null;
 
             // Coerce everything except date/times to numeric.
-            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(context, args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
             {
                 returnType = DType.Number;
                 if (matchedWithCoercion)
