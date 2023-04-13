@@ -3293,7 +3293,7 @@ namespace Microsoft.PowerFx.Core.Types
         // Gets the subtype of aggregate type expectedType that this type can coerce to.
         // Checks whether the fields of this type can be coerced to the fields of expectedType
         // and returns the type it should be coerced to in order to be compatible.
-        public bool TryGetCoercionSubType(DType expectedType, out DType coercionType, out bool coercionNeeded, bool safeCoercionRequired = false, bool aggregateCoercion = true)
+        public bool TryGetCoercionSubType(DType expectedType, out DType coercionType, out bool coercionNeeded, bool safeCoercionRequired = false, bool aggregateCoercion = true, bool usePowerFxV1CompatibilityRules = false)
         {
             Contracts.Assert(expectedType.IsValid);
 
@@ -3313,7 +3313,7 @@ namespace Microsoft.PowerFx.Core.Types
                     return true;
                 }
 
-                return CoercesTo(expectedType, out var coercionIsSafe, aggregateCoercion) && (!safeCoercionRequired || coercionIsSafe);
+                return CoercesTo(expectedType, out var coercionIsSafe, aggregateCoercion, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) && (!safeCoercionRequired || coercionIsSafe);
             }
 
             // LazyTable/Record case

@@ -1,0 +1,8 @@
+﻿>> Set( y, [1,2,3] )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Patch( y, First(y), { Value:"11" } )
+{Value:11}
+
+>> Patch( y, First(y), { Value:"111"+0 } )
+{Value:111}

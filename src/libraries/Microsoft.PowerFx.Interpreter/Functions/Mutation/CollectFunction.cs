@@ -40,8 +40,6 @@ namespace Microsoft.PowerFx.Interpreter
 
         protected virtual bool IsScalar => false;
 
-        public override bool SupportsParamCoercion => false;
-
         public override bool CanSuggestInputColumns => true;
 
         public override bool ArgMatchesDatasourceType(int argNum)
@@ -118,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion);
+                bool checkAggregateNames = argType.CheckAggregateNames(argTypes[0], args[i], errors, SupportsParamCoercion, usePowerFxV1CompatibilityRules: true);
                 fValid = fValid && checkAggregateNames;
 
                 if (!itemType.IsValid)
@@ -175,15 +173,28 @@ namespace Microsoft.PowerFx.Interpreter
 
             if (fValid)
             {
-                // The item type must be compatible with the collection schema.
-                var fError = false;
-                returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType);
-                if (fError)
+                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded))
                 {
                     fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
+                }
+                else
+                {
+                    if (coercionNeeded)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], coercionType);
+                    }
+
+                    var fError = false;
+
+                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, usePowerFxV1CompatibilityRules: true);
+
+                    if (fError)
+                    {
+                        fValid = false;
+                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                        }
                     }
                 }
             }

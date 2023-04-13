@@ -36,3 +36,9 @@ Table({Value:1},{Value:2},{Value:3},{Value:99},{Value:88},{Value:77},{Value:77},
 
 >> Collect(Table({x:1,y:2}), {x: 3}).y 
 Blank()
+
+>> Collect([1,2,3],{Value:"200"}).Value
+200
+
+>> Collect( [1,2,3], { Value:"11"+0 } )
+{Value:11}

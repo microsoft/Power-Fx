@@ -112,6 +112,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("Simple1.txt")]
         [InlineData("Collect.txt")]
+        [InlineData("Patch.txt")]
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
         [InlineData("ForAllMutate.txt")]
@@ -121,7 +122,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             //path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\ForAllMutate.txt";
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.PowerFxV1);
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
             var runner = new ReplRunner(engine) { NumberIsFloat = true };
