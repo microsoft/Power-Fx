@@ -80,6 +80,33 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("Foo(): Number {// comment \nSum(1, 1); Sum(2, 2); };Bar(): Number {Foo();};x=1;y=2;", 2, 2, false)]
+        [InlineData("Foo(x: /*comment\ncomment*/Number):/*comment*/Number = /*comment*/Abs(x);", 0, 1, false)]
+        [InlineData("x", 0, 0, true)]
+        [InlineData("x=", 0, 0, true)]
+        [InlineData("x=1", 1, 0, true)]
+        [InlineData("x=1;", 1, 0, false)]
+        [InlineData("x=1;Foo(", 1, 0, true)]
+        [InlineData("x=1;Foo(x", 1, 0, true)]
+        [InlineData("x=1;Foo(x:", 1, 0, true)]
+        [InlineData("x=1;Foo(x:Number", 1, 0, true)]
+        [InlineData("x=1;Foo(x:Number)", 1, 0, true)]
+        [InlineData("x=1;Foo(x:Number):", 1, 0, true)]
+        [InlineData("x=1;Foo(x:Number):Number", 1, 0, true)]
+        [InlineData("x=1;Foo(x:Number):Number = ", 1, 1, true)]
+        [InlineData("x=1;Foo(x:Number):Number = 10 * x", 1, 1, true)]
+        [InlineData("x=1;Foo(x:Number):Number = 10 * x;", 1, 1, false)]
+        [InlineData("x=1;Foo(:Number):Number = 10 * x;", 1, 0, true)]
+        public void NamedFormulaAndUdfTest(string script, int namedFormulaCount, int udfCount, bool expectErrors)
+        {
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script);
+
+            Assert.Equal(namedFormulaCount, parsedNamedFormulasAndUDFs.NamedFormulas.Count());
+            Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count());
+            Assert.Equal(expectErrors, parsedNamedFormulasAndUDFs.HasErrors);
+        }
+
+        [Theory]
         [InlineData("x=1;y=2;")]
         public void NamedFormulaTest(string script)
         {

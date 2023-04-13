@@ -39,6 +39,8 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
         /// </summary>
         TexlError EnsureError(DocumentErrorSeverity severity, TexlNode node, ErrorResourceKey errKey, params object[] args);
 
+        TexlError EnsureError(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, params object[] args);
+
         /// <summary>
         /// Adds an error to the container and returns the composed error value
         /// that was inserted.
