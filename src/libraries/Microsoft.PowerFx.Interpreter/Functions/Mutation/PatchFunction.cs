@@ -178,12 +178,12 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.
-                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion);
+                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
 
                 isValid = isValid && checkAggregateNames;
                 isSafeToUnion = checkAggregateNames;
 
-                if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
+                if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: true))
                     {
@@ -196,12 +196,12 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType, usePowerFxV1CompatibilityRules: true);
+                        retType = DType.Union(retType, coercionType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                     }
                 }
                 else if (isSafeToUnion)
                 {
-                    retType = DType.Union(retType, curType);
+                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                 }
             }
 

@@ -1188,6 +1188,63 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(10.0, result2.ToObject());
         }
 
+        [Theory]
+        [InlineData("ThisRecord.Field2", "_field2")] // row scope, no conflcit
+        [InlineData("Task", "_fieldTask")] // row scope wins the conflict, it's closer.         
+        [InlineData("[@Task]", "_globalTask")] // global scope
+        [InlineData("[@Task] & Task", "_globalTask_fieldTask")] // both in same expression
+        [InlineData("[@Task] & ThisRecord.Task", "_globalTask_fieldTask")] // both, fully unambiguous. 
+        [InlineData("With({Task : true}, Task)", true)] // With() wins, shadows rowscope. 
+        [InlineData("With({Task : true}, ThisRecord.Task)", true)] // With() also has ThisRecord, shadows previous rowscope.
+        [InlineData("With({Task : true}, [@Task])", "_globalTask")] // Globals.
+        [InlineData("With({Task : true} As T2, Task)", "_fieldTask")] // As avoids the conflict. 
+        [InlineData("With({Task : true} As T2, ThisRecord.Task)", "_fieldTask")] // As avoids the conflict. 
+        [InlineData("With({Task : true} As T2, ThisRecord.Field2)", "_field2")] // As avoids the conflict. 
+
+        // Errors
+        [InlineData("[@Field2]")] // error, doesn't exist in global scope. 
+        [InlineData("With({Task : true}, ThisRecord.Field2)")] // Error. ThisRecord doesn't union, it refers exclusively to With().
+        public void DisambiguationTest(string expr, object expected = null)
+        {            
+            var engine = new RecalcEngine();
+            
+            // Setup Global "Task", and RowScope with "Task" field.
+            var record = FormulaValue.NewRecordFromFields(
+                new NamedValue("Task", FormulaValue.New("_fieldTask")),
+                new NamedValue("Field2", FormulaValue.New("_field2")));
+
+            var globals = new SymbolTable();
+            var slot = globals.AddVariable("Task", FormulaType.String);
+            
+            var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type, allowThisRecord: true);
+
+            // ensure rowScope is listed first since that should get higher priority 
+            var symbols = ReadOnlySymbolTable.Compose(rowScope, globals); 
+                        
+            // Values 
+            var rowValues = ReadOnlySymbolValues.NewFromRecord(rowScope, record);
+            var globalValues = globals.CreateValues();
+            globalValues.Set(slot, FormulaValue.New("_globalTask"));
+
+            var runtimeConfig = new RuntimeConfig
+            {
+                Values = symbols.CreateValues(globalValues, rowValues)
+            };
+
+            var check = engine.Check(expr, symbolTable: symbols); // never throws
+
+            if (expected == null)
+            {
+                Assert.False(check.IsSuccess);
+                return;
+            }
+
+            var run = check.GetEvaluator();
+            var result = run.Eval(runtimeConfig);
+            
+            Assert.Equal(expected, result.ToObject());
+        }
+
         [Fact]
         public void GetVariableRecalcEngine()
         {
