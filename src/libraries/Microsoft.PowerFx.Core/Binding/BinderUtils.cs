@@ -1128,7 +1128,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 errorContainer.EnsureError(
-                    DocumentErrorSeverity.Warning,
+                    powerFxV1CompatibilityRules ? DocumentErrorSeverity.Severe : DocumentErrorSeverity.Warning,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                     typeLeft.GetKindString(),

@@ -221,6 +221,8 @@ namespace Microsoft.PowerFx
 
         private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
 
+        public IEnumerable<string> FunctionNames => _functions.FunctionNames;
+
         // Which enums are available. 
         // These do not compose - only bottom one wins. 
         // ComposedReadOnlySymbolTable will handle composition by looking up in each symbol table. 
