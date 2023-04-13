@@ -387,6 +387,11 @@ namespace Microsoft.PowerFx
                 canCoerce = value.TryCoerceTo(out DateTimeValue dateTimeResult);
                 result = dateTimeResult;
             }
+            else if (targetType == FormulaType.Decimal)
+            {
+                canCoerce = value.TryCoerceTo(out DecimalValue decimalResult);
+                result = decimalResult;
+            }
 
             return canCoerce;
         }
