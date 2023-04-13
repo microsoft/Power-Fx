@@ -40,5 +40,10 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             // Do nothing.
         }
+
+        public TexlError EnsureError(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, params object[] args)
+        {
+            return null;
+        }
     }
 }

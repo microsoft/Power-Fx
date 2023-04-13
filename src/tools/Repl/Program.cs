@@ -681,10 +681,8 @@ namespace Microsoft.PowerFx
             {
                 var column = 0;
                 var funcList = string.Empty;
-#pragma warning disable CS0618 // Type or member is obsolete
-                List<string> funcNames = _engine.Config.FunctionInfos.Select(x => x.Name).Distinct().ToList();
-#pragma warning restore CS0618 // Type or member is obsolete
-
+                List<string> funcNames = _engine.SupportedFunctions.FunctionNames.ToList();
+                
                 funcNames.Sort();
                 foreach (var func in funcNames)
                 {
