@@ -74,5 +74,15 @@ namespace Microsoft.PowerFx.Core.App.ErrorContainers
                 _errors.Errors(node, nodeType, schemaDifference, schemaDifferenceType);
             }
         }
+
+        public TexlError EnsureError(DocumentErrorSeverity severity, Token token, ErrorResourceKey errKey, params object[] args)
+        {
+            if (severity <= _maximumSeverity)
+            {
+                return _errors.EnsureError(severity, token, errKey, args);
+            }
+
+            return null;
+        }
     }
 }

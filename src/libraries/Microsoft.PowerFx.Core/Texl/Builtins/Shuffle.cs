@@ -12,14 +12,12 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Shuffle(source:*)
-    internal sealed class ShuffleFunction : BuiltinFunction
+    internal sealed class ShuffleFunction : FunctionWithTableInput
     {
         // Multiple invocations with the same args may result in different results.
         public override bool IsStateless => false;
 
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public ShuffleFunction()
             : base("Shuffle", TexlStrings.AboutShuffle, FunctionCategories.Table, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)

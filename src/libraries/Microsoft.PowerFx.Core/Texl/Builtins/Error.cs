@@ -26,8 +26,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public ErrorFunction()
             : base("Error", TexlStrings.AboutError, FunctionCategories.Logical, DType.ObjNull, 0, 1, 1)
         {
@@ -40,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.ErrorKindEnumString };
+            return new List<string>() { LanguageConstants.ErrorKindEnumString };
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -56,7 +54,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var acceptedFields = reifiedError.GetNames(DPath.Root);
             var requiredKindField = acceptedFields.Where(tn => tn.Name == "Kind").First();
             Contracts.Assert(requiredKindField.Type.IsEnum || requiredKindField.Type.Kind == DKind.Number);
-            var optionalFields = acceptedFields.Where(tn => tn.Name != "Kind");
 
             returnType = DType.ObjNull;
             nodeToCoercedTypeMap = null;
@@ -101,22 +98,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 argumentKindType = argumentKindType.GetEnumSupertype();
             }
 
-            if (argumentKindType.Kind != requiredKindField.Type.Kind)
-            {
-                errors.EnsureError(
-                    argument,
-                    TexlStrings.ErrBadSchema_ExpectedType,
-                    reifiedError.GetKindString());
-                errors.Error(
-                    argument,
-                    TexlStrings.ErrBadRecordFieldType_FieldName_ExpectedType,
-                    requiredKindField.Name.Value,
-                    "ErrorKind");
-                return false;
-            }
-
             var valid = true;
-
             var record = argument.AsRecord();
             foreach (var name in names)
             {
@@ -145,9 +127,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     acceptedFields.Where(field =>
 
                         // Kind has already been handled before
-                        field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
+                        ((requiredKindField.Type.Kind == DKind.Number) ? true : field.Name != "Kind") && names.Any(name => name.Name == field.Name)));
 
-                typeValid = CheckType(argument, argumentType, expectedOptionalFieldsRecord, errors, true, out matchedWithCoercion);
+                typeValid = CheckType(context, argument, argumentType, expectedOptionalFieldsRecord, errors, true, out matchedWithCoercion);
             }
             else
             {
@@ -157,7 +139,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                         // Kind has already been handled before
                         field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
-                typeValid = CheckType(argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);
+                typeValid = CheckType(context, argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);
             }
 
             if (!typeValid)

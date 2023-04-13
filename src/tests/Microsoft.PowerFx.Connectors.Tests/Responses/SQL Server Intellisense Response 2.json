@@ -1,0 +1,9 @@
+{
+  "@odata.context": "https://sql-dfwus.azconn-dfwus-001.p.azurewebsites.net/$metadata#databases",
+  "value": [
+    {
+      "Name": "default",
+      "DisplayName": "Use connection settings (connectortest)"
+    }
+  ]
+}

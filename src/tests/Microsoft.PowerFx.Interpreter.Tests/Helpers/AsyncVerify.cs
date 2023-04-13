@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Microsoft.PowerFx.Tests
             var task = BeginAsyncCallWorker(idx);
             var timer = Task.Delay(TimeSpan.FromSeconds(10));
 
-            if (await Task.WhenAny(task, timer) == task)
+            if (await Task.WhenAny(task, timer).ConfigureAwait(false) == task)
             {
                 return; // Success
             }
@@ -44,7 +45,7 @@ namespace Microsoft.PowerFx.Tests
                 Debugger.Break();
             }
 
-            await task;
+            await task.ConfigureAwait(false);
         }
 
         private Task BeginAsyncCallWorker(int idx)
@@ -82,7 +83,7 @@ namespace Microsoft.PowerFx.Tests
                 rtConfig.AddService(setup.TimeZoneInfo);
             }
 
-            var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(), runtimeConfig: rtConfig);
+            var task = engine.EvalAsync(expr, CancellationToken.None, options: setup.Flags.ToParserOptions(new CultureInfo("en-US")), runtimeConfig: rtConfig);
 
             var i = 0;
             while (HasOutanding)
@@ -98,7 +99,7 @@ namespace Microsoft.PowerFx.Tests
                 await Task.Yield();
             }
 
-            var result = await task;
+            var result = await task.ConfigureAwait(false);
             return result;
         }
     }

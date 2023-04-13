@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Public;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -58,13 +55,14 @@ namespace Microsoft.PowerFx
                 if (symbolTable.Functions.Any())
                 {
                     tw.WriteLine();
-                    tw.WriteLine($"{indent} Functions ({symbolTable.Functions.Count()}) total:"); 
-                    foreach (var func in symbolTable.Functions)
+                    tw.WriteLine($"{indent} Functions ({symbolTable.Functions.Count()}) total:");
+
+                    foreach (var funcName in symbolTable.Functions.FunctionNames)
                     {
-                        tw.WriteLine($"{indent} {func.Name}");
+                        tw.WriteLine($"{indent} {funcName}");
                     }
                 }
-            }             
+            }
 
             tw.WriteLine();
         }
@@ -111,12 +109,12 @@ namespace Microsoft.PowerFx
         {
             var settings = new FormulaValueSerializerSettings
             {
-                 UseCompactRepresentation = true
+                UseCompactRepresentation = true
             };
             var sb = new StringBuilder();
             value.ToExpression(sb, settings);
             return sb.ToString();
-        }        
+        }
 
         public static string Dump(TexlNode parseNode)
         {

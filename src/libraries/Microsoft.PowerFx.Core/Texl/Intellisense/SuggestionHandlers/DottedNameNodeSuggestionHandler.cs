@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Intellisense
 
                 var isOneColumnTable = leftType.IsColumn
                                         && leftNode.Kind == NodeKind.DottedName
-                                        && leftType.Accepts(intellisenseData.Binding.GetType(((DottedNameNode)leftNode).Left));
+                                        && leftType.Accepts(intellisenseData.Binding.GetType(((DottedNameNode)leftNode).Left), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
 
                 if (cursorPos < ident.Token.Span.Min)
                 {
@@ -160,7 +160,7 @@ namespace Microsoft.PowerFx.Intellisense
 
                 return data.TryGetEnumSymbol(firstNameInfo.Name, binding, out enumSymbol);
             }
-
+            
             private static bool TryGetNamespaceFunctions(TexlNode node, TexlBinding binding, out IEnumerable<TexlFunction> functions)
             {
                 Contracts.AssertValue(node);

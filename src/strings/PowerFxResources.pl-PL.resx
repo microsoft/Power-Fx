@@ -567,6 +567,24 @@
     <value>Łączy kilka wartości tekstowych w jedną wartość tekstową.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Konwertuje „tekst” reprezentujący liczbę na wartość dziesiętną.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kod języka do użycia podczas konwertowania wartości.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Wartość tekstowa do przekonwertowania na wartość dziesiętną.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Konwertuje „tekst” reprezentujący liczbę na wartość zmiennoprzecinkową.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kod języka do użycia podczas konwertowania wartości.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Wartość tekstowa do przekonwertowania na wartość zmiennoprzecinkową.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Wartość, która jest zwracana, jeśli jest to pierwszy argument bez błędu.</value>
+    <value>Wartość, która jest zwracana, jeśli poprzedni argument zawierał błąd.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Wyrażenie, które jest oceniane względem wierszy w elemencie „źródło” i zapewnia wartości na potrzeby sortowania.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Rosnąco lub malejąco</value>
+    <value>SortOrder.Ascending lub SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sortuje element podany w parametrze „źródło” w oparciu o kolumnę. Opcjonalnie za pomocą parametru „kolejność” można określić kolejność sortowania.</value>
@@ -889,7 +908,8 @@
     <value>Unikatowa nazwa kolumny.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Rosnąco lub malejąco</value>
+    <value>SortOrder.Ascending lub SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sortuje element podany w parametrze „źródło” w oparciu o indeks pasujących wartości w określonej kolumnie.</value>
@@ -1849,6 +1869,10 @@
     <value>Nieprawidłowy format.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument nie reprezentuje prawidłowej wartości daty lub godziny.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>To źródło danych jest nieprawidłowe. Napraw błąd w okienku „Źródła danych”, klikając opcje „Zawartość -&gt; Źródła danych” lub „Widok -&gt; Opcje”</value>
     
@@ -2378,7 +2402,7 @@
     <value>Liczba jednostek do dodania. Ta liczba może być ujemna.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jednostka do użycia: Years (Lata), Quarters (Kwartały), Months (Miesiące), Days (Dni), Hours (Godziny), Minutes (Minuty), Seconds (Sekundy) lub Milliseconds (Milisekundy).</value>
+    <value>Jednostka, która ma być używana. Może to być jedna z następujących jednostek: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds lub TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Data zakończenia operacji różnicowej.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jednostka, w której zostanie wyrażony wynik: Years (Lata), Quarters (Kwartały), Months (Miesiące), Days (Dni), Hours (Godziny), Minutes (Minuty), Seconds (Sekundy) lub Milliseconds (Milisekundy).</value>
+    <value>Jednostka, za pomocą której ma zostać wyrażony wynik. Może to być jedna z następujących jednostek: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds lub TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Kula ziemska</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Kula ziemska — nie połączono</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Kula ziemska — odświeżanie</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Kula ziemska — oczekujące zmiany</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Kula ziemska — ostrzeżenie</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Kula ziemska — błąd</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Upewnij się, że podano tekst dla identyfikatora. Ten błąd występuje, gdy identyfikator zawiera same wartości puste lub spacje.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Nie można porównać wartości typu {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Niezgodne typy do porównania. Nie można porównywać następujących typów: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Ta funkcja jest niejednoznaczna, ponieważ zawiera wyrażenia lambda oraz identyfikatory kolumn dla tego samego argumentu.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Opcja BooleanOptionSet o wartości „{0}” nie jest obsługiwana.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Wartość opcji {0} nie jest wartością oczekiwanego typu {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Zwraca nazwę logiczną danej wartości zestawu opcji.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opcja</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Wartość zestawu opcji, której nazwa logiczna zostanie zwrócona.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Pobieraj domyślny zestaw ustawień regionalnych w czasie wykonywania.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Koduje ciąg adresu URL, zamieniając pewne znaki niealfanumeryczne na znak % i liczbę szesnastkową.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>adres URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Adres URL do zakodowania.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>„{0}” to rozpoznawana, ale nieobsługiwana funkcja.</value>
     
   </data>
 </root>

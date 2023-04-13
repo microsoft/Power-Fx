@@ -567,6 +567,24 @@
     <value>Birçok metin değerini tek bir metin değeri olarak birleştirir.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Sayı temsil eden bir "metin" değerini ondalık bir değere dönüştürür.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Değer dönüştürme işleminde kullanılacak dil kodu.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Ondalık değerine dönüştürülecek metin değeri.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Sayı temsil eden bir "metin" değerini kayan bir değere dönüştürür.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Değer dönüştürme işleminde kullanılacak dil kodu.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Kayan değere dönüştürülecek metin değeri.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>metin</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Hata olmayan ilk bağımsız değişkense döndürülecek değer.</value>
+    <value>Önceki bağımsız değişken hataysa döndürülecek değer.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>'source' içindeki satırlarda değerlendirilen ve sıralama için değerler sağlayan bir ifade.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Artan veya Azalan</value>
+    <value>SortOrder.Ascending veya SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>İsteğe bağlı bir sıralama 'order' değeri belirterek 'source' öğesini sütuna göre sıralar.</value>
@@ -889,7 +908,8 @@
     <value>Benzersiz bir sütun adı.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Artan veya Azalan</value>
+    <value>SortOrder.Ascending veya SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>'source' öğesini belirtilen sütundaki eşleşen değerler dizinine göre sıralar.</value>
@@ -1849,6 +1869,10 @@
     <value>Geçersiz biçim.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Bağımsız değişken, geçerli bir tarih veya saat değerini temsil etmiyor.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Bu Veri kaynağı geçersiz. Lütfen sırasıyla şunlara tıklayarak "Veri kaynakları" bölmesindeki hatayı düzeltin: "İçerik -&gt; Veri kaynakları" veya "Görünüm -&gt; Seçenekler"</value>
     
@@ -2378,7 +2402,7 @@
     <value>Eklenecek birim sayısı. Sayı negatif olabilir.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Kullanılacak birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    <value>Kullanılacak birim. TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds değerlerinden biri olabilir.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Fark alma işlemi için bitiş tarihi.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Sonucun ifade edileceği birim (Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds seçeneklerinden biri).</value>
+    <value>Sonucun ifade edileceği birim. TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds değerlerinden biri olabilir.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Dünya</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Küre - Bağlı değil</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Küre - Yenile</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Küre - Değişiklikler beklemede</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Küre - Uyarı</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Küre - Hata</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Tanımlayıcınız için metne sahip olduğunuzdan emin olun. Bu hata, tanımlayıcı yalnızca boşluklardan oluştuğunda oluşur.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>{0} türündeki değerler karşılaştırılamıyor.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Karşılaştırma için uyumsuz türler. Bu türler karşılaştıramaz: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Bu işlev belirsiz, aynı bağımsız değişken için Lambda ifadesi ve sütun tanımlayıcıları içeriyor.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>BooleanOptionSet seçeneği {0} desteklenmiyor.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>{0} seçeneğinin değeri, beklenen {1} türünde değil.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Belirtilen seçenek kümesi değerinin mantıksal adını döndürür.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>seçenek</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Mantıksal adı döndürülecek bir seçenek kümesi değeri.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Çalışma zamanında ayarlanan varsayılan yerel ayarı alın.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Bir URL dizesini kodlayarak alfasayısal olmayan bazı karakterleri % ve onaltılık sayıyla değiştirir.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Kodlanacak bir URL.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' tanınan fakat desteklenmeyen bir işlev.</value>
     
   </data>
 </root>

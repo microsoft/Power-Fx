@@ -59,6 +59,13 @@ namespace Microsoft.PowerFx
 
         public string MessageKey { get; set; }
 
+        public object[] MessageArgs
+        {
+            get => _messageArgs;
+            
+            set => _messageArgs = value;
+        }
+
         /// <summary>
         /// A warning does not prevent executing the error. See <see cref="Severity"/> for more details.
         /// </summary>
@@ -87,13 +94,13 @@ namespace Microsoft.PowerFx
                     Span = this.Span,
                     Kind = this.Kind,
                     Severity = this.Severity,
-                    MessageKey = this.MessageKey
-                };
+                    MessageKey = this.MessageKey,
 
-                // New message can be localized
-                error._message = null; // will be lazily computed in new locale 
-                error._messageArgs = this._messageArgs;
-                error._messageLocale = culture;
+                    // New message can be localized
+                    _message = null, // will be lazily computed in new locale 
+                    _messageArgs = this._messageArgs,
+                    _messageLocale = culture
+                };
 
                 return error;
             }
@@ -147,7 +154,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                return errors.Select(x => ExpressionError.New(x)).ToArray();
+                return errors.Select(x => ExpressionError.New(x, CultureInfo.InvariantCulture)).ToArray();
             }
         }
 

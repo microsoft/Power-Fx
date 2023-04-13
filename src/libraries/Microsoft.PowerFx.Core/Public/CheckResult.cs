@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
@@ -17,7 +19,7 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{
+{ 
     /// <summary>
     /// Holds work such as parsing, binding, error checking done on a single expression. 
     /// Different options require different work. 
@@ -39,6 +41,13 @@ namespace Microsoft.PowerFx
 
         private ParserOptions _parserOptions;
 
+        private CultureInfo _defaultErrorCulture;
+
+        // We must call all Set() operations before calling Apply(). 
+        // This is because Apply() methods can be called in lazy ways, and so we need a gaurantee
+        // that the Set() conditions are fixed. 
+        private bool _beginApply;
+
         // Information for binding. 
         private bool _setBindingCalled;
         internal ReadOnlySymbolTable _symbols; // can be null
@@ -57,7 +66,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Engine used to handle Apply operations.</param>
         public CheckResult(Engine source)
         {
-            this._engine = source ?? throw new ArgumentNullException(nameof(source));
+            this._engine = source ?? throw new ArgumentNullException(nameof(source));            
         }
 
         internal Engine Engine => _engine;
@@ -74,13 +83,23 @@ namespace Microsoft.PowerFx
         }
 
         #region Set info from User. 
-
-        public CheckResult SetText(ParseResult parse)
+        private void VerifyEngine([CallerMemberName] string memberName = "")
         {
             if (_engine == null)
             {
-                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
+                throw new InvalidOperationException($"Can't call {memberName} without an engine.");
             }
+
+            // Can't call Set*() methods after the init phase.
+            if (_beginApply)
+            {
+                throw new InvalidOperationException($"Can't call {memberName} after calling an Apply*() method.");
+            }
+        }
+
+        public CheckResult SetText(ParseResult parse)
+        {
+            VerifyEngine();
 
             if (parse == null)
             {
@@ -101,10 +120,7 @@ namespace Microsoft.PowerFx
 
         public CheckResult SetText(string expression, ParserOptions parserOptions = null)
         {
-            if (_engine == null)
-            {
-                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
-            }
+            VerifyEngine();
 
             expression = expression ?? throw new ArgumentNullException(nameof(expression));
 
@@ -115,18 +131,24 @@ namespace Microsoft.PowerFx
 
             _expression = expression;
             _parserOptions = parserOptions ?? Engine.GetDefaultParserOptionsCopy();
-            this.ParserCultureInfo = _parserOptions.Culture;
+            ParserCultureInfo = _parserOptions.Culture;
 
+            return this;
+        }
+
+        // Set the default culture for localizing error messages. 
+        public CheckResult SetDefaultErrorCulture(CultureInfo culture)
+        {
+            VerifyEngine();
+
+            this._defaultErrorCulture = culture;
             return this;
         }
 
         // Symbols could be null if no additional symbols are provided. 
         public CheckResult SetBindingInfo(ReadOnlySymbolTable symbols)
         {
-            if (_engine == null)
-            {
-                throw new InvalidOperationException($"Can't call {nameof(SetText)} without an engine.");
-            }
+            VerifyEngine();
 
             if (_setBindingCalled)
             {
@@ -156,10 +178,14 @@ namespace Microsoft.PowerFx
         }
 
         private FormulaType _expectedReturnType;
+        private bool _allowCoerceToType = false;
 
-        public CheckResult SetExpectedReturnValue(FormulaType type)
+        public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
+            VerifyEngine();
+
             _expectedReturnType = type;
+            _allowCoerceToType = allowCoerceTo;
             return this;
         }
 
@@ -261,7 +287,7 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public IEnumerable<ExpressionError> GetErrorsInLocale(CultureInfo culture)
         {
-            culture ??= this.ParserCultureInfo;
+            culture ??= _defaultErrorCulture ?? ParserCultureInfo;
 
             foreach (var error in this._errors)
             {
@@ -286,7 +312,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key));
+        internal bool HasDeferredArgsWarning => _errors.Any(x => x.IsWarning && x.MessageKey.Equals(TexlStrings.WarnDeferredType.Key, StringComparison.Ordinal));
 
         private ReadOnlySymbolTable _allSymbols;
 
@@ -351,6 +377,7 @@ namespace Microsoft.PowerFx
                 throw new InvalidOperationException($"Must call {nameof(SetText)} before calling ApplyParse().");
             }
 
+            _beginApply = true;
             if (this.Parse == null)
             {
                 var result = Engine.Parse(_expression, Engine.Config.Features, _parserOptions);
@@ -417,8 +444,22 @@ namespace Microsoft.PowerFx
 
                 if (this.ReturnType != null && this._expectedReturnType != null)
                 {
-                    var sameType = this._expectedReturnType == this.ReturnType;
-                    if (!sameType)
+                    bool notCoerceToType = false;
+                    if (_allowCoerceToType)
+                    {
+                        if (this._expectedReturnType != FormulaType.String)
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
+                        {
+                            notCoerceToType = true;
+                        }
+                    }
+
+                    var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
+                    if (!valid)
                     {
                         _errors.Add(new ExpressionError
                         {
@@ -465,7 +506,21 @@ namespace Microsoft.PowerFx
                 // Errors require Binding, Parse 
                 var binding = ApplyBindingInternal();
 
-                // Plus engine's may have additional constaints. 
+                if (this.IsSuccess && _engine.IRTransformList?.Count > 0)
+                {
+                    // IR alone won't generate errors. 
+                    // But if there are additional transforms, those could generate errors. 
+                    try
+                    {
+                        this.ApplyIR();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // On errors, ApplyIR will add to list and then throw. 
+                    }
+                }
+
+                // Plus engine's may have additional constraints. 
                 // PostCheck may refer to binding. 
                 var extraErrors = Engine.InvokePostCheck(this);
 
@@ -474,7 +529,7 @@ namespace Microsoft.PowerFx
 
             return this.Errors;
         }
-
+                
         internal IRResult ApplyIR()
         {
             if (_irresult == null)
@@ -484,6 +539,19 @@ namespace Microsoft.PowerFx
                 this.ThrowOnErrors();
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
+                var list = _engine.IRTransformList;
+                if (list != null)
+                {
+                    foreach (var transform in list)
+                    {
+                        irnode = transform.Transform(irnode, _errors);
+
+                        // Additional errors from phases. 
+                        // Stop any further processing if we have errors. 
+                        this.ThrowOnErrors();
+                    }
+                }                
+
                 _irresult = new IRResult
                 {
                     TopNode = irnode,
@@ -492,6 +560,14 @@ namespace Microsoft.PowerFx
             }
 
             return _irresult;
+        }
+
+        // pretty print IR for debugging purposes, used by the Console REPL
+        public string PrintIR()
+        {
+            var topNode = this.ApplyIR().TopNode;
+            var topStr = topNode.ToString();
+            return topStr;
         }
 
         /// <summary>
@@ -510,7 +586,9 @@ namespace Microsoft.PowerFx
             return FormulaType.Build(type);
         }
 
-        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this.Binding, flags);
+        // Called by language server to get custom tokens.
+        // If binding is available, returns context sensitive tokens.  $$$
+        internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this._binding, flags);
 
         private string _expressionInvariant;
 

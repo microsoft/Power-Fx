@@ -1,4 +1,4 @@
-// ROUNDUP(NUMBER, NUMBER_OF_DIGITS)
+// ROUNDUP(NUMBER, NUMBER_OF_DIGITS), away from zero
 
 // ******** INTEGER PARAMETERS ********
 

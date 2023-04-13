@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
@@ -33,8 +34,6 @@ namespace Microsoft.PowerFx
         public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
         internal BigInteger LamdaParamMask;
-
-        public override bool SupportsParamCoercion => true;
 
         public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
             : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
@@ -123,7 +122,7 @@ namespace Microsoft.PowerFx
 
             var arg1 = argTypes[1];
 
-            if (!arg0.Accepts(arg1))
+            if (!arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
                 return false;
@@ -135,15 +134,15 @@ namespace Microsoft.PowerFx
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var result = _impl(args);
-            return await result;
+            return await result.ConfigureAwait(false);
         }
     }
 
     /// <summary>
     /// Base class for importing a C# function into Power Fx. 
     /// Dervied class should follow this convention:
-    /// - class name should folow this convention: "[Method Name]" + "Function"
-    /// - it should have a public static  method 'Execute'. this class will reflect over that signature to import to power fx. 
+    /// - class name should folow this convention: "[Method Name]" + "Function" + optional postfix for function orevloading
+    /// - it should have a public static  method 'Execute'. this class will reflect over that signature to import to Power Fx. 
     /// </summary>
     public abstract class ReflectionFunction
     {
@@ -170,11 +169,7 @@ namespace Microsoft.PowerFx
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
         {
             var t = GetType();
-            var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-            if (m == null)
-            {
-                throw new InvalidOperationException($"Missing Execute method");
-            }
+            var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
 
             if (returnType._type.IsDeferred || paramTypes.Any(type => type._type.IsDeferred))
             {
@@ -223,27 +218,16 @@ namespace Microsoft.PowerFx
             if (_info == null)
             {
                 var t = GetType();
-
                 var suffix = "Function";
-                var name = t.Name.Substring(0, t.Name.Length - suffix.Length);
-
-                var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-                if (m == null)
-                {
-                    throw new InvalidOperationException($"Missing Execute method");
-                }
-
+                var name = t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
+                var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
                 var returnType = GetType(m.ReturnType);
-
                 var paramTypes = new List<FormulaType>();
-
                 var isAsync = m.ReturnType.BaseType == typeof(Task);
-
                 var parameters = m.GetParameters();
-
                 var configType = default(Type);
-
                 BigInteger lamdaParamMask = default;
+
                 for (var i = 0; i < parameters.Length; i++)
                 {
                     if (i == parameters.Length - 1 && isAsync)
@@ -388,7 +372,7 @@ namespace Microsoft.PowerFx
                 }
                 else if (arg is LambdaFormulaValue lambda)
                 {
-                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync();
+                    Func<Task<BooleanValue>> argLambda = async () => (BooleanValue)await lambda.EvalAsync().ConfigureAwait(false);
                     arg = argLambda;
                 }
 
@@ -425,7 +409,7 @@ namespace Microsoft.PowerFx
                 var resultType = result.GetType().GenericTypeArguments[0];
                 try
                 {
-                    result = await Unwrap(result, resultType);
+                    result = await Unwrap(result, resultType).ConfigureAwait(false);
                 }
                 catch (CustomFunctionErrorException customFunctionErrorException)
                 {
@@ -435,16 +419,11 @@ namespace Microsoft.PowerFx
 
             var formulaResult = (FormulaValue)result;   
             
-            if (formulaResult == null)
-            {
-                formulaResult = FormulaValue.NewBlank(_info.RetType);
-            }
+            formulaResult ??= FormulaValue.NewBlank(_info.RetType);
 
-            if (formulaResult.Type != _info.RetType)
+            if (!formulaResult.Type._type.Accepts(_info.RetType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
             {
-                return CommonErrors.CustomError(
-                    formulaResult.IRContext,
-                    string.Format("Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
+                return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
             }
 
             return formulaResult;
@@ -456,7 +435,7 @@ namespace Microsoft.PowerFx
             var helper = Activator.CreateInstance(t1);
             var t2 = (Helper)helper;
 
-            FormulaValue result = await t2.Unwrap(obj);
+            FormulaValue result = await t2.Unwrap(obj).ConfigureAwait(false);
 
             return result;
         }
@@ -474,7 +453,7 @@ namespace Microsoft.PowerFx
             public override async Task<FormulaValue> Unwrap(object obj)
             {
                 var t = (Task<T>)obj;
-                var result = await t;
+                var result = await t.ConfigureAwait(false);
                 return result;
             }
         }

@@ -2,11 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -32,6 +31,8 @@ namespace Microsoft.PowerFx.Types
 
         public static FormulaType Number { get; } = new NumberType();
 
+        public static FormulaType Decimal { get; } = new DecimalType();
+
         public static FormulaType String { get; } = new StringType();
 
         public static FormulaType Time { get; } = new TimeType();
@@ -55,7 +56,9 @@ namespace Microsoft.PowerFx.Types
         public static FormulaType Deferred { get; } = new DeferredType();
 
         public static FormulaType BindingError { get; } = new BindingErrorType();
-        
+
+        public static FormulaType Void { get; } = new Void();
+
         /// <summary>
         /// Internal use only to represent an arbitrary (un-backed) option set value.
         /// Should be removed if possible.
@@ -108,7 +111,7 @@ namespace Microsoft.PowerFx.Types
 
         internal static FormulaType[] GetValidUDFPrimitiveTypes()
         {
-            FormulaType[] validTypes = { Blank, Boolean, Number, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
+            FormulaType[] validTypes = { Blank, Boolean, Number, Decimal, String, Time, Date, DateTime, DateTimeNoTimeZone, Hyperlink, Color, Guid };
             return validTypes;
         }
 
@@ -116,7 +119,7 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (FormulaType formulaType in GetValidUDFPrimitiveTypes())
             {
-                if (formulaType.ToString().Equals(formula))
+                if (string.Equals(formulaType.ToString(), formula, StringComparison.Ordinal))
                 {
                     return formulaType;
                 }
@@ -142,6 +145,7 @@ namespace Microsoft.PowerFx.Types
                 case DKind.Table:
                     return new TableType(type);
                 case DKind.Number: return Number;
+                case DKind.Decimal: return Decimal;
                 case DKind.String: return String;
                 case DKind.Boolean: return Boolean;
                 case DKind.Currency: return Number; // TODO: validate
@@ -190,6 +194,10 @@ namespace Microsoft.PowerFx.Types
                     }
 
                     return new TableType(type);
+                case DKind.Deferred:
+                    return Deferred;
+                case DKind.Void: 
+                    return Void;
                 default:
                     return new UnsupportedType(type);
             }

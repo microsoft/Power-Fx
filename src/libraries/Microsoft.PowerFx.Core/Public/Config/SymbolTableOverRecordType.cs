@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -74,9 +72,17 @@ namespace Microsoft.PowerFx
         {
             return slot.SlotIndex == int.MaxValue;
         }
-
-        internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
+                
+        bool INameResolver.Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences)
         {
+            if (preferences.HasFlag(NameLookupPreferences.GlobalsOnly))
+            {
+                // Global, specified by [@name]  syntax, mean we skip RowScope. 
+
+                nameInfo = default;
+                return false;
+            }
+        
             if (_allowThisRecord)
             {
                 if (name == TexlBinding.ThisRecordDefaultName)
@@ -138,16 +144,21 @@ namespace Microsoft.PowerFx
         {
             var hasDisplayName = DType.TryGetDisplayNameForColumn(_type._type, logicalName, out var displayName);
 
-            if (!_map.TryGetValue(logicalName, out var data))
-            {                                                
-                var slotIdx = _map.Count;
-
-                data = new NameSymbol(logicalName, _mutable)
+            NameSymbol data;
+            lock (_map)
+            {
+                if (!_map.TryGetValue(logicalName, out data))
                 {
-                    Owner = this,
-                    SlotIndex = slotIdx
-                };
-                _map.Add(logicalName, data);
+                    // Slot is based on map count, so whole operation needs to be under single lock. 
+                    var slotIdx = _map.Count;
+
+                    data = new NameSymbol(logicalName, _mutable)
+                    {
+                        Owner = this,
+                        SlotIndex = slotIdx
+                    };
+                    _map.Add(logicalName, data);
+                }
             }
 
             return new NameLookupInfo(

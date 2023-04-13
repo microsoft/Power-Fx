@@ -38,6 +38,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Number };
             }
 
+            public void Visit(DecimalType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Decimal };
+            }
+
             public void Visit(StringType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.String };
@@ -98,6 +103,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             public void Visit(BindingErrorType type)
             {
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Error };
+            }
+
+            public void Visit(Types.Void type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Void };
             }
 
             #endregion

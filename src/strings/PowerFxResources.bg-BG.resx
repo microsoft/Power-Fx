@@ -567,6 +567,24 @@
     <value>Съединява няколко текстови стойности в една текстова стойност.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>The text value to convert to a Decimal value.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Float value.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>The text value to convert to a Float value.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>текст</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Стойност, която се връща, ако е първият аргумент, който не е грешка.</value>
+    <value>Стойност, която се връща, ако предишният аргумент е грешка.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Израз, който се изчислява върху редове в „източник“ и предоставя стойности за сортиране.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Възходящ или низходящ</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сортира „източник“, базирано на колоната, опционално указвайки „ред“ на сортирането.</value>
@@ -889,7 +908,8 @@
     <value>Уникално име на колона.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Възходящ или низходящ</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Сортира „източник“, базирано на индекса от съвпадащи стойности в указаната колона.</value>
@@ -1849,6 +1869,10 @@
     <value>Невалиден формат.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Аргументът не представлява валидна стойност за дата или час.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Този източник на данни е невалиден. Коригирайте грешката в прозореца „Източници на данни“, като щракнете върху „Съдържание -&gt; Източници на данни“ или „Преглед -&gt; Опции“</value>
     
@@ -2378,7 +2402,7 @@
     <value>Брой единици за добавяне. Числото може да е отрицателно.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Единицата за използване, която може да е едно от следните: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Единицата, която да се използва. Може да бъде една от следните: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Крайна дата за другата операция.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Единицата, в която да се изрази резултатът, която може да е едно от следните: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Единицата, в която да се изрази резултатът. Може да бъде една от следните: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Глобус</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Глобус – Няма връзка</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Глобус – Обновяване</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Глобус – Чакащи промени</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Глобус – Предупреждение</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Глобус – Грешка</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Уверете се, че имате текст за вашия идентификатор. Тази грешка възниква, когато идентификаторът се състои изцяло от празни места или интервали.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Не могат да се сравнят стойности от тип {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Несъвместими типове за сравнение. Тези типове не могат да се сравняват: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Тази функция е двусмислена: съдържа ламбда-изрази и идентификатори на колони за един и същ аргумент.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Опцията BooleanOptionSet {0} не се поддържа.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Стойността на опцията {0} не е от очакван тип {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Връща логическото име на дадената стойност на набор от опции.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>опция</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Стойност на набор от опции, чието логическо име ще бъде върнато.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Получаване на езиковата променлива по подразбиране, зададена по време на изпълнение.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Кодира низ за URL адрес, замествайки определени знаци, които не са букви и цифри, с % и шестнадесетично число.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL адрес</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL адрес, който да бъде кодиран.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' is a recognized but not supported function.</value>
     
   </data>
 </root>

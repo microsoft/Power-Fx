@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class ValueTests
     {
         private static readonly TypeMarshallerCache _cache = new TypeMarshallerCache();
+        private static int _count = 0;
 
         [Theory]
         [InlineData(true, "true")]
@@ -275,16 +276,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             TableType type = (TableType)value.Type;
 
             TableType typeExpected = TableType.Empty()
-                .Add(new NamedFormulaType("Value", FormulaType.Number));
+                .Add(new NamedFormulaType("Value", FormulaType.Decimal));
             Assert.Equal(typeExpected, type);
 
             // Another way to compare
             var field1 = type.GetFieldTypes().First();
             Assert.Equal("Value", field1.Name);
-            Assert.Equal(FormulaType.Number, field1.Type);
+            Assert.Equal(FormulaType.Decimal, field1.Type);
 
             RecordValue row0 = value.Rows.First().Value;
-            Assert.Equal(1.0, row0.GetField("Value").ToObject());
+            Assert.Equal(1m, row0.GetField("Value").ToObject());
 
             var len = value.Rows.Count();
             Assert.Equal(3, len);
@@ -292,7 +293,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Converts to single column 
             var obj = value.ToObject();
 
-            Assert.Equal(new[] { 1.0, 2.0, 3.0 }, (ICollection)obj);
+            Assert.Equal(new[] { 1m, 2m, 3m }, (ICollection)obj);
 
             var resultStr = value.Dump();
             Assert.Equal("Table({Value:1},{Value:2},{Value:3})", resultStr);
@@ -357,6 +358,36 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(3, combinedError.Errors.Count);
             Assert.All(combinedError.Errors, (e) => e.Kind = ErrorKind.Custom);
             Assert.Equal("test1", combinedError.Errors.First().Message);
+        }
+
+        // Ensure the enumeration is only traversed one.
+        [Fact]
+        public void NewRecordFromFieldsTest()
+        {
+            RecordValue record = FormulaValue.NewRecordFromFields(CreateFields());
+
+            Assert.Equal(1, _count);
+        }
+
+        private IEnumerable<NamedValue> CreateFields()
+        {
+            _count++;
+
+            yield return new NamedValue("Num", FormulaValue.New(12));            
+            yield return new NamedValue("Str", FormulaValue.New("test string"));
+            yield return new NamedValue("Bool", FormulaValue.New(true));
+        }
+
+        [Fact]
+        public void VoidValueTest()
+        {
+            var formulaValue = FormulaValue.NewVoid();
+            Assert.Throws<InvalidOperationException>(() => formulaValue.ToObject());
+
+            Assert.Equal(FormulaType.Void, formulaValue.Type);
+
+            var resultStr = formulaValue.Dump();
+            Assert.Equal("If(true, {test:1}, \"Mismatched args (result of the expression can't be used).\")", resultStr);
         }
     }
 

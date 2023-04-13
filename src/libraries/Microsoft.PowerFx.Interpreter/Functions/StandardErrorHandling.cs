@@ -5,11 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -61,48 +58,27 @@ namespace Microsoft.PowerFx.Functions
                     return nonFiniteArgError;
                 }
 
-                var argumentsExpanded = expandArguments(irContext, args);
+                IEnumerable<FormulaValue> argumentsExpanded = expandArguments(irContext, args);
+                IEnumerable<FormulaValue> blankValuesReplaced = argumentsExpanded.Select((arg, i) => (arg is BlankValue) ? replaceBlankValues(arg.IRContext, i) : arg);
+                IEnumerable<FormulaValue> runtimeTypesChecked = blankValuesReplaced.Select((arg, i) => checkRuntimeTypes(irContext, i, arg));
 
-                var blankValuesReplaced = argumentsExpanded.Select((arg, i) =>
-                {
-                    if (arg is BlankValue)
-                    {
-                        return replaceBlankValues(arg.IRContext, i);
-                    }
-                    else
-                    {
-                        return arg;
-                    }
-                });
+                // Calling ToList() here is a perf improvement as we use this list multiple times
+                List<FormulaValue> runtimeValuesChecked = runtimeTypesChecked.Select((arg, i) => (arg is T t) ? checkRuntimeValues(arg.IRContext, i, t) : arg).ToList();
 
-                var runtimeTypesChecked = blankValuesReplaced.Select((arg, i) => checkRuntimeTypes(irContext, i, arg));
-
-                var runtimeValuesChecked = runtimeTypesChecked.Select((arg, i) =>
-                {
-                    if (arg is T t)
-                    {
-                        return checkRuntimeValues(arg.IRContext, i, t);
-                    }
-                    else
-                    {
-                        return arg;
-                    }
-                });
-
-                var errors = runtimeValuesChecked.OfType<ErrorValue>();
+                IEnumerable<ErrorValue> errors = runtimeValuesChecked.OfType<ErrorValue>();
                 if (errors.Any())
                 {
                     return ErrorValue.Combine(irContext, errors);
                 }
 
-                var anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank));
+                bool anyValueBlank = runtimeValuesChecked.Any(arg => arg is BlankValue || (arg is UntypedObjectValue uov && uov.Impl.Type == FormulaType.Blank));
 
                 switch (returnBehavior)
                 {
                     case ReturnBehavior.ReturnBlankIfAnyArgIsBlank:
                         if (anyValueBlank)
                         {
-                            return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                            return new BlankValue(IRContext.NotInSource(irContext.ResultType));
                         }
 
                         break;
@@ -124,8 +100,9 @@ namespace Microsoft.PowerFx.Functions
                         break;
                 }
 
-                var result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray());
-                var finiteError = FiniteResultCheck(functionName, irContext, result);
+                FormulaValue result = await targetFunction(runner, context, irContext, runtimeValuesChecked.Select(arg => arg as T).ToArray()).ConfigureAwait(false);
+                ErrorValue finiteError = FiniteResultCheck(functionName, irContext, result);
+
                 return finiteError ?? result;
             };
         }
@@ -269,8 +246,8 @@ namespace Microsoft.PowerFx.Functions
                         NamedValue namedValue;
                         namedValue = value switch
                         {
-                            T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t })),
-                            BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv })),
+                            T t => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new T[] { t }).ConfigureAwait(false)),
+                            BlankValue bv => new NamedValue(outputColumnNameStr, await targetFunction(runner, context, IRContext.NotInSource(outputItemType), new FormulaValue[] { bv }).ConfigureAwait(false)),
                             ErrorValue ev => new NamedValue(outputColumnNameStr, ev),
                             _ => new NamedValue(outputColumnNameStr, CommonErrors.RuntimeTypeMismatch(IRContext.NotInSource(inputItemType)))
                         };
@@ -427,7 +404,7 @@ namespace Microsoft.PowerFx.Functions
                             }
                         });
 
-                        var rowResult = await targetFunction(runner, context, IRContext.NotInSource(itemType), blankValuesReplaced.ToArray());
+                        var rowResult = await targetFunction(runner, context, IRContext.NotInSource(itemType), blankValuesReplaced.ToArray()).ConfigureAwait(false);
                         var namedValue = new NamedValue(columnNameStr, rowResult);
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
@@ -494,6 +471,11 @@ namespace Microsoft.PowerFx.Functions
         private static FormulaValue ReplaceBlankWithZero(IRContext irContext, int index)
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
+        }
+
+        private static FormulaValue ReplaceBlankWithZeroDecimal(IRContext irContext, int index)
+        {
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
         }
 
         private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index)

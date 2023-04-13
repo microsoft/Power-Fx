@@ -226,7 +226,7 @@ $list = (Get-Item -Filter *.csv -Path '.\BenchmarkDotNet.Artifacts\results\*' | 
 foreach ($file in [System.Linq.Enumerable]::OrderBy($list, [Func[object, string]] { param($s) if ($s -match 'Reference-report\.csv') { "" } else { $s } }))
 {
     $t = [System.IO.Path]::GetFileNameWithoutExtension($file).Split(@('.'))[-1]
-    $testCategory = $t.Substring(0, $t.Length - 7)
+    if ($t.Length -gt 7) { $testCategory = $t.Substring(0, $t.Length - 7) } else { $testCategory = $t }
 
     Write-Host "------ [TEST] $testCategory ------"
    

@@ -22,8 +22,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public RandBetweenFunction()
             : base(
                 "RandBetween",

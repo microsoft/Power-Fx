@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX function: CountAX, CountX
     internal sealed class CountIfFunction : FilterFunctionBase
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool HasPreciseErrors => true;
 
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Filter | DelegationCapability.Count;
@@ -70,9 +68,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that all the args starting at index 1 are booleans or coerecible to boolean
             for (var i = 1; i < args.Length; i++)
             {
-                if (!DType.Boolean.Accepts(argTypes[i]))
+                if (!DType.Boolean.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (argTypes[i].CoercesTo(DType.Boolean))
+                    if (argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean, allowDupes: true);
                     }

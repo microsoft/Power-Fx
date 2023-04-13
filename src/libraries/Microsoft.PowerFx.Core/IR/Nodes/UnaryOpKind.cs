@@ -8,35 +8,70 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         // Value operations
         Negate,
         Percent,
+        NegateDecimal,
+        PercentDecimal,
 
         // Coercion operations
         BooleanToNumber,
-        BooleanOptionSetToNumber,
+        OptionSetToNumber,
         DateToNumber,
         TimeToNumber,
         DateTimeToNumber,
+        CurrencyToNumber,
+
+        BooleanToDecimal,
+        OptionSetToDecimal,
+        DateToDecimal,
+        TimeToDecimal,
+        DateTimeToDecimal,
+        CurrencyToDecimal,
 
         BlobToHyperlink,
         ImageToHyperlink,
         MediaToHyperlink,
         TextToHyperlink,
+        PenImageToHyperlink,
 
         SingleColumnRecordToLargeImage,
         ImageToLargeImage,
         LargeImageToImage,
         TextToImage,
+        PenImageToImage,
+        BlobToImage,
+        HyperlinkToImage,
 
         TextToMedia,
+        BlobToMedia,
+        HyperlinkToMedia,
+
         TextToBlob,
+        HyperlinkToBlob,
 
         NumberToText,
+        DecimalToText,
         BooleanToText,
         OptionSetToText,
         ViewToText,
+        CurrencyToText,
+        GUIDToText,
+        ImageToText,
+        MediaToText,
+        BlobToText,
+        PenImageToText,
+
+        TextToGUID,
+
+        NumberToCurrency,
+        TextToCurrency,
+        BooleanToCurrency,
 
         NumberToBoolean,
         TextToBoolean,
-        BooleanOptionSetToBoolean,
+        DecimalToBoolean,
+        OptionSetToBoolean,
+        CurrencyToBoolean,
+
+        OptionSetToColor,
 
         RecordToRecord, // See field mappings
         TableToTable,
@@ -48,6 +83,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         TextToDateTime,
         TextToDate,
         TextToTime,
+        DecimalToDateTime,
+        DecimalToDate,
+        DecimalToTime,
 
         DateTimeToTime,
         DateToTime,
@@ -58,5 +96,13 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
 
         BooleanToOptionSet,
         AggregateToDataEntity,
+
+        // Argument pre-processesor in IR Phase.
+
+        /// <summary>
+        /// Used for pre-processing function arguments from blank to empty string.
+        /// All Interpreter(backed) must implement this.
+        /// </summary>
+        BlankToEmptyString,
     }
 }

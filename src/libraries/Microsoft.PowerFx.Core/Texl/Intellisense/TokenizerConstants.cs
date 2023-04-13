@@ -9,6 +9,7 @@ namespace Microsoft.PowerFx.Intellisense
         public const string VariadicOp = "VariadicOp";
         public const string BooleanLiteral = "BoolLit";
         public const string NumericLiteral = "NumLit";
+        public const string DecimalLiteral = "DecLit";
         public const string StringLiteral = "StrLit";
         public const string UnaryOp = "UnaryOp";
         public const string StringInterpolationStart = "StrInterpStart";

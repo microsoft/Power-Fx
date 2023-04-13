@@ -22,8 +22,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public ConcatenateFunction()
             : base("Concatenate", TexlStrings.AboutConcatenate, FunctionCategories.Text, DType.String, 0, 1, int.MaxValue)
         {
@@ -62,13 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 0; i < count; i++)
             {
-                var typeChecks = CheckType(args[i], argTypes[i], DType.String, errors, true, out DType coercionType);
-                if (typeChecks && coercionType != null)
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
-                }
-
-                fArgsValid &= typeChecks;
+                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
             }
 
             if (!fArgsValid)
@@ -90,8 +82,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ConcatenateTableFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public ConcatenateTableFunction()
             : base("Concatenate", TexlStrings.AboutConcatenateT, FunctionCategories.Table | FunctionCategories.Text, DType.EmptyTable, 0, 1, int.MaxValue)
@@ -137,8 +127,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Type check the args
             for (var i = 0; i < count; i++)
             {
-                fArgsValid &= CheckParamIsTypeOrSingleColumnTable(DType.String, args[i], argTypes[i], errors, out var isTable, ref nodeToCoercedTypeMap);
-                hasTableArg |= isTable;
+                // The check for null on the next line is a special case for Concatenate, to retain prior behavior
+                // See UntypedBlankAsTable.txt for more examples
+                if (argTypes[i].IsTable && argTypes[i] != DType.ObjNull)
+                {
+                    fArgsValid &= CheckStringColumnType(argTypes[i], args[i], context.Features, errors, ref nodeToCoercedTypeMap);
+                    hasTableArg |= true;
+                }
+                else
+                {
+                    fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
+                }
             }
 
             fArgsValid &= hasTableArg;
@@ -150,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
 
-            return hasTableArg && fArgsValid;
+            return fArgsValid;
         }
     }
 }

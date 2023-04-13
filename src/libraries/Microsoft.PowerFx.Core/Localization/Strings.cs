@@ -86,6 +86,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter TextArg3 = (b) => StringResources.Get("TextArg3", b);
 
         public static StringGetter AboutValue = (b) => StringResources.Get("AboutValue", b);
+        public static StringGetter AboutFloat = (b) => StringResources.Get("AboutFloat", b);
+        public static StringGetter AboutDecimal = (b) => StringResources.Get("AboutDecimal", b);
         public static StringGetter ValueArg1 = (b) => StringResources.Get("ValueArg1", b);
         public static StringGetter ValueArg2 = (b) => StringResources.Get("ValueArg2", b);
 
@@ -231,6 +233,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutSqrtT = (b) => StringResources.Get("AboutSqrtT", b);
         public static StringGetter MathFuncArg1 = (b) => StringResources.Get("MathFuncArg1", b);
         public static StringGetter MathTFuncArg1 = (b) => StringResources.Get("MathTFuncArg1", b);
+        public static StringGetter MathFuncArg2 = (b) => StringResources.Get("MathFuncArg2", b);
+        public static StringGetter MathTFuncArg2 = (b) => StringResources.Get("MathTFuncArg2", b);
 
         public static StringGetter AboutInt = (b) => StringResources.Get("AboutInt", b);
         public static StringGetter AboutIntT = (b) => StringResources.Get("AboutIntT", b);
@@ -493,6 +497,14 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutHex2DecT = (b) => StringResources.Get("AboutHex2DecT", b);
         public static StringGetter Hex2DecTArg1 = (b) => StringResources.Get("Hex2DecTArg1", b);
 
+        public static StringGetter AboutOptionSetInfo = (b) => StringResources.Get("AboutOptionSetInfo", b);
+        public static StringGetter AboutOptionSetInfoArg1 = (b) => StringResources.Get("AboutOptionSetInfoArg1", b);
+
+        public static StringGetter AboutLanguage = (b) => StringResources.Get("AboutLanguage", b);
+
+        public static StringGetter AboutEncodeUrl = (b) => StringResources.Get("AboutEncodeUrl", b);
+        public static StringGetter EncodeUrlArg1 = (b) => StringResources.Get("EncodeUrlArg1", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -515,6 +527,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrRuleNestedTooDeeply = new ErrorResourceKey("ErrRuleNestedTooDeeply");
         public static ErrorResourceKey ErrInvalidDot = new ErrorResourceKey("ErrInvalidDot");
         public static ErrorResourceKey ErrUnknownFunction = new ErrorResourceKey("ErrUnknownFunction");
+        public static ErrorResourceKey ErrUnimplementedFunction = new ErrorResourceKey("ErrUnimplementedFunction");
         public static ErrorResourceKey ErrUnknownNamespaceFunction = new ErrorResourceKey("ErrUnknownNamespaceFunction");
         public static ErrorResourceKey ErrBadArity = new ErrorResourceKey("ErrBadArity");
         public static ErrorResourceKey ErrBadArityRange = new ErrorResourceKey("ErrBadArityRange");
@@ -538,6 +551,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnRowScopeOneToNExpandNumberOfCalls = new ErrorResourceKey("WrnRowScopeOneToNExpandNumberOfCalls");
         public static ErrorResourceKey ErrInvalidSchemaNeedStringCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedStringCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedNumCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedNumCol_Col");
+        public static ErrorResourceKey ErrInvalidSchemaNeedDecCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedDecCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedDateCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedDateCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedColorCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedColorCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedCol = new ErrorResourceKey("ErrInvalidSchemaNeedCol");
@@ -553,6 +567,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrTextTooLarge = new ErrorResourceKey("ErrTextTooLarge");
         public static ErrorResourceKey ErrTextFormatTooLarge = new ErrorResourceKey("ErrTextFormatTooLarge");
         public static ErrorResourceKey ErrTextInvalidFormat = new ErrorResourceKey("ErrTextInvalidFormat");
+        public static ErrorResourceKey ErrTextInvalidArgDateTime = new ErrorResourceKey("ErrTextInvalidArgDateTime");
         public static ErrorResourceKey ErrBooleanExpected = new ErrorResourceKey("ErrBooleanExpected");
         public static ErrorResourceKey ErrOnlyOneViewExpected = new ErrorResourceKey("ErrOnlyOneViewExpected");
         public static ErrorResourceKey ErrViewFromCurrentTableExpected = new ErrorResourceKey("ErrViewFromCurrentTableExpected");
@@ -569,6 +584,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrEmptyInvalidIdentifier = new ErrorResourceKey("ErrEmptyInvalidIdentifier");
         public static ErrorResourceKey ErrIncompatibleTypes = new ErrorResourceKey("ErrIncompatibleTypes");
         public static ErrorResourceKey ErrIncompatibleTypesForEquality_Left_Right = new ErrorResourceKey("ErrIncompatibleTypesForEquality_Left_Right");
+        public static ErrorResourceKey ErrUnOrderedTypeForComparison_Type = new ErrorResourceKey("ErrUnOrderedTypeForComparison_Type");
         public static ErrorResourceKey ErrServiceFunctionUnknownOptionalParam_Name = new ErrorResourceKey("ErrServiceFunctionUnknownOptionalParam_Name");
         public static ErrorResourceKey ErrColumnTypeMismatch_ColName_ExpectedType_ActualType = new ErrorResourceKey("ErrColumnTypeMismatch_ColName_ExpectedType_ActualType");
         public static ErrorResourceKey ErrColumnMissing_ColName_ExpectedType = new ErrorResourceKey("ErrColumnMissing_ColName_ExpectedType");
@@ -628,14 +644,21 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNamedFormula_MissingSemicolon = new ErrorResourceKey("ErrNamedFormula_MissingSemicolon");
         public static ErrorResourceKey ErrNamedFormula_MissingValue = new ErrorResourceKey("ErrNamedFormula_MissingValue");
+        public static ErrorResourceKey ErrUDF_MissingFunctionBody = new ErrorResourceKey("ErrUDF_MissingFunctionBody");
         public static ErrorResourceKey ErrNamedFormula_AlreadyDefined = new ErrorResourceKey("ErrNamedFormula_AlreadyDefined");
         public static ErrorResourceKey ErrorResource_NameConflict = new ErrorResourceKey("ErrorResource_NameConflict");
+        public static ErrorResourceKey ErrUDF_FunctionAlreadyDefined = new ErrorResourceKey("ErrUDF_FunctionAlreadyDefined");
+        public static ErrorResourceKey ErrUDF_DuplicateParameter = new ErrorResourceKey("ErrUDF_DuplicateParameter");
+        public static ErrorResourceKey ErrUDF_UnknownType = new ErrorResourceKey("ErrUDF_UnknownType");
+        public static ErrorResourceKey ErrUDF_ReturnTypeDoesNotMatch = new ErrorResourceKey("ErrUDF_ReturnTypeDoesNotMatch");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.
         public static ErrorResourceKey ErrGeneralError = new ErrorResourceKey("ErrGeneralError");
         public static ErrorResourceKey ErrRemoveAllArg = new ErrorResourceKey("ErrRemoveAllArg");
 
-        public static ErrorResourceKey BooleanOptionSetOptionNotSupported = new ErrorResourceKey("BooleanOptionSetOptionNotSupported");
+        public static ErrorResourceKey OptionSetOptionNotSupported = new ErrorResourceKey("OptionSetOptionNotSupported");
+
+        public static ErrorResourceKey InvalidCast = new ErrorResourceKey("InvalidCast");
     }
 }

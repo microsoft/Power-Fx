@@ -16,8 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // scalar arguments.
     internal abstract class StatisticalFunction : BuiltinFunction
     {
-        public override bool SupportsParamCoercion => true;
-
         public override bool IsSelfContained => true;
 
         public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
@@ -57,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that all the arguments are numeric/coercible to numeric.
             for (var i = 0; i < argTypes.Length; i++)
             {
-                if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                if (CheckType(context, args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
                 {
                     if (matchedWithCoercion)
                     {

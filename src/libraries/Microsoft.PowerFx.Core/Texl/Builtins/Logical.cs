@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         internal readonly bool _isAnd;
 
         public VariadicLogicalFunction(bool isAnd)
@@ -75,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             for (var i = 0; i < count; i++)
             {
-                fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
+                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
                 if (matchedWithCoercion)
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean);

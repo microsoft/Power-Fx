@@ -15,17 +15,6 @@ namespace Microsoft.PowerFx.Core
 {
     internal class ExpressionLocalizationHelper
     {
-        [Obsolete("Use ConvertExpression with PowerFxConfig parameter instead of CultureInfo", false)]
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, bool toDisplay)
-        {
-            return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, new PowerFxConfig(culture), toDisplay);
-        }
-
-        internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, PowerFxConfig fxConfig, bool toDisplay)
-        {
-            return ConvertExpression(expressionText, parameters, bindingConfig, resolver, binderGlue, fxConfig.CultureInfo, fxConfig.Features, toDisplay);
-        }
-
         internal static string ConvertExpression(string expressionText, RecordType parameters, BindingConfig bindingConfig, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, Features flags, bool toDisplay)
         {
             var targetLexer = toDisplay ? TexlLexer.GetLocalizedInstance(culture) : TexlLexer.InvariantLexer;
@@ -82,8 +71,9 @@ namespace Microsoft.PowerFx.Core
                         replacement = targetLexer.LocalizedPunctuatorChainingSeparator;
                         break;
                     case TokKind.NumLit:
+                    case TokKind.DecLit:
                         var numLit = token.Span.GetFragment(script);
-                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator);
+                        var decimalSeparatorIndex = numLit.IndexOf(sourceDecimalSeparator, StringComparison.Ordinal);
                         if (decimalSeparatorIndex >= 0)
                         {
                             var newMin = span.Min + decimalSeparatorIndex;

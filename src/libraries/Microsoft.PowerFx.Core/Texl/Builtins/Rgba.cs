@@ -21,12 +21,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetGenericArgPreprocessor(index);
         }
 
-        public override bool IsTrackedInTelemetry => false;
-
-        public override bool SupportsParamCoercion => true;
-
-        public override bool SupportsInlining => true;
-
         // This is important to set so that calls to RGBA(consts,...) are also considered const
         public override bool IsSelfContained => true;
 

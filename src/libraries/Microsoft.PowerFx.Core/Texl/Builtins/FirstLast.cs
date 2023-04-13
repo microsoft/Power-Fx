@@ -24,8 +24,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => false;
-
         private readonly bool _isFirst;
 
         public FirstLastFunction(bool isFirst)
@@ -106,8 +104,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FirstLastFunction_UO : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => false;
 
         // Note this function does not inherit from FunctionWithTableInput so there cannot be a common
         // base class with the above function

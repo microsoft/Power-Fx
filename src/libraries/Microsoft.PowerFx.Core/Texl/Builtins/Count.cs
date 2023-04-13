@@ -22,8 +22,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => false;
-
         public CountFunction()
             : base("Count", TexlStrings.AboutCount, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
         {
@@ -58,7 +56,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedTableCol_Func, Name);
             }
-            else if (!DType.Number.Accepts(columns.Single().Type))
+            else if (
+                !DType.Number.Accepts(
+                    columns.Single().Type,
+                    exact: true, 
+                    useLegacyDateTimeAccepts: false, 
+                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
+                !DType.Decimal.Accepts(
+                    columns.Single().Type,
+                    exact: true,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Warning, args[0], TexlStrings.ErrInvalidSchemaNeedNumCol_Col, columns.Single().Name);

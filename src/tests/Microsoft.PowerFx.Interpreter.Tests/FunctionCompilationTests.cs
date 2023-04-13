@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Tests
         public void TestSwitchFunctionCompilation(string expression)
         {
             var engine = new RecalcEngine();
-            engine.UpdateVariable("A", 15);
+            engine.UpdateVariable("A", 15m);
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
             Assert.Equal(FormulaType.String, check.ReturnType);

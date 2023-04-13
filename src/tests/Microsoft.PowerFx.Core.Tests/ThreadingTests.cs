@@ -24,11 +24,15 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var bugNames = new HashSet<string>
             {
+                // Threading.InterlockedIncrement.
+                "VersionHash._hashStarter",
+
                 // readonly arrays / dictionary - is there an IReadOnly type to changes these too instead? 
                 "LazyList`1.Empty",
                 "DType._kindToSuperkindMapping",
                 "DTypeSpecParser._types",
                 "BuiltinFunctionsCore._library",
+                "BuiltinFunctionsCore._testOnlyLibrary",
                 "BuiltinFunctionsCore._featureGateFunctions",
                 "ArgumentSuggestions._languageCodeSuggestions",
                 "IntellisenseProvider.SuggestionHandlers",
@@ -59,6 +63,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "StringResources.<ExternalStringResources>k__BackingField",
                 "StringResources.<ShouldThrowIfMissing>k__BackingField",
                 "DelegationCapability.maxSingleCapabilityValue",
+                "BuiltinFunctionsCore.OtherKnownFunctions"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);

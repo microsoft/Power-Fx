@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Connectors
             return isTrigger;
         }
 
-        public static bool TryGetDefaultValue(this OpenApiSchema schema, FormulaType formulaType, out FormulaValue defaultValue)
+        public static bool TryGetDefaultValue(this OpenApiSchema schema, FormulaType formulaType, out FormulaValue defaultValue, bool numberIsFloat = false)
         {
             var x = schema.Default;
 
@@ -119,10 +119,10 @@ namespace Microsoft.PowerFx.Connectors
 
                         if (schema.Properties.ContainsKey(columnName))
                         {
-                            if (schema.Properties[columnName].TryGetDefaultValue(nft.Type, out FormulaValue innerDefaultValue))
+                            if (schema.Properties[columnName].TryGetDefaultValue(nft.Type, out FormulaValue innerDefaultValue, numberIsFloat: numberIsFloat))
                             {
                                 values.Add(new NamedValue(columnName, innerDefaultValue));
-                            }                            
+                            }
                         }
                     }
 
@@ -145,13 +145,18 @@ namespace Microsoft.PowerFx.Connectors
 
             if (x is OpenApiInteger intVal)
             {
-                defaultValue = FormulaValue.New(intVal.Value); // NumberValue
+                defaultValue = numberIsFloat
+                    ? FormulaValue.New(intVal.Value) // NumberValue
+                    : FormulaValue.New((decimal)intVal.Value); // DecimalValue
+
                 return true;
             }
 
             if (x is OpenApiDouble dbl)
             {
-                defaultValue = FormulaValue.New(dbl.Value); // NumberValue
+                defaultValue = numberIsFloat
+                    ? FormulaValue.New(dbl.Value) // NumberValue
+                    : FormulaValue.New((decimal)dbl.Value); // DecimalValue
                 return true;
             }
 
@@ -174,7 +179,8 @@ namespace Microsoft.PowerFx.Connectors
         public static bool IsInternal(this IOpenApiExtensible schema) => schema.Extensions.TryGetValue("x-ms-visibility", out var openApiExt) && openApiExt is OpenApiString openApiStr && openApiStr.Value == "internal";
 
         // See https://swagger.io/docs/specification/data-models/data-types/
-        public static (FormulaType, RecordType) ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0)
+        // numberIsFloat = numbers are stored as C# double when set to true, otherwise they are stored as C# decimal
+        public static (FormulaType, RecordType) ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0, bool numberIsFloat = false)
         {
             if (chain == null)
             {
@@ -199,6 +205,7 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         case null:
                         case "uuid":
+                        case "mquery": // For SQL Server Power Query language
                             return (FormulaType.String, null);
 
                         case "date-time":
@@ -206,23 +213,52 @@ namespace Microsoft.PowerFx.Connectors
                             // $$$ Should be DateTime type
                             return (FormulaType.String, null);
 
+                        case "binary":
+                            return (FormulaType.String, null);
+
                         default:
                             throw new NotImplementedException("Unsupported type of string");
                     }
 
-                // OpenAPI spec: Format could be float, double
-                case "number": return (FormulaType.Number, null);
+                // OpenAPI spec: Format could be float, double, or not specified.
+                // we assume not specified implies decimal
+                // https://swagger.io/docs/specification/data-models/data-types/
+                case "number":
+                    switch (schema.Format)
+                    {
+                        case "float":
+                        case "double":
+                            return numberIsFloat ? (FormulaType.Number, null) : (FormulaType.Decimal, null);
+
+                        case null:
+                            return (FormulaType.Decimal, null);
+
+                        default:
+                            throw new NotImplementedException("Unsupported type of number");
+                    }
 
                 // Always a boolean (Format not used)                
                 case "boolean": return (FormulaType.Boolean, null);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
-                case "integer": return (FormulaType.Number, null);
+                case "integer":
+                    switch (schema.Format)
+                    {
+                        case null:
+                        case "int32":
+                            return numberIsFloat ? (FormulaType.Number, null) : (FormulaType.Decimal, null);
+
+                        case "int64":
+                            return (FormulaType.Decimal, null);
+
+                        default:
+                            throw new NotImplementedException("Unsupported type of integer");
+                    }
 
                 case "array":
                     var innerA = GetUniqueIdentifier(schema.Items);
 
-                    if (innerA.StartsWith("R:") && chain.Contains(innerA))
+                    if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
                     {
                         // Here, we have a circular reference and default to a string
                         return (FormulaType.String, null);
@@ -236,7 +272,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     chain.Push(innerA);
-                    (FormulaType elementType, RecordType rt) = schema.Items.ToFormulaType(chain, level + 1);
+                    (FormulaType elementType, RecordType rt) = schema.Items.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
                     chain.Pop();
 
                     if (rt != null)
@@ -245,7 +281,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     if (elementType is RecordType r)
-                    {                        
+                    {
                         return (r.ToTable(), null);
                     }
                     else if (elementType is not AggregateType)
@@ -265,7 +301,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     // Dictionary - https://swagger.io/docs/specification/data-models/dictionaries/
                     // Key is always a string, Value is in AdditionalProperties
-                    if (schema.AdditionalProperties != null)
+                    if ((schema.AdditionalProperties != null && schema.AdditionalProperties.Properties.Any()) || schema.Discriminator != null)
                     {
                         return (FormulaType.UntypedObject, null);
                     }
@@ -293,14 +329,14 @@ namespace Microsoft.PowerFx.Connectors
                             var propName = kv.Key;
                             var innerO = GetUniqueIdentifier(kv.Value);
 
-                            if (innerO.StartsWith("R:") && chain.Contains(innerO))
+                            if (innerO.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerO))
                             {
                                 // Here, we have a circular reference and default to a string
                                 return (FormulaType.String, hObj);
                             }
 
                             chain.Push(innerO);
-                            (FormulaType propType, RecordType innerHiddenRecord) = kv.Value.ToFormulaType(chain, level + 1);
+                            (FormulaType propType, RecordType innerHiddenRecord) = kv.Value.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
                             chain.Pop();
 
                             if (innerHiddenRecord != null)
@@ -309,8 +345,8 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             if (hiddenRequired)
-                            {                                
-                                hObj = (hObj ?? RecordType.Empty()).Add(propName, propType);                           
+                            {
+                                hObj = (hObj ?? RecordType.Empty()).Add(propName, propType);
                             }
                             else
                             {
@@ -349,7 +385,7 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public static FormulaType GetReturnType(this OpenApiOperation op)
+        public static FormulaType GetReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
             var responses = op.Responses;
             if (!responses.TryGetValue("200", out OpenApiResponse response))
@@ -383,7 +419,7 @@ namespace Microsoft.PowerFx.Connectors
                         return FormulaType.Blank;
                     }
 
-                    (FormulaType responseType, RecordType hiddenRecordType) = openApiMediaType.Schema.ToFormulaType();
+                    (FormulaType responseType, RecordType hiddenRecordType) = openApiMediaType.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
 
                     if (hiddenRecordType != null)
                     {
@@ -425,13 +461,26 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (content.TryGetValue(ct, out var mediaType))
                 {
-                    if ((ct == ContentType_ApplicationJson && !mediaType.Schema.Properties.Any()) ||
-                        (ct == ContentType_TextJson && mediaType.Schema.Properties.Any()))
+                    if (ct == ContentType_TextJson && mediaType.Schema.Properties.Any())
                     {
                         continue;
                     }
 
-                    return (ct, mediaType);
+                    if (ct != ContentType_ApplicationJson)
+                    {
+                        return (ct, mediaType);
+                    }
+
+                    // application/json
+                    if (mediaType.Schema.Properties.Any() || mediaType.Schema.Type == "object")
+                    {
+                        return (ct, mediaType);
+                    }
+
+                    if (mediaType.Schema.Type == "string")
+                    {
+                        return (ContentType_TextPlain, mediaType);
+                    }
                 }
             }
 

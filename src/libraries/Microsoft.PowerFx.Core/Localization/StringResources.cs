@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Localization
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
             if (!TryGetErrorResource(resourceKey, out var resourceValue, locale))
             {
-                Debug.WriteLine(string.Format("ERROR error resource {0} not found", resourceKey));
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR error resource {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
                 {
                     throw new System.IO.FileNotFoundException(resourceKey.Key);
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Localization
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
                 }
 
-                Debug.WriteLine(string.Format("ERROR resource string {0} not found", resourceKey));
+                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR resource string {0} not found", resourceKey));
                 if (ShouldThrowIfMissing)
                 {
                     throw new System.IO.FileNotFoundException(resourceKey);
@@ -97,6 +97,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
             if (string.IsNullOrEmpty(locale))
             {
+                // $$$ Don't use CurrentUICulture
                 locale = CultureInfo.CurrentUICulture.Name;
                 Contracts.CheckNonEmpty(locale, "locale");
             }
@@ -211,7 +212,8 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 if (string.IsNullOrEmpty(locale))
                 {
-                    return _resourceManager.GetString(resourceKey);
+                    // $$$ Don't use CurrentUICulture
+                    return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
                 }
 
                 return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));

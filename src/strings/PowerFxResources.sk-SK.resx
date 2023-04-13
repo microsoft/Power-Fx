@@ -567,6 +567,24 @@
     <value>Spojí niekoľko textových hodnôt do jednej textovej hodnoty.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Skonvertuje text predstavujúci číslo na desatinnú hodnotu.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kód jazyka, ktorý sa používa pri konverzii na hodnotu.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Textová hodnota, ktorá sa má konvertovať na desatinnú hodnotu.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Skonvertuje text predstavujúci číslo na hodnotu s pohyblivou desatinnou čiarkou.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kód jazyka, ktorý sa používa pri konverzii na hodnotu.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Textová hodnota, ktorá sa má konvertovať na hodnotu s pohyblivou desatinnou čiarkou.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Hodnota, ktorá sa vráti, ak ide o prvý argument bez chyby.</value>
+    <value>Hodnota, ktorá sa vráti, ak je predchádzajúci argument chyba.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Výraz vyhodnotený pre riadky v zdroji a uvádza hodnoty pre zoradenie.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Vzostupne alebo zostupne</value>
+    <value>SortOrder.Ascending alebo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Zoradí zdroj podľa stĺpca a voliteľne určí spôsob zoradenia.</value>
@@ -889,7 +908,8 @@
     <value>Jedinečný názov stĺpca.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Vzostupne alebo zostupne</value>
+    <value>SortOrder.Ascending alebo SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Zoradí zdroj podľa stĺpca na základe indexu zhodných hodnôt v zadanom stĺpci.</value>
@@ -1849,6 +1869,10 @@
     <value>Neplatný formát.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument nepredstavuje platnú hodnotu dátumu alebo času.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Tento zdroj údajov je neplatný. Opravte chybu na table Zdroje údajov kliknutím na položku Obsah -&gt; Zdroje údajov alebo Zobraziť -&gt; Možnosti.</value>
     
@@ -2378,7 +2402,7 @@
     <value>Počet jednotiek na pridanie. Toto číslo môže byť záporné.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Jednotka, ktorá sa má použiť – jedna z týchto možností: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jednotka na použitie, ktorá môže byť jednou z nasledujúcich: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Koncový dátum pre operáciu rozdielu.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Jednotka, v ktorej má byť vyjadrený výsledok – jedna z týchto možností: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Jednotka na vyjadrenie výsledku, ktorá môže byť jednou z nasledujúcich: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Glóbus</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe – nepripojené</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe – obnovenie</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe – čakajúce zmeny</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe – upozornenie</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe – chyba</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Uistite sa, že pre svoj identifikátor máte nejaký text. K tejto chybe dôjde v prípade, že identifikátor obsahuje len medzery alebo prázdne znaky.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Nie je možné porovnávať hodnoty typu {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Nekompatibilné typy na porovnanie. Tieto typy nemožno porovnať: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Táto funkcia je nejednoznačná, obsahuje výrazy lambda a identifikátory stĺpcov pre rovnaký argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Možnosť BooleanOptionSet {0} nie je podporovaná.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Hodnota možnosti {0} nie je očakávaného typu {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Vráti logický názov danej hodnoty množiny možností.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>možnosť</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Hodnota množiny možností, ktorej logický názov sa vráti.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Získať predvolené miestne nastavenia nastavené v režime runtime.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Zakóduje reťazec URL adresy a nahradí určité nealfanumerické znaky znakom % a šestnástkovým číslom.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL adresa</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL adresa, ktorá sa má kódovať.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>{0} je rozpoznaná, ale nepodporovaná funkcia.</value>
     
   </data>
 </root>

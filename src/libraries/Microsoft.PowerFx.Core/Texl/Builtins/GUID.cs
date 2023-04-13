@@ -19,8 +19,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public GUIDNoArgFunction()
             : base(GUIDFunctionInvariantName, TexlStrings.AboutGUID, FunctionCategories.Text, DType.Guid, 0, 0, 0)
         {

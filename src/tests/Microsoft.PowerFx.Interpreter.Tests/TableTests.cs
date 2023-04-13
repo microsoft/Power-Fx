@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var pfxConfig = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(pfxConfig);
 
-            var table = await recalcEngine.EvalAsync("Table({}, {}, {})", CancellationToken.None);
+            var table = await recalcEngine.EvalAsync("Table({}, {}, {})", CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(table);
 

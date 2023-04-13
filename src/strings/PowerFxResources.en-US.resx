@@ -567,6 +567,24 @@
     <value>Joins several text values into one text value.</value>
     <comment>Description of 'Concatenate' function.</comment>
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>The text value to convert to a Decimal value.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Float value.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>The text value to convert to a Float value.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     <comment>function_parameter - Argument to the Concatenate function - the text to be concatenated.</comment>
@@ -795,7 +813,7 @@
     <comment>function_parameter - Argument to the IfError function - a value to fallback on if the previous args are errors.</comment>
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Value that is returned if it is the first non error argument.</value>
+    <value>Value that is returned if the previous argument is an error.</value>
     <comment>Description of the repeated parameter: a value to fallback on if the previous args are errors</comment>
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>An expression that gets evaluated over rows in 'source' and provides values for sorting.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorts 'source' based on the column, optionally specifying a sort 'order'.</value>
@@ -889,7 +908,8 @@
     <value>A unique column name.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascending or Descending</value>
+    <value>SortOrder.Ascending or SortOrder.Descending</value>
+    <comment>{Locked=SortOrder.Ascending}{Locked=SortOrder.Descending} Possible values for the third argument of the Sort function</comment>
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorts 'source' based on the index of matching values in the specified column.</value>
@@ -1445,6 +1465,14 @@
     <value>input</value>
     <comment>function_parameter - First parameter to generic math functions - the column in a table on which the function will be applied.</comment>
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    <comment>function_parameter - Second parameter to generic math functions - the second number on which the function will be applied.</comment>
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    <comment>function_parameter - Second parameter to generic math functions - the second column in a table on which the function will be applied.</comment>
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Returns the specified number of characters from the start of a text value.</value>
     <comment>Description of 'Left' function.</comment>
@@ -1848,6 +1876,10 @@
   <data name="ErrTextInvalidFormat" xml:space="preserve">
     <value>Invalid format.</value>
     <comment>Error Message returned by the Text function when the format passed to it is invalid.</comment>
+  </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>The argument does not represent a valid date or time value.</value>
+    <comment>Error Message returned by the Text function when the number to date format exceeds the max days to add.</comment>
   </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>This Data source is invalid. Please fix the error in "Data sources" pane by clicking "Content -&gt; Data sources" or "View -&gt; Options"</value>
@@ -2299,6 +2331,9 @@
   <data name="MathAndStat" xml:space="preserve">
     <value>Math &amp; Statistical</value>
   </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
+  </data>
   <data name="Information" xml:space="preserve">
     <value>Information</value>
   </data>
@@ -2378,8 +2413,8 @@
     <value>A number of units to add. The number can be negative.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>The unit to use, which can be one of Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
-    <comment>{Locked=Years}{Locked=Quarters}{Locked=Months}{Locked=Days}{Locked=Hours}{Locked=Minutes}{Locked=Seconds}{Locked=Milliseconds}</comment>
+    <value>The unit to use, which can be one of TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    <comment>{Locked=TimeUnit.Years}{Locked=TimeUnit.Quarters}{Locked=TimeUnit.Months}{Locked=TimeUnit.Days}{Locked=TimeUnit.Hours}{Locked=TimeUnit.Minutes}{Locked=TimeUnit.Seconds}{Locked=TimeUnit.Milliseconds}</comment>
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
     <value>start_date</value>
@@ -2400,8 +2435,8 @@
     <value>An end date for the different operation.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>The unit to express the result in, which can be one of Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
-    <comment>{Locked=Years}{Locked=Quarters}{Locked=Months}{Locked=Days}{Locked=Hours}{Locked=Minutes}{Locked=Seconds}{Locked=Milliseconds}</comment>
+    <value>The unit to express the result in, which can be one of TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
+    <comment>{Locked=TimeUnit.Years}{Locked=TimeUnit.Quarters}{Locked=TimeUnit.Months}{Locked=TimeUnit.Days}{Locked=TimeUnit.Hours}{Locked=TimeUnit.Minutes}{Locked=TimeUnit.Seconds}{Locked=TimeUnit.Milliseconds}</comment>
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
     <value>Add the specified number of units to a column of dates.</value>
@@ -2978,6 +3013,26 @@
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Globe</value>
     <comment>Icon control name representing an globe object. Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe value.</comment>
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Not connected</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Not connected value.</comment>
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Refresh value.</comment>
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Changes pending</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Changes pending value.</comment>
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Warning</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Warning value.</comment>
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Error</value>
+    <comment>Display text representing the value of Icon enum that will be shown in the icon control. This value represents the Globe - Error value.</comment>
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Half filled circle</value>
@@ -4526,6 +4581,10 @@
     <value>Ensure you have text for your identifier. This error occurs when the identifier is all blanks or spaces.</value>
     <comment>1 How to fix the error. </comment>
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Unable to compare values of type {0}.</value>
+    <comment>Error message when the user attempts to compare (using Less Than, Greater Than, Less Than or Equal, Greater Than or Equal) values of non-numeric types. {0} will be canonical type representations like "Number" or "Boolean".</comment>
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Incompatible types for comparison. These types can't be compared: {0}, {1}.</value>
     <comment>Error message when the user attempts to check equality between two values that don't make sense together. {0} and {1} will be canonical type representations like "Number" or "Boolean".</comment>
@@ -4937,6 +4996,26 @@
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>User defined function must have a body.</value>
+    <comment>This error message shows up when user defined function does not have a body</comment>
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Function {0} is already defined.</value>
+    <comment>This error message shows up when user tries to define a function that already exists</comment>
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} is a duplicate.</value>
+    <comment>This error message shows up when user defined function has a duplicate parameter</comment>
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Unknown type {0}.</value>
+    <comment>This error message shows up when an invalid type is used</comment>
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>The stated function return type does not match the return type of the function body.</value>
+    <comment>This error message shows up when expected return type does not match with actual return type</comment>
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
   </data>
@@ -5030,8 +5109,41 @@
     <value>This function is ambiguous, it contains lambda expressions and column identifiers for the same argument.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>The BooleanOptionSet option {0} is not supported.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>The value of option {0} is not of expected type {1}.</value>
     <comment>Error Message. When BooleanOptionSet option has an invalid value.</comment>
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Returns logical name of the given option set value.</value>
+    <comment>Description of 'OptionSetInfo' function.</comment>
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>option</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>An option set value whose logical name will be returned.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Get the default locale set at runtime.</value>
+    <comment>Description of 'Language' function.</comment>
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Encodes a URL string, replacing certain non-alphanumeric characters with % and a hexadecimal number.</value>
+    <comment>Description of 'EncodeUrl' function.</comment>
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>url</value>
+    <comment>Function_parameter - First parameter for the EncodeUrl function - the URL(string) to encode. Translate this string. Maintain as a single word (do not add spaces)</comment>
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>A url to be encoded.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' is a recognized but not supported function.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Type conversion failed because the given value was of type '{0}', expected '{1}' type.</value>
+    <comment>Error Message.</comment>
   </data>
 </root>

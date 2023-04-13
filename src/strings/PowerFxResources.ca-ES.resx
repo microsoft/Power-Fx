@@ -567,6 +567,24 @@
     <value>Uneix diversos valors de text en un valor de text.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>The text value to convert to a Decimal value.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Float value.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>The text value to convert to a Float value.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Valor que es retorna si és el primer argument sense errors.</value>
+    <value>Valor que es retorna si l'argument anterior no és un error.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Expressió que s'avalua sobre les files a l'element 'source' i proporciona valors per ordenar.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Ascendent o descendent</value>
+    <value>SortOrder.Ascending o SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ordena l'element 'source' en funció de la columna i, opcionalment, especifica un element 'order' per ordenar.</value>
@@ -889,7 +908,8 @@
     <value>Nom de columna únic.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Ascendent o descendent</value>
+    <value>SortOrder.Ascending o SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ordena l'element 'source' en funció de l'índex de valors que coincideixen en la columna especificada.</value>
@@ -1849,6 +1869,10 @@
     <value>El format no és vàlid.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>L'argument no representa un valor de data o hora vàlid.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>La font de dades no és vàlida. Podeu solucionar l'error a la subfinestra "Fonts de dades" si feu clic a "Contingut -&gt; Fonts de dades" o "Visualitza -&gt; Opcions"</value>
     
@@ -2200,7 +2224,7 @@
     <value>Codi de llengua del text proporcionat.</value>
   </data>
   <data name="ErrAutoRefreshNotAllowed" xml:space="preserve">
-    <value>Les funcions de servei d'actualització automàtica no es poden utilitzar a les normes d'acció.</value>
+    <value>Les funcions de servei d'actualització automàtica no es poden utilitzar a les regles d'acció.</value>
     
   </data>
   <data name="ErrMultipleValuesForField_Name" xml:space="preserve">
@@ -2378,7 +2402,7 @@
     <value>Nombre d'unitats que s'afegirà. El nombre pot ser negatiu.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unitat que s'utilitzarà, que pot ser Years, Quarters, Months, Days, Hours, Minutes, Seconds o Milliseconds.</value>
+    <value>Unitat que s'utilitzarà, que pot ser una de les següents: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Data de finalització per a l'operació diferent.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unitat en què s'expressarà el resultat, que pot ser Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Unitat en què s'expressa el resultat, que pot ser una de les següents: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2888,7 +2912,7 @@
     
   </data>
   <data name="Icon_Bookmark_DisplayName" xml:space="preserve">
-    <value>Adreça d'interès</value>
+    <value>Marcador</value>
     
   </data>
   <data name="Icon_Bug_DisplayName" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Globus</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globus: no connectat</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globus: actualització</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globus: canvis pendents</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globus: advertiment</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globus: error</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -3104,7 +3148,7 @@
     
   </data>
   <data name="Icon_BookmarkFilled_DisplayName" xml:space="preserve">
-    <value>Adreça d'interès (emplenada)</value>
+    <value>Marcador (emplenat)</value>
     
   </data>
   <data name="Icon_CancelBadge_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Assegureu-vos que teniu text per a l'identificador. Aquest error es produeix quan l'identificador està buit o només conté espais.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>No es poden comparar valors del tipus {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Els tipus són incompatibles per a la comparació. Aquests tipus no es poden comparar: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Aquesta funció és ambigua; conté expressions lambda i identificadors de columna per al mateix argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>No s'admet l'opció BooleanOptionSet {0}.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>El valor de l'opció {0} no és del tipus esperat {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Retorna el nom lògic del valor del conjunt d'opcions proporcionat.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opció</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Valor del conjunt d'opcions el nom lògic del qual es retornarà.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Permet obtenir la configuració regional per defecte definida en temps d'execució.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Codifica una cadena URL i substitueix determinats caràcters no alfanumèrics per % i un nombre hexadecimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>L'URL que es codificarà.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' is a recognized but not supported function.</value>
     
   </data>
 </root>

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
@@ -129,6 +130,20 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
         }
+
+        private static readonly IReadOnlyList<decimal> _decPow10 = new decimal[]
+        {
+            1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
+            1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
+            1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
+        };
+
+        private static readonly IReadOnlyList<decimal> _decNegPow10 = new decimal[]
+        {
+            1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
+            1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
+            1e-20m, 1e-21m, 1e-22m, 1e-23m, 1e-24m, 1e-25m, 1e-26m, 1e-27m, 1e-28m
+        };
 
         private class MinNumberAgg : IAggregator
         {
@@ -437,7 +452,7 @@ namespace Microsoft.PowerFx.Functions
                     childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
                 }
 
-                var value = await arg1.EvalInRowScopeAsync(context.NewScope(childContext));
+                var value = await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
                 if (value is ErrorValue error)
                 {
@@ -467,7 +482,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("Sum", new SumAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Sum", new SumAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // VarP(1,2,3)
@@ -479,7 +494,7 @@ namespace Microsoft.PowerFx.Functions
         // VarP([1,2,3], Value * Value)
         public static async ValueTask<FormulaValue> VarTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("VarP", new VarianceAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         internal static FormulaValue Stdev(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -489,7 +504,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static async ValueTask<FormulaValue> StdevTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("StdevP", new StdDeviationAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // Max(1,2,3)     
@@ -514,7 +529,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args);
+                return await RunAggregatorAsync("Max", agg, runner, context, irContext, args).ConfigureAwait(false);
             }
             else
             {
@@ -544,7 +559,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (agg != null)
             {
-                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args);
+                return await RunAggregatorAsync("Min", agg, runner, context, irContext, args).ConfigureAwait(false);
             }
             else
             {
@@ -592,15 +607,37 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync("Average", new AverageAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Average", new AverageAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
-        public static FormulaValue Mod(IRContext irContext, NumberValue[] args)
+        public static FormulaValue Mod(IRContext irContext, FormulaValue[] args)
         {
-            var arg0 = args[0].Value;
-            var arg1 = args[1].Value;
+            double arg0 = ((NumberValue)args[0]).Value;
 
+            if (args[1] is TableValue table)
+            {
+                List<FormulaValue> modResults = new List<FormulaValue>();
+
+                foreach (DValue<RecordValue> row in table.Rows)
+                {
+                    FormulaValue val = row.Value.GetField("Value");
+                    double arg1 = val is NumberValue nv ? nv.Value : 0d;
+                    modResults.Add(ModInternal(arg0, arg1, IRContext.NotInSource(FormulaType.Number)));
+                }
+
+                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, modResults.ToArray(), forceSingleColumn: true));
+            }
+            else
+            {
+                double arg1 = ((NumberValue)args[1]).Value;
+
+                return ModInternal(arg0, arg1, irContext);
+            }
+        }
+
+        private static FormulaValue ModInternal(double arg0, double arg1, IRContext irContext)
+        {
             if (arg1 == 0)
             {
                 return CommonErrors.DivByZeroError(irContext);
@@ -717,7 +754,9 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue RoundDown(IRContext irContext, NumberValue[] args)
         {
             var numberArg = args[0].Value;
-            var digitsArg = args[1].Value;
+
+            // RoundDown is also used for Trunc which has an optional digits argument
+            var digitsArg = args.Length == 1 ? 0 : args[1].Value;
 
             var x = Round(numberArg, digitsArg, RoundType.Down);
             return new NumberValue(irContext, x);
@@ -915,19 +954,23 @@ namespace Microsoft.PowerFx.Functions
             var maxNumber = (1L << 39) - 1;
 
             var number = Math.Floor(args[0].Value);
-            var places = (int)Math.Floor(args[1].Value);
+            int? places = null;
+            if (args.Length > 1)
+            {
+                places = (int)Math.Floor(args[1].Value);
+            }
 
             if (number < minNumber || number > maxNumber)
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            // places need to be non-negative and 10 or less
-            if (places < 0 || places > 10)
+            // places need to be non-negative and between 1 and 10
+            if (places != null && (places < 1 || places > 10))
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
-                    Message = $"Places should be between 0 and 10",
+                    Message = $"Places should be between 1 and 10",
                     Span = irContext.SourceContext,
                     Kind = ErrorKind.Numeric
                 });
@@ -941,16 +984,16 @@ namespace Microsoft.PowerFx.Functions
             */
             if (number < 0)
             {
-                result = roundNumber.ToString("X");
+                result = roundNumber.ToString("X", CultureInfo.InvariantCulture);
                 result = result.Substring(result.Length - 10, 10);
             }
             else
             {
-                result = roundNumber.ToString("X" + places);
+                result = roundNumber.ToString("X" + places, CultureInfo.InvariantCulture);
             }
 
             // places need to be greater or equal to length of hexadecimal when number is positive
-            if (places != 0 && result.Length > places && number > 0)
+            if (result.Length > places && number > 0)
             {
                 return new ErrorValue(irContext, new ExpressionError()
                 {
@@ -978,7 +1021,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // negative numbers starts after 8000000000
-            if (number.Length == 10 && number.CompareTo("8000000000") > 0)
+            if (number.Length == 10 && string.Compare(number, "8000000000", StringComparison.Ordinal) > 0)
             {
                 var maxNumber = (long)(1L << 40);
                 long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);

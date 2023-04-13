@@ -183,7 +183,7 @@
     <value>Formel til at evaluere og returnere, hvis der ikke findes nogen forekomster.</value>
   </data>
   <data name="AboutAnd" xml:space="preserve">
-    <value>Kontrollerer, om alle argumenter er sande og returnerer sande, hvis alle argumenter er sande.</value>
+    <value>Kontrollerer, om alle argumenter er sande og returnerer sand, hvis alle argumenter er sande.</value>
     
   </data>
   <data name="AboutOr" xml:space="preserve">
@@ -567,6 +567,24 @@
     <value>Forbinder adskillige tekstværdier til én tekstværdi.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Konverterer en 'tekst', der repræsenterer et tal, til en numerisk værdi.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Sprogkode, der skal anvendes, når du konverterer værdien.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Tekstværdien, der skal konverteres til en decimalværdi.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Konverterer en 'tekst', der repræsenterer et tal, til en flydende værdi.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Sprogkode, der skal anvendes, når du konverterer værdien.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Tekstværdien, der skal konverteres til en flydende værdi.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
     
@@ -575,7 +593,7 @@
     <value>En tekstværdi, der skal sammenkædes med resten af argumenterne.</value>
   </data>
   <data name="AboutConcatenateT" xml:space="preserve">
-    <value>Joinforbinder flere tekstværdier eller tabeller til én kolonne med tekstværdier.</value>
+    <value>Forbinder flere tekstværdier eller tabeller til én kolonne med tekstværdier.</value>
     
   </data>
   <data name="ConcatenateTArg1" xml:space="preserve">
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Værdi, der returneres, hvis det er det første argument uden fejl.</value>
+    <value>Værdi, der returneres, hvis det forrige argument er en fejl.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Et udtryk, der bliver evalueret i rækker i 'kilden' og giver værdier for sortering.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Stigende eller faldende</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sorterer 'kilde' på baggrund af kolonnen, angiver eventuelt en sorterings-'rækkefølge'.</value>
@@ -889,7 +908,8 @@
     <value>Et unikt kolonnenavn.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Stigende eller faldende</value>
+    <value>SortOrder.Ascending eller SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sorterer 'kilde' på baggrund af indekset for matchende værdier i den angivne kolonne.</value>
@@ -1849,6 +1869,10 @@
     <value>Ugyldigt format.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumentet repræsenterer ikke en gyldig dato- eller klokkeslætsværdi.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Datakilden er ugyldig. Udbedr fejlen i datakildepanelet ved at klikke på "Indhold-&gt; Datakilder" eller "Se-&gt; Indstillinger"</value>
     
@@ -2043,7 +2067,7 @@
     
   </data>
   <data name="AboutDateTime_second" xml:space="preserve">
-    <value>Den anden.</value>
+    <value>Sekundet.</value>
     
   </data>
   <data name="AboutDateTime_millisecond" xml:space="preserve">
@@ -2378,7 +2402,7 @@
     <value>Et antal enheder, der skal tilføjes. Antallet kan være negativt.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Den enhed, der skal bruges, kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Den enhed, der skal bruges, som kan være en af TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>En slutdato for forskelsberegningen.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Den enhed, som resultatet skal udtrykkes i, kan være Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Den enhed, resultatet skal udtrykkes i, som kan være en af TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2833,7 +2857,7 @@
     
   </data>
   <data name="AboutEndsWith" xml:space="preserve">
-    <value>Returnerer true, hvis den angivne tekst slutter med den angivne sidste streng.</value>
+    <value>Returnerer sand, hvis den angivne tekst slutter med den angivne sidste streng.</value>
     
   </data>
   <data name="AboutEndsWith_text" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Globe</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe – Ikke tilsluttet</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe – Opdater</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe – Ændringer venter</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe – Advarsel</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe – Fejl</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Sørg for, at du har tekst til din identifikator. Denne fejl opstår, når identifikatoren udelukkende består af tomme celler eller mellemrum.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Værdier af typen {0} kan ikke sammenlignes.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Inkompatible typer til sammenligning. Disse typer kan ikke sammenlignes: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Denne funktion er entydig. Den indeholder lambda-udtryk og kolonne-id'er for det samme argument.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Indstillingen BooleanOptionSet {0} understøttes ikke.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Værdien af indstillingen {0} ikke af den forventede type {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Returnerer det logiske navn for den givne værdi for grupperet indstilling.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>valgmulighed</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>En værdi for grupperet indstilling, hvis logiske navn returneres.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Hent standardudgaven af landestandardsættet ved kørsel.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Koder en URL-streng og erstatter visse ikke-alfanumeriske tegn med % og et hexadecimalt tal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-adresse</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>En URL-adresse, der skal kodes.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' er en genkendt, men ikke understøttet funktion.</value>
     
   </data>
 </root>

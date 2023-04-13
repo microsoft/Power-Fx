@@ -50,6 +50,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
+            if (context.Features.FirstLastNRequiresSecondArguments && args.Length < 2)
+            {
+                var callNode = args[0].Parent.Parent;
+                errors.Error(callNode, TexlStrings.ErrBadArity, args.Length, 2);
+                return false;
+            }
+
             var arg0Type = argTypes[0];
             if (arg0Type.IsTable)
             {

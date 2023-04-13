@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 #pragma warning disable SA1402 // File may only contain a single type
 #pragma warning disable SA1649 // File name should match first type name
@@ -28,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             ScopeInfo = new FunctionScopeInfo(this, acceptsLiteralPredicates: false);
         }
-
-        public override bool SupportsParamCoercion => true;
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -60,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
-            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
+            fArgsValid &= ScopeInfo.CheckInput(context.Features, args[0], argTypes[0], errors, out var typeScope);
 
             Contracts.Assert(typeScope.IsRecord);
             returnType = typeScope.ToTable();
@@ -113,11 +112,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     continue;
                 }
-                else if (DType.Boolean.Accepts(argTypes[i]))
+                else if (DType.Boolean.Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
                 {
                     continue;
                 }
-                else if (!argTypes[i].CoercesTo(DType.Boolean))
+                else if (!argTypes[i].CoercesTo(DType.Boolean, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrBooleanExpected);
                     continue;

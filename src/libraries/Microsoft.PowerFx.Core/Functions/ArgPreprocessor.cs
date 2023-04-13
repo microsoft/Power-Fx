@@ -12,5 +12,6 @@ namespace Microsoft.PowerFx.Core.Functions
         None = 0,
         ReplaceBlankWithZero = 1,
         ReplaceBlankWithZeroAndTruncate = 2,
+        ReplaceBlankWithEmptyString = 3,
     }
 }

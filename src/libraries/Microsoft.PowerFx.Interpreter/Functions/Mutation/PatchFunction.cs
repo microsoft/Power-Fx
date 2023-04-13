@@ -7,10 +7,8 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.DLP;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -88,7 +86,7 @@ namespace Microsoft.PowerFx.Functions
                 }
                 else if (arg is RecordValue record)
                 {
-                    await foreach (var field in record.GetFieldsAsync(cancellationToken))
+                    await foreach (var field in record.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
                     {
                         retFields[field.Name] = field.Value;
                     }
@@ -170,6 +168,7 @@ namespace Microsoft.PowerFx.Functions
             for (var i = 1; i < args.Length; i++)
             {
                 DType curType = argTypes[i];
+                bool isSafeToUnion = true;
 
                 if (!curType.IsRecord)
                 {
@@ -178,37 +177,13 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                var isSafeToUnion = true;
+                // Checks if all record names exist against table type and if its possible to coerce.
+                bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
 
-                foreach (var typedName in curType.GetNames(DPath.Root))
-                {
-                    DName name = typedName.Name;
-                    DType type = typedName.Type;
+                isValid = isValid && checkAggregateNames;
+                isSafeToUnion = checkAggregateNames;
 
-                    if (!dataSourceType.TryGetType(name, out DType dsNameType))
-                    {
-                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, typedName.Name, args[i]);
-                        isValid = isSafeToUnion = false;
-                        continue;
-                    }
-
-                    if (!type.Accepts(dsNameType, out var schemaDifference, out var schemaDifferenceType) &&
-                        (!SupportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
-                    {
-                        if (dsNameType.Kind == type.Kind)
-                        {
-                            errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
-                        }
-                        else
-                        {
-                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
-                        }
-
-                        isValid = isSafeToUnion = false;
-                    }
-                }
-
-                if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
+                if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded))
                     {
@@ -221,12 +196,12 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType);
+                        retType = DType.Union(retType, coercionType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                     }
                 }
                 else if (isSafeToUnion)
                 {
-                    retType = DType.Union(retType, curType);
+                    retType = DType.Union(retType, curType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
                 }
             }
 
@@ -254,13 +229,13 @@ namespace Microsoft.PowerFx.Functions
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken));
+            var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken).ConfigureAwait(false));
 
             var datasource = (TableValue)args[0];
             var baseRecord = (RecordValue)args[1];
 
             cancellationToken.ThrowIfCancellationRequested();
-            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken);
+            var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);
 
             return ret.ToFormulaValue();
         }

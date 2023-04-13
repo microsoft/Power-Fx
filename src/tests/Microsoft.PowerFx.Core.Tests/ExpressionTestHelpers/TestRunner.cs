@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -43,25 +44,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
-        public void AddDir(string directory = "")
+        public void AddDir(bool numberIsFloat = false, string directory = "")
         {
             directory = Path.GetFullPath(directory, TestRoot);
             var allFiles = Directory.EnumerateFiles(directory);
 
-            AddFile(allFiles);
+            AddFile(numberIsFloat, allFiles);
         }
 
-        public void AddFile(params string[] files)
+        public void AddFile(bool numberIsFloat, params string[] files)
         {
             var x = (IEnumerable<string>)files;
-            AddFile(x);
+            AddFile(numberIsFloat, x);
         }
 
-        public void AddFile(IEnumerable<string> files)
+        public void AddFile(bool numberIsFloat, IEnumerable<string> files)
         {
             foreach (var file in files)
             {
-                AddFile(file);
+                AddFile(numberIsFloat, file);
             }
         }
 
@@ -83,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return false;
         }
 
-        public void AddFile(string thisFile)
+        public void AddFile(bool numberIsFloat, string thisFile)
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 
@@ -104,6 +105,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // #Directive: Parameter
             string fileSetup = null;
             string fileOveride = null;
+            string fileSkipFile = null;
 
             while (i < lines.Length - 1)
             {
@@ -125,6 +127,14 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Can apply to multiple files. 
                         var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
                     }
+                    else if (TryParseDirective(line, "#SKIPFILE:", ref fileSkipFile))
+                    {
+                        if ((Regex.IsMatch(line, @"[:,]\s*disable\s*:\s*NumberIsFloat", RegexOptions.IgnoreCase) && !numberIsFloat) ||
+                            (Regex.IsMatch(line, @"(SKIPFILE:|,)\s*NumberIsFloat", RegexOptions.IgnoreCase) && numberIsFloat))
+                        {
+                            return;
+                        }
+                    }
                     else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
                              TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
                     {
@@ -141,6 +151,8 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 break;
             }
+
+            List<string> duplicateTests = new List<string>();
 
             while (true)
             {
@@ -191,7 +203,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw ParseError(i, $"Multiline comments aren't supported in output");
                     }
 
-                    test.Expected = line.Trim();
+                    test.Expected = line.Trim();                    
 
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))
@@ -199,7 +211,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Must be in different sources
                         if (existingTest.SourceFile == test.SourceFile && existingTest.SetupHandlerName == test.SetupHandlerName)
                         {
-                            throw ParseError(i, $"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
+                            duplicateTests.Add($"Duplicate test cases in {Path.GetFileName(test.SourceFile)} on line {test.SourceLine} and {existingTest.SourceLine}");
                         }
 
                         // Updating an existing test. 
@@ -212,7 +224,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         Tests.Add(test);
 
                         _keyToTests[key] = test;
-                    }
+                    }                    
 
                     test = null;
                 }
@@ -226,9 +238,14 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 throw ParseError(i, "Parse error - missing test result");
             }
+
+            if (duplicateTests.Any())
+            {
+                throw ParseError(0, string.Join("\r\n", duplicateTests));
+            }
         }
 
-        public TestRunFullResults RunTests()
+        public TestRunFullResults RunTests(bool numberIsFloat = false)
         {
             var summary = new TestRunFullResults();
 

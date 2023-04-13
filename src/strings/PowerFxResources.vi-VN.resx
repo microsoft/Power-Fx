@@ -567,6 +567,24 @@
     <value>Kết hợp vài giá trị văn bản thành một giá trị văn bản.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Số thập phân.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Giá trị văn bản cần chuyển đổi sang giá trị Số thập phân.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Giá trị văn bản cần chuyển đổi sang giá trị Float.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>văn_bản</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Giá trị được trả về nếu đó là đối số không lỗi đầu tiên.</value>
+    <value>Giá trị được trả về nếu đối số trước không phải là lỗi.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Một biểu thức được đánh giá qua các hàng trong 'nguồn' và cung cấp các giá trị để sắp xếp.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Tăng dần hoặc Giảm dần</value>
+    <value>SortOrder.Ascending hoặc SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sắp xếp 'nguồn' dựa theo cột, có thể tùy chọn chỉ định một 'thứ tự' sắp xếp.</value>
@@ -889,7 +908,8 @@
     <value>Tên cột duy nhất.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Tăng dần hoặc Giảm dần</value>
+    <value>SortOrder.Ascending hoặc SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sắp xếp 'nguồn' dựa trên chỉ mục của các giá trị khớp trong cột được chỉ định.</value>
@@ -1849,6 +1869,10 @@
     <value>Định dạng không hợp lệ.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Đối số này không biểu thị một giá trị ngày hoặc giờ hợp lệ.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Nguồn Dữ liệu này không hợp lệ. Vui lòng khắc phục lỗi trong ngăn "Nguồn dữ liệu" bằng cách bấm vào "Nội dung -&gt; Nguồn dữ liệu" hoặc "Xem -&gt; Tùy chọn"</value>
     
@@ -2294,7 +2318,7 @@
     <value>Hành vi</value>
   </data>
   <data name="DateTime" xml:space="preserve">
-    <value>Ngày &amp; Giờ</value>
+    <value>Ngày và giờ</value>
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Toán học &amp; Thống kê</value>
@@ -2378,7 +2402,7 @@
     <value>Số đơn vị cần thêm. Số này có thể là số âm.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Đơn vị cần sử dụng, có thể là một trong các đơn vị Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Đơn vị để sử dụng, có thể là một trong những đơn vị TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Ngày kết thúc cho phép tính khác.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Đơn vị để hiển thị kết quả, có thể là một trong các đơn vị Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Đơn vị để thể hiện kết quả, có thể là một trong những đơn vị TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Địa cầu</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Quả địa cầu - Không được kết nối</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Quả cầu - Làm mới</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Quả địa cầu – Các thay đổi đang chờ xử lý</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Quả cầu - Cảnh báo</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Quả địa cầu - Lỗi</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Hãy đảm bảo mã định danh của bạn chứa văn bản. Lỗi này xảy ra khi mã định danh chứa toàn khoảng trống hoặc dấu cách.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Không thể so sánh các giá trị thuộc loại {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Các loại không tương thích để so sánh. Những loại này không thể so sánh được: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Hàm này không rõ ràng, chứa các biểu thức lambda và mã định danh cột cho cùng một đối số.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ tùy chọn BooleanOptionSet {0}.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Giá trị của tùy chọn {0} không thuộc loại dự kiến {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Trả về tên lô-gic của giá trị bộ tùy chọn cụ thể.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>tùy chọn</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Hệ thống sẽ trả về một giá trị bộ tùy chọn có tên lô-gic.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Đặt ngôn ngữ mặc định trong thời gian chạy.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Mã hóa chuỗi URL, thay thế một số ký tự không phải chữ và số bằng % và số thập lục phân.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL sẽ được mã hóa.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>"{0}" là một hàm được công nhận nhưng không được hỗ trợ.</value>
     
   </data>
 </root>

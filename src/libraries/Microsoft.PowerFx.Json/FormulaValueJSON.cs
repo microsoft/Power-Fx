@@ -7,7 +7,13 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Xml.Schema;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Functions;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -16,15 +22,15 @@ namespace Microsoft.PowerFx.Types
         /// <summary>
         /// Convenience method to create a value from a json representation. 
         /// </summary>
-        public static FormulaValue FromJson(string jsonString)
+        public static FormulaValue FromJson(string jsonString, FormulaType formulaType = null, bool numberIsFloat = false)
         {
             try
             {
-                using var document = JsonDocument.Parse(jsonString);
-                using var jsonMemStream = new MemoryStream();
-                var propBag = document.RootElement;
+                using JsonDocument document = JsonDocument.Parse(jsonString);
+                using MemoryStream jsonMemStream = new MemoryStream();
+                JsonElement propBag = document.RootElement;
 
-                return FromJson(propBag);
+                return FromJson(propBag, formulaType, numberIsFloat);
             }
             catch
             {
@@ -37,30 +43,85 @@ namespace Microsoft.PowerFx.Types
         /// Convenience method to create a value from a <see cref="JsonElement"/>.
         /// </summary>
         /// <param name="element"></param>
-        public static FormulaValue FromJson(JsonElement element)
-        {
+        /// <param name="formulaType">Expected formula type. We will check the Json element and formula type match if this parameter is provided.</param>
+        /// <param name="numberIsFloat">Treat JSON numbers as Floats.  By default, they are treated as Decimals.</param>
+        public static FormulaValue FromJson(JsonElement element, FormulaType formulaType = null, bool numberIsFloat = false)
+        {            
+            if (formulaType is UntypedObjectType uot)
+            {
+                return UntypedObjectValue.New(new JsonUntypedObject(element.Clone()));
+            }
+
+            bool skipTypeValidation = formulaType == null || formulaType is BlankType;
+
             switch (element.ValueKind)
             {
                 case JsonValueKind.Null:
-                    return new BlankValue(IRContext.NotInSource(FormulaType.Blank));
+                    return FormulaValue.NewBlank(formulaType);
 
                 case JsonValueKind.Number:
-                    return new NumberValue(IRContext.NotInSource(FormulaType.Number), element.GetDouble());
+                    if ((skipTypeValidation && numberIsFloat) || formulaType is NumberType)
+                    {
+                        return NumberValue.New(element.GetDouble());
+                    }
+                    else if ((skipTypeValidation && !numberIsFloat) || formulaType is DecimalType)
+                    {
+                        return DecimalValue.New(element.GetDecimal());
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Expecting a NumberType or DecimalType but got {formulaType._type.Kind}");
+                    }
 
                 case JsonValueKind.String:
-                    return new StringValue(IRContext.NotInSource(FormulaType.String), element.GetString());
+                    if (skipTypeValidation || formulaType is StringType)
+                    {
+                        return StringValue.New(element.GetString());
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");
+                    }
 
                 case JsonValueKind.False:
-                    return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false);
+                    if (skipTypeValidation || formulaType is BooleanType)
+                    {
+                        return BooleanValue.New(false);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Expecting a BooleanType but got {formulaType._type.Kind}");
+                    }
 
                 case JsonValueKind.True:
-                    return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), true);
+                    if (skipTypeValidation || formulaType is BooleanType)
+                    {
+                        return BooleanValue.New(true);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Expecting a BooleanType but got {formulaType._type.Kind}");
+                    }
 
                 case JsonValueKind.Object:
-                    return RecordFromJsonObject(element);
+                    if (skipTypeValidation || formulaType is RecordType)
+                    {
+                        return RecordFromJsonObject(element, formulaType as RecordType, numberIsFloat);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Expecting a RecordType but got {formulaType._type.Kind}");
+                    }
 
                 case JsonValueKind.Array:
-                    return TableFromJsonArray(element);
+                    if (skipTypeValidation || formulaType is TableType)
+                    {
+                        return TableFromJsonArray(element, formulaType as TableType, numberIsFloat);
+                    }                    
+                    else
+                    {
+                        throw new NotImplementedException($"Expecting a TableType Json Array but got {formulaType._type.Kind}");
+                    }
 
                 default:
                     throw new NotImplementedException($"Unrecognized JsonElement {element.ValueKind}");
@@ -68,7 +129,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         // Json objects parse to records. 
-        private static RecordValue RecordFromJsonObject(JsonElement element)
+        private static RecordValue RecordFromJsonObject(JsonElement element, RecordType recordType, bool numberIsFloat = false)
         {
             Contract.Assert(element.ValueKind == JsonValueKind.Object);
 
@@ -80,7 +141,13 @@ namespace Microsoft.PowerFx.Types
                 var name = pair.Name;
                 var value = pair.Value;
 
-                var paValue = FromJson(value);
+                // if TryGetFieldType fails, fieldType is set to Blank
+                if (recordType?.TryGetFieldType(name, out FormulaType fieldType) != true)
+                {
+                    fieldType = null;
+                }
+
+                var paValue = FromJson(value, fieldType, numberIsFloat);
                 fields.Add(new NamedValue(name, paValue));
                 type = type.Add(new NamedFormulaType(name, paValue.IRContext.ResultType));
             }
@@ -92,16 +159,18 @@ namespace Microsoft.PowerFx.Types
         // Parse json. 
         // [1,2,3]  is a single column table, actually equivalent to: 
         // [{Value : 1, Value: 2, Value :3 }]
-        internal static TableValue TableFromJsonArray(JsonElement array)
+        internal static FormulaValue TableFromJsonArray(JsonElement array, TableType tableType, bool numberIsFloat = false)
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
-            var records = new List<RecordValue>();
+            var records = new List<RecordValue>();            
+            bool isArray = tableType?._type.IsColumn == true;
+            FormulaType ft = isArray ? tableType.ToRecord().GetFieldType("Value") : tableType?.ToRecord();
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
-                var element = array[i];
-                var val = GuaranteeRecord(FromJson(element));
+                JsonElement element = array[i];
+                var val = GuaranteeRecord(FromJson(element, ft, numberIsFloat));
 
                 records.Add(val);
             }
@@ -114,7 +183,22 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                type = ((RecordType)GuaranteeRecord(records[0]).IRContext.ResultType).ToTable();
+                DType typeUnion = DType.EmptyRecord;
+                foreach (var record in records)
+                {
+                    typeUnion = DType.Union(
+                        GuaranteeRecord(record).IRContext.ResultType._type, 
+                        typeUnion, 
+                        useLegacyDateTimeAccepts: false, 
+                        usePowerFxV1CompatibilityRules: false /* Use more strict union rules */);
+                }
+
+                if (typeUnion.HasErrors)
+                {
+                    return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new JsonUntypedObject(array.Clone()));
+                }
+
+                type = (TableType)FormulaType.Build(typeUnion.ToRecord().ToTable());
             }
 
             return new InMemoryTableValue(IRContext.NotInSource(type), records.Select(r => DValue<RecordValue>.Of(r)));

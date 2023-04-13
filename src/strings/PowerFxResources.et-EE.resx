@@ -567,6 +567,24 @@
     <value>Ühendab mitu tekstväärtust üheks tekstväärtuseks.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>The text value to convert to a Decimal value.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Converts a 'text' that represents a number to a Float value.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Language code to use when converting the value.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>The text value to convert to a Float value.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Väärtus, mis tagastatakse, kui see on esimene mittevigane argument.</value>
+    <value>Väärtus, mis tagastatakse, kui eelmine argument on vealine.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Avaldis, mille väärtus arvutatakse allikas olevate ridade põhjal ja mis esitab sortimiseks väärtused.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Tõusev või laskuv järjestus</value>
+    <value>SortOrder.Ascending või SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Sordib allika veeru põhjal, määrates soovi korral sortimisjärjestuse.</value>
@@ -889,7 +908,8 @@
     <value>Kordumatu veerunimi.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Tõusev või laskuv järjestus</value>
+    <value>SortOrder.Ascending või SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Sordib allika vastavalt määratud veerus vastavuses olevate väärtuste registrile.</value>
@@ -1849,6 +1869,10 @@
     <value>Sobimatu vorming.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argument ei esinda kehtivat kuupäeva- ega kellaajaväärtust.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>See andmeallikas ei sobi. Parandage viga paanil Andmeallikad, valides Sisu -&gt; Andmeallikad või Vaade -&gt; Suvandid</value>
     
@@ -2378,7 +2402,7 @@
     <value>Lisatavate ühikute arv. Arv võib olla negatiivne.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Kasutatav ühik, mis võib olla kas: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Kasutatav ühik, mis võib olla üks järgmistest: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Lõppkuupäev erinevuse arvutamise toimingu jaoks.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Ühik, milles tulemus esitatakse, mis võib olla kas: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Ühik, milles väljendatakse tulemus. Võib olla üks järgmistest: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Maailm</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe – pole ühendatud</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe – värskenda</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe – muudatused on ootel</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe – hoiatus</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe – tõrge</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Veenduge, et teil oleks oma identifikaatorile tekst. See tõrge ilmneb, kui identifikaator koosneb ainult tühiväärtustest või tühikutest.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Väärtusi tüübiga {0} ei saa võrrelda.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Võrdluse jaoks sobimatud tüübid. Neid tüüpe ei saa võrrelda: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>See funktsioon on mitmetähenduslik, see sisaldab sama argumendi lambdaavaldisi ja veeruidentifikaatoreid.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Suvandit BooleanOptionSet {0} ei toetata.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Suvandi {0} väärtuse tüüp pole eeldatud tüüp {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Tagastab antud suvandikomplekti väärtuse loogilise nime.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>suvand</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Suvandikomplekti väärtus, mille loogiline nimi tagastatakse.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Saate hankida käitusajal määratud vaikelokaadi.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Kodeerib URL-stringi, asendades teatud mittetähtnumbrilised märgid märgiga % ja kuueteistkümnendarvuga.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Kodeeritav URL.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' is a recognized but not supported function.</value>
     
   </data>
 </root>

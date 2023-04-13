@@ -16,9 +16,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     internal abstract class StringOneArgFunction : BuiltinFunction
     {
-        public override bool IsSelfContained => true;
+        public override ArgPreprocessor GetArgPreprocessor(int index)
+        {
+            return base.GetGenericArgPreprocessor(index);
+        }
 
-        public override bool SupportsParamCoercion => true;
+        public override bool IsSelfContained => true;
 
         public StringOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
             : base(name, description, functionCategories, DType.String, 0, 1, 1, DType.String)
@@ -89,8 +92,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public StringOneArgTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories functionCategories)
             : base(name, description, functionCategories, DType.EmptyTable, 0, 1, 1, DType.EmptyTable)
         {
@@ -119,19 +120,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], errors, ref nodeToCoercedTypeMap);
-
-            if (nodeToCoercedTypeMap?.Any() ?? false)
-            {
-                // Now set the coerced type to a table with numeric column type with the same name as in the argument.
-                returnType = nodeToCoercedTypeMap[args[0]];
-            }
-            else
-            {
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                : argTypes[0];
-            }
+            fValid &= CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
 
             return fValid;
         }

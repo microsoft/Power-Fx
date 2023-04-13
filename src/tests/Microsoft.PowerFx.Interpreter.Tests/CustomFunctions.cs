@@ -68,16 +68,20 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task CustomFunctionErrorTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new CustomFunctionError());
             config.AddFunction(new AsyncCustomFunctionError());
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
+#pragma warning disable CS0618 // Type or member is obsolete
             var func = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError");
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             var func2 = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError2");
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func2);
 
             // Test for non async invokes.
@@ -96,11 +100,11 @@ namespace Microsoft.PowerFx.Tests
             Assert.IsType<NumberValue>(result2);
             Assert.Equal(20d, ((NumberValue)result2).Value);
 
-            var errorResult2 = await engine.EvalAsync("CustomFunctionError2(-1)", CancellationToken.None);
+            var errorResult2 = await engine.EvalAsync("CustomFunctionError2(-1)", CancellationToken.None).ConfigureAwait(false);
             Assert.IsType<ErrorValue>(errorResult2);
             Assert.Equal("arg should be greater than 0", ((ErrorValue)errorResult2).Errors.First().Message);
 
-            await Assert.ThrowsAsync<NotSupportedException>(() => engine.EvalAsync("CustomFunctionError2(0)", CancellationToken.None));
+            await Assert.ThrowsAsync<NotSupportedException>(async () => await engine.EvalAsync("CustomFunctionError2(0)", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         public class NullFunctionReturn : ReflectionFunction
@@ -119,16 +123,18 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task NullToBlankTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new NullFunctionReturn());
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
+#pragma warning disable CS0618 // Type or member is obsolete
             var func = engine.GetAllFunctionNames().First(name => name == "NullFunction");
+#pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func);
 
             // Can be invoked. 
-            var result = await engine.EvalAsync("NullFunction()", CancellationToken.None);
+            var result = await engine.EvalAsync("NullFunction()", CancellationToken.None).ConfigureAwait(false);
             Assert.IsType<BlankValue>(result);
             Assert.IsType<NumberType>(result.Type);
         }
@@ -136,12 +142,12 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunction()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
-            // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
+            // Shows up in enumeration
+            var func = engine.GetFunctionsByName("TestCustom");
             Assert.NotNull(func);
 
             // Can be invoked. 
@@ -162,12 +168,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("TestCustom(0,true,If(false,\"test\"))", "0,True,", false, null)]
         public void CustomFunctionErrorOrBlank(string script, string expectedResult, bool isErrorExpected, string errorMessage)
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new TestCustomFunction());
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustom");
+            var func = engine.GetFunctionsByName("TestCustom");
             Assert.NotNull(func);
 
             // With error as arg.
@@ -199,7 +205,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomRecordFunction()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new TestRecordCustomFunction());
 
             // Invalid function
@@ -208,9 +214,9 @@ namespace Microsoft.PowerFx.Tests
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "RecordTest");
+            var func = engine.GetFunctionsByName("RecordTest");
             Assert.NotNull(func);
-            var invalidFunc = engine.GetAllFunctionNames().First(name => name == "InvalidRecordTest");
+            var invalidFunc = engine.GetFunctionsByName("InvalidRecordTest");
             Assert.NotNull(invalidFunc);
 
             // Can be invoked. 
@@ -241,6 +247,39 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Fact]
+        public void CustomTableArgFunction()
+        {
+            var config = new PowerFxConfig();
+            config.AddFunction(new TableArgCustomFunction());
+
+            var engine = new RecalcEngine(config);
+
+            // Shows up in enumeration
+            var func = engine.GetAllFunctionNames().First(name => name == "TableArgTest");
+            Assert.NotNull(func);
+
+            // Can be invoked. 
+            var result = engine.Eval("TableArgTest( [1, 2, 3, 4, 5] )");
+            Assert.IsType<NumberValue>(result);
+
+            var resultNumber = (NumberValue)result;
+            Assert.Equal(5, resultNumber.Value);
+        }
+
+        private class TableArgCustomFunction : ReflectionFunction
+        {
+            public TableArgCustomFunction()
+                : base("TableArgTest", FormulaType.Number, TableType.Empty().Add("Value", FormulaType.Number))
+            {
+            }
+
+            public NumberValue Execute(TableValue table)
+            {
+                return FormulaValue.New(table.Count());
+            }
+        }
+
         // Must have "Function" suffix. 
         private class TestInvalidRecordCustomFunction : ReflectionFunction
         {
@@ -264,7 +303,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void InvalidDeferredFunctionTest()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             Assert.Throws<NotSupportedException>(() => config.AddFunction(new InvalidDeferredFunction()));
             Assert.Throws<NotSupportedException>(() => config.AddFunction(new InvalidArgDeferredFunction()));
         }
@@ -298,12 +337,12 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomFunction_CallBack()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new TestCallbackFunction());
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCallback");
+            var func = engine.GetFunctionsByName("TestCallback");
             Assert.NotNull(func);
 
             var result = engine.Eval("TestCallback(1=2)");
@@ -323,18 +362,18 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomFunctionAsync_CallBack()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new WaitFunction());
             config.AddFunction(new HelperFunction(x => FormulaValue.New(x.Value + 1)));
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "Wait");
+            var func = engine.GetFunctionsByName("Wait");
             Assert.NotNull(func);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
-            var result = await engine.EvalAsync("Wait(Helper() = 3)", cts.Token);
+            var result = await engine.EvalAsync("Wait(Helper() = 3)", cts.Token).ConfigureAwait(false);
             Assert.Equal(true, result.ToObject());
         }
 
@@ -345,7 +384,7 @@ namespace Microsoft.PowerFx.Tests
             // Any arg can be a boolean callback function.
             public static async Task<BooleanValue> Execute(Func<Task<BooleanValue>> expression, CancellationToken cancellationToken)
             {
-                while (!(await expression()).Value)
+                while (!(await expression().ConfigureAwait(false)).Value)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                 }
@@ -375,7 +414,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomFunctionAsync_CallBack_Invalid()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             Action act = () => config.AddFunction(new InvalidTestCallbackFunction());
             Exception exception = Assert.Throws<InvalidOperationException>(act);
             Assert.Equal("Unknown parameter type: expression, System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.StringValue]]. Only System.Func`1[System.Threading.Tasks.Task`1[Microsoft.PowerFx.Types.BooleanValue]] is supported", exception.Message);
@@ -388,7 +427,7 @@ namespace Microsoft.PowerFx.Tests
             // Any arg can be a boolean callback function.
             public static async Task<BooleanValue> Execute(Func<Task<StringValue>> expression, CancellationToken cancellationToken)
             {
-                await expression();
+                await expression().ConfigureAwait(false);
                 return FormulaValue.New(false);
             }
         }
@@ -396,21 +435,21 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomMockAndFunction_CallBack()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new MockAnd2ArgFunction());
             var engine = new RecalcEngine(config);
 
             // Shows up in enuemeration
-            var func = engine.GetAllFunctionNames().First(name => name == "MockAnd2Arg");
+            var func = engine.GetFunctionsByName("MockAnd2Arg");
             Assert.NotNull(func);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
             var result = engine.EvalAsync("MockAnd2Arg(1=2, 1=1)", cts.Token);
-            Assert.Equal(false, (await result).ToObject());
+            Assert.Equal(false, (await result.ConfigureAwait(false)).ToObject());
 
             var result2 = engine.EvalAsync("MockAnd2Arg(1=1, 1=1)", cts.Token);
-            Assert.Equal(true, (await result2).ToObject());
+            Assert.Equal(true, (await result2.ConfigureAwait(false)).ToObject());
         }
 
         private class MockAnd2ArgFunction : ReflectionFunction
@@ -420,30 +459,30 @@ namespace Microsoft.PowerFx.Tests
             // Any arg can be a boolean callback function.
             public static async Task<BooleanValue> Execute(Func<Task<BooleanValue>> expression1, Func<Task<BooleanValue>> expression2, CancellationToken cancellationToken)
             {
-                if (!(await expression1()).Value)
+                if (!(await expression1().ConfigureAwait(false)).Value)
                 {
                     return FormulaValue.New(false);
                 }
 
-                return await expression2();
+                return await expression2().ConfigureAwait(false);
             }
         }
 
         [Fact]
         public async void SimpleCustomAsyncFuntion()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
 
             config.AddFunction(new TestCustomAsyncFunction());
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
-            var func = engine.GetAllFunctionNames().First(name => name == "TestCustomAsync");
+            var func = engine.GetFunctionsByName("TestCustomAsync");
             Assert.NotNull(func);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
-            var resultAsync = await engine.EvalAsync("TestCustomAsync(3, true)", cts.Token);
+            var resultAsync = await engine.EvalAsync("TestCustomAsync(3, true)", cts.Token).ConfigureAwait(false);
 
             Assert.Equal("3,True", resultAsync.ToObject());
         }
@@ -453,7 +492,7 @@ namespace Microsoft.PowerFx.Tests
         public async void VerifyCustomFunctionIsAsync()
         {
             var func = new TestCustomWaitAsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -465,12 +504,12 @@ namespace Microsoft.PowerFx.Tests
             await Task.Yield();
 
             // custom func is blocking on our waiter
-            await Task.Delay(TimeSpan.FromMilliseconds(5));
+            await Task.Delay(TimeSpan.FromMilliseconds(5)).ConfigureAwait(false);
             Assert.False(task.IsCompleted);
 
             func.SetResult(15);
 
-            var result = await task;
+            var result = await task.ConfigureAwait(false);
 
             Assert.Equal(30.0, result.ToObject());
         }
@@ -479,7 +518,7 @@ namespace Microsoft.PowerFx.Tests
         public async void VerifyCancellationInAsync()
         {
             var func = new InfiniteAsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(func);
 
             var engine = new RecalcEngine(config);
@@ -489,12 +528,12 @@ namespace Microsoft.PowerFx.Tests
             var task = engine.EvalAsync("InfiniteAsync()", cts.Token);
 
             // custom func is blocking on our Infinite loop.
-            await Task.Delay(TimeSpan.FromMilliseconds(5));
+            await Task.Delay(TimeSpan.FromMilliseconds(5)).ConfigureAwait(false);
             Assert.False(task.IsCompleted);
 
             cts.Cancel();
 
-            await Assert.ThrowsAsync<TaskCanceledException>(async () => { await task; });
+            await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => { await task.ConfigureAwait(false); }).ConfigureAwait(false);
         }
 
         // Add a function that gets different runtime state per expression invoke
@@ -518,7 +557,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 var runtime = new RuntimeConfig();
                 runtime.AddService(new UserAsyncFunction.Runtime { _name = name });
-                var result = await expr.EvalAsync(CancellationToken.None, runtime);
+                var result = await expr.EvalAsync(CancellationToken.None, runtime).ConfigureAwait(false);
 
                 var expected = name + "3";
                 var actual = result.ToObject();
@@ -530,7 +569,7 @@ namespace Microsoft.PowerFx.Tests
         public async void InvalidAsyncFunction()
         {
             var func = new TestCustomInvalidAsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
         }
 
@@ -538,7 +577,7 @@ namespace Microsoft.PowerFx.Tests
         public async void InvalidAsync2Function()
         {
             var func = new TestCustomInvalid2AsyncFunction();
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             Assert.Throws<InvalidOperationException>(() => config.AddFunction(func));
         }
 
@@ -580,18 +619,18 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void CustomAsyncFuntionUsingCtor()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
 
             config.AddFunction(new TestCtorCustomAsyncFunction());
             var engine = new RecalcEngine(config);
 
             // Shows up in enumeration
-            var func = engine.GetAllFunctionNames().First(name => name == "CustomAsync");
+            var func = engine.GetFunctionsByName("CustomAsync");
             Assert.NotNull(func);
 
             // Can be invoked. 
             using var cts = new CancellationTokenSource();
-            var resultAsync = await engine.EvalAsync("CustomAsync(\"test\")", cts.Token);
+            var resultAsync = await engine.EvalAsync("CustomAsync(\"test\")", cts.Token).ConfigureAwait(false);
 
             Assert.Equal("test", resultAsync.ToObject());
         }
@@ -620,7 +659,7 @@ namespace Microsoft.PowerFx.Tests
             public async Task<NumberValue> Execute(CancellationToken cancellationToken)
             {
                 await Task.Yield();
-                var result = await _waiter.Task;
+                var result = await _waiter.Task.ConfigureAwait(false);
 
                 var n = ((NumberValue)result).Value;
                 var x = FormulaValue.New(n * 2);
@@ -664,7 +703,7 @@ namespace Microsoft.PowerFx.Tests
             // Must have "Execute" method. 
             public async Task<StringValue> Execute(CancellationToken cancellationToken)
             {
-                await Task.Delay(-1, cancellationToken); // throws TaskCanceledException
+                await Task.Delay(-1, cancellationToken).ConfigureAwait(false); // throws TaskCanceledException
 
                 throw new InvalidOperationException($"Shouldn't get here");
             }
@@ -682,7 +721,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomSetPropertyFunction()
         {
-            var config = new PowerFxConfig(null);
+            var config = new PowerFxConfig();
             config.AddFunction(new TestCustomSetPropFunction());
             var engine = new RecalcEngine(config);
 
@@ -692,7 +731,7 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("x", x);
 
             // Test multiple overloads
-            engine.Eval("SetProperty(x.NumProp, 123)", options: _opts);
+            engine.Eval("SetProperty(x.NumProp, Float(123))", options: _opts);
             Assert.Equal(123.0, obj.NumProp);
 
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
@@ -702,10 +741,10 @@ namespace Microsoft.PowerFx.Tests
             var check = engine.Check("SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
             Assert.False(check.IsSuccess);
 
-            check = engine.Check("SetProperty(x.BoolProp, 123)"); // arg mismatch
+            check = engine.Check("SetProperty(x.BoolProp, Float(123))"); // arg mismatch
             Assert.False(check.IsSuccess);
 
-            check = engine.Check("SetProperty(x.numMissing, 123)", options: _opts); // Binding Fail
+            check = engine.Check("SetProperty(x.numMissing, Float(123))", options: _opts); // Binding Fail
             Assert.False(check.IsSuccess);
         }
 
@@ -743,8 +782,8 @@ namespace Microsoft.PowerFx.Tests
             config.AddFunction(new SetFieldStrFunction());
             var engine = new RecalcEngine(config);
 
-            var count = engine.GetAllFunctionNames().Count(name => name == "SetField");
-            Assert.Equal(1, count); // no duplicates
+            var setFieldFunctions = engine.GetFunctionsByName("SetField");
+            Assert.Equal(2, setFieldFunctions.Count()); 
 
             // Duplicates?
             var result = engine.Eval(expr);

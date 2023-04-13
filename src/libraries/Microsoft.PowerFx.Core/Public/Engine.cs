@@ -9,6 +9,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -48,7 +49,7 @@ namespace Microsoft.PowerFx
         // All functions that powerfx core knows about. 
         // Derived engines may only support a subset of these builtins, 
         // and they may add their own custom ones. 
-        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctions = ReadOnlySymbolTable.NewDefault(Core.Texl.BuiltinFunctionsCore.BuiltinFunctionsLibrary);
+        private static readonly ReadOnlySymbolTable _allBuiltinCoreFunctions = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
 
         /// <summary>
         /// Builtin functions supported by this engine. 
@@ -57,20 +58,33 @@ namespace Microsoft.PowerFx
 
         // By default, we pull the core functions. 
         // These can be overridden. 
-        internal IEnumerable<TexlFunction> Functions => CreateResolverInternal().Functions;
+        internal TexlFunctionSet Functions => CreateResolverInternal().Functions;
 
         /// <summary>
-        /// Get all functions from the config and symbol tables. 
+        /// List of transforms to apply to an IR. 
         /// </summary>
-        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Select(f => new FunctionInfo(f));
+        internal readonly List<Core.IR.IRTransform> IRTransformList = new List<Core.IR.IRTransform>();
+        
+        /// <summary>
+        /// Get all functions from the config and symbol tables. 
+        /// </summary>        
+#pragma warning disable CS0618 // Type or member is obsolete
+        public IEnumerable<FunctionInfo> FunctionInfos => Functions.Functions.Select(f => new FunctionInfo(f));
+#pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>
         /// List all functions (both builtin and custom) registered with this evaluator. 
         /// </summary>
+#pragma warning disable CA1024 // Use properties where appropriate        
         public IEnumerable<string> GetAllFunctionNames()
+#pragma warning restore CA1024 // Use properties where appropriate
         {
-            return FunctionInfos.Select(func => func.Name).Distinct();
+            return Functions.FunctionNames;
         }
+
+        internal IEnumerable<TexlFunction> GetFunctionsByName(string name) => Functions.WithName(name);
+
+        internal int FunctionCount => Functions.Count();
 
         // Additional symbols for the engine.
         // A derived engine can replace this completely to inject engine-specific virtuals. 
@@ -120,9 +134,9 @@ namespace Microsoft.PowerFx
         {
             return new ParserOptions
             {
-                 Culture = this.Config.CultureInfo,
+                 Culture = null,
                  AllowsSideEffects = false,
-                 MaxExpressionLength = 0, // no limit
+                 MaxExpressionLength = Config.MaximumExpressionLength,
             };
         }
 
@@ -130,9 +144,10 @@ namespace Microsoft.PowerFx
         ///     Tokenize an expression to a sequence of <see cref="Token" />s.
         /// </summary>
         /// <param name="expressionText"></param>
+        /// <param name="culture"></param>
         /// <returns></returns>
-        public IReadOnlyList<Token> Tokenize(string expressionText)
-            => TexlLexer.GetLocalizedInstance(Config.CultureInfo).GetTokens(expressionText);
+        public IReadOnlyList<Token> Tokenize(string expressionText, CultureInfo culture = null)
+            => TexlLexer.GetLocalizedInstance(culture).GetTokens(expressionText);
 
         /// <summary>
         /// Parse the expression without doing any binding.
@@ -142,26 +157,13 @@ namespace Microsoft.PowerFx
         /// <returns></returns>
         public ParseResult Parse(string expressionText, ParserOptions options = null)
         {
-            options ??= this.GetDefaultParserOptionsCopy();
-            return Parse(expressionText, Config.Features, options, Config.CultureInfo);
+            return Parse(expressionText, Config.Features, options ?? this.GetDefaultParserOptionsCopy());
         }
 
         /// <summary>
         /// Parse the expression without doing any binding.
         /// </summary>
-        /// <param name="expressionText"></param>
-        /// <param name="options"></param>
-        /// <param name="cultureInfo"></param>
-        /// <returns></returns>
-        public static ParseResult Parse(string expressionText, ParserOptions options = null, CultureInfo cultureInfo = null)
-        {
-            return Parse(expressionText, Features.None, options, cultureInfo);
-        }
-
-        /// <summary>
-        /// Parse the expression without doing any binding.
-        /// </summary>
-        public static ParseResult Parse(string expressionText, Features features, ParserOptions options = null, CultureInfo cultureInfo = null)
+        public static ParseResult Parse(string expressionText, Features features = null, ParserOptions options = null)
         {
             if (expressionText == null)
             {
@@ -170,10 +172,7 @@ namespace Microsoft.PowerFx
 
             options ??= new ParserOptions();
 
-            // If culture isn't explicitly set, use the one from PowerFx Config
-            options.Culture ??= cultureInfo;
-
-            var result = options.Parse(expressionText, features);
+            var result = options.Parse(expressionText, features ?? Features.None);
             return result;            
         }
 
@@ -299,7 +298,7 @@ namespace Microsoft.PowerFx
             // Anything else should be accomplished with SymbolTables.
             bool useThisRecordForRuleScope = ruleScope != null;
 
-            var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope);
+            var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope, result.Parse.Options.NumberIsFloat);
 
             var binding = TexlBinding.Run(
                 glue,
@@ -355,7 +354,7 @@ namespace Microsoft.PowerFx
         public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
         {            
             var binding = checkResult.Binding;
-            var formula = new Formula(expression, Config.CultureInfo);
+            var formula = new Formula(expression, checkResult.ParserCultureInfo);
             formula.ApplyParse(checkResult.Parse);
 
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
@@ -374,8 +373,9 @@ namespace Microsoft.PowerFx
         /// be acecssed as top-level identifiers in the formula. Must be the names from before any rename operation is applied.</param>
         /// <param name="pathToRename">Path to the field to rename.</param>
         /// <param name="updatedName">New name. Replaces the last segment of <paramref name="pathToRename"/>.</param>
+        /// <param name="culture">Culture.</param>
         /// <returns></returns>
-        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName)
+        public RenameDriver CreateFieldRenamer(RecordType parameters, DPath pathToRename, DName updatedName, CultureInfo culture)
         {
             Contracts.CheckValue(parameters, nameof(parameters));
             Contracts.CheckValid(pathToRename, nameof(pathToRename));
@@ -390,7 +390,7 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal(), CreateBinderGlue());
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal(), CreateBinderGlue(), culture);
         }
 
         /// <summary>
@@ -400,13 +400,14 @@ namespace Microsoft.PowerFx
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
         /// as part of the RecordType.</param>
+        /// <param name="parseCulture">Culture.</param>
         /// <returns>The formula, with all identifiers converted to invariant form.</returns>
-        public string GetInvariantExpression(string expressionText, RecordType parameters)
+        public string GetInvariantExpression(string expressionText, RecordType parameters, CultureInfo parseCulture = null)
         {            
             var ruleScope = this.GetRuleScope();
             var symbolTable = (parameters == null) ? null : SymbolTable.NewFromRecord(parameters);
 
-            return GetInvariantExpressionWorker(expressionText, symbolTable, Config.CultureInfo);
+            return GetInvariantExpressionWorker(expressionText, symbolTable, parseCulture);
         }
 
         internal string GetInvariantExpressionWorker(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo parseCulture)
@@ -423,17 +424,18 @@ namespace Microsoft.PowerFx
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula. If DisplayNames are used, make sure to have that mapping
         /// as part of the RecordType.</param>
+        /// <param name="culture">Culture.</param>
         /// <returns>The formula, with all identifiers converted to display form.</returns>
-        public string GetDisplayExpression(string expressionText, RecordType parameters)
+        public string GetDisplayExpression(string expressionText, RecordType parameters, CultureInfo culture = null)
         {
             var symbols = SymbolTable.NewFromRecord(parameters);
-            return GetDisplayExpression(expressionText, symbols);
+            return GetDisplayExpression(expressionText, symbols, culture);
         }
 
-        public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable)
+        public string GetDisplayExpression(string expressionText, ReadOnlySymbolTable symbolTable, CultureInfo culture = null)
         {
             var ruleScope = this.GetRuleScope();
-            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), Config, toDisplay: true);
+            return ExpressionLocalizationHelper.ConvertExpression(expressionText, ruleScope, GetDefaultBindingConfig(), CreateResolverInternal(symbolTable), CreateBinderGlue(), culture, Config.Features, toDisplay: true);
         }
     }
 }

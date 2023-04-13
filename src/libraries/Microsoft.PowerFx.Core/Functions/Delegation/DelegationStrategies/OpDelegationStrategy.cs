@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
@@ -29,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
         {
             Contracts.AssertNonEmpty(message);
 
-            return string.Format("Op:{0}, {1}", Op, message);
+            return string.Format(CultureInfo.InvariantCulture, "Op:{0}, {1}", Op, message);
         }
 
         public virtual bool IsOpSupportedByColumn(OperationCapabilityMetadata metadata, TexlNode column, DPath columnPath, TexlBinding binder)
@@ -41,6 +42,15 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var result = metadata.IsBinaryOpInDelegationSupportedByColumn(Op, columnPath);
             if (!result)
             {
+                // Filter(SharepointDS, BooleanCol And <some other predicate>), makes it non delegable since no column has And/Or capability
+                if ((column.Kind == NodeKind.FirstName || column.Kind == NodeKind.DottedName) && (Op == BinaryOp.And || Op == BinaryOp.Or))
+                {
+                    if (binder.IsValidBooleanDelegableNode(column))
+                    {
+                        return IsOpSupportedByTable(metadata, column, binder);
+                    }
+                }
+                
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
                 SuggestDelegationHint(column, binder, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnPath.ToString()));
             }
@@ -77,31 +87,28 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(binding);
             Contracts.AssertValue(opDelStrategy);
 
-            if (!binding.IsRowScope(node))
+            // Check whether this is -
+            //  1) in operator delegation and
+            //  2) it is not within row scope
+            //  3) it is verifying if RHS node is supported and
+            //  4) it is not an async node or a valid async node.
+            //  5) it is a single column table and
+            //  6) metadata belongs to cds datasource that supports delegation of CdsIn
+            // If this check fails, verify if it is simply a valid node..
+            // Eg of valid delegation functions -
+            // Filter(Accounts, 'Account Name' in ["Foo", Bar"]) - Direct table use
+            // Set(Names, ["Foo", Bar"]); Filter(Accounts, 'Account Name' in Names) - Using variable of type table
+            // ClearCollect(Names, Accounts); Filter(Accounts, 'Account Name' in Names.'Account Name') - using column from collection.
+            // This won't be delegated if the AllowAsyncDelegation- Filter(Accounts, 'Account Name' in Accounts.'Account Name') as Accounts.'Account Name' is async.
+            if (isRHSNode && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled
+                && opDelStrategy is BinaryOpDelegationStrategy { Op: BinaryOp.In }
+                && !binding.IsRowScope(node)
+                && binding.GetType(node).IsTable 
+                && binding.GetType(node).IsColumn
+                && (binding.Features.AllowAsyncDelegation || !binding.IsAsync(node))
+                && opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
             {
-                // Check whether this is -
-                //  1) in operator delegation and
-                //  2) it is verifying if RHS node is supported and
-                //  3) it is not an async node and
-                //  4) it is a single column table and
-                //  5) metadata belongs to cds datasource that supports delegation of CdsIn
-                // If this check fails, verify if it is simply a valid node..
-                // Eg of valid delegation functions -
-                // Filter(Accounts, 'Account Name' in ["Foo", Bar"]) - Direct table use
-                // Set(Names, ["Foo", Bar"]); Filter(Accounts, 'Account Name' in Names) - Using variable of type table
-                // ClearCollect(Names, Accounts); Filter(Accounts, 'Account Name' in Names.'Account Name') - using column from collection.
-                // This won't be delegated - Filter(Accounts, 'Account Name' in Accounts.'Account Name') as Accounts.'Account Name' is async.
-                if (isRHSNode && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled
-                    && (opDelStrategy as BinaryOpDelegationStrategy)?.Op == BinaryOp.In && !binding.IsAsync(node) && binding.GetType(node).IsTable && binding.GetType(node).IsColumn &&
-                    opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
-                {
-                    return true;
-                }
-
-                if (!binding.IsRowScope(node) && IsValidNode(node, binding))
-                {
-                    return true;
-                }
+                return true;
             }
 
             switch (node.Kind)
@@ -172,9 +179,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                     {
                         var kind = node.Kind;
 
-                        if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit)
+                        if (kind != NodeKind.BoolLit && kind != NodeKind.StrLit && kind != NodeKind.NumLit && kind != NodeKind.DecLit)
                         {
-                            var telemetryMessage = string.Format("NodeKind {0} unsupported.", kind);
+                            var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "NodeKind {0} unsupported.", kind);
                             SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                             return false;
                         }
@@ -273,7 +280,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 !(binaryOpNode.Right is FirstNameNode || binaryOpNode.Right is DottedNameNode) &&
                 !opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
             {
-                var telemetryMessage = string.Format("{0} operator not supported at table level", binaryOpNode.Op.ToString());
+                var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "{0} operator not supported at table level", binaryOpNode.Op.ToString());
                 SuggestDelegationHintAndAddTelemetryMessage(node, binding, telemetryMessage);
                 TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.BinaryOpNoSupported, node, binding, _function, DelegationTelemetryInfo.CreateBinaryOpNoSupportedInfoTelemetryInfo(binaryOpNode.Op));
                 return false;

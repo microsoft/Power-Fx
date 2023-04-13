@@ -5,10 +5,11 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests.Helpers;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
-namespace Microsoft.PowerFx.Tests
+namespace Microsoft.PowerFx.Json.Tests
 {
     public class FormulaTypeSerializerSnapshotTests
     {

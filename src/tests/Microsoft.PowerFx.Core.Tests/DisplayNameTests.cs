@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public DisplayNameTests()
             : base()
         {
-            _engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
+            _engine = new Engine(new PowerFxConfig());
         }
 
         private readonly Engine _engine;
@@ -239,12 +239,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (toDisplay)
                 {
-                    var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, record);
+                    var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, record, CultureInfo.InvariantCulture);
                     Assert.Equal(outputExpression, outDisplayExpression);
                 }
                 else
                 {
-                    var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, record);
+                    var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, record, CultureInfo.InvariantCulture);
                     Assert.Equal(outputExpression, outInvariantExpression);
                 }
             }
@@ -272,10 +272,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
 
-            var config = new PowerFxConfig(new CultureInfo("fr-FR"));
+            var config = new PowerFxConfig();
             var engine = new Engine(config);
             var check = new CheckResult(engine)
-                .SetText(mixedExpression ?? display)
+                .SetText(mixedExpression ?? display, new ParserOptions(new CultureInfo("fr-FR")))
                 .SetBindingInfo(allSymbols);
 
             check.ApplyBinding();
@@ -286,12 +286,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(logical, invariant);
 
             // Get display
-            var displayActual = engine.GetDisplayExpression(logical, allSymbols);
+            var displayActual = engine.GetDisplayExpression(logical, allSymbols, check.ParserCultureInfo);
             Assert.Equal(display, displayActual);
 
             if (mixedExpression != null)
             {
-                displayActual = engine.GetDisplayExpression(mixedExpression, allSymbols);
+                displayActual = engine.GetDisplayExpression(mixedExpression, allSymbols, check.ParserCultureInfo);
                 Assert.Equal(display, displayActual);
             }
         }
@@ -354,7 +354,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("B + + + ", "B + + + ", "M", "A")]
         public void RenameParameter(string expressionBase, string expectedExpression, string path, string newName)
         {
-            var config = new PowerFxConfig(CultureInfo.InvariantCulture);
+            var config = new PowerFxConfig();
             var optionSet1 = new OptionSet("firstos", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
@@ -393,7 +393,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new Engine(config);
 
-            var renamer = engine.CreateFieldRenamer(r1, dpath, new DName(newName));
+            var renamer = engine.CreateFieldRenamer(r1, dpath, new DName(newName), CultureInfo.InvariantCulture);
 
             if (renamer.Find(expressionBase))
             {
@@ -408,12 +408,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RenameLazyRecord()
         {
-            var engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
+            var engine = new Engine(new PowerFxConfig());
 
             var renamer = engine.CreateFieldRenamer(
                 new BindingEngineTests.LazyRecursiveRecordType(),
                 DPath.Root.Append(new DName("Loop")).Append(new DName("SomeString")),
-                new DName("Var"));
+                new DName("Var"),
+                CultureInfo.InvariantCulture);
 
             Assert.Equal("Loop.Var = \"1\"", renamer.ApplyRename("Loop.SomeString = \"1\""));
         }
@@ -421,12 +422,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void RenameLazyRecordReusedTypes()
         {
-            var engine = new Engine(new PowerFxConfig(CultureInfo.InvariantCulture));
+            var engine = new Engine(new PowerFxConfig());
 
             var renamer = engine.CreateFieldRenamer(
                 new BindingEngineTests.LazyRecursiveRecordType(),
                 DPath.Root.Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")).Append(new DName("Loop")),
-                new DName("Var"));
+                new DName("Var"),
+                CultureInfo.InvariantCulture);
 
             Assert.Equal("Var.Var.SomeString = \"1\"", renamer.ApplyRename("Loop.Loop.SomeString = \"1\""));
         }
@@ -510,7 +512,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     {
         public CommaSeparatedDecimalLocaleConversionTests()
         {
-            _engine = new Engine(new PowerFxConfig(CultureInfo.GetCultureInfo("fr-FR")));
+            _engine = new Engine(new PowerFxConfig());
         }
 
         private readonly Engine _engine;
@@ -542,12 +544,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             if (toDisplay)
             {
-                var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1);
+                var outDisplayExpression = _engine.GetDisplayExpression(inputExpression, r1, CultureInfo.GetCultureInfo("fr-FR"));
                 Assert.Equal(outputExpression, outDisplayExpression);
             }
             else
             {
-                var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1);
+                var outInvariantExpression = _engine.GetInvariantExpression(inputExpression, r1, CultureInfo.GetCultureInfo("fr-FR"));
                 Assert.Equal(outputExpression, outInvariantExpression);
             }
         }
@@ -604,7 +606,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("logicalB", "logicalB")]
         public void TestSuggestIdentifier(string txt, string expected)
         {
-            var pfxConfig = new PowerFxConfig(Features.SupportColumnNamesAsIdentifiers);
+            var pfxConfig = new PowerFxConfig(new Features { SupportColumnNamesAsIdentifiers = true });
             var recalcEngine = new Engine(pfxConfig);
             var rt = RecordType.Empty()
                 .Add(new NamedFormulaType("logicalA", FormulaType.Number, displayName: "displayName"))

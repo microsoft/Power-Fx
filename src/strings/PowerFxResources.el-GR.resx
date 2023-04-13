@@ -153,7 +153,7 @@
     
   </data>
   <data name="SwitchExpression" xml:space="preserve">
-    <value>τιμή_εναλλαγής</value>
+    <value>αλλαγή_τιμής</value>
     
   </data>
   <data name="SwitchDefaultReturn" xml:space="preserve">
@@ -161,7 +161,7 @@
     
   </data>
   <data name="SwitchCaseExpr" xml:space="preserve">
-    <value>τιμή_συμφωνίας</value>
+    <value>column_name</value>
     
   </data>
   <data name="SwitchCaseArg" xml:space="preserve">
@@ -169,11 +169,11 @@
     
   </data>
   <data name="AboutSwitch_switch_value" xml:space="preserve">
-    <value>Τιμή προς σύγκριση με κάθε τιμή_συμφωνίας.</value>
+    <value>Τιμή προς σύγκριση με κάθε match_value.</value>
     
   </data>
   <data name="AboutSwitch_match_value" xml:space="preserve">
-    <value>Τιμή προς σύγκριση με την τιμή_εναλλαγής.</value>
+    <value>Τιμή προς αντιστοίχιση με την αλλαγή_τιμής.</value>
     
   </data>
   <data name="AboutSwitch_match_result" xml:space="preserve">
@@ -567,6 +567,24 @@
     <value>Ενώνει διάφορες τιμές κειμένου σε μία τιμή κειμένου.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Μετατρέπει ένα "κείμενο" που αντιπροσωπεύει έναν αριθμό σε δεκαδική τιμή.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Κωδικός γλώσσας για χρήση κατά τη μετατροπή της τιμής.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε δυαδική τιμή.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Μετατρέπει σε "κείμενο" που αντιπροσωπεύει έναν αριθμό σε τιμή κινητής υποδιαστολής.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Κωδικός γλώσσας για χρήση κατά τη μετατροπή της τιμής.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Η τιμή κειμένου για μετατροπή σε τιμή κινητής υποδιαστολής.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>κείμενο</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Η τιμή που επιστρέφεται αν πρόκειται για το πρώτο όρισμα που δεν είναι σφάλμα.</value>
+    <value>Η τιμή που επιστρέφεται αν το προηγούμενο όρισμα είναι σφάλμα.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Μια παράσταση που αξιολογείται σε σειρές στην "προέλευση" και παρέχει τιμές για ταξινόμηση.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Με αύξουσα ή φθίνουσα σειρά</value>
+    <value>SortOrder.Ascending ή SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Ταξινομεί την "προέλευση" με βάση τη στήλη, προαιρετικά με καθορισμό "σειράς" ταξινόμησης.</value>
@@ -889,7 +908,8 @@
     <value>Μοναδικό όνομα στήλης.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Με αύξουσα ή φθίνουσα σειρά</value>
+    <value>SortOrder.Ascending ή SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Ταξινομεί την "προέλευση" με βάση το δείκτη αντιστοίχισης τιμών στην καθορισμένη στήλη.</value>
@@ -1849,6 +1869,10 @@
     <value>Μη έγκυρη μορφή.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Το όρισμα δεν αντιπροσωπεύει έγκυρη τιμή ημερομηνίας ή ώρας.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Αυτή η προέλευση δεδομένων δεν είναι έγκυρη. Διορθώστε το σφάλμα στο παράθυρο "Προελεύσεις δεδομένων" κάνοντας κλικ στην επιλογή "Περιεχόμενο -&gt; Προελεύσεις δεδομένων" ή "Προβολή -&gt; Επιλογές"</value>
     
@@ -2378,7 +2402,7 @@
     <value>Ένας αριθμός μονάδων για προσθήκη. Ο αριθμός μπορεί να είναι αρνητικός.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Η μονάδα προς χρήση. Μπορεί να είναι Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Η μονάδα προς χρήση, η οποία μπορεί να είναι μία από τις TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Ημερομηνία λήξης για τη λειτουργία διαφοράς.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Η μονάδα που εκφράζει το αποτέλεσμα. Μπορεί να είναι Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Η μονάδα για την έκφραση του αποτελέσματος το οποίο μπορεί να είναι ένα από τα TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2931,6 +2955,26 @@
     <value>Κόσμος</value>
     
   </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Δεν είναι συνδεδεμένο</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Ανανέωση</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Αλλαγές σε εκκρεμότητα</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Προειδοποίηση</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Σφάλμα</value>
+    
+  </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
     <value>Μισός γεμάτος κύκλος</value>
     
@@ -3192,7 +3236,7 @@
     
   </data>
   <data name="LayoutMode_Auto_DisplayName" xml:space="preserve">
-    <value>Αυτόματος</value>
+    <value>Αυτόματο</value>
     
   </data>
   <data name="LayoutDirection_Horizontal_DisplayName" xml:space="preserve">
@@ -3200,7 +3244,7 @@
     
   </data>
   <data name="LayoutDirection_Vertical_DisplayName" xml:space="preserve">
-    <value>Κατακόρυφος</value>
+    <value>Κατακόρυφα</value>
     
   </data>
   <data name="LayoutAlignItems_Start_DisplayName" xml:space="preserve">
@@ -3396,7 +3440,7 @@
     
   </data>
   <data name="DateTimeZone_Local_DisplayName" xml:space="preserve">
-    <value>Local</value>
+    <value>Τοπικός</value>
     
   </data>
   <data name="DateTimeZone_UTC_DisplayName" xml:space="preserve">
@@ -3436,7 +3480,7 @@
     
   </data>
   <data name="Layout_Horizontal_DisplayName" xml:space="preserve">
-    <value>Οριζόντια</value>
+    <value>Οριζόντιος</value>
     
   </data>
   <data name="Layout_Vertical_DisplayName" xml:space="preserve">
@@ -3508,7 +3552,7 @@
     
   </data>
   <data name="BarcodeType_DataMatrix_DisplayName" xml:space="preserve">
-    <value>Data Matrix</value>
+    <value>Πίνακας δεδομένων</value>
     
   </data>
   <data name="BarcodeType_Ean_DisplayName" xml:space="preserve">
@@ -3576,7 +3620,7 @@
     
   </data>
   <data name="LoadingSpinner_None_DisplayName" xml:space="preserve">
-    <value>Κανένας</value>
+    <value>Κανένα</value>
     
   </data>
   <data name="NotificationType_Error_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Βεβαιωθείτε ότι έχετε κείμενο για το αναγνωριστικό. Αυτό το σφάλμα παρουσιάζεται όταν το αναγνωριστικό αποτελείται μόνο από κενά ή διαστήματα.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Δεν είναι δυνατή η σύγκριση τιμών τύπου {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Ασύμβατοι τύποι για σύγκριση. Δεν είναι δυνατή η σύγκριση αυτών των τύπων: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Αυτή η συνάρτηση είναι διφορούμενη, περιέχει παραστάσεις λάμδα και αναγνωριστικά στηλών για το ίδιο όρισμα.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Η επιλογή BooleanOptionSet {0} δεν υποστηρίζεται.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Η τιμή του πεδίου {0} δεν είναι αναμενόμενου τύπου {1}.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Επιστρέφει λογικό όνομα της δεδομένης τιμής συνόλου επιλογών.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>επιλογή</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Μια τιμή συνόλου επιλογών του οποίου το λογικό όνομα θα επιστραφεί.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Αποκτήστε τις προεπιλεγμένες τοπικές ρυθμίσεις που έχουν οριστεί κατά το χρόνο εκτέλεσης.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Κωδικοποιεί μια συμβολοσειρά διεύθυνσης URL, αντικαθιστώντας ορισμένους μη αλφαριθμητικούς χαρακτήρες με % και δεκαεξαδική αρίθμηση.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>Διεύθυνση URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>Μια διεύθυνση URL για κωδικοποίηση.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>Το '{0}' είναι μια αναγνωρισμένη αλλά μη υποστηριζόμενη συνάρτηση.</value>
     
   </data>
 </root>

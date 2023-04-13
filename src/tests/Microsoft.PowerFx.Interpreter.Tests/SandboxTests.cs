@@ -28,19 +28,20 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async void MaxRecursionDepthTest()
         {
-            var config = new PowerFxConfig(null)
+            var config = new PowerFxConfig()
             {
                 MaxCallDepth = 10
             };
+            var opts = new ParserOptions() { NumberIsFloat = true };
             var recalcEngine = new RecalcEngine(config);
-            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))"));
-            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))"));
+            Assert.IsType<ErrorValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(Abs(1))))))", options: opts));
+            Assert.IsType<NumberValue>(recalcEngine.Eval("Abs(Abs(Abs(Abs(Abs(1)))))", options: opts));
             Assert.IsType<NumberValue>(recalcEngine.Eval(
                 @"Sum(
                 Sum(Sum(1),1),
                 Sum(Sum(1),1),
                 Sum(Sum(1),1)
-                )"));
+                )", options: opts));
         }
 
         // Create a small expression that runs quickly and rapidly consumes large amounts of memory. 
@@ -72,7 +73,7 @@ namespace Microsoft.PowerFx.Tests
 
         // Pick a "small" memory size that's large enough to execute basic expressions but will
         // fail on intentionally large expressions. 
-        private const int DefaultMemorySizeBytes = 50 * 1000;
+        private const int DefaultMemorySizeBytes = 100 * 1024;
 
         // Verify memory limits. 
         [Theory]
@@ -81,7 +82,12 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(50, 20)]
         public async Task MemoryLimit(int nWidth, int nDepth)
         {
-            var engine = new RecalcEngine();
+            var config = new PowerFxConfig
+            {
+                MaximumExpressionLength = 2000
+            };
+
+            var engine = new RecalcEngine(config);
 
             var mem = new SingleThreadedGovernor(DefaultMemorySizeBytes);
 
@@ -91,8 +97,7 @@ namespace Microsoft.PowerFx.Tests
             var expr = CreateMemoryExpression(nWidth, nDepth);
 
             // Ensure governor traps excessive memory usage. 
-            await Assert.ThrowsAsync<GovernorException>(async () =>
-                    await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
+            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
 
 #if false // https://github.com/microsoft/Power-Fx/issues/971
             // Still traps without the pre-poll. 
@@ -101,8 +106,7 @@ namespace Microsoft.PowerFx.Tests
             var gov2 = new TestIgnorePrePollGovernor(DefaultMemorySizeBytes);
             runtimeConfig.AddService<Governor>(gov2);
 
-            await Assert.ThrowsAsync<MyException>(async () =>
-                    await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
+            await Assert.ThrowsAsync<MyException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
 #endif
         }
 
@@ -121,19 +125,18 @@ namespace Microsoft.PowerFx.Tests
             var smallExpr = CreateMemoryExpression(1, 1); // should b eok
 
             // Governor allows basic expressions
-            var result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig);
+            var result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             mem.Poll();
 
             // Ensure governor traps excessive memory usage. 
-            await Assert.ThrowsAsync<GovernorException>(async () =>
-                    await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig));
+            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
 
             // Since Governor is cumulative, even the small evaluations now fails
             Assert.Throws<GovernorException>(() => mem.Poll());
 
             // But creating a new one works. 
             runtimeConfig.AddService<Governor>(new SingleThreadedGovernor(DefaultMemorySizeBytes));
-            result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig);
+            result = await engine.EvalAsync(smallExpr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
         }
 
         private class TestIgnorePrePollGovernor : SingleThreadedGovernor
@@ -164,10 +167,7 @@ namespace Microsoft.PowerFx.Tests
             cts.CancelAfter(5);
 
             // Eval may never return.             
-            await Assert.ThrowsAsync<OperationCanceledException>(async () =>
-            {
-                await engine.EvalAsync(expr, cts.Token);
-            });
+            await Assert.ThrowsAsync<OperationCanceledException>(async () => await engine.EvalAsync(expr, cts.Token).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         // Substitute(source, match, replace) // all instances 

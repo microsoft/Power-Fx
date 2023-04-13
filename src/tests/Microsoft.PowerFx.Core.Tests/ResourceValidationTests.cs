@@ -30,10 +30,12 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void TestResourceImportUsesCurrentUICulture()
         {
+            // $$$ Don't use CurrentUICulture
             var initialCulture = CultureInfo.CurrentUICulture;
             var enUsERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
             var enUsBasicContent = StringResources.Get("AboutAbs");
 
+            // $$$ Don't use CurrentUICulture
             CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
 
             var frERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
@@ -46,7 +48,11 @@ namespace Microsoft.PowerFx.Tests
             // Strings are not the same as enUS
             // Not validating content directly, since it might change
             Assert.NotEqual(enUsBasicContent, frBasicContent);
-            Assert.NotEqual(enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag), frERContent.GetSingleValue(ErrorResource.ShortMessageTag));
+
+            string usContent = enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag);
+            string frContent = frERContent.GetSingleValue(ErrorResource.ShortMessageTag);
+
+            Assert.NotEqual(usContent, frContent);
         }        
 
         [Fact]

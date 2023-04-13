@@ -22,13 +22,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
     {
         // Check() calls through to engine. 
         [Fact]
-        public void Test()
+        public void TestDecimal()
         {
             var engine = new Engine(new PowerFxConfig());
 
             var scope = engine.CreateEditorScope();
             var result = scope.Check("1+2");
-            Assert.Equal(result.ReturnType, FormulaType.Number);
+            Assert.Equal(result.ReturnType, FormulaType.Decimal);
         }
 
         [Fact]
@@ -197,6 +197,19 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
             // By default, handler name is the fully qualified name. 
             Assert.Equal("Microsoft.PowerFx.Tests.LanguageServiceProtocol.EditorContextScopeTests+MyHandler", name);
+        }
+
+        [Fact]
+        public void CheckExpectedReturnValueNumber()
+        {
+            var editorContextScope = new EditorContextScope(
+                            (expr) => new CheckResult(
+                                    new Engine()).SetText(expr).SetBindingInfo().SetExpectedReturnValue(FormulaType.String, true));
+
+            var check = editorContextScope.Check("123");
+
+            Assert.True(check.IsSuccess);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
         }
 
         private class MyEmptyHandler : CodeFixHandler

@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public SubstituteFunction()
             : base("Substitute", TexlStrings.AboutSubstitute, FunctionCategories.Text, DType.String, 0, 3, 4, DType.String, DType.String, DType.String, DType.Number)
         {
@@ -36,8 +34,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class SubstituteTFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public SubstituteTFunction()
             : base("Substitute", TexlStrings.AboutSubstituteT, FunctionCategories.Table, DType.EmptyTable, 0, 3, 4)
@@ -75,18 +71,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings
-                fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                returnType = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                    ? DType.CreateTable(new TypedName(DType.String, new DName(ColumnName_ValueStr)))
-                    : type0;
+                fValid &= CheckStringColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
                 returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
-                if (!DType.String.Accepts(type0))
+                if (!DType.String.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (type0.CoercesTo(DType.String))
+                    if (type0.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.String);
                     }
@@ -101,11 +93,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg1 should be either a string or a column of strings.
             if (type1.IsTable)
             {
-                fValid &= CheckStringColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.String.Accepts(type1))
+            else if (!DType.String.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.String))
+                if (type1.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
                 }
@@ -119,11 +111,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg2 should be either a string or a column of strings.
             if (type2.IsTable)
             {
-                fValid &= CheckStringColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(type2, args[2], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.String.Accepts(type2))
+            else if (!DType.String.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type2.CoercesTo(DType.String))
+                if (type2.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], DType.String);
                 }
@@ -142,19 +134,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Arg3 should be either a number or a column of numbers.
                 if (type3.IsTable)
                 {
-                    fValid &= CheckNumericColumnType(type3, args[3], errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(type3, args[3], context.Features, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(type3))
+                else if (!CheckType(context, args[3], type3, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
-                    if (type3.CoercesTo(DType.Number))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[3], DType.Number);
-                    }
-                    else
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
-                    }
+                    fValid = false;
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrNumberExpected);
                 }
             }
 

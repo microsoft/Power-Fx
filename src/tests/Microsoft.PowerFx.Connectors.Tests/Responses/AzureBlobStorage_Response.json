@@ -1,13 +1,13 @@
 ﻿{
-  "Id": "JTJmY29udGFpbmVyJTJmYm9yYTEuanBn",
-  "Name": "bora1.txt",
-  "DisplayName": "bora1.txt",
-  "Path": "/container/bora1.txt",
-  "LastModified": "2022-06-14T08:20:28Z",
+  "Id": "JTJmY29udGFpbmVyJTJmYm9yYTQudHh0",
+  "Name": "bora4.txt",
+  "DisplayName": "bora4.txt",
+  "Path": "/container/bora4.txt",
+  "LastModified": "2023-03-14T11:26:32Z",
   "Size": 3,
   "MediaType": "text/plain",
   "IsFolder": false,
-  "ETag": "\"0x8DA4DDEBD78FA5D\"",
-  "FileLocator": "JTJmY29udGFpbmVyJTJmYm9yYTEuanBn",
+  "ETag": "\"0x8DB247EF69C9568\"",
+  "FileLocator": "JTJmY29udGFpbmVyJTJmYm9yYTQudHh0",
   "LastModifiedBy": null
 }

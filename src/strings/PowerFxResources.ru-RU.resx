@@ -567,6 +567,24 @@
     <value>Объединяет несколько текстовых значений в одно текстовое значение.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Преобразует "текст", который представляет число, в десятичное значение.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Код языка, используемый при преобразовании значения.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Текстовое значение для преобразования в десятичное значение.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Преобразует "текст", который представляет число, в число с плавающей точкой.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Код языка, используемый при преобразовании значения.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Текстовое значение для преобразования в число с плавающей точкой.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>текст</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Значение, возвращаемое, если это первый аргумент без ошибок.</value>
+    <value>Значение, возвращаемое, если предыдущий аргумент является ошибкой.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Выражение, которое вычисляется для строк в "источнике" и предоставляет значения для сортировки.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>По возрастанию или по убыванию</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Сортирует "источник" на основе столбца, дополнительно можно указать "порядок сортировки".</value>
@@ -889,7 +908,8 @@
     <value>Уникальное имя столбца.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>По возрастанию или по убыванию</value>
+    <value>SortOrder.Ascending или SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Сортирует "источник" на основе индекса соответствующих значений в указанном столбце.</value>
@@ -1849,6 +1869,10 @@
     <value>Недопустимый формат.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Аргумент представляет собой недопустимое значение даты или времени.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Этот источник данных недопустим. Исправьте ошибку в панели "Источники данных", выбрав пункты "Содержимое -&gt; Источники данных" или "Вид -&gt; Параметры"</value>
     
@@ -1870,7 +1894,7 @@
     
   </data>
   <data name="ErrTypeError_WrongType" xml:space="preserve">
-    <value>Тип этого выражения "{0}" не соответствует ожидаемому типу "{0}". Обнаруженный тип: "{1}".</value>
+    <value>Тип этого выражения не соответствует ожидаемому типу "{0}". Обнаруженный тип: "{1}".</value>
     
   </data>
   <data name="ErrTypeErrorRecordIncompatibleWithSource" xml:space="preserve">
@@ -2378,7 +2402,7 @@
     <value>Количество единиц для добавления. Может быть отрицательным.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Единица измерения, допустимые варианты: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Используемые единицы: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Конечная дата для операции разности.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Результат может выражаться в следующих единицах: Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Единица, в которой нужно выразить результат: TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Земной шар</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Земной шар — подключено</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Земной шар — обновление</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Земной шар — ожидаются изменения</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Земной шар — предупреждение</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Земной шар — ошибка</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Введите для идентификатора текст. Ошибка возникает, если идентификатор пустой или состоит из одних пробелов.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Не удалось сравнить значения типа "{0}".</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Несовместимые типы для сравнения. Невозможно сравнить эти типы: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Эта функция является неоднозначной, она содержит лямбда-выражения и идентификаторы столбцов для одного аргумента.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Параметр BooleanOptionSet {0} не поддерживается.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Значение параметра "{0}" отличается от ожидаемого типа "{1}".</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Возвращает логическое имя заданного значения набора параметров.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>параметр</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Значение набора параметров, логическое имя которого будет возвращено.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Настройка языкового стандарта по умолчанию во время выполнения.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Кодирует строку URL-адреса, заменяя определенные символы, отличные от буквенно-цифровых, на % и шестнадцатеричное число.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL-адрес</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL-адрес, который следует закодировать.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>Функция "{0}" распознана, но она не поддерживается.</value>
     
   </data>
 </root>

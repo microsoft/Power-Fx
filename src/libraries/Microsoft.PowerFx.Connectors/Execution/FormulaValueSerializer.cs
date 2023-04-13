@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -32,6 +33,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected abstract void WriteNullValue();
 
         protected abstract void WriteNumberValue(double numberValue);
+
+        protected abstract void WriteDecimalValue(decimal decimalValue);
 
         protected abstract void WriteStringValue(string stringValue);
 
@@ -70,6 +73,30 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 }
 
                 WriteProperty(property.Key, property.Value, namedValue.Value);
+            }
+
+            if (!schema.Properties.Any() && fields.Any())
+            {
+                foreach (NamedValue nv in fields)
+                {
+                    WriteProperty(
+                        nv.Name,
+                        new OpenApiSchema()
+                        {
+                            Type = nv.Value.Type._type.Kind switch
+                            {
+                                DKind.Number => "number",
+                                DKind.Decimal => "number",
+                                DKind.String => "string",
+                                DKind.Boolean => "boolean",
+                                DKind.Record => "object",
+                                DKind.Table => "array",
+                                DKind.ObjNull => "null",
+                                _ => "unknown_dkind"
+                            }
+                        }, 
+                        nv.Value);
+                }
             }
 
             EndObject(objectName);
@@ -121,6 +148,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteNumberValue(numberValue.Value);
                     }
+                    else if (fv is DecimalValue decimalValue)
+                    {
+                        WriteDecimalValue(decimalValue.Value);
+                    }
                     else
                     {
                         throw new ArgumentException($"Expected NumberValue (number) and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
@@ -149,6 +180,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     if (fv is NumberValue integerValue)
                     {
                         WriteNumberValue(integerValue.Value);
+                    }
+                    else if (fv is DecimalValue decimalValue)
+                    {
+                        WriteDecimalValue(decimalValue.Value);
                     }
                     else
                     {
@@ -196,6 +231,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
             else if (value is NumberValue numberValue)
             {
                 WriteNumberValue(numberValue.Value);
+            }
+            else if (value is DecimalValue decimalValue)
+            {
+                WriteDecimalValue(decimalValue.Value);
             }
             else if (value is StringValue stringValue)
             {

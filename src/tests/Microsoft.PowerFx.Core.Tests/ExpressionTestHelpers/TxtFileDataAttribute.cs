@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.PowerFx.Core.Parser;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -21,12 +22,14 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathCommon;
         private readonly string _filePathSpecific;
         private readonly string _engineName;
-        
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName)
+        private readonly bool _numberIsFloat;
+
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, bool numberIsFloat)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
+            _numberIsFloat = numberIsFloat;
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -53,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         foreach (var file in allFiles)
                         {
-                            parser.AddFile(file);
+                            parser.AddFile(_numberIsFloat, file);
                         }
                     }
                 }
@@ -80,7 +83,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         internal static string GetDefaultTestDir(string filePath)
-        { 
+        {
             var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
             var testDir = Path.Combine(curDir, filePath);

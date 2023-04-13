@@ -81,6 +81,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
             _writer.Append(numberValue);
         }
 
+        protected override void WriteDecimalValue(decimal decimalValue)
+        {
+            _writer.Append(decimalValue);
+        }
+
         protected override void WritePropertyName(string name)
         {
             AddSeparator();

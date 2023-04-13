@@ -196,34 +196,34 @@ Table({Value:1},{Value:2},{Value:3})
 Errors: Error 29-37: Name isn't valid. 'ThisItem' isn't recognized.|Error 0-38: The function 'ForAll' has some invalid arguments.
 
 >> ParseJSON("5") + ParseJSON("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+10
 
 >> ParseJSON("5") - ParseJSON("5")
-Errors: Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean.|Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean.
+0
 
 >> ParseJSON("5") * ParseJSON("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.
+25
 
 >> ParseJSON("5") / ParseJSON("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Text, Boolean, Date, Time, DateTimeNoTimeZone, DateTime.
+1
 
 >> ParseJSON("5") = ParseJSON("5")
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
 
 >> ParseJSON("5") > ParseJSON("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+Errors: Error 15-16: This operation isn't valid on these types: UntypedObject, UntypedObject.
 
 >> ParseJSON("5") < ParseJSON("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 17-31: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+Errors: Error 15-16: This operation isn't valid on these types: UntypedObject, UntypedObject.
 
 >> ParseJSON("5") <> ParseJSON("5")
 Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
 
 >> ParseJSON("5") >= ParseJSON("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+Errors: Error 15-17: This operation isn't valid on these types: UntypedObject, UntypedObject.
 
 >> ParseJSON("5") <= ParseJSON("5")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.|Error 18-32: Invalid argument type. Expecting one of the following: Number, Date, Time, DateTime.
+Errors: Error 15-17: This operation isn't valid on these types: UntypedObject, UntypedObject.
 
 >> CountRows(ParseJSON("[1, 2, 3]"))
 3
@@ -488,3 +488,6 @@ Blank()
 
 >> Text(Index(ParseJSON("[""one"",""two"",""three""]"),true)) // Coercion from boolean
 "one"
+
+>> Boolean(IfError(ParseJSON("{""field1"":true}").field1, ParseJSON("false")))
+true

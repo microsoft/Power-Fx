@@ -177,7 +177,10 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             var nodeType = binding.GetType(column);
             var hasEnhancedDelegation = binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled;
-            return DType.String.Accepts(nodeType) || nodeType.CoercesTo(DType.String) || (hasEnhancedDelegation && nodeType.IsMultiSelectOptionSet() && nodeType.IsTable);
+            var usePowerFxV1CompatibilityRules = binding.Features.PowerFxV1CompatibilityRules;
+            return DType.String.Accepts(nodeType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                nodeType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                (hasEnhancedDelegation && nodeType.IsMultiSelectOptionSet() && nodeType.IsTable);
         }
 
         public override bool IsOpSupportedByTable(OperationCapabilityMetadata metadata, TexlNode node, TexlBinding binding)
@@ -201,7 +204,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 /* Left node can be first name, row scope lambda or a lookup column */
                 (_binaryOpNode.Left.Kind == NodeKind.FirstName || binding.IsFullRecordRowScopeAccess(_binaryOpNode.Left) || (_binaryOpNode.Left.Kind == NodeKind.DottedName && binding.GetType((_binaryOpNode.Left as DottedNameNode).Left).HasExpandInfo)) &&
                 /* Right has to be a single column table */
-                ((_binaryOpNode.Right.Kind == NodeKind.Table || binding.GetType(_binaryOpNode.Right)?.IsColumn == true) && !binding.IsAsync(_binaryOpNode.Right));
+                ((_binaryOpNode.Right.Kind == NodeKind.Table || binding.GetType(_binaryOpNode.Right)?.IsColumn == true) && (binding.Features.AllowAsyncDelegation || !binding.IsAsync(_binaryOpNode.Right)));
 
             if (!(isRHSFirstName || isRHSRecordScope || isCdsInTableDelegation))
             {

@@ -567,6 +567,24 @@
     <value>Menggabungkan beberapa nilai teks menjadi satu nilai teks.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Mengonversi 'teks' yang mewakili angka ke nilai Desimal.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kode bahasa yang harus digunakan saat mengonversi nilai.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Nilai teks untuk dikonversi ke nilai Desimal.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Mengonversi 'teks' yang mewakili angka ke nilai Float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kode bahasa yang harus digunakan saat mengonversi nilai.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Nilai teks untuk dikonversi ke nilai Float.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>teks</value>
     
@@ -795,7 +813,7 @@
     
   </data>
   <data name="AboutIfError_fallback" xml:space="preserve">
-    <value>Jika nilai adalah argumen bebas kesalahan pertama, nilai akan dikembalikan.</value>
+    <value>Nilai yang dihasilkan jika argumen sebelumnya adalah kesalahan.</value>
     
   </data>
   <data name="AboutSubstitute" xml:space="preserve">
@@ -864,7 +882,8 @@
     <value>Ekspresi yang dievaluasi pada setiap baris di 'sumber' dan memberikan hasil untuk proses sortir.</value>
   </data>
   <data name="AboutSort_order" xml:space="preserve">
-    <value>Urutan Naik atau Turun</value>
+    <value>SortOrder.Ascending atau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumns" xml:space="preserve">
     <value>Menyortir 'sumber' berdasarkan kolom, menentukan 'urutan' sortir opsional.</value>
@@ -889,7 +908,8 @@
     <value>Nama kolom unik.</value>
   </data>
   <data name="AboutSortByColumns_order" xml:space="preserve">
-    <value>Urutan Naik atau Turun</value>
+    <value>SortOrder.Ascending atau SortOrder.Descending</value>
+    
   </data>
   <data name="AboutSortByColumnsWithOrderValues" xml:space="preserve">
     <value>Menyortir 'sumber' berdasarkan indeks nilai yang cocok di kolom yang ditentukan.</value>
@@ -1849,6 +1869,10 @@
     <value>Format tidak valid.</value>
     
   </data>
+  <data name="ErrTextInvalidArgDateTime" xml:space="preserve">
+    <value>Argumen tidak menunjukkan nilai tanggal atau waktu yang valid.</value>
+    
+  </data>
   <data name="ErrInvalidDataSource" xml:space="preserve">
     <value>Sumber Data ini tidak valid. Perbaiki kesalahan di panel "Sumber data" dengan mengeklik "Konten -&gt; Sumber data" atau "View -&gt; Opsi"</value>
     
@@ -2378,7 +2402,7 @@
     <value>Jumlah unit untuk ditambahkan. Jumlah boleh negatif.</value>
   </data>
   <data name="AboutDateAdd_unit" xml:space="preserve">
-    <value>Unit untuk digunakan, yang dapat berupa Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Satuan yang akan digunakan, yang dapat berupa salah satu dari TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="DateDiffArg1" xml:space="preserve">
@@ -2400,7 +2424,7 @@
     <value>Tanggal akhir operasi berbeda.</value>
   </data>
   <data name="AboutDateDiff_unit" xml:space="preserve">
-    <value>Unit untuk digunakan, yang dapat berupa Years, Quarters, Months, Days, Hours, Minutes, Seconds, Milliseconds.</value>
+    <value>Satuan untuk menyatakan hasil, yang dapat berupa salah satu dari TimeUnit.Years, TimeUnit.Quarters, TimeUnit.Months, TimeUnit.Days, TimeUnit.Hours, TimeUnit.Minutes, TimeUnit.Seconds, TimeUnit.Milliseconds.</value>
     
   </data>
   <data name="AboutDateAddT" xml:space="preserve">
@@ -2929,6 +2953,26 @@
   </data>
   <data name="Icon_Globe_DisplayName" xml:space="preserve">
     <value>Globe</value>
+    
+  </data>
+  <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
+    <value>Globe - Tidak tersambung</value>
+    
+  </data>
+  <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
+    <value>Globe - Refresh</value>
+    
+  </data>
+  <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
+    <value>Globe - Perubahan tertunda</value>
+    
+  </data>
+  <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
+    <value>Globe - Peringatan</value>
+    
+  </data>
+  <data name="Icon_GlobeError_DisplayName" xml:space="preserve">
+    <value>Globe - Kesalahan</value>
     
   </data>
   <data name="Icon_HalfFilledCircle_DisplayName" xml:space="preserve">
@@ -4418,6 +4462,10 @@
     <value>Pastikan Anda memiliki teks untuk pengidentifikasi Anda. Kesalahan ini terjadi jika semua pengidentifikasi kosong atau berisi spasi.</value>
     
   </data>
+  <data name="ErrUnOrderedTypeForComparison_Type" xml:space="preserve">
+    <value>Tidak dapat membandingkan nilai dari tipe {0}.</value>
+    
+  </data>
   <data name="ErrorResource_ErrIncompatibleTypesForEquality_Left_Right_ShortMessage" xml:space="preserve">
     <value>Jenis perbandingan tidak kompatibel. Jenis ini tidak dapat dibandingkan: {0}, {1}.</value>
     
@@ -4834,8 +4882,37 @@
     <value>Fungsi ini ambigu karena berisi ekspresi lambda dan pengidentifikasi kolom untuk argumen yang sama.</value>
     
   </data>
-  <data name="BooleanOptionSetOptionNotSupported" xml:space="preserve">
-    <value>Opsi BooleanOptionSet {0} tidak didukung.</value>
+  <data name="OptionSetOptionNotSupported" xml:space="preserve">
+    <value>Nilai opsi {0} bukanlah tipe {1} yang diharapkan.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfo" xml:space="preserve">
+    <value>Menghasilkan nama logis dari nilai rangkaian pilihan yang diberikan.</value>
+    
+  </data>
+  <data name="AboutOptionSetInfoArg1" xml:space="preserve">
+    <value>opsi</value>
+  </data>
+  <data name="AboutOptionSetInfo_option" xml:space="preserve">
+    <value>Nilai rangkaian pilihan yang nama logisnya akan dihasilkan.</value>
+  </data>
+  <data name="AboutLanguage" xml:space="preserve">
+    <value>Dapatkan lokal default yang ditetapkan pada runtime.</value>
+    
+  </data>
+  <data name="AboutEncodeUrl" xml:space="preserve">
+    <value>Mengodekan string URL, mengganti karakter non-alfanumerik tertentu dengan % dan angka heksadesimal.</value>
+    
+  </data>
+  <data name="EncodeUrlArg1" xml:space="preserve">
+    <value>URL</value>
+    
+  </data>
+  <data name="AboutEncodeUrl_url" xml:space="preserve">
+    <value>URL untuk dikodekan.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' adalah fungsi yang dikenali, tetapi tidak didukung.</value>
     
   </data>
 </root>

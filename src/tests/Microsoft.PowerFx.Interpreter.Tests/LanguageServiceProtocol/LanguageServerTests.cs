@@ -43,9 +43,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Init();
         }
 
-        private void Init(Features features = Features.None, ParserOptions options = null)
+        private void Init(Features features = null, ParserOptions options = null)
         {
-            var config = new PowerFxConfig(features: features);
+            var config = new PowerFxConfig(features: features ?? Features.None);
             config.AddFunction(new BehaviorFunction());
 
             var engine = new Engine(config);
@@ -61,10 +61,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             var uriObj = new Uri(documentUri);
             var json = HttpUtility.ParseQueryString(uriObj.Query).Get("context");
-            if (json == null)
-            {
-                json = "{}";
-            }
+            json ??= "{}";
 
             var record = (RecordValue)FormulaValueJSON.FromJson(json);
             return ReadOnlySymbolTable.NewFromRecord(record.Type);
@@ -354,7 +351,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [Theory]
         [InlineData("AA", "Name isn't valid. 'AA' isn't recognized.")]
         [InlineData("1+CountRowss", "Name isn't valid. 'CountRowss' isn't recognized.")]
-        [InlineData("CountRows(2)", "Invalid argument type (Number). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
+        [InlineData("CountRows(2)", "Invalid argument type (Decimal). Expecting a Table value instead.", "The function 'CountRows' has some invalid arguments.")]
         public void TestDidOpenErroneousFormula(string formula, params string[] expectedErrors)
         {
             var expectedDiagnostics = expectedErrors.Select(error => new Diagnostic()
@@ -1117,7 +1114,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData("{\"A\": 1 }", "A+2", typeof(NumberType))]
+        [InlineData("{\"A\": 1 }", "A+2", typeof(DecimalType))]
         [InlineData("{}", "\"hi\"", typeof(StringType))]
         [InlineData("{}", "", typeof(BlankType))]
         [InlineData("{}", "{ A: 1 }", typeof(KnownRecordType))]
@@ -1180,15 +1177,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         }
 
         [Theory]
-        [InlineData(false, "{}", "{ A: 1 }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""}}}")]
-        [InlineData(false, "{}", "[1, 2]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Number""}}}")]
-        [InlineData(true, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}")]
-        [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Boolean""}}}}}")]
-        [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Number""},""B"":{""Type"":""Record"",""Fields"":{""C"":{""Type"":""Record"",""Fields"":{""D"":{""Type"":""String""}}},""E"":{""Type"":""Boolean""}}}}}")]
-        [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Number""}}}")]
+        [InlineData(false, "{}", "{ A: 1 }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Decimal""}}}")]
+        [InlineData(false, "{}", "[1, 2]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Decimal""}}}")]
+        [InlineData(true, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""A"":{""Type"":""Decimal""},""B"":{""Type"":""Boolean""}}}")]
+        [InlineData(false, "{}", "[{ A: 1 }, { B: true }]", @"{""Type"":""Table"",""Fields"":{""Value"":{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Decimal""},""B"":{""Type"":""Boolean""}}}}}")]
+        [InlineData(false, "{}", "{A: 1, B: { C: { D: \"Qwerty\" }, E: true } }", @"{""Type"":""Record"",""Fields"":{""A"":{""Type"":""Decimal""},""B"":{""Type"":""Record"",""Fields"":{""C"":{""Type"":""Record"",""Fields"":{""D"":{""Type"":""String""}}},""E"":{""Type"":""Boolean""}}}}}")]
+        [InlineData(false, "{}", "{ type: 123 }", @"{""Type"":""Record"",""Fields"":{""type"":{""Type"":""Decimal""}}}")]
         public void TestPublishExpressionType_AggregateShapes(bool tableSyntaxDoesntWrapRecords, string context, string expression, string expectedTypeJson)
         {
-            Init(tableSyntaxDoesntWrapRecords ? Features.TableSyntaxDoesntWrapRecords : Features.None);
+            Init(new Features { TableSyntaxDoesntWrapRecords = tableSyntaxDoesntWrapRecords });
             var documentUri = $"powerfx://app?context={context}&getExpressionType=true";
             _testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -1304,6 +1301,52 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Contains("Caractères inattendus.", diags.First().Message); // the value should be localized. Resx files have this localized.
         }
 
+        // Parse in Culture1, Errors in culture2
+        [Fact]
+        public void ParseAndErrorLocaleAreDifferent()
+        {
+            var engine = new Engine(new PowerFxConfig());
+                        
+            var parseLocale = CultureInfo.CreateSpecificCulture("fr-FR");
+            var errorLocale = CultureInfo.CreateSpecificCulture("es-ES");
+
+            engine.Config.AddFunction(new BehaviorFunction());
+
+            _sendToClientData = new List<string>();
+            _scopeFactory = new TestPowerFxScopeFactory(
+                (string documentUri) => new EditorContextScope(
+                    (expr) => new CheckResult(engine)
+                        .SetText(expr, new ParserOptions { Culture = parseLocale })
+                        .SetBindingInfo()
+                        .SetDefaultErrorCulture(errorLocale)));
+
+            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+
+            _testServer.OnDataReceived(
+                JsonSerializer.Serialize(new
+                {
+                    jsonrpc = "2.0",
+                    method = "textDocument/didOpen",
+                    @params = new DidOpenTextDocumentParams()
+                    {
+                        TextDocument = new TextDocumentItem()
+                        {
+                            Uri = "powerfx://app",
+                            LanguageId = "powerfx",
+                            Version = 1,
+                            Text = "123,456 + foo"
+                        }
+                    }
+                }));
+
+            CheckBehaviorError(_sendToClientData[0], false, out var diags);
+
+            // Checking if contains text in the correct locale
+            // the value should be localized. Resx files have this localized.
+            // If it's a different error message, then we may have a bug in the parser locale. 
+            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message); 
+        }
+
         // Test showing how LSP can fully customize check result. 
         [Fact]
         public void CustomCheckResult()
@@ -1330,7 +1373,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
-            Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Number'.", diags.First().Message);
+            Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)

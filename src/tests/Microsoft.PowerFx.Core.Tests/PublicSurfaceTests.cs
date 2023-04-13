@@ -14,12 +14,12 @@ namespace Microsoft.PowerFx.Core.Tests
     public class PublicSurfaceTests
     {
         [Fact]
-        public void Test()
+        public void PublicSurface_Tests()
         {
             var asm = typeof(Parser.TexlParser).Assembly;
 
             // The goal for public namespaces is to make the SDK easy for the consumer. 
-            // Namespace principles for public classes:            // 
+            // Namespace principles for public classes:
             // - prefer fewer namespaces. See C# for example: https://docs.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis
             // - For easy discovery, but Engine in "Microsoft.PowerFx".
             // - For sub areas with many related classes, cluster into a single subnamespace.
@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.NameCollisionException",
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
+                "Microsoft.PowerFx.Core.Parser.ParseFormulasResult",
                 "Microsoft.PowerFx.ParserOptions",
 
                 // Config & Symbols
@@ -54,6 +55,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
                 "Microsoft.PowerFx.Syntax.CommentToken",
+                "Microsoft.PowerFx.Syntax.DecLitToken",
                 "Microsoft.PowerFx.Syntax.ErrorToken",
                 "Microsoft.PowerFx.Syntax.IdentToken",
                 "Microsoft.PowerFx.Syntax.NumLitToken",
@@ -70,6 +72,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.BlankNode",
                 "Microsoft.PowerFx.Syntax.BoolLitNode",
                 "Microsoft.PowerFx.Syntax.CallNode",
+                "Microsoft.PowerFx.Syntax.DecLitNode",
                 "Microsoft.PowerFx.Syntax.DottedNameNode",
                 "Microsoft.PowerFx.Syntax.ErrorNode",
                 "Microsoft.PowerFx.Syntax.FirstNameNode",
@@ -109,6 +112,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DateTimeValue",
                 "Microsoft.PowerFx.Types.DateType",
                 "Microsoft.PowerFx.Types.DateValue",
+                "Microsoft.PowerFx.Types.DecimalType",
+                "Microsoft.PowerFx.Types.DecimalValue",
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
                 "Microsoft.PowerFx.Types.ExternalType",
@@ -143,9 +148,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
                 "Microsoft.PowerFx.Types.ValidFormulaValue",
-
+                "Microsoft.PowerFx.Types.Void",
+                "Microsoft.PowerFx.Types.VoidValue",
+                
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
+                "Microsoft.PowerFx.Intellisense.ConnectorSuggestion",
+                "Microsoft.PowerFx.Intellisense.ConnectorSuggestions",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
                 "Microsoft.PowerFx.Intellisense.IntellisenseOperations",
@@ -154,7 +163,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
-                "Microsoft.PowerFx.Intellisense.SuggestionKind",
+                "Microsoft.PowerFx.Intellisense.SuggestionKind",                
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
                 "Microsoft.PowerFx.Intellisense.CodeFixHandler",
@@ -163,11 +172,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 // TBD ...
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
-                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",                
+                "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable"
+                "Microsoft.PowerFx.Core.Utils.ICheckable",
+                "Microsoft.PowerFx.IUserInfo",
+                "Microsoft.PowerFx.UserInfo",
+                "Microsoft.PowerFx.SymbolTableExtensions"
             };
 
             var sb = new StringBuilder();
@@ -225,7 +237,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var len = values1.Length;
             Assert.Equal(len, values2.Length);
-            
+
             for (var i = 0; i < len; i++)
             {
                 var x = values1.GetValue(i);

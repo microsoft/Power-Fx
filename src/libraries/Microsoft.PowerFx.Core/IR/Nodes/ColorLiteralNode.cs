@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Drawing;
+
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
     internal sealed class ColorLiteralNode : IntermediateNode
     {
-        public readonly uint LiteralValue;
+        public readonly Color LiteralValue;
 
-        public ColorLiteralNode(IRContext irContext, uint value)
+        public ColorLiteralNode(IRContext irContext, Color value)
             : base(irContext)
         {
             LiteralValue = value;

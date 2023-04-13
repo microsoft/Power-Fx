@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -27,7 +28,7 @@ using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
-{    
+{
     public class TexlTests : PowerFxTest
     {
         private readonly CultureInfo _defaultLocale = new ("en-US");
@@ -80,8 +81,8 @@ namespace Microsoft.PowerFx.Core.Tests
             // TestBindingErrors(script, DType.Error);
             var engine = new Engine(new PowerFxConfig());
             var result = engine.Check(script);
-            
-            Assert.Equal(DType.Error, result.Binding.ResultType);            
+
+            Assert.Equal(DType.Error, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
@@ -145,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:n]")]
         public void TexlDateTableFunctions_ConsistentOneColumnTableResult(string expression, string expectedType)
         {
-            var engine = new Engine(new PowerFxConfig(Features.ConsistentOneColumnTableResult));
+            var engine = new Engine(new PowerFxConfig(new Features { ConsistentOneColumnTableResult = true }));
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
@@ -201,7 +202,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Value:n]")));
-            TestSimpleBindingSuccess("Char(T)", TestUtils.DT("*[Value:s]"), symbol, Features.ConsistentOneColumnTableResult);
+            TestSimpleBindingSuccess("Char(T)", TestUtils.DT("*[Value:s]"), symbol, new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -244,7 +245,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Concatenate(ShowColumns(Table,\"B\"), \" ending\")",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
 
             symbol.RemoveVariable("Table");
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n, B:s, C:b, D:s]")));
@@ -252,7 +253,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Concatenate(ShowColumns(Table,\"B\"), \" ending\", ShowColumns(Table,\"D\"))",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -294,14 +295,37 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        private class BooleanOptionSet : OptionSet, IExternalOptionSet
+        internal class BooleanOptionSet : IExternalOptionSet
         {
-            public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)
-                : base(name, displayNameProvider)
+            public DisplayNameProvider DisplayNameProvider => DisplayNameUtility.MakeUnique(new Dictionary<string, string>
             {
-            }
+                { "Yes", "Yes" },
+                { "No", "No" },
+            });
 
-            bool IExternalOptionSet.IsBooleanValued => true;
+            public IEnumerable<DName> OptionNames => new[] { new DName("No"), new DName("Yes") };
+
+            public DKind BackingKind => DKind.Boolean;
+
+            public bool IsConvertingDisplayNameMapping => false;
+
+            public DName EntityName => new DName("BoolOptionSet");
+
+            public DType Type => DType.CreateOptionSetType(this);
+
+            public OptionSetValueType OptionSetValueType => new OptionSetValueType(this);
+
+            public bool TryGetValue(DName fieldName, out OptionSetValue optionSetValue)
+            {
+                if (fieldName.Value == "No" || fieldName.Value == "Yes")
+                {
+                    optionSetValue = new OptionSetValue(fieldName.Value, this.OptionSetValueType, fieldName.Value == "Yes");
+                    return true;
+                }
+
+                optionSetValue = null;
+                return false;
+            }
         }
 
         [Theory]
@@ -317,18 +341,12 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
 
-            var boolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
-            {
-                { "Yes", "Yes" },
-                { "No", "No" },
-            });
-
             TestSimpleBindingSuccess(
                 expression,
                 DType.Number,
                 symbol,
-                features: Features.All,
-                optionSets: new[] { new BooleanOptionSet("BoolOptionSet", boolOptionSetDisplayNameProvider) });
+                features: Features.PowerFxV1,
+                optionSets: new[] { new BooleanOptionSet() });
         }
 
         [Theory]
@@ -498,38 +516,61 @@ namespace Microsoft.PowerFx.Core.Tests
                 symbol);
         }
 
-        [Fact]
-        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion()
+        [Theory]
+        [InlineData("If(A < 10, 1, \"2\")", "n", true)]
+        [InlineData("If(A < 1, \"one\", A < 2, 2, A < 3, true, false)", "s", true)]
+        [InlineData("If(A < 1, true, A < 2, 2, A < 3, false, \"true\")", "b", true)]
+        [InlineData("If(A < 10, 1, [1,2,3])", "-", true)]
+        [InlineData("If(A < 10, 1, {Value: 2})", "-", true)]
+        [InlineData("If(0 < 1, [1], 2)", "-", true)]
+
+        // negative cases, when if produces void type
+        // If(1 < 0, [1], 2) => V which is void value
+
+        // void type is not allowed in aggregate type.
+        // {test: V}
+        [InlineData("{test: If(1 < 0, [1], 2)}", "![]", false)]
+
+        // [V]
+        [InlineData("[If(1 < 0, [1], 2)]", "*[]", false)]
+
+        // void type can't be consumed.
+        // V + 1 
+        [InlineData("If(1 < 0, [1], 2) + 1", "n", false)]
+
+        // Abs(V)
+        [InlineData("Abs(If(1 < 0, [1], 2))", "n", false)]
+
+        // Len(V)
+        [InlineData("Len(If(1 < 0, [1], 2))", "n", false)]
+
+        // If(V, 0, 1)
+        [InlineData("If(If(1 < 0, [1], 2), 0, 1)", "n", false)]
+
+        // Hour(V)
+        [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
+
+        // ForAll([1,2,3], V)
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "e", false)]
+        public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("A", FormulaType.Number);
-            
-            TestSimpleBindingSuccess(
-                "If(A < 10, 1, \"2\")",
-                DType.Number,
-                symbol);
 
-            TestSimpleBindingSuccess(
-                "If(A < 1, \"one\", A < 2, 2, A < 3, true, false)",
-                DType.String,
-                symbol);
-
-            TestSimpleBindingSuccess(
-                "If(A < 1, true, A < 2, 2, A < 3, false, \"true\")",
-                DType.Boolean,
-                symbol);
-
-            // Negative cases -- when args cannot be coerced.
-
-            TestBindingErrors(
-                "If(A < 10, 1, [1,2,3])",
-                DType.Number,
-                symbol);
-
-            TestBindingErrors(
-                "If(A < 10, 1, {Value: 2})",
-                DType.Number,
-                symbol);
+            if (checkSuccess)
+            {
+                TestSimpleBindingSuccess(
+                                    expression,
+                                    TestUtils.DT(expectedType),
+                                    symbol);
+            }
+            else
+            {
+                TestBindingErrors(
+                    expression,
+                    TestUtils.DT(expectedType),
+                    symbol);
+            }
         }
 
         [Fact]
@@ -668,7 +709,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -695,7 +736,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Len(T)",
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -737,7 +778,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Lower(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -795,7 +836,7 @@ namespace Microsoft.PowerFx.Core.Tests
                script,
                TestUtils.DT("*[Value:s]"),
                symbol,
-               Features.ConsistentOneColumnTableResult);
+               new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -942,7 +983,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -999,7 +1040,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1026,7 +1067,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Trunc(T)",
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1098,7 +1139,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 expression,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1142,7 +1183,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1186,7 +1227,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -1266,7 +1307,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value: n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -1509,7 +1550,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Trim(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1538,7 +1579,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "TrimEnds(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1567,7 +1608,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Upper(T)",
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Fact]
@@ -1814,7 +1855,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT(expectedType),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -1952,7 +1993,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT(expectedType),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2002,18 +2043,18 @@ namespace Microsoft.PowerFx.Core.Tests
                     var symbol = new SymbolTable();
                     symbol.AddVariable("T1", new TableType(TestUtils.DT(typedGlobal1)));
                     symbol.AddVariable("T2", new TableType(TestUtils.DT(typedGlobal2)));
-                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, Features.ConsistentOneColumnTableResult);
+                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, new Features { ConsistentOneColumnTableResult = true });
                 }
                 else
                 {
                     var symbol = new SymbolTable();
                     symbol.AddVariable("T", new TableType(TestUtils.DT(typedGlobal1)));
-                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, Features.ConsistentOneColumnTableResult);
+                    TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), symbol, new Features { ConsistentOneColumnTableResult = true });
                 }
             }
             else
             {
-                TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), features: Features.ConsistentOneColumnTableResult);
+                TestSimpleBindingSuccess(script, TestUtils.DT(expectedType), features: new Features { ConsistentOneColumnTableResult = true });
             }
         }
 
@@ -2358,7 +2399,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2470,6 +2511,33 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("IsEmpty(\"Hello\")", true)]
+        [InlineData("IsEmpty(7)", true)]
+        [InlineData("IsEmpty([1,2,3,4])", false)]
+        [InlineData("IsEmpty({a:3, b:4})", true)]
+        [InlineData("IsEmpty(Blank())", false)]
+        public void TexlFunctionTypeSemanticsIsEmpty(string script, bool expectedError)
+        {
+            TestSimpleBindingSuccess(script, DType.Boolean); // Without restriction, all succeed
+
+            if (expectedError)
+            {
+                TestBindingErrors(
+                    script,
+                    DType.Boolean,
+                    symbolTable: null,
+                    features: new Features { RestrictedIsEmptyArguments = true });
+            }
+            else
+            {
+                TestSimpleBindingSuccess(
+                    script,
+                    DType.Boolean,
+                    features: new Features { RestrictedIsEmptyArguments = true });
+            }
+        }
+
+        [Theory]
         [InlineData("Sequence(20)", "*[Value:n]")]
         [InlineData("Sequence(20, 30)", "*[Value:n]")]
         [InlineData("Sequence(20, 30, 10)", "*[Value:n]")]
@@ -2527,7 +2595,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2557,7 +2625,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2587,7 +2655,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2617,7 +2685,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2647,7 +2715,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2681,7 +2749,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:b]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2716,7 +2784,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:c]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2746,7 +2814,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2776,7 +2844,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2806,7 +2874,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2836,7 +2904,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2866,7 +2934,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2901,7 +2969,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2931,7 +2999,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2969,7 +3037,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -2999,7 +3067,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -3029,7 +3097,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value:n]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -3070,7 +3138,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 script,
                 TestUtils.DT("*[Value: s]"),
                 symbol,
-                Features.ConsistentOneColumnTableResult);
+                new Features { ConsistentOneColumnTableResult = true });
         }
 
         [Theory]
@@ -3218,9 +3286,10 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.False(result.IsSuccess);
         }
 
-        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, OptionSet[] optionSets = null)
+        private void TestBindingErrors(string script, DType expectedType, SymbolTable symbolTable = null, bool numberIsFloat = true, OptionSet[] optionSets = null, Features features = null)
         {
-            var config = new PowerFxConfig
+            features = features ?? Features.None;
+            var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
             };
@@ -3234,14 +3303,16 @@ namespace Microsoft.PowerFx.Core.Tests
             }
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
+            var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
+            var result = engine.Check(script, opts);
 
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.False(result.IsSuccess);
         }
 
-        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = Features.None, OptionSet[] optionSets = null)
+        private static void TestSimpleBindingSuccess(string script, DType expectedType, SymbolTable symbolTable = null, Features features = null, bool numberIsFloat = true, IExternalOptionSet[] optionSets = null)
         {
+            features ??= Features.None;
             var config = new PowerFxConfig(features)
             {
                 SymbolTable = symbolTable
@@ -3254,13 +3325,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     foreach (var optionSet in optionSets)
                     {
-                        config.AddOptionSet(optionSet);
+                        config.AddEntity(optionSet);
                     }
                 }
             }
 
             var engine = new Engine(config);
-            var result = engine.Check(script);
+            var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
+            var result = engine.Check(script, opts);
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.IsSuccess);
         }

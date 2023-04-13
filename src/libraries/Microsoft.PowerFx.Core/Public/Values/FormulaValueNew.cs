@@ -31,16 +31,15 @@ namespace Microsoft.PowerFx.Types
             return new BlankValue(IRContext.NotInSource(FormulaType.Number));
         }
 
-        public static NumberValue New(decimal number)
+        public static DecimalValue New(decimal number)
         {
-            // $$$ Is this safe? or loss in precision?
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
-        public static NumberValue New(long number)
+        public static DecimalValue New(long number)
         {
-            // $$$ Is this safe? or loss in precision?
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)number);
+            // it is safe to convert 64-bit Long to Decimal
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)number);
         }
 
         public static NumberValue New(int number)
@@ -129,6 +128,11 @@ namespace Microsoft.PowerFx.Types
         public static ColorValue New(Color value)
         {
             return new ColorValue(IRContext.NotInSource(FormulaType.Color), value);
+        }
+
+        public static VoidValue NewVoid()
+        {
+            return new VoidValue(IRContext.NotInSource(FormulaType.Void));
         }
     }
 }

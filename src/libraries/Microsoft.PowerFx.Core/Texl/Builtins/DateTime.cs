@@ -30,8 +30,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateFunction()
             : base("Date", TexlStrings.AboutDate, FunctionCategories.DateTime, DType.Date, 0, 3, 3, DType.Number, DType.Number, DType.Number)
         {
@@ -49,8 +47,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public ExtractDateTimeFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
@@ -83,8 +79,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public TimeFunction()
             : base("Time", TexlStrings.AboutTime, FunctionCategories.DateTime, DType.Time, 0, 3, 4, DType.Number, DType.Number, DType.Number, DType.Number)
         {
@@ -108,8 +102,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public DateTimeFunction()
             : base("DateTime", TexlStrings.AboutDateTime, FunctionCategories.DateTime, DType.DateTime, 0, 6, 7, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number, DType.Number)
@@ -233,10 +225,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public WeekdayFunction()
-            : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
+            : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, BuiltInEnums.StartOfWeekEnum.FormulaType._type)
         {
         }
 
@@ -248,7 +238,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.StartOfWeekEnumString };
+            return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
     }
 
@@ -259,8 +249,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public WeekNumFunction()
             : base("WeekNum", TexlStrings.AboutWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
@@ -275,7 +263,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.StartOfWeekEnumString };
+            return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
     }
 
@@ -284,8 +272,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class ISOWeekNumFunction : BuiltinFunction
     {
         public override bool IsSelfContained => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public ISOWeekNumFunction()
             : base("ISOWeekNum", TexlStrings.AboutISOWeekNum, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
@@ -311,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.DateTimeFormatEnumString };
+            return new List<string>() { LanguageConstants.DateTimeFormatEnumString };
         }
 
         public override bool HasSuggestionsForParam(int index)
@@ -326,8 +312,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public const string DateValueInvariantFunctionName = "DateValue";
 
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => true;
 
         public DateValueFunction()
             : base(DateValueInvariantFunctionName, TexlStrings.AboutDateValue, DType.Date)
@@ -348,8 +332,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public TimeValueFunction()
             : base(TimeValueFunctionInvariantName, TexlStrings.AboutTimeValue, DType.Time)
         {
@@ -369,8 +351,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateTimeValueFunction()
             : base(DateTimeValueInvariantFunctionName, TexlStrings.AboutDateTimeValue, DType.DateTime)
         {
@@ -388,12 +368,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         internal static readonly List<string> SubDayStringList = new List<string>() { "Hours", "Minutes", "Seconds", "Milliseconds" };
 
         public DateAddFunction()
-            : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, DType.String)
+            : base("DateAdd", TexlStrings.AboutDateAdd, FunctionCategories.DateTime, DType.DateTime, 0, 2, 3, DType.DateTime, DType.Number, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {
         }
 
@@ -405,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -459,8 +437,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateAddTFunction()
             : base("DateAdd", TexlStrings.AboutDateAddT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
         {
@@ -474,7 +450,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -502,22 +478,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of dates/dateTimes. Since dateTime is the supertype, checking
                 // for DateTime alone is sufficient.
-                fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
-
-                if (fValid)
-                {
-                    var inputColumn = type0.GetNames(DPath.Root).Single();
-                    var resultColumnType = inputColumn.Type;
-                    if (nodeToCoercedTypeMap != null && nodeToCoercedTypeMap.TryGetValue(args[0], out var coercedType))
-                    {
-                        resultColumnType = coercedType.GetColumnTypeFromSingleColumnTable();
-                    }
-
-                    var resultColumnName = context.Features.HasFlag(Features.ConsistentOneColumnTableResult)
-                        ? ColumnName_Value
-                        : inputColumn.Name;
-                    returnType = DType.CreateTable(new TypedName(resultColumnType, resultColumnName));
-                }
+                fValid &= CheckDateColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
@@ -525,7 +486,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
                 }
-                else if (type0.CoercesTo(DType.DateTime))
+                else if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
@@ -540,11 +501,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg1 should be either a number or a column of numbers.
             if (type1.IsTable)
             {
-                fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.Number.Accepts(type1))
+            else if (!DType.Number.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.Number))
+                if (type1.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number);
                 }
@@ -556,11 +517,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var hasUnits = args.Length == 3;
-            if (hasUnits && !DType.String.Accepts(argTypes[2]))
+
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
+                BuiltInEnums.TimeUnitEnum.OptionSetType :
+                DType.String;
+
+            if (hasUnits)
             {
-                // Arg2 should be a string
-                fValid = false;
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrStringExpected);
+                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                {
+                    // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
+                    fValid = false;
+                    errors.TypeMismatchError(args[2], arg2ExpectedType, argTypes[2]);
+                }
+                else if (arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                {
+                    // For implementations, coerce enum option set values to the backing type
+                    var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], coercionType);
+                }
             }
 
             // At least one arg has to be a table.
@@ -582,10 +557,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateDiffFunction()
-            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, DType.String)
+            : base("DateDiff", TexlStrings.AboutDateDiff, FunctionCategories.DateTime, DType.Number, 0, 2, 3, DType.DateTime, DType.DateTime, BuiltInEnums.TimeUnitEnum.FormulaType._type)
         {
         }
 
@@ -597,7 +570,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -614,8 +587,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public DateDiffTFunction()
             : base("DateDiff", TexlStrings.AboutDateDiffT, FunctionCategories.Table, DType.EmptyTable, 0, 2, 3)
         {
@@ -629,7 +600,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override IEnumerable<string> GetRequiredEnumNames()
         {
-            return new List<string>() { EnumConstants.TimeUnitEnumString };
+            return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
@@ -657,11 +628,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of dates
-                fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckDateColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.DateTime.Accepts(type0))
+            else if (!DType.DateTime.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type0.CoercesTo(DType.DateTime))
+                if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                 }
@@ -676,11 +647,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type1.IsTable)
             {
                 // Ensure we have a one-column table of dates
-                fValid &= CheckDateColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckDateColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.DateTime.Accepts(type1))
+            else if (!DType.DateTime.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.DateTime))
+                if (type1.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.DateTime);
                 }
@@ -691,12 +662,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            var arg2ExpectedType = context.Features.StronglyTypedBuiltinEnums ?
+                BuiltInEnums.TimeUnitEnum.FormulaType._type :
+                DType.String;
+
             var hasUnits = args.Length == 3;
-            if (hasUnits && !DType.String.Accepts(argTypes[2]))
+            if (hasUnits)
             {
-                // Arg2 should be a string
-                fValid = false;
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrStringExpected);
+                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                {
+                    // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
+                    fValid = false;
+                    errors.TypeMismatchError(args[2], arg2ExpectedType, argTypes[2]);
+                }
+                else if (arg2ExpectedType.OptionSetInfo is EnumSymbol enumSymbol1)
+                {
+                    // For implementations, coerce enum option set values to the backing type
+                    var coercionType = enumSymbol1.EnumType.GetEnumSupertype();
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], coercionType);
+                }
             }
 
             // At least one arg has to be a table.
@@ -715,8 +699,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateValueFunction_UO : BuiltinFunction
     {
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public override bool IsSelfContained => true;
 
@@ -741,8 +723,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => false;
-
         public override bool IsSelfContained => true;
 
         public TimeValueFunction_UO()
@@ -765,8 +745,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DateTimeValueFunction_UO : BuiltinFunction
     {
         public override bool HasPreciseErrors => true;
-
-        public override bool SupportsParamCoercion => false;
 
         public override bool IsSelfContained => true;
 

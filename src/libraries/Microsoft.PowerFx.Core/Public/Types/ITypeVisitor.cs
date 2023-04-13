@@ -16,6 +16,8 @@ namespace Microsoft.PowerFx.Types
 
         void Visit(NumberType type);
 
+        void Visit(DecimalType type);
+
         void Visit(StringType type);
 
         void Visit(RecordType type);
@@ -47,5 +49,7 @@ namespace Microsoft.PowerFx.Types
         void Visit(DeferredType type);
 
         void Visit(BindingErrorType type);
+
+        void Visit(Void type);
     }
 }

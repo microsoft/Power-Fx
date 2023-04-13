@@ -25,9 +25,6 @@ namespace Microsoft.PowerFx
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
-        // $$$ NEeded by config... make private?
-        internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
-
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
@@ -89,6 +86,11 @@ namespace Microsoft.PowerFx
             Inc();
             DName displayDName = default;
             DName varDName = ValidateName(name);
+
+            if (type is Types.Void)
+            {
+                throw new NotSupportedException();
+            }
 
             if (displayName != null)
             {
@@ -207,14 +209,29 @@ namespace Microsoft.PowerFx
         {
             Inc();
 
-            _functions.RemoveAll(func => func.Name == name);
+            _functions.RemoveAll(name);
         }
 
         internal void RemoveFunction(TexlFunction function)
         {
             Inc();
 
-            _functions.RemoveAll(func => func == function);
+            _functions.RemoveAll(function);
+        }
+
+        internal void AddFunctions(TexlFunctionSet functions)
+        {
+            Inc();
+
+            if (functions._count == 0)
+            {
+                return;
+            }
+
+            _functions.Add(functions);
+
+            // Add any associated enums 
+            EnumStoreBuilder?.WithRequiredEnums(functions);
         }
 
         internal void AddFunction(TexlFunction function)
@@ -223,7 +240,7 @@ namespace Microsoft.PowerFx
             _functions.Add(function);
 
             // Add any associated enums 
-            EnumStoreBuilder?.WithRequiredEnums(new List<TexlFunction>() { function });
+            EnumStoreBuilder?.WithRequiredEnums(new TexlFunctionSet(function));
         }
 
         internal EnumStoreBuilder EnumStoreBuilder
@@ -243,23 +260,11 @@ namespace Microsoft.PowerFx
 
             if (entity is IExternalOptionSet optionSet)
             {
-                nameInfo = new NameLookupInfo(
-                    BindKind.OptionSet,
-                    optionSet.Type,
-                    DPath.Root,
-                    0,
-                    optionSet,
-                    displayName);
+                nameInfo = new NameLookupInfo(BindKind.OptionSet, optionSet.Type, DPath.Root, 0, optionSet, displayName);
             }
             else if (entity is IExternalDataSource)
             {
-                nameInfo = new NameLookupInfo(
-                    BindKind.Data,
-                    entity.Type,
-                    DPath.Root,
-                    0,
-                    entity,
-                    displayName);
+                nameInfo = new NameLookupInfo(BindKind.Data, entity.Type, DPath.Root, 0, entity, displayName);
             }
             else
             {
@@ -276,6 +281,36 @@ namespace Microsoft.PowerFx
             }
 
             _variables.Add(entity.EntityName, nameInfo);
+        }
+
+        /// <summary>
+        /// Adds a host object schema, that can be referenced in the formula.
+        /// Actual object is added in Runtime config service provider.
+        /// </summary>
+        /// <param name="name">Name of the object.</param>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="getValue">Call back that will retrieve object from the service provider.
+        /// It can throw CustomFunctionErrorException, that fx will convert to an error.</param>
+        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, FormulaValue> getValue)
+        {
+            var hostDName = ValidateName(name);
+
+            // Attempt to update display name provider before symbol table,
+            // since it can throw on collision and we want to leave the config in a good state.
+            if (_environmentSymbolDisplayNameProvider is SingleSourceDisplayNameProvider ssDnp)
+            {
+                _environmentSymbolDisplayNameProvider = ssDnp.AddField(hostDName, default);
+            }
+
+            var info = new NameLookupInfo(
+                BindKind.PowerFxResolvedObject,
+                type._type,
+                DPath.Root,
+                0,
+                data: getValue,
+                displayName: default);
+
+            _variables.Add(hostDName, info);
         }
     }
 }

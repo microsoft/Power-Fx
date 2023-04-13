@@ -1,0 +1,81 @@
+﻿#SETUP:PowerFxV1CompatibilityRules
+
+//Table()
+>> Table({a:0}, {a:true}, {a:2})
+Table({a:0},{a:1},{a:2})
+
+>> Table({a:true}, {a:0}, {a:999})
+Table({a:true},{a:false},{a:true})
+
+>> First( Table({a:0,b:0}, {a:true, b:1})).b
+0
+
+>> First( Table({a:0}, {a:true, b:1})).b
+Blank()
+
+>> Last(Table({a:0,b:0}, {a:true, b:1})).b
+1
+
+>> Table({a:1}, {a:Date(2023,3,1)})
+Table({a:1},{a:44986})
+
+>> Table({a:10,b:11}, {a:20, b:"21"})
+Table({a:10,b:11},{a:20,b:21})
+
+>> Table({a:1}, {a:"1"}, {a:true})
+Table({a:1},{a:1},{a:1})
+
+>> Table({a:1}, {a:Date(2023,3,1)}, {a:true})
+Table({a:1},{a:44986},{a:1})
+
+>> Table({a:0,b:Date(2023,3,1)}, {a:Date(2023,3,1),b:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")})
+Errors: Error 0-96: The function 'Table' has some invalid arguments.
+
+>> Table({A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:"1",d2:4},y:3}})
+Table({A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:1,d2:4},y:3}})
+
+>> Table({y : { x : { a: 1}}}, {y:{x : { a: true, b:2}}} )
+Table({y:{x:{a:1,b:Blank()}}},{y:{x:{a:1,b:2}}})
+
+// Tabular
+>> [{a:0}, {a:true}, {a:2}]
+Table({a:0},{a:1},{a:2})
+
+>> [{a:true}, {a:0}, {a:999}]
+Table({a:true},{a:false},{a:true})
+
+>> First( [{a:0,b:0}, {a:true, b:1}]).b
+0
+
+>> First( [{a:0}, {a:true, b:1}]).b
+Blank()
+
+>> Last([{a:0,b:0}, {a:true, b:1}]).b
+1
+
+>> [{a:1}, {a:Date(2023,3,1)}]
+Table({a:1},{a:44986})
+
+>> [{a:10,b:11}, {a:20, b:"21"}]
+Table({a:10,b:11},{a:20,b:21})
+
+>> [{a:1}, {a:"1"}, {a:true}]
+Table({a:1},{a:1},{a:1})
+
+>> [{a:1}, {a:Date(2023,3,1)}, {a:true}]
+Table({a:1},{a:44986},{a:1})
+
+>> [{a:0,b:Date(2023,3,1)}, {a:Date(2023,3,1),b:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")}]
+Errors: Error 25-90: Incompatible type. The item you are trying to put into a table has a type that is not compatible with the table.
+
+>> [{A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:"1",d2:4},y:3}}]
+Table({A:{x:{d1:1,d2:3},y:3}},{A:{x:{d1:1,d2:4},y:3}})
+
+>> [{y : { x : { a: 1}}}, {y:{x : { a: true, b:2}}}]
+Table({y:{x:{a:1,b:Blank()}}},{y:{x:{a:1,b:2}}})
+
+>> Last([ {a:2}, {a:true, b:true, c:20}, {a:2, b:2, c:true} ]).c
+1
+
+>> Last([ {a:"str"}, {a:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")} ]).a
+"5cc45615-f759-4a53-b225-d3a2497f60ad"

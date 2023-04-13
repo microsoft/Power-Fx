@@ -18,8 +18,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public StringTwoArgFunction(string name, TexlStrings.StringGetter description)
             : this(name, description, DType.Boolean)
         {

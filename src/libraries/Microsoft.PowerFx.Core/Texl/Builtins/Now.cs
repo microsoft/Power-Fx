@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public NowFunction()
             : base("Now", TexlStrings.AboutNow, FunctionCategories.DateTime, DType.DateTime, 0, 0, 0)
         {

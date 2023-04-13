@@ -13,17 +13,16 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class InterpreterSuggestTests : IntellisenseTestBase
-    {        
+    {
         private string[] SuggestStrings(string expression, PowerFxConfig config, RecordType parameterType)
         {
             Assert.NotNull(expression);
 
-            var intellisense = Suggest(expression, config, parameterType);
+            var intellisense = Suggest(expression, config, culture: null, parameterType);
             return intellisense.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray();
         }
 
@@ -48,8 +47,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
-        {            
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder());
+        {
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -80,7 +79,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var actualSuggestions = SuggestStrings(expression, engine, parameterType);
             Assert.Equal(expectedSuggestions, actualSuggestions);
-            
+
             // Now try with Globals instead of RowScope
             foreach (var field in parameterType.GetFieldTypes())
             {
@@ -96,7 +95,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Dis|", "DisplayOpt", "DisplayRowScope")] // Match to row scope       
         public void TestSuggestOptionSetsDisplayName(string expression, params string[] expectedSuggestions)
         {
-            var config = PowerFxConfig.BuildWithEnumStore(null, new EnumStoreBuilder(), new TexlFunction[0]);
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder(), new TexlFunctionSet());
 
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
@@ -185,7 +184,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = SuggestTests.Default;
             config.SymbolTable.EnableMutationFunctions();
             var actualSuggestions = SuggestStrings(expression, config, null);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
         }
     }
 }
