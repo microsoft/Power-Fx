@@ -32,6 +32,7 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
@@ -472,7 +473,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     expectedParamType = enumSymbol.EnumType.GetEnumSupertype();
                 }
 
-                var typeChecks = CheckType(args[i], argTypes[i], expectedParamType, errors, SupportCoercionForArg(i), out DType coercionType);
+                var typeChecks = CheckType(context, args[i], argTypes[i], expectedParamType, errors, SupportCoercionForArg(i), out DType coercionType);
                 if (typeChecks)
                 {
                     // For implementations, coerce enum option set values to the backing type
@@ -857,19 +858,19 @@ namespace Microsoft.PowerFx.Core.Functions
             return result;
         }
 
-        protected bool SetErrorForMismatchedColumns(DType expectedType, DType actualType, TexlNode errorArg, IErrorContainer errors)
+        protected bool SetErrorForMismatchedColumns(DType expectedType, DType actualType, TexlNode errorArg, IErrorContainer errors, Features features)
         {
             Contracts.AssertValid(expectedType);
             Contracts.AssertValid(actualType);
             Contracts.AssertValue(errorArg);
             Contracts.AssertValue(errors);
 
-            return SetErrorForMismatchedColumnsCore(expectedType, actualType, errorArg, errors, DPath.Root);
+            return SetErrorForMismatchedColumnsCore(expectedType, actualType, errorArg, errors, DPath.Root, features);
         }
 
         // This function recursively traverses the types to find the first occurence of a type mismatch.
         // DTypes are guaranteed to be finite, so there is no risk of a call stack overflow
-        private bool SetErrorForMismatchedColumnsCore(DType expectedType, DType actualType, TexlNode errorArg, IErrorContainer errors, DPath columnPrefix)
+        private bool SetErrorForMismatchedColumnsCore(DType expectedType, DType actualType, TexlNode errorArg, IErrorContainer errors, DPath columnPrefix, Features features)
         {
             Contracts.AssertValid(expectedType);
             Contracts.AssertValid(actualType);
@@ -884,7 +885,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 if (actualType.TryGetType(expectedColumn.Name, out var actualColumnType))
                 {
                     var expectedColumnType = expectedColumn.Type;
-                    if (expectedColumnType.Accepts(actualColumnType))
+                    if (expectedColumnType.Accepts(actualColumnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: features.PowerFxV1CompatibilityRules))
                     {
                         continue;
                     }
@@ -901,7 +902,8 @@ namespace Microsoft.PowerFx.Core.Functions
                             actualColumnType,
                             errorArg,
                             errors,
-                            columnPrefix.Append(new DName(errName)));
+                            columnPrefix.Append(new DName(errName)),
+                            features);
                     }
 
                     if (expectedColumn.Type.IsExpandEntity
@@ -966,21 +968,21 @@ namespace Microsoft.PowerFx.Core.Functions
                         ? DType.Number : DType.Decimal;
         }
 
-        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, out bool matchedWithCoercion)
+        protected bool CheckType(CheckTypesContext context, TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, out bool matchedWithCoercion)
         {
-            return CheckType(node, nodeType, expectedType, errors, SupportsParamCoercion, out matchedWithCoercion);
+            return CheckType(context, node, nodeType, expectedType, errors, SupportsParamCoercion, out matchedWithCoercion);
         }
 
-        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported, out bool matchedWithCoercion)
+        protected bool CheckType(CheckTypesContext context, TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported, out bool matchedWithCoercion)
         {
-            var typeChecks = CheckType(node, nodeType, expectedType, errors, coerceIfSupported, out DType coercionType);
+            var typeChecks = CheckType(context, node, nodeType, expectedType, errors, coerceIfSupported, out DType coercionType);
             matchedWithCoercion = typeChecks && coercionType != null;
             return typeChecks;
         }
 
-        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckType(CheckTypesContext context, TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            var typeChecks = CheckType(node, nodeType, expectedType, errors, coerceIfSupported: true, out DType coercionType);
+            var typeChecks = CheckType(context, node, nodeType, expectedType, errors, coerceIfSupported: true, out DType coercionType);
 
             if (coercionType != null)
             {
@@ -992,22 +994,30 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Check the type of a specified node against an expected type and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
-        protected bool CheckType(TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported, out DType coercionType)
+        protected bool CheckType(CheckTypesContext context, TexlNode node, DType nodeType, DType expectedType, IErrorContainer errors, bool coerceIfSupported, out DType coercionType)
         {
+            Contracts.AssertValue(context);
             Contracts.AssertValue(node);
             Contracts.Assert(nodeType.IsValid);
             Contracts.Assert(expectedType.IsValid);
             Contracts.AssertValue(errors);
 
             coercionType = null;
-            if (expectedType.Accepts(nodeType, out var schemaDifference, out var schemaDifferenceType))
+            var usePFxv1CompatRules = context.Features.PowerFxV1CompatibilityRules;
+            if (expectedType.Accepts(
+                nodeType,
+                out var schemaDifference,
+                out var schemaDifferenceType,
+                exact: true,
+                useLegacyDateTimeAccepts: false,
+                usePowerFxV1CompatibilityRules: usePFxv1CompatRules))
             {
                 return true;
             }
 
             KeyValuePair<string, DType> coercionDifference = default;
             DType coercionDifferenceType = null;
-            if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType))
+            if (coerceIfSupported && nodeType.CoercesTo(expectedType, out _, out coercionType, out coercionDifference, out coercionDifferenceType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePFxv1CompatRules))
             {
                 return true;
             }
@@ -1019,7 +1029,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if ((targetType.IsTable && nodeType.IsTable) || (targetType.IsRecord && nodeType.IsRecord))
             {
-                if (SetErrorForMismatchedColumns(expectedType, targetType, node, errors))
+                if (SetErrorForMismatchedColumns(expectedType, targetType, node, errors, context.Features))
                 {
                     return false;
                 }
@@ -1062,7 +1072,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // pass context (to get at features) and an out parameter for the type to use as the result of such a function.
         // If not needed, use one of the overloads without context and the out parameter.
         // Date/DateTime/Time are special and will not snap to expectedType but will retain the subtype.
-        private bool CheckColumnTypeCore(DType type, TexlNode arg, TypedName column, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
+        private bool CheckColumnTypeCore(CheckTypesContext context, TexlNode arg, DType type, TypedName column, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             Contracts.Assert(type.IsValid);
             Contracts.AssertValue(arg);
@@ -1076,31 +1086,31 @@ namespace Microsoft.PowerFx.Core.Functions
                 return false;
             }
 
-            if (expectedType.Accepts(column.Type))
+            if (!expectedType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                return true;
+                if (SupportsParamCoercion && column.Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                {
+                    returnType = DType.CreateTable(new TypedName(expectedType, column.Name));
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, returnType);
+                }
+                else
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, expectedType.GetKindString(), column.Name.Value);
+                    return false;
+                }
             }
-            else if (SupportsParamCoercion && column.Type.CoercesTo(expectedType))
-            {
-                returnType = DType.CreateTable(new TypedName(expectedType, column.Name));
-                CollectionUtils.Add(ref nodeToCoercedTypeMap, arg, returnType);
-                return true;
-            }
-            else
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, expectedType.GetKindString(), column.Name.Value);
-                return false;
-            }
+
+            return true;
         }
 
-        protected bool CheckColumnType(DType type, TexlNode arg, TypedName column, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckColumnType(CheckTypesContext context, TexlNode arg, DType type, TypedName column, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckColumnTypeCore(type, arg, column, expectedType, errors, ref nodeToCoercedTypeMap, out _);
+            return CheckColumnTypeCore(context, arg, type, column, expectedType, errors, ref nodeToCoercedTypeMap, out _);
         }
 
-        protected bool CheckColumnType(DType type, TexlNode arg, TypedName column, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, CheckTypesContext context, out DType returnType)
+        protected bool CheckColumnType(CheckTypesContext context, TexlNode arg, DType type, TypedName column, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
-            if (CheckColumnTypeCore(type, arg, column, expectedType, errors, ref nodeToCoercedTypeMap, out returnType))
+            if (CheckColumnTypeCore(context, arg, type, column, expectedType, errors, ref nodeToCoercedTypeMap, out returnType))
             {
                 if (context.Features.ConsistentOneColumnTableResult)
                 {
@@ -1113,18 +1123,18 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        protected bool CheckColumnType(DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckColumnType(CheckTypesContext context, TexlNode arg, DType type, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             return TryGetSingleColumn(type, arg, errors, out var column) &&
-                CheckColumnTypeCore(type, arg, column, expectedType, errors, ref nodeToCoercedTypeMap, out _);
+                CheckColumnTypeCore(context, arg, type, column, expectedType, errors, ref nodeToCoercedTypeMap, out _);
         }
 
-        protected bool CheckColumnType(DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, CheckTypesContext context, out DType returnType)
+        protected bool CheckColumnType(CheckTypesContext context, TexlNode arg, DType type, DType expectedType, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             returnType = type;
 
             if (TryGetSingleColumn(type, arg, errors, out var column) &&
-                CheckColumnTypeCore(type, arg, column, expectedType, errors, ref nodeToCoercedTypeMap, out returnType))
+                CheckColumnTypeCore(context, arg, type, column, expectedType, errors, ref nodeToCoercedTypeMap, out returnType))
             {
                 if (context.Features.ConsistentOneColumnTableResult)
                 {
@@ -1139,58 +1149,58 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Check that the type of a specified node is a number column type, and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
-        public bool CheckNumericColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public bool CheckNumericColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckColumnType(type, arg, DType.Number, errors, ref nodeToCoercedTypeMap);
+            return CheckColumnType(context, arg, type, DType.Number, errors, ref nodeToCoercedTypeMap);
         }
 
         // This overload returns the single column table type to use for a function for which this arg is the first parameter.
-        public bool CheckNumericColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, CheckTypesContext context, out DType returnType)
+        public bool CheckNumericColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
-            return CheckColumnType(type, arg, DType.Number, errors, ref nodeToCoercedTypeMap, context, out returnType);
+            return CheckColumnType(context, arg, type, DType.Number, errors, ref nodeToCoercedTypeMap, out returnType);
         }
 
         // Check that the type of a specified node is a color column type, and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
-        protected bool CheckColorColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckColorColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckColumnType(type, arg, DType.Color, errors, ref nodeToCoercedTypeMap);
+            return CheckColumnType(context, arg, type, DType.Color, errors, ref nodeToCoercedTypeMap);
         }
 
         // This overload returns the single column table type to use for a function for which this arg is the first parameter.
-        protected bool CheckColorColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, CheckTypesContext context, out DType returnType)
+        protected bool CheckColorColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
-            return CheckColumnType(type, arg, DType.Color, errors, ref nodeToCoercedTypeMap, context, out returnType);
+            return CheckColumnType(context, arg, type, DType.Color, errors, ref nodeToCoercedTypeMap, out returnType);
         }
 
         // Check that the type of a specified node is a string column type, and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
-        protected bool CheckStringColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckStringColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckColumnType(type, arg, DType.String, errors, ref nodeToCoercedTypeMap);
+            return CheckColumnType(context, arg, type, DType.String, errors, ref nodeToCoercedTypeMap);
         }
 
         // This overload returns the single column table type to use for a function for which this arg is the first parameter.
-        protected bool CheckStringColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, CheckTypesContext context, out DType returnType)
+        protected bool CheckStringColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
-            return CheckColumnType(type, arg, DType.String, errors, ref nodeToCoercedTypeMap, context, out returnType);
+            return CheckColumnType(context, arg, type, DType.String, errors, ref nodeToCoercedTypeMap, out returnType);
         }
 
         // Check that the type of a specified node is a date column type, and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
-        protected bool CheckDateColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckDateColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckColumnType(type, arg, DType.DateTime, errors, ref nodeToCoercedTypeMap);
+            return CheckColumnType(context, arg, type, DType.DateTime, errors, ref nodeToCoercedTypeMap);
         }
 
         // This overload returns the single column table type to use for a function for which this arg is the first parameter.
         // Note that the function return type will retain the same DateTime subtype - could be Date, DateTime, or Time
-        protected bool CheckDateColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, CheckTypesContext context, out DType returnType)
+        protected bool CheckDateColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, out DType returnType)
         {
             returnType = type;
 
             if (TryGetSingleColumn(type, arg, errors, out var column) &&
-                CheckColumnTypeCore(type, arg, column, DType.DateTime, errors, ref nodeToCoercedTypeMap, out returnType))
+                CheckColumnTypeCore(context, arg, type, column, DType.DateTime, errors, ref nodeToCoercedTypeMap, out returnType))
             {
                 if (context.Features.ConsistentOneColumnTableResult)
                 {
@@ -1207,9 +1217,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Check that the type of a specified node is a boolean column type, and possibly emit errors
         // accordingly. Returns true if the types align, false otherwise.
-        protected bool CheckBooleanColumnType(DType type, TexlNode arg, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        protected bool CheckBooleanColumnType(CheckTypesContext context, TexlNode arg, DType type, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
-            return CheckColumnType(type, arg, DType.Boolean, errors, ref nodeToCoercedTypeMap);
+            return CheckColumnType(context, arg, type, DType.Boolean, errors, ref nodeToCoercedTypeMap);
         }
 
         // Enumerate some of the function signatures for a specified arity and known parameter descriptions.

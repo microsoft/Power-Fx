@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             //   * always a float, which could help with overload resolution in the future
             //   * does not determine the type of result (that's on the second arg)
             //   * is always an integer, as it is truncated by the argpreprocessor and the runtime
-            if (!CheckType(args[0], argTypes[0], DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+            if (!CheckType(context, args[0], argTypes[0], DType.Number, DefaultErrorContainer, ref nodeToCoercedTypeMap))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
                 fArgsValid = false;
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that start and step arguments are numeric/coercible to numeric.
             for (var i = 1; i < argTypes.Length; i++)
             {
-                if (!CheckType(args[i], argTypes[i], returnScalarType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                if (!CheckType(context, args[i], argTypes[i], returnScalarType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                     fArgsValid = false;

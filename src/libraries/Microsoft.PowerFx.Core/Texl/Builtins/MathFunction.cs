@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, argTypes[0]);
 
-            fValid &= CheckType(args[0], argTypes[0], returnType, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckType(context, args[0], argTypes[0], returnType, errors, ref nodeToCoercedTypeMap);
 
             if (!fValid)
             { 
@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             { 
                 fValid &= TryGetSingleColumn(argType, arg, errors, out var column);
                 var returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column.Type);
-                fValid &= CheckColumnType(argType, arg, column, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                fValid &= CheckColumnType(context, arg, argType, column, returnScalarType, errors, ref nodeToCoercedTypeMap, out returnType);
             }
             else
             {
@@ -181,14 +181,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             returnType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, argTypes[0]);
 
-            if (!CheckType(args[0], argTypes[0], returnType, errors, ref nodeToCoercedTypeMap))
+            if (!CheckType(context, args[0], argTypes[0], returnType, errors, ref nodeToCoercedTypeMap))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);
                 fValid = false;
             }
 
             if (args.Length == 2 && 
-                !CheckType(args[1], argTypes[1], _secondArgFloat ? DType.Number : returnType, errors, ref nodeToCoercedTypeMap))
+                !CheckType(context, args[1], argTypes[1], _secondArgFloat ? DType.Number : returnType, errors, ref nodeToCoercedTypeMap))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
                 fValid = false;
@@ -272,12 +272,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     if (InConsistentTableResultFixedName)
                     {
-                        fValid &= CheckColumnType(type0, args[0], column0, returnScalarType, errors, ref nodeToCoercedTypeMap);
+                        fValid &= CheckColumnType(context, args[0], type0, column0, returnScalarType, errors, ref nodeToCoercedTypeMap);
                         returnType = DType.CreateTable(new TypedName(returnScalarType, GetOneColumnTableResultName(context.Features)));
                     }
                     else
                     {
-                        fValid &= CheckColumnType(type0, args[0], column0, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                        fValid &= CheckColumnType(context, args[0], type0, column0, returnScalarType, errors, ref nodeToCoercedTypeMap, out returnType);
                     }
 
                     // Check arg1 below.
@@ -294,11 +294,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     if (InConsistentTableResultUseSecondArg)
                     {
-                        fValid &= CheckColumnType(type1, args[1], column1, secondArgScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                        fValid &= CheckColumnType(context, args[1], type1, column1, secondArgScalarType, errors, ref nodeToCoercedTypeMap, out returnType);
                     }
                     else
                     {
-                        fValid &= CheckColumnType(type1, args[1], column1, secondArgScalarType, errors, ref nodeToCoercedTypeMap);
+                        fValid &= CheckColumnType(context, args[1], type1, column1, secondArgScalarType, errors, ref nodeToCoercedTypeMap);
 
                         // Since the 1st arg is not a table, make a new table return type *[Result:n]
                         returnType = DType.CreateTable(new TypedName(returnScalarType, GetOneColumnTableResultName(context.Features)));
@@ -328,9 +328,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(otherType, otherArg, errors, out var otherColumn);
-                    fValid &= CheckColumnType(otherType, otherArg, otherColumn, otherDesiredScalarType, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckColumnType(context, otherArg, otherType, otherColumn, otherDesiredScalarType, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!CheckType(otherArg, otherType, otherDesiredScalarType, errors, ref nodeToCoercedTypeMap))
+                else if (!CheckType(context, otherArg, otherType, otherDesiredScalarType, errors, ref nodeToCoercedTypeMap))
                 {
                     fValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, otherArg, TexlStrings.ErrTypeError);
@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(type0, args[0], errors, out var oneArgColumn);
                     returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, oneArgColumn.Type);
-                    fValid &= CheckColumnType(type0, args[0], oneArgColumn, returnScalarType, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                    fValid &= CheckColumnType(context, args[0], type0, oneArgColumn, returnScalarType, errors, ref nodeToCoercedTypeMap, out returnType);
                 }
                 else
                 {
