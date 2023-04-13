@@ -185,7 +185,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType))
                 {
-                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded))
+                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: true))
                     {
                         isValid = false;
                     }
@@ -196,7 +196,7 @@ namespace Microsoft.PowerFx.Functions
                             CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], coercionType);
                         }
 
-                        retType = DType.Union(retType, coercionType);
+                        retType = DType.Union(retType, coercionType, usePowerFxV1CompatibilityRules: true);
                     }
                 }
                 else if (isSafeToUnion)

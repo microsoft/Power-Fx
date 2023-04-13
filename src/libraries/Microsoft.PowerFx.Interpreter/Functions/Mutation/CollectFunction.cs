@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Interpreter
 
             if (fValid)
             {
-                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded))
+                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: true))
                 {
                     fValid = false;
                 }
