@@ -5,22 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -760,14 +753,27 @@ namespace Microsoft.PowerFx.Functions
             }
 
             var source = (StringValue)args[0];
-            var start0Based = (int)(start.Value - 1);
-            if (source.Value == string.Empty || start0Based >= source.Value.Length)
+            double startValue = start.Value;
+            if (startValue > int.MaxValue)
+            {
+                startValue = int.MaxValue;
+            }
+
+            var start0Based = (int)(startValue - 1);
+            string str = source.Value;
+            if (str == string.Empty || start0Based >= str.Length)
             {
                 return new StringValue(irContext, string.Empty);
             }
 
-            var minCount = Math.Min((int)count.Value, source.Value.Length - start0Based);
-            var result = source.Value.Substring(start0Based, minCount);
+            double countValue = count.Value;
+            if (countValue > int.MaxValue)
+            {
+                countValue = int.MaxValue;
+            }
+
+            var minCount = Math.Min((int)countValue, str.Length - start0Based);
+            var result = str.Substring(start0Based, minCount);
 
             return new StringValue(irContext, result);
         }
@@ -826,14 +832,27 @@ namespace Microsoft.PowerFx.Functions
                 throw new NotImplementedException("Should have been handled by IR");
             }
 
-            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));
+            double cnt = count.Value;
+
+            if (cnt > int.MaxValue)
+            {
+                cnt = int.MaxValue;
+            }
+
+            return new StringValue(irContext, leftOrRight(source.Value, (int)cnt));
         }
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
-            var startIndexValue = (int)((NumberValue)args[2]).Value;
+            double arg2 = ((NumberValue)args[2]).Value;
+
+            if (arg2 < int.MinValue || arg2 > int.MaxValue)
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
+            var startIndexValue = (int)arg2;
 
             if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
             {
@@ -866,6 +885,11 @@ namespace Microsoft.PowerFx.Functions
             var start0Based = (int)(start - 1);
             var prefix = start0Based < source.Length ? source.Substring(0, start0Based) : source;
 
+            if (count > int.MaxValue)
+            {
+                count = int.MaxValue - start0Based;
+            }
+
             var suffixIndex = start0Based + (int)count;
             var suffix = suffixIndex < source.Length ? source.Substring(suffixIndex) : string.Empty;
             var result = prefix + replacement + suffix;
@@ -887,8 +911,7 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // This is static analysis before actually executing, so just use string lengths and avoid contents. 
-        internal static int SubstituteGetResultLength(
-            int sourceLen, int matchLen, int replacementLen, bool replaceAll)
+        internal static int SubstituteGetResultLength(int sourceLen, int matchLen, int replacementLen, bool replaceAll)
         {
             int maxLenChars;
 

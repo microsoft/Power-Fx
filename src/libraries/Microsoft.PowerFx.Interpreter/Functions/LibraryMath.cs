@@ -644,13 +644,13 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // r = a – N × floor(a/b)
-            var q = Math.Floor(arg0 / arg1);
+            double q = Math.Floor(arg0 / arg1);
             if (IsInvalidDouble(q))
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            var result = arg0 - (arg1 * ((long)q));
+            double result = arg0 - (arg1 * ((long)q));
 
             // We validate the reminder is in a valid range.
             // This is mainly to support very large numbers (like 1E+308) where the calculation could be incorrect
@@ -950,8 +950,8 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Dec2Hex(IRContext irContext, NumberValue[] args)
         {
-            var minNumber = -(1L << 39);
-            var maxNumber = (1L << 39) - 1;
+            long minNumber = -(1L << 39); // -549755813888
+            long maxNumber = (1L << 39) - 1; // +549755813887
 
             var number = Math.Floor(args[0].Value);
             int? places = null;
