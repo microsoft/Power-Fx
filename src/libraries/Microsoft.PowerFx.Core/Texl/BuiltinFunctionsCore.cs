@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl
 
         // Functions in this list are shared and may show up in other hosts by default.
         internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
-        private static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
+        internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
 
         public static readonly TexlFunction AmPm = _library.Add(new AmPmFunction());
         public static readonly TexlFunction AmPmShort = _library.Add(new AmPmShortFunction());

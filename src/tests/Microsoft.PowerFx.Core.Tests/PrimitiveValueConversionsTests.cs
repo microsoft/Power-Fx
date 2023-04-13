@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -37,7 +38,6 @@ namespace Microsoft.PowerFx.Core.Tests
             else
             {
                 Assert.True(result);
-
                 Assert.True(actualFxType.GetType() == fxType);
 
                 var value = GetValue(dotnetType);
@@ -45,13 +45,16 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.Equal(fxType, fxValue.Type.GetType());
 
                 var expr = actualFxType.DefaultExpressionValue();
-                var engine = new Engine(new PowerFxConfig());
+
+                SymbolTable symbol = new SymbolTable();
+                symbol.AddFunctions(BuiltinFunctionsCore._featureGateFunctions);
+                var engine = new Engine(new PowerFxConfig() { SymbolTable = symbol });
                 var options = new ParserOptions()
                 {
                     NumberIsFloat = !(dotnetType == typeof(decimal) || dotnetType == typeof(long))
                 };
-                var check = engine.Check(expr, options);
 
+                var check = engine.Check(expr, options);
                 Assert.Equal(check.ReturnType, actualFxType);
             }
         }
