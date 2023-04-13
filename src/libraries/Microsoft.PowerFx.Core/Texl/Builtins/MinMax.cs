@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 for (var i = 0; i < argTypes.Length; i++)
                 {
-                    if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime))
+                    if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.DateTime, allowDupes: true);
                         returnType = DType.DateTime;
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Ensure that all the arguments are numeric/coercible to numeric.
                 for (var i = 0; i < argTypes.Length; i++)
                 {
-                    if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                    if (CheckType(context, args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
                     {
                         if (matchedWithCoercion)
                         {

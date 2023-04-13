@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx
                 return;
             }
 
-            var ok = srcType._type.Accepts(newType._type);
+            var ok = srcType._type.Accepts(newType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
 
             if (ok)
             {
@@ -220,6 +220,8 @@ namespace Microsoft.PowerFx
         internal readonly Dictionary<string, NameLookupInfo> _variables = new Dictionary<string, NameLookupInfo>();
 
         private protected readonly TexlFunctionSet _functions = new TexlFunctionSet();
+
+        public IEnumerable<string> FunctionNames => _functions.FunctionNames;
 
         // Which enums are available. 
         // These do not compose - only bottom one wins. 

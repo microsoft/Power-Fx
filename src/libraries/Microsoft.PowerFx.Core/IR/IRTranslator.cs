@@ -539,20 +539,21 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     var value = context.Binding.GetInfo(node).VerifyValue().Data;
                     Contracts.Assert(value != null);
+                    var usePFxV1CompatRules = context.Binding.Features.PowerFxV1CompatibilityRules;
 
-                    if (DType.Color.Accepts(resultType))
+                    if (DType.Color.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new ColorLiteralNode(context.GetIRContext(node), ConvertToColor((double)value));
                     } 
-                    else if (DType.Number.Accepts(resultType))
+                    else if (DType.Number.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new NumberLiteralNode(context.GetIRContext(node), (double)value);
                     }
-                    else if (DType.String.Accepts(resultType))
+                    else if (DType.String.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new TextLiteralNode(context.GetIRContext(node), (string)value);
                     }
-                    else if (DType.Boolean.Accepts(resultType))
+                    else if (DType.Boolean.Accepts(resultType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules))
                     {
                         result = new BooleanLiteralNode(context.GetIRContext(node), (bool)value);
                     }
@@ -752,13 +753,13 @@ namespace Microsoft.PowerFx.Core.IR
                 var scope = GetNewScope();
                 foreach (var fromField in fromType.GetNames(DPath.Root))
                 {
-                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type))
+                    if (!toType.TryGetType(fromField.Name, out var toFieldType) || toFieldType.Accepts(fromField.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: _features.PowerFxV1CompatibilityRules))
                     {
                         continue;
                     }
                     else
                     {
-                        var coercionKind = CoercionMatrix.GetCoercionKind(fromField.Type, toFieldType);
+                        var coercionKind = CoercionMatrix.GetCoercionKind(fromField.Type, toFieldType, _features.PowerFxV1CompatibilityRules);
                         if (coercionKind == CoercionKind.None)
                         {
                             continue;
@@ -794,7 +795,7 @@ namespace Microsoft.PowerFx.Core.IR
 
             private IntermediateNode InjectCoercion(IntermediateNode child, IRTranslatorContext context, DType fromType, DType toType)
             {
-                var coercionKind = CoercionMatrix.GetCoercionKind(fromType, toType);
+                var coercionKind = CoercionMatrix.GetCoercionKind(fromType, toType, context.Binding.Features.PowerFxV1CompatibilityRules);
                 UnaryOpKind unaryOpKind;
                 switch (coercionKind)
                 {
@@ -877,6 +878,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToHyperlink:
                         unaryOpKind = UnaryOpKind.TextToHyperlink;
                         break;
+                    case CoercionKind.PenImageToHyperlink:
+                        unaryOpKind = UnaryOpKind.PenImageToHyperlink;
+                        break;
                     case CoercionKind.SingleColumnRecordToLargeImage:
                         unaryOpKind = UnaryOpKind.SingleColumnRecordToLargeImage;
                         break;
@@ -889,11 +893,29 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.TextToImage:
                         unaryOpKind = UnaryOpKind.TextToImage;
                         break;
+                    case CoercionKind.HyperlinkToImage:
+                        unaryOpKind = UnaryOpKind.HyperlinkToImage;
+                        break;
+                    case CoercionKind.PenImageToImage:
+                        unaryOpKind = UnaryOpKind.PenImageToImage;
+                        break;
+                    case CoercionKind.BlobToImage:
+                        unaryOpKind = UnaryOpKind.BlobToImage;
+                        break;
                     case CoercionKind.TextToMedia:
                         unaryOpKind = UnaryOpKind.TextToMedia;
                         break;
+                    case CoercionKind.BlobToMedia:
+                        unaryOpKind = UnaryOpKind.BlobToMedia;
+                        break;
+                    case CoercionKind.HyperlinkToMedia:
+                        unaryOpKind = UnaryOpKind.HyperlinkToMedia;
+                        break;
                     case CoercionKind.TextToBlob:
                         unaryOpKind = UnaryOpKind.TextToBlob;
+                        break;
+                    case CoercionKind.HyperlinkToBlob:
+                        unaryOpKind = UnaryOpKind.HyperlinkToBlob;
                         break;
                     case CoercionKind.NumberToText:
                         unaryOpKind = UnaryOpKind.NumberToText;
@@ -949,6 +971,9 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.DateToDateTime:
                         unaryOpKind = UnaryOpKind.DateToDateTime;
                         break;
+                    case CoercionKind.DateTimeToTime:
+                        unaryOpKind = UnaryOpKind.DateTimeToTime;
+                        break;
                     case CoercionKind.DateToTime:
                         unaryOpKind = UnaryOpKind.DateToTime;
                         break;
@@ -963,6 +988,42 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
                     case CoercionKind.AggregateToDataEntity:
                         unaryOpKind = UnaryOpKind.AggregateToDataEntity;
+                        break;
+                    case CoercionKind.TextToGUID:
+                        unaryOpKind = UnaryOpKind.TextToGUID;
+                        break;
+                    case CoercionKind.GUIDToText:
+                        unaryOpKind = UnaryOpKind.GUIDToText;
+                        break;
+                    case CoercionKind.NumberToCurrency:
+                        unaryOpKind = UnaryOpKind.NumberToCurrency;
+                        break;
+                    case CoercionKind.TextToCurrency:
+                        unaryOpKind = UnaryOpKind.TextToCurrency;
+                        break;
+                    case CoercionKind.CurrencyToNumber:
+                        unaryOpKind = UnaryOpKind.CurrencyToNumber;
+                        break;
+                    case CoercionKind.CurrencyToBoolean:
+                        unaryOpKind = UnaryOpKind.CurrencyToBoolean;
+                        break;
+                    case CoercionKind.BooleanToCurrency:
+                        unaryOpKind = UnaryOpKind.BooleanToCurrency;
+                        break;
+                    case CoercionKind.CurrencyToText:
+                        unaryOpKind = UnaryOpKind.CurrencyToText;
+                        break;
+                    case CoercionKind.MediaToText:
+                        unaryOpKind = UnaryOpKind.MediaToText;
+                        break;
+                    case CoercionKind.ImageToText:
+                        unaryOpKind = UnaryOpKind.ImageToText;
+                        break;
+                    case CoercionKind.BlobToText:
+                        unaryOpKind = UnaryOpKind.BlobToText;
+                        break;
+                    case CoercionKind.PenImageToText:
+                        unaryOpKind = UnaryOpKind.PenImageToText;
                         break;
                     case CoercionKind.UntypedToText:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text_UO, child);
