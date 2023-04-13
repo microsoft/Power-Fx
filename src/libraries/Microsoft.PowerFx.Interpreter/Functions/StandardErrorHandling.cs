@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 IEnumerable<FormulaValue> argumentsExpanded = expandArguments(irContext, args);
-                IEnumerable<FormulaValue> blankValuesReplaced = argumentsExpanded.Select((arg, i) => (arg is BlankValue) ? replaceBlankValues(arg.IRContext, i, null) : arg);
+                IEnumerable<FormulaValue> blankValuesReplaced = argumentsExpanded.Select((arg, i) => (arg is BlankValue) ? replaceBlankValues(arg.IRContext, i, irContext.ResultType) : arg);
                 IEnumerable<FormulaValue> runtimeTypesChecked = blankValuesReplaced.Select((arg, i) => checkRuntimeTypes(irContext, i, arg));
 
                 // Calling ToList() here is a perf improvement as we use this list multiple times
