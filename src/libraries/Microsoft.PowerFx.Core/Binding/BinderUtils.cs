@@ -761,7 +761,7 @@ namespace Microsoft.PowerFx.Core.Binding
                             // Regular Addition
                             return CheckDecimalBinaryOp(errorContainer, node, usePowerFxV1CompatibilityRules, leftType, rightType, numberIsFloat);
                     }
-            } 
+            }
         }
 
         private static bool IsAcceptedByDateOrTime(DType type, bool usePowerFxV1CompatibilityRules)
@@ -1095,7 +1095,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Handle DateTime <=> Decimal comparison
                 if (DType.Decimal.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
-                    IsAcceptedByDateOrTime(typeLeft, usePowerFxV1CompatibilityRules)) 
+                    IsAcceptedByDateOrTime(typeLeft, usePowerFxV1CompatibilityRules))
                 {
                     if (numberIsFloat)
                     {
@@ -1128,7 +1128,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 errorContainer.EnsureError(
-                    powerFxV1CompatibilityRules ? DocumentErrorSeverity.Severe : DocumentErrorSeverity.Warning,
+                    usePowerFxV1CompatibilityRules ? DocumentErrorSeverity.Severe : DocumentErrorSeverity.Warning,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                     typeLeft.GetKindString(),
