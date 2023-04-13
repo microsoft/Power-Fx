@@ -42,3 +42,9 @@ Blank()
 
 >> Collect( [1,2,3], { Value:"11"+0 } )
 {Value:11}
+
+>> With( { t: [1,2,3] }, Collect( t, {Value:"200"}); t)
+Table({Value:1},{Value:2},{Value:3},{Value:200})
+
+>> Collect([1,2,3],{Value:"run time error"}).Value
+Error({Kind:ErrorKind.InvalidArgument})

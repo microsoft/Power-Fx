@@ -4,5 +4,11 @@ Table({Value:1},{Value:2},{Value:3})
 >> Patch( y, First(y), { Value:"11" } )
 {Value:11}
 
+>> y
+Table({Value:11},{Value:2},{Value:3})
+
 >> Patch( y, First(y), { Value:"111"+0 } )
 {Value:111}
+
+>> Patch(y,First(y),{Value:"run time error"}).Value
+Error({Kind:ErrorKind.InvalidArgument})
