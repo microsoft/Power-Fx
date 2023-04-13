@@ -942,7 +942,7 @@ namespace Microsoft.PowerFx.Core.Binding
             return new BinderCheckTypeResult() { Coercions = coercions };
         }
 
-        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool numberIsFloat)
+        private static BinderCheckTypeResult CheckEqualArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool numberIsFloat, bool powerFxV1CompatibilityRules)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -1098,7 +1098,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 errorContainer.EnsureError(
-                    DocumentErrorSeverity.Warning,
+                    powerFxV1CompatibilityRules ? DocumentErrorSeverity.Severe : DocumentErrorSeverity.Warning,
                     left.Parent,
                     TexlStrings.ErrIncompatibleTypesForEquality_Left_Right,
                     typeLeft.GetKindString(),
@@ -1172,7 +1172,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
         // for handling operators and their overloads. That will offload the burden of dealing with
         // operator special cases to the various operator classes.
-        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled, bool numberIsFloat)
+        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, DType leftType, DType rightType, bool isEnhancedDelegationEnabled, bool numberIsFloat, bool powerFxV1CompatibilityRules)
         {
             Contracts.AssertValue(node);
 
@@ -1210,7 +1210,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.Equal:
                 case BinaryOp.NotEqual:
-                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, numberIsFloat);
+                    var resEq = CheckEqualArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, numberIsFloat, powerFxV1CompatibilityRules);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resEq.Coercions };
 
                 case BinaryOp.Less:
