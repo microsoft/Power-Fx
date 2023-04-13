@@ -63,9 +63,9 @@ namespace Microsoft.PowerFx
         internal bool FirstLastNRequiresSecondArguments { get; set; }
 
         /// <summary>
-        /// Enable the "blank" keyword as a replacement for calling "Blank()".
+        /// Block a set of reserved keywords from being used.  Without this, these words are available for identifiers.
         /// </summary>
-        internal bool BlankKeyword { get; set; }
+        internal bool ReservedKeywords { get; set; }
 
         internal bool PowerFxV1CompatibilityRules { get; set; }
 
@@ -81,7 +81,7 @@ namespace Microsoft.PowerFx
             RestrictedIsEmptyArguments = true,
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
-            BlankKeyword = true,
+            ReservedKeywords = true,
         };
 
         internal Features()

@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx
                 Culture = null,
                 AllowsSideEffects = false,
                 MaxExpressionLength = Config.MaximumExpressionLength,
-                BlankKeyword = Config.Features.BlankKeyword
+                ReservedKeywords = Config.Features.ReservedKeywords
             };
         }
 
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(expressionText));
             }
 
-            options ??= new ParserOptions() { BlankKeyword = features?.BlankKeyword == true };
+            options ??= new ParserOptions() { ReservedKeywords = features?.ReservedKeywords == true };
 
             var result = options.Parse(expressionText, features ?? Features.None);
             return result;            

@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Parser
             NumberIsFloat = 1 << 2,
 
             // When specified, the "blank" keyword is enabled.
-            BlankKeyword = 1 << 3,
+            ReservedKeywords = 1 << 3,
         }
 
         private bool _hasSemicolon = false;
@@ -73,9 +73,9 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            // UDFs always support BlankKeyword, no back compat concern
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | Flags.BlankKeyword | (numberIsFloat ? Flags.NumberIsFloat : 0));
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | Flags.BlankKeyword | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            // UDFs always support ReservedKeywords, no back compat concern
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | Flags.ReservedKeywords | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | Flags.ReservedKeywords | (numberIsFloat ? Flags.NumberIsFloat : 0));
 
             return parser.ParseUDFs(script);
         }
@@ -325,7 +325,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(culture);
             var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
-                             (flags.HasFlag(Flags.BlankKeyword) ? TexlLexer.Flags.BlankKeyword : 0);
+                             (flags.HasFlag(Flags.ReservedKeywords) ? TexlLexer.Flags.ReservedKeywords : 0);
             culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
             return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
@@ -662,7 +662,6 @@ namespace Microsoft.PowerFx.Core.Parser
                         case TokKind.StrLit:
                         case TokKind.True:
                         case TokKind.False:
-                        case TokKind.Blank:
                             PostError(_curs.TokCur, TexlStrings.ErrOperatorExpected);
                             tok = _curs.TokMove();
 
@@ -862,8 +861,6 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.True:
                 case TokKind.False:
                     return new BoolLitNode(ref _idNext, _curs.TokMove());
-                case TokKind.Blank:
-                    return new BlankNode(ref _idNext, _curs.TokMove());
                 case TokKind.StrInterpStart:
                     var res = ParseStringInterpolation();
                     var tokCur = _curs.TokCur;

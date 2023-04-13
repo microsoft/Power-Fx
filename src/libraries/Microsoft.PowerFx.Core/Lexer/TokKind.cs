@@ -274,11 +274,6 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         As,
 
-        /// <summary>
-        /// Blank keyword.
-        /// </summary>
-        Blank,
-
         // Interpolation
 
         /// <summary>

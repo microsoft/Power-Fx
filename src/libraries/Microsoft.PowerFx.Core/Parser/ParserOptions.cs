@@ -26,9 +26,9 @@ namespace Microsoft.PowerFx
         public bool NumberIsFloat { get; set; }
 
         /// <summary>
-        /// If true, the "blank" keyword is supported.  By default, the Blank() function must be used to return a blank value.
+        /// If true, various words have been reserved and are not available for identifiers.
         /// </summary>
-        public bool BlankKeyword { get; set; }
+        public bool ReservedKeywords { get; set; }
 
         /// <summary>
         /// The culture that an expression will parse with. 
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx
 
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
-                        (BlankKeyword || features.BlankKeyword ? TexlParser.Flags.BlankKeyword : 0);
+                        (ReservedKeywords || features.ReservedKeywords ? TexlParser.Flags.ReservedKeywords : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;

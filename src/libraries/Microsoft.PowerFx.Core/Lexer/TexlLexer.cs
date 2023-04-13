@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Syntax
             NumberIsFloat = 1 << 0,
 
             // Enable the "blank" keyword to return an untyped blank value, as if Blank() had been called
-            BlankKeyword = 2 << 0
+            ReservedKeywords = 2 << 0
         }
 
         // Locale-invariant syntax.
@@ -44,7 +44,6 @@ namespace Microsoft.PowerFx.Syntax
         public const string KeywordOr = "Or";
         public const string KeywordNot = "Not";
         public const string KeywordAs = "As";
-        public const string KeywordBlank = "blank";
         public const string PunctuatorDecimalSeparatorInvariant = ".";
         public const string PunctuatorCommaInvariant = ",";
         public const string PunctuatorSemicolonInvariant = ";";
@@ -88,11 +87,22 @@ namespace Microsoft.PowerFx.Syntax
         public const string FourSpaces = "    ";
         public const string LineBreakAndfourSpaces = "\n    ";
 
+        // Reserved Keywords
+        public const string ReservedBlank = "blank";
+        public const string ReservedNull = "null";
+        public const string ReservedEmpty = "empty";
+        public const string ReservedNone = "none";
+        public const string ReservedNothing = "nothing";
+        public const string ReservedUndefined = "undefined";
+        public const string ReservedThis = "This";
+        public const string ReservedIs = "Is";
+        public const string ReservedChild = "Child";
+        public const string ReservedChildren = "Children";
+        public const string ReservedSiblings = "Siblings";
+
         // Keywords are not locale-specific, populate keyword dictionary statically
         private static readonly IReadOnlyDictionary<string, TokKind> _keywords = new Dictionary<string, TokKind>()
         {
-            // Someday when KeywordBlank becomes a permanent addition to the language, it belongs here.
-            // But while it is an optional keyword, it is handled separately.
             { KeywordTrue, TokKind.True },
             { KeywordFalse, TokKind.False },
             { KeywordIn, TokKind.In },
@@ -103,6 +113,24 @@ namespace Microsoft.PowerFx.Syntax
             { KeywordOr, TokKind.KeyOr },
             { KeywordNot, TokKind.KeyNot },
             { KeywordAs, TokKind.As },
+        };
+
+        // Reserved keywords are not locale-specific, populate keyword dictionary statically
+        // This list includes things we might want to use and other common keywords from other languages
+        // that have no meaning here to avoid confusion
+        private static readonly IReadOnlyCollection<string> _reservedKeywords = new HashSet<string>()
+        {
+            { ReservedBlank },
+            { ReservedNull },
+            { ReservedEmpty },
+            { ReservedNone },
+            { ReservedNothing },
+            { ReservedUndefined },
+            { ReservedIs },
+            { ReservedThis },
+            { ReservedChild },
+            { ReservedChildren },
+            { ReservedSiblings },
         };
 
         // Limits the StringBuilderCache TLS memory usage for LexerImpl.
@@ -377,7 +405,6 @@ namespace Microsoft.PowerFx.Syntax
                 case TokKind.KeyNot:
                 case TokKind.KeyOr:
                 case TokKind.As:
-                case TokKind.Blank:
                     result = true;
                     break;
                 default:
@@ -470,6 +497,12 @@ namespace Microsoft.PowerFx.Syntax
         public static bool IsKeyword(string str, out TokKind tid)
         {
             return _keywords.TryGetValue(str, out tid);
+        }
+
+        // Returns true if the specified string is a reserved keyword.
+        public static bool IsReservedKeyword(string str)
+        {
+            return _reservedKeywords.Contains(str);
         }
 
         // Returns true and set 'tid' if the specified string is a punctuator.
@@ -863,7 +896,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly Stack<LexerMode> _modeStack;
             private readonly bool _numberIsFloat;
-            private readonly bool _blankKeyword;
+            private readonly bool _reservedKeywords;
 
             private int _currentTokenPos; // The start of the current token.
 
@@ -879,7 +912,7 @@ namespace Microsoft.PowerFx.Syntax
                 _sb = sb;
 
                 _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
-                _blankKeyword = flags.HasFlag(TexlLexer.Flags.BlankKeyword);
+                _reservedKeywords = flags.HasFlag(TexlLexer.Flags.ReservedKeywords);
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
@@ -1248,11 +1281,10 @@ namespace Microsoft.PowerFx.Syntax
                     return new KeyToken(tid, spanTok);
                 }
 
-                // "blank" is a keyword but handled separately because it only enabled with a flag.
-                // Someday when it becomes permanent and moved into the keywords list, this code can be eliminated.
-                else if (_blankKeyword && str == "blank" && !fDelimiterStart)
+                // Reserved words under a Features gate
+                if (_reservedKeywords && IsReservedKeyword(str) && !fDelimiterStart)
                 {
-                    return new KeyToken(TokKind.Blank, spanTok);
+                    return new ErrorToken(GetTextSpan(), TexlStrings.ErrReservedKeyword);
                 }
 
                 return new IdentToken(str, spanTok, fDelimiterStart, fDelimiterEnd);
