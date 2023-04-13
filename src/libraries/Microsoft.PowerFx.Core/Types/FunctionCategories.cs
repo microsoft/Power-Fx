@@ -20,6 +20,7 @@ namespace Microsoft.PowerFx.Core.Types
         Information = 0x40,
         Color = 0x80,
         REST = 0x100,
-        Component = 0x200
+        Component = 0x200,
+        UserDefined = 0x400,
     }
 }
