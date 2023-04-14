@@ -28,14 +28,22 @@ namespace Microsoft.PowerFx.Core.IR
         ImageToHyperlink,
         MediaToHyperlink,
         TextToHyperlink,
+        PenImageToHyperlink,
 
         SingleColumnRecordToLargeImage,
         ImageToLargeImage,
         LargeImageToImage,
         TextToImage,
+        PenImageToImage,
+        BlobToImage,
+        HyperlinkToImage,
 
+        BlobToMedia,
+        HyperlinkToMedia,
         TextToMedia,
+
         TextToBlob,
+        HyperlinkToBlob,
 
         NumberToText,
         DecimalToText,
@@ -85,6 +93,20 @@ namespace Microsoft.PowerFx.Core.IR
         UntypedToTime,
         UntypedToDateTime,
         UntypedToColor,
-        UntypedToGUID
+        UntypedToGUID,
+
+        TextToGUID,
+        GUIDToText,
+        BlobToText,
+        ImageToText,
+        MediaToText,
+        PenImageToText,
+
+        CurrencyToNumber,
+        NumberToCurrency,
+        CurrencyToText,
+        TextToCurrency,
+        CurrencyToBoolean,
+        BooleanToCurrency,
     }
 }

@@ -703,7 +703,7 @@ namespace Microsoft.PowerFx
                     try
                     {
                         hostObj = getHostObject(_services);
-                        if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type))
+                        if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
                         {
                             hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext);
                         }

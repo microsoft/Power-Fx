@@ -95,14 +95,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             for (var i = 1; i < count - 1; i += 2)
             {
-                if (!argTypes[0].Accepts(argTypes[i]) && !argTypes[i].Accepts(argTypes[0]))
+                if (!argTypes[0].Accepts(argTypes[i], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
+                    !argTypes[i].Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     // Type mismatch; using CheckType to fill the errors collection
-                    var validExpectedType = CheckType(args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool _);
+                    var validExpectedType = CheckType(context, args[i], argTypes[i], argTypes[0], errors, coerceIfSupported: false, out bool _);
                     if (validExpectedType)
                     {
                         // Check on the opposite direction
-                        validExpectedType = CheckType(args[0], argTypes[0], argTypes[i], errors, coerceIfSupported: false, out bool _);
+                        validExpectedType = CheckType(context, args[0], argTypes[0], argTypes[i], errors, coerceIfSupported: false, out bool _);
                     }
 
                     fArgsValid &= validExpectedType;
@@ -119,7 +120,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
 
-                var typeSuper = DType.Supertype(type, typeArg);
+                var typeSuper = DType.Supertype(
+                    type,
+                    typeArg,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
 
                 if (!typeSuper.IsError)
                 {
@@ -136,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!type.IsError)
                 {
-                    if (typeArg.CoercesTo(type))
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }
