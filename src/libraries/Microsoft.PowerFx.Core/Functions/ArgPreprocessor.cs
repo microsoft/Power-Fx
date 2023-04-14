@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.Functions
     // 
     // For example, an argument may speficy ReplaceBlankWithFloatZero.  All of these "ReplaceBlank" by injecting a Coalesce call 
     // into the IR.  The only question is what to Coalesce to, in particular which type.  In the case of the Truncate variations,
-    // the result is furhter processed to truncate to an integer, but still remains in a Number type.
+    // the result is further processed to truncate to an integer, but still remains in a Number type.
     internal enum ArgPreprocessor
     {
         None = 0,
@@ -26,7 +26,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // A call to the Trunc function is injected into the IR
         ReplaceBlankWithFloatZeroAndTruncate = 4,
         ReplaceBlankWithDecimalZeroAndTruncate = 5,
-
 
         // CallZero is a Zero in the same type as the return type of the function call.
         // Scalar and SingleColumnTable is for a function that returns a scalar number or a single column table of numbers, respectively.
