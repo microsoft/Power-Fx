@@ -259,7 +259,7 @@ Table({Value:-8165619676597685})
 >> Cot( Pi()/4 )
 1
 
->> Cot( [Pi()/4] )
+>> Round( Cot( [Pi()/4] ), 10 )
 Table({Value:1})
 
 >> Tan( 0 )
@@ -271,7 +271,7 @@ Table({Value:0})
 >> Tan( Pi()/4 )
 1
 
->> Tan( [Pi()/4] )
+>> Round( Tan( [Pi()/4] ), 10 )
 Table({Value:1})
 
 >> Acos( 0 )

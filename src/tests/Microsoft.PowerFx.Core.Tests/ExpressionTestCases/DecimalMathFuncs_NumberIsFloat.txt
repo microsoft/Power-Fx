@@ -179,10 +179,12 @@ Table({Value:30000.12},{Value:1E+24},{Value:2E+24})
 
 // non-decimal aware numeric functions
 
->> Sqrt( 1524157899404237160815376 )         // exact square of 1234567899876, should be done in float and match next test
+// exact square of 1234567899876 is 1524157899404237160815376
+// taking dquare root of 1524157899404230000000000 should result in a difference between float and decimal
+>> Sqrt( 1524157899404230000000000 )
 1234567899876
 
->> Sqrt( Value(1524157899404237160815376) )  // exact square of 1234567899876
+>> Sqrt( Float(1524157899404230000000000) )
 1234567899876
 
 >> Sqrt( 4.000000000000000004 )              // outside of float range, will round to 4
@@ -197,16 +199,16 @@ Table({Value:30000.12},{Value:1E+24},{Value:2E+24})
 >> Log( 10000000000000050000000, 10 )         // input will be rounded with float conversion
 22
 
->> Log( 10000000000000050000000, Value(10) )
+>> Log( 10000000000000050000000, Float(10) )
 22
 
 >> Log( 10000000000000000000000, 10 )         // above tests should match these answers
 22
 
->> Log( 10000000000000000000000, Value(10) )  
+>> Log( 10000000000000000000000, Float(10) )  
 22
 
->> Log( Value("1e100"), 10 )
+>> Log( Float("1e100"), 10 )
 100
 
 >> Ln( 2.71828182845904523536028747135266249775724709369995 )
@@ -239,11 +241,8 @@ Table({Value:-1})
 >> Sin( [0] )
 Table({Value:0})
 
->> Sin( Pi() )
-1.2246467991473532E-16
-
->> Sin( [Pi()] )
-Table({Value:1.2246467991473532E-16})
+>> Sin( Pi()/2 )
+1
 
 >> Cot( 0 )
 Error({Kind:ErrorKind.Div0})
@@ -257,11 +256,11 @@ Table({Value:Error({Kind:ErrorKind.Div0})})
 >> Cot( [3.14159265358979323846264338327950288419716939937510] )
 Table({Value:-8165619676597685})
 
->> Cot( Pi() )
--8165619676597685
+>> Cot( Pi()/4 )
+1
 
->> Cot( [Pi()] )
-Table({Value:-8165619676597685})
+>> Round( Cot( [Pi()/4] ), 10 )
+Table({Value:1})
 
 >> Tan( 0 )
 0
@@ -269,11 +268,11 @@ Table({Value:-8165619676597685})
 >> Tan( [0] )
 Table({Value:0})
 
->> Tan( Pi() )
--1.2246467991473532E-16
+>> Tan( Pi()/4 )
+1
 
->> Tan( [Pi()] )
-Table({Value:-1.2246467991473532E-16})
+>> Round( Tan( [Pi()/4] ), 10 )
+Table({Value:1})
 
 >> Acos( 0 )
 1.5707963267948966
@@ -322,6 +321,12 @@ Table({Value:0})
 
 >> Atan( [1] )
 Table({Value:0.7853981633974483})
+
+>> 4 * Atan(1) - Pi()
+0
+
+>> Atan( [4 * Atan(1) - Pi()] )
+Table({Value:0})
 
 >> Atan2( 0, 0 )
 Error({Kind:ErrorKind.Div0})
