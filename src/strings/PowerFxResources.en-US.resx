@@ -1809,20 +1809,8 @@
     <value>The first argument of '{0}' should be a one-column table.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Invalid schema, expected a column of text values for '{0}'.</value>
-    <comment>Error Message.</comment>
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Invalid schema, expected a column of date values for '{0}'.</value>
-    <comment>Error Message.</comment>
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Invalid schema, expected a column of numeric values for '{0}'.</value>
-    <comment>Error Message.</comment>
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Invalid schema, expected a column of color values for '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Invalid schema, expected a column of {0} values for '{1}'.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2330,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Math &amp; Statistical</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Information</value>
@@ -4992,6 +4983,26 @@
   <data name="ErrNamedFormula_MissingValue" xml:space="preserve">
     <value>Named formula must be an expression.</value>
     <comment>This error message shows up when Named formula is not an expression. For example, a = ;</comment>
+  </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>User defined function must have a body.</value>
+    <comment>This error message shows up when user defined function does not have a body</comment>
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Function {0} is already defined.</value>
+    <comment>This error message shows up when user tries to define a function that already exists</comment>
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} is a duplicate.</value>
+    <comment>This error message shows up when user defined function has a duplicate parameter</comment>
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Unknown type {0}.</value>
+    <comment>This error message shows up when an invalid type is used</comment>
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>The stated function return type does not match the return type of the function body.</value>
+    <comment>This error message shows up when expected return type does not match with actual return type</comment>
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>

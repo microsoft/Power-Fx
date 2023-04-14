@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     "-",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: ReplaceBlankWithFloatZero,
                     checkRuntimeTypes: DateNumberTimeOrDateTime,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<DecimalValue>(
                     "-",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroDecimal,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
                     checkRuntimeTypes: ExactValueType<DecimalValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     "%",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: ReplaceBlankWithFloatZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<DecimalValue>(
                     "%",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroDecimal,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
                     checkRuntimeTypes: ExactValueType<DecimalValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -447,6 +447,28 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: BlankToEmptyString)
+            },
+            {
+                UnaryOpKind.TextToGUID,
+                StandardErrorHandling<StringValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Guid)
+            },
+            {
+                UnaryOpKind.GUIDToText,
+                StandardErrorHandling<GuidValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<GuidValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: Text)
             },
         };
 #endregion
