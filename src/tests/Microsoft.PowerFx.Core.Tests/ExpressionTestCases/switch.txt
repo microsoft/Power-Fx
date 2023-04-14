@@ -312,7 +312,7 @@ DateTime(2001,4,1,10,0,0,0)
 
 // Result of switch can't be consumed.
 >> Abs(Switch(1, 1, -2, {x:4}))
-Errors: Error 0-28: The function 'Abs' has some invalid arguments.|Error 4-27: Invalid argument type (Void). Expecting a Number value instead.
+Errors: Error 0-28: The function 'Abs' has some invalid arguments.|Error 4-27: Invalid argument type (Void). Expecting a Decimal value instead.
 
 // Expression generating void value can be used inside of the switch. If(1<0, 1, {x:1}) => void value
 >> Switch(1, 1, 2, If(1<0, 1, {x:4}))
