@@ -13,7 +13,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -57,35 +56,27 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var matchedWithCoercion = false;
             DType arg0CoercedType = null;
 
-            if (
-                !DType.Decimal.Accepts(
-                    arg0Type,
-                    exact: true, 
-                    useLegacyDateTimeAccepts: false, 
-                    usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules) &&
-                (checkTypesContext.NumberIsFloat || DType.Number.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules)))
+            if (!DType.Decimal.Accepts(arg0Type) && (checkTypesContext.NumberIsFloat || DType.Number.Accepts(arg0Type)))
             {
-                isValidNumber = CheckType(checkTypesContext, arg0, arg0Type, DType.Number, DefaultErrorContainer, out matchedWithCoercion);
+                isValidNumber = CheckType(arg0, arg0Type, DType.Number, DefaultErrorContainer, out matchedWithCoercion);
                 arg0CoercedType = matchedWithCoercion ? DType.Number : DType.Invalid;
             }
             else
             {
-                isValidNumber = CheckType(checkTypesContext, arg0, arg0Type, DType.Decimal, DefaultErrorContainer, out matchedWithCoercion);
+                isValidNumber = CheckType(arg0, arg0Type, DType.Decimal, DefaultErrorContainer, out matchedWithCoercion);
                 arg0CoercedType = matchedWithCoercion ? DType.Decimal : DType.Invalid;
             }
 
             if (!isValidNumber || matchedWithCoercion)
             {
-                if (DType.DateTime.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules) ||
-                    DType.Time.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules) ||
-                    DType.Date.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+                if (DType.DateTime.Accepts(arg0Type))
                 {
                     // No coercion needed for datetimes here.
                     arg0CoercedType = DType.Invalid;
                 }
                 else
                 {
-                    isValidString = CheckType(checkTypesContext, arg0, arg0Type, DType.String, DefaultErrorContainer, out matchedWithCoercion);
+                    isValidString = CheckType(arg0, arg0Type, DType.String, DefaultErrorContainer, out matchedWithCoercion);
 
                     if (isValidString)
                     {
@@ -121,12 +112,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return isValid;
             }
 
-            if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+            if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1]))
             {
                 // Coerce enum values to string
                 CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
             }
-            else if (!DType.String.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+            else if (!DType.String.Accepts(argTypes[1]))
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
                 isValid = false;
@@ -166,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (args.Length > 2)
             {
                 var argType = argTypes[2];
-                if (!DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+                if (!DType.String.Accepts(argType))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrStringExpected);
                     isValid = false;

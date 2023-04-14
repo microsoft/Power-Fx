@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             for (var i = 0; i < count; i++)
             {
-                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
+                fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, out var matchedWithCoercion);
                 if (matchedWithCoercion)
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Boolean);

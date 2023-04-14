@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             var returnTypeFormulaType = _returnTypeToken.GetFormulaType()._type;
 
-            if (!returnTypeFormulaType.Kind.Equals(actualBodyReturnType.Kind) || !returnTypeFormulaType.CoercesTo(returnTypeFormulaType, true, false, context.Features.PowerFxV1CompatibilityRules))
+            if (!returnTypeFormulaType.Kind.Equals(actualBodyReturnType.Kind) || !returnTypeFormulaType.CoercesTo(returnTypeFormulaType))
             {
                 errorContainer.EnsureError(DocumentErrorSeverity.Severe, _returnTypeToken, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
             }

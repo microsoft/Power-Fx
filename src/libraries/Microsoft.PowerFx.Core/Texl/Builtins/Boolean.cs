@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckStringColumnType(argType, arg, context.Features, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckStringColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
             returnType = rowType.ToTable();
@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckNumericColumnType(argType, arg, context.Features, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckNumericColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
             returnType = rowType.ToTable();
@@ -222,7 +222,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var arg = args[0];
             var argType = argTypes[0];
-            fValid &= CheckBooleanColumnType(argType, arg, context.Features, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckBooleanColumnType(argType, arg, errors, ref nodeToCoercedTypeMap);
 
             var rowType = DType.EmptyRecord.Add(new TypedName(DType.Boolean, ColumnName_Value));
             returnType = rowType.ToTable();

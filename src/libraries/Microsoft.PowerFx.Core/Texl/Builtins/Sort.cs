@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (args.Length == 3)
             {
-                if (!orderExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (!orderExpectedType.Accepts(argTypes[2]))
                 {
                     fValid = false;
                     errors.TypeMismatchError(args[2], orderExpectedType, argTypes[2]);

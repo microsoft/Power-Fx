@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             for (var i = 0; i < count; i++)
             {
-                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
+                fArgsValid &= CheckType(args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
             }
 
             if (!fArgsValid)
@@ -131,12 +131,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // See UntypedBlankAsTable.txt for more examples
                 if (argTypes[i].IsTable && argTypes[i] != DType.ObjNull)
                 {
-                    fArgsValid &= CheckStringColumnType(argTypes[i], args[i], context.Features, errors, ref nodeToCoercedTypeMap);
+                    fArgsValid &= CheckStringColumnType(argTypes[i], args[i], errors, ref nodeToCoercedTypeMap);
                     hasTableArg |= true;
                 }
                 else
                 {
-                    fArgsValid &= CheckType(context, args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
+                    fArgsValid &= CheckType(args[i], argTypes[i], DType.String, errors, ref nodeToCoercedTypeMap);
                 }
             }
 
