@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IntFunction : MathOneArgFunction
     {
         public IntFunction()
-            : base("Int", TexlStrings.AboutInt, FunctionCategories.MathAndStat, nativeDecimal: true)
+            : base("Int", TexlStrings.AboutInt, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class IntTableFunction : MathOneArgTableFunction
     {
         public IntTableFunction()
-            : base("Int", TexlStrings.AboutIntT, FunctionCategories.Table, nativeDecimal: true)
+            : base("Int", TexlStrings.AboutIntT, FunctionCategories.Table)
         {
         }
     }

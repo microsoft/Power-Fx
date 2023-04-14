@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var type = argTypes[0];
                 var arg = args[0];
-                fValid &= CheckNumericColumnType(context, arg, type, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckNumericColumnType(type, arg, context.Features, errors, ref nodeToCoercedTypeMap);
             }
             else if (argTypes.Length == 2)
             {
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
 
                     // Check arg1 below.
                     otherArg = args[1];
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (type1.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
 
                     // Check arg0 below.
                     otherArg = args[0];
@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (otherType.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(context, otherArg, otherType, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap);
                 }
                 else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {

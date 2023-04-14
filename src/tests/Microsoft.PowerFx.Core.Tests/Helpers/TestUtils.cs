@@ -141,9 +141,17 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out coercedArgs);
 
                 // explicitly blocking coercion
+                var wasCoerced = false;
                 if (CheckNumericTableOverload)
                 {
-                    if (!CheckNumericColumnType(context, args[0], argTypes[0], errors, ref coercedArgs))
+                    if (CheckColumnType(context, argTypes[0], args[0], DType.Number, errors, TexlStrings.ErrInvalidSchemaNeedNumCol_Col, ref wasCoerced))
+                    {
+                        if (wasCoerced)
+                        {
+                            CollectionUtils.Add(ref coercedArgs, args[0], DType.EmptyTable.Add(new DName("Value"), DType.Number), allowDupes: true);
+                        }
+                    }
+                    else
                     {
                         isValid = false;
                         coercedArgs?.Clear();
@@ -154,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
                 if (CheckStringTableOverload)
                 {
-                    if (!CheckStringColumnType(context, args[0], argTypes[0], errors, ref coercedArgs))
+                    if (!CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref coercedArgs))
                     {
                         isValid = false;
                         coercedArgs?.Clear();
@@ -188,7 +196,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 }
                 else if (!(expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) || columns.Single().Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, expectedType.GetKindString(), columns.Single().Name.Value);
+                    errors.EnsureError(DocumentErrorSeverity.Severe, arg, errKey, columns.Single().Name.Value);
                     return false;
                 }
 

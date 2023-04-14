@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             if (index >= 0 && index <= 2)
             {
-                return ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate;
+                return ArgPreprocessor.ReplaceBlankWithZeroAndTruncate;
             }
 
             return base.GetGenericArgPreprocessor(index);

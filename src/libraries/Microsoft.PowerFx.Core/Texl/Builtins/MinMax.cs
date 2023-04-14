@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public MinMaxFunction(bool isMin)
-            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.Unknown, 0, 1, int.MaxValue, DType.Unknown)
+            : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMin : TexlStrings.AboutMax, FunctionCategories.MathAndStat, DType.Number, 0, 1, int.MaxValue, DType.Number)
         {
         }
 
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+            nodeToCoercedTypeMap = null;
             var fArgsValid = true;
             returnType = argTypes[0];
 
@@ -53,12 +53,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             } // If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
             else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
             {
-                returnType = DetermineNumericFunctionReturnType(nativeDecimal: true, context.NumberIsFloat, argTypes[0]);
+                returnType = DType.Number;
 
                 // Ensure that all the arguments are numeric/coercible to numeric.
                 for (var i = 0; i < argTypes.Length; i++)
                 {
-                    if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                    if (CheckType(context, args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                    {
+                        if (matchedWithCoercion)
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                        }
+                    }
+                    else
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                         fArgsValid = false;

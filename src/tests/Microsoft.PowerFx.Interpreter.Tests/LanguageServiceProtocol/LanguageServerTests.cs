@@ -370,7 +370,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 new Diagnostic()
                 {
-                    Message = "Invalid schema, expected a column of Number values for 'Value'.",
+                    Message = "Invalid schema, expected a column of numeric values for 'Value'.",
                     Severity = DiagnosticSeverity.Warning
                 },
                 new Diagnostic()

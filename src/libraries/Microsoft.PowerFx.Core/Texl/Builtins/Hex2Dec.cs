@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type = argTypes[0];
             var arg = args[0];
 
-            fValid &= CheckStringColumnType(context, arg, type, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckStringColumnType(type, arg, context.Features, errors, ref nodeToCoercedTypeMap);
 
             return fValid;
         }
