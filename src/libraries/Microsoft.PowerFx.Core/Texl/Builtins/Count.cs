@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 fValid = false;
-                errors.EnsureError(DocumentErrorSeverity.Warning, args[0], TexlStrings.ErrInvalidSchemaNeedNumCol_Col, columns.Single().Name);
+                errors.EnsureError(DocumentErrorSeverity.Warning, args[0], TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, DType.Number.GetKindString(), columns.Single().Name);
             }
 
             return fValid;
