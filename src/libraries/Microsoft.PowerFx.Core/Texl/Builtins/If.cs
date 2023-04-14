@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = true;
             for (var i = 0; i < (count & ~1); i += 2)
             {
-                fArgsValid &= CheckType(context, args[i], argTypes[i], DType.Boolean, errors, true, out bool withCoercion);
+                fArgsValid &= CheckType(args[i], argTypes[i], DType.Boolean, errors, true, out bool withCoercion);
 
                 if (withCoercion)
                 {
@@ -92,11 +92,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
 
-                var typeSuper = DType.Supertype(
-                    type, 
-                    typeArg,
-                    useLegacyDateTimeAccepts: false,
-                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                var typeSuper = DType.Supertype(type, typeArg);
                 if (!typeSuper.IsError)
                 {
                     type = typeSuper;
@@ -112,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else if (!type.IsError)
                 {
-                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    if (typeArg.CoercesTo(type))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
                     }

@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // for example Table in an invocation Average(Table, valueFunction).
         // Returns true on success, false if the input or its type are invalid with respect to this function's declaration
         // (and populate the error container accordingly).
-        public virtual bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, IErrorContainer errors, out DType typeScope)
+        public virtual bool CheckInput(TexlNode inputNode, DType inputSchema, IErrorContainer errors, out DType typeScope)
         {
             Contracts.AssertValue(inputNode);
             Contracts.Assert(inputSchema.IsValid);
@@ -140,9 +140,9 @@ namespace Microsoft.PowerFx.Core.Functions
         }
 
         // Same as the virtual overload, however all typechecks are done quietly, without posting document errors.
-        public virtual bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, out DType typeScope)
+        public virtual bool CheckInput(TexlNode inputNode, DType inputSchema, out DType typeScope)
         {
-            return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
+            return CheckInput(inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
         }
 
         public void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)

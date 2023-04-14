@@ -70,12 +70,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings
-                fValid &= CheckStringColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
                 returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
-                if (!CheckType(context, args[0], type0, DType.String, errors, ref nodeToCoercedTypeMap))
+                if (!CheckType(args[0], type0, DType.String, errors, ref nodeToCoercedTypeMap))
                 {
                     fValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrStringExpected);
@@ -85,9 +85,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg1 should be either a number or a column of numbers.
             if (type1.IsTable)
             {
-                fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
             }
-            else if (!CheckType(context, args[1], type1, DType.Number, errors, ref nodeToCoercedTypeMap))
+            else if (!CheckType(args[1], type1, DType.Number, errors, ref nodeToCoercedTypeMap))
             { 
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
@@ -99,9 +99,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var type2 = argTypes[2];
                 if (type2.IsTable)
                 {
-                    fValid &= CheckNumericColumnType(type2, args[2], context.Features, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!CheckType(context, args[2], type2, DType.Number, errors, ref nodeToCoercedTypeMap))
+                else if (!CheckType(args[2], type2, DType.Number, errors, ref nodeToCoercedTypeMap))
                 {
                     fValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrNumberExpected);

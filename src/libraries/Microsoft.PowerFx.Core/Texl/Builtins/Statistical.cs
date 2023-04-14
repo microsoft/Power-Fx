@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Ensure that all the arguments are numeric/coercible to numeric.
             for (var i = 0; i < argTypes.Length; i++)
             {
-                if (CheckType(context, args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                if (CheckType(args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
                 {
                     if (matchedWithCoercion)
                     {
