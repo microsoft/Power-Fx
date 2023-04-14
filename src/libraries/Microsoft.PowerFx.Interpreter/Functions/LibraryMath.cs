@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Interpreter;
@@ -612,7 +610,7 @@ namespace Microsoft.PowerFx.Functions
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // VarP(1,2,3)
@@ -741,7 +739,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args);
+            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
@@ -766,6 +764,7 @@ namespace Microsoft.PowerFx.Functions
             double arg0 = arg0nv.Value;
             double arg1 = arg1nv.Value;
 
+            // Both floating point zero and negative zero will satisfy this test
             if (arg1 == 0)
             {
                 return CommonErrors.DivByZeroError(irContext);
@@ -796,6 +795,7 @@ namespace Microsoft.PowerFx.Functions
             decimal arg1 = arg1dv.Value;
             decimal q;
 
+            // Both decimal zero and negative zero will satisfy this test
             if (arg1 == 0m)
             {
                 return CommonErrors.DivByZeroError(irContext);
@@ -820,25 +820,19 @@ namespace Microsoft.PowerFx.Functions
         // Sequence( count:n, start:(n|w), step:(n|w) ) where start and step must be the same type
         public static FormulaValue Sequence(IRContext irContext, FormulaValue[] args)
         {
-            int count = (int)((NumberValue)args[0]).Value;
+            double count = ((NumberValue)args[0]).Value;
 
-            if (count < 0)
+            if (count < 0 || count > int.MaxValue)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            if (args[1] is NumberValue startN && args[2] is NumberValue stepN)
+            return (args[1], args[2]) switch
             {
-                return SequenceFloat(irContext, count, startN, stepN);
-            }
-            else if (args[1] is DecimalValue startW && args[2] is DecimalValue stepW)
-            {
-                return SequenceDecimal(irContext, count, startW, stepW);
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
+                (NumberValue startN, NumberValue stepN) => SequenceFloat(irContext, (int)count, startN, stepN),
+                (DecimalValue startW, DecimalValue stepW) => SequenceDecimal(irContext, (int)count, startW, stepW),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
         }
 
         public static FormulaValue SequenceFloat(IRContext irContext, int count, NumberValue start, NumberValue step)
@@ -877,18 +871,12 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0];
 
-            if (arg0 is NumberValue num)
+            return arg0 switch
             {
-                return AbsFloat(irContext, num);
-            }
-            else if (arg0 is DecimalValue dec)
-            {
-                return AbsDecimal(irContext, dec);
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
+                NumberValue num => AbsFloat(irContext, num),
+                DecimalValue dec => AbsDecimal(irContext, dec),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
         }
 
         public static FormulaValue AbsFloat(IRContext irContext, NumberValue arg)
@@ -901,7 +889,7 @@ namespace Microsoft.PowerFx.Functions
         public static FormulaValue AbsDecimal(IRContext irContext, DecimalValue arg)
         {
             decimal x = arg.Value;
-            decimal val = x < 0m ? -x : x;
+            decimal val = Math.Abs(x);
             return new DecimalValue(irContext, val);
         }
 
@@ -918,23 +906,19 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.UnreachableCodeError(irContext);
             }
 
-            if (args[0] is NumberValue num)
+            return args[0] switch
             {
-                return RoundFloat(irContext, num, digits);
-            }
-            else if (args[0] is DecimalValue dec)
-            {
-                return RoundDecimal(irContext, dec, digits);
-            }
-
-            return CommonErrors.UnreachableCodeError(irContext);
+                NumberValue num => RoundFloat(irContext, num, digits),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
         }
 
         internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default)
         {
             var number = num.Value;
             var s = number < 0 ? -1d : 1d;
-            var n = number * s;
+            var n = Math.Abs(number);
 
             int dg = doubleDigs > int.MaxValue ? int.MaxValue :
                           doubleDigs < int.MinValue ? int.MinValue :
@@ -982,8 +966,9 @@ namespace Microsoft.PowerFx.Functions
         internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double doubleDigs, RoundType roundType = RoundType.Default)
         {
             var signedNumber = dec.Value;
+
             var sign = signedNumber < 0 ? -1m : 1m;
-            var unsignedNumber = signedNumber < 0 ? -signedNumber : signedNumber;
+            var unsignedNumber = Math.Abs(signedNumber);
 
             int digits = doubleDigs > int.MaxValue ? int.MaxValue : 
                                doubleDigs < int.MinValue ? int.MinValue : 
@@ -1081,18 +1066,12 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.UnreachableCodeError(irContext);
             }
 
-            if (args[0] is NumberValue num)
+            return args[0] switch
             {
-                return RoundFloat(irContext, num, digits, RoundType.Up);
-            }
-            else if (args[0] is DecimalValue dec)
-            {
-                return RoundDecimal(irContext, dec, digits, RoundType.Up);
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
+                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Up),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Up),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
         }
 
         public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
@@ -1113,32 +1092,22 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.UnreachableCodeError(irContext);
             }
 
-            if (args[0] is NumberValue num)
+            return args[0] switch
             {
-                return RoundFloat(irContext, num, digits, RoundType.Down);
-            }
-            else if (args[0] is DecimalValue dec)
-            {
-                return RoundDecimal(irContext, dec, digits, RoundType.Down);
-            }
-
-            return CommonErrors.UnreachableCodeError(irContext);
+                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Down),
+                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Down),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
         }
 
         public static FormulaValue Int(IRContext irContext, FormulaValue[] args)
         {
-            if (args[0] is NumberValue num)
+            return args[0] switch
             {
-                return IntFloat(irContext, num);
-            }
-            else if (args[0] is DecimalValue dec)
-            {
-                return IntDecimal(irContext, dec);
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
+                NumberValue num => IntFloat(irContext, num),
+                DecimalValue dec => IntDecimal(irContext, dec),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
         }
 
         public static FormulaValue IntFloat(IRContext irContext, NumberValue arg)

@@ -461,7 +461,7 @@ namespace Microsoft.PowerFx.Core.IR
                 }
                 else
                 {
-                    throw new NotImplementedException("Unexpcted type");
+                    throw new NotImplementedException("Unexpected type");
                 }
 
                 var convertedNode = new CallNode(convertedIRContext, BuiltinFunctionsCore.Coalesce, arg, zeroLitNode);
