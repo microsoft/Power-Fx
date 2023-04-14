@@ -74,8 +74,8 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: false) &&
-                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: false, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
+                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
                 {
                     if (dsNameType.Kind == type.Kind)
                     {

@@ -186,12 +186,12 @@ namespace Microsoft.PowerFx.Interpreter
 
                     var fError = false;
 
-                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, allowCoerce: true, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
 
                     if (fError)
                     {
                         fValid = false;
-                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors))
+                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
                         {
                             errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
                         }
