@@ -73,11 +73,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings.
-                fValid &= CheckStringColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.String.Accepts(type0))
+            else if (!DType.String.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type0.CoercesTo(DType.String))
+                if (type0.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.String);
                 }
@@ -91,11 +91,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg1 should be either a string or a column of strings.
             if (type1.IsTable)
             {
-                fValid &= CheckStringColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.String.Accepts(type1))
+            else if (!DType.String.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                if (type1.CoercesTo(DType.String))
+                if (type1.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
                 }
@@ -117,11 +117,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Arg2 should be either a number or a column of numbers.
                 if (argTypes[2].IsTable)
                 {
-                    fValid &= CheckNumericColumnType(type2, args[2], errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(context, args[2], type2, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(type2))
+                else if (!DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (type2.CoercesTo(DType.Number))
+                    if (type2.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, args[2], DType.Number);
                     }

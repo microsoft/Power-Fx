@@ -72,9 +72,17 @@ namespace Microsoft.PowerFx
         {
             return slot.SlotIndex == int.MaxValue;
         }
-
-        internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
+                
+        bool INameResolver.Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences)
         {
+            if (preferences.HasFlag(NameLookupPreferences.GlobalsOnly))
+            {
+                // Global, specified by [@name]  syntax, mean we skip RowScope. 
+
+                nameInfo = default;
+                return false;
+            }
+        
             if (_allowThisRecord)
             {
                 if (name == TexlBinding.ThisRecordDefaultName)
