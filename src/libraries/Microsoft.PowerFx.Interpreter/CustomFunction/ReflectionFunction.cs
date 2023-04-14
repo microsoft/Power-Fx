@@ -5,24 +5,15 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx
 {
@@ -55,6 +46,20 @@ namespace Microsoft.PowerFx
         // Explicitly provide types.
         // Necessary for Tables/Records
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
+            : this(name, returnType, null /*change*/, paramTypes)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
+        /// Explicitly provide types and argument signatures.
+        /// </summary>
+        /// <param name="name">Function Name.</param>
+        /// <param name="returnType">Return Type.</param>
+        /// <param name="argSignature">Provide list of <see cref="CustomFunctionSignatureHelper"/>
+        /// where each entry represents a single overload of the function.</param>
+        /// <param name="paramTypes">Parameter Types.</param>
+        protected ReflectionFunction(string name, FormulaType returnType, IEnumerable<CustomFunctionSignatureHelper> argSignature, params FormulaType[] paramTypes)
         {
             var t = GetType();
             var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
@@ -68,7 +73,7 @@ namespace Microsoft.PowerFx
 
             var configType = ConfigType ?? default;
 
-            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
+            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, argSignature, isAsync);
         }
 
         private FunctionDescr Scan()
@@ -125,7 +130,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
+                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, null, isAsync);
             }
 
             return _info;
@@ -159,13 +164,13 @@ namespace Microsoft.PowerFx
             // Special case SetProperty. Use reference equality to opt into special casing.
             if (object.ReferenceEquals(info.Name, SetPropertyName))
             {
-                return new CustomSetPropertyFunction(info.Name)
+                return new CustomSetPropertyFunction(info.Name, _info.ArgumentSignatures)
                 {
                     _impl = args => InvokeAsync(null, args, CancellationToken.None)
                 };
             }
 
-            return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
+            return new CustomTexlFunction(info.Name, info.RetType, info.ArgumentSignatures, info.ParamTypes)
             {
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
                 LamdaParamMask = info.LamdaParamMask,

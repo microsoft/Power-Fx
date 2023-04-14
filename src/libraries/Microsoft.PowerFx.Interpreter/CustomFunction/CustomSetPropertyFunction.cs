@@ -1,6 +1,8 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -30,16 +32,31 @@ namespace Microsoft.PowerFx
 
         public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
+        private readonly IEnumerable<CustomFunctionSignatureHelper> _argumentSignatures;
+
         public CustomSetPropertyFunction(string name)
+            : this(name, null)
+        {
+        }
+
+        public CustomSetPropertyFunction(string name, IEnumerable<CustomFunctionSignatureHelper> argumentSignatures)
             : base(DPath.Root, name, name, SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
         {
+            _argumentSignatures = argumentSignatures;
+            if (_argumentSignatures == null)
+            {
+                _argumentSignatures = new CustomFunctionSignatureHelper[] { new CustomFunctionSignatureHelper("Arg 1", "Arg 2") };
+            }
         }
 
         private static StringGetter SG(string text) => CustomTexlFunction.SG(text);
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return new[] { SG("Arg 1"), SG("Arg 2") };
+            foreach (var signature in CustomTexlFunction.GetCustomSignatures(_argumentSignatures))
+            {
+                yield return signature;
+            }
         }
 
         // 2nd argument should be same type as 1st argument. 
@@ -84,5 +101,4 @@ namespace Microsoft.PowerFx
             return await result.ConfigureAwait(false);
         }
     }
-
 }
