@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx
 
             var arg1 = argTypes[1];
 
-            if (!arg0.Accepts(arg1))
+            if (!arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);
                 return false;
