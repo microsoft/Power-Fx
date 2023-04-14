@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AbsFunction : MathOneArgFunction
     {
         public AbsFunction()
-            : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat, nativeDecimal: true)
+            : base("Abs", TexlStrings.AboutAbs, FunctionCategories.MathAndStat)
         {
         }
     }
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AbsTableFunction : MathOneArgTableFunction
     {
         public AbsTableFunction()
-            : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table, nativeDecimal: true)
+            : base("Abs", TexlStrings.AboutAbsT, FunctionCategories.Table)
         {
         }
     }

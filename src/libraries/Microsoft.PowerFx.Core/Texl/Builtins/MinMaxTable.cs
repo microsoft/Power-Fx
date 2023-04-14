@@ -37,22 +37,31 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             // The return type will be the result type of the expression in the 2nd argument
+            var fArgsValid = true;
             returnType = argTypes[1];
             nodeToCoercedTypeMap = null;
 
             // Coerce everything except date/times to numeric.
-            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time)
+            if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time && CheckType(context, args[1], argTypes[1], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
             {
-                returnType = DetermineNumericFunctionReturnType(true, context.NumberIsFloat, argTypes[1]);
-                if (!CheckType(context, args[1], argTypes[1], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                returnType = DType.Number;
+                if (matchedWithCoercion)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
-                    nodeToCoercedTypeMap = null;
-                    return false;
-                }    
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number, allowDupes: true);
+                }
+            }
+            else if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
+                fArgsValid = false;
             }
 
-            return true;
+            if (!fArgsValid)
+            {
+                nodeToCoercedTypeMap = null;
+            }
+
+            return fArgsValid;
         }
     }
 }

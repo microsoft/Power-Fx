@@ -549,7 +549,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInternalControlInInputProperty = new ErrorResourceKey("ErrInternalControlInInputProperty");
         public static ErrorResourceKey ErrColumnNotAccessibleInCurrentContext = new ErrorResourceKey("ErrColumnNotAccessibleInCurrentContext");
         public static ErrorResourceKey WrnRowScopeOneToNExpandNumberOfCalls = new ErrorResourceKey("WrnRowScopeOneToNExpandNumberOfCalls");
-        public static ErrorResourceKey ErrInvalidSchemaNeedTypeCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedTypeCol_Col");
+        public static ErrorResourceKey ErrInvalidSchemaNeedStringCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedStringCol_Col");
+        public static ErrorResourceKey ErrInvalidSchemaNeedNumCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedNumCol_Col");
+        public static ErrorResourceKey ErrInvalidSchemaNeedDecCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedDecCol_Col");
+        public static ErrorResourceKey ErrInvalidSchemaNeedDateCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedDateCol_Col");
+        public static ErrorResourceKey ErrInvalidSchemaNeedColorCol_Col = new ErrorResourceKey("ErrInvalidSchemaNeedColorCol_Col");
         public static ErrorResourceKey ErrInvalidSchemaNeedCol = new ErrorResourceKey("ErrInvalidSchemaNeedCol");
         public static ErrorResourceKey ErrNeedRecord = new ErrorResourceKey("ErrNeedRecord");
         public static ErrorResourceKey ErrAutoRefreshNotAllowed = new ErrorResourceKey("ErrAutoRefreshNotAllowed");

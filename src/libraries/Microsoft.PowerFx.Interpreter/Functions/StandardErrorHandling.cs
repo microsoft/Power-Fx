@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -44,7 +43,7 @@ namespace Microsoft.PowerFx.Functions
         private static AsyncFunctionPtr StandardErrorHandlingAsync<T>(
                 string functionName,
                 Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
-                Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues,
+                Func<IRContext, int, FormulaValue> replaceBlankValues,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
                 Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
                 ReturnBehavior returnBehavior,
@@ -60,7 +59,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 IEnumerable<FormulaValue> argumentsExpanded = expandArguments(irContext, args);
-                IEnumerable<FormulaValue> blankValuesReplaced = argumentsExpanded.Select((arg, i) => (arg is BlankValue) ? replaceBlankValues(arg.IRContext, i, irContext.ResultType) : arg);
+                IEnumerable<FormulaValue> blankValuesReplaced = argumentsExpanded.Select((arg, i) => (arg is BlankValue) ? replaceBlankValues(arg.IRContext, i) : arg);
                 IEnumerable<FormulaValue> runtimeTypesChecked = blankValuesReplaced.Select((arg, i) => checkRuntimeTypes(irContext, i, arg));
 
                 // Calling ToList() here is a perf improvement as we use this list multiple times
@@ -114,7 +113,7 @@ namespace Microsoft.PowerFx.Functions
         private static AsyncFunctionPtr StandardErrorHandling<T>(
             string functionName,
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
-            Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues,
+            Func<IRContext, int, FormulaValue> replaceBlankValues,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
             ReturnBehavior returnBehavior,
@@ -134,7 +133,7 @@ namespace Microsoft.PowerFx.Functions
         private static AsyncFunctionPtr StandardErrorHandling<T>(
             string functionName,
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
-            Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues,
+            Func<IRContext, int, FormulaValue> replaceBlankValues,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
             ReturnBehavior returnBehavior,
@@ -153,7 +152,7 @@ namespace Microsoft.PowerFx.Functions
         private static AsyncFunctionPtr StandardErrorHandling<T>(
             string functionName,
             Func<IRContext, IEnumerable<FormulaValue>, IEnumerable<FormulaValue>> expandArguments,
-            Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues,
+            Func<IRContext, int, FormulaValue> replaceBlankValues,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeTypes,
             Func<IRContext, int, FormulaValue, FormulaValue> checkRuntimeValues,
             ReturnBehavior returnBehavior,
@@ -172,12 +171,12 @@ namespace Microsoft.PowerFx.Functions
         /// </summary>
         /// <param name="functionName">Function name.</param>
         /// <param name="targetFunction">Target function to execute.</param>
-        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int, FormulaType)"/>, meaning scalar has handled this via IR.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(
             string functionName, 
             AsyncFunctionPtr targetFunction,
-            Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues)
+            Func<IRContext, int, FormulaValue> replaceBlankValues)
             where TScalar : FormulaValue => StandardErrorHandlingAsync<TableValue>(
                 functionName: functionName,
                 expandArguments: NoArgExpansion,
@@ -214,11 +213,11 @@ namespace Microsoft.PowerFx.Functions
         /// Wrapper for single column table argument functions.
         /// </summary>
         /// <param name="targetFunction">Target function to execute.</param>
-        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int, FormulaType)"/>, meaning scalar has handled this via IR.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, TableValue[], ValueTask<FormulaValue>> StandardSingleColumnTable<T>(
             AsyncFunctionPtr targetFunction,
-            Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues)
+            Func<IRContext, int, FormulaValue> replaceBlankValues)
             where T : FormulaValue
         {
             return async (runner, context, irContext, args) =>
@@ -241,7 +240,7 @@ namespace Microsoft.PowerFx.Functions
                         if (value is BlankValue)
                         {
                             // since this is for single column table arg, index is passed as 0
-                            value = replaceBlankValues(value.IRContext, 0, outputItemType);
+                            value = replaceBlankValues(value.IRContext, 0);
                         }
 
                         NamedValue namedValue;
@@ -313,11 +312,11 @@ namespace Microsoft.PowerFx.Functions
         /// As a concrete example, Concatenate(["a", "b"], ["1", "2"]) => ["a1", "b2"].
         /// </summary>
         /// <param name="targetFunction">Target function to execute.</param>
-        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int, FormulaType)"/>, meaning scalar has handled this via IR.</param>
+        /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         public static Func<EvalVisitor, EvalVisitorContext, IRContext, FormulaValue[], ValueTask<FormulaValue>> MultiSingleColumnTable(
             AsyncFunctionPtr targetFunction,
-            Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues)
+            Func<IRContext, int, FormulaValue> replaceBlankValues)
         {
             return async (runner, context, irContext, args) =>
             {
@@ -397,7 +396,7 @@ namespace Microsoft.PowerFx.Functions
                         {
                             if (arg is BlankValue)
                             {
-                                return replaceBlankValues(arg.IRContext, i, itemType);
+                                return replaceBlankValues(arg.IRContext, i);
                             }
                             else
                             {
@@ -447,27 +446,6 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        private static IEnumerable<FormulaValue> SequenceFunctionExpandArgs(IRContext irContext, IEnumerable<FormulaValue> args)
-        {
-            var res = new List<FormulaValue>(args);
-            
-            while (res.Count < 3)
-            {
-                if (((TableType)irContext.ResultType).SingleColumnFieldType == FormulaType.Decimal)
-                { 
-                    var count = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 1m);
-                    res.Add(count);
-                }
-                else
-                {
-                    var count = new NumberValue(IRContext.NotInSource(FormulaType.Number), 1d);
-                    res.Add(count);
-                }
-            }
-
-            return res.ToArray();
-        }
-
         private static IEnumerable<FormulaValue> MidFunctionExpandArgs(IRContext irContext, IEnumerable<FormulaValue> args)
         {
             var res = new List<FormulaValue>(args);
@@ -490,61 +468,33 @@ namespace Microsoft.PowerFx.Functions
         #endregion
 
         #region Common Blank Replacement Pipeline Stages
-        private static FormulaValue ReplaceBlankWithFloatZero(IRContext irContext, int index, FormulaType callType)
+        private static FormulaValue ReplaceBlankWithZero(IRContext irContext, int index)
         {
             return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
         }
 
-        private static FormulaValue ReplaceBlankWithDecimalZero(IRContext irContext, int index, FormulaType callType)
+        private static FormulaValue ReplaceBlankWithZeroDecimal(IRContext irContext, int index)
         {
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
         }
 
-        private static FormulaValue ReplaceBlankWithCallZero(IRContext irContext, int index, FormulaType callType)
-        {
-            if (callType is DecimalType)
-            {
-                return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
-            }
-            else
-            {
-                return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
-            }
-        }
-
-        private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index, FormulaType callType)
+        private static FormulaValue ReplaceBlankWithEmptyString(IRContext irContext, int index)
         {
             return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);
         }
 
-        private static Func<IRContext, int, FormulaType, FormulaValue> ReplaceBlankWith(params FormulaValue[] values)
+        private static Func<IRContext, int, FormulaValue> ReplaceBlankWith(params FormulaValue[] values)
         {
-            return (irContext, index, callType) =>
+            return (irContext, index) =>
             {
                 return values[index];
             };
         }
 
-        private static Func<IRContext, int, FormulaType, FormulaValue> ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(params int[] indices)
+        private static Func<IRContext, int, FormulaValue> ReplaceBlankWithZeroForSpecificIndices(params int[] indices)
         {
             var indicesToReplace = new HashSet<int>(indices);
-            return (irContext, index, callType) =>
-            {
-                if (indicesToReplace.Contains(index) || callType is NumberType)
-                {
-                    return new NumberValue(IRContext.NotInSource(FormulaType.Number), 0.0);
-                }
-                else
-                {
-                    return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 0m);
-                }
-            };
-        }
-
-        private static Func<IRContext, int, FormulaType, FormulaValue> ReplaceBlankWithFloatZeroForSpecificIndices(params int[] indices)
-        {
-            var indicesToReplace = new HashSet<int>(indices);
-            return (irContext, index, callType) =>
+            return (irContext, index) =>
             {
                 if (indicesToReplace.Contains(index))
                 {
@@ -677,17 +627,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue DateNumberTimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
         {
-            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is DecimalValue || arg is BlankValue || arg is ErrorValue)
-            {
-                return arg;
-            }
-
-            return CommonErrors.RuntimeTypeMismatch(irContext);
-        }
-
-        private static FormulaValue NumberOrDecimal(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is NumberValue || arg is DecimalValue)
+            if (arg is DateValue || arg is DateTimeValue || arg is TimeValue || arg is NumberValue || arg is BlankValue || arg is ErrorValue)
             {
                 return arg;
             }
@@ -802,12 +742,12 @@ namespace Microsoft.PowerFx.Functions
             return args;
         }
 
-        private static FormulaValue DoNotReplaceBlank(IRContext irContext, int index, FormulaType itemType)
+        private static FormulaValue DoNotReplaceBlank(IRContext irContext, int index)
         {
             return new BlankValue(irContext);
         }
 
-        private static FormulaValue NoOpAlreadyHandledByIR(IRContext irContext, int index, FormulaType itemType)
+        private static FormulaValue NoOpAlreadyHandledByIR(IRContext irContext, int index)
         {
             return new BlankValue(irContext);
         }

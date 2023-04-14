@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("1+2", "AddDecimals(100,200)", 300.0)]
         [InlineData("{ x : 1, y:true}.x", "({x:100, y:True}).x", 100.0)]
         [InlineData("Mid(\"ABCDEF\", 2, 3) ", "Mid(ABCDEF, Float(200), Float(300))", "")]
-        [InlineData("Sum(1,2,3)", "Sum(100, 200, 300)", 600.0)]
+        [InlineData("Sum(1,2,3)", "Sum(Float(100), Float(200), Float(300))", 600.0)]
         [InlineData("true And 1", "And(True, (DecimalToBoolean(100)))", true)] // LazyEvalNode
         [InlineData("N200 = 2", "EqNumbers(N200,Float(200))", true)]
         [InlineData("1;true", "(100;True;)", true)]

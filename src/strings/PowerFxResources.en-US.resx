@@ -1809,8 +1809,20 @@
     <value>The first argument of '{0}' should be a one-column table.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
-    <value>Invalid schema, expected a column of {0} values for '{1}'.</value>
+  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
+    <value>Invalid schema, expected a column of text values for '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
+    <value>Invalid schema, expected a column of date values for '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
+    <value>Invalid schema, expected a column of numeric values for '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
+    <value>Invalid schema, expected a column of color values for '{0}'.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">

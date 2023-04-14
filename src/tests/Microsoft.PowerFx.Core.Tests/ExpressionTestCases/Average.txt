@@ -35,14 +35,9 @@
 2.34567
 
 //Excel returns -0.781666667
-// Rounding here so we get consistent results between float and decimal
-// Standard test suite numeric fuzzy compare won't do the right thing as decimal numeric compares should be exact
->> Round(Average(-1.234, 2.345, -3.456),7)
--0.7816667
+>> Average(-1.234, 2.345, -3.456)
+-0.78166667
 
-// Exact number
->> Average(1.234,-2.456,5.427,-43.234)
--9.75725
 
 // ******** NULL and ERROR PARAMETERS ********
 

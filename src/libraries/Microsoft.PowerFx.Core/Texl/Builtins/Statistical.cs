@@ -18,12 +18,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        private readonly bool _nativeDecimal = false;
-
-        public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
-            : base(name, description, fc, nativeDecimal ? DType.Unknown : DType.Number, 0, 1, int.MaxValue, nativeDecimal ? DType.Unknown : DType.Number)
+        public StatisticalFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc)
+            : base(name, description, fc, DType.Number, 0, 1, int.MaxValue, DType.Number)
         {
-            _nativeDecimal = nativeDecimal;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -52,17 +49,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = true;
-
-            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
-
-            returnType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, argTypes[0]);
-            Contracts.Assert(returnType == DType.Number || (_nativeDecimal && returnType == DType.Decimal));
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            Contracts.Assert(returnType == DType.Number);
 
             // Ensure that all the arguments are numeric/coercible to numeric.
             for (var i = 0; i < argTypes.Length; i++)
             {
-                if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                if (CheckType(context, args[i], argTypes[i], DType.Number, DefaultErrorContainer, out var matchedWithCoercion))
+                {
+                    if (matchedWithCoercion)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.Number, allowDupes: true);
+                    }
+                }
+                else
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                     fValid = false;

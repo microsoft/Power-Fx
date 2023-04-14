@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class PowerFunction : MathTwoArgFunction
     {
         public PowerFunction()
-            : base("Power", TexlStrings.AboutPower, minArity: 2)
+            : base("Power", TexlStrings.AboutPower, 2)
         {
         }
 
