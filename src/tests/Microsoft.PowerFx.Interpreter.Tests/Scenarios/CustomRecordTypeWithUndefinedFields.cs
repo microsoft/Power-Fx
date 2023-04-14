@@ -21,11 +21,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestAccept()
         {
             var t = _customRecordType._type;
-            foreach (var usePFxV1CompatRules in new[] { false, true })
-            {
-                var ok = t.Accepts(t, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePFxV1CompatRules);
-                Assert.True(ok);
-            }
+            var ok = t.Accepts(t);
+
+            Assert.True(ok);
         }
 
         public CustomRecordTypeWithUndefinedFields()

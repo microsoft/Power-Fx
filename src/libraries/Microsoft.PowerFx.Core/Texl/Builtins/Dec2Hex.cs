@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var type = argTypes[0];
                 var arg = args[0];
-                fValid &= CheckNumericColumnType(type, arg, context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckNumericColumnType(type, arg, errors, ref nodeToCoercedTypeMap);
             }
             else if (argTypes.Length == 2)
             {
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (type0.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
 
                     // Check arg1 below.
                     otherArg = args[1];
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 else if (type1.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
 
                     // Check arg0 below.
                     otherArg = args[0];
@@ -124,11 +124,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (otherType.IsTable)
                 {
                     // Ensure we have a one-column table of numerics
-                    fValid &= CheckNumericColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(otherType, otherArg, errors, ref nodeToCoercedTypeMap);
                 }
-                else if (!DType.Number.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                else if (!DType.Number.Accepts(otherType))
                 {
-                    if (otherType.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    if (otherType.CoercesTo(DType.Number))
                     {
                         CollectionUtils.Add(ref nodeToCoercedTypeMap, otherArg, DType.Number);
                     }

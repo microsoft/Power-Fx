@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx
                 return;
             }
 
-            var ok = srcType._type.Accepts(newType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true);
+            var ok = srcType._type.Accepts(newType._type);
 
             if (ok)
             {

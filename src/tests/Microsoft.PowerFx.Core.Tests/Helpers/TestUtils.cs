@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 var wasCoerced = false;
                 if (CheckNumericTableOverload)
                 {
-                    if (CheckColumnType(context, argTypes[0], args[0], DType.Number, errors, TexlStrings.ErrInvalidSchemaNeedNumCol_Col, ref wasCoerced))
+                    if (CheckColumnType(argTypes[0], args[0], DType.Number, errors, TexlStrings.ErrInvalidSchemaNeedNumCol_Col, ref wasCoerced))
                     {
                         if (wasCoerced)
                         {
@@ -162,16 +162,16 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
                 if (CheckStringTableOverload)
                 {
-                    if (!CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref coercedArgs))
+                    if (!CheckStringColumnType(argTypes[0], args[0], errors, ref coercedArgs))
                     {
-                        isValid = false;
-                        coercedArgs?.Clear();
+                        isValid = false;                        
+                        coercedArgs?.Clear();                        
                     }
 
                     return isValid;
                 }
 
-                if (!DType.Number.Accepts(argTypes[0], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (!DType.Number.Accepts(argTypes[0]))
                 {
                     isValid = false;
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNumberExpected);                    
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                 return isValid;
             }
 
-            private bool CheckColumnType(CheckTypesContext context, DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ErrorResourceKey errKey, ref bool wasCoerced)
+            private bool CheckColumnType(DType type, TexlNode arg, DType expectedType, IErrorContainer errors, ErrorResourceKey errKey, ref bool wasCoerced)
             {
                 Contracts.Assert(type.IsValid);
                 Contracts.AssertValue(arg);
@@ -194,13 +194,13 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, TexlStrings.ErrInvalidSchemaNeedCol);
                     return false;
                 }
-                else if (!(expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) || columns.Single().Type.CoercesTo(expectedType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules)))
+                else if (!(expectedType.Accepts(columns.Single().Type) || columns.Single().Type.CoercesTo(expectedType)))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg, errKey, columns.Single().Name.Value);
                     return false;
                 }
 
-                if (!expectedType.Accepts(columns.Single().Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (!expectedType.Accepts(columns.Single().Type))
                 {
                     wasCoerced = true;
                 }

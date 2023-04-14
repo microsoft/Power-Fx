@@ -478,7 +478,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of dates/dateTimes. Since dateTime is the supertype, checking
                 // for DateTime alone is sufficient.
-                fValid &= CheckDateColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
@@ -486,7 +486,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     returnType = DType.CreateTable(new TypedName(type0, GetOneColumnTableResultName(context.Features)));
                 }
-                else if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                else if (type0.CoercesTo(DType.DateTime))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                     returnType = DType.CreateTable(new TypedName(DType.DateTime, GetOneColumnTableResultName(context.Features)));
@@ -501,11 +501,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg1 should be either a number or a column of numbers.
             if (type1.IsTable)
             {
-                fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckNumericColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.Number.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            else if (!DType.Number.Accepts(type1))
             {
-                if (type1.CoercesTo(DType.Number, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (type1.CoercesTo(DType.Number))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.Number);
                 }
@@ -524,7 +524,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (hasUnits)
             {
-                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (!arg2ExpectedType.Accepts(argTypes[2]))
                 {
                     // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
                     fValid = false;
@@ -628,11 +628,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of dates
-                fValid &= CheckDateColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckDateColumnType(type0, args[0], errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.DateTime.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            else if (!DType.DateTime.Accepts(type0))
             {
-                if (type0.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (type0.CoercesTo(DType.DateTime))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[0], DType.DateTime);
                 }
@@ -647,11 +647,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type1.IsTable)
             {
                 // Ensure we have a one-column table of dates
-                fValid &= CheckDateColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckDateColumnType(type1, args[1], errors, ref nodeToCoercedTypeMap);
             }
-            else if (!DType.DateTime.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            else if (!DType.DateTime.Accepts(type1))
             {
-                if (type1.CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (type1.CoercesTo(DType.DateTime))
                 {
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.DateTime);
                 }
@@ -669,7 +669,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var hasUnits = args.Length == 3;
             if (hasUnits)
             {
-                if (!arg2ExpectedType.Accepts(argTypes[2], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                if (!arg2ExpectedType.Accepts(argTypes[2]))
                 {
                     // Arg2 should be a BuiltInEnums.TimeUnitEnum.OptionSetType
                     fValid = false;

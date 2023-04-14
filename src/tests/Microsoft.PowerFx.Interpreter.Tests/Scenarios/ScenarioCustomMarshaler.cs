@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     var marshaller = cache.GetMarshaller(kv.Value.GetType());
                     var expectedType = type.GetFieldType(fieldName);
 
-                    Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true));
+                    Assert.True(expectedType._type.Accepts(marshaller.Type._type, exact: true));
 
                     return (marshaller.Type,
                             (object objSource) =>

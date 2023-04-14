@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // The first arg determines the scope type for the lambda params, and the return type.
-            fArgsValid &= ScopeInfo.CheckInput(context.Features, args[0], argTypes[0], errors, out var typeScope);
+            fArgsValid &= ScopeInfo.CheckInput(args[0], argTypes[0], errors, out var typeScope);
             Contracts.Assert(typeScope.IsRecord);
 
             // The result type has N additional columns, as specified by (args[1],args[2]), (args[3],args[4]), ... etc.

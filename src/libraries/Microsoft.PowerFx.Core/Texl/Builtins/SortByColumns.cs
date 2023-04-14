@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var nextArgIdx = i + 1;
                 if (nextArgIdx < args.Length)
                 {
-                    if (!orderExpectedType.Accepts(argTypes[nextArgIdx], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    if (!orderExpectedType.Accepts(argTypes[nextArgIdx]))
                     {
                         fValid = false;
                         errors.TypeMismatchError(args[i + 1], argTypes[nextArgIdx], argTypes[2]);
@@ -458,7 +458,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var column = columns.Single();
-            if (nameNode != null && columnType.IsValid && !columnType.Accepts(column.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            if (nameNode != null && columnType.IsValid && !columnType.Accepts(column.Type))
             {
                 errors.EnsureError(
                     DocumentErrorSeverity.Severe,
