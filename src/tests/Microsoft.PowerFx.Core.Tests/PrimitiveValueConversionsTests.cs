@@ -3,7 +3,9 @@
 
 using System;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -37,7 +39,6 @@ namespace Microsoft.PowerFx.Core.Tests
             else
             {
                 Assert.True(result);
-
                 Assert.True(actualFxType.GetType() == fxType);
 
                 var value = GetValue(dotnetType);
@@ -45,13 +46,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.Equal(fxType, fxValue.Type.GetType());
 
                 var expr = actualFxType.DefaultExpressionValue();
-                var engine = new Engine(new PowerFxConfig());
+
+                var engine = GetEngineWithFeatureGatedFunctions();
                 var options = new ParserOptions()
                 {
                     NumberIsFloat = !(dotnetType == typeof(decimal) || dotnetType == typeof(long))
                 };
-                var check = engine.Check(expr, options);
 
+                var check = engine.Check(expr, options);
                 Assert.Equal(check.ReturnType, actualFxType);
             }
         }
@@ -71,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             return Activator.CreateInstance(t);
         }
-
+        
         // .Net dates map to FormulaType.DateTime, so need to explicitly test FormulaType.Date
         [Fact]
         public void TestDateOnly()
@@ -347,6 +349,13 @@ namespace Microsoft.PowerFx.Core.Tests
         private static void AssertEqual<T>(PrimitiveValue<T> a, PrimitiveValue<T> b)
         {
             Assert.Equal(a.Value, b.Value);
+        }
+
+        private static Engine GetEngineWithFeatureGatedFunctions()
+        {
+            SymbolTable symbol = new SymbolTable();
+            symbol.AddFunctions(BuiltinFunctionsCore._featureGateFunctions);
+            return new Engine(new PowerFxConfig() { SymbolTable = symbol });
         }
     }
 }

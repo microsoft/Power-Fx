@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class AverageFunction : StatisticalFunction
     {
         public AverageFunction()
-            : base("Average", TexlStrings.AboutAverage, FunctionCategories.MathAndStat)
+            : base("Average", TexlStrings.AboutAverage, FunctionCategories.MathAndStat, nativeDecimal: true)
         {
         }
     }
@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override DelegationCapability FunctionDelegationCapability => DelegationCapability.Average;
 
         public AverageTableFunction()
-            : base("Average", TexlStrings.AboutAverageT, FunctionCategories.Table)
+            : base("Average", TexlStrings.AboutAverageT, FunctionCategories.Table, nativeDecimal: true)
         {
         }
     }

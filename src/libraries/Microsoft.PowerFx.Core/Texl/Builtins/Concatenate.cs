@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // See UntypedBlankAsTable.txt for more examples
                 if (argTypes[i].IsTable && argTypes[i] != DType.ObjNull)
                 {
-                    fArgsValid &= CheckStringColumnType(argTypes[i], args[i], context.Features, errors, ref nodeToCoercedTypeMap);
+                    fArgsValid &= CheckStringColumnType(context, args[i], argTypes[i], errors, ref nodeToCoercedTypeMap);
                     hasTableArg |= true;
                 }
                 else

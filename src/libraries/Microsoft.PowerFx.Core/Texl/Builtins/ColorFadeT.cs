@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of colors.
-                fValid &= CheckColorColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
+                fValid &= CheckColorColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap, out returnType);
 
                 // Check arg1 below.
                 otherArg = args[1];
@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (type1.IsTable)
             {
                 // Ensure we have a one-column table of numerics.
-                fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
 
                 // Since the 1st arg is not a table, make a new table return type *[Result:c]
                 returnType = DType.CreateTable(new TypedName(DType.Color, GetOneColumnTableResultName(context.Features)));
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (otherType.IsTable)
             {
                 // Ensure we have a one-column table of numerics/color values based on expected type.
-                return expectedType == DType.Number ? CheckNumericColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap) : CheckColorColumnType(otherType, otherArg, context.Features, errors, ref nodeToCoercedTypeMap);
+                return CheckColumnType(context, otherArg, otherType, expectedType == DType.Number ? DType.Number : DType.Color, errors, ref nodeToCoercedTypeMap);
             }
 
             if (expectedType.Accepts(otherType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
