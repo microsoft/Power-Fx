@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public LogFunction()
-            : base("Log", TexlStrings.AboutLog, 1)
+            : base("Log", TexlStrings.AboutLog, minArity: 1)
         {
         }
 

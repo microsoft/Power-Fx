@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var output = result.ToExpression();
 
-            Assert.Equal("Table({logicalB:4},{logicalB:5},{logicalB:6})", output);
+            Assert.Equal("Table({logicalB:Float(4)},{logicalB:Float(5)},{logicalB:Float(6)})", output);
 
             var displayExpression = engine.GetDisplayExpression("DropColumns(myTable, displayName)", parameters.Type);
             var invariantExpression = engine.GetInvariantExpression("DropColumns(myTable, displayName)", parameters.Type);
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var output = result.ToExpression();
 
-            Assert.Equal("Table({logicalA:1,logicalB:4,newColumn:4},{logicalA:2,logicalB:5,newColumn:10},{logicalA:3,logicalB:6,newColumn:18})", output);
+            Assert.Equal("Table({logicalA:Float(1),logicalB:Float(4),newColumn:Float(4)},{logicalA:Float(2),logicalB:Float(5),newColumn:Float(10)},{logicalA:Float(3),logicalB:Float(6),newColumn:Float(18)})", output);
 
             var displayExpression = engine.GetDisplayExpression("AddColumns(myTable, newColumn, displayName * logicalB)", parameters.Type);
             var invariantExpression = engine.GetInvariantExpression("AddColumns(myTable, newColumn, displayName * logicalB)", parameters.Type);

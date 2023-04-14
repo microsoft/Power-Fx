@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of strings.
-                fValid &= CheckStringColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
             }
             else if (!DType.String.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg1 should be either a string or a column of strings.
             if (type1.IsTable)
             {
-                fValid &= CheckStringColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckStringColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
             }
             else if (!DType.String.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
@@ -117,7 +117,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Arg2 should be either a number or a column of numbers.
                 if (argTypes[2].IsTable)
                 {
-                    fValid &= CheckNumericColumnType(type2, args[2], context.Features, errors, ref nodeToCoercedTypeMap);
+                    fValid &= CheckNumericColumnType(context, args[2], type2, errors, ref nodeToCoercedTypeMap);
                 }
                 else if (!DType.Number.Accepts(type2, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {

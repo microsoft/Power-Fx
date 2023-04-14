@@ -27,7 +27,17 @@ namespace Microsoft.PowerFx.Types
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
+            if (!settings.UseCompactRepresentation)
+            {
+                sb.Append("Float(");
+            }
+
             sb.Append((Value == 0) ? "0" : Value.ToString(CultureInfo.InvariantCulture));
+
+            if (!settings.UseCompactRepresentation)
+            {
+                sb.Append(")");
+            }
         }
     }
 }
