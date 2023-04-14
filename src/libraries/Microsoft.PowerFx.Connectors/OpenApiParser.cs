@@ -56,16 +56,16 @@ namespace Microsoft.PowerFx.Connectors
                     ConnectorFunction connectorFunction = new ConnectorFunction(op, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError, numberIsFloat: numberIsFloat);
 
                     functions.Add(connectorFunction);
-                    sFunctions.Add(connectorFunction._serviceFunction);
+                    sFunctions.Add(connectorFunction._defaultServiceFunction);
                 }
             }
 
             // post processing for ConnectorDynamicValue, identify service functions
             foreach (ConnectorFunction cf in functions)
             {
-                if (cf._serviceFunction != null)
+                if (cf._defaultServiceFunction != null)
                 {
-                    foreach (ServiceFunctionParameterTemplate sfpt in cf._serviceFunction._requiredParameters)
+                    foreach (ServiceFunctionParameterTemplate sfpt in cf._defaultServiceFunction._requiredParameters)
                     {
                         if (sfpt.ConnectorDynamicValue != null)
                         {

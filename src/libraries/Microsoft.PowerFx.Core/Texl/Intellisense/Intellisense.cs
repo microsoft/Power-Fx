@@ -189,7 +189,7 @@ namespace Microsoft.PowerFx.Intellisense
             return false;
         }
 
-        protected static void TypeMatchPriority(DType type, IList<IntellisenseSuggestion> suggestions)
+        protected static void TypeMatchPriority(DType type, IList<IntellisenseSuggestion> suggestions, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.Assert(type.IsValid);
             Contracts.AssertValue(suggestions);
@@ -205,10 +205,10 @@ namespace Microsoft.PowerFx.Intellisense
                 if (!suggestion.Type.IsUnknown && 
 
                     // Most type acceptance is straightforward
-                    (type.Accepts(suggestion.Type) ||
+                    (type.Accepts(suggestion.Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
 
                     // Option Set expected types should also include the option set base as a reccomendation.
-                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo)))))
+                    (suggestion.Type.IsOptionSet && type.Accepts(DType.CreateOptionSetValueType(suggestion.Type.OptionSetInfo), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))))
                 {
                     suggestion.SortPriority++;
                 }
@@ -267,8 +267,8 @@ namespace Microsoft.PowerFx.Intellisense
 
             var expectedType = intellisenseData.ExpectedType;
 
-            TypeMatchPriority(expectedType, intellisenseData.Suggestions);
-            TypeMatchPriority(expectedType, intellisenseData.SubstringSuggestions);
+            TypeMatchPriority(expectedType, intellisenseData.Suggestions, _config.Features.PowerFxV1CompatibilityRules);
+            TypeMatchPriority(expectedType, intellisenseData.SubstringSuggestions, _config.Features.PowerFxV1CompatibilityRules);
             List<IntellisenseSuggestion> resultSuggestions = intellisenseData.Suggestions.Distinct().ToList();
             IEnumerable<IntellisenseSuggestion> resultSubstringSuggestions = intellisenseData.SubstringSuggestions.Distinct();
 

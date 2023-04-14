@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             s1.AddFunction(new MultiplyFunction(4));
 
             // Executing old expression is *still* unaffected (does not pickup new function with same name)
-            result = await expr.EvalAsync(CancellationToken.None);
+            result = await expr.EvalAsync(CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(6.0, result.ToObject());
 
             // But rebinding will pickup new ... 
@@ -634,8 +634,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 var runtime = new RuntimeConfig();
                 runtime.AddService(new UserFunction.Runtime { _name = name });
-                var result = await expr.EvalAsync(CancellationToken.None, runtime)
-                ;
+                var result = await expr.EvalAsync(CancellationToken.None, runtime).ConfigureAwait(false);
 
                 var expected = name + "3";
                 var actual = result.ToObject();

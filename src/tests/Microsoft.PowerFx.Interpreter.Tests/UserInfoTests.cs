@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -74,6 +75,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        // Verify disambiguation 
+        [Theory]
+        [InlineData("[@User].FullName", "Full")]
+        [InlineData("User", "rowscope")]
+        [InlineData("Field", "field")]
+        public void DisambiguationTest(string expr, object expected)
+        {
+            var userInfo = new UserInfo
+            {
+                FullName = "Full", 
+                Email = "Email",
+                Id = "Id"
+            };
+
+            var rowScope = ReadOnlySymbolValues.NewFromRecord(RecordValue.NewRecordFromFields(
+                new NamedValue("User", FormulaValue.New("rowscope")),
+                new NamedValue("Field", FormulaValue.New("field"))));
+
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddUserInfoObject();
+            var engine = new RecalcEngine(config);
+            
+            var rc = new RuntimeConfig();
+            rc.SetUserInfo(userInfo);
+            rc.Values = rowScope;
+
+            var result = engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: rc).Result;
+
+            Assert.Equal(expected, result.ToObject());
         }
     }
 }
