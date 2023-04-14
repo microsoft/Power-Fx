@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Types
     public class BooleanValue : PrimitiveValue<bool>
     {
         // List of types that allowed to convert to BooleanValue
-        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToBoolean = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Boolean };
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToBoolean = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Decimal, FormulaType.Boolean };
 
         internal BooleanValue(IRContext irContext, bool value)
             : base(irContext, value)

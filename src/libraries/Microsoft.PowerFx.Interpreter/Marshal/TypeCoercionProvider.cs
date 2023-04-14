@@ -333,7 +333,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Source type format.</param>
         /// <param name="target">Target type format.</param>
         /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
-        private static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
+        public static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
         {
             if (source == FormulaType.Boolean)
             {
