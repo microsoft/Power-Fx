@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             if (index == 1)
             {
-                return ArgPreprocessor.ReplaceBlankWithZeroAndTruncate;
+                return ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate;
             }
 
             return ArgPreprocessor.None;
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
+            fValid &= CheckStringColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap, out returnType);
 
             return fValid;
         }
@@ -122,10 +122,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
+            fValid &= CheckStringColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap, out returnType);
 
             // Typecheck the count table
-            fValid &= CheckNumericColumnType(argTypes[1], args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckNumericColumnType(context, args[1], argTypes[1], errors, ref nodeToCoercedTypeMap);
 
             return fValid;
         }
@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the count table
-            fValid &= CheckNumericColumnType(argTypes[1], args[1], context.Features, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckNumericColumnType(context, args[1], argTypes[1], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
             returnType = DType.CreateTable(new TypedName(DType.String, GetOneColumnTableResultName(context.Features)));
