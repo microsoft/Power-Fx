@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorBinaryAdd = StandardErrorHandling<NumberValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
+            replaceBlankValues: ReplaceBlankWithFloatZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDecimalBinaryAdd = StandardErrorHandling<DecimalValue>(
             "+",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZeroDecimal,
+            replaceBlankValues: ReplaceBlankWithDecimalZero,
             checkRuntimeTypes: ExactValueType<DecimalValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorBinaryMul = StandardErrorHandling<NumberValue>(
             "*",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
+            replaceBlankValues: ReplaceBlankWithFloatZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDecimalBinaryMul = StandardErrorHandling<DecimalValue>(
             "*",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZeroDecimal,
+            replaceBlankValues: ReplaceBlankWithDecimalZero,
             checkRuntimeTypes: ExactValueType<DecimalValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorBinaryDiv = StandardErrorHandling<NumberValue>(
             "/",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
+            replaceBlankValues: ReplaceBlankWithFloatZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDecimalBinaryDiv = StandardErrorHandling<DecimalValue>(
             "/",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZeroDecimal,
+            replaceBlankValues: ReplaceBlankWithDecimalZero,
             checkRuntimeTypes: ExactValueType<DecimalValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorBinaryGt = StandardErrorHandling<NumberValue>(
             ">",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
+            replaceBlankValues: ReplaceBlankWithFloatZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDecimalBinaryGt = StandardErrorHandling<DecimalValue>(
             ">",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZeroDecimal,
+            replaceBlankValues: ReplaceBlankWithDecimalZero,
             checkRuntimeTypes: ExactValueType<DecimalValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorBinaryGeq = StandardErrorHandling<NumberValue>(
             ">=",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
+            replaceBlankValues: ReplaceBlankWithFloatZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDecimalBinaryGeq = StandardErrorHandling<DecimalValue>(
             ">=",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZeroDecimal,
+            replaceBlankValues: ReplaceBlankWithDecimalZero,
             checkRuntimeTypes: ExactValueType<DecimalValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -107,7 +107,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorBinaryLt = StandardErrorHandling<NumberValue>(
             "<",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
+            replaceBlankValues: ReplaceBlankWithFloatZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDecimalBinaryLt = StandardErrorHandling<DecimalValue>(
             "<",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZeroDecimal,
+            replaceBlankValues: ReplaceBlankWithDecimalZero,
             checkRuntimeTypes: ExactValueType<DecimalValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorBinaryLeq = StandardErrorHandling<NumberValue>(
             "<=",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZero,
+            replaceBlankValues: ReplaceBlankWithFloatZero,
             checkRuntimeTypes: ExactValueType<NumberValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Functions
         public static readonly AsyncFunctionPtr OperatorDecimalBinaryLeq = StandardErrorHandling<DecimalValue>(
             "<=",
             expandArguments: NoArgExpansion,
-            replaceBlankValues: ReplaceBlankWithZeroDecimal,
+            replaceBlankValues: ReplaceBlankWithDecimalZero,
             checkRuntimeTypes: ExactValueType<DecimalValue>,
             checkRuntimeValues: DeferRuntimeTypeChecking,
             returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
