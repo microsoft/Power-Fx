@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(returnType.IsTable);
 
             // Typecheck the input table
-            fValid &= CheckStringColumnType(argTypes[0], args[0], context.Features, errors, ref nodeToCoercedTypeMap);
+            fValid &= CheckStringColumnType(context, args[0], argTypes[0], errors, ref nodeToCoercedTypeMap);
 
             // Synthesize a new return type
             returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
