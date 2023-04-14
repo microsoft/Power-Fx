@@ -478,7 +478,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // Ensure we have a one-column table of dates/dateTimes. Since dateTime is the supertype, checking
                 // for DateTime alone is sufficient.
-                fValid &= CheckDateColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap, out returnType);
+                fValid &= CheckDateColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap, context, out returnType);
             }
             else
             {
@@ -501,7 +501,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // Arg1 should be either a number or a column of numbers.
             if (type1.IsTable)
             {
-                fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckNumericColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
             else if (!DType.Number.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
@@ -628,7 +628,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type0.IsTable)
             {
                 // Ensure we have a one-column table of dates
-                fValid &= CheckDateColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckDateColumnType(type0, args[0], context.Features, errors, ref nodeToCoercedTypeMap);
             }
             else if (!DType.DateTime.Accepts(type0, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
@@ -647,7 +647,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (type1.IsTable)
             {
                 // Ensure we have a one-column table of dates
-                fValid &= CheckDateColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
+                fValid &= CheckDateColumnType(type1, args[1], context.Features, errors, ref nodeToCoercedTypeMap);
             }
             else if (!DType.DateTime.Accepts(type1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {

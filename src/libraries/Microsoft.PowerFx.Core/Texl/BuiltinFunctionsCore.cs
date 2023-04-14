@@ -53,8 +53,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction BooleanN_T = _library.Add(new BooleanNFunction_T());
         public static readonly TexlFunction BooleanB = _library.Add(new BooleanBFunction());
         public static readonly TexlFunction BooleanB_T = _library.Add(new BooleanBFunction_T());
-        public static readonly TexlFunction BooleanW = _library.Add(new BooleanWFunction());
-        public static readonly TexlFunction BooleanW_T = _library.Add(new BooleanWFunction_T());
         public static readonly TexlFunction Boolean_UO = _library.Add(new BooleanFunction_UO());
         public static readonly TexlFunction Clock24 = _library.Add(new IsClock24Function());
         public static readonly TexlFunction Char = _library.Add(new CharFunction());

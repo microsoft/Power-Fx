@@ -69,59 +69,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class SumDecimalAgg : IAggregator
-        {
-            protected int _count;
-            protected decimal _accumulator;
-            protected bool _overflow;
-
-            public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
-                {
-                    return;
-                }
-
-                var n1 = (DecimalValue)value;
-
-                try
-                {
-                    _accumulator += n1.Value;
-                }
-                catch (OverflowException)
-                {
-                    _overflow = true;
-                }
-
-                _count++;
-            }
-
-            public virtual FormulaValue NoElementValue(IRContext context)
-            {
-                return GetDefault(context);
-            }
-
-            public FormulaValue GetDefault(IRContext context)
-            {
-                return new BlankValue(context);
-            }
-
-            public virtual FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return GetDefault(irContext);
-                }
-
-                if (_overflow)
-                {
-                    return CommonErrors.OverflowError(irContext);
-                }
-
-                return new DecimalValue(irContext, _accumulator);
-            }
-        }
-
         private class VarianceAgg : IAggregator
         {
             protected int _count;
@@ -184,6 +131,20 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
+        private static readonly IReadOnlyList<decimal> _decPow10 = new decimal[]
+        {
+            1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
+            1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
+            1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
+        };
+
+        private static readonly IReadOnlyList<decimal> _decNegPow10 = new decimal[]
+        {
+            1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
+            1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
+            1e-20m, 1e-21m, 1e-22m, 1e-23m, 1e-24m, 1e-25m, 1e-26m, 1e-27m, 1e-28m
+        };
+
         private class MinNumberAgg : IAggregator
         {
             protected double _minValue = double.MaxValue;
@@ -214,39 +175,6 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return new NumberValue(irContext, _minValue);
-            }
-        }
-
-        private class MinDecimalAgg : IAggregator
-        {
-            protected decimal _minValue = decimal.MaxValue;
-            protected int _count = 0;
-
-            public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
-                {
-                    return;
-                }
-
-                var n1 = ((DecimalValue)value).Value;
-
-                if (n1 < _minValue)
-                {
-                    _minValue = n1;
-                }
-
-                _count++;
-            }
-
-            public FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return new BlankValue(irContext);
-                }
-
-                return new DecimalValue(irContext, _minValue);
             }
         }
 
@@ -377,39 +305,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class MaxDecimalAgg : IAggregator
-        {
-            protected decimal _maxValue = decimal.MinValue;
-            protected int _count = 0;
-
-            public void Apply(FormulaValue value)
-            {
-                if (value is BlankValue)
-                {
-                    return;
-                }
-
-                var n1 = ((DecimalValue)value).Value;
-
-                if (n1 > _maxValue)
-                {
-                    _maxValue = n1;
-                }
-
-                _count++;
-            }
-
-            public FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return new BlankValue(irContext);
-                }
-
-                return new DecimalValue(irContext, _maxValue);
-            }
-        }
-
         private class MaxDateAndDateTimeAgg : IAggregator
         {
             protected DateTime _maxValueDT = DateTime.MinValue;
@@ -421,7 +316,7 @@ namespace Microsoft.PowerFx.Functions
                 _timeZoneInfo = timeZoneInfo;
             }
 
-            public MaxDateAndDateTimeAgg(IServiceProvider serviceProvider)
+            public MaxDateAndDateTimeAgg(IServiceProvider serviceProvider) 
                 : this(serviceProvider.GetService<TimeZoneInfo>())
             {
             }
@@ -526,29 +421,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private class AverageDecimalAgg : SumDecimalAgg
-        {
-            public override FormulaValue NoElementValue(IRContext context)
-            {
-                return CommonErrors.DivByZeroError(context);
-            }
-
-            public override FormulaValue GetResult(IRContext irContext)
-            {
-                if (_count == 0)
-                {
-                    return CommonErrors.DivByZeroError(irContext);
-                }
-
-                if (_overflow)
-                {
-                    return CommonErrors.OverflowError(irContext);
-                }
-
-                return new DecimalValue(irContext, _accumulator / _count);
-            }
-        }
-
         private static FormulaValue RunAggregator(IAggregator agg, IRContext irContext, FormulaValue[] values)
         {
             foreach (var value in values.Where(v => v is not BlankValue))
@@ -604,13 +476,13 @@ namespace Microsoft.PowerFx.Functions
         // Sum(1,2,3)     
         internal static FormulaValue Sum(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), irContext, args);
+            return RunAggregator(new SumAgg(), irContext, args);
         }
 
         // Sum([1,2,3], Value * Value)     
         public static async ValueTask<FormulaValue> SumTable(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return await RunAggregatorAsync("Sum", irContext.ResultType == FormulaType.Decimal ? new SumDecimalAgg() : new SumAgg(), runner, context, irContext, args).ConfigureAwait(false);
+            return await RunAggregatorAsync("Sum", new SumAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // VarP(1,2,3)
@@ -702,10 +574,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 agg = isMin ? new MinNumberAgg() : new MaxNumberAgg();
             }
-            else if (irContext.ResultType == FormulaType.Decimal)
-            {
-                agg = isMin ? new MinDecimalAgg() : new MaxDecimalAgg();
-            }
             else if (irContext.ResultType == FormulaType.DateTime || irContext.ResultType == FormulaType.Date)
             {
                 agg = isMin ? new MinDateAndDateTimeAgg(serviceProvider) : new MaxDateAndDateTimeAgg(serviceProvider);
@@ -726,7 +594,7 @@ namespace Microsoft.PowerFx.Functions
         // Average(1,2,3)
         public static FormulaValue Average(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return RunAggregator(irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), irContext, args);
+            return RunAggregator(new AverageAgg(), irContext, args);
         }
 
         // Average([1,2,3], Value * Value)     
@@ -739,45 +607,50 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            return await RunAggregatorAsync("Average", irContext.ResultType == FormulaType.Decimal ? new AverageDecimalAgg() : new AverageAgg(), runner, context, irContext, args).ConfigureAwait(false);
+            return await RunAggregatorAsync("Average", new AverageAgg(), runner, context, irContext, args).ConfigureAwait(false);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-mod
         public static FormulaValue Mod(IRContext irContext, FormulaValue[] args)
         {
-            if (irContext.ResultType == FormulaType.Number)
+            double arg0 = ((NumberValue)args[0]).Value;
+
+            if (args[1] is TableValue table)
             {
-                return ModFloat(irContext, (NumberValue)args[0], (NumberValue)args[1]);
-            }
-            else if (irContext.ResultType == FormulaType.Decimal)
-            {
-                return ModDecimal(irContext, (DecimalValue)args[0], (DecimalValue)args[1]);
+                List<FormulaValue> modResults = new List<FormulaValue>();
+
+                foreach (DValue<RecordValue> row in table.Rows)
+                {
+                    FormulaValue val = row.Value.GetField("Value");
+                    double arg1 = val is NumberValue nv ? nv.Value : 0d;
+                    modResults.Add(ModInternal(arg0, arg1, IRContext.NotInSource(FormulaType.Number)));
+                }
+
+                return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, modResults.ToArray(), forceSingleColumn: true));
             }
             else
             {
-                return CommonErrors.UnreachableCodeError(irContext);
+                double arg1 = ((NumberValue)args[1]).Value;
+
+                return ModInternal(arg0, arg1, irContext);
             }
         }
 
-        public static FormulaValue ModFloat(IRContext irContext, NumberValue arg0nv, NumberValue arg1nv)
+        private static FormulaValue ModInternal(double arg0, double arg1, IRContext irContext)
         {
-            double arg0 = arg0nv.Value;
-            double arg1 = arg1nv.Value;
-
-            // Both floating point zero and negative zero will satisfy this test
             if (arg1 == 0)
             {
                 return CommonErrors.DivByZeroError(irContext);
             }
 
             // r = a – N × floor(a/b)
-            double q = Math.Floor(arg0 / arg1);
+            var q = Math.Floor(arg0 / arg1);
             if (IsInvalidDouble(q))
             {
                 return CommonErrors.OverflowError(irContext);
             }
 
-            double result = arg0 - (arg1 * ((long)q));
+            var result = arg0 - (arg1 * ((long)q));
 
             // We validate the reminder is in a valid range.
             // This is mainly to support very large numbers (like 1E+308) where the calculation could be incorrect
@@ -789,65 +662,24 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, result);
         }
 
-        public static FormulaValue ModDecimal(IRContext irContext, DecimalValue arg0dv, DecimalValue arg1dv)
-        {
-            decimal arg0 = arg0dv.Value;
-            decimal arg1 = arg1dv.Value;
-            decimal q;
-
-            // Both decimal zero and negative zero will satisfy this test
-            if (arg1 == 0m)
-            {
-                return CommonErrors.DivByZeroError(irContext);
-            }
-
-            // r = a – N × floor(a/b)
-            try
-            {
-                q = decimal.Floor(arg0 / arg1);
-            }
-            catch (OverflowException)
-            {
-                return CommonErrors.OverflowError(irContext);
-            }
-
-            decimal result = arg0 - (arg1 * q);
-
-            return new DecimalValue(irContext, result);
-        }
-
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-sequence
-        // Sequence( count:n, start:(n|w), step:(n|w) ) where start and step must be the same type
-        public static FormulaValue Sequence(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Sequence(IRContext irContext, NumberValue[] args)
         {
-            double count = ((NumberValue)args[0]).Value;
+            var records = args[0].Value;
+            var start = args[1].Value;
+            var step = args[2].Value;
 
-            if (count < 0 || count > int.MaxValue)
+            if (records < 0)
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            return (args[1], args[2]) switch
-            {
-                (NumberValue startN, NumberValue stepN) => SequenceFloat(irContext, (int)count, startN, stepN),
-                (DecimalValue startW, DecimalValue stepW) => SequenceDecimal(irContext, (int)count, startW, stepW),
-                _ => CommonErrors.UnreachableCodeError(irContext)
-            };
-        }
+            var rows = LazySequence(records, start, step).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
 
-        public static FormulaValue SequenceFloat(IRContext irContext, int count, NumberValue start, NumberValue step)
-        {
-            var rows = LazySequenceFloat(count, start.Value, step.Value).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
-        public static FormulaValue SequenceDecimal(IRContext irContext, int count, DecimalValue start, DecimalValue step)
-        {
-            var rows = LazySequenceDecimal(count, start.Value, step.Value).Select(n => new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), n));
-            return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
-        }
-
-        private static IEnumerable<double> LazySequenceFloat(int records, double start, double step)
+        private static IEnumerable<double> LazySequence(double records, double start, double step)
         {
             var x = start;
             for (var i = 1; i <= records; i++)
@@ -857,76 +689,32 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static IEnumerable<decimal> LazySequenceDecimal(int records, decimal start, decimal step)
-        {
-            var x = start;
-            for (var i = 1; i <= records; i++)
-            {
-                yield return x;
-                x += step;
-            }
-        }
-
-        public static FormulaValue Abs(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Abs(IRContext irContext, NumberValue[] args)
         {
             var arg0 = args[0];
-
-            return arg0 switch
-            {
-                NumberValue num => AbsFloat(irContext, num),
-                DecimalValue dec => AbsDecimal(irContext, dec),
-                _ => CommonErrors.UnreachableCodeError(irContext)
-            };
-        }
-
-        public static FormulaValue AbsFloat(IRContext irContext, NumberValue arg)
-        {
-            double x = arg.Value;
-            double val = Math.Abs(x);
+            var x = arg0.Value;
+            var val = Math.Abs(x);
             return new NumberValue(irContext, val);
         }
 
-        public static FormulaValue AbsDecimal(IRContext irContext, DecimalValue arg)
+        public static FormulaValue Round(IRContext irContext, NumberValue[] args)
         {
-            decimal x = arg.Value;
-            decimal val = Math.Abs(x);
-            return new DecimalValue(irContext, val);
+            var numberArg = args[0].Value;
+            var digitsArg = args[1].Value;
+
+            var x = Round(numberArg, digitsArg);
+            return new NumberValue(irContext, x);
         }
 
-        public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
+        internal static double Round(double number, double digits, RoundType rt = RoundType.Default)
         {
-            double digits;
-
-            if (args.Length == 2 && args[1] is NumberValue numberDigs)
-            {
-                digits = numberDigs.Value;
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
-
-            return args[0] switch
-            {
-                NumberValue num => RoundFloat(irContext, num, digits),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits),
-                _ => CommonErrors.UnreachableCodeError(irContext)
-            };
-        }
-
-        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default)
-        {
-            var number = num.Value;
             var s = number < 0 ? -1d : 1d;
-            var n = Math.Abs(number);
-
-            int dg = doubleDigs > int.MaxValue ? int.MaxValue :
-                          doubleDigs < int.MinValue ? int.MinValue :
-                                (int)doubleDigs;
+            var n = number * s;
+            var dg = digits < 0 ? (int)Math.Ceiling(digits) : (int)Math.Floor(digits);
 
             if (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d)
             {
-                return num;
+                return number;
             }
 
             // Dividing by m, since multiplication was introducing floating point error
@@ -936,114 +724,14 @@ namespace Microsoft.PowerFx.Functions
             switch (rt)
             {
                 case RoundType.Default:
-                    return new NumberValue(irContext, s * Math.Floor((n + (1 / (2 * m)) + eps) * m) / m);
+                    return s * Math.Floor((n + (1 / (2 * m)) + eps) * m) / m;
                 case RoundType.Down:
-                    return new NumberValue(irContext, s * Math.Floor(n * m) / m);
+                    return s * Math.Floor(n * m) / m;
                 case RoundType.Up:
-                    return new NumberValue(irContext, s * Math.Ceiling(n * m) / m);
+                    return s * Math.Ceiling(n * m) / m;
             }
 
-            return CommonErrors.UnreachableCodeError(irContext);
-        }
-
-        private static readonly IReadOnlyList<decimal> DecPow10 = new decimal[]
-        {
-            1e+00m, 1e+01m, 1e+02m, 1e+03m, 1e+04m, 1e+05m, 1e+06m, 1e+07m, 1e+08m, 1e+09m,
-            1e+10m, 1e+11m, 1e+12m, 1e+13m, 1e+14m, 1e+15m, 1e+16m, 1e+17m, 1e+18m, 1e+19m,
-            1e+20m, 1e+21m, 1e+22m, 1e+23m, 1e+24m, 1e+25m, 1e+26m, 1e+27m, 1e+28m
-        };
-
-        private static readonly IReadOnlyList<decimal> DecNegPow10 = new decimal[]
-        {
-            1e-00m, 1e-01m, 1e-02m, 1e-03m, 1e-04m, 1e-05m, 1e-06m, 1e-07m, 1e-08m, 1e-09m,
-            1e-10m, 1e-11m, 1e-12m, 1e-13m, 1e-14m, 1e-15m, 1e-16m, 1e-17m, 1e-18m, 1e-19m,
-            1e-20m, 1e-21m, 1e-22m, 1e-23m, 1e-24m, 1e-25m, 1e-26m, 1e-27m, 1e-28m
-        };
-
-        // The algorithm for Decimal is different from that of Float because with less range we are going out of our way to avoid overflow
-        // At the time of this writing, the version of .NET being targeted only supports two varieties of MidpointRounding
-        // In the future, some of this can be replaced with built in support in decimal.Round()
-        internal static FormulaValue RoundDecimal(IRContext irContext, DecimalValue dec, double doubleDigs, RoundType roundType = RoundType.Default)
-        {
-            var signedNumber = dec.Value;
-
-            var sign = signedNumber < 0 ? -1m : 1m;
-            var unsignedNumber = Math.Abs(signedNumber);
-
-            int digits = doubleDigs > int.MaxValue ? int.MaxValue : 
-                               doubleDigs < int.MinValue ? int.MinValue : 
-                                    (int)doubleDigs;
-
-            if (digits < -28)
-            {
-                return new DecimalValue(irContext, 0m);
-            }
-            else if (digits > 28)
-            {
-                return dec;
-            }
-
-            try
-            {
-                switch (roundType)
-                {
-                    case RoundType.Default:
-                        if (digits >= 0)
-                        {
-                            return new DecimalValue(irContext, decimal.Round(signedNumber, digits, MidpointRounding.AwayFromZero));
-                        }
-                        else
-                        {
-                            // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
-                            var scale = DecPow10[-digits];
-                            return new DecimalValue(irContext, decimal.Round(signedNumber / scale, 0, MidpointRounding.AwayFromZero) * scale);
-                        }
-
-                    case RoundType.Down:
-                        if (digits == 0)
-                        {
-                            // this could be covered by the below dg < 0 case, but this is an important scenario to optimize
-                            // Trunc with no second argument comes here
-                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber));
-                        }
-                        else if (digits < 0)
-                        {
-                            // safe to divide n and multiply by the same amount, won't overflow unless the result would have overflowed
-                            var scale = DecPow10[-digits];
-                            return new DecimalValue(irContext, sign * decimal.Floor(unsignedNumber / scale) * scale);
-                        }
-                        else
-                        {
-                            // uses the system Round to avoid overflow and then correct if the result was rounded up
-                            var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
-                            return new DecimalValue(irContext, sign * (unsignedRound > unsignedNumber ? unsignedRound - DecNegPow10[digits] : unsignedRound));
-                        }
-
-                    case RoundType.Up:
-                        if (digits == 0)
-                        {
-                            // this could be covered by the below dg < 0 case, but this is an important scenario to optimize
-                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber));
-                        }
-                        else if (digits < 0)
-                        {
-                            var scale = DecPow10[-digits];
-                            return new DecimalValue(irContext, sign * decimal.Ceiling(unsignedNumber / scale) * scale);
-                        }
-                        else
-                        {
-                            // uses the system Round to avoid overflow and then correct if the result was rounded down
-                            var unsignedRound = decimal.Round(unsignedNumber, digits, MidpointRounding.AwayFromZero);
-                            return new DecimalValue(irContext, sign * (unsignedRound < unsignedNumber ? unsignedRound + DecNegPow10[digits] : unsignedRound));
-                        }
-                }
-            }
-            catch (OverflowException)
-            {
-                return CommonErrors.OverflowError(irContext);
-            }
-
-            return CommonErrors.UnreachableCodeError(irContext);
+            return 0;
         }
 
         public enum RoundType
@@ -1053,73 +741,33 @@ namespace Microsoft.PowerFx.Functions
             Down
         }
 
-        public static FormulaValue RoundUp(IRContext irContext, FormulaValue[] args)
+        // Char is used for PA string escaping 
+        public static FormulaValue RoundUp(IRContext irContext, NumberValue[] args)
         {
-            double digits;
+            var numberArg = args[0].Value;
+            var digitsArg = args[1].Value;
 
-            if (args.Length == 2 && args[1] is NumberValue numberDigs)
-            {
-                digits = numberDigs.Value;
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
-
-            return args[0] switch
-            {
-                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Up),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Up),
-                _ => CommonErrors.UnreachableCodeError(irContext)
-            };
+            var x = Round(numberArg, digitsArg, RoundType.Up);
+            return new NumberValue(irContext, x);
         }
 
-        public static FormulaValue RoundDown(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue RoundDown(IRContext irContext, NumberValue[] args)
         {
-            double digits;
+            var numberArg = args[0].Value;
 
-            // Trunc uses RoundDown as the implementation, and Trunc's second argument is optional
-            if (args.Length == 2 && args[1] is NumberValue numberDigs)
-            {
-                digits = numberDigs.Value;
-            }
-            else if (args.Length == 1)
-            {
-                digits = 0;
-            }
-            else
-            {
-                return CommonErrors.UnreachableCodeError(irContext);
-            }
+            // RoundDown is also used for Trunc which has an optional digits argument
+            var digitsArg = args.Length == 1 ? 0 : args[1].Value;
 
-            return args[0] switch
-            {
-                NumberValue num => RoundFloat(irContext, num, digits, RoundType.Down),
-                DecimalValue dec => RoundDecimal(irContext, dec, digits, RoundType.Down),
-                _ => CommonErrors.UnreachableCodeError(irContext)
-            };
+            var x = Round(numberArg, digitsArg, RoundType.Down);
+            return new NumberValue(irContext, x);
         }
 
-        public static FormulaValue Int(IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Int(IRContext irContext, NumberValue[] args)
         {
-            return args[0] switch
-            {
-                NumberValue num => IntFloat(irContext, num),
-                DecimalValue dec => IntDecimal(irContext, dec),
-                _ => CommonErrors.UnreachableCodeError(irContext)
-            };
-        }
-
-        public static FormulaValue IntFloat(IRContext irContext, NumberValue arg)
-        {
-            var val = Math.Floor(arg.Value);
+            var arg0 = args[0];
+            var x = arg0.Value;
+            var val = Math.Floor(x);
             return new NumberValue(irContext, val);
-        }
-
-        public static FormulaValue IntDecimal(IRContext irContext, DecimalValue arg)
-        {
-            var val = decimal.Floor(arg.Value);
-            return new DecimalValue(irContext, val);
         }
 
         public static FormulaValue Ln(IRContext irContext, NumberValue[] args)

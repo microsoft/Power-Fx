@@ -2338,42 +2338,18 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Sum(T, 1)", "w")]
-        [InlineData("Average(T, \"Item\")", "w")]
+        [InlineData("Sum(T, 1)", "n")]
+        [InlineData("Average(T, \"Item\")", "n")]
         [InlineData("Filter(T, true)", "*[Item:n]")]
-        [InlineData("Sum(TW, 1)", "w")]
-        [InlineData("Average(TW, \"Item\")", "w")]
-        [InlineData("Filter(TW, true)", "*[Item:w]")]
         public void TestWarningOnLiteralPredicate(string script, string expectedType)
         {
             var symbol = new SymbolTable();
             symbol.AddVariable("T", new TableType(TestUtils.DT("*[Item:n]")));
-            symbol.AddVariable("TW", new TableType(TestUtils.DT("*[Item:w]")));
             TestBindingWarning(
                 script,
                 TestUtils.DT(expectedType),
                 expectedErrorCount: null,
                 symbolTable: symbol);
-        }
-
-        [Theory]
-        [InlineData("Sum(T, 1)", "n")]
-        [InlineData("Average(T, \"Item\")", "n")]
-        [InlineData("Filter(T, true)", "*[Item:n]")]
-        [InlineData("Sum(TW, 1)", "n")]
-        [InlineData("Average(TW, \"Item\")", "n")]
-        [InlineData("Filter(TW, true)", "*[Item:w]")]
-        public void TestWarningOnLiteralPredicate_NumberIsFloat(string script, string expectedType)
-        {
-            var symbol = new SymbolTable();
-            symbol.AddVariable("T", new TableType(TestUtils.DT("*[Item:n]")));
-            symbol.AddVariable("TW", new TableType(TestUtils.DT("*[Item:w]")));
-            TestBindingWarning(
-                script,
-                TestUtils.DT(expectedType),
-                expectedErrorCount: null,
-                symbolTable: symbol,
-                numberIsFloat: true);
         }
 
         [Theory]
@@ -3275,19 +3251,15 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(isPure, result.Binding.IsPure(result.Parse.Root));
         }
 
-        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false)
+        private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null)
         {
             var config = new PowerFxConfig
             {
                 SymbolTable = symbolTable
             };
-            var parserOptions = new ParserOptions()
-            {
-                NumberIsFloat = numberIsFloat
-            };
 
             var engine = new Engine(config);
-            var result = engine.Check(script, parserOptions);
+            var result = engine.Check(script);
             
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.Binding.ErrorContainer.HasErrors());

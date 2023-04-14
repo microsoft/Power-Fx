@@ -52,10 +52,10 @@ Errors: Error 0-26: The function 'Mid' has some invalid arguments.|Error 12-25: 
 Table({Value:1},{Value:2})
 
 >> Mod([1,2],Blank())
-Errors: Error 0-18: The function 'Mod' has some invalid arguments.|Error 4-9: Invalid argument type (Table). Expecting a Decimal value instead.
+Errors: Error 0-18: The function 'Mod' has some invalid arguments.|Error 4-9: Invalid argument type (Table). Expecting a Number value instead.
 
 >> Mod(Blank(),[3,4])
-Errors: Error 0-18: The function 'Mod' has some invalid arguments.|Error 12-17: Invalid argument type (Table). Expecting a Decimal value instead.
+Errors: Error 0-18: The function 'Mod' has some invalid arguments.|Error 12-17: Invalid argument type (Table). Expecting a Number value instead.
 
 >> Power(Blank(),3)
 0

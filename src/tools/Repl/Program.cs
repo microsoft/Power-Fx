@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx
                     // IR pretty printer: IR( <expr> )
                     else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
                     {
-                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
+                        var opts = new ParserOptions() { AllowsSideEffects = true };
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
                         var ir = cr.PrintIR();
                         Console.WriteLine(ir);

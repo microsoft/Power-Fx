@@ -272,44 +272,32 @@ namespace Microsoft.PowerFx.Core.Tests
                     return (TestResult.Pass, null);
                 }
 
-                // Check to see if it is a number, this test covers decimal too as decimal fits in double
-                if (double.TryParse(expected, out var expectedFloat))
+                // fuzzy compare of floating point numbers (which didn't strict match above)
+                if ((originalResult == null || originalResult is NumberValue) && double.TryParse(expected, out var expectedFloat))
                 {
-                    // fuzzy compare of floating point numbers (which didn't strict match above)
-                    if (originalResult == null || originalResult is NumberValue)
+                    // if the expected result is high precision, and a float was returned, there is no way they can match
+                    // this is important for tests that check for a decimal return, for which the value would be rounded to a float and would pass
+                    if (decimal.TryParse(expected, out var expectdDecimal) &&
+                        (decimal.Round(expectdDecimal, 17) != expectdDecimal))
                     {
-                        // if the expected result is high precision, and a float was returned, there is no way they can match
-                        // this is important for tests that check for a decimal return, for which the value would be rounded to a float and would pass
-                        if (decimal.TryParse(expected, out var expectdDecimal) &&
-                            (decimal.Round(expectdDecimal, 17) != expectdDecimal))
-                        {
-                            return (TestResult.Fail, $"\r\n  Float result {expectedFloat} can't match high precision Decimal expected {expected}");
-                        }
-
-                        if (result is NumberValue numericResult)
-                        {
-                            if (NumberCompare(numericResult.Value, expectedFloat))
-                            {
-                                return (TestResult.Pass, null);
-                            }
-                        }
-                        else if (result is DecimalValue decimalResult)
-                        {
-                            if (NumberCompare((double)decimalResult.Value, expectedFloat))
-                            {
-                                return (TestResult.Pass, null);
-                            }
-                        }
+                        return (TestResult.Fail, $"\r\n  Float result {expectedFloat} can't match high precision Decimal expected {expected}");
                     }
 
-                    // strict compare binary decimal values after being parsed (for printing differences)
-                    else if (originalResult is DecimalValue dec && decimal.Parse(expected, System.Globalization.NumberStyles.Float) == dec.Value)
+                    if (result is NumberValue numericResult)
                     {
+                        if (NumberCompare(numericResult.Value, expectedFloat))
+                        {
                             return (TestResult.Pass, null);
+                        }
+                    }
+                    else if (result is DecimalValue decimalResult)
+                    {
+                        if (NumberCompare((double)decimalResult.Value, expectedFloat))
+                        {
+                            return (TestResult.Pass, null);
+                        }
                     }
                 }
-
-                decimal.TryParse(expected, out var ee);
 
                 // strict compare of decimal numbers, with fuzzy compare of floating equivalent (which didn't strict match above)
                 if ((originalResult is DecimalValue origDecimal) && (result is NumberValue resNumber) && double.TryParse(expected, out var expectedNumber))

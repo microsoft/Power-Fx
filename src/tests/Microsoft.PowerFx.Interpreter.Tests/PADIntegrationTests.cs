@@ -64,8 +64,6 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("robintable", robinTable);
 
-            // with number is float
-
             var opts = new ParserOptions() { NumberIsFloat = true };
 
             var result1 = engine.Eval("Value(Index(robintable, 1).Column1)", options: opts); // 101
@@ -74,19 +72,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(101d, result1.ToObject());
             Assert.Equal("str202", result2.ToObject());
 
-            var result3 = engine.Eval("Sum(robintable, Value(ThisRecord.Column1))", options: opts);
+            var result3 = engine.Eval("Sum(robintable, Value(ThisRecord.Column1))");
             Assert.Equal(101d + 201 + 301, result3.ToObject());
-
-            // without number is float
-
-            var result1m = engine.Eval("Value(Index(robintable, 1).Column1)"); // 101
-            var result2m = engine.Eval("Text(Index(robintable, 2).Column2)"); // "str202"
-
-            Assert.Equal(101m, result1m.ToObject());
-            Assert.Equal("str202", result2m.ToObject());
-
-            var result3m = engine.Eval("Sum(robintable, Value(ThisRecord.Column1))");
-            Assert.Equal(101m + 201 + 301, result3m.ToObject());
         }
 
         // Create table with strong typing
