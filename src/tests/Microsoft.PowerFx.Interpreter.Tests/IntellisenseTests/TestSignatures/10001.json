@@ -1,0 +1,30 @@
+{
+  "Signatures": [
+    {
+      "Label": "Overload(arg1 : Number, arg2 : String)",
+      "Documentation": "Custom func Overload",
+      "Parameters": [
+        {
+          "Label": "arg1 : Number",
+          "Documentation": ""
+        },
+        {
+          "Label": "arg2 : String",
+          "Documentation": ""
+        }
+      ]
+    },
+    {
+      "Label": "Overload(arg1 : String)",
+      "Documentation": "Custom func Overload",
+      "Parameters": [
+        {
+          "Label": "arg1 : String",
+          "Documentation": ""
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 1,
+  "ActiveParameter": 0
+}
