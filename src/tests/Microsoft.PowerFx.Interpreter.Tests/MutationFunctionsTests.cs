@@ -1,28 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json;
 using Xunit;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -258,7 +242,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void MutationNumberAsFloatTests(string expr)
         {
             var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
-            var fv = FormulaValueJSON.FromJson(JsonConvert.SerializeObject(100), numberIsFloat: true);
+            var fv = FormulaValueJSON.FromJson("100", numberIsFloat: true);
 
             var rType = RecordType.Empty()
                 .Add(new NamedFormulaType("flavor", FormulaType.String))
