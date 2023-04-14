@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx
             // Special case SetProperty. Use reference equality to opt into special casing.
             if (object.ReferenceEquals(info.Name, SetPropertyName))
             {
-                return new CustomSetPropertyFunction(info.Name, _info.ArgumentSignatures)
+                return new CustomSetPropertyFunction(info.Name, info.ArgumentSignatures)
                 {
                     _impl = args => InvokeAsync(null, args, CancellationToken.None)
                 };
