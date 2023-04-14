@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -102,16 +103,16 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
             }
         }
 
-        public static DelegationTelemetryInfo CreateUnsupportArgTelmetryInfo(DType dType)
+        public static DelegationTelemetryInfo CreateUnsupportArgTelemetryInfo(DType dType)
         {
             Contracts.AssertValue(dType);
 
             return new DelegationTelemetryInfo(dType.Kind.ToString());
         }
 
-        public static DelegationTelemetryInfo CreateUnSupportedDistinctArgTelmetryInfo(int condition)
+        public static DelegationTelemetryInfo CreateUnSupportedDistinctArgTelemetryInfo(int condition)
         {
-            return new DelegationTelemetryInfo(condition.ToString());
+            return new DelegationTelemetryInfo(condition.ToString(CultureInfo.InvariantCulture));
         }
     }
 }
