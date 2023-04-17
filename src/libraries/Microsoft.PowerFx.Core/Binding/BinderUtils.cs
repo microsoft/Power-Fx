@@ -1066,6 +1066,24 @@ namespace Microsoft.PowerFx.Core.Binding
                     return new BinderCheckTypeResult() { Coercions = coercions };
                 }
 
+                // Handle Date/Time <=> DateTime comparison
+                // Promote all sides to DateTime
+                if (IsAcceptedByDateOrTime(typeLeft, usePowerFxV1CompatibilityRules) &&
+                    IsAcceptedByDateOrTime(typeRight, usePowerFxV1CompatibilityRules))
+                {
+                    if (typeLeft.Kind != DKind.DateTime)
+                    {
+                        coercions.Add(new BinderCoercionResult { Node = left, CoercedType = DType.DateTime });
+                    }
+
+                    if (typeRight.Kind != DKind.DateTime)
+                    {
+                        coercions.Add(new BinderCoercionResult { Node = right, CoercedType = DType.DateTime });
+                    }
+
+                    return new BinderCheckTypeResult { Coercions = coercions };
+                }
+
                 // Handle UntypedObject comparisons
                 if (typeLeft.IsUntypedObject && CoercionMatrix.GetCoercionKind(typeLeft, typeRight, usePowerFxV1CompatibilityRules) != CoercionKind.None)
                 {

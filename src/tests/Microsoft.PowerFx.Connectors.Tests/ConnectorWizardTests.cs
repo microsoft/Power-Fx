@@ -138,7 +138,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Finally contruct the expression
             string expression = function.GetExpression("SQL", parameters);
 
-            Assert.Equal(@"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { p1: 50, p2: ""abc"" })", expression);
+            Assert.Equal(@"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { p1: Float(50), p2: ""abc"" })", expression);
         }
 
         [Fact]

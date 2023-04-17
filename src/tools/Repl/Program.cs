@@ -552,7 +552,14 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                resultString = value.ToExpression();
+                var sb = new StringBuilder();
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    UseCompactRepresentation = true,
+                };
+                value.ToExpression(sb, settings);
+
+                resultString = sb.ToString();
             }
 
             return resultString;
