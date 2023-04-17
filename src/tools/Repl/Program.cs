@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx
                     // IR pretty printer: IR( <expr> )
                     else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
                     {
-                        var opts = new ParserOptions() { AllowsSideEffects = true };
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
                         var ir = cr.PrintIR();
                         Console.WriteLine(ir);
@@ -552,7 +552,14 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                resultString = value.ToExpression();
+                var sb = new StringBuilder();
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    UseCompactRepresentation = true,
+                };
+                value.ToExpression(sb, settings);
+
+                resultString = sb.ToString();
             }
 
             return resultString;

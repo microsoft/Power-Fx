@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -289,7 +290,7 @@ namespace Microsoft.PowerFx
                             });
                     }
                     
-                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType))
+                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType || func is IfErrorFunction))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
                     }
@@ -703,7 +704,7 @@ namespace Microsoft.PowerFx
                     try
                     {
                         hostObj = getHostObject(_services);
-                        if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type))
+                        if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
                         {
                             hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext);
                         }

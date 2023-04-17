@@ -195,3 +195,6 @@ Time(11,30,59,0)
 // Error-DateTime
 >> IfError(Error({Kind: ErrorKind.Validation}), DateTime(2021, 12, 12, 17, 30, 0))
 DateTime(2021,12,12,17,30,0,0)
+
+>> IfError(1/0, 2, Time(12, 0, 0))
+2

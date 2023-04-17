@@ -17,6 +17,11 @@ namespace Microsoft.PowerFx.Core.Binding
     internal enum NameLookupPreferences
     {
         None = 0,
+        
+        /// <summary>
+        /// An identifier with [@name] notation. This means ignore all symbols in RowScope.
+        /// Used to specify a global that may be overshadoweded by a local.
+        /// </summary>
         GlobalsOnly = 0x1,
         HasDottedNameParent = 0x2,
     }
