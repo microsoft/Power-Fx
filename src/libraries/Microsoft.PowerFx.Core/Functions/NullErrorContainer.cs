@@ -10,9 +10,12 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
-    // Default "no-op" error container that does not post document errors.
-    // See the TexlFunction.DefaultErrorContainer property and its uses for more info.
-    internal sealed class DefaultNoOpErrorContainer : IErrorContainer
+    // Null error container that does not post document errors.
+    // See the TexlFunction.NullErrorContainer property and its uses for more info.
+    //
+    // In general, this error container should not be used in custom function CheckTypes.
+    // Instead, an argument should be checked once rather than multiple times.
+    internal sealed class NullErrorContainer : IErrorContainer
     {
         public DocumentErrorSeverity DefaultSeverity => DocumentErrorSeverity._Min;
 

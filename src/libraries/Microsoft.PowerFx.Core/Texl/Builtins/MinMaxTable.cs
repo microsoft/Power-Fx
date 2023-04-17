@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (argTypes[1] != DType.Date && argTypes[1] != DType.DateTime && argTypes[1] != DType.Time)
             {
                 returnType = DetermineNumericFunctionReturnType(true, context.NumberIsFloat, argTypes[1]);
-                if (!CheckType(context, args[1], argTypes[1], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                if (!CheckType(context, args[1], argTypes[1], returnType, errors, ref nodeToCoercedTypeMap))
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrNumberExpected);
                     nodeToCoercedTypeMap = null;

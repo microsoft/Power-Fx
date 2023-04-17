@@ -44,9 +44,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Column name when Features.ConsistentOneColumnTableResult is enabled.
         public const string ColumnName_ValueStr = "Value";
 
-        // A default "no-op" error container that does not post document errors.
-        public static IErrorContainer DefaultErrorContainer => new DefaultNoOpErrorContainer();
-
         // The information for scope if there is one.
         private FunctionScopeInfo _scopeInfo;
 
