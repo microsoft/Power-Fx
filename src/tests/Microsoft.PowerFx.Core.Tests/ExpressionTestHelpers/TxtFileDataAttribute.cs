@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Utils;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -22,14 +24,42 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathCommon;
         private readonly string _filePathSpecific;
         private readonly string _engineName;
-        private readonly bool _numberIsFloat;
+        private readonly Dictionary<string, bool> _setup;
 
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, bool numberIsFloat)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
-            _numberIsFloat = numberIsFloat;
+            _setup = ParserSetupString(setup);
+        }
+
+        public static Dictionary<string, bool> ParserSetupString(string setup)
+        {
+            var dict = new Dictionary<string, bool>();
+
+            foreach (Match match in Regex.Matches(setup, @"(disable:)?([\w]+)"))
+            {
+                bool enabled = !(match.Groups[1].Value == "disable:");
+
+                dict.Add(match.Groups[2].Value, enabled);
+
+                if (match.Groups[2].Value == "PowerFxV1")
+                {
+                    foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    {
+                        if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
+                        {
+                            if ((bool)featureProperty.GetValue(Features.PowerFxV1))
+                            {
+                                dict.Add(featureProperty.Name, enabled);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return dict;
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -56,7 +86,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         foreach (var file in allFiles)
                         {
-                            parser.AddFile(_numberIsFloat, file);
+                            parser.AddFile(_setup, file);
                         }
                     }
                 }

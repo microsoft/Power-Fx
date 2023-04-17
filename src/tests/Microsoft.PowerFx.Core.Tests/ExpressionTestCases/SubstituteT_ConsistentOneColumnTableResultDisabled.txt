@@ -1,19 +1,19 @@
-#SETUP: ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
+#SETUP: disable:ConsistentOneColumnTableResult
 
 >> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Substitute(emptyTable, emptyTable, emptyTable))
 Table()
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], Filter(["a"], Len(Value) > 10), [{repl:"X"}, {repl:"Y"}])
-Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+Table({name:Error({Kind:ErrorKind.NotApplicable})},{name:Error({Kind:ErrorKind.NotApplicable})})
 
 >> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Substitute(emptyTable, "a", "b"))
 Table()
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
-Table({Value:"Xbcdefg"},{Value:"YY hh ii"})
+Table({name:"Xbcdefg"},{name:"YY hh ii"})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], "g", [{repl:"X"}, {repl:"Y"}])
-Table({Value:"abcdefX"},{Value:"YY hh ii"})
+Table({name:"abcdefX"},{name:"YY hh ii"})
 
 >> Substitute( "abcdefg", [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
 Table({Value:"Xbcdefg"},{Value:"abcdefY"})
@@ -32,44 +32,44 @@ Table({Value:""},{Value:""})
 Blank()
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1<0,"null"), [{repl:"X"}, {repl:"Y"}])
-Table({Value:"abcdefg"},{Value:"gg hh ii"})
+Table({name:"abcdefg"},{name:"gg hh ii"})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1<0,[{match:"a"},{match:"g"}]), [{repl:"X"}, {repl:"Y"}])
 Blank()
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1<0,"null"))
-Table({Value:"bcdefg"},{Value:" hh ii"})
+Table({name:"bcdefg"},{name:" hh ii"})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1<0,[{repl:"X"}, {repl:"Y"}]))
 Blank()
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1<0,1))
-Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+Table({name:Error({Kind:ErrorKind.InvalidArgument})},{name:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1<0,[1]))
 Blank()
 
 // ##### Error arguments
 >> Substitute(If(1/0<2,"c"), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
 
 >> Substitute(If(1/0<2,["a","b"]), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
 Error({Kind:ErrorKind.Div0})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1/0<2,"null"), [{repl:"X"}, {repl:"Y"}])
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+Table({name:Error({Kind:ErrorKind.Div0})},{name:Error({Kind:ErrorKind.Div0})})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1/0<2,[{match:"a"},{match:"g"}]), [{repl:"X"}, {repl:"Y"}])
 Error({Kind:ErrorKind.Div0})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1/0<2,"null"))
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+Table({name:Error({Kind:ErrorKind.Div0})},{name:Error({Kind:ErrorKind.Div0})})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1/0<2,[{repl:"X"}, {repl:"Y"}]))
 Error({Kind:ErrorKind.Div0})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1/0<2,1))
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+Table({name:Error({Kind:ErrorKind.Div0})},{name:Error({Kind:ErrorKind.Div0})})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1/0<2,[1]))
 Error({Kind:ErrorKind.Div0})

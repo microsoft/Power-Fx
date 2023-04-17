@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Microsoft.PowerFx.Types;
@@ -30,41 +32,60 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // The intent of SKIPFILE is to be a permanent mode selection for tests that are range/precision sensitive.
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), false)]
-        public void InterpreterTestCase(ExpressionTestCase testCase)
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "NumberIsFloat")]
+        public void NoFeatures_Float(ExpressionTestCase testCase)
         {
-            // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over.
-            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
-
-            var runner = new InterpreterRunner() { NumberIsFloat = false };
-            var (result, msg) = runner.RunTestCase(testCase);
-
-            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
-            switch (result)
-            {
-                case TestResult.Pass:
-                    break;
-
-                case TestResult.Fail:
-                    Assert.True(false, prefix + msg);
-                    break;
-
-                case TestResult.Skip:
-                    Skip.If(true, prefix + msg);
-                    break;
-            }
+            RunExpressionTestCase(testCase, Features.None, numberIsFloat: true);
         }
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), true)]
-        public void InterpreterTestCase_NumberIsFloat(ExpressionTestCase testCase)
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat")]
+        public void Canavs_Float(ExpressionTestCase testCase)
+        {
+            var features = new Features()
+            {
+                TableSyntaxDoesntWrapRecords = true,
+                ConsistentOneColumnTableResult = true
+            };
+
+            RunExpressionTestCase(testCase, features, numberIsFloat: true);
+        }
+
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,NumberIsFloat")]
+        public void Canavs_Float_1(ExpressionTestCase testCase)
+        {
+            // abcdef
+
+            var features = new Features()
+            {
+                TableSyntaxDoesntWrapRecords = true,
+            };
+
+            RunExpressionTestCase(testCase, features, numberIsFloat: true);
+        }
+
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1")]
+        public void V1_Decimal(ExpressionTestCase testCase)
+        {
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false);
+        }
+
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,NumberIsFloat")]
+        public void V1_Float(ExpressionTestCase testCase)
+        {
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true);
+        }
+
+        private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner() { NumberIsFloat = true };
+            var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features };
             var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
@@ -128,7 +149,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(numberIsFloat: true, path);
+            testRunner.AddFile(TxtFileDataAttribute.ParserSetupString("NumberIsFloat"), path);
 
             var result = testRunner.RunTests();
 
@@ -172,7 +193,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(numberIsFloat: false, path);
+            runner.AddDir(new Dictionary<string, bool>(), path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);

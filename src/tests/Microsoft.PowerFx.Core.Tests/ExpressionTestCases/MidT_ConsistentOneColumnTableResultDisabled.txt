@@ -1,10 +1,10 @@
-#SETUP: ConsistentOneColumnTableResult
+#SETUP: disable:ConsistentOneColumnTableResult
 
 >> Mid("Hello world", [3, 7])
-Table({Value:"llo world"},{Value:"world"})
+Table({Result:"llo world"},{Result:"world"})
 
 >> Mid("Hello world", [3, 7], [2, 3])
-Table({Value:"ll"},{Value:"wor"})
+Table({Result:"ll"},{Result:"wor"})
 
 >> Mid(["Hello", "world"], [3, 2])
 Table({Value:"llo"},{Value:"orld"})
@@ -42,7 +42,7 @@ Table({Value:"ell"},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 // ##### Blank arguments
 >> Mid(If(1<0,"Hello world"), [4, 5])
-Table({Value:""},{Value:""})
+Table({Result:""},{Result:""})
 
 >> Mid(If(1<0,["Hello", "world"]), [4, 5])
 Blank()
@@ -61,7 +61,7 @@ Blank()
 
 // ##### Error arguments
 >> Mid(If(1/0<2,"Hello world"), [4, 5])
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
 
 >> Mid(If(1/0<2,["Hello", "world"]), [4, 5])
 Error({Kind:ErrorKind.Div0})

@@ -92,6 +92,11 @@ namespace Microsoft.PowerFx.Core.Tests
         public bool NumberIsFloat { get; set; }
 
         /// <summary>
+        /// What Features should be enabled, before applying file level #SETUP and #DISABLE.
+        /// </summary>
+        public Features Features = Features.None;
+
+        /// <summary>
         /// Runs a PowerFx test case, with optional setup.
         /// </summary>
         /// <param name="expr">PowerFx expression.</param>

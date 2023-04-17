@@ -44,25 +44,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public string TestRoot { get; set; } = GetDefaultTestDir();
 
-        public void AddDir(bool numberIsFloat = false, string directory = "")
+        public void AddDir(Dictionary<string, bool> setup, string directory = "")
         {
             directory = Path.GetFullPath(directory, TestRoot);
             var allFiles = Directory.EnumerateFiles(directory);
 
-            AddFile(numberIsFloat, allFiles);
+            AddFile(setup, allFiles);
         }
 
-        public void AddFile(bool numberIsFloat, params string[] files)
+        public void AddFile(Dictionary<string, bool> setup, params string[] files)
         {
             var x = (IEnumerable<string>)files;
-            AddFile(numberIsFloat, x);
+            AddFile(setup, x);
         }
 
-        public void AddFile(bool numberIsFloat, IEnumerable<string> files)
+        public void AddFile(Dictionary<string, bool> setup, IEnumerable<string> files)
         {
             foreach (var file in files)
             {
-                AddFile(numberIsFloat, file);
+                AddFile(setup, file);
             }
         }
 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Tests
             return false;
         }
 
-        public void AddFile(bool numberIsFloat, string thisFile)
+        public void AddFile(Dictionary<string, bool> setup, string thisFile)
         {
             thisFile = Path.GetFullPath(thisFile, TestRoot);
 
@@ -129,10 +129,13 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                     else if (TryParseDirective(line, "#SKIPFILE:", ref fileSkipFile))
                     {
-                        if ((Regex.IsMatch(line, @"[:,]\s*disable\s*:\s*NumberIsFloat", RegexOptions.IgnoreCase) && !numberIsFloat) ||
-                            (Regex.IsMatch(line, @"(SKIPFILE:|,)\s*NumberIsFloat", RegexOptions.IgnoreCase) && numberIsFloat))
+                        foreach (var flag in TxtFileDataAttribute.ParserSetupString(fileSkipFile))
                         {
-                            return;
+                            if ((flag.Value && setup.ContainsKey(flag.Key) && setup[flag.Key]) ||
+                                (!flag.Value && !(setup.ContainsKey(flag.Key) && setup[flag.Key])))
+                            {
+                                return;
+                            }
                         }
                     }
                     else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||

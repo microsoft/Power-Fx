@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
+
 // Expanded coercion test cases
 
 >> Char("55")

@@ -1,10 +1,10 @@
-#SETUP: ConsistentOneColumnTableResult
+#SETUP: disable:ConsistentOneColumnTableResult
 
 >> Left("Hello world", [4, 5])
-Table({Value:"Hell"},{Value:"Hello"})
+Table({Result:"Hell"},{Result:"Hello"})
 
 >> Right("Hello world", [3, 5])
-Table({Value:"rld"},{Value:"world"})
+Table({Result:"rld"},{Result:"world"})
 
 >> Left(["Hello", "world"], [4, 5])
 Table({Value:"Hell"},{Value:"world"})
@@ -45,7 +45,7 @@ Table({Value:"lo"},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 // ##### Blank arguments
 >> Left(If(1<0,"Hello world"), [4, 5])
-Table({Value:""},{Value:""})
+Table({Result:""},{Result:""})
 
 >> Left(If(1<0,["Hello", "world"]), [4, 5])
 Blank()
@@ -57,7 +57,7 @@ Table({Value:""},{Value:""})
 Blank()
 
 >> Right(If(1<0,"Hello world"), [4, 5])
-Table({Value:""},{Value:""})
+Table({Result:""},{Result:""})
 
 >> Right(If(1<0,["Hello", "world"]), [4, 5])
 Blank()
@@ -70,7 +70,7 @@ Blank()
 
 // ##### Error arguments
 >> Left(If(1/0<2,"Hello world"), [4, 5])
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
 
 >> Left(If(1/0<2,["Hello", "world"]), [4, 5])
 Error({Kind:ErrorKind.Div0})
@@ -82,7 +82,7 @@ Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
 Error({Kind:ErrorKind.Div0})
 
 >> Right(If(1/0<2,"Hello world"), [4, 5])
-Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
 
 >> Right(If(1/0<2,["Hello", "world"]), [4, 5])
 Error({Kind:ErrorKind.Div0})

@@ -31,7 +31,11 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
-        private static readonly Features _features = Features.PowerFxV1;
+        private const string OptionNoFeatures = "NoFeatures";
+
+        private const string OptionPowerFxV1 = "PowerFxV1";
+
+        private static Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
         {
@@ -48,7 +52,9 @@ namespace Microsoft.PowerFx
             {
                 { OptionFormatTable, OptionFormatTable },
                 { OptionNumberIsFloat, OptionNumberIsFloat },
-                { OptionLargeCallDepth, OptionLargeCallDepth }
+                { OptionLargeCallDepth, OptionLargeCallDepth },
+                { OptionNoFeatures, OptionNoFeatures },
+                { OptionPowerFxV1, OptionPowerFxV1 }
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -612,10 +618,25 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionPowerFxV1.ToLower(CultureInfo.InvariantCulture))
+                {
+                    _features = Features.PowerFxV1;
+                    ResetEngine();
+                    return value;
+                }
+
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionNoFeatures.ToLower(CultureInfo.InvariantCulture))
+                {
+//                    _features = Features.None;
+                    ResetEngine();
+                    return value;
+                }
+
                 var featureProperty = typeof(Features).GetProperty(option.Value, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 if (featureProperty?.CanWrite == true)
                 {
                     featureProperty.SetValue(_features, value.Value);
+                    ResetEngine();
                     return value;
                 }
 
