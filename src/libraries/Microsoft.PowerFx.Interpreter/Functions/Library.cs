@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -2209,17 +2210,29 @@ namespace Microsoft.PowerFx.Functions
             {
                 var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
 
-                if (errorRecord.GetField(ErrorType.KindFieldName) is ErrorValue error)
+                var kindField = errorRecord.GetField(ErrorType.KindFieldName);
+                if (kindField is ErrorValue error)
                 {
                     return error;
                 }
 
-                if (errorRecord.GetField(ErrorType.KindFieldName) is not NumberValue kindField)
+                ErrorKind errorKind;
+                switch (kindField)
                 {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    case NumberValue nv:
+                        errorKind = (ErrorKind)(int)nv.Value;
+                        break;
+                    case DecimalValue dv:
+                        errorKind = (ErrorKind)(int)dv.Value;
+                        break;
+                    case OptionSetValue osv:
+                        errorKind = (ErrorKind)Convert.ToInt32(osv.ExecutionValue, CultureInfo.InvariantCulture);
+                        break;
+                    default:
+                        return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
-                result.Add(new ExpressionError { Kind = (ErrorKind)kindField.Value, Message = messageField?.Value as string });
+                result.Add(new ExpressionError { Kind = errorKind, Message = messageField?.Value as string });
             }
 
             return result;
