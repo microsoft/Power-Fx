@@ -28,3 +28,15 @@ true
 
 >> Date(1899,12,29) = Time(0,0,0)
 false
+
+>> ErrorKind.Custom = 100
+false
+
+>> ErrorKind.Custom = 1000
+true
+
+>> 100 = ErrorKind.Custom
+false
+
+>> 1000 = ErrorKind.Custom
+true
