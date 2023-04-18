@@ -568,22 +568,22 @@
     
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+    <value>Converteix un element "text" que representa un nombre en un valor decimal.</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Codi de llengua que cal utilitzar en convertir el valor.</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a Decimal value.</value>
+    <value>Valor de text que es convertirà en un valor decimal.</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Float value.</value>
+    <value>Converteix un element "text" que representa un nombre en un valor float.</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Codi de llengua que cal utilitzar en convertir el valor.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>Valor de text que es convertirà en un valor float.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
@@ -1465,6 +1465,14 @@
     <value>entrada</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Retorna el nombre de caràcters especificats des del començament d'un valor de text.</value>
     
@@ -1801,20 +1809,8 @@
     <value>El primer argument de '{0}' ha de ser una taula d'una sola columna.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors de text per a '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors de data per a '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors numèrics per a '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors de color per a '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>L'esquema no és vàlid; s'esperava una columna de valors {0} per a "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemàtiques i estadístiques</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>Definit per l'usuari</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informació</value>
@@ -4789,6 +4788,26 @@
     <value>La fórmula amb nom ha de ser una expressió.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>La funció definida per l'usuari ha de tenir un cos.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>La funció {0} ja està definida.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>El paràmetre {0} està duplicat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tipus {0} desconegut.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>El tipus de retorn de la funció indicada no coincideix amb el tipus de retorn del cos de la funció.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>La fórmula NamedFormula "{0}" ja existeix.</value>
   </data>
@@ -4912,7 +4931,11 @@
     <value>L'URL que es codificarà.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>"{0}" és una funció reconeguda, però no s'admet.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>S'ha produït un error en convertir el tipus perquè el valor proporcionat era del tipus "{0}" però s'esperava el tipus "{1}".</value>
     
   </data>
 </root>

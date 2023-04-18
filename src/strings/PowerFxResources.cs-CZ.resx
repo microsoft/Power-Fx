@@ -1465,6 +1465,14 @@
     <value>vstup</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikátor</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikátor</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Vrátí zadaný počet znaků od začátku textové hodnoty.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Prvním argumentem „{0}“ by měla být tabulka s jedním sloupcem.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec textových hodnot pro „{0}“.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec hodnot dat pro „{0}“.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec číselných hodnot pro „{0}“.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Neplatné schéma, očekával se sloupec hodnot barvy pro „{0}“.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Neplatné schéma, očekával se sloupec hodnot {0} pro '{1}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematické a statistické</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informace</value>
@@ -4789,6 +4788,26 @@
     <value>Pojmenovaný vzorec musí být výraz.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Uživatelem definovaná funkce musí mít tělo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkce {0} je již definována.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametr {0} je duplicitní.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Neznámý typ {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Uvedený návratový typ funkce neodpovídá návratovému typu těla funkce.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' již existuje.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' je rozpoznaná, ale nepodporovaná funkce.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Převod typu se nezdařil, protože daná hodnota byla typu '{0}', ale očekáván byl typ '{1}'.</value>
     
   </data>
 </root>

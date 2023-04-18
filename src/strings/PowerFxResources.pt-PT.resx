@@ -1465,6 +1465,14 @@
     <value>entrada</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Devolve o número especificado de carateres do início de um valor de texto.</value>
     
@@ -1801,20 +1809,8 @@
     <value>O primeiro argumento de "{0}" deve ser uma tabela de uma coluna.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores de texto para "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores de data para "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores numéricos para "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Esquema inválido, era esperada uma coluna de valores de cor para "{0}".</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Esquema inválido, era esperada uma coluna de valores de {0} para "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemática e Estatística</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>Definido pelo Utilizador</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informações</value>
@@ -4789,6 +4788,26 @@
     <value>A fórmula com nome tem de ser uma expressão.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>A função definida pelo utilizador tem de ter um corpo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>A função {0} já está definida.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>O parâmetro {0} é um duplicado.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tipo desconhecido {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>O tipo de retorno da função indicada não corresponde ao tipo de retorno do corpo da função.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A NamedFormula "{0}" já existe.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" é uma função reconhecida, mas não suportada.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Falha ao converter tipo porque o valor indicado era do tipo "{0}" e era esperado o tipo "{1}".</value>
     
   </data>
 </root>

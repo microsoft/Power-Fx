@@ -1465,6 +1465,14 @@
     <value>intrare</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modificator</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modificator</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Returnează numărul de caractere specificat de la începutul unei valori text.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Primul argument din „{0}” ar trebui să fie un tabel cu o singură coloană.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Schemă nevalidă, era așteptată o coloană de valori text pentru „{0}”.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Schemă nevalidă, era așteptată o coloană de valori dată pentru „{0}”.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Schemă nevalidă, era așteptată o coloană de valori numerice pentru „{0}”.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Schemă nevalidă, era așteptată o coloană de valori de culoare pentru „{0}”.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Schemă nevalidă, era așteptată o coloană de valori {0} pentru „{1}”.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematice și statistice</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>Definit de utilizator</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informații</value>
@@ -4789,6 +4788,26 @@
     <value>Formula denumită trebuie să fie o expresie.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Funcția definită de utilizator trebuie să aibă un corp.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funcția {0} este definită deja.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametrul {0} este dublat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tip necunoscut {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Tipul de returnare al funcției declarate nu se potrivește cu tipul de returnare al corpului funcției.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” există deja.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}” este o funcție recunoscută, dar nu este acceptată.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Conversia de tip nu a reușit, deoarece valoarea dată a fost de tip „{0}”, tipul așteptat „{1}”.</value>
     
   </data>
 </root>

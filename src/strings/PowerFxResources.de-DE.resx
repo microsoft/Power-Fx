@@ -568,22 +568,22 @@
     
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+    <value>Konvertiert einen „Text“, der eine Zahl darstellt, in einen Dezimalwert</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Zu verwendender Sprachcode für die Konvertierung des Werts</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a Decimal value.</value>
+    <value>Der Textwert, der in einen Dezimalwert konvertiert werden soll</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Float value.</value>
+    <value>Konvertiert einen „Text“, der eine Zahl darstellt, in einen Floatwert</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Zu verwendender Sprachcode für die Konvertierung des Werts</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>Der Textwert, der in einen Floatwert konvertiert werden soll</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>Text</value>
@@ -1465,6 +1465,14 @@
     <value>Eingabe</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>Modifizierer</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>Modifizierer</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Gibt die angegebene Anzahl Zeichen ab dem Anfang eines Textwerts zurück.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Das erste Argument von „{0}“ sollte eine einspaltige Tabelle sein.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Textwerten für „{0}“ erwartet.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Datumswerten für „{0}“ erwartet.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Zahlenwerten für „{0}“ erwartet.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Farbwerten für „{0}“ erwartet.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Ungültiges Schema, es wurde eine Spalte mit {0} Werten für „{1}“ erwartet.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Mathematik und Statistik</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informationen</value>
@@ -4789,6 +4788,26 @@
     <value>Die benannte Formel muss ein Ausdruck sein.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Die benutzerdefinierte Funktion muss einen Textkörper aufweisen.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funktion {0} ist bereits definiert.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} ist ein Duplikat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Unbekannter Typ {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Der Rückgabetyp der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ ist bereits vorhanden.</value>
   </data>
@@ -4912,7 +4931,11 @@
     <value>Eine zu codierende URL.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>„{0}“ ist eine erkannte, aber nicht unterstützte Funktion</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Fehler bei der Typkonvertierung, da der angegebene Wert vom Typ „{0}“ war. Erwarteter Typ: „{1}“.</value>
     
   </data>
 </root>

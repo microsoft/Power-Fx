@@ -1465,6 +1465,14 @@
     <value>unos</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Vraća određeni broj znakova s početka tekstne vrijednosti.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Prvi argument stavke "{0}" treba biti tablica s jednim stupcem.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac vrijednosti teksta za "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac vrijednosti datuma za "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac numeričkih vrijednosti za "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Shema nije valjana, očekuje se stupac vrijednosti boje za "{0}".</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Shema nije valjana, očekuje se stupac vrijednosti {0} za „{1}”.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematičke i statističke</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacije</value>
@@ -4789,6 +4788,26 @@
     <value>Imenovana formula mora biti izraz.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Korisnički definirana funkcija mora imati tijelo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkcija {0} je već definirana.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametar {0} je duplikat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Nepoznata vrsta {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Navedena vrsta povrata funkcije ne odgovara vrsti povrata tijela funkcije.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” već postoji.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}” je prepoznata, ali ne i podržana funkcija.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Pretvorba vrste nije uspjela zato što je dana vrijednost bila vrste „{0}”, a očekivala se vrsta „{1}”.</value>
     
   </data>
 </root>

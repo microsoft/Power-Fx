@@ -1465,6 +1465,14 @@
     <value>入力</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>修飾子</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>修飾子</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>テキスト値の先頭から指定された文字数を返します。</value>
     
@@ -1801,20 +1809,8 @@
     <value>最初の引数 '{0}' は、1 列のテーブルである必要があります。</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。テキスト値の列が '{0}' に必要です。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。日付の値の列が '{0}' に必要です。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。数値の列が '{0}' に必要です。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>スキーマが無効です。色の値の列が '{0}' に必要です。</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>スキーマが無効です。{0} の列、'{1}' の値が必要です。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>数学 &amp; 統計</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>情報</value>
@@ -4789,6 +4788,26 @@
     <value>名前付き計算式は式である必要があります。</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>ユーザーが定義した関数には本文が必要です。</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>関数 {0} は既に定義されています。</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>パラメーター {0} が重複しています。</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>不明なタイプ {0}。</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>宣言した関数の戻り値タイプが、関数本文の戻り値タイプと一致しません。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'は既に存在します。</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' は認識されましたが、サポートされない関数です。</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>必要な種類 '{1}' に対して種類 '{0}' の値を指定したため、種類の変換が失敗しました。</value>
     
   </data>
 </root>

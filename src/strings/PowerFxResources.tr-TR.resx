@@ -1465,6 +1465,14 @@
     <value>giriş</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>değiştirici</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>değiştirici</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Bir metin değerinin başından belirtilen karakter sayısını döndürür.</value>
     
@@ -1801,20 +1809,8 @@
     <value>'{0}' öğesinin ilk bağımsız değişkeninin tek sütunlu bir tablo olması gerekir.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir metin değerleri sütunu bekleniyor.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir tarih değerleri sütunu bekleniyor.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir sayısal değerler sütunu bekleniyor.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Geçersiz şema, '{0}' öğesine ilişkin bir renk değerleri sütunu bekleniyor.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Invalid schema, expected a column of {0} values for '{1}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik ve İstatistik</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Bilgi</value>
@@ -4789,6 +4788,26 @@
     <value>Adlandırılmış formül bir ifade olmalı.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Kullanıcı tanımlı işlevin gövdesi olmalı.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>{0} işlevi zaten tanımlandı.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>{0} parametresi yinelenen bir öğe.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>{0} türü bilinmiyor.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Belirtilen işlev dönüş türü, işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' zaten var.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' tanınan fakat desteklenmeyen bir işlev.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Verilen değer '{0}' türünde olduğu için tür dönüşümü başarısız oldu; '{1}' türü bekleniyor.</value>
     
   </data>
 </root>

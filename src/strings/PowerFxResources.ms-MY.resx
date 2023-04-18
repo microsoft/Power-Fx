@@ -1465,6 +1465,14 @@
     <value>input</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>pengubah suai</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>pengubah suai</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Mengembalikan bilangan aksara yang ditentukan daripada permulaan nilai teks.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Argumen pertama '{0}' seharusnya jadual dengan satu lajur.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai teks untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai tarikh untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai angka untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai warna untuk '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Skema tidak sah, menjangkakan lajur nilai {0} untuk '{1}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik dan Statistik</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Maklumat</value>
@@ -4789,6 +4788,26 @@
     <value>Formula yang dinamakan mestilah ungkapan.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Fungsi ditakrifkan pengguna mesti mempunyai isi.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Fungsi {0} sudah ditakrifkan.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} ialah duplikasi.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Jenis tidak diketahui {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Jenis kembali fungsi yang dinyatakan tidak sepadan dengan jenis kembali isi fungsi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah wujud.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' ialah fungsi yang dikenali tetapi tidak disokong.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Penukaran jenis gagal kerana nilai yang diberikan ialah jenis '{0}', jenis '{1}' dijangkakan.</value>
     
   </data>
 </root>

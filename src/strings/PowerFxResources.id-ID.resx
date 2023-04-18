@@ -1465,6 +1465,14 @@
     <value>masukan</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>pengubah</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>pengubah</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Menampilkan jumlah karakter tertentu dari awal nilai teks.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Argumen pertama dari '{0}' harus berupa tabel kolom tunggal.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Skema tidak valid, diharapkan kolom nilai teks untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Skema tidak valid, diharapkan kolom nilai tanggal untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Skema tidak valid, diharapkan kolom nilai numerik untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Skema tidak valid, diharapkan kolom nilai warna untuk '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Skema tidak valid, diharapkan kolom nilai {0} untuk '{1}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematika &amp; statistik</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informasi</value>
@@ -4789,6 +4788,26 @@
     <value>Rumus bernama harus merupakan ekspresi.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Fungsi yang ditentukan pengguna harus memiliki isi.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Fungsi {0} telah ditentukan.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} adalah duplikat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tipe {0} tidak diketahui.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Tipe pengembalian fungsi yang dinyatakan tidak cocok dengan tipe pengembalian dari isi fungsi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah ada.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' adalah fungsi yang dikenali, tetapi tidak didukung.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Konversi jenis gagal karena nilai yang diberikan adalah jenis '{0}', yang diharapkan adalah jenis '{1}'.</value>
     
   </data>
 </root>

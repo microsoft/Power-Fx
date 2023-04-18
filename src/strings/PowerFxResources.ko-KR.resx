@@ -1465,6 +1465,14 @@
     <value>입력</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>한정자</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>한정자</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>텍스트 값의 시작 부분의 지정된 문자 수를 반환합니다.</value>
     
@@ -1801,20 +1809,8 @@
     <value>'{0}'의 첫 번째 인수는 단일 열 테이블이어야 합니다.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 텍스트 값의 열이 필요합니다.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 날짜 값의 열이 필요합니다.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 숫자 값의 열이 필요합니다.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>잘못된 스키마입니다. '{0}'에 대해 색 값의 열이 필요합니다.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>잘못된 스키마입니다. '{1}'에 대해 {0} 값의 열이 필요합니다.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>수학 및 통계</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>정보</value>
@@ -4789,6 +4788,26 @@
     <value>이름이 지정된 수식은 식이어야 합니다.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>사용자 정의 함수에는 본문이 있어야 합니다.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>함수 {0}이(가) 이미 정의되어 있습니다.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>매개 변수 {0}이(가) 중복됩니다.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>알 수 없는 형식 {0}입니다.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>명시된 함수 반환 형식이 함수 본문의 반환 형식과 일치하지 않습니다.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'이(가) 이미 있습니다.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}'은(는) 인식되었지만 지원되지 않는 함수입니다.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>지정된 값이 '{0}' 형식이었으므로 형식을 변환하지 못했습니다. 필요한 형식은 '{1}'입니다.</value>
     
   </data>
 </root>

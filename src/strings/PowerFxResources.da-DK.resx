@@ -1465,6 +1465,14 @@
     <value>input</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Returnerer det angivne antal tegn fra starten af en tekstværdi.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Det første argument for "{0}" skal være en tabel med én kolonne.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Ugyldigt skema, forventede en kolonne med tekstværdier for '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Ugyldigt skema, forventede en kolonne med datoværdier for '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Ugyldigt skema, forventede en kolonne med numeriske værdier for '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Ugyldigt skema, forventede en kolonne med farveværdier for '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Ugyldigt skema. Forventede en kolonne {0} med datoværdier for "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik og statistisk</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Oplysninger</value>
@@ -4789,6 +4788,26 @@
     <value>Den navngivne formel skal være et udtryk.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Brugerdefineret funktion skal have et brødtekst.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funktionen {0} er allerede defineret.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameteren {0} er en dublet.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Ukendt type {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Den angivne funktionsreturtype matcher ikke returtypen af funktionens brødtekst.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' findes allerede.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' er en genkendt, men ikke understøttet funktion.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Typekonverteringen mislykkedes, fordi den angivne værdi var af typen "{0}". Typen "{1}" forventes.</value>
     
   </data>
 </root>

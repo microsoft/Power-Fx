@@ -1465,6 +1465,14 @@
     <value>syöte</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>määrite</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>määrite</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Palauttaa määritetyn määrän merkkejä tekstiarvon alusta.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Kohteen {0} ensimmäisen argumentin tulee olla yksisarakkeinen taulukko.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin tekstiarvojen saraketta kohteelle {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin päivämääräarvojen saraketta kohteelle {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin numeeristen arvojen saraketta kohteelle {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Virheellinen rakenne, odotettiin väriarvojen saraketta kohteelle {0}.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Virheellinen rakenne, odotettiin saraketta, jossa on {0} arvoa kohteelle {1}.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematiikka ja tilastot</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Tiedot</value>
@@ -4789,6 +4788,26 @@
     <value>Nimetyn kaavan on oltava lauseke.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Käyttäjän määrittämässä funktiossa on oltava teksti.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Toiminto {0} on jo määritetty.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametri {0} on kaksoiskappale.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tuntematon tyyppi {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Ilmoitettu toiminnon palautustyyppi ei vastaa toiminnon rungon palautustyyppiä.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on jo olemassa.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} on tunnistettu toiminto, mutta sitä ei tueta.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Tyypin muuntaminen epäonnistui, koska annettu arvo oli tyypiltään {0}, odotettiin tyyppiä {1}.</value>
     
   </data>
 </root>

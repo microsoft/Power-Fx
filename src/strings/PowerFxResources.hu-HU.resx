@@ -1465,6 +1465,14 @@
     <value>bemenet</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>módosító</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>módosító</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>A megadott számú karaktert adja vissza egy szöveges érték elejéről.</value>
     
@@ -1801,20 +1809,8 @@
     <value>A(z) {0} első argumentumának egyoszlopos táblának kell lennie.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy szöveges értékeket tartalmazó oszlopot kell megadni.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy dátumértékeket tartalmazó oszlopot kell megadni.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy számértékeket tartalmazó oszlopot kell megadni.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Érvénytelen séma. A(z) {0} esetében egy színértékeket tartalmazó oszlopot kell megadni.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Érvénytelen séma. A(z) {1} értékei esetében egy {0} oszlopot kell megadni.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -2322,6 +2318,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematikai és statisztikai</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Információ</value>
@@ -4789,6 +4788,26 @@
     <value>A megnevezett képletnek kifejezésnek kell lennie.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>A felhasználó által definiált függvénynek rendelkeznie kell egy törzzsel.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>A(z) {0} funkció már meg van határozva.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>A {0} paraméter duplikált elem.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Ismeretlen típusú {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>A funkció visszaadott típusa nem egyezik meg a függvénytest visszaküldési típusával.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A(z) '{0}' NamedFormula már létezik.</value>
   </data>
@@ -4913,6 +4932,10 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>A(z) '{0}' egy felismert, de nem támogatott függvény.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>A típus átalakítása nem sikerült, mert a megadott érték „{0}” típusú, a várt érték pedig „{1}” típusú.</value>
     
   </data>
 </root>
