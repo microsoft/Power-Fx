@@ -759,7 +759,7 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errors);
             }
 
-            TryGetInt(irContext, start, out int start0Based);
+            TryGetInt(start, out int start0Based);
             start0Based = start0Based - 1;
 
             string str = ((StringValue)args[0]).Value;
@@ -768,7 +768,7 @@ namespace Microsoft.PowerFx.Functions
                 return new StringValue(irContext, string.Empty);
             }
 
-            TryGetInt(irContext, count, out int countValue);
+            TryGetInt(count, out int countValue);
             var minCount = Math.Min(countValue, str.Length - start0Based);
             var result = str.Substring(start0Based, minCount);
 
@@ -829,7 +829,7 @@ namespace Microsoft.PowerFx.Functions
                 throw new NotImplementedException("Should have been handled by IR");
             }
 
-            TryGetInt(irContext, count, out int cnt);
+            TryGetInt(count, out int cnt);
 
             return new StringValue(irContext, leftOrRight(source.Value, cnt));
         }
@@ -839,7 +839,7 @@ namespace Microsoft.PowerFx.Functions
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
 
-            if (!TryGetInt(irContext, args[2], out int startIndexValue))
+            if (!TryGetInt(args[2], out int startIndexValue))
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
@@ -1073,7 +1073,7 @@ namespace Microsoft.PowerFx.Functions
             return resultDateTime.UtcDateTime;
         }
 
-        internal static bool TryGetInt(IRContext irContext, FormulaValue value, out int outputValue)
+        internal static bool TryGetInt(FormulaValue value, out int outputValue)
         {
             double inputValue;
             outputValue = int.MinValue;
@@ -1084,7 +1084,7 @@ namespace Microsoft.PowerFx.Functions
                     inputValue = n.Value;
                     break;
                 case DecimalValue w:
-                    inputValue = DecimalToNumber(irContext, w).Value;
+                    inputValue = (double)w.Value;
                     break;
                 default:
                     return false;

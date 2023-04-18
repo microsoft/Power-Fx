@@ -459,7 +459,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Time(IRContext irContext, NumberValue[] args)
         {
-            if (args.Length < 4 || !TryGetInt(irContext, args[0], out int hour) || !TryGetInt(irContext, args[1], out int minute) || !TryGetInt(irContext, args[2], out int second) || !TryGetInt(irContext, args[3], out int millisecond))
+            if (args.Length < 4 || !TryGetInt(args[0], out int hour) || !TryGetInt(args[1], out int minute) || !TryGetInt(args[2], out int second) || !TryGetInt(args[3], out int millisecond))
             {
                 return CommonErrors.InvalidDateTimeError(irContext);
             }
