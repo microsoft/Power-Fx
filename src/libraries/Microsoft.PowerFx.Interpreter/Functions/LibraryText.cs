@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -867,20 +866,20 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            if (start >= int.MaxValue)
+            if (!TryGetInt((NumberValue)args[1], out int start0Based))
             {
-                start = source.Length + 1;
+                start0Based = source.Length + 1;
             }
 
-            var start0Based = (int)(start - 1);
+            start0Based = start0Based - 1;
             var prefix = start0Based < source.Length ? source.Substring(0, start0Based) : source;
 
-            if (count > int.MaxValue)
+            if (!TryGetInt((NumberValue)args[2], out int cnt))
             {
-                count = int.MaxValue - start0Based;
+                cnt = cnt - start0Based;
             }
 
-            var suffixIndex = start0Based + (int)count;
+            var suffixIndex = start0Based + cnt;
             var suffix = suffixIndex < source.Length ? source.Substring(suffixIndex) : string.Empty;
             var result = prefix + replacement + suffix;
 
@@ -952,7 +951,7 @@ namespace Microsoft.PowerFx.Functions
                     return source;
                 }
 
-                instanceNum = (int)nv.Value;
+                TryGetInt(nv, out instanceNum);
             }
 
             // Compute max possible memory this operation may need.
