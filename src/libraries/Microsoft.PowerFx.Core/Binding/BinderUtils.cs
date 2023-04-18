@@ -1023,6 +1023,20 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult() { Coercions = new[] { new BinderCoercionResult() { Node = right, CoercedType = typeLeft } } };
             }
 
+            // Special case for comparing option set values backed by numbers with decimal values
+            if ((typeLeft.Kind == DKind.OptionSetValue && typeLeft.OptionSetInfo?.BackingKind == DKind.Number && typeRight.Kind == DKind.Decimal) ||
+                (typeRight.Kind == DKind.OptionSetValue && typeRight.OptionSetInfo?.BackingKind == DKind.Number && typeLeft.Kind == DKind.Decimal))
+            {
+                return new BinderCheckTypeResult
+                {
+                    Coercions = new[]
+                    {
+                        new BinderCoercionResult { Node = left, CoercedType = DType.Number },
+                        new BinderCoercionResult { Node = right, CoercedType = DType.Number }
+                    }
+                };
+            }
+
             // Special case for view values, it should produce an error when the base views are different
             if (typeLeft.Kind == DKind.ViewValue && !typeLeft.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
             {

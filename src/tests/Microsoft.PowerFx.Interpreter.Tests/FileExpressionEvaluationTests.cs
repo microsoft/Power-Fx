@@ -32,13 +32,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // The intent of SKIPFILE is to be a permanent mode selection for tests that are range/precision sensitive.
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "NumberIsFloat")]
-        public void NoFeatures_Float(ExpressionTestCase testCase)
-        {
-            RunExpressionTestCase(testCase, Features.None, numberIsFloat: true);
-        }
-
-        [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat")]
         public void Canavs_Float(ExpressionTestCase testCase)
         {
@@ -46,20 +39,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 TableSyntaxDoesntWrapRecords = true,
                 ConsistentOneColumnTableResult = true
-            };
-
-            RunExpressionTestCase(testCase, features, numberIsFloat: true);
-        }
-
-        [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,NumberIsFloat")]
-        public void Canavs_Float_1(ExpressionTestCase testCase)
-        {
-            // abcdef
-
-            var features = new Features()
-            {
-                TableSyntaxDoesntWrapRecords = true,
             };
 
             RunExpressionTestCase(testCase, features, numberIsFloat: true);

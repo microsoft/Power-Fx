@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
@@ -31,7 +32,7 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
-        private const string OptionNoFeatures = "NoFeatures";
+        private const string OptionFeaturesNone = "FeaturesNone";
 
         private const string OptionPowerFxV1 = "PowerFxV1";
 
@@ -53,7 +54,7 @@ namespace Microsoft.PowerFx
                 { OptionFormatTable, OptionFormatTable },
                 { OptionNumberIsFloat, OptionNumberIsFloat },
                 { OptionLargeCallDepth, OptionLargeCallDepth },
-                { OptionNoFeatures, OptionNoFeatures },
+                { OptionFeaturesNone, OptionFeaturesNone },
                 { OptionPowerFxV1, OptionPowerFxV1 }
             };
 
@@ -625,9 +626,16 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionNoFeatures.ToLower(CultureInfo.InvariantCulture))
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionFeaturesNone.ToLower(CultureInfo.InvariantCulture))
                 {
-//                    _features = Features.None;
+                    foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    {
+                        if (prop.PropertyType == typeof(bool) && prop.CanWrite)
+                        {
+                            prop.SetValue(_features, false);
+                        }
+                    }
+
                     ResetEngine();
                     return value;
                 }
