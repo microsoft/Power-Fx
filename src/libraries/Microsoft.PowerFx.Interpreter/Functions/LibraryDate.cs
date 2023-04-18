@@ -459,7 +459,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Time(IRContext irContext, NumberValue[] args)
         {
-            if (args.Length < 4 || !TryGetInt(args[0].Value, out int hour) || !TryGetInt(args[1].Value, out int minute) || !TryGetInt(args[2].Value, out int second) || !TryGetInt(args[3].Value, out int millisecond))
+            if (args.Length < 4 || !TryGetInt(irContext, args[0], out int hour) || !TryGetInt(irContext, args[1], out int minute) || !TryGetInt(irContext, args[2], out int second) || !TryGetInt(irContext, args[3], out int millisecond))
             {
                 return CommonErrors.InvalidDateTimeError(irContext);
             }
@@ -655,18 +655,6 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return CommonErrors.InvalidDateTimeError(irContext);
             }
-        }
-
-        private static bool TryGetInt(double inputValue, out int outputValue)
-        {
-            outputValue = 0;
-            if (inputValue < -32767d || inputValue > 32767d)
-            {
-                return false;
-            }
-
-            outputValue = (int)inputValue;
-            return true;
         }
     }
 }

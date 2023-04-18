@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -758,27 +759,17 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errors);
             }
 
-            var source = (StringValue)args[0];
-            double startValue = start.Value;
-            if (startValue > int.MaxValue)
-            {
-                startValue = int.MaxValue;
-            }
+            TryGetInt(irContext, start, out int start0Based);
+            start0Based = start0Based - 1;
 
-            var start0Based = (int)(startValue - 1);
-            string str = source.Value;
+            string str = ((StringValue)args[0]).Value;
             if (str == string.Empty || start0Based >= str.Length)
             {
                 return new StringValue(irContext, string.Empty);
             }
 
-            double countValue = count.Value;
-            if (countValue > int.MaxValue)
-            {
-                countValue = int.MaxValue;
-            }
-
-            var minCount = Math.Min((int)countValue, str.Length - start0Based);
+            TryGetInt(irContext, count, out int countValue);
+            var minCount = Math.Min(countValue, str.Length - start0Based);
             var result = str.Substring(start0Based, minCount);
 
             return new StringValue(irContext, result);
@@ -838,7 +829,7 @@ namespace Microsoft.PowerFx.Functions
                 throw new NotImplementedException("Should have been handled by IR");
             }
 
-            TryGetIntValue(count.Value, out int cnt);
+            TryGetInt(irContext, count, out int cnt);
 
             return new StringValue(irContext, leftOrRight(source.Value, cnt));
         }
@@ -848,7 +839,7 @@ namespace Microsoft.PowerFx.Functions
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
 
-            if (!TryGetIntValue(((NumberValue)args[2]).Value, out int startIndexValue))
+            if (!TryGetInt(irContext, args[2], out int startIndexValue))
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
@@ -1082,8 +1073,23 @@ namespace Microsoft.PowerFx.Functions
             return resultDateTime.UtcDateTime;
         }
 
-        private static bool TryGetIntValue(double inputValue, out int outputValue)
+        internal static bool TryGetInt(IRContext irContext, FormulaValue value, out int outputValue)
         {
+            double inputValue;
+            outputValue = int.MinValue;
+
+            switch (value)
+            {
+                case NumberValue n:
+                    inputValue = n.Value;
+                    break;
+                case DecimalValue w:
+                    inputValue = DecimalToNumber(irContext, w).Value;
+                    break;
+                default:
+                    return false;
+            }
+
             if (inputValue > int.MaxValue)
             {
                 outputValue = int.MaxValue;
