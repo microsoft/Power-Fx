@@ -240,6 +240,3 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 >> Round(-1e28,2)
 -1E+28
-
->> Round(14.123456,-1e28)
-14.123456

@@ -838,28 +838,20 @@ namespace Microsoft.PowerFx.Functions
                 throw new NotImplementedException("Should have been handled by IR");
             }
 
-            double cnt = count.Value;
+            TryGetIntValue(count.Value, out int cnt);
 
-            if (cnt > int.MaxValue)
-            {
-                cnt = int.MaxValue;
-            }
-
-            return new StringValue(irContext, leftOrRight(source.Value, (int)cnt));
+            return new StringValue(irContext, leftOrRight(source.Value, cnt));
         }
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
-            double arg2 = ((NumberValue)args[2]).Value;
 
-            if (arg2 < int.MinValue || arg2 > int.MaxValue)
+            if (!TryGetIntValue(((NumberValue)args[2]).Value, out int startIndexValue))
             {
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
-
-            var startIndexValue = (int)arg2;
 
             if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
             {
@@ -1088,6 +1080,23 @@ namespace Microsoft.PowerFx.Functions
         {
             var resultDateTime = new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified), fromTimeZone.GetUtcOffset(dateTime));
             return resultDateTime.UtcDateTime;
+        }
+
+        private static bool TryGetIntValue(double inputValue, out int outputValue)
+        {
+            if (inputValue > int.MaxValue)
+            {
+                outputValue = int.MaxValue;
+                return false;
+            }
+            else if (inputValue < int.MinValue)
+            {
+                outputValue = int.MinValue;
+                return false;
+            }
+
+            outputValue = (int)inputValue;
+            return true;
         }
     }
 }
