@@ -114,3 +114,6 @@ true
 
 >> Wyz("foo")
 Errors: Error 0-10: 'Wyz' is an unknown or unsupported function.
+
+>> Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
+Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
