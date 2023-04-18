@@ -718,26 +718,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CheckIntefaceSuccess()
-        {
-            var engine = new RecalcEngine();
-            CheckThroughInterface(engine);
-        }
-
-        private void CheckThroughInterface(IPowerFxEngine engine)
-        {
-            var result = engine.Check(
-               "3*2+x",
-               RecordType.Empty().Add(
-                   new NamedFormulaType("x", FormulaType.Number)));
-
-            Assert.True(result.IsSuccess);
-            Assert.True(result.ReturnType is NumberType);
-            Assert.Single(result.TopLevelIdentifiers);
-            Assert.Equal("x", result.TopLevelIdentifiers.First());
-        }
-
-        [Fact]
         public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig();

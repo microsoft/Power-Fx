@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public sealed class RecalcEngine : Engine, IPowerFxEngine
+    public sealed class RecalcEngine : Engine
     {
         // Map SlotIndex --> Value
         internal Dictionary<int, RecalcFormulaInfo> Formulas { get; } = new Dictionary<int, RecalcFormulaInfo>();

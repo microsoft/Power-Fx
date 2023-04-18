@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx
     /// Expose binding logic for Power Fx. 
     /// Derive from this to provide evaluation abilities. 
     /// </summary>
-    public class Engine : IPowerFxEngine
+    public class Engine
     {
         /// <summary>
         /// Configuration symbols for this Power Fx engine.
