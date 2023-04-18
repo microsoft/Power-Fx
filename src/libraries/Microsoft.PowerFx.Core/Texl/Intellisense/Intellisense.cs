@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Intellisense
     {
         protected readonly IReadOnlyList<ISuggestionHandler> _suggestionHandlers;
         protected readonly IEnumStore _enumStore;
-        protected readonly PowerFxConfig _config;        
+        protected readonly PowerFxConfig _config;
 
         public Intellisense(PowerFxConfig config, IEnumStore enumStore, IReadOnlyList<ISuggestionHandler> suggestionHandlers)
         {
@@ -39,6 +39,8 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.CheckValue(binding, "binding");
             Contracts.CheckValue(formula, "formula");
 
+            var allSupportedFunctions = binding.NameResolver.Functions;
+            
             // TODO: Hoist scenario tracking out of language module.
             // Guid suggestScenarioGuid = Common.Telemetry.Log.Instance.StartScenario("IntellisenseSuggest");
 
@@ -46,7 +48,7 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 if (!TryInitializeIntellisenseContext(context, binding, formula, out var intellisenseData))
                 {
-                    return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>());
+                    return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allSupportedFunctions);
                 }
 
                 foreach (var handler in _suggestionHandlers)
@@ -63,7 +65,7 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 // If there is any exception, we don't need to crash. Instead, Suggest() will simply 
                 // return an empty result set along with exception for client use.
-                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), ex);
+                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allSupportedFunctions, ex);
             }
 
             // TODO: Hoist scenario tracking out of language module.
@@ -264,7 +266,7 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(intellisenseData);
-
+            var allSupportedFunctions = intellisenseData.Binding.NameResolver.Functions;
             var expectedType = intellisenseData.ExpectedType;
 
             TypeMatchPriority(expectedType, intellisenseData.Suggestions, _config.Features.PowerFxV1CompatibilityRules);
@@ -284,7 +286,7 @@ namespace Microsoft.PowerFx.Intellisense
             intellisenseData.SubstringSuggestions.Sort(culture);
             resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
 
-            return new IntellisenseResult(intellisenseData, resultSuggestions);
+            return new IntellisenseResult(intellisenseData, resultSuggestions, allSupportedFunctions);
         }
     }
 

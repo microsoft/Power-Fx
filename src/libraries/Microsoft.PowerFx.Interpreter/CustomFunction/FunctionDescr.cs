@@ -27,9 +27,7 @@ namespace Microsoft.PowerFx
 
         internal BigInteger LamdaParamMask { get; }
 
-        internal IEnumerable<CustomFunctionSignatureHelper> ArgumentSignatures { get; }
-
-        public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, Type configType, BigInteger lamdaParamMask, IEnumerable<CustomFunctionSignatureHelper> argumentSignatures, bool isAsync = false)
+        public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, Type configType, BigInteger lamdaParamMask, bool isAsync = false)
         {
             Name = name;
             Method = method;
@@ -38,7 +36,6 @@ namespace Microsoft.PowerFx
             ConfigType = configType;
             IsAsync = isAsync;
             LamdaParamMask = lamdaParamMask;
-            ArgumentSignatures = argumentSignatures;
         }
     }
 }
