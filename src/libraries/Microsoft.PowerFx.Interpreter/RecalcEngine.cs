@@ -61,19 +61,6 @@ namespace Microsoft.PowerFx
             return CreateResolverInternal();
         }
 
-        /// <summary>
-        /// Create an evaluator over the existing binding.
-        /// </summary>
-        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
-        /// <returns></returns>
-        [Obsolete("Call CheckResult.GetEvaluator()")]
-        public static IExpression CreateEvaluatorDirect(CheckResult result)
-        {
-            var eval = result.GetEvaluator();
-            var eval2 = (ParsedExpression)eval;
-            return eval2;
-        }
-
         // Event handler fired when we update symbol values. 
         private void OnSymbolValuesOnUpdate(ISymbolSlot slot, FormulaValue arg2)
         {

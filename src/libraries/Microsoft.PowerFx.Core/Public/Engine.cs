@@ -193,26 +193,6 @@ namespace Microsoft.PowerFx
             return check;
         }
 
-        /// <summary>
-        /// Type check a formula without executing it. 
-        /// </summary>
-        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string, ParserOptions)"/>.</param>
-        /// <param name="parameterType">types of additional args to pass.</param>
-        /// <param name="options">parser options to use.</param>
-        /// <returns></returns>
-        [Obsolete("Use other check overload. Shouldn't need both ParserOptions and ParseResult.")]
-        public CheckResult Check(ParseResult parse, RecordType parameterType, ParserOptions options)
-        {
-            return Check(parse, parameterType);
-        }
-
-        [Obsolete("Use other check overload. Shouldn't need both ParserOptions and ParseResult.")]
-        internal CheckResult Check(ParseResult parse, ParserOptions options)
-        {
-            parse.Options = options;
-            return Check(parse, null, options);
-        }
-
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
         {
             var check = new CheckResult(this)
@@ -342,25 +322,6 @@ namespace Microsoft.PowerFx
             // So these both become available to intellisense. 
             var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = this.CreateIntellisense();
-            var suggestions = intellisense.Suggest(context, binding, formula);
-
-            return suggestions;
-        }
-
-        /// <summary>
-        /// Get intellisense from the formula, with parser options.
-        /// </summary>
-        [Obsolete("Use overload without expression")]
-        public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
-        {            
-            var binding = checkResult.Binding;
-            var formula = new Formula(expression, checkResult.ParserCultureInfo);
-            formula.ApplyParse(checkResult.Parse);
-
-            // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
-            // So these both become available to intellisense. 
-            var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;
