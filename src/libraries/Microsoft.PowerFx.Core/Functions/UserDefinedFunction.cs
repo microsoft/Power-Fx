@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Functions
             this.UdfBody = body;
         }
 
-        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, INameResolver functionNameResolver = null)
+        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null, INameResolver functionNameResolver = null)
         {
             if (nameResolver is null)
             {
@@ -59,8 +59,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 throw new ArgumentNullException(nameof(documentBinderGlue));
             }
 
-            var bindingConfig = new BindingConfig(this._isImperative);
-            var binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Merge(nameResolver, _parametersRecordType, functionNameResolver), bindingConfig);
+            bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
+            var binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Merge(nameResolver, _parametersRecordType, functionNameResolver), bindingConfig, features: features);
 
             CheckTypesOnDeclaration(binding.CheckTypesContext, binding.ResultType, binding.ErrorContainer);
             userDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(binding, _args, binding.ErrorContainer);
