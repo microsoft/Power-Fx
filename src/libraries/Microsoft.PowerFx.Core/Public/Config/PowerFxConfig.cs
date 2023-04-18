@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx
             return config;
         }
 
-        // For PAClient cases - JSRunner,Dataverse. These don't derive from Engine. 
+        // For PAClient cases - JSRunner. These don't derive from Engine. 
         [Obsolete("Migrate to SymbolTables")]
         internal void SetCoreFunctions(IEnumerable<TexlFunction> functions)
         {
