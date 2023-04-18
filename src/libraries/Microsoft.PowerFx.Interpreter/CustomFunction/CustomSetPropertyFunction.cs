@@ -32,31 +32,14 @@ namespace Microsoft.PowerFx
 
         public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
-        private readonly IEnumerable<CustomFunctionSignatureHelper> _argumentSignatures;
-
         public CustomSetPropertyFunction(string name)
-            : this(name, null)
+            : base(DPath.Root, name, name, CustomFunctionUtility.SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
         {
         }
-
-        public CustomSetPropertyFunction(string name, IEnumerable<CustomFunctionSignatureHelper> argumentSignatures)
-            : base(DPath.Root, name, name, SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
-        {
-            _argumentSignatures = argumentSignatures;
-            if (_argumentSignatures == null)
-            {
-                _argumentSignatures = new CustomFunctionSignatureHelper[] { new CustomFunctionSignatureHelper("Arg 1", "Arg 2") };
-            }
-        }
-
-        private static StringGetter SG(string text) => CustomTexlFunction.SG(text);
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            foreach (var signature in CustomTexlFunction.GetCustomSignatures(_argumentSignatures))
-            {
-                yield return signature;
-            }
+            yield return CustomFunctionUtility.GenerateArgSignature(ParamTypes);
         }
 
         // 2nd argument should be same type as 1st argument. 

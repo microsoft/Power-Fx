@@ -28,25 +28,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests.CustomFunction
 
         private abstract class TestOverload : ReflectionFunction
         {
-            public TestOverload(FormulaType param)
-                : base("Overload", FormulaType.String, argSignature: GetArgSignatures(), param)
+            public TestOverload(params FormulaType[] param)
+                : base("Overload", FormulaType.String, param)
             {
-            }
-
-            private static IEnumerable<CustomFunctionSignatureHelper> GetArgSignatures()
-            {
-                return new[]
-                {
-                        new CustomFunctionSignatureHelper("arg1 : Number", "arg2 : String"),
-                        new CustomFunctionSignatureHelper("arg1 : String")
-                };
             }
         }
 
         private class TestOverload1 : TestOverload
         {
             public TestOverload1() 
-                : base(FormulaType.Number)
+                : base(FormulaType.Number, FormulaType.String)
             {
             }
 

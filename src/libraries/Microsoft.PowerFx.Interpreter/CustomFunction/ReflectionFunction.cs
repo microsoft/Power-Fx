@@ -46,20 +46,6 @@ namespace Microsoft.PowerFx
         // Explicitly provide types.
         // Necessary for Tables/Records
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
-            : this(name, returnType, null /*change*/, paramTypes)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
-        /// Explicitly provide types and argument signatures.
-        /// </summary>
-        /// <param name="name">Function Name.</param>
-        /// <param name="returnType">Return Type.</param>
-        /// <param name="argSignature">Provide list of <see cref="CustomFunctionSignatureHelper"/>
-        /// where each entry represents a single overload of the function.</param>
-        /// <param name="paramTypes">Parameter Types.</param>
-        protected ReflectionFunction(string name, FormulaType returnType, IEnumerable<CustomFunctionSignatureHelper> argSignature, params FormulaType[] paramTypes)
         {
             var t = GetType();
             var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
@@ -73,7 +59,7 @@ namespace Microsoft.PowerFx
 
             var configType = ConfigType ?? default;
 
-            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, argSignature, isAsync);
+            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
         }
 
         private FunctionDescr Scan()
@@ -124,13 +110,13 @@ namespace Microsoft.PowerFx
                         throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}. Only {typeof(Func<Task<BooleanValue>>)} is supported");
                     }
                     else
-                    { 
+                    {
                         // Unknown parameter type
                         throw new InvalidOperationException($"Unknown parameter type: {parameters[i].Name}, {parameters[i].ParameterType}");
                     }
                 }
 
-                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, null, isAsync);
+                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
             }
 
             return _info;
@@ -164,13 +150,13 @@ namespace Microsoft.PowerFx
             // Special case SetProperty. Use reference equality to opt into special casing.
             if (object.ReferenceEquals(info.Name, SetPropertyName))
             {
-                return new CustomSetPropertyFunction(info.Name, info.ArgumentSignatures)
+                return new CustomSetPropertyFunction(info.Name)
                 {
                     _impl = args => InvokeAsync(null, args, CancellationToken.None)
                 };
             }
 
-            return new CustomTexlFunction(info.Name, info.RetType, info.ArgumentSignatures, info.ParamTypes)
+            return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
             {
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
                 LamdaParamMask = info.LamdaParamMask,
@@ -280,8 +266,8 @@ namespace Microsoft.PowerFx
                 }
             }
 
-            var formulaResult = (FormulaValue)result;   
-            
+            var formulaResult = (FormulaValue)result;
+
             formulaResult ??= FormulaValue.NewBlank(_info.RetType);
 
             if (!formulaResult.Type._type.Accepts(_info.RetType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
