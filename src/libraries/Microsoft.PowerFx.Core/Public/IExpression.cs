@@ -17,25 +17,4 @@ namespace Microsoft.PowerFx
         [Obsolete("Use CheckResult.GetEvaluator() instead.")]
         Task<FormulaValue> EvalAsync(RecordValue parameters, CancellationToken cancellationToken);
     }
-
-    /// <summary>
-    /// Extensions for <see cref="IExpression"/>.
-    /// </summary>
-    public static class IExpressionExtensions
-    {
-        /// <summary>
-        /// Evaluate the expression with a given set of record values.
-        /// </summary>
-        [Obsolete("Use CheckResult.GetEvaluator() instead.")]
-        public static FormulaValue Eval(this IExpression expr, RecordValue parameters, CancellationToken cancellationToken)
-        {
-            return expr.EvalAsync(parameters, cancellationToken).Result;
-        }
-
-        [Obsolete("Use CheckResult.GetEvaluator() instead.")]
-        public static FormulaValue Eval(this IExpression expr, RecordValue parameters)
-        {
-            return expr.Eval(parameters, CancellationToken.None);
-        }
-    }
 }
