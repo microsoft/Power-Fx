@@ -75,6 +75,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
+                runner.CheckCancel();
+
                 if (first)
                 {
                     first = false;
