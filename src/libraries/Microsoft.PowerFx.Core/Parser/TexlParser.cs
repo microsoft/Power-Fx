@@ -77,15 +77,15 @@ namespace Microsoft.PowerFx.Core.Parser
             return parser.ParseUDFs(script);
         }
 
-        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, bool numberAsFloat, CultureInfo loc = null)
+        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, bool numberIsFloat, CultureInfo loc = null)
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas);
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas);
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
 
-            return parser.ParseUDFsAndNamedFormulas(script, numberAsFloat);
+            return parser.ParseUDFsAndNamedFormulas(script, numberIsFloat);
         }
 
         private ParseUDFsResult ParseUDFs(string script)
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, bool numberAsFloat)
+        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, bool numberIsFloat)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, numberAsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, numberIsFloat));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -330,7 +330,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         var result = ParseExpr(Precedence.None);
                         ParseTrivia();
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, numberAsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, numberIsFloat));
                     }
                     else
                     {
