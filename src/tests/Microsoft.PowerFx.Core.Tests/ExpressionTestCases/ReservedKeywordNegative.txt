@@ -79,3 +79,6 @@ Errors: Error 1-3: Unexpected characters. The formula contains 'As' where 'Ident
 
 >> {'Siblings':1}
 {Siblings:1}
+
+>> 3 Is 4
+Errors: Error 2-4: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 2-4: Expected operator. We expect an operator such as +, *, or & at this point in the formula.

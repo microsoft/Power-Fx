@@ -80,3 +80,6 @@ Errors: Error 1-9: Unexpected characters. The formula contains 'Error' where 'Id
 
 >> {'Siblings':1}
 {Siblings:1}
+
+>> 3 Is 4
+Errors: Error 2-4: Unexpected characters. Characters are used in the formula in an unexpected way.

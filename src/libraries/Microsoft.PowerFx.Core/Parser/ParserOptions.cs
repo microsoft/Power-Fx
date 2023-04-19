@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// If true, various words have been reserved and are not available for identifiers.
         /// </summary>
-        public bool ReservedKeywords { get; set; }
+        internal bool ReservedKeywords { get; set; }
 
         /// <summary>
         /// The culture that an expression will parse with. 

@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Syntax
         public const string FourSpaces = "    ";
         public const string LineBreakAndfourSpaces = "\n    ";
 
-        // Reserved Keywords
+        // Reserved but currently unused keywords
         public const string ReservedBlank = "blank";
         public const string ReservedNull = "null";
         public const string ReservedEmpty = "empty";
