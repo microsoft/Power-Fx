@@ -526,6 +526,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in rowsAsync)
             {
+                runner.CheckCancel();
+
                 rows.Add(await row.ConfigureAwait(false));
             }
 
