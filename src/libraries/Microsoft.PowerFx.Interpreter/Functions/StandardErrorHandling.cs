@@ -234,6 +234,8 @@ namespace Microsoft.PowerFx.Functions
                 var resultRows = new List<DValue<RecordValue>>();
                 foreach (var row in args[0].Rows)
                 {
+                    runner.CheckCancel();
+
                     if (row.IsValue)
                     {
                         var value = row.Value.GetField(inputColumnNameStr);
@@ -349,6 +351,8 @@ namespace Microsoft.PowerFx.Functions
                 var tabularArgRows = new DValue<RecordValue>[args.Length][];
                 for (var i = 0; i < args.Length; i++)
                 {
+                    runner.CheckCancel();
+
                     if (args[i] is TableValue tv)
                     {
                         tabularArgRows[i] = tv.Rows
@@ -359,10 +363,14 @@ namespace Microsoft.PowerFx.Functions
 
                 for (var i = 0; i < minTableSize; i++)
                 {
+                    runner.CheckCancel();
+
                     var functionArgs = new FormulaValue[args.Length];
                     ErrorValue errorRow = null;
                     for (var j = 0; j < args.Length; j++)
                     {
+                        runner.CheckCancel();
+
                         var arg = args[j];
                         if (arg is TableValue tv)
                         {
