@@ -1,27 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.FunctionArgValidators;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -248,6 +234,55 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.False(check.IsSuccess);
             Assert.NotEmpty(check.Errors);
             Assert.True(check.Errors.Where(er => er.Message.Contains(errorMessage)).Any());
+        }
+
+        // Regression test case
+        // https://github.com/microsoft/Power-Fx/issues/1335
+        [Theory]
+        [InlineData("Collect(checktable, {flavor: \"Strawberry\", quantity: 300 })")]
+        public void MutationNumberAsFloatTests(string expr)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
+            var fv = FormulaValueJSON.FromJson("100", numberIsFloat: true);
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("flavor", FormulaType.String))
+                .Add(new NamedFormulaType("quantity", fv.Type));
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("checktable", FormulaValue.NewTable(rType));
+
+            var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
+
+            var message = string.Empty;
+            if (check.Errors.Any())
+            {
+                message = check.Errors?.First().Message;
+            }
+
+            Assert.True(check.IsSuccess, message);
+        }
+
+        [Theory]
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })")]
+        public void MismatchErrorTests(string expr)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
+            var fv = FormulaValueJSON.FromJson("100", numberIsFloat: true);
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("subject", FormulaType.String))
+                .Add(new NamedFormulaType("poly", FormulaType.Build(DType.Polymorphic)));
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("t1", FormulaValue.NewTable(rType));
+
+            var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
+
+            Assert.False(check.IsSuccess);
+
+            // This error message is a mitigation.
+            Assert.Contains("The item you are trying to put into a table has a type that is not compatible with the table.", check.Errors.First().Message);
         }
     }
 }

@@ -196,6 +196,9 @@ namespace Microsoft.PowerFx.Functions
         public static bool TryFloat(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out NumberValue result)
         {
             result = null;
+
+            Contract.Assert(NumberValue.AllowedListConvertToNumber.Contains(value.Type));
+
             switch (value)
             {
                 case NumberValue n:
@@ -268,6 +271,9 @@ namespace Microsoft.PowerFx.Functions
         public static bool TryDecimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, out DecimalValue result)
         {
             result = null;
+
+            Contract.Assert(DecimalValue.AllowedListConvertToDecimal.Contains(value.Type));
+
             switch (value)
             {
                 case NumberValue n:

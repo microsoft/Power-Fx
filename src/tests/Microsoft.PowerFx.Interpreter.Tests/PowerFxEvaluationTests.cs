@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx;
@@ -341,11 +342,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 FormulaValue newValueDeserialized;
 
+                var sb = new StringBuilder();
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    UseCompactRepresentation = true,
+                };
+                newValue.ToExpression(sb, settings);
+
                 try
                 {
                     // Serialization test. Serialized expression must produce an identical result.
                     ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
-                    newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                 }
                 catch (InvalidOperationException e)
                 {
@@ -355,7 +363,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     {
                         // Serialization test. Serialized expression must produce an identical result.
                         ParserOptions options = new ParserOptions() { NumberIsFloat = true };
-                        newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                        newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                     }
                     else
                     {

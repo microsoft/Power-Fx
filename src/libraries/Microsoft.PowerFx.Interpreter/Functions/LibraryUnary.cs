@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     "-",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: ReplaceBlankWithFloatZero,
                     checkRuntimeTypes: DateNumberTimeOrDateTime,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<DecimalValue>(
                     "-",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroDecimal,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
                     checkRuntimeTypes: ExactValueType<DecimalValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<NumberValue>(
                     "%",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZero,
+                    replaceBlankValues: ReplaceBlankWithFloatZero,
                     checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<DecimalValue>(
                     "%",
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithZeroDecimal,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
                     checkRuntimeTypes: ExactValueType<DecimalValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
@@ -663,6 +663,9 @@ namespace Microsoft.PowerFx.Functions
                 case BooleanValue boolVal:
                     result = boolVal;
                     break;
+                case DecimalValue dec:
+                    result = DecimalToBoolean(irContext, new DecimalValue[] { dec });
+                    break;
             }
 
             return result != null;
@@ -724,7 +727,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue DecimalToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
         {
-            return NumberToDateTime(CreateFormattingInfo(runner), irContext, new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)args[0].Value));
+            return DecimalToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+        }
+
+        public static DateTimeValue DecimalToDateTime(FormattingInfo formatInfo, IRContext irContext, DecimalValue value)
+        {
+            return NumberToDateTime(formatInfo, irContext, new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)value.Value));
         }
 
         public static DateTimeValue NumberToDateTime(FormattingInfo formatInfo, IRContext irContext, NumberValue value)
@@ -770,6 +778,9 @@ namespace Microsoft.PowerFx.Functions
                     return TryDateTimeParse(formatInfo, irContext, st, out result);
                 case NumberValue num:
                     result = NumberToDateTime(formatInfo, irContext, num);
+                    break;
+                case DecimalValue dec:
+                    result = DecimalToDateTime(formatInfo, irContext, dec);
                     break;
                 case DateValue dv:
                     result = new DateTimeValue(irContext, dv.GetConvertedValue(formatInfo.TimeZoneInfo));
