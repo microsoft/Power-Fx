@@ -112,6 +112,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("Simple1.txt")]
         [InlineData("Collect.txt")]
+        [InlineData("Patch.txt")]
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
         [InlineData("ForAllMutate.txt")]
