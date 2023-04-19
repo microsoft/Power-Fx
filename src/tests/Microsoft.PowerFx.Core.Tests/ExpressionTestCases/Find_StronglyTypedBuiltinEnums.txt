@@ -1,4 +1,4 @@
-﻿#SKIPFILE: StronglyTypedBuiltinEnums
+﻿#SKIPFILE: disable:StronglyTypedBuiltinEnums
 
 >> Find("", "")
 1
@@ -249,31 +249,31 @@ Error({Kind:ErrorKind.Div0})
 Blank()
 
 >> Find(1, ErrorKind.BadRegex)
-1
-
->> Find(1, ErrorKind.BadRegex, 1)
-1
-
->> Find(1, ErrorKind.BadRegex, 2)
 Blank()
 
->> Find(1, ErrorKind.BadRegex, 3)
+>> Find("x", ErrorKind.BadRegex, 1)
+8
+
+>> Find("a", ErrorKind.BadRegex, 2)
+2
+
+>> Find("a", ErrorKind.BadRegex, 4)
 Blank()
 
->> Find(1, ErrorKind.BadRegex, 4)
+>> Find(1, ErrorKind.BadRegex, 20)
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Find(ErrorKind.BadRegex, 156)
-1
-
->> Find(ErrorKind.BadRegex, 156, 1)
-1
-
->> Find(ErrorKind.BadRegex, 156, 2)
 Blank()
 
->> Find(ErrorKind.BadRegex, 156, 4)
+>> Find(ErrorKind.BadRegex, "SoBadRegexSo", 1)
+3
+
+>> Find(ErrorKind.BadRegex, "SoBadRegexSo", 4)
 Blank()
 
->> Find(ErrorKind.BadRegex, 156, 5)
+>> Find(ErrorKind.BadRegex, "SoBadRegexSo", 8)
+Blank()
+
+>> Find(ErrorKind.BadRegex, "SoBadRegexSo", 20)
 Error({Kind:ErrorKind.InvalidArgument})

@@ -619,7 +619,7 @@ false
 false
 
 >> DateTime(1900,1,1,12,0,0) <  Time(12,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
+#SKIP awaint resolution of https://github.com/microsoft/Power-Fx/issues/1396, expected: false
 
 // comparison done on floating point due to Date/DateTime/Time
 >> DateTime(1900,1,1,12,0,0) <  Decimal("2.5000000000000000000002")
@@ -693,7 +693,7 @@ true
 
 // comp todo: but we allow time and datetime?  no error for =
 >> Time(1,0,0) <  DateTime(1899,12,30,1,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
+#SKIP awaint resolution of https://github.com/microsoft/Power-Fx/issues/1396, expected: false
 
 >> Time(3,0,0) <  Decimal("0.125")
 false

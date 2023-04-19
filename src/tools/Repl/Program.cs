@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx
 
         private const string OptionPowerFxV1 = "PowerFxV1";
 
-        private static Features _features = Features.PowerFxV1;
+        private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
         {
@@ -621,7 +621,14 @@ namespace Microsoft.PowerFx
 
                 if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionPowerFxV1.ToLower(CultureInfo.InvariantCulture))
                 {
-                    _features = Features.PowerFxV1;
+                    foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    {
+                        if (prop.PropertyType == typeof(bool) && prop.CanWrite && (bool)prop.GetValue(Features.PowerFxV1))
+                        {
+                            prop.SetValue(_features, value.Value);
+                        }
+                    }
+
                     ResetEngine();
                     return value;
                 }
@@ -632,7 +639,7 @@ namespace Microsoft.PowerFx
                     {
                         if (prop.PropertyType == typeof(bool) && prop.CanWrite)
                         {
-                            prop.SetValue(_features, false);
+                            prop.SetValue(_features, value.Value);
                         }
                     }
 

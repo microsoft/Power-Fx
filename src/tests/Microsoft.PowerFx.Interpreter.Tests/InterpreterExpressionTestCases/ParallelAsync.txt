@@ -1,4 +1,4 @@
-﻿#SETUP: AsyncTestSetup, EnableExpressionChaining
+﻿#SETUP: AsyncTestSetup, EnableExpressionChaining, disable:SupportColumnNamesAsIdentifiers
 
 // Testsetup adds these functions:
 // - Async(N)  returns N, but ... 

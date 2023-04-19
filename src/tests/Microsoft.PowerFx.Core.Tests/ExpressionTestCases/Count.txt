@@ -1,4 +1,6 @@
-﻿// ******** TABLE WITH NO BLANK RECORDS ********
+﻿#SETUP: TableSyntaxDoesntWrapRecords
+
+// ******** TABLE WITH NO BLANK RECORDS ********
 
 >> Count([0])
 1

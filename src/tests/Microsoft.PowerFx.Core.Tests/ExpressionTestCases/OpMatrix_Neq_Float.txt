@@ -1,4 +1,4 @@
-#SKIPFILE: disable:NumberIsFloat
+#SKIPFILE: disable:NumberIsFloat,PowerFxV1CompatibilityRules
 
 // NOT EQUALS
 

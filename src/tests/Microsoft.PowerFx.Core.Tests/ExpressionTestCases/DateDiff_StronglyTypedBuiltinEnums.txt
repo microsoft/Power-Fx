@@ -1,4 +1,4 @@
-﻿#SKIPFILE: StronglyTypedBuiltinEnums
+﻿#SKIPFILE: disable:StronglyTypedBuiltinEnums
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30))
 15
@@ -22,34 +22,34 @@ Error({Kind:ErrorKind.InvalidArgument})
 15
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
-15
+Errors: Error 44-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "days")
-15
+Errors: Error 44-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "DaYs")
-15
+Errors: Error 44-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2013,1,15) , Date(2012,1,30), TimeUnit.Days)
 -351
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "milliseconds")
-1296000000
+Errors: Error 44-58: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "seconds")
-1296000
+Errors: Error 44-53: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "minutes")
-21600
+Errors: Error 44-53: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "hours")
-360
+Errors: Error 44-51: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "quarters")
-0
+Errors: Error 44-54: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,7,30), "quarters")
-2
+Errors: Error 44-54: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Milliseconds)
 1296000000
@@ -73,13 +73,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 -21
 
 >> DateDiff(Date(2021,1,1), Date(2000,1,1), "Years")
--21
+Errors: Error 41-48: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2021,1,1), Date(2021,2,1), TimeUnit.Months)
 1
 
 >> DateDiff(Date(2021,1,1), Date(2021,2,1), "Months")
-1
+Errors: Error 41-49: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
 
 >> DateDiff(Date(2021,1,1), Date(2021,1,20), TimeUnit.Months)
 0
@@ -212,7 +212,7 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Div0})
 
 >> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), 1/0)
-Error({Kind:ErrorKind.Div0})
+Errors: Error 71-72: Invalid argument type (Decimal). Expecting a Enum (TimeUnit) value instead.
 
 // ******************************** COERCIONS ********************************
 

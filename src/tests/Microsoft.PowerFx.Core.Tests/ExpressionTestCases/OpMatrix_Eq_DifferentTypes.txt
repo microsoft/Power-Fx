@@ -1,3 +1,5 @@
+#SKIPFILE: PowerFxV1CompatibilityRules
+
 >> 1 = "1"
 false
 
@@ -39,4 +41,16 @@ true
 false
 
 >> 1000 = ErrorKind.Custom
+true
+
+>> "abc" = 23
+false
+
+>> 23 = "abc"
+false
+
+>> "abc" <> 23
+true
+
+>> 23 <> "abc"
 true

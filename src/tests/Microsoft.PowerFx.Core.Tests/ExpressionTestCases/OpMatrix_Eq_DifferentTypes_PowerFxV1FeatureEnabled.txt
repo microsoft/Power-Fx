@@ -1,11 +1,10 @@
-#SKIPFILE: disable:NumberIsFloat
-#SETUP: PowerFxV1CompatibilityRules
+#SKIPFILE: disable:PowerFxV1CompatibilityRules
 
 >> 1 = "1"
-Errors: Error 2-3: Incompatible types for comparison. These types can't be compared: Number, Text.
+Errors: Error 2-3: Incompatible types for comparison. These types can't be compared: Decimal, Text.
 
 >> 0 = false
-Errors: Error 2-3: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+Errors: Error 2-3: Incompatible types for comparison. These types can't be compared: Decimal, Boolean.
 
 // Second comparison ensures the test doesn't fail if it runs exactly at midnight
 >> With({n:Now(),t:Today()}, (t = n) && (Mod(Value(n), 1) > 0))
@@ -49,3 +48,15 @@ false
 
 >> 1000 = ErrorKind.Custom
 true
+
+>> "abc" = 23
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Text, Decimal.
+
+>> 23 = "abc"
+Errors: Error 3-4: Incompatible types for comparison. These types can't be compared: Decimal, Text.
+
+>> "abc" <> 23
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Text, Decimal.
+
+>> 23 <> "abc"
+Errors: Error 3-5: Incompatible types for comparison. These types can't be compared: Decimal, Text.

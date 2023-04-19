@@ -1,4 +1,5 @@
 #SKIPFILE: NumberIsFloat
+#SETUP: disable:SupportColumnNamesAsIdentifiers
 
 // non-decimal aware other functions
 

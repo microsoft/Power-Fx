@@ -16,11 +16,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
-        // File expression tests are run TWICE - once with and once without NumberIsFloat
+        // File expression tests are run multiple times for the different ways a host can use Power Fx.
+        // 
+        // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
+        // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
+        // 3. Default Canvas features with NumberIsFloat - the current default for Canvas apps.  Canvas
+        //    has an internal relationship with the compiler that allows it to run with a different mix of features.
+        // 4. No features with NumberIsFloat (occsional) - important for back compat convertes in Canvas as the
+        //    back compat converters depend on the feature mix being the same as when the original app was serialized.
         //
-        // Most tests are not sensitive to float vs. decimal and will pass in both modes without modification.
-        // If you aren't speficically testing numeric limits, stick to numbers that are less than +/-1E20 which is
-        // a safe range for both float and decimal and practically where most makers will work.  
+        // For floating point, most tests are not sensitive to float vs. decimal and will pass in both modes
+        // without modification.  If you aren't speficically testing numeric limits, stick to numbers that are
+        // less than +/-1E20 which is a safe range for both float and decimal and practically where most makers will work.  
         //
         // For testing large float numbers (for example, 1E100 or 1E300) or high precision decimals
         // (for example, 1.00000000000000000000001), individual files can be excluded from one of the two modes
@@ -30,11 +37,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         //
         // Skipped files do not show up in the list of skipped tests, tests are skipped before being added in TxtFileData.
         // The intent of SKIPFILE is to be a permanent mode selection for tests that are range/precision sensitive.
+        // 
+        // You can also use #SETUP: TableSyntaxDoesntWrapRecords, for example, to turn on this feature for a given file
+        // to use that feature.  If the point of the file is not to test that feature, on or off, there is no need
+        // to duplicate the file.  If point is to test that feature, duplicate the file and add #SKIPFILE directives instead.
 
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat")]
-        public void Canavs_Float(ExpressionTestCase testCase)
+        public void Canvas_Float(ExpressionTestCase testCase)
         {
+            // current default features in Canvas
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
@@ -57,6 +69,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true);
         }
+
+#if false
+        // This does not need to be run every time, but should be run periodically.
+        // Keeping this clean ensures that back compat converters in Canvas continue to function properly.
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "NumberIsFloat")]
+        public void None_Float(ExpressionTestCase testCase)
+        {
+            RunExpressionTestCase(testCase, Features.None, numberIsFloat: true);
+        }
+#endif
 
         private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat)
         {
@@ -144,7 +167,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ScanForTxtParseErrors()
         {
-            var method = GetType().GetMethod(nameof(InterpreterTestCase));
+            var method = GetType().GetMethod(nameof(Canvas_Float));
             var attr = (TxtFileDataAttribute)method.GetCustomAttributes(typeof(TxtFileDataAttribute), false)[0];
 
             // Verify this runs without throwing an exception.

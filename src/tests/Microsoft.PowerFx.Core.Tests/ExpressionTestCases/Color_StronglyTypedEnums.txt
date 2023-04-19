@@ -1,4 +1,4 @@
-﻿#SKIPFILE: StronglyTypedBuiltinEnums
+﻿#SKIPFILE: disable:StronglyTypedBuiltinEnums
 
 >> ColorValue("#01020304")
 RGBA(1,2,3,0.016)
@@ -64,13 +64,13 @@ Blank()
 Blank()
 
 >> Color.Red
-RGBA(255,0,0,1)
+Color.Red
 
 >> Color.Black
-RGBA(0,0,0,1)
+Color.Black
 
 >> Color.ForestGreen
-RGBA(34,139,34,1)
+Color.ForestGreen
 
 >> Color.AliceBlue
-RGBA(240,248,255,1)
+Color.AliceBlue

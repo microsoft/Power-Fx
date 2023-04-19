@@ -621,7 +621,7 @@ false
 false
 
 >> DateTime(1900,1,1,12,0,0) <  Time(12,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
+false
 
 >> DateTime(1900,1,1,12,0,0) <  Decimal("2.5000000000000000000002")
 true
@@ -694,7 +694,7 @@ true
 
 // comp todo: but we allow time and datetime?  no error for =
 >> Time(1,0,0) <  DateTime(1899,12,30,1,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
+false
 
 >> Time(3,0,0) <  Decimal("0.125")
 false

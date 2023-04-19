@@ -1,4 +1,4 @@
-#SETUP: disable:ConsistentOneColumnTableResult
+#SETUP: disable:ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
 
 >> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Substitute(emptyTable, emptyTable, emptyTable))
 Table()
@@ -16,17 +16,17 @@ Table({name:"Xbcdefg"},{name:"YY hh ii"})
 Table({name:"abcdefX"},{name:"YY hh ii"})
 
 >> Substitute( "abcdefg", [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
-Table({Value:"Xbcdefg"},{Value:"abcdefY"})
+Table({Result:"Xbcdefg"},{Result:"abcdefY"})
 
 >> Substitute("aaabbbccc", "a", "X", [1,2])
-Table({Value:"Xaabbbccc"},{Value:"aXabbbccc"})
+Table({Result:"Xaabbbccc"},{Result:"aXabbbccc"})
 
 >> Substitute(["aaabbbccc", "xxxyyyzzz"], ["c", "y"], ["C", "Y"], [2, 3])
 Table({Value:"aaabbbcCc"},{Value:"xxxyyYzzz"})
 
 // ##### Blank arguments
 >> Substitute(If(1<0,"c"), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
-Table({Value:""},{Value:""})
+Table({Result:""},{Result:""})
 
 >> Substitute(If(1<0,["a","b"]), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
 Blank()

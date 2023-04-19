@@ -1,4 +1,4 @@
-#SKIPFILE: disable:NumberIsFloat
+#SKIPFILE: disable:NumberIsFloat,PowerFxV1CompatibilityRules
 
 // EQUALS
 
@@ -672,7 +672,7 @@ false
 >> Time(9,0,0) = Date(1900,1,2)
 false
 
-// comp todo: but we allow time and datetime?
+// NOTE This returns true with PowerFxV1 and on Canvas
 >> Time(1,0,0) = DateTime(1899,12,30,1,0,0)
 false
 
