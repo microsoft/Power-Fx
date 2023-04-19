@@ -78,11 +78,6 @@ namespace Microsoft.PowerFx
             PowerFxV1CompatibilityRules = true,
         };
 
-        public static Features PowerFxV1Compat => new Features
-        {
-            PowerFxV1CompatibilityRules = true,
-        };
-
         internal Features()
         {
         }

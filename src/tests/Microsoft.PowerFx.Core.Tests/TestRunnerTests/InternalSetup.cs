@@ -72,24 +72,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     if (isDisable)
                     {
-#if false
-                        if (!iSetup.Flags.HasFlag(flag))
-                        {
-                            throw new InvalidOperationException($"Flag {partName} is already disabled");
-                        }
-#endif
-
                         iSetup.Flags &= ~flag;
                     }
                     else
                     {
-#if false
-                        if (iSetup.Flags.HasFlag(flag))
-                        {
-                            throw new InvalidOperationException($"Flag {partName} is already enabled");
-                        }
-#endif
-
                         iSetup.Flags |= flag;
                     }
 
@@ -99,24 +85,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     if (isDisable)
                     {
-#if false
-                        if (!((bool)prop.GetValue(iSetup.Features)))
-                        {
-                            throw new InvalidOperationException($"Feature {partName} is already disabled");
-                        }
-#endif
-
                         prop.SetValue(iSetup.Features, false);
                     }
                     else
                     {
-#if false
-                        if ((bool)prop.GetValue(iSetup.Features))
-                        {
-                            throw new InvalidOperationException($"Feature {partName} is already enabled");
-                        }
-#endif
-
                         prop.SetValue(iSetup.Features, true);
                     }
 

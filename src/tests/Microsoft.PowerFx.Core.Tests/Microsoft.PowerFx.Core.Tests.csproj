@@ -47,11 +47,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="expressiontestcases\Disable_ConsistentOneColumnTableResult.txt" />
-    <None Remove="ExpressionTestCases\LeftRightT_ConsistentOneColumnTableResultDisabled.txt" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
