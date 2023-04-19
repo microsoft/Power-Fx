@@ -566,6 +566,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
+                runner.CheckCancel();
+
                 SymbolContext childContext;
                 if (row.IsValue)
                 {
