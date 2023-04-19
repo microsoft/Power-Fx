@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Syntax
     {
         private readonly INameResolver _globalNameResolver;
         private readonly IBinderGlue _documentBinderGlue;
+        private readonly BindingConfig _bindingConfig;
 
         /// <summary>
         /// A script containing one or more UDFs.
@@ -44,11 +45,14 @@ namespace Microsoft.PowerFx.Syntax
         private readonly CultureInfo _loc;
         private readonly bool _numberAsFloat;
         private readonly IUserDefinitionSemanticsHandler _userDefinitionSemanticsHandler;
+        private readonly Features _features;
 
-        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, CultureInfo loc = null, bool numberAsFloat = false, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null)
+        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, CultureInfo loc = null, bool numberAsFloat = false, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null)
         {
+            _features = features ?? Features.None;
             _globalNameResolver = globalNameResolver;
             _documentBinderGlue = documentBinderGlue;
+            _bindingConfig = bindingConfig;
             _script = script ?? throw new ArgumentNullException(nameof(script));
             _loc = loc;
             _numberAsFloat = numberAsFloat;
@@ -60,9 +64,9 @@ namespace Microsoft.PowerFx.Syntax
             return TexlParser.ParseUserDefinitionScript(script, numberAsFloat, loc);
         }
 
-        public static bool ProcessUserDefnitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false)
+        public static bool ProcessUserDefnitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false, Features features = null)
         {
-            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, loc, numberAsFloat, userDefinitionSemanticsHandler);
+            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, loc, numberAsFloat, userDefinitionSemanticsHandler, features);
 
             return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
         }
@@ -120,7 +124,7 @@ namespace Microsoft.PowerFx.Syntax
         {
             foreach (var udf in userDefinedFunctions)
             {
-                var binding = udf.BindBody(_globalNameResolver, _documentBinderGlue, _userDefinitionSemanticsHandler, functionNameResolver);
+                var binding = udf.BindBody(_globalNameResolver, _documentBinderGlue, _bindingConfig, _userDefinitionSemanticsHandler, _features, functionNameResolver);
                 udf.CheckTypesOnDeclaration(binding.CheckTypesContext, actualBodyReturnType: binding.ResultType, binding.ErrorContainer);
                 errors.AddRange(binding.ErrorContainer.GetErrors());
             }
