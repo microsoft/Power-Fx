@@ -1304,8 +1304,8 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue Dec2Hex(IRContext irContext, NumberValue[] args)
         {
-            var minNumber = -(1L << 39);
-            var maxNumber = (1L << 39) - 1;
+            long minNumber = -(1L << 39); // -549755813888
+            long maxNumber = (1L << 39) - 1; // +549755813887
 
             var number = Math.Floor(args[0].Value);
             int? places = null;
