@@ -1,4 +1,5 @@
 ﻿#SETUP: PowerFxV1CompatibilityRules
+// With this flag, return type is based on first arg
 
 >> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0), Time(12, 1, 7))
 Date(1899,12,30)
@@ -20,3 +21,15 @@ Date(1985,3,5)
 
 >> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5))
 DateTime(1985,3,5,0,0,0,0)
+
+>> Max("1","2")
+Error({Kind:ErrorKind.Validation})
+
+>> Min("1","2")
+Error({Kind:ErrorKind.Validation})
+
+>> Max("1",2)
+Error({Kind:ErrorKind.Validation})
+
+>> Max(1,"2")
+2

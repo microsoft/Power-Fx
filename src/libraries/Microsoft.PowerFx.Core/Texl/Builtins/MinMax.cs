@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // When PowerFxV1CompatibilityRules is enabled, return type is always argTypes[0]
             if (context.Features.PowerFxV1CompatibilityRules)
             {
-                for (var i = 0; i < argTypes.Length; i++)
+                for (var i = 1; i < argTypes.Length; i++)
                 {
                     if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
                     {
