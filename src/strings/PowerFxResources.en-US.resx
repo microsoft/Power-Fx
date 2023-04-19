@@ -5138,4 +5138,24 @@
     <value>Type conversion failed because the given value was of type '{0}', expected '{1}' type.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Delegating this operation on table '{0}' is not supported.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationLookUpPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationLookUpOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate LookUp: only support delegation for lookup on primary key field '{0}'.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationLookUpRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate LookUp: Id expression refers to ThisRecord.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationLookUpBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate LookUp: contains a behavior function '{0}'.</value>
+    <comment>Warning message.</comment>
+  </data>
 </root>

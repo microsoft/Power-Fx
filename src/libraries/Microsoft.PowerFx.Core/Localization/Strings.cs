@@ -657,5 +657,11 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey OptionSetOptionNotSupported = new ErrorResourceKey("OptionSetOptionNotSupported");
 
         public static ErrorResourceKey InvalidCast = new ErrorResourceKey("InvalidCast");
+
+        public static ErrorResourceKey WrnDelagationTableNotSupported = new ErrorResourceKey("WrnDelagationTableNotSupported");
+        public static ErrorResourceKey WrnDelagationLookUpPredicate = new ErrorResourceKey("WrnDelagationLookUpPredicate");
+        public static ErrorResourceKey WrnDelagationLookUpOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelagationLookUpOnlyPrimaryKeyField");
+        public static ErrorResourceKey WrnDelagationLookUpRefersThisRecord = new ErrorResourceKey("WrnDelagationLookUpRefersThisRecord");
+        public static ErrorResourceKey WrnDelagationLookUpBehaviorFunction = new ErrorResourceKey("WrnDelagationLookUpBehaviorFunction");
     }
 }
