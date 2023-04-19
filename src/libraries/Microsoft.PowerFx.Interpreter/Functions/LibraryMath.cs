@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -1267,7 +1266,8 @@ namespace Microsoft.PowerFx.Functions
             upper = Math.Floor(upper);
 
             decimal value = (decimal)services.SafeNextDouble();
-            return new DecimalValue(irContext, Math.Floor((value * (upper - lower + 1)) + lower));
+
+            return new DecimalValue(irContext, Math.Floor((value * (upper - lower + 1m)) + lower));
         }
 
         private static FormulaValue Pi(IRContext irContext, FormulaValue[] args)
@@ -1386,7 +1386,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new DecimalValue(irContext, (decimal)value);
                 }
-                catch
+                catch (OverflowException)
                 {
                     return CommonErrors.OverflowError(irContext);
                 }
