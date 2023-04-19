@@ -758,8 +758,8 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errors);
             }
 
-            TryGetInt(start, out int start0Based);
-            start0Based = start0Based - 1;
+            TryGetInt(start, out int start1Based);
+            var start0Based = start1Based - 1;
 
             string str = ((StringValue)args[0]).Value;
             if (str == string.Empty || start0Based >= str.Length)
@@ -828,9 +828,9 @@ namespace Microsoft.PowerFx.Functions
                 throw new NotImplementedException("Should have been handled by IR");
             }
 
-            TryGetInt(count, out int cnt);
+            TryGetInt(count, out int intCount);
 
-            return new StringValue(irContext, leftOrRight(source.Value, cnt));
+            return new StringValue(irContext, leftOrRight(source.Value, intCount));
         }
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
@@ -866,20 +866,20 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            if (!TryGetInt((NumberValue)args[1], out int start0Based))
+            if (!TryGetInt(args[1], out int start1Based))
             {
-                start0Based = source.Length + 1;
+                start1Based = source.Length + 1;
             }
 
-            start0Based = start0Based - 1;
+            var start0Based = start1Based - 1;
             var prefix = start0Based < source.Length ? source.Substring(0, start0Based) : source;
 
-            if (!TryGetInt((NumberValue)args[2], out int cnt))
+            if (!TryGetInt(args[2], out int intCount))
             {
-                cnt = cnt - start0Based;
+                intCount = intCount - start0Based;
             }
 
-            var suffixIndex = start0Based + cnt;
+            var suffixIndex = start0Based + intCount;
             var suffix = suffixIndex < source.Length ? source.Substring(suffixIndex) : string.Empty;
             var result = prefix + replacement + suffix;
 
