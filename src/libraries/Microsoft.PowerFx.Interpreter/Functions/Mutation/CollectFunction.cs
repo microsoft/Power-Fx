@@ -188,7 +188,7 @@ namespace Microsoft.PowerFx.Interpreter
                     fValid = false;
                     if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTableDoesNotAcceptThisType);
                     }
                 }
             }

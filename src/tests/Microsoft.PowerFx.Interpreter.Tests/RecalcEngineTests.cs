@@ -40,9 +40,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(Governor)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
-#pragma warning disable CS0618 // Type or member is obsolete
-                $"{ns}.{nameof(RecalcEngineScope)}",
-#pragma warning restore CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(IExpressionEvaluator)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
@@ -718,26 +715,6 @@ namespace Microsoft.PowerFx.Tests
             var formulaValue = result.GetEvaluator().Eval(recordValue);
 
             Assert.Equal(15.0, (double)formulaValue.ToObject());
-        }
-
-        [Fact]
-        public void CheckIntefaceSuccess()
-        {
-            var engine = new RecalcEngine();
-            CheckThroughInterface(engine);
-        }
-
-        private void CheckThroughInterface(IPowerFxEngine engine)
-        {
-            var result = engine.Check(
-               "3*2+x",
-               RecordType.Empty().Add(
-                   new NamedFormulaType("x", FormulaType.Number)));
-
-            Assert.True(result.IsSuccess);
-            Assert.True(result.ReturnType is NumberType);
-            Assert.Single(result.TopLevelIdentifiers);
-            Assert.Equal("x", result.TopLevelIdentifiers.First());
         }
 
         [Fact]
