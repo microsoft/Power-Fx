@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx
         }
     }
 
-    internal class ParsedExpression : IExpression, IExpressionEvaluator
+    internal class ParsedExpression : IExpressionEvaluator
     {
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
@@ -111,34 +111,7 @@ namespace Microsoft.PowerFx
             // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
-
-        // Obsolete. Use IExpressionEvaluator. 
-        async Task<FormulaValue> IExpression.EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
-        {
-            var useRowScope = _topScopeSymbol.AccessedFields.Count > 0;
-            ReadOnlySymbolValues symbolValues = null;
-
-            // For backwards compat - if a caller with internals access created a IR that binds to 
-            // rowscope directly, then apply parameters to row scope. 
-            if (!useRowScope)
-            {
-                symbolValues = SymbolValues.NewFromRecord(parameters);
-                parameters = RecordValue.Empty();
-            }
-
-            var runtimeConfig = new RuntimeConfig(symbolValues, _cultureInfo);
-            var evalVisitor = new EvalVisitor(runtimeConfig, cancellationToken);
-            try
-            {
-                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker)).ConfigureAwait(false);
-                return newValue;
-            }
-            catch (MaxCallDepthException maxCallDepthException)
-            {
-                return maxCallDepthException.ToErrorValue(_irnode.IRContext);
-            }
-        }
-
+        
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
             ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
