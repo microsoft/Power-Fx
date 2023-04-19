@@ -316,3 +316,18 @@ Errors: Error 13-16: Expected number. We expect a number at this point in the fo
 >> Max([1,2,3], [1])
 Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Max' has some invalid arguments.
 
+>> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0), Time(12, 1, 7))
+0.500775462962963
+
+>> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5), Time(12, 1, 7))
+0.500775462962963
+
+>> Min(Time(12, 1, 7), Date(1985,3,5), DateTime(2014,11,11,13,50,0))
+0.500775462962963
+
+>> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0))
+DateTime(1985,3,5,0,0,0,0)
+
+>> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5))
+DateTime(1985,3,5,0,0,0,0)
+

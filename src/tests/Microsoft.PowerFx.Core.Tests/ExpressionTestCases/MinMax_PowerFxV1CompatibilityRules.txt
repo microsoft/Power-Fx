@@ -1,0 +1,22 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+>> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0), Time(12, 1, 7))
+Date(1899,12,30)
+
+>> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5), Time(12, 1, 7))
+DateTime(1899,12,30,12,1,7,0)
+
+>> Min(Time(12, 1, 7), Date(1985,3,5), DateTime(2014,11,11,13,50,0))
+Time(0,0,0,0)
+
+>> Max(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
+Date(2022,3,8)
+
+>> Min(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
+Date(2022,3,8)
+
+>> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0))
+Date(1985,3,5)
+
+>> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5))
+DateTime(1985,3,5,0,0,0,0)
