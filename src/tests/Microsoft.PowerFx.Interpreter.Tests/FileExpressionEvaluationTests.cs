@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
         // 3. Default Canvas features with NumberIsFloat - the current default for Canvas apps.  Canvas
         //    has an internal relationship with the compiler that allows it to run with a different mix of features.
-        // 4. No features with NumberIsFloat (occsional) - important for back compat convertes in Canvas as the
+        // 4. No features with NumberIsFloat (occasional) - important for back compat convertes in Canvas as the
         //    back compat converters depend on the feature mix being the same as when the original app was serialized.
         //
         // For floating point, most tests are not sensitive to float vs. decimal and will pass in both modes

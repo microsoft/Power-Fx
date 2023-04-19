@@ -7,8 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -36,30 +38,53 @@ namespace Microsoft.PowerFx.Core.Tests
 
         public static Dictionary<string, bool> ParserSetupString(string setup)
         {
-            var dict = new Dictionary<string, bool>();
+            var settings = new Dictionary<string, bool>();
+            var possible = new HashSet<string>();
+            var powerFxV1 = new Dictionary<string, bool>();
 
-            foreach (Match match in Regex.Matches(setup, @"(disable:)?([\w]+)"))
+            foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                bool enabled = !(match.Groups[1].Value == "disable:");
-
-                dict.Add(match.Groups[2].Value, enabled);
-
-                if (match.Groups[2].Value == "PowerFxV1")
+                if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
                 {
-                    foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    possible.Add(featureProperty.Name);
+                    if ((bool)featureProperty.GetValue(Features.PowerFxV1))
                     {
-                        if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
-                        {
-                            if ((bool)featureProperty.GetValue(Features.PowerFxV1))
-                            {
-                                dict.Add(featureProperty.Name, enabled);
-                            }
-                        }
+                        powerFxV1.Add(featureProperty.Name, true);
                     }
                 }
             }
 
-            return dict;
+            possible.Add("PowerFxV1");
+            possible.Add("NumberIsFloat");
+
+            foreach (Match match in Regex.Matches(setup, @"(disable:)?([\w]+|//)"))
+            {
+                bool enabled = !(match.Groups[1].Value == "disable:");
+                var name = match.Groups[2].Value;
+
+                // end of line comment on settings string
+                if (name == "//")  
+                {
+                    break;
+                }
+
+                if (!possible.Contains(name))
+                {
+                    throw new ArgumentException($"Setup string not found: {name}");
+                }
+
+                settings.Add(name, enabled);
+
+                if (match.Groups[2].Value == "PowerFxV1")
+                {
+                    foreach (var pfx1Feature in powerFxV1)
+                    {
+                        settings.Add(pfx1Feature.Key, true);
+                    }
+                }
+            }
+
+            return settings;
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)

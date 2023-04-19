@@ -1,0 +1,31 @@
+﻿#SKIPFILE: StronglyTypedBuiltinEnums
+
+>> Find(1, ErrorKind.BadRegex)
+1
+
+>> Find(1, ErrorKind.BadRegex, 1)
+1
+
+>> Find(1, ErrorKind.BadRegex, 2)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex, 3)
+Blank()
+
+>> Find(1, ErrorKind.BadRegex, 4)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find(ErrorKind.BadRegex, 156)
+1
+
+>> Find(ErrorKind.BadRegex, 156, 1)
+1
+
+>> Find(ErrorKind.BadRegex, 156, 2)
+Blank()
+
+>> Find(ErrorKind.BadRegex, 156, 4)
+Blank()
+
+>> Find(ErrorKind.BadRegex, 156, 5)
+Error({Kind:ErrorKind.InvalidArgument})
