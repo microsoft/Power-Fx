@@ -1853,6 +1853,10 @@
     <value>Numeric value is too large.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Use of a reserved word that is currently not supported.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Expression can't be more than {0} characters. The expression is {1} characters.</value>
     <comment>Error Message when the expression text is too long.</comment>

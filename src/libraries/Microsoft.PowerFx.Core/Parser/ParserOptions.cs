@@ -26,6 +26,11 @@ namespace Microsoft.PowerFx
         public bool NumberIsFloat { get; set; }
 
         /// <summary>
+        /// If true, various words have been reserved and are not available for identifiers.
+        /// </summary>
+        internal bool ReservedKeywords { get; set; }
+
+        /// <summary>
         /// The culture that an expression will parse with. 
         /// This primarily determines numeric decimal separator character
         /// as well as chaining operator. 
@@ -65,7 +70,8 @@ namespace Microsoft.PowerFx
             }
 
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
-                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0);
+                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
+                        (ReservedKeywords || features.ReservedKeywords ? TexlParser.Flags.ReservedKeywords : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;
