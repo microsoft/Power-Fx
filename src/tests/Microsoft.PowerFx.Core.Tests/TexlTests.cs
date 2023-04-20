@@ -2348,6 +2348,91 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData(@"{%%:""hi""}", "![%%:s]", "![_:e]")]
+        [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
+        [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
+        [InlineData(@"AddColumns( [1,2,3], %%, Value*3 )", "*[%%:w, Value:w]", "*[Value:w]")]
+        public void TestReservedWords_TurnedOn(string script, string successType, string failType)
+        {
+            // OkToUse should work, all others include As (an existing keyword) should fail
+            string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
+
+            var config = new PowerFxConfig(features: Features.PowerFxV1);
+            var engine = new Engine(config);
+            var opts = new ParserOptions();
+
+            foreach (var word in words)
+            {
+                var scriptWord = script.Replace("%%", word);
+                var successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                var failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                var result = engine.Check(scriptWord, opts);
+
+                if (word == "OkToUse")
+                {
+                    Assert.True(result.IsSuccess, $"should succeed: {word}");
+                    Assert.Equal(successTypeWord, result.Binding.ResultType);
+                }
+                else
+                {
+                    Assert.False(result.IsSuccess, $"should fail: {word}");
+                    Assert.Equal(failTypeWord, result.Binding.ResultType);
+                }
+
+                // should always work if enclosed in single quotes
+                scriptWord = script.Replace("%%", $"'{word}'");
+                successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                result = engine.Check(scriptWord, opts);
+
+                Assert.True(result.IsSuccess, $"should succeed with single quotes: {word}");
+                Assert.Equal(successTypeWord, result.Binding.ResultType);
+            }
+        }
+
+        [Theory]
+        [InlineData(@"{%%:""hi""}", "![%%:s]", "![_:e]")]
+        [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
+        [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
+        public void TestReservedWords_TurnedOff(string script, string successType, string failType)
+        {
+            // As should fail (an existing keyword), all others should work
+            string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
+
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var opts = new ParserOptions();
+
+            foreach (var word in words)
+            {
+                var scriptWord = script.Replace("%%", word);
+                var successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                var failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                var result = engine.Check(scriptWord, opts);
+
+                if (word != "As")
+                {
+                    Assert.True(result.IsSuccess, $"should succeed: {word}");
+                    Assert.Equal(successTypeWord, result.Binding.ResultType);
+                }
+                else
+                {
+                    Assert.False(result.IsSuccess, $"should fail: {word}");
+                    Assert.Equal(failTypeWord, result.Binding.ResultType);
+                }
+
+                // should always work if enclosed in single quotes
+                scriptWord = script.Replace("%%", $"'{word}'");
+                successTypeWord = TestUtils.DT(successType.Replace("%%", word));
+                failTypeWord = TestUtils.DT(failType.Replace("%%", word));
+                result = engine.Check(scriptWord, opts);
+
+                Assert.True(result.IsSuccess, $"should succeed with single quotes: {word}");
+                Assert.Equal(successTypeWord, result.Binding.ResultType);
+            }
+        }
+
+        [Theory]
         [InlineData("With({A: 1, B: \"test\"}, B & \" \" & A)", "![A:n, B:s]", "s")]
         [InlineData("With({table: [{name: \"first\"},{name: \"first\"}]}, ForAll(table, Value))", "![table:*[value:s]]", "*[name:s]")]
         [InlineData("With({date: Today()}, date)", "![date:D]", "D")]

@@ -219,3 +219,15 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 //Excel returns "JaneSmithmmTRUE12.00028117"
 >> Replace("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23),10,5,"mm")
 "JaneSmithmmtrue12.00012/23/1976"
+
+>> Replace("false",1e28,2,"mm")
+"falsemm"
+
+>> Replace("false",3,1e28,"mm")
+"famm"
+
+>> Replace("false",-1e28,2,"mm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Replace("false",3,-1e28,"mm")
+Error({Kind:ErrorKind.InvalidArgument})

@@ -109,3 +109,9 @@ Error({Kind:ErrorKind.Div0})
 
 >> Left("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23),10)
 "JaneSmith6"
+
+>> Left("HelloWorld", 1e28)
+"HelloWorld"
+
+>> Left("HelloWorld", -1e28)
+Error({Kind:ErrorKind.InvalidArgument})

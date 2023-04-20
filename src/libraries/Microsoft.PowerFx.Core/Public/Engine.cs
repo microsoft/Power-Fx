@@ -134,9 +134,10 @@ namespace Microsoft.PowerFx
         {
             return new ParserOptions
             {
-                 Culture = null,
-                 AllowsSideEffects = false,
-                 MaxExpressionLength = Config.MaximumExpressionLength,
+                Culture = null,
+                AllowsSideEffects = false,
+                MaxExpressionLength = Config.MaximumExpressionLength,
+                ReservedKeywords = Config.Features.ReservedKeywords
             };
         }
 
@@ -170,7 +171,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(expressionText));
             }
 
-            options ??= new ParserOptions();
+            options ??= new ParserOptions() { ReservedKeywords = features?.ReservedKeywords == true };
 
             var result = options.Parse(expressionText, features ?? Features.None);
             return result;            

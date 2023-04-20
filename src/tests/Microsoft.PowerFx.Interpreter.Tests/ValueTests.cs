@@ -5,8 +5,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -388,6 +390,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var resultStr = formulaValue.Dump();
             Assert.Equal("If(true, {test:1}, \"Mismatched args (result of the expression can't be used).\")", resultStr);
+        }
+
+        [Theory]
+        [InlineData(12, 12.34, "test", 12, true)]
+        [InlineData(-2, -2.34, "string", -2, true)]
+        [InlineData(2147483649, 2147483649.12, "test string", int.MaxValue, false)]
+        [InlineData(-2147483649, -2147483649.12, "test", int.MinValue, false)]
+        public void TryGetIntTest(double doubleValue, decimal decimalValue, string stringValue, int expectedIntValue, bool inBound)
+        {
+            var num = NumberValue.New(doubleValue);
+            var dec = DecimalValue.New(decimalValue);
+            var str = StringValue.New(stringValue);
+
+            Assert.Equal(inBound, Library.TryGetInt(num, out int outputNumberToInt));
+            Assert.Equal(expectedIntValue, outputNumberToInt);
+            
+            Assert.Equal(inBound, Library.TryGetInt(dec, out int outputDecimalToInt));
+            Assert.Equal(expectedIntValue, outputDecimalToInt);
+
+            Assert.False(Library.TryGetInt(str, out int outputStringToInt));
         }
     }
 
