@@ -659,9 +659,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey InvalidCast = new ErrorResourceKey("InvalidCast");
 
         public static ErrorResourceKey WrnDelagationTableNotSupported = new ErrorResourceKey("WrnDelagationTableNotSupported");
-        public static ErrorResourceKey WrnDelagationLookUpPredicate = new ErrorResourceKey("WrnDelagationLookUpPredicate");
-        public static ErrorResourceKey WrnDelagationLookUpOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelagationLookUpOnlyPrimaryKeyField");
-        public static ErrorResourceKey WrnDelagationLookUpRefersThisRecord = new ErrorResourceKey("WrnDelagationLookUpRefersThisRecord");
-        public static ErrorResourceKey WrnDelagationLookUpBehaviorFunction = new ErrorResourceKey("WrnDelagationLookUpBehaviorFunction");
+        public static ErrorResourceKey WrnDelagationPredicate = new ErrorResourceKey("WrnDelagationPredicate");
+        public static ErrorResourceKey WrnDelagationOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelagationOnlyPrimaryKeyField");
+        public static ErrorResourceKey WrnDelagationRefersThisRecord = new ErrorResourceKey("WrnDelagationRefersThisRecord");
+        public static ErrorResourceKey WrnDelagationBehaviorFunction = new ErrorResourceKey("WrnDelagationBehaviorFunction");
     }
 }
