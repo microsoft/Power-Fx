@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private readonly bool _nativeDecimal = false;
 
         public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
-            : base(name, description, fc, nativeDecimal ? DType.Unknown : DType.Number, 0x02, 2, 2, DType.EmptyTable, nativeDecimal ? DType.Unknown : DType.Number)
+            : base(name, description, fc, DType.Number, 0x02, 2, 2, DType.EmptyTable, DType.Number)
         {
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false, acceptsLiteralPredicates: false);
             _nativeDecimal = nativeDecimal;
