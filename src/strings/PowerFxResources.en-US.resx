@@ -5147,15 +5147,15 @@
     <comment>Warning message.</comment>
   </data>
   <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Can't delegate LookUp: only support delegation for lookup on primary key field '{0}'.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate LookUp: Id expression refers to ThisRecord.</value>
+    <value>Can't delegate {0}: Id expression refers to ThisRecord.</value>
     <comment>Warning message.</comment>
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Can't delegate LookUp: contains a behavior function '{0}'.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
 </root>
