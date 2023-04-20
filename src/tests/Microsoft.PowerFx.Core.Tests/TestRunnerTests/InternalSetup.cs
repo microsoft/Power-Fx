@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Tests
         internal bool DisableMemoryChecks { get; set; }
 
         /// <summary>
-        /// By default, we run the result back through the serializer and deserialize again to se if we get the same result.
+        /// By default, we run the result back through the serializer and deserialize again to see if we get the same result.
         /// For some tests, for example reserved words, the deserialization will not work properly.
         /// </summary>
         internal bool SkipDeserializeComparison { get; set; }
