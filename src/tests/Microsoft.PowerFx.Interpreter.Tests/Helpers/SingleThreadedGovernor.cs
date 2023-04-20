@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Tests
             var used = CurrentBytesUsed;
             if (used + allocateBytes > _maxAllowedBytes)
             {
-                throw new GovernorException($"memory overuse");
+                throw new GovernorException($"Memory overuse: Used {used + allocateBytes} bytes vs. {_maxAllowedBytes} allowed.");
             }
         }
 
