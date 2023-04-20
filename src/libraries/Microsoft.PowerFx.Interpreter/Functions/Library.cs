@@ -2127,6 +2127,8 @@ namespace Microsoft.PowerFx.Functions
                     var allErrors = new List<RecordValue>();
                     foreach (var error in res.Error.Errors)
                     {
+                        runner.CheckCancel();
+
                         var kindProperty = new NamedValue("Kind", FormulaValue.New((int)error.Kind));
                         var messageProperty = new NamedValue(
                             "Message",
@@ -2255,6 +2257,8 @@ namespace Microsoft.PowerFx.Functions
 
             for (var i = 1; i < args.Length - 1; i += 2)
             {
+                runner.CheckCancel();
+
                 var match = (LambdaFormulaValue)args[i];
                 var matchValue = await match.EvalAsync().ConfigureAwait(false);
 
@@ -2344,6 +2348,8 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 SymbolContext childContext;
                 if (row.IsValue)
                 {
@@ -2373,6 +2379,8 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
 
                 // Filter evals to a boolean
