@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -298,6 +299,17 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyTable1._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
                 Assert.Equal(FormulaType.BindingError, FormulaType.Build(DType.Supertype(_lazyRecord2._type, _lazyRecord1._type, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)));
             }
+        }
+        
+        [Fact]
+        public void HasErrors()
+        {
+            // Non-recursive
+            Assert.False(_lazyRecord1._type.HasErrors);
+
+            // Recursive
+            var recursiveType = new BindingEngineTests.LazyRecursiveRecordType();
+            Assert.False(recursiveType._type.HasErrors);
         }
     }
 }

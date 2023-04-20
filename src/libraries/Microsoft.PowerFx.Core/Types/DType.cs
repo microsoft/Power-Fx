@@ -669,7 +669,7 @@ namespace Microsoft.PowerFx.Core.Types
                     : 0;
 
         public bool HasErrors => IsAggregate
-                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || tn.Type.HasErrors)
+                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || (!tn.Type.IsLazyType && tn.Type.HasErrors))
                     : IsError;
 
         public bool Contains(DName fieldName)
