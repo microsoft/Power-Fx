@@ -31,9 +31,6 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
-        private const string OptionDisableReservedWords = "DisableReserveWords";
-        private static bool _disableReservedWords = false;
-
         private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
@@ -52,7 +49,6 @@ namespace Microsoft.PowerFx
                 { OptionFormatTable, OptionFormatTable },
                 { OptionNumberIsFloat, OptionNumberIsFloat },
                 { OptionLargeCallDepth, OptionLargeCallDepth },
-                { OptionDisableReservedWords, OptionDisableReservedWords },
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
