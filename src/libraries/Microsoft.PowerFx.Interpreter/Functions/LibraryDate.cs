@@ -459,10 +459,10 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Time(IRContext irContext, NumberValue[] args)
         {
-            var hour = (int)args[0].Value;
-            var minute = (int)args[1].Value;
-            var second = (int)args[2].Value;
-            var millisecond = (int)args[3].Value;
+            if (args.Length < 4 || !TryGetInt(args[0], out int hour) || !TryGetInt(args[1], out int minute) || !TryGetInt(args[2], out int second) || !TryGetInt(args[3], out int millisecond))
+            {
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
 
             return TimeImpl(irContext, hour, minute, second, millisecond);
         }

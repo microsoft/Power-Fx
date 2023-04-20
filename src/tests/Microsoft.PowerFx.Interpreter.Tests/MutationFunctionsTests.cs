@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -260,6 +261,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             Assert.True(check.IsSuccess, message);
+        }
+
+        [Theory]
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })")]
+        public void MismatchErrorTests(string expr)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
+            var fv = FormulaValueJSON.FromJson("100", numberIsFloat: true);
+
+            var rType = RecordType.Empty()
+                .Add(new NamedFormulaType("subject", FormulaType.String))
+                .Add(new NamedFormulaType("poly", FormulaType.Build(DType.Polymorphic)));
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("t1", FormulaValue.NewTable(rType));
+
+            var check = engine.Check(expr, options: new ParserOptions() { NumberIsFloat = true, AllowsSideEffects = true });
+
+            Assert.False(check.IsSuccess);
+
+            // This error message is a mitigation.
+            Assert.Contains("The item you are trying to put into a table has a type that is not compatible with the table.", check.Errors.First().Message);
         }
     }
 }

@@ -19,6 +19,8 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var arg in args)
             {
+                runner.CheckCancel();
+
                 var res = await runner.EvalArgAsync<BooleanValue>(arg, context, arg.IRContext).ConfigureAwait(false);
 
                 if (res.IsBlank)

@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.Core
     /// Provides quick fix.
     /// </summary>
     [Obsolete("Use EditorContextScope instead")]
-    public interface IPowerFxScopeQuickFix
+    internal interface IPowerFxScopeQuickFix
     {
         /// <summary>
         /// Provider quick fix suggesions.

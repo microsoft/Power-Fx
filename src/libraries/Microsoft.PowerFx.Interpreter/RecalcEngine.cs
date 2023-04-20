@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public sealed class RecalcEngine : Engine, IPowerFxEngine
+    public sealed class RecalcEngine : Engine
     {
         // Map SlotIndex --> Value
         internal Dictionary<int, RecalcFormulaInfo> Formulas { get; } = new Dictionary<int, RecalcFormulaInfo>();
@@ -59,19 +59,6 @@ namespace Microsoft.PowerFx
         internal INameResolver TestCreateResolver()
         {
             return CreateResolverInternal();
-        }
-
-        /// <summary>
-        /// Create an evaluator over the existing binding.
-        /// </summary>
-        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
-        /// <returns></returns>
-        [Obsolete("Call CheckResult.GetEvaluator()")]
-        public static IExpression CreateEvaluatorDirect(CheckResult result)
-        {
-            var eval = result.GetEvaluator();
-            var eval2 = (ParsedExpression)eval;
-            return eval2;
         }
 
         // Event handler fired when we update symbol values. 
