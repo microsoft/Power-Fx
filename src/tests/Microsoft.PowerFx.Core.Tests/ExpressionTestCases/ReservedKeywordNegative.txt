@@ -1,4 +1,5 @@
-﻿
+﻿#SETUP: DisableReservedKeywords
+
 // With ReservedKeywords disabled these tests should pass as if these were normal identifiers
 
 >> {OkToUse :1}

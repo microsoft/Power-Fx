@@ -27,8 +27,9 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// If true, various words have been reserved and are not available for identifiers.
+        /// Will only be set by Canvas apps, all other Power Fx hosts should have reserved keywords always enforced.
         /// </summary>
-        internal bool ReservedKeywords { get; set; }
+        internal bool DisableReservedKeywords { get; set; }
 
         /// <summary>
         /// The culture that an expression will parse with. 
@@ -71,7 +72,7 @@ namespace Microsoft.PowerFx
 
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
                         (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
-                        (ReservedKeywords || features.ReservedKeywords ? TexlParser.Flags.ReservedKeywords : 0);
+                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;

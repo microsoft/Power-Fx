@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx
             {
                 { OptionFormatTable, OptionFormatTable },
                 { OptionNumberIsFloat, OptionNumberIsFloat },
-                { OptionLargeCallDepth, OptionLargeCallDepth }
+                { OptionLargeCallDepth, OptionLargeCallDepth },
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))

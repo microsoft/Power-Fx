@@ -2352,12 +2352,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
         [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
         [InlineData(@"AddColumns( [1,2,3], %%, Value*3 )", "*[%%:w, Value:w]", "*[Value:w]")]
-        public void TestReservedWords_TurnedOn(string script, string successType, string failType)
+        public void TestReservedWords_Disallowed(string script, string successType, string failType)
         {
             // OkToUse should work, all others include As (an existing keyword) should fail
             string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
 
-            var config = new PowerFxConfig(features: Features.PowerFxV1);
+            var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new Engine(config);
             var opts = new ParserOptions();
 
@@ -2394,14 +2394,14 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"{%%:""hi""}", "![%%:s]", "![_:e]")]
         [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
         [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
-        public void TestReservedWords_TurnedOff(string script, string successType, string failType)
+        public void TestReservedWords_Allowed(string script, string successType, string failType)
         {
             // As should fail (an existing keyword), all others should work
             string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
 
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-            var opts = new ParserOptions();
+            var opts = new ParserOptions() { DisableReservedKeywords = true };
 
             foreach (var word in words)
             {

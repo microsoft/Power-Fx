@@ -29,8 +29,8 @@ namespace Microsoft.PowerFx.Syntax
             // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
             NumberIsFloat = 1 << 0,
 
-            // Enable the "blank" keyword to return an untyped blank value, as if Blank() had been called
-            ReservedKeywords = 2 << 0
+            // Enable the the use of reserved keywords as identifiers, for Canvas short term.
+            DisableReservedKeywords = 2 << 0
         }
 
         // Locale-invariant syntax.
@@ -896,7 +896,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly StringBuilder _sb; // Used while building a token.
             private readonly Stack<LexerMode> _modeStack;
             private readonly bool _numberIsFloat;
-            private readonly bool _reservedKeywords;
+            private readonly bool _disableReservedKeywords;
 
             private int _currentTokenPos; // The start of the current token.
 
@@ -912,7 +912,7 @@ namespace Microsoft.PowerFx.Syntax
                 _sb = sb;
 
                 _numberIsFloat = flags.HasFlag(TexlLexer.Flags.NumberIsFloat);
-                _reservedKeywords = flags.HasFlag(TexlLexer.Flags.ReservedKeywords);
+                _disableReservedKeywords = flags.HasFlag(TexlLexer.Flags.DisableReservedKeywords);
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
@@ -1282,7 +1282,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 // Reserved words under a Features gate
-                if (_reservedKeywords && IsReservedKeyword(str) && !fDelimiterStart)
+                if (!_disableReservedKeywords && IsReservedKeyword(str) && !fDelimiterStart)
                 {
                     return new ErrorToken(GetTextSpan(), TexlStrings.ErrReservedKeyword);
                 }
