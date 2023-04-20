@@ -401,3 +401,21 @@ Date(2022,1,3)
 // String to number
 >> DateAdd(Date(2022,1,1), "12")
 Date(2022,1,13)
+
+>> DateAdd(Date(2001,1,1), 1e28, TimeUnit.Months)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateAdd(Date(2001,1,1), 1e28, TimeUnit.Quarters)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateAdd(Date(2001,1,1), 1e28, TimeUnit.Years)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateAdd(Date(2001,1,1), -1e28, TimeUnit.Months)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateAdd(Date(2001,1,1), -1e28, TimeUnit.Quarters)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateAdd(Date(2001,1,1), -1e28, TimeUnit.Years)
+Error({Kind:ErrorKind.InvalidArgument})
