@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsStateless => true;
 
         public Hex2DecFunction()
-            : base("Hex2Dec", TexlStrings.AboutHex2Dec, FunctionCategories.MathAndStat, DType.Unknown, 0, 1, 1, DType.String)
+            : base("Hex2Dec", TexlStrings.AboutHex2Dec, FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.String)
         {
         }
 
