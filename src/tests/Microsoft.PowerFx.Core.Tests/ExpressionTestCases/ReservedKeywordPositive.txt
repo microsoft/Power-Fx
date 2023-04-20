@@ -1,4 +1,4 @@
-﻿#SETUP: ReservedKeywords
+﻿#SETUP: SkipDeserializeComparison
 
 // With ReservedKeywords enabled (PowerFxV1) these tests should all fail.
 
