@@ -205,8 +205,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// </summary>
         public bool AreFieldsOptional { get; set; } = false;
 
-        #endregion 
-        
+        #endregion        
 
         // Constructor for the single invalid DType sentinel value.
         private DType()

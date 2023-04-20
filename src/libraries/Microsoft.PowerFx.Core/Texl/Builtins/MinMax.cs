@@ -45,8 +45,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // return type is
                 // - always argTypes[0] if 1st element is [Date, Time, DateTime, Number, Decimal]
                 // - otherwise it's Decimal or Number, depending on NumberIsFloat flag
-
-                returnType = argTypes[0];
                 if (!(returnType.IsDateTimeGroup || returnType.IsNumeric))
                 { 
                     returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
