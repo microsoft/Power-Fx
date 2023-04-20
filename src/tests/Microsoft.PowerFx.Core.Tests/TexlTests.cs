@@ -392,6 +392,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("CountIf(Table, A > 0, Today() + A)")]
         [InlineData("CountIf(Table, {Result:A})")]
         [InlineData("CountIf([1,3,4], NonBoolOptionSet.First")]
+        [InlineData("CountIf(First(Table), true)")]
         public void TexlFunctionTypeSemanticsCountIf_Negative(string expression)
         {
             var symbol = new SymbolTable();
@@ -407,29 +408,6 @@ namespace Microsoft.PowerFx.Core.Tests
             TestBindingErrors(
                 expression,
                 DType.Number,
-                symbol,
-                optionSets: new[] { new OptionSet("NonBoolOptionSet", nonBoolOptionSetDisplayNameProvider) });
-        }
-
-        // These following tests are different from above because the first arg isn't even a table, so CheckTypes is not run
-
-        [Theory]
-        [InlineData("CountIf(First(Table), true)")]
-        public void TexlFunctionTypeSemanticsCountIf_Negative_Unknown(string expression)
-        {
-            var symbol = new SymbolTable();
-            symbol.AddVariable("Table", new TableType(TestUtils.DT("*[A:n]")));
-
-            var nonBoolOptionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
-            {
-                { "First", "One" },
-                { "Second", "Two" },
-                { "Third", "Three" },
-            });
-
-            TestBindingErrors(
-                expression,
-                DType.Unknown,
                 symbol,
                 optionSets: new[] { new OptionSet("NonBoolOptionSet", nonBoolOptionSetDisplayNameProvider) });
         }

@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public CountFunction()
-            : base("Count", TexlStrings.AboutCount, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Unknown, 0, 1, 1, DType.EmptyTable)
+            : base("Count", TexlStrings.AboutCount, FunctionCategories.Table | FunctionCategories.MathAndStat, DType.Number, 0, 1, 1, DType.EmptyTable)
         {
         }
 

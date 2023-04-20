@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public LenFunction()
-            : base("Len", TexlStrings.AboutLen, FunctionCategories.Text, DType.Unknown)
+            : base("Len", TexlStrings.AboutLen, FunctionCategories.Text, DType.Number)
         {
         }
 
