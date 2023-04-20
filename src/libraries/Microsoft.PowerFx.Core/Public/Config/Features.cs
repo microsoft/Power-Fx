@@ -62,11 +62,6 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool FirstLastNRequiresSecondArguments { get; set; }
 
-        /// <summary>
-        /// Block a set of reserved keywords from being used.  Without this, these words are available for identifiers.
-        /// </summary>
-        internal bool ReservedKeywords { get; set; }
-
         internal bool PowerFxV1CompatibilityRules { get; set; }
 
         internal static Features None => new Features();
@@ -81,7 +76,6 @@ namespace Microsoft.PowerFx
             RestrictedIsEmptyArguments = true,
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
-            ReservedKeywords = true,
         };
 
         internal Features()
