@@ -26,6 +26,12 @@ namespace Microsoft.PowerFx.Core.Tests
         /// </summary>
         internal bool DisableMemoryChecks { get; set; }
 
+        /// <summary>
+        /// By default, we run the result back through the serializer and deserialize again to se if we get the same result.
+        /// For some tests, for example reserved words, the deserialization will not work properly.
+        /// </summary>
+        internal bool SkipDeserializeTest { get; set; }
+
         private static bool TryGetFeaturesProperty(string featureName, out PropertyInfo propertyInfo)
         {
             propertyInfo = typeof(Features).GetProperty(featureName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
@@ -66,6 +72,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 if (string.Equals(part, "DisableMemChecks", StringComparison.OrdinalIgnoreCase))
                 {
                     iSetup.DisableMemoryChecks = true;
+                    parts.Remove(part);
+                }
+                else if (string.Equals(part, "SkipDeserializeTest", StringComparison.OrdinalIgnoreCase))
+                {
+                    iSetup.SkipDeserializeTest = true;
                     parts.Remove(part);
                 }
                 else if (Enum.TryParse<TexlParser.Flags>(partName, out var flag))

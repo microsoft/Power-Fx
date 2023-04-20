@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over.e
+            // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
             var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features };
