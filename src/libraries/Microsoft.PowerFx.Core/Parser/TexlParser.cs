@@ -29,6 +29,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
             NumberIsFloat = 1 << 2,
+
+            // When specified, the "blank" keyword is enabled.
+            ReservedKeywords = 1 << 3,
         }
 
         private bool _hasSemicolon = false;
@@ -71,8 +74,9 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            // UDFs always support ReservedKeywords, no back compat concern
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | Flags.ReservedKeywords | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | Flags.ReservedKeywords | (numberIsFloat ? Flags.NumberIsFloat : 0));
 
             return parser.ParseUDFs(script);
         }
@@ -82,8 +86,8 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
+            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0) | Flags.ReservedKeywords);
+            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0) | Flags.ReservedKeywords);
 
             return parser.ParseUDFsAndNamedFormulas(script, numberIsFloat);
         }
@@ -463,8 +467,8 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(culture);
-
-            var lexerFlags = flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : TexlLexer.Flags.None;
+            var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
+                             (flags.HasFlag(Flags.ReservedKeywords) ? TexlLexer.Flags.ReservedKeywords : 0);
             culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
             return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
