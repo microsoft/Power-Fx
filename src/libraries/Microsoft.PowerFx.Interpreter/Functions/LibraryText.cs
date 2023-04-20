@@ -736,7 +736,7 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
         public static FormulaValue Len(IRContext irContext, StringValue[] args)
         {
-            return new NumberValue(irContext, args[0].Value.Length);
+            return NumberOrDecimalValue(irContext, args[0].Value.Length);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-left-mid-right

@@ -78,14 +78,14 @@ Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 >> Patch(t1, 0, 0)
 Errors: Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.|Error 0-15: The function 'Patch' has some invalid arguments.
 
-// field22 is missing and this is Ok
+// field22 is missing
 >> Patch(
      Table(
        {field1:2, field2:{field21:"earth",field22:"venus"}},
        {field1:3, field2:{field21:"moon",field22:"phobos"}}),
      {field2:{field21:"moon"}},
      {field1:7})
-{field1:7,field2:{field21:"moon",field22:"phobos"}}
+Errors: Error 151-176: Invalid argument type. Expecting a Record value, but of a different schema.|Error 151-176: Missing column. Your formula is missing a column 'field22' with a type of 'Text'.|Error 0-195: The function 'Patch' has some invalid arguments.
 
 >> Patch(
      Table(
@@ -93,7 +93,7 @@ Errors: Error 10-11: Invalid argument type (Decimal). Expecting a Record value i
        {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
     {Properties:{Moon:{Name:"Phobos"}}},
     {Planet:"Jupter"})
-{Planet:"Jupter",Properties:{Color:"red-brown",Moon:{Color:"yellow",Name:"Phobos"},Size:"huge",Weight:99999}}
+Errors: Error 258-293: Invalid argument type. Expecting a Record value, but of a different schema.|Error 258-293: Missing column. Your formula is missing a column 'Color' with a type of 'Text'.|Error 0-318: The function 'Patch' has some invalid arguments.
 
 // Display names
 >> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});
@@ -143,10 +143,8 @@ Blank()
 >> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
 Blank()
 
-
-// Record to Record coercion not allowed
 >> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
-Errors: Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.|Error 0-79: The function 'Patch' has some invalid arguments.
+{Field1:1,Field2:"earth",Field3:DateTime(2022,11,14,19,22,6,0),Field4:true}
 
 >> Patch(t1,LookUp(t1,DisplayNameField2="earth"),{Field1:100,Field4:false});t1
 Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false})
@@ -184,3 +182,12 @@ Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name i
 
 >> Patch(Table({Value:1}, If(false, {x:1, Value:2}, {Value:2, z:2}), {Value:3}), {Value:2}, {Value:11})
 {Value:11}
+
+>> With({t1:Table({a:1, b:"a"}, {a:2, b:Blank()})}, Patch(t1, Last(t1), {a:3, b:"c"}); t1)
+Table({a:1,b:"a"},{a:3,b:"c"})
+
+>> With({t1:Table({a:1,b:If(false,"")},{a:Blank(),b:"1"})}, Patch(t1, Last(t1), {b:"2"}); t1)
+Table({a:1,b:Blank()},{a:Blank(),b:"2"})
+
+>> With({t1:Table({a:1,b:If(false,"")},{a:Blank(),b:"2"})}, Patch(t1, Last(t1), {a:2}); t1)
+Table({a:1,b:Blank()},{a:2,b:"2"})

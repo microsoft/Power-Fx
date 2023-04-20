@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private readonly bool _nativeDecimal = false;
 
         public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
-            : base(name, description, fc, nativeDecimal ? DType.Unknown : DType.Number, 0, 1, 1, nativeDecimal ? DType.Unknown : DType.Number)
+            : base(name, description, fc, DType.Number, 0, 1, 1, DType.Number)
         {
             _nativeDecimal = nativeDecimal;
         }
@@ -151,7 +151,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private readonly bool _secondArgFloat = false;
 
         public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false, bool secondArgFloat = false)
-            : base(name, description, FunctionCategories.MathAndStat, nativeDecimal ? DType.Unknown : DType.Number, 0, minArity, 2, nativeDecimal ? DType.Unknown : DType.Number, nativeDecimal && !secondArgFloat ? DType.Unknown : DType.Number)
+            : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, minArity, 2, DType.Number, DType.Number)
         {
             _nativeDecimal = nativeDecimal;
             _secondArgFloat = secondArgFloat;

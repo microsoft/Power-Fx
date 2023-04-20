@@ -209,7 +209,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -221,7 +221,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var count = table.Count();
-                return new NumberValue(irContext, count);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -264,7 +264,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return new NumberValue(irContext, count);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = args[0];
             if (arg0 is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return new NumberValue(irContext, count);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (args[0] is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             // Streaming 
@@ -367,7 +367,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return new NumberValue(irContext, count);
+            return NumberOrDecimalValue(irContext, count);
         }
 
         // Filter ([1,2,3,4,5], Value > 5)

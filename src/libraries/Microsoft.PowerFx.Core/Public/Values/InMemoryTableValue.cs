@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -17,25 +18,21 @@ namespace Microsoft.PowerFx.Types
         private readonly RecordType _recordType;
 
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
-            : base(irContext, records.ToList())
+            : base(irContext, MaybeAdjustType(irContext, records).ToList())
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
         }
 
+        private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
+        {
+            return records.Select(record => record.IsValue ? DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(((TableType)irContext.ResultType).ToRecord(), record.Value)) : record);
+        }
+
         protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)
         {
-            if (record.IsValue)
-            {
-                var compileTimeType = _recordType;
-                var record2 = CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, record.Value);
-                return DValue<RecordValue>.Of(record2);
-            }
-            else
-            {
-                return record;
-            }
+            return record;
         }
 
         protected override DValue<RecordValue> MarshalInverse(RecordValue row)
