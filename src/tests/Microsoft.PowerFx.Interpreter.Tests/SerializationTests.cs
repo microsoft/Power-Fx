@@ -3,11 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -97,7 +100,44 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var result = check.GetEvaluator().Eval();
 
             Assert.IsType<ErrorValue>(result);
-        }       
+        }
+
+        [Fact]
+        public void RecordValueKeyworkSerializationTest()
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var symbol = new SymbolTable();
+
+            // Combining both keywords and reserved keywords
+            var keywords = TexlLexer.GetKeywords().Concat(TexlLexer.GetReservedKeywords()).ToList();
+
+            foreach (var keyword in keywords)
+            {
+                var expectedRecord = $"{{{keyword.ToUpperInvariant()}:Float(0),'{keyword}':Float(0)}}";
+                var expectedTable = $"Table({{{keyword.ToUpperInvariant()}:Float(0),'{keyword}':Float(0)}})";
+
+                var fields = new List<NamedValue>()
+                {
+                    new NamedValue(keyword, FormulaValue.New(0)),
+                    new NamedValue(keyword.ToUpperInvariant(), FormulaValue.New(0))
+                };
+
+                var record = FormulaValue.NewRecordFromFields(fields);
+                var table = FormulaValue.NewTable(record.Type, record);
+
+                var recordSerialized = record.ToExpression();
+                var tableSerialized = table.ToExpression();
+
+                Assert.Equal(expectedRecord, recordSerialized);
+                Assert.Equal(expectedTable, tableSerialized);
+
+                var checkRecord = engine.Check(recordSerialized);
+                var checkTable = engine.Check(tableSerialized);
+
+                Assert.True(checkRecord.IsSuccess);                
+                Assert.True(checkTable.IsSuccess);
+            }
+        }
 
         internal class BooleanOptionSet : OptionSet, IExternalOptionSet
         {            

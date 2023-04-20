@@ -256,7 +256,15 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
 
-                sb.Append(IdentToken.MakeValidIdentifier(field.Name));
+                var fieldName = IdentToken.MakeValidIdentifier(field.Name);
+
+                if ((TexlLexer.IsKeyword(fieldName, out _) || TexlLexer.IsReservedKeyword(fieldName)) && 
+                    !fieldName.StartsWith("'", StringComparison.Ordinal) && !fieldName.EndsWith("'", StringComparison.Ordinal))
+                {
+                    fieldName = $"'{fieldName}'";
+                }
+
+                sb.Append(fieldName);
                 sb.Append(':');
 
                 field.Value.ToExpression(sb, settings);
