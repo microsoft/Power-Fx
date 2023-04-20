@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 // When PowerFxV1CompatibilityRules is enabled
                 // return type is
-                // - always argTypes[0] if all elements are [Date, Time, DateTime, Number, Decimal]
+                // - always argTypes[0] if 1st element is [Date, Time, DateTime, Number, Decimal]
                 // - otherwise it's Decimal or Number, depending on NumberIsFloat flag
 
                 returnType = argTypes[0];

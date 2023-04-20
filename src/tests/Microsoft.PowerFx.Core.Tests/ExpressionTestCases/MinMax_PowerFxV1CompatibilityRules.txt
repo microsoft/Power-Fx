@@ -1,7 +1,7 @@
 ﻿#SETUP: PowerFxV1CompatibilityRules
 
 // With this flag enabled, return type is
-// - always argTypes[0] if all elements are [Date, Time, DateTime, Number, Decimal]
+// - always argTypes[0] if 1st element is [Date, Time, DateTime, Number, Decimal]
 // - otherwise it's Decimal or Number, depending on NumberIsFloat flag
 
 >> Max(1)
