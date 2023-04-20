@@ -1,5 +1,8 @@
 ﻿#SETUP: PowerFxV1CompatibilityRules
-// With this flag, return type is based on first arg
+
+// With this flag enabled, return type is
+// - always argTypes[0] if all elements are [Date, Time, DateTime, Number, Decimal]
+// - otherwise it's Decimal or Number, depending on NumberIsFloat flag
 
 >> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0), Time(12, 1, 7))
 Date(1899,12,30)
@@ -23,13 +26,37 @@ Date(1985,3,5)
 DateTime(1985,3,5,0,0,0,0)
 
 >> Max("1","2")
-Error({Kind:ErrorKind.Validation})
+2
 
 >> Min("1","2")
-Error({Kind:ErrorKind.Validation})
+1
 
 >> Max("1",2)
-Error({Kind:ErrorKind.Validation})
+2
 
 >> Max(1,"2")
 2
+
+>> Min(1/0, Date(2023, 4, 20)) 
+Error({Kind:ErrorKind.Div0})
+
+>> Min(Date(2023, 4, 20), 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> Min(1, "foo")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Min(Today(), 3)
+Date(1900,1,2)
+
+>> Min(Now(), "2023")
+2023
+
+>> Min("1E1", "20")
+10
+
+>> Min(true, false)
+0
+
+>> Max(false, true)
+1

@@ -38,11 +38,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();            
             var fArgsValid = true;
             returnType = argTypes[0];
-
-            // When PowerFxV1CompatibilityRules is enabled, return type is always argTypes[0]
+            
             if (context.Features.PowerFxV1CompatibilityRules)
             {
-                for (var i = 1; i < argTypes.Length; i++)
+                // When PowerFxV1CompatibilityRules is enabled
+                // return type is
+                // - always argTypes[0] if all elements are [Date, Time, DateTime, Number, Decimal]
+                // - otherwise it's Decimal or Number, depending on NumberIsFloat flag
+                if (!Array.TrueForAll(argTypes, element => element.IsDateTimeGroup || element.IsNumeric))
+                { 
+                    returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+                }
+
+                for (var i = 0; i < argTypes.Length; i++)
                 {
                     if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
                     {
