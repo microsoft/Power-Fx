@@ -152,6 +152,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 if (row.IsValue)
                 {
                     // $$$ this is super inefficient... maybe a custom derived RecordValue? 
@@ -161,6 +163,8 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
+                        runner.CheckCancel();
+
                         var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
                         fields.Add(new NamedValue(column.Name, value));
                     }
@@ -183,6 +187,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 if (row.IsValue)
                 {
                     list.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, row.Value.Fields.Where(f => !columnNames.Contains(f.Name)).ToArray())));
@@ -322,6 +328,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in sources.Rows)
             {
+                runner.CheckCancel();
+
                 if (row.IsValue || row.IsError)
                 {
                     var childContext = row.IsValue ?
@@ -330,6 +338,8 @@ namespace Microsoft.PowerFx.Functions
                     var include = true;
                     for (var i = 0; i < filters.Length; i++)
                     {
+                        runner.CheckCancel();
+
                         var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
                         if (result is ErrorValue error)
@@ -467,6 +477,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var pair in arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))
             {
+                runner.CheckCancel();
+
                 pairs.Add(await pair.ConfigureAwait(false));
             }
 
@@ -474,6 +486,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var (row, sortValue) in pairs)
             {
+                runner.CheckCancel();
+
                 allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(sortValue);
                 allDecimals &= IsValueTypeErrorOrBlank<DecimalValue>(sortValue);
                 allStrings &= IsValueTypeErrorOrBlank<StringValue>(sortValue);

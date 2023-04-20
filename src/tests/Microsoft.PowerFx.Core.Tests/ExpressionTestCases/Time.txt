@@ -383,3 +383,18 @@ Time(11,12,0,0)
 
 >> TimeValue("11:12:00.1234567")
 Time(11,12,0,123)
+
+>> Time(1e28, 23, 34, 456)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(12, 1e28, 34, 456)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(12, 23, 1e28, 456)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(12, 23, 34, 1e28)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(32767, 32767, 32767, 32767)
+Time(10,13,39,767)
