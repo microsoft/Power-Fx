@@ -131,11 +131,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // In TZ Indian standard time (GMT+5:30) DateDiff(DateTime(2023,1,30,0,0,0), DateTime(2023,1,31,4,30,0)) = 1
             var evaluator = _engine.Check("DateDiff(nonUTCDateTime, utcDateTime)", options: null, _symbolTable).GetEvaluator();
             var result = await evaluator.EvalAsync(default, _localSymbol).ConfigureAwait(false);
-            Assert.Equal(1, ((NumberValue)result).Value);
+            Assert.Equal(1, ((DecimalValue)result).Value);
 
             // In TZ UTC DateDiff(DateTime(2023,1,30,0,0,0), DateTime(2023,1,30,23,30,0)) = 0
             var utcResult = await evaluator.EvalAsync(default, _utcSymbol).ConfigureAwait(false);
-            Assert.Equal(0, ((NumberValue)utcResult).Value);
+            Assert.Equal(0, ((DecimalValue)utcResult).Value);
         }
 
         [Fact]
