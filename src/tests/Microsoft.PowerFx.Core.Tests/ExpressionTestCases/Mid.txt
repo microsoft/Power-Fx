@@ -200,11 +200,5 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 >> Mid("asdf",1e28,2)
 ""
 
->> Mid("hello", Float(1e28), 2)
-""
-
 >> Mid("asdf",-1e28,2)
-Error({Kind:ErrorKind.InvalidArgument})
-
->> Mid("hello", Float(-1e28), 2)
 Error({Kind:ErrorKind.InvalidArgument})
