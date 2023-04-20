@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -31,11 +32,14 @@ namespace Microsoft.PowerFx.Types
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            if (Type.TryGetFieldType(fieldName, out _))
+            if (Type.TryGetFieldType(fieldName, out var compileTimeType))
             {
                 // Only return field which were specified via the expectedType (IE RecordType),
                 // because inner record value may have more fields than the expected type.
-                return _fields.TryGetValue(fieldName, out result);
+                if (compileTimeType == fieldType && _fields.TryGetValue(fieldName, out result))
+                {
+                    return true;
+                }
             }
 
             result = default;
