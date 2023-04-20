@@ -409,7 +409,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("firstos.option_1 <> Os1Value", "newOsName.Option1 <> Os1Value", "firstos", "newOsName")] // OK
         [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1ValueRenamed", "Os1Value", "Os1ValueRenamed")] // OK
-        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_5 <> Os1Value", "option_1", "option_5")]        
+        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_5 <> Os1Value", "firstos.option_1", "firstos.option_5")]        
         [InlineData("firstos.Option1 <> Os1Value", "firstos.Option6 <> Os1Value", "firstos.Option1", "firstos.Option6")]
         [InlineData("TestFirstOptionSet.option_1 <> Os1Value", "newOsName.option_1 <> Os1Value", "TestFirstOptionSet", "newOsName")]
         public void RenameParameter2(string expressionBase, string expectedExpression, string oldName, string newName)
