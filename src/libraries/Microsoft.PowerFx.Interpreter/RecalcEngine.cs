@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx
             var parameterSymbols = runtimeConfig?.Values?.SymbolTable;
             var symbolsAll = ReadOnlySymbolTable.Compose(parameterSymbols, symbolTable);
 
-            options ??= new ParserOptions() { ReservedKeywords = Config.Features.ReservedKeywords };
+            options ??= this.GetDefaultParserOptionsCopy();
 
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
