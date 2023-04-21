@@ -111,7 +111,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         foreach (var file in allFiles)
                         {
-                            parser.AddFile(_setup, file);
+                            // Skip .md files
+
+                            if (file.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                parser.AddFile(_setup, file);
+                            }
                         }
                     }
                 }

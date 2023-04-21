@@ -25,28 +25,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // 4. No features with NumberIsFloat (occasional) - important for back compat convertes in Canvas as the
         //    back compat converters depend on the feature mix being the same as when the original app was serialized.
         //
-        // For floating point, most tests are not sensitive to float vs. decimal and will pass in both modes
-        // without modification.  If you aren't speficically testing numeric limits, stick to numbers that are
-        // less than +/-1E20 which is a safe range for both float and decimal and practically where most makers will work.  
-        //
-        // For testing large float numbers (for example, 1E100 or 1E300) or high precision decimals
-        // (for example, 1.00000000000000000000001), individual files can be excluded from one of the two modes
-        // with a directive at the top of the file:
-        //   #SKIPFILE: NumberIsFloat          // skips the file if NumberIsFloat is enabled (float mode)
-        //   #SKIPFILE: disable:NumberIsFloat  // skips the file if NumberIsFloat is disabled (decimal mode)
-        //
-        // Skipped files do not show up in the list of skipped tests, tests are skipped before being added in TxtFileData.
-        // The intent of SKIPFILE is to be a permanent mode selection for tests that are range/precision sensitive.
-        // 
-        // You can also use #SETUP: TableSyntaxDoesntWrapRecords, for example, to turn on this feature for a given file
-        // to use that feature.  If the point of the file is not to test that feature, on or off, there is no need
-        // to duplicate the file.  If point is to test that feature, duplicate the file and add #SKIPFILE directives instead.
+        // See the README.md in the ExpressionTestCases directory for more details.
 
         [InterpreterTheory]
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat")]
         public void Canvas_Float(ExpressionTestCase testCase)
         {
-            // current default features in Canvas a
+            // current default features in Canvas
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,

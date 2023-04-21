@@ -1,0 +1,84 @@
+﻿#SETUP: DisableMemChecks
+#SKIPFILE: PowerFxV1CompatibilityRules
+
+// With this flag disabled, for Canvas compat, return type is determined by the entire argument list
+
+>> Max(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
+DateTime(2022,3,8,13,50,0,0)
+
+>> Min(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
+DateTime(2022,3,8,0,0,0,0)
+
+>> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0), Time(12, 1, 7))
+0.500775462962963
+
+>> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5), Time(12, 1, 7))
+0.500775462962963
+
+>> Min(Time(12, 1, 7), Date(1985,3,5), DateTime(2014,11,11,13,50,0))
+0.500775462962963
+
+>> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0))
+DateTime(1985,3,5,0,0,0,0)
+
+>> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5))
+DateTime(1985,3,5,0,0,0,0)
+
+>> Min(Today(), 3)
+3
+
+// Value(Date(2023,3,15)) = 45000
+>> Min(Date(2112,1,1), 45000)
+45000
+
+>> Min(Date(2023,3,15), DateTime(2021,2,3,4,5,6))
+DateTime(2021,2,3,4,5,6,0)
+
+>> Min(Today(), Time(12,0,0))
+0.5
+
+>> Min(Date(2112,1,1), "2023-01-01", "2022-12-30")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+>> Min(Now(), 45000.5)
+45000.5
+
+>> Min(DateTime(2023,3,15,0,0,0), Date(2021,2,3))
+DateTime(2021,2,3,0,0,0,0)
+
+>> Min(Now(), Time(12,34,59,790))
+0.524303125
+
+>> Min(Now(), "2023-01-01T12:34:56", "2022-12-30")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+>> Min(Time(12,0,0),0.25)
+0.25
+
+>> Min(Time(12,0,0), DateTime(1888,10,20,12,34,56,789))
+-4087.4757316088
+
+>> Max(Time(12,0,0), DateTime(1888,10,20,12,34,56,789))
+0.5
+
+>> Min(Time(12,0,0), Today())
+0.5
+
+>> Min(Time(12,0,0), "06:00:00", "03:45:00")
+Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
+
+// ****** Mix and numeric and date/time arguments, scalar arguments (result is numeric) ******
+
+// Date(2022, 9, 9) = 44813
+>> Max(Date(2022, 9, 9), 50000)
+50000
+
+>> Min(Date(2022, 9, 9), 50000)
+44813
+
+>> Max(Date(2022, 9, 9), 40000)
+44813
+
+>> Min(Date(2022, 9, 9), 40000)
+40000
+

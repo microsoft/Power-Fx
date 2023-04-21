@@ -1,0 +1,19 @@
+﻿#SKIPFILE: disable:PowerFxV1CompatibilityRules
+#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+// field22 is missing
+>> Patch(
+     Table(
+       {field1:2, field2:{field21:"earth",field22:"venus"}},
+       {field1:3, field2:{field21:"moon",field22:"phobos"}}),
+     {field2:{field21:"moon"}},
+     {field1:7})
+{field1:7,field2:{field21:"moon",field22:"phobos"}}
+
+>> Patch(
+     Table(
+       {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
+       {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
+    {Properties:{Moon:{Name:"Phobos"}}},
+    {Planet:"Jupter"})
+{Planet:"Jupter",Properties:{Color:"red-brown",Moon:{Color:"yellow",Name:"Phobos"},Size:"huge",Weight:99999}}

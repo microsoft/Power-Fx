@@ -72,6 +72,6 @@ Errors: Error 1-3: Unexpected characters. The formula contains 'As' where 'Ident
 >> {'in':1}
 {'in':1}
 
->> {'exactIn':1}
-{'exactIn':1}
+>> {'exactin':1}
+{'exactin':1}
 
