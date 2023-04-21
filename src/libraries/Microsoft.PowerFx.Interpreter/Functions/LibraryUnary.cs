@@ -474,8 +474,13 @@ namespace Microsoft.PowerFx.Functions
 #endregion
 
 #region Unary Operator Implementations
-        private static NumberValue NumericNegate(IRContext irContext, NumberValue[] args)
+        private static FormulaValue NumericNegate(IRContext irContext, NumberValue[] args)
         {
+            if (args.Length == 0 || args[0] == null)
+            {
+                return CommonErrors.GenericInvalidArgument(irContext);
+            }
+
             var result = -args[0].Value;
             return new NumberValue(irContext, result);
         }

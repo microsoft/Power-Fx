@@ -102,3 +102,6 @@ DateTime(2011,1,30,8,0,0,123)
 
 >> With({d:DateTimeValue("March 10, 2023 5:30 PM")}, DateTimeValue(Text(d, DateTimeFormat.UTC)) = d)
 true
+
+>> -Date(2003, 4, 1)
+Error: InvalidArgument - Invalid Argument
