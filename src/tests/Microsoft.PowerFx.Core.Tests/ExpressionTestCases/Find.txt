@@ -399,3 +399,9 @@ Table()
    1/0
    )
 Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", 1e28)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Find("B", "LastNameisBillerFirstNameisBethy", -1e28)
+Error({Kind:ErrorKind.InvalidArgument})

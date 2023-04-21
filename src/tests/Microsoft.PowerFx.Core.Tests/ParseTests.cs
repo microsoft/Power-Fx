@@ -422,7 +422,7 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             // The language does not / no longer supports a null constant.
             // Out-of-context nulls are parsed as unbound identifiers.
-            TestRoundtrip(script, expectedNodeKind: expectedNodeKind);
+            TestRoundtrip(script, expectedNodeKind: expectedNodeKind, flags: TexlParser.Flags.DisableReservedKeywords);
         }
 
         [Theory]

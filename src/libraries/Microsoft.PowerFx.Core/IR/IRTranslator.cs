@@ -677,37 +677,25 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Field access within a record.
                     Contracts.Assert(typeLhs.IsRecord);
-
-                    if (typeLhs.TryGetType(nameRhs, out var typeRhs) &&
-                        typeRhs.IsExpandEntity &&
-                        context.Binding.TryGetEntityInfo(node, out var expandInfo) &&
-                        expandInfo.IsTable)
+                    typeLhs.TryGetType(nameRhs, out var typeRhs);
+                    if (node.Left is FirstNameNode namespaceNode && context.Binding.GetInfo(namespaceNode)?.Kind == BindKind.QualifiedValue)
                     {
-                        // No relationships in PFX yet
-                        Contracts.Assert(false, "Relationships not yet supported");
+                        Contracts.Assert(false, "QualifiedValues not yet supported by PowerFx");
                         throw new NotSupportedException();
+                    }
+
+                    if (typeRhs.IsDeferred)
+                    {
+                        throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
+                    }
+
+                    if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)
+                    {
+                        result = new ScopeAccessNode(context.GetIRContext(node), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(nameRhs)));
                     }
                     else
                     {
-                        if (node.Left is FirstNameNode namespaceNode && context.Binding.GetInfo(namespaceNode)?.Kind == BindKind.QualifiedValue)
-                        {
-                            Contracts.Assert(false, "QualifiedValues not yet supported by PowerFx");
-                            throw new NotSupportedException();
-                        }
-
-                        if (typeRhs.IsDeferred)
-                        {
-                            throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
-                        }
-
-                        if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)
-                        {
-                            result = new ScopeAccessNode(context.GetIRContext(node), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(nameRhs)));
-                        }
-                        else
-                        {
-                            result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
-                        }
+                        result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
                     }
                 }
                 else if (typeLhs.IsUntypedObject)
