@@ -667,7 +667,7 @@ Errors: Error 15-19: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Time(24,0,0) <= 0
-true
+false
 
 >> Time(24,0,0) <= 1
 true
