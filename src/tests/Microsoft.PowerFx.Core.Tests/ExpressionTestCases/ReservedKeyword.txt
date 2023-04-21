@@ -1,9 +1,6 @@
 ﻿
 // common tests
 
->> 3 Is 4
-Errors: Error 2-4: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 2-4: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
-
 >> {OkToUse :1}
 {OkToUse:1}
 
