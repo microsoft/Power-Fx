@@ -420,7 +420,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             config.AddOptionSet(optionSet1, new DName("TestFirstOptionSet"));
 
-            RecordType r1 = RecordType.Empty()                
+            RecordType r1 = RecordType.Empty()
                 .Add(new NamedFormulaType("Os1Value", optionSet1.FormulaType, "DisplayOS1Value"));
 
             DPath oldNameAsPath = DPath.Root;
@@ -431,8 +431,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Engine engine = new Engine(config);
 
-            RenameDriver renamer = engine.CreateFieldRenamer(r1, oldNameAsPath, new DName(newName), CultureInfo.InvariantCulture);
-            Assert.Equal(expectedExpression, renamer.RenameOptionSet(expressionBase));
+            RenameDriver renamer = engine.CreateOptionSetRenamer(r1, oldNameAsPath, new DName(newName), CultureInfo.InvariantCulture);
+            Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
         }
 
         [Fact]

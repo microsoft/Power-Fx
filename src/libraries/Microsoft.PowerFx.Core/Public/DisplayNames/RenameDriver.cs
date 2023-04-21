@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -24,7 +25,7 @@ namespace Microsoft.PowerFx.Core
 
         private Dictionary<AggregateType, WrappedDerivedRecordType> _wrappedLazyRecordTypes;
 
-        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture)
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, bool renameOptionSet)
         {
             var segments = new Queue<DName>(pathToRename.Segments());
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));
@@ -33,9 +34,9 @@ namespace Microsoft.PowerFx.Core
             _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
 
             // After this point, _renameParameters should have at most one logical->display pair that can change in this conversion
-            _renameParameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
+            _renameParameters = renameOptionSet ? parameters : RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
             _resolver = resolver;
-            _renameResolver = RenameResolverHelper(resolver, pathToRename, updatedName);
+            _renameResolver = renameOptionSet ? RenameResolverHelper(resolver, pathToRename, updatedName) : resolver;
             _engine = engine;
             _binderGlue = binderGlue;
             _culture = culture;
@@ -50,22 +51,13 @@ namespace Microsoft.PowerFx.Core
         {
             // Ensure expression is converted to invariant before applying rename.
             var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters, _culture);
-            var converted = ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, true);
+            var converted = ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _renameParameters, BindingConfig.Default, _renameResolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, true);
 
             // Convert back to the invariant expression. All parameter values are already invariant at this point, so we pass _renameParameters, but stripped of it's DisplayNameProvider.
             // Reset the wrapped cache first to ensure we clear all display name providers
             _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
             var strippedRenameParameters = GetWrappedAggregateType(_renameParameters, DisabledDisplayNameProvider.Instance) as RecordType;
             return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, false);
-        }
-
-        public string RenameOptionSet(string expressionText)
-        {
-            // Ensure expression is converted to invariant before applying rename.
-            var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters, _culture);
-            var converted = ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _baseParameters, BindingConfig.Default, _renameResolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, true);
-           
-            return ExpressionLocalizationHelper.ConvertExpression(converted, _baseParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, false);
         }
 
         /// <summary>
@@ -86,7 +78,7 @@ namespace Microsoft.PowerFx.Core
                 throw new Exception("Unexpected resolver");
             }
 
-            if (!rost.TryLookup(pathToRename[0], out NameLookupInfo nameInfo))
+            if (!((INameResolver)rost).Lookup(pathToRename[0], out NameLookupInfo nameInfo))
             {
                 return resolver;
             }
@@ -94,10 +86,8 @@ namespace Microsoft.PowerFx.Core
             SymbolTable st = new SymbolTable();
             bool updated = false;
 
-            if (nameInfo.Type.Kind == Types.DKind.OptionSet)
-            {
-                OptionSet os = (OptionSet)nameInfo.Data;
-
+            if (nameInfo.Data is OptionSet os)
+            { 
                 if (pathToRename.Length == 1)
                 {
                     st.AddEntity(os, updatedName);
@@ -107,7 +97,9 @@ namespace Microsoft.PowerFx.Core
                 {
                     if (os.TryGetValue(pathToRename[1], out OptionSetValue osValue))
                     {
-                        st.AddEntity(new OptionSet(os.EntityName, new SingleSourceDisplayNameProvider(new Dictionary<DName, DName> { [new DName(osValue.Option)] = updatedName })));
+                        st.AddEntity(new OptionSet(os.EntityName, new SingleSourceDisplayNameProvider(
+                            new Dictionary<DName, DName> { [new DName(osValue.Option)] = updatedName }.ToImmutableDictionary(),
+                            new Dictionary<DName, DName> { [new DName(osValue.DisplayName)] = new DName(osValue.Option) }.ToImmutableDictionary()))); 
                         updated = true;
                     }
                 }
@@ -121,7 +113,7 @@ namespace Microsoft.PowerFx.Core
             var field = segments.Dequeue();
             if (segments.Count == 0)
             {
-                // Create a display name provider with only the name in question                
+                // Create a display name provider with only the name in question
                 var names = new Dictionary<DName, DName>
                 {
                     [field] = updatedName
