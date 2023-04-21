@@ -248,11 +248,6 @@ namespace Microsoft.PowerFx.Syntax
             return _keywords.Keys.ToList();
         }
 
-        public static IReadOnlyList<string> GetReservedKeywords()
-        {
-            return _reservedKeywords.ToList();
-        }
-
         private TexlLexer(string preferredDecimalSeparator)
         {
             // List and decimal separators.

@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbol = new SymbolTable();
 
             // Combining both keywords and reserved keywords
-            var keywords = TexlLexer.GetKeywords().Concat(TexlLexer.GetReservedKeywords()).ToList();
+            string[] keywords = new string[] { "null", "empty", "none", "nothing", "undefined", "This", "Is", "Child", "Children", "Siblings", "true", "false", "in", "exactin", "Self", "Parent", "And", "Or", "Not", "As" };
 
             foreach (var keyword in keywords)
             {
