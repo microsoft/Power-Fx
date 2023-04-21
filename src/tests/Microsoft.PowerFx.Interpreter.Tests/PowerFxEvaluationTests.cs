@@ -350,11 +350,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 };
                 newValue.ToExpression(sb, settings);
 
-                if (iSetup.SkipDeserializeTest)
-                {
-                    return new RunResult(newValue, newValue);
-                }
-
                 try
                 {
                     // Serialization test. Serialized expression must produce an identical result.
