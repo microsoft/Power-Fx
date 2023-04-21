@@ -407,12 +407,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("firstos.option_1 <> Os1Value", "newOsName.Option1 <> Os1Value", "firstos", "newOsName")] // OK
-        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1ValueRenamed", "Os1Value", "Os1ValueRenamed")] // OK
-        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_5 <> Os1Value", "firstos.option_1", "firstos.option_5")]        
-        [InlineData("firstos.Option1 <> Os1Value", "firstos.Option6 <> Os1Value", "firstos.Option1", "firstos.Option6")]
-        [InlineData("TestFirstOptionSet.option_1 <> Os1Value", "newOsName.option_1 <> Os1Value", "TestFirstOptionSet", "newOsName")]
-        public void RenameParameter2(string expressionBase, string expectedExpression, string oldName, string newName)
+        [InlineData("firstos.option_1 <> Os1Value", "newOsName.Option1 <> Os1Value", "firstos", "newOsName")]        
+        [InlineData("firstos.option_1 <> firstos.option_2", "firstos.option_5 <> firstos.option_2", "firstos.option_1", "option_5")]
+        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1Value", "Unknown", "Unknown2")]
+        [InlineData("firstos.option_1 <> firstos.option_2", "firstos.option_1 <> firstos.option_2", "firstos.Unknown", "Unknown2")]
+        public void RenameParameter_OptionSet(string expressionBase, string expectedExpression, string oldName, string newName)
         {
             PowerFxConfig config = new PowerFxConfig();
             OptionSet optionSet1 = new OptionSet("firstos", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
@@ -423,10 +422,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             config.AddOptionSet(optionSet1, new DName("TestFirstOptionSet"));
 
-            RecordType r1 = RecordType.Empty()
-                .Add(new NamedFormulaType("firstos", optionSet1.FormulaType, "TestFirstOptionSet"))
+            RecordType r1 = RecordType.Empty()                
                 .Add(new NamedFormulaType("Os1Value", optionSet1.FormulaType, "DisplayOS1Value"));
-            
+
             DPath oldNameAsPath = DPath.Root;
             foreach (var segment in oldName.Split('.'))
             {
@@ -434,9 +432,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
 
             Engine engine = new Engine(config);
+
             RenameDriver renamer = engine.CreateFieldRenamer(r1, oldNameAsPath, new DName(newName), CultureInfo.InvariantCulture);
-            
-            Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));            
+            Assert.Equal(expectedExpression, renamer.RenameOptionSet(expressionBase));
         }
 
         [Fact]

@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
@@ -19,6 +17,7 @@ namespace Microsoft.PowerFx.Core
         private readonly RecordType _baseParameters;
         private readonly RecordType _renameParameters;
         private readonly INameResolver _resolver;
+        private readonly INameResolver _renameResolver;
         private readonly Engine _engine;
         private readonly IBinderGlue _binderGlue;
         private readonly CultureInfo _culture;
@@ -36,6 +35,7 @@ namespace Microsoft.PowerFx.Core
             // After this point, _renameParameters should have at most one logical->display pair that can change in this conversion
             _renameParameters = RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
             _resolver = resolver;
+            _renameResolver = RenameResolverHelper(resolver, pathToRename, updatedName);
             _engine = engine;
             _binderGlue = binderGlue;
             _culture = culture;
@@ -59,6 +59,15 @@ namespace Microsoft.PowerFx.Core
             return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, false);
         }
 
+        public string RenameOptionSet(string expressionText)
+        {
+            // Ensure expression is converted to invariant before applying rename.
+            var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters, _culture);
+            var converted = ExpressionLocalizationHelper.ConvertExpression(invariantExpression, _baseParameters, BindingConfig.Default, _renameResolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, true);
+           
+            return ExpressionLocalizationHelper.ConvertExpression(converted, _baseParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, false);
+        }
+
         /// <summary>
         /// Tells if the expression contains will get changed.
         /// </summary>
@@ -67,8 +76,44 @@ namespace Microsoft.PowerFx.Core
         public bool Find(string expressionText)
         {
             var invariantExpression = _engine.GetInvariantExpression(expressionText, _baseParameters, _culture);
-
             return invariantExpression != ApplyRename(invariantExpression);
+        }
+
+        private INameResolver RenameResolverHelper(INameResolver resolver, DPath pathToRename, DName updatedName)
+        {
+            if (resolver is not ReadOnlySymbolTable rost)
+            {
+                throw new Exception("Unexpected resolver");
+            }
+
+            if (!rost.TryLookup(pathToRename[0], out NameLookupInfo nameInfo))
+            {
+                return resolver;
+            }
+
+            SymbolTable st = new SymbolTable();
+            bool updated = false;
+
+            if (nameInfo.Type.Kind == Types.DKind.OptionSet)
+            {
+                OptionSet os = (OptionSet)nameInfo.Data;
+
+                if (pathToRename.Length == 1)
+                {
+                    st.AddEntity(os, updatedName);
+                    updated = true;
+                }
+                else if (pathToRename.Length == 2)
+                {
+                    if (os.TryGetValue(pathToRename[1], out OptionSetValue osValue))
+                    {
+                        st.AddEntity(new OptionSet(os.EntityName, new SingleSourceDisplayNameProvider(new Dictionary<DName, DName> { [new DName(osValue.Option)] = updatedName })));
+                        updated = true;
+                    }
+                }
+            }
+
+            return updated ? new ComposedReadOnlySymbolTable(st, rost) : resolver;
         }
 
         private FormulaType RenameFormulaTypeHelper(AggregateType nestedType, Queue<DName> segments, DName updatedName)
@@ -76,7 +121,7 @@ namespace Microsoft.PowerFx.Core
             var field = segments.Dequeue();
             if (segments.Count == 0)
             {
-                // Create a display name provider with only the name in question
+                // Create a display name provider with only the name in question                
                 var names = new Dictionary<DName, DName>
                 {
                     [field] = updatedName
