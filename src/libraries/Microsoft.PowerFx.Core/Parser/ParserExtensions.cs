@@ -25,9 +25,9 @@ namespace Microsoft.PowerFx.Core.Parser
                 parserOptions.NumberIsFloat = true;
             }
 
-            if (flags.HasFlag(TexlParser.Flags.ReservedKeywords))
+            if (flags.HasFlag(TexlParser.Flags.DisableReservedKeywords))
             {
-                parserOptions.ReservedKeywords = true;
+                parserOptions.DisableReservedKeywords = true;
             }
 
             return parserOptions; 

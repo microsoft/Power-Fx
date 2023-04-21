@@ -123,6 +123,21 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:n]")]
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:n]")]
+        public void TexlDateTableFunctions_Float(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Result:w]")]
+        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Result:w]")]
+        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:w]")]
         public void TexlDateTableFunctions(string expression, string expectedType)
         {
             var engine = new Engine(new PowerFxConfig());
@@ -141,13 +156,36 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
         [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
         [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Value:d]")]
-        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Value:n]")]
-        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Value:n]")]
-        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:n]")]
+        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Value:w]")]
+        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Value:w]")]
+        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:w]")]
         public void TexlDateTableFunctions_ConsistentOneColumnTableResult(string expression, string expectedType)
         {
             var engine = new Engine(new PowerFxConfig(new Features { ConsistentOneColumnTableResult = true }));
-            var result = engine.Check(expression);
+            var options = new ParserOptions() { NumberIsFloat = false };
+            var result = engine.Check(expression, options);
+
+            Assert.True(DType.TryParse(expectedType, out var expectedDType));
+            Assert.Equal(expectedDType, result.Binding.ResultType);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("DateAdd([Date(2000,1,1)],1)", "*[Value:D]")]
+        [InlineData("DateAdd([Date(2000,1,1)],[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Table({a:Date(2000,1,1)}),[3])", "*[Value:D]")]
+        [InlineData("DateAdd(Date(2000,1,1),[1])", "*[Value:D]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],1)", "*[Value:d]")]
+        [InlineData("DateAdd([DateTimeValue(\"1 Jan 2015\")],[3])", "*[Value:d]")]
+        [InlineData("DateAdd(DateTimeValue(\"1 Jan 2015\"),[1])", "*[Value:d]")]
+        [InlineData("DateDiff([Date(2000,1,1)],[Date(2001,1,1)],\"years\")", "*[Value:n]")]
+        [InlineData("DateDiff(Date(2000,1,1),[Date(2001,1,1)],\"years\")", "*[Value:n]")]
+        [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Value:n]")]
+        public void TexlDateTableFunctions_ConsistentOneColumnTableResult_Float(string expression, string expectedType)
+        {
+            var engine = new Engine(new PowerFxConfig(new Features { ConsistentOneColumnTableResult = true }));
+            var options = new ParserOptions() { NumberIsFloat = true };
+            var result = engine.Check(expression, options);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
             Assert.Equal(expectedDType, result.Binding.ResultType);
@@ -353,8 +391,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("CountIf(Table, Today() + A)")]
         [InlineData("CountIf(Table, A > 0, Today() + A)")]
         [InlineData("CountIf(Table, {Result:A})")]
-        [InlineData("CountIf(First(Table), true)")]
         [InlineData("CountIf([1,3,4], NonBoolOptionSet.First")]
+        [InlineData("CountIf(First(Table), true)")]
         public void TexlFunctionTypeSemanticsCountIf_Negative(string expression)
         {
             var symbol = new SymbolTable();
@@ -1492,16 +1530,52 @@ namespace Microsoft.PowerFx.Core.Tests
             var symbol = new SymbolTable();
             symbol.AddVariable("S", FormulaType.Date);
             symbol.AddVariable("R", FormulaType.Number);
+            symbol.AddVariable("W", FormulaType.Decimal);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S, R)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S, W)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsWeekNum_Float()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("S", FormulaType.Date);
+            symbol.AddVariable("R", FormulaType.Number);
+            symbol.AddVariable("W", FormulaType.Decimal);
 
             TestSimpleBindingSuccess(
                 "WeekNum(S)",
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
 
             TestSimpleBindingSuccess(
                 "WeekNum(S, R)",
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
+
+            TestSimpleBindingSuccess(
+                "WeekNum(S, W)",
+                DType.Number,
+                symbol,
+                numberIsFloat: true);
         }
 
         [Fact]
@@ -1512,8 +1586,22 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestSimpleBindingSuccess(
                 "ISOWeekNum(S)",
+                DType.Decimal,
+                symbol,
+                numberIsFloat: false);
+        }
+
+        [Fact]
+        public void TexlFunctionTypeSemanticsISOWeekNum_Float()
+        {
+            var symbol = new SymbolTable();
+            symbol.AddVariable("S", FormulaType.Date);
+
+            TestSimpleBindingSuccess(
+                "ISOWeekNum(S)",
                 DType.Number,
-                symbol);
+                symbol,
+                numberIsFloat: true);
         }
 
         [Theory]
@@ -2264,12 +2352,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
         [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
         [InlineData(@"AddColumns( [1,2,3], %%, Value*3 )", "*[%%:w, Value:w]", "*[Value:w]")]
-        public void TestReservedWords_TurnedOn(string script, string successType, string failType)
+        public void TestReservedWords_Disallowed(string script, string successType, string failType)
         {
             // OkToUse should work, all others include As (an existing keyword) should fail
             string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
 
-            var config = new PowerFxConfig(features: Features.PowerFxV1);
+            var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new Engine(config);
             var opts = new ParserOptions();
 
@@ -2306,14 +2394,14 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData(@"{%%:""hi""}", "![%%:s]", "![_:e]")]
         [InlineData(@"With( { %%: 3 }, %% )", "w", "?")]
         [InlineData(@"With( { %%: 3 }, { Value: %% } )", "![Value:w]", "?")]
-        public void TestReservedWords_TurnedOff(string script, string successType, string failType)
+        public void TestReservedWords_Allowed(string script, string successType, string failType)
         {
             // As should fail (an existing keyword), all others should work
             string[] words = new string[] { "OkToUse", "As", "This", "blank", "null", "nothing", "undefined", "none", "empty", "Is", "Child", "Children", "Siblings" };
 
             var config = new PowerFxConfig();
             var engine = new Engine(config);
-            var opts = new ParserOptions();
+            var opts = new ParserOptions() { DisableReservedKeywords = true };
 
             foreach (var word in words)
             {

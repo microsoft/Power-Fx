@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat")]
         public void Canvas_Float(ExpressionTestCase testCase)
         {
-            // current default features in Canvas
+            // current default features in Canvas a
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
@@ -135,6 +135,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Theory]
         [InlineData("Simple1.txt")]
         [InlineData("Collect.txt")]
+        [InlineData("Patch.txt")]
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
         [InlineData("ForAllMutate.txt")]

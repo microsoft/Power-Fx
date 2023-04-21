@@ -1,0 +1,38 @@
+﻿#SETUP: DisableReservedKeywords
+
+// With ReservedKeywords disabled these tests should pass as if these were normal identifiers
+// Output will still be escaped to ensure future compatibility when ToExpression is used
+
+>> {Is      :1}
+{'Is':1}
+
+>> {This    :1}
+{'This':1}
+
+>> {blank   :1}
+{'blank':1}
+
+>> {empty   :1}
+{'empty':1}
+
+>> {null    :1}
+{'null':1}
+
+>> {none    :1}
+{'none':1}
+
+>> {nothing :1}
+{'nothing':1}
+
+>> {undefined:1}
+{'undefined':1}
+
+>> {Child:1}
+{'Child':1}
+
+>> {Children:1}
+{'Children':1}
+
+>> {Siblings:1}
+{'Siblings':1}
+

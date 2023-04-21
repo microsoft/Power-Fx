@@ -205,13 +205,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// </summary>
         public bool AreFieldsOptional { get; set; } = false;
 
-        #endregion 
-
-        /// <summary>
-        ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
-        ///  any location without coercion.
-        /// </summary>
-        internal bool IsUniversal => Kind == DKind.Error || Kind == DKind.ObjNull;
+        #endregion        
 
         // Constructor for the single invalid DType sentinel value.
         private DType()
@@ -633,7 +627,17 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsLazyType => Kind == DKind.LazyRecord || Kind == DKind.LazyTable;
 
+        public bool IsDateTimeGroup => Kind == DKind.Date || Kind == DKind.DateTime || Kind == DKind.Time;
+
+        public bool IsNumeric => Kind == DKind.Number || Kind == DKind.Decimal;
+
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
+
+        /// <summary>
+        ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
+        ///  any location without coercion.
+        /// </summary>
+        internal bool IsUniversal => Kind == DKind.Error || Kind == DKind.ObjNull;
 
         public int ChildCount
         {
@@ -665,7 +669,7 @@ namespace Microsoft.PowerFx.Core.Types
                     : 0;
 
         public bool HasErrors => IsAggregate
-                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || tn.Type.HasErrors)
+                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || (!tn.Type.IsLazyType && tn.Type.HasErrors))
                     : IsError;
 
         public bool Contains(DName fieldName)

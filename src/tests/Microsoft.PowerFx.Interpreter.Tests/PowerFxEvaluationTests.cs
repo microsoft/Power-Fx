@@ -308,7 +308,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var symbolTable = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
 
                 // These tests are only run in en-US locale for now
-                var check = engine.Check(expr, options: iSetup.Flags.ToParserOptions(new CultureInfo("en-US")), symbolTable: symbolTable);
+                var options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
+                var check = engine.Check(expr, options: options, symbolTable: symbolTable);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
@@ -357,7 +358,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 try
                 {
                     // Serialization test. Serialized expression must produce an identical result.
-                    ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
                     newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                 }
                 catch (InvalidOperationException e)
@@ -367,7 +367,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     if (!NumberIsFloat && e.Message.Contains("value is too large"))
                     {
                         // Serialization test. Serialized expression must produce an identical result.
-                        ParserOptions options = new ParserOptions() { NumberIsFloat = true };
+                        options.NumberIsFloat = true;
                         newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                     }
                     else
