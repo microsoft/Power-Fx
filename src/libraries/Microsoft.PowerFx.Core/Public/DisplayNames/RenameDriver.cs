@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx.Core
         private readonly Engine _engine;
         private readonly IBinderGlue _binderGlue;
         private readonly CultureInfo _culture;
+        private readonly bool _renameOptionSet;
 
         private Dictionary<AggregateType, WrappedDerivedRecordType> _wrappedLazyRecordTypes;
 
@@ -40,6 +41,7 @@ namespace Microsoft.PowerFx.Core
             _engine = engine;
             _binderGlue = binderGlue;
             _culture = culture;
+            _renameOptionSet = renameOptionSet;
         }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace Microsoft.PowerFx.Core
             // Convert back to the invariant expression. All parameter values are already invariant at this point, so we pass _renameParameters, but stripped of it's DisplayNameProvider.
             // Reset the wrapped cache first to ensure we clear all display name providers
             _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
-            var strippedRenameParameters = GetWrappedAggregateType(_renameParameters, DisabledDisplayNameProvider.Instance) as RecordType;
+            var strippedRenameParameters = _renameOptionSet ? _baseParameters : GetWrappedAggregateType(_renameParameters, DisabledDisplayNameProvider.Instance) as RecordType;
             return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, false);
         }
 
