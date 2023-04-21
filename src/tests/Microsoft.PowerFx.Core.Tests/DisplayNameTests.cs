@@ -405,8 +405,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("firstos.option_1 <> Os1Value", "newOsName.Option1 <> Os1Value", "firstos", "newOsName")]        
+        [InlineData("firstos.option_1 <> Os1Value", "newOsName.Option1 <> Os1Value", "firstos", "newOsName")]
         [InlineData("firstos.option_1 <> firstos.option_2", "firstos.option_5 <> firstos.option_2", "firstos.option_1", "option_5")]
+        [InlineData("firstos.option_1 <> option_1", "firstos.option_5 <> option_1", "firstos.option_1", "option_5")]
         [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1Value", "Unknown", "Unknown2")]
         [InlineData("firstos.option_1 <> firstos.option_2", "firstos.option_1 <> firstos.option_2", "firstos.Unknown", "Unknown2")]
         public void RenameParameter_OptionSet(string expressionBase, string expectedExpression, string oldName, string newName)
@@ -422,7 +423,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             RecordType r1 = RecordType.Empty()
                 .Add(new NamedFormulaType("Os1Value", optionSet1.FormulaType, "DisplayOS1Value"))
-                .Add(new NamedFormulaType("firstos", FormulaType.Number, "DisplayNum"));
+                .Add(new NamedFormulaType("option_1", FormulaType.Number, "DisplayNum"));
 
             DPath oldNameAsPath = DPath.Root;
             foreach (var segment in oldName.Split('.'))
