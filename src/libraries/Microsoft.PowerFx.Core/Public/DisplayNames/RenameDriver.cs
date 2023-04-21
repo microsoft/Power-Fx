@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core
 
         private Dictionary<AggregateType, WrappedDerivedRecordType> _wrappedLazyRecordTypes;
 
-        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, INameResolver resolver, IBinderGlue binderGlue, CultureInfo culture, bool renameOptionSet)
+        internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, ReadOnlySymbolTable resolver, IBinderGlue binderGlue, CultureInfo culture, bool renameOptionSet)
         {
             var segments = new Queue<DName>(pathToRename.Segments());
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));
@@ -73,16 +73,11 @@ namespace Microsoft.PowerFx.Core
             return invariantExpression != ApplyRename(invariantExpression);
         }
 
-        private INameResolver RenameResolverHelper(INameResolver resolver, DPath pathToRename, DName updatedName)
-        {
-            if (resolver is not ReadOnlySymbolTable rost)
+        private INameResolver RenameResolverHelper(ReadOnlySymbolTable symbols, DPath pathToRename, DName updatedName)
+        {           
+            if (!((INameResolver)symbols).Lookup(pathToRename[0], out NameLookupInfo nameInfo))
             {
-                throw new Exception("Unexpected resolver");
-            }
-
-            if (!((INameResolver)rost).Lookup(pathToRename[0], out NameLookupInfo nameInfo))
-            {
-                return resolver;
+                return symbols;
             }
 
             SymbolTable st = new SymbolTable();
@@ -107,7 +102,7 @@ namespace Microsoft.PowerFx.Core
                 }
             }
 
-            return updated ? new ComposedReadOnlySymbolTable(st, rost) : resolver;
+            return updated ? new ComposedReadOnlySymbolTable(st, symbols) : symbols;
         }
 
         private FormulaType RenameFormulaTypeHelper(AggregateType nestedType, Queue<DName> segments, DName updatedName)
