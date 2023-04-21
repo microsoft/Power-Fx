@@ -83,6 +83,7 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
                     var funcName = binding?.GetInfo(callNode)?.Function?.Name ?? string.Empty;
                     return new DelegationTelemetryInfo(funcName);
                 default:
+                    //  PII-free unformatted prints of powerapps formulas.
                     return new DelegationTelemetryInfo(StructuralPrint.Print(node, binding));
             }
         }
@@ -99,6 +100,7 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
                     var funcName = binding?.GetInfo(callNode)?.Function?.Name ?? string.Empty;
                     return new DelegationTelemetryInfo(funcName);
                 default:
+                    //  PII-free unformatted prints of powerapps formulas.
                     return new DelegationTelemetryInfo(StructuralPrint.Print(node, binding));
             }
         }
