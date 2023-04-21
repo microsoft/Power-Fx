@@ -3,7 +3,6 @@
 
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
