@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -561,7 +562,16 @@ namespace Microsoft.PowerFx
 
         // Called by language server to get custom tokens.
         // If binding is available, returns context sensitive tokens.  $$$
+        // Keeping this temporarily for custom publish tokens notification
+        // Feature to auto fix casing of function name in the editor also depends on this function and custom publish tokens notification
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this._binding, flags);
+
+        /// <summary>
+        /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
+        /// </summary>
+        /// <param name="comparer">Optional comparer to sort tokens.</param>
+        /// <returns>Ordered or undordered collection of tokens.</returns>
+        internal ICollection<ITokenTextSpan> GetTokens(IComparer<ITokenTextSpan> comparer = null) => Tokenization.Tokenize(_expression, _binding, Parse.Comments, comparer);
 
         private string _expressionInvariant;
 

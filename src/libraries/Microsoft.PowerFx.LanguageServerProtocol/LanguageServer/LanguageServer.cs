@@ -116,6 +116,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
                             break;
+                        case TextDocumentNames.FullDocumentSemanticTokens:
+                            HandleFullDocumentSemanticTokens(id, paramsJson);
+                            break;
+                        case TextDocumentNames.RangeDocumentSemanticTokens:
+                            HandleRangeDocumentSemanticTokens(id, paramsJson);
+                            break;
                         default:
                             _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.MethodNotFound));
                             break;
@@ -413,6 +419,116 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, codeActions));
+        }
+
+        /// <summary>
+        /// Handles requests to compute semantic requests for the full document or expression.
+        /// </summary>
+        /// <param name="id">Request Id.</param>
+        /// <param name="paramsJson">Request Params Stringified Body.</param>
+        private void HandleFullDocumentSemanticTokens(string id, string paramsJson)
+        {
+            if (!TryParseAndValidateSemanticTokenParams(id, paramsJson, out SemanticTokensParams semanticTokensParams))
+            {
+                return;
+            }
+
+            var uri = new Uri(semanticTokensParams.TextDocument.Uri);
+            var queryParams = HttpUtility.ParseQueryString(uri.Query);
+            var expression = queryParams?.Get("expression") ?? string.Empty;
+
+            if (string.IsNullOrEmpty(expression))
+            {
+                // Empty tokens for the empty expression
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
+            var eol = queryParams?.Get("eol");
+            eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
+
+            var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
+            var checkResult = scope.Check(expression);
+            var tokens = checkResult.GetTokens();
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+        }
+
+        /// <summary>
+        /// Handles requests to compute semantic requests for the a specific part of document or expression.
+        /// </summary>
+        /// <param name="id">Request Id.</param>
+        /// <param name="paramsJson">Request Params Stringified Body.</param>
+        private void HandleRangeDocumentSemanticTokens(string id, string paramsJson)
+        {
+            if (!TryParseAndValidateSemanticTokenParams(id, paramsJson, out SemanticTokensRangeParams semanticTokensParams))
+            {
+                return;
+            }
+
+            if (semanticTokensParams.Range == null)
+            {
+                // No tokens for invalid range
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            var uri = new Uri(semanticTokensParams.TextDocument.Uri);
+            var queryParams = HttpUtility.ParseQueryString(uri.Query);
+            var expression = queryParams.Get("expression");
+
+            if (string.IsNullOrEmpty(expression))
+            {
+                // Empty tokens for the empty expression
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
+            var eol = queryParams.Get("eol");
+            eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
+
+            var (startIndex, endIndex) = PositionRangeHelper.ConvertRangeToPositions(semanticTokensParams.Range, expression, eol);
+            if (startIndex < 0 || endIndex < 0)
+            {
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
+            var result = scope.Check(expression);
+            var tokens = result.GetTokens();
+
+            // Only consider overlapping tokens. end index is exlcusive
+            var overlappingTokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(overlappingTokens, expression, eol);
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+        }
+
+        private bool TryParseAndValidateSemanticTokenParams<T>(string id, string paramsJson, out T semanticTokenParams)
+            where T : SemanticTokensParams
+        {
+            semanticTokenParams = null;
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return false;
+            }
+
+            if (!TryParseParams(paramsJson, out semanticTokenParams) || string.IsNullOrWhiteSpace(semanticTokenParams?.TextDocument?.Uri))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return false;
+            }
+
+            return true;
+        }
+
+        private void SendEmptySemanticTokensResponse(string id)
+        {
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse()));
         }
 
         private CompletionItemKind GetCompletionItemKind(SuggestionKind kind)

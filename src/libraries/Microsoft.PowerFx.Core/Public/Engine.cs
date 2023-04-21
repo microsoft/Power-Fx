@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
@@ -118,6 +119,11 @@ namespace Microsoft.PowerFx
 
             symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
             return symbols;
+        }
+
+        private protected virtual IExternalRuleScopeResolver CreateExternalRuleScopeResolver()
+        {
+            return null;
         }
 
         private protected virtual IBinderGlue CreateBinderGlue()
@@ -284,6 +290,8 @@ namespace Microsoft.PowerFx
             // We can still use that for intellisense.             
             var resolver = CreateResolverInternal(out var combinedSymbols, symbolTable);
 
+            var externalRuleScopeResolver = CreateExternalRuleScopeResolver();
+
             var glue = CreateBinderGlue();
 
             var ruleScope = this.GetRuleScope();
@@ -297,6 +305,7 @@ namespace Microsoft.PowerFx
 
             var binding = TexlBinding.Run(
                 glue,
+                externalRuleScopeResolver,
                 parse.Root,
                 resolver,
                 bindingConfig,

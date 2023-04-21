@@ -401,6 +401,19 @@ namespace Microsoft.PowerFx.Core.Binding
             return Run(glue, null, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, features);
         }
 
+        public static TexlBinding Run(
+           IBinderGlue glue,
+           IExternalRuleScopeResolver externalRuleScopeResolver,
+           TexlNode node,
+           INameResolver resolver,
+           BindingConfig bindingConfig,
+           DType ruleScope,
+           Features features = null)
+        {
+            features ??= Features.None;
+            return Run(glue, externalRuleScopeResolver, new DataSourceToQueryOptionsMap(), node, resolver, bindingConfig, false, ruleScope, false, null, features);
+        }
+
         public void WidenResultType()
         {
             SetType(Top, DType.Error);

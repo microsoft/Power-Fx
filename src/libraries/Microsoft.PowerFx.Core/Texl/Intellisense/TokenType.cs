@@ -4,6 +4,7 @@
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     // Keep in sync with src/AppMagic/js/AppMagic.WebAuthoring/Constants/Texl.ts
+    // Keep in sync with the @microsoft/power-fx-formulabar package
     internal enum TokenType
     {
         // default(TokenType) will resolve to Unknown.

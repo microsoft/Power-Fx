@@ -13,7 +13,9 @@ using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
@@ -1374,6 +1376,268 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
             Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
+        }
+
+        [Fact]
+        public void TestCorrectFullSemanticTokensAreReturned()
+        {
+            // Arrange
+            var expression = "Max(1, 2, 3)";
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            Assert.Single(decodedTokens.Where(tok => tok.TokenType == TokenType.Function));
+            Assert.Equal(3, decodedTokens.Where(tok => tok.TokenType == TokenType.NumLit || tok.TokenType == TokenType.DecLit).Count());
+        }
+
+        [Fact]
+        public void TestErrorResponseReturnedWhenUriIsNullForFullSemanticTokensRequest()
+        {
+            // Arrange
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = null }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            AssertErrorPayload(_sendToClientData.FirstOrDefault(), payload.id, JsonRpcHelper.ErrorCode.ParseError);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyFullSemanticTokensResponseReturnedWhenExpressionIsInvalid(bool isPresent)
+        {
+            // Arrange
+            string expression = string.Empty;
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = isPresent ? GetUri($"expression={expression}") : GetUri() }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        [Fact]
+        public void TestFullSemanticTokensResponseReturnedWithDefaultEOL()
+        {
+            // Arrange
+            string expression = "Sum(\n1,1\n)";
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            Assert.Equal(expression.Where(c => c == '\n').Count(), SemanticTokensRelatedTestsHelper.DetermineNumberOfLinesThatTokensAreSpreadAcross(response));
+        }
+
+        [Theory]
+        [InlineData(1, 4, 1, 20, false, false)]
+        [InlineData(1, 6, 1, 20, true, false)]
+        [InlineData(1, 1, 1, 12, false, true)]
+        [InlineData(1, 5, 1, 24, true, false)]
+        [InlineData(1, 5, 1, 15, true, true)]
+        [InlineData(1, 9, 1, 14, true, true)]
+        [InlineData(1, 1, 3, 34, false, false)]
+        [InlineData(1, 3, 2, 12, false, true)]
+        [InlineData(2, 11, 3, 3, true, true)]
+        [InlineData(1, 24, 3, 17, false, false)]
+        public void TestCorrectRangeSemanticTokensAreReturned(int startLine, int startLineCol, int endLine, int endLineCol, bool tokenDoesNotAlignOnLeft, bool tokenDoesNotAlignOnRight)
+        {
+            // Arrange
+            var expression = "If(Len(Phone_Number) < 10,\nNotify(\"Invalid Phone\nNumber\"),Notify(\"Valid Phone No\"))";
+            var eol = "\n";
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") },
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(startLine, endLine, startLineCol, endLineCol)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData.FirstOrDefault(), payload.id);
+            var (startIndex, endIndex) = PositionRangeHelper.ConvertRangeToPositions(semanticTokenParams.Range, expression, eol);
+            var decodedResponse = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression, eol);
+
+            var leftMostTok = decodedResponse.Min(tok => tok.StartIndex);
+            var rightMostTok = decodedResponse.Max(tok => tok.EndIndex);
+
+            Assert.All(decodedResponse, (tok) => Assert.False(tok.EndIndex <= leftMostTok || tok.StartIndex >= rightMostTok));
+            if (tokenDoesNotAlignOnLeft)
+            {
+                Assert.True(leftMostTok < startIndex);
+            }
+            else
+            {
+                Assert.True(leftMostTok >= startIndex);
+            }
+
+            if (tokenDoesNotAlignOnRight)
+            {
+                Assert.True(rightMostTok > endIndex);
+            }
+            else
+            {
+                Assert.True(rightMostTok <= endIndex);
+            }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyRangeSemanticTokensResponseReturnedWhenExpressionIsInvalid(bool isPresent)
+        {
+            // Arrange
+            string expression = string.Empty;
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = isPresent ? GetUri($"expression={expression}") : GetUri() },
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        [Fact]
+        public void TestErrorResponseReturnedWhenUriIsNullForRangeSemanticTokensRequest()
+        {
+            // Arrange
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = null },
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            AssertErrorPayload(_sendToClientData.FirstOrDefault(), payload.id, JsonRpcHelper.ErrorCode.ParseError);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyRangeSemanticTokensResponseReturnedWhenRangeIsNullOrInvalid(bool isNull)
+        {
+            // Arrange
+            var expression = "If(Len(Phone_Number) < 10,\nNotify(\"Invalid Phone\nNumber\"),Notify(\"Valid Phone No\"))";
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") },
+                Range = isNull ? null : SemanticTokensRelatedTestsHelper.CreateRange(expression.Length + 2, 2, 1, 2)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        private static SemanticTokensResponse AssertAndGetSemanticTokensResponse(string response, string id)
+        {
+            var tokensResponse = AssertAndGetResponsePayload<SemanticTokensResponse>(response, id);
+            Assert.NotNull(tokensResponse);
+            Assert.NotNull(tokensResponse.Data);
+            return tokensResponse;
+        }
+
+        private static void AssertErrorPayload(string response, string id, JsonRpcHelper.ErrorCode expectedCode)
+        {
+            Assert.NotNull(response);
+            var derializedResponse = JsonDocument.Parse(response);
+            var root = derializedResponse.RootElement;
+            Assert.True(root.TryGetProperty("id", out var responseId));
+            Assert.Equal(id, responseId.GetString());
+            Assert.True(root.TryGetProperty("error", out var errElement));
+            Assert.True(errElement.TryGetProperty("code", out var codeElement));
+            var code = (JsonRpcHelper.ErrorCode)codeElement.GetInt32();
+            Assert.Equal(expectedCode, code);
+        }
+
+        private static T AssertAndGetResponsePayload<T>(string response, string id)
+        {
+            Assert.NotNull(response);
+            var derializedResponse = JsonDocument.Parse(response);
+            var root = derializedResponse.RootElement;
+            root.TryGetProperty("id", out var responseId);
+            Assert.Equal(id, responseId.GetString());
+            root.TryGetProperty("result", out var resultElement);
+            var @params = JsonSerializer.Deserialize<T>(resultElement.GetRawText(), _jsonSerializerOptions);
+            return @params;
+        }
+
+        private static (string payload, string id) GetRangeDocumentSemanticTokensRequestPayload(SemanticTokensRangeParams @params, string id = null)
+        {
+            return GetReqestPayload(@params, TextDocumentNames.RangeDocumentSemanticTokens, id);
+        }
+
+        private static (string payload, string id) GetFullDocumentSemanticTokensRequestPayload(SemanticTokensParams @params, string id = null)
+        {
+            return GetReqestPayload(@params, TextDocumentNames.FullDocumentSemanticTokens, id);
+        }
+        
+        private static string GetUri(string queryParams = null)
+        {
+            var uriBuilder = new UriBuilder("powerfx://app")
+            {
+                Query = queryParams ?? string.Empty
+            };
+            return uriBuilder.Uri.AbsoluteUri;
+        }
+
+        private static (string payload, string id) GetReqestPayload<T>(T @params, string method, string id = null)
+        {
+            id ??= Guid.NewGuid().ToString();
+            var payload = JsonSerializer.Serialize(
+            new
+            {
+                jsonrpc = "2.0",
+                id,
+                method,
+                @params
+            }, _jsonSerializerOptions);
+            return (payload, id);
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)
