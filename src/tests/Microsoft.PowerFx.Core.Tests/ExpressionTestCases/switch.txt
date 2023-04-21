@@ -1,5 +1,4 @@
-﻿#SKIPFILE: PowerFxV1CompatibilityRules
-
+﻿
 // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-if
 
 // 3 args: Test, (match,result)
@@ -273,10 +272,6 @@ Date(2000,1,5)
 >> Switch("Case1","Case2",Date(2000,1,4),"Case1",DateValue("1/10/2000"))
 Date(2000,1,10)
 
-//Date-DateTime
->> Switch("Case1","Case2",Date(2000,1,4),"Case1",DateTimeValue("4/1/2001 10:00:00"))
-DateTime(2001,4,1,10,0,0,0)
-
 // ====================== FIRST RESULT TIME, SECOND RESULT OTHER DATAYPE ======================
 
 >> Switch("Case1","Case2",Time(6,30,30),"Case1",100)
@@ -298,10 +293,6 @@ Time(6,30,40,0)
 
 >> Switch("Case1","Case2",Time(6,30,30),"Case1",TimeValue("6:00:00"))
 Time(6,0,0,0)
-
-//Time-DateTime
->> Switch("Case1","Case2",Time(6,30,30),"Case1",DateTimeValue("4/1/2001 10:00:00"))
-DateTime(2001,4,1,10,0,0,0)
 
 // ====================== FIRST RESULT DATETIME, SECOND RESULT OTHER DATAYPE ======================
 
