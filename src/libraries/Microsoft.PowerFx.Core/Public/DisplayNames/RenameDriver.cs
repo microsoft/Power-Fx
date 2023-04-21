@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core
             _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
 
             // After this point, _renameParameters should have at most one logical->display pair that can change in this conversion
-            _renameParameters = renameOptionSet ? parameters : RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
+            _renameParameters = renameOptionSet ? null : RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
             _resolver = resolver;
             _renameResolver = renameOptionSet ? RenameResolverHelper(resolver, pathToRename, updatedName) : resolver;
             _engine = engine;

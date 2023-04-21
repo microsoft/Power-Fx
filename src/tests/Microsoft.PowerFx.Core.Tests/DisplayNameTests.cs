@@ -421,7 +421,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.AddOptionSet(optionSet1, new DName("TestFirstOptionSet"));
 
             RecordType r1 = RecordType.Empty()
-                .Add(new NamedFormulaType("Os1Value", optionSet1.FormulaType, "DisplayOS1Value"));
+                .Add(new NamedFormulaType("Os1Value", optionSet1.FormulaType, "DisplayOS1Value"))
+                .Add(new NamedFormulaType("firstos", FormulaType.Number, "DisplayNum"));
 
             DPath oldNameAsPath = DPath.Root;
             foreach (var segment in oldName.Split('.'))
