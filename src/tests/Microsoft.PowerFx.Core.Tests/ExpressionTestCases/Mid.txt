@@ -196,3 +196,9 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 
 >> Mid("Jane" & "Smith" & 67890 & true & Blank() & Text(12, "#.000") & Date(1976, 12,23),10,5)
 "67890"
+
+>> Mid("asdf",1e28,2)
+""
+
+>> Mid("asdf",-1e28,2)
+Error({Kind:ErrorKind.InvalidArgument})

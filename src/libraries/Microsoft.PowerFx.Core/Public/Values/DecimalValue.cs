@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
@@ -10,6 +11,9 @@ namespace Microsoft.PowerFx.Types
 {
     public class DecimalValue : PrimitiveValue<decimal>
     {
+        // List of types that allowed to convert to DecimalValue
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToDecimal = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Decimal, FormulaType.DateTime, FormulaType.Date, FormulaType.Boolean };
+
         internal DecimalValue(IRContext irContext, decimal value)
             : base(irContext, value)
         {

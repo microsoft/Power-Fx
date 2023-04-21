@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
@@ -1227,11 +1228,11 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.RandBetween,
-                StandardErrorHandling<NumberValue>(
+                StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.RandBetween.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeTypes: NumberOrDecimal,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RandBetween)
@@ -2126,6 +2127,8 @@ namespace Microsoft.PowerFx.Functions
                     var allErrors = new List<RecordValue>();
                     foreach (var error in res.Error.Errors)
                     {
+                        runner.CheckCancel();
+
                         var kindProperty = new NamedValue("Kind", FormulaValue.New((int)error.Kind));
                         var messageProperty = new NamedValue(
                             "Message",
@@ -2209,17 +2212,29 @@ namespace Microsoft.PowerFx.Functions
             {
                 var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
 
-                if (errorRecord.GetField(ErrorType.KindFieldName) is ErrorValue error)
+                var kindField = errorRecord.GetField(ErrorType.KindFieldName);
+                if (kindField is ErrorValue error)
                 {
                     return error;
                 }
 
-                if (errorRecord.GetField(ErrorType.KindFieldName) is not NumberValue kindField)
+                ErrorKind errorKind;
+                switch (kindField)
                 {
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
+                    case NumberValue nv:
+                        errorKind = (ErrorKind)(int)nv.Value;
+                        break;
+                    case DecimalValue dv:
+                        errorKind = (ErrorKind)(int)dv.Value;
+                        break;
+                    case OptionSetValue osv:
+                        errorKind = (ErrorKind)Convert.ToInt32(osv.ExecutionValue, CultureInfo.InvariantCulture);
+                        break;
+                    default:
+                        return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
-                result.Add(new ExpressionError { Kind = (ErrorKind)kindField.Value, Message = messageField?.Value as string });
+                result.Add(new ExpressionError { Kind = errorKind, Message = messageField?.Value as string });
             }
 
             return result;
@@ -2242,6 +2257,8 @@ namespace Microsoft.PowerFx.Functions
 
             for (var i = 1; i < args.Length - 1; i += 2)
             {
+                runner.CheckCancel();
+
                 var match = (LambdaFormulaValue)args[i];
                 var matchValue = await match.EvalAsync().ConfigureAwait(false);
 
@@ -2331,6 +2348,8 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 SymbolContext childContext;
                 if (row.IsValue)
                 {
@@ -2360,6 +2379,8 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
 
                 // Filter evals to a boolean

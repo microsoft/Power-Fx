@@ -40,8 +40,6 @@ namespace Microsoft.PowerFx.Interpreter
 
         protected virtual bool IsScalar => false;
 
-        public override bool SupportsParamCoercion => false;
-
         public override bool CanSuggestInputColumns => true;
 
         public override bool ArgMatchesDatasourceType(int argNum)
@@ -175,20 +173,28 @@ namespace Microsoft.PowerFx.Interpreter
 
             if (fValid)
             {
-                // The item type must be compatible with the collection schema.
-                var fError = false;
-                returnType = DType.Union(
-                    ref fError, 
-                    collectionType.ToRecord(), 
-                    collectedType, 
-                    useLegacyDateTimeAccepts: false, 
-                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
-                if (fError)
+                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
+                }
+                else
+                {
+                    if (coercionNeeded)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], coercionType);
+                    }
+
+                    var fError = false;
+
+                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, allowCoerce: true, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+
+                    if (fError)
+                    {
+                        fValid = false;
+                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTableDoesNotAcceptThisType);
+                        }
                     }
                 }
             }

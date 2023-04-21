@@ -40,9 +40,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(Governor)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
-#pragma warning disable CS0618 // Type or member is obsolete
-                $"{ns}.{nameof(RecalcEngineScope)}",
-#pragma warning restore CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(IExpressionEvaluator)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
@@ -721,26 +718,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CheckIntefaceSuccess()
-        {
-            var engine = new RecalcEngine();
-            CheckThroughInterface(engine);
-        }
-
-        private void CheckThroughInterface(IPowerFxEngine engine)
-        {
-            var result = engine.Check(
-               "3*2+x",
-               RecordType.Empty().Add(
-                   new NamedFormulaType("x", FormulaType.Number)));
-
-            Assert.True(result.IsSuccess);
-            Assert.True(result.ReturnType is NumberType);
-            Assert.Single(result.TopLevelIdentifiers);
-            Assert.Equal("x", result.TopLevelIdentifiers.First());
-        }
-
-        [Fact]
         public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig();
@@ -1099,7 +1076,7 @@ namespace Microsoft.PowerFx.Tests
             // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
             // RandBetween maps 0.5 to 6. 
             result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
-            Assert.Equal(6.0, result.ToObject());
+            Assert.Equal(6.0m, result.ToObject());
         }
 
         [Fact]

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Text;
@@ -15,8 +16,12 @@ namespace Microsoft.PowerFx.Types
     /// </summary>
     public class DateTimeValue : PrimitiveValue<DateTime>
     {
+        // List of types that allowed to convert to DateTimeValue
+        internal static readonly IReadOnlyList<FormulaType> AllowedListConvertToDateTime = new FormulaType[] { FormulaType.String, FormulaType.Number, FormulaType.Decimal, FormulaType.DateTime, FormulaType.Date };
+
         /// <summary>
         /// Direct use of <see cref="Value"/> is prohibited in favor of <see cref="GetConvertedValue(TimeZoneInfo)"/> method.
+        /// Only use 'new' keyword here to catch accidental uses of base class method. 
         /// </summary>
         [Obsolete("Use Method" + nameof(GetConvertedValue) + " instead, with proper timezone information.")]
         public new DateTime Value => base.Value;

@@ -566,6 +566,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
+                runner.CheckCancel();
+
                 SymbolContext childContext;
                 if (row.IsValue)
                 {
@@ -1215,10 +1217,20 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, value);
         }
 
-        public static FormulaValue RandBetween(IServiceProvider services, IRContext irContext, NumberValue[] args)
+        public static FormulaValue RandBetween(IServiceProvider services, IRContext irContext, FormulaValue[] args)
         {
-            var lower = args[0].Value;
-            var upper = args[1].Value;
+            return (args[0], args[1]) switch
+            {
+                (NumberValue lower, NumberValue upper) => RandBetweenFloat(services, irContext, lower, upper),
+                (DecimalValue lower, DecimalValue upper) => RandBetweenDecimal(services, irContext, lower, upper),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
+        }
+
+        public static FormulaValue RandBetweenFloat(IServiceProvider services, IRContext irContext, NumberValue lowerArg, NumberValue upperArg)
+        {
+            var lower = lowerArg.Value;
+            var upper = upperArg.Value;
 
             if (lower > upper)
             {
@@ -1235,6 +1247,29 @@ namespace Microsoft.PowerFx.Functions
 
             var value = services.SafeNextDouble();
             return new NumberValue(irContext, Math.Floor((value * (upper - lower + 1)) + lower));
+        }
+
+        public static FormulaValue RandBetweenDecimal(IServiceProvider services, IRContext irContext, DecimalValue lowerArg, DecimalValue upperArg)
+        {
+            decimal lower = lowerArg.Value;
+            decimal upper = upperArg.Value;
+
+            if (lower > upper)
+            {
+                return new ErrorValue(irContext, new ExpressionError()
+                {
+                    Message = $"Lower value cannot be greater than Upper value",
+                    Span = irContext.SourceContext,
+                    Kind = ErrorKind.Numeric
+                });
+            }
+
+            lower = Math.Ceiling(lower);
+            upper = Math.Floor(upper);
+
+            decimal value = (decimal)services.SafeNextDouble();
+
+            return new DecimalValue(irContext, Math.Floor((value * (upper - lower + 1m)) + lower));
         }
 
         private static FormulaValue Pi(IRContext irContext, FormulaValue[] args)
@@ -1300,10 +1335,74 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        // Functions that return an integer result, such as Len, will return a Decimal by default or
+        // a Float if compiled under NumberIsFloat.  Decimal is preferrable for decimal centric calculations
+        // as a Float will promote the entire expression to Float and possibly lose precision.
+        //
+        // Could these variations be done as an overload?  Yes. But we really want to make sure we get the
+        // right onw and not have C# coerce to another data type and possibly lose precision.
+        private static FormulaValue NumberOrDecimalValue(IRContext irContext, int value)
+        {
+            // all int values fit in both double and decimal
+            if (irContext.ResultType == FormulaType.Number)
+            {
+                return new NumberValue(irContext, (double)value);
+            }
+            else if (irContext.ResultType == FormulaType.Decimal)
+            {
+                return new DecimalValue(irContext, (decimal)value);
+            }
+            else
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+        }
+
+        private static FormulaValue NumberOrDecimalValue_Long(IRContext irContext, long value)
+        {
+            // all long values fit in both double and decimal, however Number could lose some precision
+            if (irContext.ResultType == FormulaType.Number)
+            {
+                return new NumberValue(irContext, (double)value);
+            }
+            else if (irContext.ResultType == FormulaType.Decimal)
+            {
+                return new DecimalValue(irContext, (decimal)value);
+            }
+            else
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+        }
+
+        // This function should only be used in places where we don't expect value to exceed the range of a decimal
+        private static FormulaValue NumberOrDecimalValue_Double(IRContext irContext, double value)
+        {
+            if (irContext.ResultType == FormulaType.Number)
+            {
+                return new NumberValue(irContext, value);
+            }
+            else if (irContext.ResultType == FormulaType.Decimal)
+            {
+                try
+                {
+                    return new DecimalValue(irContext, (decimal)value);
+                }
+                catch (OverflowException)
+                {
+                    return CommonErrors.OverflowError(irContext);
+                }
+            }
+            else
+            {
+                return CommonErrors.UnreachableCodeError(irContext);
+            }
+        }
+
         private static FormulaValue Dec2Hex(IRContext irContext, NumberValue[] args)
         {
-            var minNumber = -(1L << 39);
-            var maxNumber = (1L << 39) - 1;
+            long minNumber = -(1L << 39); // -549755813888
+            long maxNumber = (1L << 39) - 1; // +549755813887
 
             var number = Math.Floor(args[0].Value);
             int? places = null;
@@ -1364,7 +1463,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (string.IsNullOrEmpty(number))
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (number.Length > 10)
@@ -1378,7 +1477,7 @@ namespace Microsoft.PowerFx.Functions
                 var maxNumber = (long)(1L << 40);
                 long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var negative_result);
                 negative_result -= maxNumber;
-                return new NumberValue(irContext, negative_result);
+                return NumberOrDecimalValue_Long(irContext, negative_result);
             }
 
             if (!long.TryParse(number, System.Globalization.NumberStyles.HexNumber, null, out var result))
@@ -1386,7 +1485,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.OverflowError(irContext);
             }
 
-            return new NumberValue(irContext, result);
+            return NumberOrDecimalValue_Long(irContext, result);
         }
     }
 }

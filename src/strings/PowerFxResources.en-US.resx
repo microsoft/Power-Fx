@@ -1853,6 +1853,10 @@
     <value>Numeric value is too large.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Use of a reserved word that is currently not supported.</value>
+    <comment>Error Message.</comment>
+  </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
     <value>Expression can't be more than {0} characters. The expression is {1} characters.</value>
     <comment>Error Message when the expression text is too long.</comment>
@@ -5133,5 +5137,25 @@
   <data name="InvalidCast" xml:space="preserve">
     <value>Type conversion failed because the given value was of type '{0}', expected '{1}' type.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Delegating this operation on table '{0}' is not supported.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Id expression refers to ThisRecord.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
+    <comment>Warning message.</comment>
   </data>
 </root>
