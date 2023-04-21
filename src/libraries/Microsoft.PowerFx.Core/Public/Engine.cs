@@ -134,9 +134,9 @@ namespace Microsoft.PowerFx
         {
             return new ParserOptions
             {
-                 Culture = null,
-                 AllowsSideEffects = false,
-                 MaxExpressionLength = Config.MaximumExpressionLength,
+                Culture = null,
+                AllowsSideEffects = false,
+                MaxExpressionLength = Config.MaximumExpressionLength,
             };
         }
 
@@ -171,7 +171,6 @@ namespace Microsoft.PowerFx
             }
 
             options ??= new ParserOptions();
-
             var result = options.Parse(expressionText, features ?? Features.None);
             return result;            
         }

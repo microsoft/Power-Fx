@@ -451,3 +451,21 @@ Error({Kind:ErrorKind.Div0})
 
 >> Year(If(1/0<2,Date(2000,1,1)))
 Error({Kind:ErrorKind.Div0})
+
+>> Date(1e28,5,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,1e28,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,5,1e28)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(-1e28,5,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,-1e28,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,5,-1e28)
+Error({Kind:ErrorKind.InvalidArgument})

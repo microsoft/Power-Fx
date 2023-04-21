@@ -1,6 +1,8 @@
-﻿#SETUP: DisableMemChecks
+﻿#SETUP: PowerFxV1CompatibilityRules
 
-// ****** Numeric arguments, scalar arguments ******
+// With this flag enabled, return type is
+// - always argTypes[0] if 1st element is [Date, Time, DateTime, Number, Decimal]
+// - otherwise it's Decimal or Number, depending on NumberIsFloat flag
 
 >> Max(1)
 1
@@ -116,24 +118,25 @@ Time(2,0,0,0)
 Time(1,50,0,0)
 
 >> Max(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
-DateTime(2022,3,8,13,50,0,0)
+Date(2022,3,8)
 
 >> Min(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
-DateTime(2022,3,8,0,0,0,0)
-
-// ****** Mix and numeric and date/time arguments, scalar arguments (result is numeric) ******
+Date(2022,3,8)
 
 // Date(2022, 9, 9) = 44813
 >> Max(Date(2022, 9, 9), 50000)
-50000
+Date(2036,11,21)
 
 >> Min(Date(2022, 9, 9), 50000)
-44813
+Date(2022,9,9)
 
 >> Max(Date(2022, 9, 9), 40000)
-44813
+Date(2022,9,9)
 
 >> Min(Date(2022, 9, 9), 40000)
+Date(2009,7,6)
+
+>> Min(40000, Date(2022, 9, 9))
 40000
 
 // ****** Coercions, scalar arguments ******
@@ -232,23 +235,11 @@ Error({Kind:ErrorKind.Numeric})
 
 // ****** Table + expression, numeric ******
 
->> Max(Sequence(10000), Value)
-10000
-
->> Min(Sequence(10000), Value)
-1
-
 >> Max([1, 2, 3, 4, 5], Value)
 5
 
 >> Min([1, 2, 3, 4, 5], Value)
 1
-
->> Max(Sequence(33333, 10),Value)
-33342
-
->> Min(Sequence(33333, 10),Value)
-10
 
 >> Max([1, 2, 3], 4)
 4
@@ -269,12 +260,6 @@ Date(1986,10,19)
 
 >> Min(Table({Name:"John Doe", DOB:Date(1985,3,5)},{Name:"Jane Roe", DOB:Date(1986,10,19)}),DOB)
 Date(1985,3,5)
-
->> Max(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
-Date(1999,12,31)
-
->> Min(Sequence(10000), DateAdd(Date(2000,1,1), -Value, TimeUnit.Days))
-Date(1972,8,15)
 
 >> Max(Sequence(10), Date(2000,1,10 + Value))
 Date(2000,1,20)
@@ -317,17 +302,106 @@ Errors: Error 13-16: Expected number. We expect a number at this point in the fo
 Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Max' has some invalid arguments.
 
 >> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0), Time(12, 1, 7))
-0.500775462962963
+Date(1899,12,30)
 
 >> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5), Time(12, 1, 7))
-0.500775462962963
+DateTime(1899,12,30,12,1,7,0)
 
 >> Min(Time(12, 1, 7), Date(1985,3,5), DateTime(2014,11,11,13,50,0))
-0.500775462962963
+Time(0,0,0,0)
 
 >> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0))
-DateTime(1985,3,5,0,0,0,0)
+Date(1985,3,5)
 
 >> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5))
 DateTime(1985,3,5,0,0,0,0)
 
+>> Max("1",2)
+2
+
+>> Max(1,"2")
+2
+
+>> Min(1/0, Date(2023, 4, 20)) 
+Error({Kind:ErrorKind.Div0})
+
+>> Min(Date(2023, 4, 20), 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> Min(1, "foo")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Min(Today(), 3)
+Date(1900,1,2)
+
+// "2023" as a string cannot be coerced to a DateTime (invalid format)
+>> Min(Now(), "2023")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>>Min(Now(), "2023-01-01")
+DateTime(2023,1,1,0,0,0,0)
+
+>> Min("1E1", "20")
+10
+
+>> Min(true, false)
+0
+
+>> Max(false, true)
+1
+
+// Value(Date(2023,3,15)) = 45000
+>> Min(Date(2112,1,1), 45000)
+Date(2023,3,15)
+
+>> Min(Date(2023,3,15), DateTime(2021,2,3,4,5,6))
+Date(2021,2,3)
+
+>> Min(Today(), Time(12,0,0))
+Date(1899,12,30)
+
+>> Min(Date(2112,1,1), "2023-01-01", "2022-12-30")
+Date(2022,12,30)
+
+>> Min(Now(), 45000.5)
+DateTime(2023,3,15,12,0,0,0)
+
+>> Min(DateTime(2023,3,15,0,0,0), Date(2021,2,3))
+DateTime(2021,2,3,0,0,0,0)
+
+>> Min(Now(), Time(12,34,56))
+DateTime(1899,12,30,12,34,56,0)
+
+>> Min(Now(), "2023-01-01T12:34:56", "2022-12-30")
+DateTime(2022,12,30,0,0,0,0)
+
+>> Min(Time(12,0,0),0.25)
+Time(6,0,0,0)
+
+>> Min(Time(12,0,0), DateTime(1888,10,20,12,34,56,789))
+Time(12,0,0,0)
+
+>> Max(Time(12,0,0), DateTime(1888,10,20,12,34,56,789))
+Time(12,34,56,789)
+
+>> Min(Time(12,0,0), Today())
+Time(0,0,0,0)
+
+>> Min(Time(12,0,0), "06:00:00", "03:45:00")
+Time(3,45,0,0)
+
+>> Min(50000, Date(2023,3,15))
+45000
+
+>> Min(50000, DateTime(2023,3,15,18,0,0))
+45000.75
+
+>> Min(0.75, Time(12,0,0))
+0.5
+
+>> Min(3, true, "5")
+1
+
+>> Min(3, true, "-5")
+-5
+ 

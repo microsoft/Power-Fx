@@ -1076,7 +1076,7 @@ namespace Microsoft.PowerFx.Tests
             // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
             // RandBetween maps 0.5 to 6. 
             result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
-            Assert.Equal(6.0, result.ToObject());
+            Assert.Equal(6.0m, result.ToObject());
         }
 
         [Fact]
