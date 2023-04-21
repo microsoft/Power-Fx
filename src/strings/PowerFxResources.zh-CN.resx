@@ -567,6 +567,24 @@
     <value>将多个文本值联接为一个文本值。</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>将表示数字的“文本”转换为数值。</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>在转换值时要使用的语言代码。</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>要转换为数值的文本值。</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>将表示数字的“文本”转换为浮点值。</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>在转换值时要使用的语言代码。</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>要转换为浮点值的文本值。</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>文本</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>要编码的 URL。</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' 是一个可识别但不支持的函数。</value>
+    
   </data>
 </root>

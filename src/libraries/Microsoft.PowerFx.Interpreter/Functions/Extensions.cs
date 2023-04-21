@@ -46,8 +46,10 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="arg">Arg node.</param>
         /// <param name="errors">Error object reference.</param>
         /// <param name="supportsParamCoercion">Does the caller function support coercion.</param>
+        /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
+        /// permissive Accepts relationships).</param>
         /// <returns></returns>
-        internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false)
+        internal static bool CheckAggregateNames(this DType argType, DType dataSourceType, TexlNode arg, IErrorContainer errors, bool supportsParamCoercion = false, bool usePowerFxV1CompatibilityRules = false)
         {
             bool isValid = true;
 
@@ -72,8 +74,8 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: false) &&
-                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false) || !coercionIsSafe))
+                if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) &&
+                    (!supportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
                 {
                     if (dsNameType.Kind == type.Kind)
                     {

@@ -41,7 +41,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
 
             // The argument should be a table of one column.
             var argType = argTypes[0];
@@ -56,10 +61,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedTableCol_Func, Name);
             }
-            else if (!DType.Number.Accepts(columns.Single().Type) && !DType.Decimal.Accepts(columns.Single().Type))
+            else if (
+                !DType.Number.Accepts(
+                    columns.Single().Type,
+                    exact: true, 
+                    useLegacyDateTimeAccepts: false, 
+                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
+                !DType.Decimal.Accepts(
+                    columns.Single().Type,
+                    exact: true,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 fValid = false;
-                errors.EnsureError(DocumentErrorSeverity.Warning, args[0], TexlStrings.ErrInvalidSchemaNeedNumCol_Col, columns.Single().Name);
+                errors.EnsureError(DocumentErrorSeverity.Warning, args[0], TexlStrings.ErrInvalidSchemaNeedTypeCol_Col, DType.Number.GetKindString(), columns.Single().Name);
             }
 
             return fValid;

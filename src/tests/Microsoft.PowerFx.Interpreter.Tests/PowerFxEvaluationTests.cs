@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx;
@@ -307,7 +308,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var symbolTable = ReadOnlySymbolTable.NewFromRecord(parameters.Type);
 
                 // These tests are only run in en-US locale for now
-                var check = engine.Check(expr, options: iSetup.Flags.ToParserOptions(new CultureInfo("en-US")), symbolTable: symbolTable);
+                var options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
+                var check = engine.Check(expr, options: options, symbolTable: symbolTable);
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
@@ -341,11 +343,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 FormulaValue newValueDeserialized;
 
+                var sb = new StringBuilder();
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    UseCompactRepresentation = true,
+                };
+                newValue.ToExpression(sb, settings);
+
                 try
                 {
                     // Serialization test. Serialized expression must produce an identical result.
-                    ParserOptions options = new ParserOptions() { NumberIsFloat = NumberIsFloat };
-                    newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                    newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                 }
                 catch (InvalidOperationException e)
                 {
@@ -354,8 +362,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     if (!NumberIsFloat && e.Message.Contains("value is too large"))
                     {
                         // Serialization test. Serialized expression must produce an identical result.
-                        ParserOptions options = new ParserOptions() { NumberIsFloat = true };
-                        newValueDeserialized = await engine.EvalAsync(newValue.ToExpression(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
+                        options.NumberIsFloat = true;
+                        newValueDeserialized = await engine.EvalAsync(sb.ToString(), CancellationToken.None, options, runtimeConfig: runtimeConfig).ConfigureAwait(false);
                     }
                     else
                     {

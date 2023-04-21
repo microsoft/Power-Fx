@@ -11,18 +11,24 @@ namespace Microsoft.PowerFx.Interpreter
 {
     public class CustomFunctionErrorException : Exception
     {
-        public readonly ErrorKind ErrorKind;
+        public ErrorKind ErrorKind => ExpressionError.Kind;
+
+        public readonly ExpressionError ExpressionError;
+
+        public CustomFunctionErrorException(ExpressionError expressionError)
+            : base(expressionError.Message)
+        {
+            this.ExpressionError = expressionError;
+        }
 
         public CustomFunctionErrorException(string message)
-            : base(message) 
+            : this(new ExpressionError() { Message = message, Kind = ErrorKind.None }) 
         {
-            ErrorKind = ErrorKind.None;
         }
 
         public CustomFunctionErrorException(string message, ErrorKind kind)
-            : this(message)
+            : this(new ExpressionError() { Message = message, Kind = kind })
         {
-            ErrorKind = kind;
         }
     }
 }

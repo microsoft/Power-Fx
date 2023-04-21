@@ -96,88 +96,149 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var count = args.Length;
             nodeToCoercedTypeMap = null;
 
+            // Check the predicates.
             var fArgsValid = true;
+            var type = ReturnType;
 
-            /*
-            If we were to write IfError(v1, f1, v2, f2, ..., vn, fn) in a try...catch way, it would look something like:
-                
-            var result
-            try {
-                result = v1();
-            } catch {
-                return f1();
-            }
-            try {
-                result = v2();
-            } catch {
-                return f2();
-            }
-            ...
-            try {
-                result = vn();
-            } catch {
-                return fn();  // omit this last catch if there is an odd number of arguments
-            }
-            return result;
+            var isBehavior = context.AllowsSideEffects;
 
-            In this case, we prefer the type of the last v_i as the return type.
-            Possible return values are:
-            Even case: f1, f2, ..., vn, fn
-            Odd case: f1, f2, ..., vn
-            */
-
-            var preferredTypeIndex = (count % 2) == 0 ? count - 2 : count - 1;
-            var type = argTypes[preferredTypeIndex];
-            if (type.IsError)
-            {
-                errors.EnsureError(args[preferredTypeIndex], TexlStrings.ErrTypeError);
-                fArgsValid = false;
-            }
-
-            for (var i = count - 1; i >= 0; i -= 2)
+            Contracts.Assert(type == DType.Unknown);
+            for (var i = 0; i < count;)
             {
                 var nodeArg = args[i];
                 var typeArg = argTypes[i];
 
-                var typeSuper = type.IsError ? typeArg : DType.Supertype(type, typeArg);
-
-                if (!typeSuper.IsError)
+                if (typeArg.IsError)
                 {
-                    // If preferred type was error or null (due to Blank or Error) assign new type in hierarchy
-                    if (type.IsError || type == DType.ObjNull)
+                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                }
+
+                // In an IfError expression, not all expressions can be returned to the caller:
+                // - If there is an even number of arguments, only the fallbacks or the last
+                //   value (the next-to-last argument) can be returned:
+                //   IfError(v1, f1, v2, f2, v3, f3) --> possible values to be returned are f1, f2, f3 or v3
+                // - If there is an odd number of arguments, only the fallbacks or the last
+                //   value (the last argument) can be returned:
+                //   IfError(v1, f1, v2, f2, v3) --> possible values to be returned are f1, f2 or v3
+                var typeCanBeReturned = (i % 2) == 1 || i == ((count % 2) == 0 ? (count - 2) : (count - 1));
+
+                if (typeCanBeReturned)
+                {
+                    // Let's check if it matches the other types that can be returned
+                    var typeSuper = DType.Supertype(type, typeArg, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+
+                    if (!typeSuper.IsError)
                     {
                         type = typeSuper;
                     }
-                }
-                else
-                {
-                    if (typeArg.IsVoid)
+                    else if (type.Kind == DKind.Unknown)
                     {
-                        type = DType.Void;
-                    }
-                    else if (typeArg.IsError)
-                    {
-                        errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                        // One of the args is also of unknown type, so we can't resolve the type of IfError
+                        type = typeSuper;
                         fArgsValid = false;
                     }
-                    else if (!type.IsError && typeArg.CoercesTo(type))
+                    else if (!type.IsError)
                     {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                        // Types don't resolve normally, coercion needed
+                        if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                        }
+                        else if (!isBehavior || !IsArgTypeInconsequential(nodeArg))
+                        {
+                            errors.EnsureError(
+                                DocumentErrorSeverity.Severe,
+                                nodeArg,
+                                TexlStrings.ErrBadType_ExpectedType_ProvidedType,
+                                type.GetKindString(),
+                                typeArg.GetKindString());
+                            fArgsValid = false;
+                        }
                     }
-                    else
+                    else if (typeArg.Kind != DKind.Unknown)
                     {
-                        type = DType.Void;
+                        type = typeArg;
+                        fArgsValid = false;
                     }
                 }
 
-                if ((count % 2) != 0 && i == count - 1)
+                // If there are an odd number of args, the last arg also participates.
+                i += 2;
+                if (i == count)
                 {
-                    i++;
+                    i--;
                 }
             }
 
             returnType = type;
             return fArgsValid;
+        }
+
+        // In behavior properties, the arg type is irrelevant if nothing actually depends
+        // on the output type of IfError (see If.cs, Switch.cs)
+        private bool IsArgTypeInconsequential(TexlNode arg)
+        {
+            Contracts.AssertValue(arg);
+            Contracts.Assert(arg.Parent is ListNode);
+            Contracts.Assert(arg.Parent.Parent is CallNode);
+            Contracts.Assert(arg.Parent.Parent.AsCall().Head.Name == Name);
+
+            var call = arg.Parent.Parent.AsCall().VerifyValue();
+
+            // Pattern: OnSelect = IfError(arg1, arg2, ... argK)
+            // Pattern: OnSelect = IfError(arg1, IfError(arg1, arg2,...), ... argK)
+            // ...etc.
+            var ancestor = call;
+            while (ancestor.Head.Name == Name)
+            {
+                if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
+                {
+                    return true;
+                }
+
+                // Deal with the possibility that the ancestor may be contributing to a chain.
+                // This also lets us cover the following patterns:
+                // Pattern: OnSelect = X; IfError(arg1, arg2); Y; Z
+                // Pattern: OnSelect = X; IfError(arg1;arg11;...;arg1k, arg2;arg21;...;arg2k); Y; Z
+                // ...etc.
+                VariadicOpNode chainNode;
+                if ((chainNode = ancestor.Parent.AsVariadicOp()) != null && chainNode.Op == VariadicOp.Chain)
+                {
+                    // Top-level chain in a behavior rule.
+                    if (chainNode.Parent == null)
+                    {
+                        return true;
+                    }
+
+                    // A chain nested within a larger non-call structure.
+                    if (!(chainNode.Parent is ListNode) || !(chainNode.Parent.Parent is CallNode))
+                    {
+                        return false;
+                    }
+
+                    // Only the last chain segment is consequential.
+                    var numSegments = chainNode.Children.Length;
+                    if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
+                    {
+                        return true;
+                    }
+
+                    // The node is in the last segment of a chain nested within a larger invocation.
+                    ancestor = chainNode.Parent.Parent.AsCall();
+                    continue;
+                }
+
+                // Walk up the parent chain to the outer invocation.
+                if (!(ancestor.Parent is ListNode) || !(ancestor.Parent.Parent is CallNode))
+                {
+                    return false;
+                }
+
+                ancestor = ancestor.Parent.Parent.AsCall();
+            }
+
+            // Exhausted all supported patterns.
+            return false;
         }
 
         public override bool IsLambdaParam(int index)

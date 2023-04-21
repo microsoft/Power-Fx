@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx
             {
                 { OptionFormatTable, OptionFormatTable },
                 { OptionNumberIsFloat, OptionNumberIsFloat },
-                { OptionLargeCallDepth, OptionLargeCallDepth }
+                { OptionLargeCallDepth, OptionLargeCallDepth },
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx
                     // IR pretty printer: IR( <expr> )
                     else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
                     {
-                        var opts = new ParserOptions() { AllowsSideEffects = true };
+                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
                         var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
                         var ir = cr.PrintIR();
                         Console.WriteLine(ir);
@@ -552,7 +552,14 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                resultString = value.ToExpression();
+                var sb = new StringBuilder();
+                var settings = new FormulaValueSerializerSettings()
+                {
+                    UseCompactRepresentation = true,
+                };
+                value.ToExpression(sb, settings);
+
+                resultString = sb.ToString();
             }
 
             return resultString;
@@ -681,10 +688,8 @@ namespace Microsoft.PowerFx
             {
                 var column = 0;
                 var funcList = string.Empty;
-#pragma warning disable CS0618 // Type or member is obsolete
-                List<string> funcNames = _engine.Config.FunctionInfos.Select(x => x.Name).Distinct().ToList();
-#pragma warning restore CS0618 // Type or member is obsolete
-
+                List<string> funcNames = _engine.SupportedFunctions.FunctionNames.ToList();
+                
                 funcNames.Sort();
                 foreach (var func in funcNames)
                 {

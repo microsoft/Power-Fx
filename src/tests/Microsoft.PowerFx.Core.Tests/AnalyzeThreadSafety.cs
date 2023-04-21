@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 return false;
             }
 
-            if (t.IsPrimitive || t.IsEnum)
+            if (t.IsPrimitive || t.IsEnum || t == typeof(decimal))
             {
                 return true;
             }
@@ -156,6 +156,13 @@ namespace Microsoft.PowerFx.Core.Tests
                     var valueArg = t.GetGenericArguments()[1];
                     var isValueArgSafe = IsTypeImmutable(valueArg);
                     return isValueArgSafe;
+                }
+
+                if (genericDef == typeof(IReadOnlyCollection<>))
+                {
+                    var keyArg = t.GetGenericArguments()[0];
+                    var isKeyArgSafe = IsTypeImmutable(keyArg);
+                    return isKeyArgSafe;
                 }
 
                 if (genericDef == typeof(IEnumerable<>)

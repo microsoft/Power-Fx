@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx
     /// Expose binding logic for Power Fx. 
     /// Derive from this to provide evaluation abilities. 
     /// </summary>
-    public class Engine : IPowerFxEngine
+    public class Engine
     {
         /// <summary>
         /// Configuration symbols for this Power Fx engine.
@@ -63,6 +63,11 @@ namespace Microsoft.PowerFx
         // These can be overridden. 
         internal TexlFunctionSet Functions => CreateResolverInternal().Functions;
 
+        /// <summary>
+        /// List of transforms to apply to an IR. 
+        /// </summary>
+        internal readonly List<Core.IR.IRTransform> IRTransformList = new List<Core.IR.IRTransform>();
+        
         /// <summary>
         /// Get all functions from the config and symbol tables. 
         /// </summary>        
@@ -137,9 +142,9 @@ namespace Microsoft.PowerFx
         {
             return new ParserOptions
             {
-                 Culture = null,
-                 AllowsSideEffects = false,
-                 MaxExpressionLength = Config.MaximumExpressionLength,
+                Culture = null,
+                AllowsSideEffects = false,
+                MaxExpressionLength = Config.MaximumExpressionLength,
             };
         }
 
@@ -174,7 +179,6 @@ namespace Microsoft.PowerFx
             }
 
             options ??= new ParserOptions();
-
             var result = options.Parse(expressionText, features ?? Features.None);
             return result;            
         }
@@ -194,26 +198,6 @@ namespace Microsoft.PowerFx
 
             CheckWorker(check);
             return check;
-        }
-
-        /// <summary>
-        /// Type check a formula without executing it. 
-        /// </summary>
-        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string, ParserOptions)"/>.</param>
-        /// <param name="parameterType">types of additional args to pass.</param>
-        /// <param name="options">parser options to use.</param>
-        /// <returns></returns>
-        [Obsolete("Use other check overload. Shouldn't need both ParserOptions and ParseResult.")]
-        public CheckResult Check(ParseResult parse, RecordType parameterType, ParserOptions options)
-        {
-            return Check(parse, parameterType);
-        }
-
-        [Obsolete("Use other check overload. Shouldn't need both ParserOptions and ParseResult.")]
-        internal CheckResult Check(ParseResult parse, ParserOptions options)
-        {
-            parse.Options = options;
-            return Check(parse, null, options);
         }
 
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
@@ -340,25 +324,6 @@ namespace Microsoft.PowerFx
             // So these both become available to intellisense. 
             var context = new IntellisenseContext(expression, cursorPosition);
             var intellisense = this.CreateIntellisense();
-            var suggestions = intellisense.Suggest(context, binding, formula);
-
-            return suggestions;
-        }
-
-        /// <summary>
-        /// Get intellisense from the formula, with parser options.
-        /// </summary>
-        [Obsolete("Use overload without expression")]
-        public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
-        {            
-            var binding = checkResult.Binding;
-            var formula = new Formula(expression, checkResult.ParserCultureInfo);
-            formula.ApplyParse(checkResult.Parse);
-
-            // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
-            // So these both become available to intellisense. 
-            var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 
             return suggestions;

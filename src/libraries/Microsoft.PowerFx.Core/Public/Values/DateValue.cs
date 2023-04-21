@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx.Types
     {
         /// <summary>
         /// Direct use of <see cref="Value"/> is prohibited in favor of <see cref="GetConvertedValue(TimeZoneInfo)"/> method.
+        /// Only use 'new' keyword here to catch accidental uses of base class method. 
         /// </summary>
         [Obsolete("Use Method" + nameof(GetConvertedValue) + " instead, with proper timezone information.")]
         public new DateTime Value => base.Value;

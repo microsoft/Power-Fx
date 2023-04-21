@@ -459,8 +459,8 @@ namespace Microsoft.PowerFx
                         }
                     }
 
-                    var sameType = this._expectedReturnType == this.ReturnType;
-                    if (notCoerceToType || !sameType)
+                    var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
+                    if (!valid)
                     {
                         _errors.Add(new ExpressionError
                         {
@@ -507,6 +507,20 @@ namespace Microsoft.PowerFx
                 // Errors require Binding, Parse 
                 var binding = ApplyBindingInternal();
 
+                if (this.IsSuccess && _engine.IRTransformList?.Count > 0)
+                {
+                    // IR alone won't generate errors. 
+                    // But if there are additional transforms, those could generate errors. 
+                    try
+                    {
+                        this.ApplyIR();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // On errors, ApplyIR will add to list and then throw. 
+                    }
+                }
+
                 // Plus engine's may have additional constraints. 
                 // PostCheck may refer to binding. 
                 var extraErrors = Engine.InvokePostCheck(this);
@@ -516,7 +530,7 @@ namespace Microsoft.PowerFx
 
             return this.Errors;
         }
-
+                
         internal IRResult ApplyIR()
         {
             if (_irresult == null)
@@ -525,6 +539,19 @@ namespace Microsoft.PowerFx
                 var binding = this.ApplyBindingInternal();
                 this.ThrowOnErrors();
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
+
+                var list = _engine.IRTransformList;
+                if (list != null)
+                {
+                    foreach (var transform in list)
+                    {
+                        irnode = transform.Transform(irnode, _errors);
+
+                        // Additional errors from phases. 
+                        // Stop any further processing if we have errors. 
+                        this.ThrowOnErrors();
+                    }
+                }                
 
                 _irresult = new IRResult
                 {

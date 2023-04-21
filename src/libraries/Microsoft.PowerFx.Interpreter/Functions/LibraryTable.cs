@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -150,6 +152,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 if (row.IsValue)
                 {
                     // $$$ this is super inefficient... maybe a custom derived RecordValue? 
@@ -159,6 +163,8 @@ namespace Microsoft.PowerFx.Functions
 
                     foreach (var column in newColumns)
                     {
+                        runner.CheckCancel();
+
                         var value = await column.Lambda.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
                         fields.Add(new NamedValue(column.Name, value));
                     }
@@ -181,6 +187,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in sources)
             {
+                runner.CheckCancel();
+
                 if (row.IsValue)
                 {
                     list.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(recordIRContext, row.Value.Fields.Where(f => !columnNames.Contains(f.Name)).ToArray())));
@@ -201,7 +209,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -213,7 +221,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var count = table.Count();
-                return new NumberValue(irContext, count);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -227,7 +235,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -256,7 +264,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return new NumberValue(irContext, count);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -268,7 +276,7 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = args[0];
             if (arg0 is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             if (arg0 is TableValue table)
@@ -299,7 +307,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                 }
 
-                return new NumberValue(irContext, count);
+                return NumberOrDecimalValue(irContext, count);
             }
 
             return CommonErrors.RuntimeTypeMismatch(irContext);
@@ -309,7 +317,7 @@ namespace Microsoft.PowerFx.Functions
         {
             if (args[0] is BlankValue)
             {
-                return new NumberValue(irContext, 0);
+                return NumberOrDecimalValue(irContext, 0);
             }
 
             // Streaming 
@@ -320,6 +328,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in sources.Rows)
             {
+                runner.CheckCancel();
+
                 if (row.IsValue || row.IsError)
                 {
                     var childContext = row.IsValue ?
@@ -328,6 +338,8 @@ namespace Microsoft.PowerFx.Functions
                     var include = true;
                     for (var i = 0; i < filters.Length; i++)
                     {
+                        runner.CheckCancel();
+
                         var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
                         if (result is ErrorValue error)
@@ -355,7 +367,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return new NumberValue(irContext, count);
+            return NumberOrDecimalValue(irContext, count);
         }
 
         // Filter ([1,2,3,4,5], Value > 5)
@@ -465,6 +477,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var pair in arg0.Rows.Select(row => ApplyLambda(runner, context, row, arg1)))
             {
+                runner.CheckCancel();
+
                 pairs.Add(await pair.ConfigureAwait(false));
             }
 
@@ -472,6 +486,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var (row, sortValue) in pairs)
             {
+                runner.CheckCancel();
+
                 allNumbers &= IsValueTypeErrorOrBlank<NumberValue>(sortValue);
                 allDecimals &= IsValueTypeErrorOrBlank<DecimalValue>(sortValue);
                 allStrings &= IsValueTypeErrorOrBlank<StringValue>(sortValue);
@@ -528,6 +544,22 @@ namespace Microsoft.PowerFx.Functions
             else
             {
                 return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
+        }
+
+        public static async ValueTask<FormulaValue> AsType(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var arg0 = (RecordValue)args[0];
+            var arg1 = (TableValue)args[1];
+
+            try
+            {
+                var result = arg1.CastRecord(arg0, runner.CancellationToken);
+                return result.ToFormulaValue();
+            }
+            catch (CustomFunctionErrorException e)
+            {
+                return new ErrorValue(irContext, e.ExpressionError);
             }
         }
 

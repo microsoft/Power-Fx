@@ -4,8 +4,10 @@
 using System;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -37,7 +39,6 @@ namespace Microsoft.PowerFx.Core.Tests
             else
             {
                 Assert.True(result);
-
                 Assert.True(actualFxType.GetType() == fxType);
 
                 var value = GetValue(dotnetType);
@@ -45,13 +46,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 Assert.Equal(fxType, fxValue.Type.GetType());
 
                 var expr = actualFxType.DefaultExpressionValue();
-                var engine = new Engine(new PowerFxConfig());
+
+                var engine = GetEngineWithFeatureGatedFunctions();
                 var options = new ParserOptions()
                 {
                     NumberIsFloat = !(dotnetType == typeof(decimal) || dotnetType == typeof(long))
                 };
-                var check = engine.Check(expr, options);
 
+                var check = engine.Check(expr, options);
                 Assert.Equal(check.ReturnType, actualFxType);
             }
         }
@@ -71,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             return Activator.CreateInstance(t);
         }
-
+        
         // .Net dates map to FormulaType.DateTime, so need to explicitly test FormulaType.Date
         [Fact]
         public void TestDateOnly()
@@ -207,6 +209,138 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Throws<InvalidOperationException>(() => PrimitiveValueConversions.Marshal("str", FormulaType.DateTime));
         }
 
+        internal class TestFormulaType : FormulaType
+        {
+            public TestFormulaType(DType type)
+                : base(type)
+            {
+            }
+
+            public override void Visit(ITypeVisitor vistor)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [Theory]
+        [InlineData("s", "b", "UnaryOpKind.TextToBoolean")]
+        [InlineData("s", "g", "UnaryOpKind.TextToGUID")] // new
+        [InlineData("s", "i", "UnaryOpKind.TextToImage")] // Existing, not implemented
+        [InlineData("s", "m", "UnaryOpKind.TextToMedia")] // Existing, not implemented
+        [InlineData("s", "o", "UnaryOpKind.TextToBlob")] // Existing, not implemented
+        [InlineData("s", "h", "UnaryOpKind.TextToHyperlink")] // Existing, not implemented
+        [InlineData("s", "n", "function:Float")]
+        [InlineData("s", "d", "function:DateTimeValue")]
+        [InlineData("s", "D", "function:DateValue")]
+        [InlineData("s", "T", "function:TimeValue")]
+        [InlineData("n", "s", "UnaryOpKind.NumberToText")]
+        [InlineData("D", "s", "function:Text")]
+        [InlineData("d", "s", "function:Text")]
+        [InlineData("T", "s", "function:Text")]
+        [InlineData("b", "s", "UnaryOpKind.BooleanToText")]
+        [InlineData("g", "s", "UnaryOpKind.GUIDToText")] // new
+        [InlineData("o", "s", "UnaryOpKind.BlobToText")] // new
+        [InlineData("m", "s", "UnaryOpKind.MediaToText")] // new
+        [InlineData("i", "s", "UnaryOpKind.ImageToText")] // Existing, not implemented
+        [InlineData("p", "s", "UnaryOpKind.PenImageToText")] // new
+        [InlineData("m", "h", "UnaryOpKind.MediaToHyperlink")] // Existing, not implemented
+        [InlineData("i", "h", "UnaryOpKind.ImageToHyperlink")] // Existing, not implemented
+        [InlineData("o", "h", "UnaryOpKind.BlobToHyperlink")] // Existing, not implemented
+        [InlineData("p", "h", "UnaryOpKind.PenImageToHyperlink")] // new
+        [InlineData("h", "i", "UnaryOpKind.HyperlinkToImage")] // new
+        [InlineData("o", "i", "UnaryOpKind.BlobToImage")] // new
+        [InlineData("p", "i", "UnaryOpKind.PenImageToImage")] // new
+        [InlineData("h", "m", "UnaryOpKind.HyperlinkToMedia")] // new
+        [InlineData("o", "m", "UnaryOpKind.BlobToMedia")] // new
+        [InlineData("h", "o", "UnaryOpKind.HyperlinkToBlob")] // new
+        [InlineData("d", "D", "UnaryOpKind.DateTimeToDate")] // new
+        [InlineData("d", "T", "UnaryOpKind.DateTimeToTime")] // new
+        [InlineData("T", "D", "UnaryOpKind.TimeToDate")] // new
+        [InlineData("T", "d", "UnaryOpKind.TimeToDateTime")] // new
+        [InlineData("D", "T", "UnaryOpKind.DateToTime")] // new
+        [InlineData("D", "d", "UnaryOpKind.DateToDateTime")] // new
+        [InlineData("n", "$", "UnaryOpKind.NumberToCurrency")] // new
+        [InlineData("$", "n", "UnaryOpKind.CurrencyToNumber")] // new
+        [InlineData("$", "s", "UnaryOpKind.CurrencyToText")] // new
+        [InlineData("s", "$", "UnaryOpKind.TextToCurrency")] // new
+        [InlineData("$", "b", "UnaryOpKind.CurrencyToBoolean")] // new
+        [InlineData("b", "$", "UnaryOpKind.BooleanToCurrency")] // new
+        [InlineData("w", "n", "function:Float")]
+        [InlineData("w", "s", "UnaryOpKind.DecimalToText")]
+        [InlineData("w", "b", "UnaryOpKind.DecimalToBoolean")]
+        [InlineData("w", "d", "UnaryOpKind.DecimalToDateTime")]
+        [InlineData("w", "D", "UnaryOpKind.DecimalToDate")]
+        [InlineData("w", "T", "UnaryOpKind.DecimalToTime")]
+        [InlineData("n", "w", "function:Decimal")]
+        [InlineData("s", "w", "function:Decimal")]
+        [InlineData("b", "w", "UnaryOpKind.BooleanToDecimal")]
+        [InlineData("d", "w", "UnaryOpKind.DateTimeToDecimal")]
+        [InlineData("D", "w", "UnaryOpKind.DateToDecimal")]
+        [InlineData("T", "w", "UnaryOpKind.TimeToDecimal")]
+        public void TestTypeCoercion(string fromTypeSpec, string toTypeSpec, string coercionKindStr)
+        {
+            Assert.True(DType.TryParse(fromTypeSpec, out var fromType));
+            Assert.True(DType.TryParse(toTypeSpec, out var toType));
+
+            UnaryOpKind unaryOpCoercionKind = (UnaryOpKind)(-1);
+            string functionName = null;
+
+            if (coercionKindStr.StartsWith("UnaryOpKind."))
+            {
+                unaryOpCoercionKind =
+                    Enum.Parse<UnaryOpKind>(
+                        coercionKindStr.Substring("UnaryOpKind.".Length));
+            }
+            else if (coercionKindStr.StartsWith("function:"))
+            {
+                functionName = coercionKindStr.Substring("function:".Length);
+            }
+            else
+            {
+                Assert.False(true, "Invalid coercionKindStr: " + coercionKindStr);
+            }
+
+            var symbolTable = new SymbolTable();
+            symbolTable.AddVariable("fromTypeVar", new TestFormulaType(fromType));
+            symbolTable.AddVariable("toTypeVar", new TestFormulaType(toType));
+            var config = new PowerFxConfig(Features.PowerFxV1)
+            {
+                SymbolTable = symbolTable
+            };
+
+            var engine = new Engine(config);
+            var expression = "If(1<0, toTypeVar, fromTypeVar)";
+            var result = engine.Check(expression);
+            Assert.True(result.IsSuccess);
+
+            var ir = result.ApplyIR();
+
+            var callNode = ir.TopNode as CallNode;
+            Assert.NotNull(callNode);
+            Assert.Equal(3, callNode.Args.Count);
+
+            var elseNode = callNode.Args[2] as LazyEvalNode;
+            Assert.NotNull(elseNode);
+
+            if (functionName != null)
+            {
+                var conversionCallNode = elseNode.Child as CallNode;
+                Assert.NotNull(conversionCallNode);
+                Assert.Equal(functionName, conversionCallNode.Function.Name);
+            }
+            else
+            {
+                if (elseNode.Child is ResolvedObjectNode)
+                {
+                    Assert.True(false, $"Conversion from {fromTypeSpec} to {toTypeSpec} should have a coercion node!");
+                }
+
+                var unaryNode = elseNode.Child as UnaryOpNode;
+                Assert.NotNull(unaryNode);
+                Assert.Equal(unaryOpCoercionKind, unaryNode.Op);
+            }
+        }
+
         private static void AssertEqual<T>(T a, PrimitiveValue<T> b)
         {
             Assert.Equal(a, b.Value);
@@ -215,6 +349,13 @@ namespace Microsoft.PowerFx.Core.Tests
         private static void AssertEqual<T>(PrimitiveValue<T> a, PrimitiveValue<T> b)
         {
             Assert.Equal(a.Value, b.Value);
+        }
+
+        private static Engine GetEngineWithFeatureGatedFunctions()
+        {
+            SymbolTable symbol = new SymbolTable();
+            symbol.AddFunctions(BuiltinFunctionsCore._featureGateFunctions);
+            return new Engine(new PowerFxConfig() { SymbolTable = symbol });
         }
     }
 }

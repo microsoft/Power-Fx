@@ -41,7 +41,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
 
             // The argument should be a table of one column.
             var argType = argTypes[0];

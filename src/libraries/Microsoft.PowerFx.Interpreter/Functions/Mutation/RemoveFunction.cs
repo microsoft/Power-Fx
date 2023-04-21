@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -115,7 +116,7 @@ namespace Microsoft.PowerFx.Functions
                 if (!argType.IsRecord)
                 {
                     // The last arg may be the optional "ALL" parameter.
-                    if (argCount >= 3 && i == argCount - 1 && DType.String.Accepts(argType))
+                    if (argCount >= 3 && i == argCount - 1 && DType.String.Accepts(argType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         var strNode = (StrLitNode)args[i];
 
@@ -133,14 +134,16 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable());
-                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType);
+                var collectionAcceptsRecord = collectionType.Accepts(argType.ToTable(), exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+                var recordAcceptsCollection = argType.ToTable().Accepts(collectionType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+
+                bool checkAggregateNames = argType.CheckAggregateNames(collectionType, args[i], errors, SupportsParamCoercion);
 
                 // The item schema should be compatible with the collection schema.
-                if (!collectionAcceptsRecord && !recordAcceptsCollection)
+                if (!checkAggregateNames)
                 {
                     fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors))
+                    if (!SetErrorForMismatchedColumns(collectionType, argType, args[i], errors, context.Features))
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], ErrTableDoesNotAcceptThisType);
                     }
@@ -172,7 +175,7 @@ namespace Microsoft.PowerFx.Functions
             var all = false;
             var toExclude = 1;
 
-            if (argCount >= 3 && DType.String.Accepts(lastArg.Type._type))
+            if (argCount >= 3 && DType.String.Accepts(lastArg.Type._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
             {
                 var lastArgValue = (string)lastArg.ToObject();
 

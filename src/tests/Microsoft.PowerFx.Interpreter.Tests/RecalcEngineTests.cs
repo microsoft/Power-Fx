@@ -40,9 +40,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(Governor)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
-#pragma warning disable CS0618 // Type or member is obsolete
-                $"{ns}.{nameof(RecalcEngineScope)}",
-#pragma warning restore CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(IExpressionEvaluator)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
@@ -721,26 +718,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CheckIntefaceSuccess()
-        {
-            var engine = new RecalcEngine();
-            CheckThroughInterface(engine);
-        }
-
-        private void CheckThroughInterface(IPowerFxEngine engine)
-        {
-            var result = engine.Check(
-               "3*2+x",
-               RecordType.Empty().Add(
-                   new NamedFormulaType("x", FormulaType.Number)));
-
-            Assert.True(result.IsSuccess);
-            Assert.True(result.ReturnType is NumberType);
-            Assert.Single(result.TopLevelIdentifiers);
-            Assert.Equal("x", result.TopLevelIdentifiers.First());
-        }
-
-        [Fact]
         public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig();
@@ -1099,7 +1076,7 @@ namespace Microsoft.PowerFx.Tests
             // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
             // RandBetween maps 0.5 to 6. 
             result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
-            Assert.Equal(6.0, result.ToObject());
+            Assert.Equal(6.0m, result.ToObject());
         }
 
         [Fact]
@@ -1188,6 +1165,63 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(10.0, result2.ToObject());
         }
 
+        [Theory]
+        [InlineData("ThisRecord.Field2", "_field2")] // row scope, no conflcit
+        [InlineData("Task", "_fieldTask")] // row scope wins the conflict, it's closer.         
+        [InlineData("[@Task]", "_globalTask")] // global scope
+        [InlineData("[@Task] & Task", "_globalTask_fieldTask")] // both in same expression
+        [InlineData("[@Task] & ThisRecord.Task", "_globalTask_fieldTask")] // both, fully unambiguous. 
+        [InlineData("With({Task : true}, Task)", true)] // With() wins, shadows rowscope. 
+        [InlineData("With({Task : true}, ThisRecord.Task)", true)] // With() also has ThisRecord, shadows previous rowscope.
+        [InlineData("With({Task : true}, [@Task])", "_globalTask")] // Globals.
+        [InlineData("With({Task : true} As T2, Task)", "_fieldTask")] // As avoids the conflict. 
+        [InlineData("With({Task : true} As T2, ThisRecord.Task)", "_fieldTask")] // As avoids the conflict. 
+        [InlineData("With({Task : true} As T2, ThisRecord.Field2)", "_field2")] // As avoids the conflict. 
+
+        // Errors
+        [InlineData("[@Field2]")] // error, doesn't exist in global scope. 
+        [InlineData("With({Task : true}, ThisRecord.Field2)")] // Error. ThisRecord doesn't union, it refers exclusively to With().
+        public void DisambiguationTest(string expr, object expected = null)
+        {            
+            var engine = new RecalcEngine();
+            
+            // Setup Global "Task", and RowScope with "Task" field.
+            var record = FormulaValue.NewRecordFromFields(
+                new NamedValue("Task", FormulaValue.New("_fieldTask")),
+                new NamedValue("Field2", FormulaValue.New("_field2")));
+
+            var globals = new SymbolTable();
+            var slot = globals.AddVariable("Task", FormulaType.String);
+            
+            var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type, allowThisRecord: true);
+
+            // ensure rowScope is listed first since that should get higher priority 
+            var symbols = ReadOnlySymbolTable.Compose(rowScope, globals); 
+                        
+            // Values 
+            var rowValues = ReadOnlySymbolValues.NewFromRecord(rowScope, record);
+            var globalValues = globals.CreateValues();
+            globalValues.Set(slot, FormulaValue.New("_globalTask"));
+
+            var runtimeConfig = new RuntimeConfig
+            {
+                Values = symbols.CreateValues(globalValues, rowValues)
+            };
+
+            var check = engine.Check(expr, symbolTable: symbols); // never throws
+
+            if (expected == null)
+            {
+                Assert.False(check.IsSuccess);
+                return;
+            }
+
+            var run = check.GetEvaluator();
+            var result = run.Eval(runtimeConfig);
+            
+            Assert.Equal(expected, result.ToObject());
+        }
+
         [Fact]
         public void GetVariableRecalcEngine()
         {
@@ -1206,6 +1240,26 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(engine.TryGetVariableType("A", out type));
             Assert.Equal(default, type);
         }
+
+        [Fact]
+        public void ComparisonWithMismatchedTypes()
+        {
+            foreach ((Features f, ErrorSeverity es) in new[] 
+            { 
+                (Features.PowerFxV1, ErrorSeverity.Severe), 
+                (Features.None, ErrorSeverity.Warning) 
+            })
+            {
+                var config = new PowerFxConfig(f);
+                var engine = new RecalcEngine(config);
+
+                CheckResult cr = engine.Check(@"If(2 = ""2"", 3, 4 )");
+                ExpressionError firstError = cr.Errors.First();
+
+                Assert.Equal(es, firstError.Severity);
+                Assert.Equal("Incompatible types for comparison. These types can't be compared: Decimal, Text.", firstError.Message);
+            }
+        } 
 
         private class TestRandService : IRandomService
         {

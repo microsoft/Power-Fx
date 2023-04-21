@@ -567,6 +567,24 @@
     <value>Menggabungkan beberapa nilai teks menjadi satu nilai teks.</value>
     
   </data>
+  <data name="AboutDecimal" xml:space="preserve">
+    <value>Mengonversi 'teks' yang mewakili angka ke nilai Desimal.</value>
+  </data>
+  <data name="AboutDecimal_language" xml:space="preserve">
+    <value>Kode bahasa yang harus digunakan saat mengonversi nilai.</value>
+  </data>
+  <data name="AboutDecimal_text" xml:space="preserve">
+    <value>Nilai teks untuk dikonversi ke nilai Desimal.</value>
+  </data>
+  <data name="AboutFloat" xml:space="preserve">
+    <value>Mengonversi 'teks' yang mewakili angka ke nilai Float.</value>
+  </data>
+  <data name="AboutFloat_language" xml:space="preserve">
+    <value>Kode bahasa yang harus digunakan saat mengonversi nilai.</value>
+  </data>
+  <data name="AboutFloat_text" xml:space="preserve">
+    <value>Nilai teks untuk dikonversi ke nilai Float.</value>
+  </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>teks</value>
     
@@ -4892,5 +4910,9 @@
   </data>
   <data name="AboutEncodeUrl_url" xml:space="preserve">
     <value>URL untuk dikodekan.</value>
+  </data>
+  <data name="ErrUnimplementedFunction" xml:space="preserve">
+    <value>'{0}' adalah fungsi yang dikenali, tetapi tidak didukung.</value>
+    
   </data>
 </root>
