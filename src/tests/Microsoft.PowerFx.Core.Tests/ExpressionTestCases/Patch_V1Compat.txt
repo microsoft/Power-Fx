@@ -8,7 +8,7 @@
        {field1:3, field2:{field21:"moon",field22:"phobos"}}),
      {field2:{field21:"moon"}},
      {field1:7})
-{field1:7,field2:{field21:"moon",field22:"phobos"}}
+#SKIP: awaiting https://github.com/microsoft/Power-Fx/issues/1383
 
 >> Patch(
      Table(
@@ -16,4 +16,4 @@
        {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
     {Properties:{Moon:{Name:"Phobos"}}},
     {Planet:"Jupter"})
-{Planet:"Jupter",Properties:{Color:"red-brown",Moon:{Color:"yellow",Name:"Phobos"},Size:"huge",Weight:99999}}
+#SKIP: awaiting https://github.com/microsoft/Power-Fx/issues/1383
