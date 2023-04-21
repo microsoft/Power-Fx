@@ -104,4 +104,4 @@ DateTime(2011,1,30,8,0,0,123)
 true
 
 >> -Date(2003, 4, 1)
-Error: InvalidArgument - Invalid Argument
+Error({Kind:ErrorKind.InvalidArgument})

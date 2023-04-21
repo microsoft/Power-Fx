@@ -400,4 +400,4 @@ Error({Kind:ErrorKind.InvalidArgument})
 Time(10,13,39,767)
 
 >> -Time(1, 0, 0)
-Error: InvalidArgument - Invalid Argument
+Error({Kind:ErrorKind.InvalidArgument})
