@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Texl;
@@ -302,15 +304,7 @@ namespace Microsoft.PowerFx
             bool useThisRecordForRuleScope = ruleScope != null;
 
             var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope, result.Parse.Options.NumberIsFloat);
-
-            var binding = TexlBinding.Run(
-                glue,
-                externalRuleScopeResolver,
-                parse.Root,
-                resolver,
-                bindingConfig,
-                ruleScope: ruleScope?._type,
-                features: Config.Features);
+            var binding = TexlBinding.Run(glue, externalRuleScopeResolver, new DataSourceToQueryOptionsMap(), parse.Root, resolver, bindingConfig, false, ruleScope?._type, false, null, Config.Features);
 
             return (binding, combinedSymbols);
         }
