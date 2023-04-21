@@ -330,40 +330,36 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                if (row.IsValue || row.IsError)
+                var childContext = RuntimeHelpers.GetSymbolContext(context, row);
+
+                var include = true;
+                for (var i = 0; i < filters.Length; i++)
                 {
-                    var childContext = row.IsValue ?
-                        context.SymbolContext.WithScopeValues(row.Value) :
-                        context.SymbolContext.WithScopeValues(row.Error);
-                    var include = true;
-                    for (var i = 0; i < filters.Length; i++)
+                    runner.CheckCancel();
+
+                    var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
+
+                    if (result is ErrorValue error)
                     {
-                        runner.CheckCancel();
-
-                        var result = await filters[i].EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
-
-                        if (result is ErrorValue error)
-                        {
-                            return error;
-                        }
-                        else if (result is BlankValue)
-                        {
-                            include = false;
-                            break;
-                        }
-
-                        include = ((BooleanValue)result).Value;
-
-                        if (!include)
-                        {
-                            break;
-                        }
+                        return error;
+                    }
+                    else if (result is BlankValue)
+                    {
+                        include = false;
+                        break;
                     }
 
-                    if (include)
+                    include = ((BooleanValue)result).Value;
+
+                    if (!include)
                     {
-                        count++;
+                        break;
                     }
+                }
+
+                if (include)
+                {
+                    count++;
                 }
             }
 
@@ -651,21 +647,7 @@ namespace Microsoft.PowerFx.Functions
            DValue<RecordValue> row,
            LambdaFormulaValue filter)
         {
-            SymbolContext childContext;
-
-            // Issue #263 Filter should be able to handle empty rows
-            if (row.IsValue)
-            {
-                childContext = context.SymbolContext.WithScopeValues(row.Value);
-            }
-            else if (row.IsBlank)
-            {
-                childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
-            }
-            else
-            {
-                childContext = context.SymbolContext.WithScopeValues(row.Error);
-            }
+            SymbolContext childContext = RuntimeHelpers.GetSymbolContext(context, row);
 
             // Filter evals to a boolean 
             var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);

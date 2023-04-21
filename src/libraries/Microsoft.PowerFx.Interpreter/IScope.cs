@@ -43,6 +43,21 @@ namespace Microsoft.PowerFx
         }
     }
 
+    internal class BlankScope : IScope
+    {
+        public readonly BlankValue _context;
+
+        public BlankScope(BlankValue context)
+        {
+            _context = context;
+        }
+
+        public virtual FormulaValue Resolve(string name)
+        {
+            return _context;
+        }
+    }
+
     internal class UntypedObjectThisRecordScope : IScope
     {
         public readonly FormulaValue _thisRecord;

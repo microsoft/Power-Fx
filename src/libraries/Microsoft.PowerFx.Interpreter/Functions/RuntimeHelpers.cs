@@ -3,6 +3,7 @@
 
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -30,6 +31,22 @@ namespace Microsoft.PowerFx.Functions
         {
             var str = string.Concat(arg1.Value, arg2.Value);
             return new StringValue(irContext, str);
+        }
+
+        public static SymbolContext GetSymbolContext(EvalVisitorContext context, DValue<RecordValue> row)
+        {
+            if (row.IsValue)
+            {
+                return context.SymbolContext.WithScopeValues(row.Value);
+            }
+            else if (row.IsError)
+            {
+                return context.SymbolContext.WithScopeValues(row.Error);
+            }
+            else
+            {
+                return context.SymbolContext.WithScopeValues(FormulaValue.NewBlank());
+            }
         }
     }
 }

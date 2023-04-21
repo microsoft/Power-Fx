@@ -149,3 +149,9 @@ Error({Kind:ErrorKind.Div0})
 
 >> Concat(Table({a:1},Blank(),{a:3}), Coalesce(a,0), ",")
 "1,0,3"
+
+>> Concat(Table({a:1},{a:Blank()},{a:3},If(1<0,{a:4}),{a:5}), If(IsBlank(ThisRecord), -100, Coalesce(a, 0)), ",")
+"1,0,3,-100,5"
+
+>> Concat([1,3,Blank(),5], If(IsBlank(ThisRecord), -100, Coalesce(Value, 0)), ",")
+"1,3,0,5"

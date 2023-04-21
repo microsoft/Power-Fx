@@ -62,6 +62,11 @@ namespace Microsoft.PowerFx
             return WithScopeValues(new ErrorScope(scopeValues));
         }
 
+        public SymbolContext WithScopeValues(BlankValue value)
+        {
+            return WithScopeValues(new BlankScope(value));
+        }
+
         public SymbolContext WithThisItem(FormulaValue value)
         {
             return WithScopeValues(new UntypedObjectThisRecordScope(value));

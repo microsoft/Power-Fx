@@ -622,6 +622,10 @@ namespace Microsoft.PowerFx
                 {
                     return r3._thisRecord;
                 }
+                else if (r is BlankScope r4)
+                {
+                    return r4._context;
+                }
             }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
