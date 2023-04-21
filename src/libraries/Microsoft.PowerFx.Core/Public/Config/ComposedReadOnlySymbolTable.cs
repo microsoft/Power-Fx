@@ -136,11 +136,6 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
-        {
-            return Lookup(name, out nameInfo);
-        }
-
         public virtual IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
         {
             Contracts.Check(theNamespace.IsValid, "The namespace is invalid.");
