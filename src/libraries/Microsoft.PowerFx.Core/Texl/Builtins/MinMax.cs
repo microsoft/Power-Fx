@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 for (var i = 0; i < argTypes.Length; i++)
                 {
-                    if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                    if (!CheckType(context, args[i], argTypes[i], returnType, errors, ref nodeToCoercedTypeMap))
                     {
                         errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
                         fArgsValid = false;

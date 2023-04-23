@@ -142,7 +142,10 @@ namespace Microsoft.PowerFx.Core.Functions
         // Same as the virtual overload, however all typechecks are done quietly, without posting document errors.
         public virtual bool CheckInput(Features features, TexlNode inputNode, DType inputSchema, out DType typeScope)
         {
-            return CheckInput(features, inputNode, inputSchema, TexlFunction.DefaultErrorContainer, out typeScope);
+            // A "no-op" or /dev/null error container that does not post document errors.
+            NullErrorContainer nullErrorContainer = new NullErrorContainer();
+
+            return CheckInput(features, inputNode, inputSchema, nullErrorContainer, out typeScope);
         }
 
         public void CheckLiteralPredicates(TexlNode[] args, IErrorContainer errors)

@@ -65,12 +65,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules) &&
                 (checkTypesContext.NumberIsFloat || DType.Number.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules)))
             {
-                isValidNumber = CheckType(checkTypesContext, arg0, arg0Type, DType.Number, DefaultErrorContainer, out matchedWithCoercion);
+                isValidNumber = CheckType(checkTypesContext, arg0, arg0Type, DType.Number, errors, out matchedWithCoercion);
                 arg0CoercedType = matchedWithCoercion ? DType.Number : DType.Invalid;
             }
             else
             {
-                isValidNumber = CheckType(checkTypesContext, arg0, arg0Type, DType.Decimal, DefaultErrorContainer, out matchedWithCoercion);
+                isValidNumber = CheckType(checkTypesContext, arg0, arg0Type, DType.Decimal, errors, out matchedWithCoercion);
                 arg0CoercedType = matchedWithCoercion ? DType.Decimal : DType.Invalid;
             }
 
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    isValidString = CheckType(checkTypesContext, arg0, arg0Type, DType.String, DefaultErrorContainer, out matchedWithCoercion);
+                    isValidString = CheckType(checkTypesContext, arg0, arg0Type, DType.String, errors, out matchedWithCoercion);
 
                     if (isValidString)
                     {
