@@ -1,5 +1,8 @@
 #SETUP: NumberIsFloat,PowerFxV1CompatibilityRules
 
+// Value() has been replaced with Value() for PA client compatibility.  
+// When in NumberIsFloat mode, Value and Float functions are effectively the same.
+
 // EQUALS
 
 // In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
@@ -46,147 +49,147 @@ false
 
 // Float
 
->> Float(16) = Float(14)
+>> Value(16) = Value(14)
 false
 
->> Float(16) = Float(16)
+>> Value(16) = Value(16)
 true
 
->> Float(16) = Float("1e100")
+>> Value(16) = Value("1e100")
 false
 
->> Float(16) = Float(18)
+>> Value(16) = Value(18)
 false
 
->> Float(16) = "16"
+>> Value(16) = "16"
 Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
->> Float(16) = "16.000000000000000000002"
+>> Value(16) = "16.000000000000000000002"
 Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
->> Float(16) = "14"
+>> Value(16) = "14"
 Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
->> Float(16) = "18"
+>> Value(16) = "18"
 Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
->> Float(16) = "1e20"
+>> Value(16) = "1e20"
 Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
->> Float(1e20) = "1e20"
+>> Value(1e20) = "1e20"
 Errors: Error 12-13: Incompatible types for comparison. These types can't be compared: Number, Text.
 
->> Float(1) = true
+>> Value(1) = true
 Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
->> Float(1) = false
+>> Value(1) = false
 Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
->> Float(0) = true
+>> Value(0) = true
 Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
->> Float(0) = false
+>> Value(0) = false
 Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
->> Float(2) = true
+>> Value(2) = true
 Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
->> Float(2) = false
+>> Value(2) = false
 Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
->> Float(0) = Blank()
+>> Value(0) = Blank()
 false
 
->> Float(1) = Blank()
+>> Value(1) = Blank()
 false
 
->> Float(2) = Blank()
+>> Value(2) = Blank()
 false
 
->> If(1<0,Float(1)) = Blank()
+>> If(1<0,Value(1)) = Blank()
 true
 
->> Float(2) = Date(1900,1,1)
+>> Value(2) = Date(1900,1,1)
 true
 
 >> Value(Date(2000,1,1))
 36526
 
->> Float(36526) = Date(2000,1,1)
+>> Value(36526) = Date(2000,1,1)
 true
 
->> Float(36526) = Date(2001,12,12)
+>> Value(36526) = Date(2001,12,12)
 false
 
 >> Value(DateTime(2000,1,1,12,0,0))
 36526.5
 
->> Float(36526.5) = DateTime(2000,1,1,12,0,0)
+>> Value(36526.5) = DateTime(2000,1,1,12,0,0)
 true
 
->> Float(36526.5) = DateTime(2020,12,20,0,0,0)
+>> Value(36526.5) = DateTime(2020,12,20,0,0,0)
 false
 
 >> Value(Time(12,0,0))
 0.5
 
->> Float(0.5) = Time(12,0,0)
+>> Value(0.5) = Time(12,0,0)
 true
 
->> Float(0.5) = Time(9,0,0)
+>> Value(0.5) = Time(9,0,0)
 false
 
 // comparison done in floating point, decimal rounded
->> Float(16) = Decimal("16.000000000000000000002")
+>> Value(16) = Decimal("16.000000000000000000002")
 true
 
->> Float(16) = Decimal("16")
+>> Value(16) = Decimal("16")
 true
 
->> Float("1e100") = Decimal("2.00000000000000000000002")
+>> Value("1e100") = Decimal("2.00000000000000000000002")
 false
 
->> Float(16) = ParseJSON("16")
+>> Value(16) = ParseJSON("16")
 true
 
->> Float(16) = ParseJSON("16.0")
+>> Value(16) = ParseJSON("16.0")
 true
 
->> Float(16) = ParseJSON("1.6e1")
+>> Value(16) = ParseJSON("1.6e1")
 true
 
 // comparison done in floating point, decimal rounded
->> Float(16) = ParseJSON("16.0000000000000000000002")
+>> Value(16) = ParseJSON("16.0000000000000000000002")
 true
 
 // comparison done in floating point, decimal rounded
->> Float("16.0000000000000000000002") = ParseJSON("16.0000000000000000000002")
+>> Value("16.0000000000000000000002") = ParseJSON("16.0000000000000000000002")
 true
 
->> Float(16) = ParseJSON("1e100")
+>> Value(16) = ParseJSON("1e100")
 false
 
->> Float("1e100") = ParseJSON("2")
+>> Value("1e100") = ParseJSON("2")
 false
 
->> Float("1e100") = ParseJSON("1e100")
+>> Value("1e100") = ParseJSON("1e100")
 true
 
 // Text - Text can only be compared with other text
 
->> "16" = Float(16)
+>> "16" = Value(16)
 Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Number.
 
->> "16" = Float(18)
+>> "16" = Value(18)
 Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Number.
 
->> "16" = Float(14)
+>> "16" = Value(14)
 Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Number.
 
->> "1e100" = Float(2)
+>> "1e100" = Value(2)
 Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Text, Number.
 
->> "" = Float(0)
+>> "" = Value(0)
 Errors: Error 3-4: Incompatible types for comparison. These types can't be compared: Text, Number.
 
 >> "16" = "16"
@@ -301,25 +304,25 @@ false
 
 // Boolean
 
->> true = Float(2)
+>> true = Value(2)
 Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
->> true = Float(1)
+>> true = Value(1)
 Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
->> true = Float(0)
+>> true = Value(0)
 Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
->> false = Float(2)
+>> false = Value(2)
 Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
->> false = Float(1)
+>> false = Value(1)
 Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
->> false = Float(0)
+>> false = Value(0)
 Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
->> true = Float("1e100")
+>> true = Value("1e100")
 Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
 >> true = "1"
@@ -427,16 +430,16 @@ false
 
 // Blank
 
->> Blank() = Float(2)
+>> Blank() = Value(2)
 false
 
->> Blank() = Float("1e100")
+>> Blank() = Value("1e100")
 false
 
 >> Blank() = "2"
 false
 
->> Blank() = Float(0)
+>> Blank() = Value(0)
 false
 
 >> Blank() = "1e100"
@@ -477,10 +480,10 @@ false
 
 // Date
 
->> Date(2000,1,1) = Float(2)
+>> Date(2000,1,1) = Value(2)
 false
 
->> Date(1900,1,1) = Float(2)
+>> Date(1900,1,1) = Value(2)
 true
 
 >> Date(1900,1,1) = "2"
@@ -525,7 +528,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // DateTime
 
->> DateTime(1900,1,1,12,0,0) = Float(2.5)
+>> DateTime(1900,1,1,12,0,0) = Value(2.5)
 true
 
 >> DateTime(1900,1,1,12,0,0) = "2.5"
@@ -582,7 +585,7 @@ false
 
 // Time
 
->> Time(9,0,0) = Float(0.375)
+>> Time(9,0,0) = Value(0.375)
 true
 
 >> Time(9,0,0) = "0.375"
@@ -645,7 +648,7 @@ true
 
 // Decimal
 
->> Decimal("2.000000000000000000000001") = Float(2)
+>> Decimal("2.000000000000000000000001") = Value(2)
 true
 
 >> Decimal("16.000000000000000000000001") = "16"
@@ -719,14 +722,14 @@ true
 
 // Untyped
 
->> ParseJSON("16.00000000000000000000001") = Float(2)
+>> ParseJSON("16.00000000000000000000001") = Value(2)
 false
 
 // comparisons with float are done in float
->> ParseJSON("16.00000000000000000000001") = Float(16)
+>> ParseJSON("16.00000000000000000000001") = Value(16)
 true
 
->> ParseJSON("1e100") = Float(2)
+>> ParseJSON("1e100") = Value(2)
 false
 
 >> ParseJSON("16.00000000000000000000001") = "2"

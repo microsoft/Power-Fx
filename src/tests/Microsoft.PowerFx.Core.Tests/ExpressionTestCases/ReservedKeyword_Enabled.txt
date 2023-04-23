@@ -1,4 +1,6 @@
-﻿// With ReservedKeywords enabled (PowerFxV1) these tests should all fail.
+﻿#SETUP: disable:DisableReservedKeywords
+
+// With ReservedKeywords enabled (PowerFxV1) these tests should all fail.
 
 >> {Is      :1}
 Errors: Error 1-3: Unexpected characters. The formula contains 'Error' where 'Ident' is expected.|Error 1-3: Unexpected characters. The formula contains 'Error' where 'Colon' is expected.|Error 1-3: Expected colon. We expect a colon (:) at this point in the formula.|Error 9-10: Unexpected characters. The formula contains 'Colon' where 'CurlyClose' is expected.|Error 9-10: Unexpected characters. Characters are used in the formula in an unexpected way.

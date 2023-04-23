@@ -1,5 +1,8 @@
 #SETUP: NumberIsFloat
 
+// Float() has been replaced with Value() for PA client compatibility.  
+// When in NumberIsFloat mode, Value and Float functions are effectively the same.
+
 // MINUS
 
 // In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
@@ -24,63 +27,63 @@
 
 // Float
 
->> Float(12)-Float(2)
+>> Value(12)-Value(2)
 10
 
->> Float("1e100")-Float(2)
+>> Value("1e100")-Value(2)
 1E+100
 
->> Float(12)-"2"
+>> Value(12)-"2"
 10
 
->> Float("1e100")-"2"
+>> Value("1e100")-"2"
 1E+100
 
->> Float(12)-true
+>> Value(12)-true
 11
 
->> Float("1e100")-true
+>> Value("1e100")-true
 1E+100
 
->> Float(12)-Blank()
+>> Value(12)-Blank()
 12
 
->> Float("1e100")-Blank()
+>> Value("1e100")-Blank()
 1E+100
 
->> Float(12)-Date(2000,1,1)
+>> Value(12)-Date(2000,1,1)
 Error({Kind:ErrorKind.NotSupported})
 
->> Float(12)-DateTime(2000,1,1,12,0,0)
+>> Value(12)-DateTime(2000,1,1,12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> Float(12)-Time(12,0,0)
+>> Value(12)-Time(12,0,0)
 Error({Kind:ErrorKind.NotSupported})
 
->> Float(12)-Decimal("2.00000000000000000000000000002")
+>> Value(12)-Decimal("2.00000000000000000000000000002")
 10
 
->> Float("1e100")-Decimal("2.00000000000000000000000000002")
+>> Value("1e100")-Decimal("2.00000000000000000000000000002")
 1E+100
 
->> Float(12)-ParseJSON("2")
+>> Value(12)-ParseJSON("2")
 10
 
->> Float(12)-ParseJSON("1e100")
+>> Value(12)-ParseJSON("1e100")
 -1E+100
 
->> Float("1e100")-ParseJSON("2")
+>> Value("1e100")-ParseJSON("2")
 1e100
 
->> Float("1e100")-ParseJSON("1e100")
+>> Value("1e100")-ParseJSON("1e100")
 0
 
 // Text
 
->> "12"-Float(2)
+>> "12"-Value(2)
 10
 
->> "1e100"-Float(2)
+>> "1e100"-Value(2)
 1E+100
 
 >> "12"-"2"
@@ -127,7 +130,7 @@ Error({Kind:ErrorKind.NotSupported})
 
 // Boolean
 
->> true-Float(2)
+>> true-Value(2)
 -1
 
 >> true-"2"
@@ -159,7 +162,7 @@ Error({Kind:ErrorKind.NotSupported})
 
 // Blank
 
->> Blank()-Float(2)
+>> Blank()-Value(2)
 -2
 
 >> Blank()-"2"
@@ -191,7 +194,7 @@ Error({Kind:ErrorKind.NotSupported})
 
 // Date
 
->> Date(2000,1,1)-Float(2)
+>> Date(2000,1,1)-Value(2)
 Date(1999,12,30)
 
 >> Date(2000,1,1)-"2"
@@ -226,7 +229,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // DateTime
 
->> DateTime(2000,1,1,12,0,0)-Float(2)
+>> DateTime(2000,1,1,12,0,0)-Value(2)
 DateTime(1999,12,30,12,0,0,0)
 
 >> DateTime(2000,1,1,12,0,0)-"2"
@@ -258,7 +261,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Time
 
->> Time(9,0,0)-Float(0.125)
+>> Time(9,0,0)-Value(0.125)
 Time(6,0,0,0)
 
 >> Time(9,0,0)-"0.125"
@@ -293,7 +296,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Decimal
 
->> Decimal("16.000000000000000000000001")-Float(2)
+>> Decimal("16.000000000000000000000001")-Value(2)
 14
 
 >> Decimal("16.000000000000000000000001")-"2"
@@ -325,10 +328,10 @@ Error({Kind:ErrorKind.NotSupported})
 
 // Untyped
 
->> ParseJSON("16.00000000000000000000001")-Float(2)
+>> ParseJSON("16.00000000000000000000001")-Value(2)
 14
 
->> ParseJSON("1e100")-Float(2)
+>> ParseJSON("1e100")-Value(2)
 1E+100
 
 >> ParseJSON("16.00000000000000000000001")-"2"
