@@ -1,4 +1,4 @@
-﻿#SKIPFILE: disable:StronglyTypedBuiltinEnums
+﻿#SETUP: StronglyTypedBuiltinEnums
 
 >> Color.Red
 Color.Red

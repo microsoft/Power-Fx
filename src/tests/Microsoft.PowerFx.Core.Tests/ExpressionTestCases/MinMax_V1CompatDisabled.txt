@@ -1,5 +1,5 @@
 ﻿#SETUP: DisableMemChecks
-#SKIPFILE: PowerFxV1CompatibilityRules
+#SETUP: disable:PowerFxV1CompatibilityRules
 
 // With this flag disabled, for Canvas compat, return type is determined by the entire argument list
 

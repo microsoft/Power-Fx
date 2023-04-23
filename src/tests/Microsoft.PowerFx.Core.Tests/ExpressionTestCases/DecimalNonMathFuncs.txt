@@ -1,4 +1,4 @@
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat
 #SETUP: disable:SupportColumnNamesAsIdentifiers
 
 // non-decimal aware other functions

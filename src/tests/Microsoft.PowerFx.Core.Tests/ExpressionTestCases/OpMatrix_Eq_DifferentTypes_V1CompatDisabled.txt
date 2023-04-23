@@ -1,4 +1,4 @@
-#SKIPFILE: PowerFxV1CompatibilityRules
+#SETUP: disable:PowerFxV1CompatibilityRules
 
 >> 1 = "1"
 false

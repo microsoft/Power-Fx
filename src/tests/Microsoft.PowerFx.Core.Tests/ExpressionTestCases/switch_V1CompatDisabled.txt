@@ -1,4 +1,4 @@
-﻿#SKIPFILE: disable:PowerFxV1CompatibilityRules
+﻿#SETUP: PowerFxV1CompatibilityRules
 
 //Date-DateTime
 >> Switch("Case1","Case2",Date(2000,1,4),"Case1",DateTimeValue("4/1/2001 10:00:00"))

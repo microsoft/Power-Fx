@@ -86,13 +86,12 @@ namespace Microsoft.PowerFx.Core.Tests
         public static TimeSpan Timeout = TimeSpan.FromSeconds(20);
 
         /// <summary>
-        /// Should the NumberIsFloat parser flag be in effect?
-        /// Also impacts what tests will be run through #SKIPFILE directives.
+        /// Should the NumberIsFloat parser flag be in effect.
         /// </summary>
         public bool NumberIsFloat { get; set; }
 
         /// <summary>
-        /// What Features should be enabled, before applying file level #SETUP and #DISABLE.
+        /// What base Features should be enabled, before adding file level #SETUP and #DISABLE.
         /// </summary>
         public Features Features = Features.None;
 

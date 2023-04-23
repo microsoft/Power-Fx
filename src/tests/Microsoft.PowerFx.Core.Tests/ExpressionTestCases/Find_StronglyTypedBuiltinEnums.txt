@@ -1,4 +1,4 @@
-﻿#SKIPFILE: disable:StronglyTypedBuiltinEnums
+﻿#SETUP: StronglyTypedBuiltinEnums
 
 >> Find(1, ErrorKind.BadRegex)
 Blank()

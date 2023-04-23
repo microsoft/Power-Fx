@@ -33,15 +33,16 @@ namespace Microsoft.PowerFx.Core.Tests
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
-            _setup = ParserSetupString(setup);
+            _setup = ParseSetupString(setup);
         }
 
-        public static Dictionary<string, bool> ParserSetupString(string setup)
+        public static Dictionary<string, bool> ParseSetupString(string setup)
         {
             var settings = new Dictionary<string, bool>();
             var possible = new HashSet<string>();
             var powerFxV1 = new Dictionary<string, bool>();
 
+            // Features
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
@@ -54,13 +55,27 @@ namespace Microsoft.PowerFx.Core.Tests
                 }
             }
 
-            possible.Add("PowerFxV1");
-            possible.Add("NumberIsFloat");
+            // Parser Flags
+            foreach (var parserFlag in System.Enum.GetValues(typeof(TexlParser.Flags)))
+            {
+                possible.Add(parserFlag.ToString());
+            }
 
-            foreach (Match match in Regex.Matches(setup, @"(disable:)?([\w]+|//)"))
+            possible.Add("PowerFxV1");
+            possible.Add("DisableMemChecks");
+            possible.Add("TimeZoneInfo");
+            possible.Add("MutationFunctionsTestSetup");
+            possible.Add("OptionSetTestSetup");
+            possible.Add("AsyncTestSetup");
+            possible.Add("OptionSetSortTestSetup");
+            possible.Add("AllEnumsSetup");
+            possible.Add("Default");
+
+            foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {
                 bool enabled = !(match.Groups[1].Value == "disable:");
-                var name = match.Groups[2].Value;
+                var name = match.Groups[3].Value;
+                var complete = match.Groups[2].Value;
 
                 // end of line comment on settings string
                 if (name == "//")  
@@ -70,10 +85,10 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 if (!possible.Contains(name))
                 {
-                    throw new ArgumentException($"Setup string not found: {name}");
+                    throw new ArgumentException($"Setup string not found: {name} from \"{setup}\"");
                 }
 
-                settings.Add(name, enabled);
+                settings.Add(complete, enabled);
 
                 if (match.Groups[2].Value == "PowerFxV1")
                 {

@@ -1,4 +1,4 @@
-#SKIPFILE: disable:PowerFxV1CompatibilityRules
+#SETUP: PowerFxV1CompatibilityRules
 
 >> 1 = "1"
 Errors: Error 2-3: Incompatible types for comparison. These types can't be compared: Decimal, Text.

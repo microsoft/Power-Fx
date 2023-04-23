@@ -1,4 +1,4 @@
-﻿#SKIPFILE: StronglyTypedBuiltinEnums
+﻿#SETUP: disable:StronglyTypedBuiltinEnums
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
 15

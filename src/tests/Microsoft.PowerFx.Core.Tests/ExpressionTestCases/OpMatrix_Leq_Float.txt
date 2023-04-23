@@ -1,4 +1,4 @@
-#SKIPFILE: disable:NumberIsFloat
+#SETUP: NumberIsFloat
 
 // LESS THAN OR EQUAL
 

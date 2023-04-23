@@ -1,4 +1,4 @@
-﻿#SKIPFILE: disable:StronglyTypedBuiltinEnums
+﻿#SETUP: StronglyTypedBuiltinEnums
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
 Errors: Error 44-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.

@@ -1,4 +1,5 @@
-﻿
+﻿#SETUP: ConsistentOneColumnTableResult
+
 >> Find("", "")
 1
 

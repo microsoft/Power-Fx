@@ -1,4 +1,4 @@
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat
 
 // Some functions return integer results, that are typed decimal or float based on NumberIsFloat
 

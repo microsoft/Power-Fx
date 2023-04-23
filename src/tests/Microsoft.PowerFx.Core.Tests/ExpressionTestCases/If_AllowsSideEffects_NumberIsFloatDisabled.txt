@@ -1,5 +1,6 @@
 ﻿#SETUP: EnableExpressionChaining
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat
+
 // NumberoFloat difference is just different in the error messages for a few of these tests
 
 >> If(1>0, 100, {x:3}) + 1

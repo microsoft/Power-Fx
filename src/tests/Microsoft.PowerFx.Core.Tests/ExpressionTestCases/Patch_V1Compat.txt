@@ -1,4 +1,4 @@
-﻿#SKIPFILE: disable:PowerFxV1CompatibilityRules
+﻿#SETUP: PowerFxV1CompatibilityRules
 #SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
 // field22 is missing

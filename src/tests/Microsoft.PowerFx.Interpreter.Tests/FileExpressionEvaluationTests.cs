@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat")]
         public void Canvas_Float(ExpressionTestCase testCase)
         {
-            // current default features in Canvas
+            // current default features in Canvas abc
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1")]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat")]
         public void V1_Decimal(ExpressionTestCase testCase)
         {
             RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false);
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(TxtFileDataAttribute.ParserSetupString("NumberIsFloat"), path);
+            testRunner.AddFile(TxtFileDataAttribute.ParseSetupString("NumberIsFloat"), path);
 
             var result = testRunner.RunTests();
 

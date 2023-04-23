@@ -1,4 +1,4 @@
-#SKIPFILE: ConsistentOneColumnTableResult
+#SETUP: disable:ConsistentOneColumnTableResult
 
 >> Char(["55", "56", "57"])
 Table({Result:"7"},{Result:"8"},{Result:"9"})

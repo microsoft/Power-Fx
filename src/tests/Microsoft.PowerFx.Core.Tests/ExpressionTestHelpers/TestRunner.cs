@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -68,20 +69,25 @@ namespace Microsoft.PowerFx.Core.Tests
 
         // Directive should start with #, end in : like "#SETUP:"
         // Returns true if matched; false if not. Throws on error.
-        private static bool TryParseDirective(string line, string directive, ref string param)
+        private static bool TryParseDirective(string line, string directive, out string param)
         {
             if (line.StartsWith(directive, StringComparison.OrdinalIgnoreCase))
             {
-                if (param != null)
+                param = line.Substring(directive.Length).Trim();
+
+                // strip any end of line comment
+                if (param.LastIndexOf("//") >= 0)
                 {
-                    throw new InvalidOperationException($"Can't have multiple {directive}");
+                    param = param.Substring(0, param.LastIndexOf("//"));
                 }
 
-                param = line.Substring(directive.Length).Trim();
                 return true;
             }
-
-            return false;
+            else
+            {
+                param = null;
+                return false;
+            }
         }
 
         public void AddFile(Dictionary<string, bool> setup, string thisFile)
@@ -99,13 +105,11 @@ namespace Microsoft.PowerFx.Core.Tests
 
             TestCase test = null;
 
-            var i = -1;
-
-            // Preprocess file directives
-            // #Directive: Parameter
             string fileSetup = null;
             string fileOveride = null;
-            string fileSkipFile = null;
+            Dictionary<string, bool> fileSetupDict = new Dictionary<string, bool>();
+
+            var i = -1;
 
             while (i < lines.Length - 1)
             {
@@ -118,8 +122,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 if (line.Length > 1 && line[0] == '#')
                 {
-                    string fileDisable = null;
-                    if (TryParseDirective(line, "#DISABLE:", ref fileDisable))
+                    if (TryParseDirective(line, "#DISABLE:", out var fileDisable))
                     {
                         DisabledFiles.Add(fileDisable);
 
@@ -127,21 +130,30 @@ namespace Microsoft.PowerFx.Core.Tests
                         // Can apply to multiple files. 
                         var countRemoved = Tests.RemoveAll(test => string.Equals(Path.GetFileName(test.SourceFile), fileDisable, StringComparison.OrdinalIgnoreCase));
                     }
-                    else if (TryParseDirective(line, "#SKIPFILE:", ref fileSkipFile))
+                    else if (TryParseDirective(line, "#SETUP:", out var thisSetup))
                     {
-                        foreach (var flag in TxtFileDataAttribute.ParserSetupString(fileSkipFile))
+                        foreach (var flag in TxtFileDataAttribute.ParseSetupString(thisSetup))
                         {
-                            if ((flag.Value && setup.ContainsKey(flag.Key) && setup[flag.Key]) ||
-                                (!flag.Value && !(setup.ContainsKey(flag.Key) && setup[flag.Key])))
+                            if (fileSetupDict.ContainsKey(flag.Key) && fileSetupDict[flag.Key] != flag.Value)
                             {
-                                return;
+                                // Multiple setup lines are fine, but can't contradict.
+                                // ParseSetupString may expand aggregate handlers, such as PowerFxV1, which may create unexpected contradictions.
+                                throw new InvalidOperationException($"Duplicate and contradictory #SETUP directives: {line} {(flag.Value ? string.Empty : "disable:")}{flag.Key}");
+                            }
+                            else
+                            {
+                                fileSetupDict.Add(flag.Key, flag.Value);
                             }
                         }
                     }
-                    else if (TryParseDirective(line, "#SETUP:", ref fileSetup) ||
-                             TryParseDirective(line, "#OVERRIDE:", ref fileOveride))
+                    else if (TryParseDirective(line, "#OVERRIDE:", out var thisOveride))
                     {
-                        // flag is set, no additional work needed.
+                        if (fileOveride != null)
+                        {
+                            throw new InvalidOperationException($"Can't have multiple #OVERRIDE: directives");
+                        }
+
+                        fileOveride = thisOveride;
                     }
                     else
                     {
@@ -154,6 +166,19 @@ namespace Microsoft.PowerFx.Core.Tests
 
                 break;
             }
+
+            // If the test is incompatible with the base setup, skip it.
+            // It is OK for the test to turn on handlers and features that don't conflict.
+            foreach (var flag in fileSetupDict)
+            {
+                if ((setup.ContainsKey(flag.Key) && flag.Value != setup[flag.Key]) ||
+                    (!setup.ContainsKey(flag.Key) && setup.ContainsKey("Default") && flag.Value != setup["Default"]))
+                {
+                    return;
+                }
+            }        
+
+            fileSetup = string.Join(",", fileSetupDict.Select(i => (i.Value ? string.Empty : "disable:") + i.Key));
 
             List<string> duplicateTests = new List<string>();
 
