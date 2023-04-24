@@ -331,3 +331,14 @@ DateTime(1985,3,5,0,0,0,0)
 >> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5))
 DateTime(1985,3,5,0,0,0,0)
 
+>> Max(Table({a:1},Blank(),{a:3}), If(IsBlank(ThisRecord),100,a))
+100
+
+>> Max([-1, Blank(), -3], If(IsBlank(ThisRecord),100,Value))
+-1
+
+>> Min(Table({a:1},Blank(),{a:3}), If(IsBlank(ThisRecord),-100,a))
+-100
+
+>> Min([1, Blank(), 3], If(IsBlank(ThisRecord),-100,Value))
+1
