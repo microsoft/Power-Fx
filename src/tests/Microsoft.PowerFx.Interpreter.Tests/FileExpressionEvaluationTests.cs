@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(TxtFileDataAttribute.ParseSetupString("NumberIsFloat"), path);
+            testRunner.AddFile(TestRunner.ParseSetupString("NumberIsFloat"), path);
 
             var result = testRunner.RunTests();
 

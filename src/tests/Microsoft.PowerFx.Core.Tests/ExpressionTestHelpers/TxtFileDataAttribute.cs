@@ -32,73 +32,7 @@ namespace Microsoft.PowerFx.Core.Tests
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
-            _setup = ParseSetupString(setup);
-        }
-
-        public static Dictionary<string, bool> ParseSetupString(string setup)
-        {
-            var settings = new Dictionary<string, bool>();
-            var possible = new HashSet<string>();
-            var powerFxV1 = new Dictionary<string, bool>();
-
-            // Features
-            foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-            {
-                if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
-                {
-                    possible.Add(featureProperty.Name);
-                    if ((bool)featureProperty.GetValue(Features.PowerFxV1))
-                    {
-                        powerFxV1.Add(featureProperty.Name, true);
-                    }
-                }
-            }
-
-            // Parser Flags
-            foreach (var parserFlag in System.Enum.GetValues(typeof(TexlParser.Flags)))
-            {
-                possible.Add(parserFlag.ToString());
-            }
-
-            possible.Add("PowerFxV1");
-            possible.Add("DisableMemChecks");
-            possible.Add("TimeZoneInfo");
-            possible.Add("MutationFunctionsTestSetup");
-            possible.Add("OptionSetTestSetup");
-            possible.Add("AsyncTestSetup");
-            possible.Add("OptionSetSortTestSetup");
-            possible.Add("AllEnumsSetup");
-            possible.Add("Default");
-
-            foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
-            {
-                bool enabled = !(match.Groups[1].Value == "disable:");
-                var name = match.Groups[3].Value;
-                var complete = match.Groups[2].Value;
-
-                // end of line comment on settings string
-                if (name == "//")  
-                {
-                    break;
-                }
-
-                if (!possible.Contains(name))
-                {
-                    throw new ArgumentException($"Setup string not found: {name} from \"{setup}\"");
-                }
-
-                settings.Add(complete, enabled);
-
-                if (match.Groups[2].Value == "PowerFxV1")
-                {
-                    foreach (var pfx1Feature in powerFxV1)
-                    {
-                        settings.Add(pfx1Feature.Key, true);
-                    }
-                }
-            }
-
-            return settings;
+            _setup = TestRunner.ParseSetupString(setup);
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)

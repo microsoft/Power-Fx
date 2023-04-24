@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -43,6 +45,90 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         public string TestRoot { get; set; } = GetDefaultTestDir();
+
+        // Parses a comma delimited setup string, as found in TxtFileDataAttributes and the start of .txt files,
+        // into a dictionary for passing to AddDir, AddFile, etc.  This routine is used both to determine what
+        // the current testing context supports (with TxtFileDataAtrributes) and what a given .txt file requires
+        // (with AddFile).  These two dictionaries must be compatible and not contradict for a test to run.
+        //
+        // Dictionary contents, with NumberIsFloat as an example:
+        //    <NumberIsFloat, true> = "NumberIsFloat" was specified
+        //    <NumberIsFloat, false> = "disable:NumberIsFloat" was specified
+        //
+        // Use "Default" for all settings not explicilty called out.  Without Default, if a setting is not
+        // specified, the test can be run with or without the setting.
+        //
+        // Setting strings are validated by here.  Any of these are possible choices:
+        //    * Engine.Features, determined through reflection
+        //    * TexlParser.Flags, determined through reflection
+        //    * Default, special case
+        //    * PowerFxV1, special case, will expand to its constituent Features
+        //    * Other handlers listed in this routine
+        public static Dictionary<string, bool> ParseSetupString(string setup)
+        {
+            var settings = new Dictionary<string, bool>();
+            var possible = new HashSet<string>();
+            var powerFxV1 = new Dictionary<string, bool>();
+
+            // Features
+            foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
+                {
+                    possible.Add(featureProperty.Name);
+                    if ((bool)featureProperty.GetValue(Features.PowerFxV1))
+                    {
+                        powerFxV1.Add(featureProperty.Name, true);
+                    }
+                }
+            }
+
+            // Parser Flags
+            foreach (var parserFlag in System.Enum.GetValues(typeof(TexlParser.Flags)))
+            {
+                possible.Add(parserFlag.ToString());
+            }
+
+            possible.Add("Default");
+            possible.Add("PowerFxV1");
+            possible.Add("DisableMemChecks");
+            possible.Add("TimeZoneInfo");
+            possible.Add("MutationFunctionsTestSetup");
+            possible.Add("OptionSetTestSetup");
+            possible.Add("AsyncTestSetup");
+            possible.Add("OptionSetSortTestSetup");
+            possible.Add("AllEnumsSetup");
+
+            foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
+            {
+                bool enabled = !(match.Groups[1].Value == "disable:");
+                var name = match.Groups[3].Value;
+                var complete = match.Groups[2].Value;
+
+                // end of line comment on settings string
+                if (name == "//")
+                {
+                    break;
+                }
+
+                if (!possible.Contains(name))
+                {
+                    throw new ArgumentException($"Setup string not found: {name} from \"{setup}\"");
+                }
+
+                settings.Add(complete, enabled);
+
+                if (match.Groups[2].Value == "PowerFxV1")
+                {
+                    foreach (var pfx1Feature in powerFxV1)
+                    {
+                        settings.Add(pfx1Feature.Key, true);
+                    }
+                }
+            }
+
+            return settings;
+        }
 
         public void AddDir(Dictionary<string, bool> setup, string directory = "")
         {
@@ -131,7 +217,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                     else if (TryParseDirective(line, "#SETUP:", out var thisSetup))
                     {
-                        foreach (var flag in TxtFileDataAttribute.ParseSetupString(thisSetup))
+                        foreach (var flag in ParseSetupString(thisSetup))
                         {
                             if (fileSetupDict.ContainsKey(flag.Key) && fileSetupDict[flag.Key] != flag.Value)
                             {
