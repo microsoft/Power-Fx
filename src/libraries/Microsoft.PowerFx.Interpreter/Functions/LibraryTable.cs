@@ -330,7 +330,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                var childContext = RuntimeHelpers.GetSymbolContext(context, row);
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 var include = true;
                 for (var i = 0; i < filters.Length; i++)
@@ -647,7 +647,7 @@ namespace Microsoft.PowerFx.Functions
            DValue<RecordValue> row,
            LambdaFormulaValue filter)
         {
-            SymbolContext childContext = RuntimeHelpers.GetSymbolContext(context, row);
+            SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
             // Filter evals to a boolean 
             var result = await filter.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);

@@ -2350,7 +2350,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                SymbolContext childContext = RuntimeHelpers.GetSymbolContext(context, row);
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 // Filter evals to a boolean
                 var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
@@ -2369,7 +2369,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 // Filter evals to a boolean
                 var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();

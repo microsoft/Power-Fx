@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.RecordScope;
 
 namespace Microsoft.PowerFx
 {
@@ -35,7 +34,7 @@ namespace Microsoft.PowerFx
         // the scope topScope. topScope was created by IR. 
         public static SymbolContext NewTopScope(ScopeSymbol topScope, RecordValue ruleScope)
         {
-            return new SymbolContext(topScope, new Dictionary<int, IScope>() { { topScope.Id, new RecordScope(ruleScope) } });
+            return new SymbolContext(topScope, new Dictionary<int, IScope>() { { topScope.Id, new FormulaValueScope(ruleScope) } });
         }
 
         public SymbolContext WithScope(ScopeSymbol currentScope)
@@ -52,24 +51,9 @@ namespace Microsoft.PowerFx
             return new SymbolContext(CurrentScope, newScopeValues);
         }
 
-        public SymbolContext WithScopeValues(RecordValue scopeValues)
+        public SymbolContext WithScopeValues(FormulaValue value)
         {
-            return WithScopeValues(new RecordScope(scopeValues));
-        }
-
-        public SymbolContext WithScopeValues(ErrorValue scopeValues)
-        {
-            return WithScopeValues(new ErrorScope(scopeValues));
-        }
-
-        public SymbolContext WithScopeValues(BlankValue value)
-        {
-            return WithScopeValues(new BlankScope(value));
-        }
-
-        public SymbolContext WithThisItem(FormulaValue value)
-        {
-            return WithScopeValues(new UntypedObjectThisRecordScope(value));
+            return WithScopeValues(new FormulaValueScope(value));
         }
 
         // Called by evaluator to fetch a runtime value in the given scope. 

@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Functions
                     sb.Append(separator);
                 }
 
-                SymbolContext childContext = RuntimeHelpers.GetSymbolContext(context, row);
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
