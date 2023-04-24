@@ -86,25 +86,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             var eol = ChooseEol(expression);
 
             // Act
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol).ToArray();
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
 
             // Assert
-            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(encodedTokens, expression, eol);
-            Assert.Equal(tokens.Count, encodedTokens.Length / SemanticTokensEncoder.SlotsPerToken);
-            for (var i = SemanticTokensEncoder.SlotsPerToken - 1; i >= 0 && i < encodedTokens.Length; i += SemanticTokensEncoder.SlotsPerToken)
-            {
-                Assert.Equal(0u, encodedTokens[i]);
-            }
-
-            Assert.Equal(tokens.Count, decodedTokens.Count);
-            Assert.All(tokens.Zip(decodedTokens), (tokens) =>
-            {
-                var expectedToken = tokens.First;
-                var actualToken = tokens.Second;
-                Assert.Equal(expectedToken.StartIndex, actualToken.StartIndex);
-                Assert.Equal(expectedToken.EndIndex, actualToken.EndIndex);
-                Assert.Equal(expectedToken.TokenType, actualToken.TokenType);
-            });
+            AssertEncodedTokens(encodedTokens, tokens, expression, eol);
         }
 
         [Theory]
@@ -148,11 +133,107 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             tokens.Sort(new TokensComparer());
 
             // Act
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(overlappingToks, expression, eol).ToArray();
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(overlappingToks, expression, eol);
 
             // Assert
+            AssertEncodedTokens(encodedTokens, tokens, expression, eol, false);
+        }
+
+        [Theory]
+        [InlineData("1 +2;/*This is comment line one\r\nThis is comment line two\r\nLine 3 \r\n*/\r\n\r\ntrue;Max(1,2,3)")]
+        [InlineData("1 +2;\"This is string line one\r\nThis is string line two\r\nLine 3 \r\n\"\r\n\r\n;true;Max(1,2,3)")]
+        [InlineData("1 +2;\"This is string line one\r\nThis is string line two\r\nLine 3 \r\n\"\r\n\r\n;//This is single line comment \r\n\r\ntrue;Max(1,2,3)")]
+        [InlineData("\"String One\r\nString Two\"\"String Three\r\nStringFour\r\n\"\r\n\r\n\r\n;/*This is comment \r\n Comment Two\r\n */\r\n\r\n\r\n\"Yet another string\r\n yet another line\r\n\"")]
+        [InlineData("Max\r\n(1\r\n,1344,\r\n34\r\n);\"String One\r\nString Two\"\"String Three\r\nStringFour\r\n\"\r\n\r\n\r\n;/*This is comment \r\n Comment Two\r\n */\r\n\r\n\r\n\"Yet another string\r\n yet another line\r\n\"")]
+        [InlineData("// This is single line comment \r\n")]
+        [InlineData("/* One line \r\n Second Line */\r\n\r\n\r\n/*Third Comment First One \r\n Fourth Comment*/")]
+        [InlineData("\"\r\n\r\n\r\n\r\nA\r\n       \r\nS\"\r\n\r\n\r\n\r\n       /*\r\n\r\nYet another comment \r\n Yet another line*/            \r\n    \r\n\r\n//Single Line Comment\r\n\r\n\r\n//Single Line Comment")]
+        [InlineData("$\"This is interplolated \r\n string and 1 + 2 = \r\n{3}\r\n\r\n \r\n{\"End\r\n of a\r\n string\"\r\n\r\n\r\n\r\n       /*\r\n\r\nYet another comment \r\n Yet another line*/            \r\n    \r\n\r\n/* One line \r\n Second Line */\r\n\r\n\r\n/*Third Comment First One \r\n Fourth Comment*/}\"")]
+        public void TestMultilineTokensAreEncodedCorrectly(string expression)
+        {  
+            // Arrange
+            var checkResult = GetDefaultCheckResult(expression);
+            var tokens = checkResult.GetTokens(new TokensComparer());
+            var eol = ChooseEol(expression);
+
+            // Act
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+
+            // Assert
+            AssertEncodedTokens(encodedTokens, tokens, expression, eol, true);
+        }
+
+        // Skipping because of a bug in TexlLexer.cs which causes the spans to first comment and second comment tokens in the expression below to overlap
+        // Enable this test after fixing it in a separate user story
+        // For some reason, Skip attribute on InlineData for the TestMultilineTokensAreEncodedCorrectly test doesn't skip the tests in Visual Studio so adding a separate test
+        [Fact(Skip = "\"There's a bug in TexlLexer which causes the first two comment tokens to overlap. The end index of first comment is one more than (16) than the start of second comment (15). Fix it and then enable this test\"")]
+        public void TestOverlappingCommentTokensSkip()
+        {
+            var expression = "//Comment one \n//Comment Two \n \"String One\n\";\"String One \n String Two \n\";";
+            TestMultilineTokensAreEncodedCorrectly(expression);
+        }
+
+        private static void AssertEncodedTokens(ICollection<uint> encodedTokensCollection, ICollection<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
+        {
+            var encodedTokens = encodedTokensCollection.ToArray();
             var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(encodedTokens, expression, eol);
-            Assert.Equal(tokens.Count, encodedTokens.Length / SemanticTokensEncoder.SlotsPerToken);
+
+            if (hasMultilineTokens)
+            {
+                var nonBrokenTokens = decodedTokens.Where(decodedToken => tokens.SingleOrDefault(actualToken => actualToken.StartIndex == decodedToken.StartIndex && actualToken.EndIndex == decodedToken.EndIndex && actualToken.TokenType == decodedToken.TokenType) != default).ToList();
+                var brokenTokens = decodedTokens.Where(decodedToken => !nonBrokenTokens.Contains(decodedToken));
+                var tokensPutTogether = new List<ITokenTextSpan>();
+                TokenWithAdjustment currentToken = null;
+                foreach (var brokenToken in brokenTokens)
+                {
+                    var adjustedStartIdx = brokenToken.StartIndex;
+                    while (adjustedStartIdx > 0 && eol.IndexOf(expression[adjustedStartIdx - 1]) != -1)
+                    {
+                        adjustedStartIdx--;
+                    }
+
+                    var adjustedEndIndex = brokenToken.EndIndex;
+                    while (adjustedEndIndex < expression.Length && eol.IndexOf(expression[adjustedEndIndex]) != -1)
+                    {
+                        adjustedEndIndex++;
+                    }
+
+                    if (currentToken == null || (currentToken.EndIndex != brokenToken.StartIndex || currentToken.TokenType != brokenToken.TokenType))
+                    {
+                        currentToken = new TokenWithAdjustment(adjustedStartIdx, adjustedEndIndex, brokenToken.TokenType, brokenToken.StartIndex - adjustedStartIdx, adjustedEndIndex - brokenToken.EndIndex);
+                    }
+                    else
+                    {
+                        currentToken = new TokenWithAdjustment(currentToken.StartIndex, adjustedEndIndex, currentToken.TokenType, currentToken.LeftAdjustment, adjustedEndIndex - brokenToken.EndIndex);
+                    }
+
+                    if (currentToken != null)
+                    {
+                        for (int left = 0; left <= currentToken.LeftAdjustment; left++)
+                        {
+                            for (int right = 0; right <= currentToken.RightAdjustment; right++)
+                            {
+                                if (tokens.Any(tok => tok.StartIndex == currentToken.StartIndex + left && tok.EndIndex == currentToken.EndIndex - right && tok.TokenType == currentToken.TokenType))
+                                {
+                                    tokensPutTogether.Add(new TokenWithAdjustment(currentToken.StartIndex + left, currentToken.EndIndex - right, currentToken.TokenType));
+                                    currentToken = null;
+                                    break;
+                                }
+                            }
+
+                            if (currentToken == null)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                Assert.Null(currentToken);
+                decodedTokens = nonBrokenTokens.Concat(tokensPutTogether).OrderBy(tok => tok, new TokensComparer()).ToList();
+            }
+
+            Assert.True(encodedTokens.Length / SemanticTokensEncoder.SlotsPerToken >= tokens.Count);
             for (var i = SemanticTokensEncoder.SlotsPerToken - 1; i >= 0 && i < encodedTokens.Length; i += SemanticTokensEncoder.SlotsPerToken)
             {
                 Assert.Equal(0u, encodedTokens[i]);
@@ -190,6 +271,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true });
             Assert.False(checkResult.Errors.Any());
             return checkResult;
+        }
+
+        private class TokenWithAdjustment : ITokenTextSpan
+        {
+            public string TokenName { get; set; } = string.Empty;
+
+            public int StartIndex { get; set; }
+
+            public int EndIndex { get; set; }
+
+            public TokenType TokenType { get; set; }
+
+            public bool CanBeHidden => false;
+
+            public int LeftAdjustment { get; set; } = 0;
+
+            public int RightAdjustment { get; set; } = 0;
+
+            public TokenWithAdjustment(int startIdx, int endIdx, TokenType type, int leftAdjustment = 0, int rightAdjustment = 0)
+            {
+                StartIndex = startIdx;
+                EndIndex = endIdx;
+                TokenType = type;
+                LeftAdjustment = leftAdjustment;
+                RightAdjustment = rightAdjustment;
+            }
         }
 
         private class TokensComparer : IComparer<ITokenTextSpan>

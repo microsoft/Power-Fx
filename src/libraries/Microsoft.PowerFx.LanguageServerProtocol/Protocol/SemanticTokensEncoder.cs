@@ -124,7 +124,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                         if (++endOfLineMatchIndex >= eol.Length)
                         {
                             // If current token is not null, we are dealing with multiline token, consider the current line of token as a separate encoded token
-                            EncodeAndAddToken(encodedTokens, currentToken, currentTokenStartLine, currentTokenStartPosition, positionOnCurrentLine - (uint)eol.Length, currentLineNumber, ref previousTokenLineNumber, ref previousTokenStartIdx);
+
+                            EncodeAndAddToken(encodedTokens, currentToken, currentTokenStartLine, currentTokenStartPosition, eol.Length > positionOnCurrentLine ? null : positionOnCurrentLine - (uint)eol.Length, currentLineNumber, ref previousTokenLineNumber, ref previousTokenStartIdx);
                             if (currentToken != null && i == currentToken.EndIndex - 1)
                             {
                                 (currentToken, currentTokenStartLine, currentTokenStartPosition) = (null, null, null);
@@ -159,16 +160,20 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="currentLineNumber">Curent Line Number in the expression.</param>
         /// <param name="previousTokenLineNumber">Line number of the previous encoded token.</param>
         /// <param name="previousTokenStartIdx">Starting position of the previous encoded token.</param>
-        private static void EncodeAndAddToken(ICollection<uint> encodedTokens, ITokenTextSpan currentToken, uint? currentTokenStartLine, uint? currentTokenStartPosition, uint endPosition, uint currentLineNumber,  ref uint previousTokenLineNumber, ref uint previousTokenStartIdx)
+        private static void EncodeAndAddToken(ICollection<uint> encodedTokens, ITokenTextSpan currentToken, uint? currentTokenStartLine, uint? currentTokenStartPosition, uint? endPosition, uint currentLineNumber,  ref uint previousTokenLineNumber, ref uint previousTokenStartIdx)
         {
-            if (currentToken == null || !currentTokenStartLine.HasValue || !currentTokenStartPosition.HasValue)
+            if (currentToken == null || !currentTokenStartLine.HasValue || !currentTokenStartPosition.HasValue || !endPosition.HasValue)
             {
                 return;
             }
 
             // if token ends on the same line as it starts, pick the position it was first seen on else pick 0 (multi line token)
             var startPosition = currentLineNumber == currentTokenStartLine.Value ? currentTokenStartPosition.Value : 0u;
-            var length = (endPosition + 1) - startPosition;
+            var length = (endPosition.Value + 1) - startPosition;
+            if (length <= 0)
+            {
+                return;
+            }
 
             // Line number of current token relative to previous token
             encodedTokens.Add(currentLineNumber - previousTokenLineNumber);
