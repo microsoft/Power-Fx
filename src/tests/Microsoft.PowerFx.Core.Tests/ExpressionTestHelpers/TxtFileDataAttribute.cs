@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis.Operations;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;

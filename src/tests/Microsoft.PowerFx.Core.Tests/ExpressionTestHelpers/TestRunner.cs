@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
@@ -76,9 +75,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 param = line.Substring(directive.Length).Trim();
 
                 // strip any end of line comment
-                if (param.LastIndexOf("//") >= 0)
+                if (param.Contains("//"))
                 {
-                    param = param.Substring(0, param.LastIndexOf("//"));
+                    param = param.Substring(0, param.IndexOf("//"));
                 }
 
                 return true;
