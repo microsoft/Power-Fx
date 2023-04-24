@@ -1,4 +1,5 @@
-#SKIPFILE: disable:NumberIsFloat   // waiting on https://github.com/microsoft/Power-Fx/issues/1204
+#SETUP: NumberIsFloat   // waiting on https://github.com/microsoft/Power-Fx/issues/1204
+#SETUP: ConsistentOneColumnTableResult
 
 >> Round(Sin(Table({a:0},{a:Pi()/6},{a:Pi()/2})),3)
 Table({Value:0},{Value:0.5},{Value:1})

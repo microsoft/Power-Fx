@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -22,14 +25,14 @@ namespace Microsoft.PowerFx.Core.Tests
         private readonly string _filePathCommon;
         private readonly string _filePathSpecific;
         private readonly string _engineName;
-        private readonly bool _numberIsFloat;
+        private readonly Dictionary<string, bool> _setup;
 
-        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, bool numberIsFloat)
+        public TxtFileDataAttribute(string filePathCommon, string filePathSpecific, string engineName, string setup)
         {
             _filePathCommon = filePathCommon;
             _filePathSpecific = filePathSpecific;
             _engineName = engineName;
-            _numberIsFloat = numberIsFloat;
+            _setup = TestRunner.ParseSetupString(setup);
         }
 
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
@@ -56,7 +59,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
                         foreach (var file in allFiles)
                         {
-                            parser.AddFile(_numberIsFloat, file);
+                            // Skip .md files
+
+                            if (file.EndsWith(".txt", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                parser.AddFile(_setup, file);
+                            }
                         }
                     }
                 }

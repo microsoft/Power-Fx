@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
+
 >> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Substitute(emptyTable, emptyTable, emptyTable))
 Table()
 

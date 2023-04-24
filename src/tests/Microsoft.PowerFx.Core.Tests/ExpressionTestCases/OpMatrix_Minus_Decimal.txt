@@ -1,4 +1,4 @@
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat
 
 // In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
 // and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.

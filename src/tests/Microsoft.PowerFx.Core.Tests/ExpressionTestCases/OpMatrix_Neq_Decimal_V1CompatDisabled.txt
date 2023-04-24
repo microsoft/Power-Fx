@@ -1,4 +1,4 @@
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat,disable:PowerFxV1CompatibilityRules
 
 // NOT EQUALS
 
@@ -58,51 +58,39 @@ true
 >> Float(16) <> Float(18)
 true
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) <> "16"
 true
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) <> "16.000000000000000000002"
 true
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) <> "14"
 true
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) <> "18"
 true
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) <> "1e20"
 true
 
-// comp todo: type mismatch error (string and number)
 >> Float(1e20) <> "1e20"
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(1) <> true
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(1) <> false
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(0) <> true
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(0) <> false
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(2) <> true
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(2) <> false
 true
 
@@ -186,23 +174,18 @@ false
 
 // Text - Text can only be compared with other text
 
-// comp todo: type mismatch error (string and number)
 >> "16" <> Float(16)
 true
 
-// comp todo: type mismatch error (string and number)
 >> "16" <> Float(18)
 true
 
-// comp todo: type mismatch error (string and number)
 >> "16" <> Float(14)
 true
 
-// comp todo: type mismatch error (string and number)
 >> "1e100" <> Float(2)
 true
 
-// comp todo: type mismatch error (string and number)
 >> "" <> Float(0)
 true
 
@@ -221,11 +204,9 @@ true
 >> "1e100" <> "2"
 true
 
-// comp todo: type mismatch error (string and boolean)
 >> "1" <> true
 true
 
-// comp todo: type mismatch error (string and boolean)
 >> "1e100" <> true
 true
 
@@ -244,23 +225,18 @@ true
 >> "1e100" <> Blank()
 true
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "36526" <> Date(2000,1,1)
 true
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "36526.5" <> DateTime(2000,1,1,12,0,0)
 true
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "16" <> Time(12,0,0)
 true
 
-// comp todo: type mismatch error (string and number)
 >> "2" <> Decimal("2.000000000000000000000002")
 true
 
-// comp todo: type mismatch error (string and number)
 >> "1e100" <> Decimal("2.000000000000000000000002")
 true
 
@@ -325,55 +301,43 @@ true
 
 // Boolean
 
-// comp todo: type mismatch error (boolean and number)
 >> true <> Float(2)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> true <> Float(1)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> true <> Float(0)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> false <> Float(2)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> false <> Float(1)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> false <> Float(0)
 true
 
 >> true <> Float("1e100")
 true
 
-// comp todo: type mismatch error (string and boolean)
 >> true <> "1"
 true
 
-// comp todo: type mismatch error (string and boolean)
 >> false <> "0"
 true
 
-// comp todo: type mismatch error (string and boolean)
 >> false <> "1"
 true
 
-// comp todo: type mismatch error (string and boolean)
 >> true <> "1E+100"
 true
 
-// comp todo: type mismatch error (string and boolean)
 // returns false in Excel
 >> true <> "true"
 true
 
-// comp todo: type mismatch error (string and boolean)
 >> false <> "false"
 true
 
@@ -389,51 +353,39 @@ true
 >> false <> Blank()
 true
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true <> Date(1927,5,18)
 true
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true <> DateTime(1927,5,18,0,0,0)
 true
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true <> Time(12,0,0)
 true
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false <> Date(1927,5,18)
 true
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false <> DateTime(1927,5,18,0,0,0)
 true
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false <> Time(12,0,0)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> true <> Decimal("1.000000000000000000000002")
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> true <> Decimal(1)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> true <> Decimal(0)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> false <> Decimal("1.000000000000000000000002")
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> false <> Decimal(1)
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> false <> Decimal(0)
 true
 
@@ -534,7 +486,6 @@ false
 >> Date(1900,1,1) <> "2"
 true
 
-// comp todo: type mismatch error (boolean and number)
 >> Date(1900,1,0) <> true
 true
 
@@ -559,7 +510,6 @@ true
 >> Date(1954,10,3) <> Today()
 true
 
-// comp todo: type mismatch error (date and time)
 >> Date(2000,1,1) <> Time(12,0,0)
 true
 
@@ -577,11 +527,9 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateTime(1900,1,1,12,0,0) <> Float(2.5)
 false
 
-// comp todo: type mismatch error (date/datetime and string)
 >> DateTime(1900,1,1,12,0,0) <> "2.5"
 true
 
-// comp todo: type mismatch error (date/datetime and boolean)
 >> DateTime(2000,1,1,12,0,0) <> true
 true
 
@@ -635,15 +583,12 @@ true
 >> Time(9,0,0) <> Float(0.375)
 false
 
-// comp todo: type mismatch error (time and string)
 >> Time(9,0,0) <> "0.375"
 true
 
-// comp todo: type mismatch error (time and boolean)
 >> Time(9,0,0) <> true
 true
 
-// comp todo: type mismatch error (time and boolean)
 >> Time(24,0,0) <> false
 true
 
@@ -665,11 +610,9 @@ false
 >> Time(9,0,1) <> Time(9,0,0)
 true
 
-// comp todo: type mismatch error (time and date)
 >> Time(9,0,0) <> Date(1900,1,2)
 true
 
-// comp todo: but we allow time and datetime?
 >> Time(1,0,0) <> DateTime(1899,12,30,1,0,0)
 true
 
@@ -702,11 +645,9 @@ false
 >> Decimal("2.000000000000000000000001") <> Float(2)
 false
 
-// comp todo: type mismatch error (number and string)
 >> Decimal("16.000000000000000000000001") <> "16"
 true
 
-// comp todo: type mismatch error (number and boolean)
 >> Decimal("1.000000000000000000000001") <> true
 true
 

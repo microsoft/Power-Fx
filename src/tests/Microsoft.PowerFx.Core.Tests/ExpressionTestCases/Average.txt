@@ -1,4 +1,5 @@
-﻿
+﻿#SETUP: disable:SupportColumnNamesAsIdentifiers
+
 >> Average(1,0,5)
 2
 

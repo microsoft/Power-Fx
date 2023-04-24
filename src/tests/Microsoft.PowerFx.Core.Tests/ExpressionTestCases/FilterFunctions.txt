@@ -1,3 +1,5 @@
+#SETUP: TableSyntaxDoesntWrapRecords
+
 // 'As' with Filter
 >> Filter([1,2,3] As X, X.Value > 2)
 Table({Value:3})

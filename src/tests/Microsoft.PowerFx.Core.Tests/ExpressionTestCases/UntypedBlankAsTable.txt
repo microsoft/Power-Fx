@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 // Using an untyped blank, such as the return type from Blank(), as an argument to a single column table enabled function.
 // We are inconsistent, but don't want to break existing behavior, and this scenario is not common or useful.
 // A typed Blank, such as returned from a database or If(1<0,"foo") is fine, it specifically an untyped Blank that is odd.

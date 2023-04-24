@@ -1,4 +1,4 @@
-﻿#SKIPFILE: disable:NumberIsFloat  // no coercion from decimal to boolean yet
+﻿#SETUP: NumberIsFloat  // no coercion from decimal to boolean yet
 
 >> Boolean(["true", "True", "TRUE", "false", "False", "FALSE"])
 Table({Value:true},{Value:true},{Value:true},{Value:false},{Value:false},{Value:false})
