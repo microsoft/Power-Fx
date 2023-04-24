@@ -80,3 +80,15 @@ Blank()
 >> ForAll([1], If(false, {a:1}, {b:2}))
 Table({})
 
+>> ForAll([1,2,Blank()], If(IsBlank(ThisRecord), 999, ThisRecord.Value + 1))
+Table({Value:2},{Value:3},{Value:1})
+
+>> ForAll(Table({a:1},{a:2},Blank()), If(IsBlank(ThisRecord), 999, ThisRecord.a + 1))
+Table({Value:2},{Value:3},{Value:999})
+
+>> ForAll(Table(Blank()),IsBlank(ThisRecord))
+Table({Value:true})
+
+>> ForAll([Blank()],IsBlank(ThisRecord))
+Table({Value:false})
+

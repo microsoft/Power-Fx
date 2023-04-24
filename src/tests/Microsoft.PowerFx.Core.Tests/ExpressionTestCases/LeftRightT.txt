@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 >> Left("Hello world", [4, 5])
 Table({Value:"Hell"},{Value:"Hello"})
 

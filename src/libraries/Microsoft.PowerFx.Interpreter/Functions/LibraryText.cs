@@ -79,19 +79,7 @@ namespace Microsoft.PowerFx.Functions
                     sb.Append(separator);
                 }
 
-                SymbolContext childContext;
-                if (row.IsValue)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Value);
-                }
-                else if (row.IsBlank)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
-                }
-                else
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Error);
-                }
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 

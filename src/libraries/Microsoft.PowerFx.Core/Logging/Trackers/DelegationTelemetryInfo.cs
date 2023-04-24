@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -81,8 +83,38 @@ namespace Microsoft.PowerFx.Core.Logging.Trackers
                     var funcName = binding?.GetInfo(callNode)?.Function?.Name ?? string.Empty;
                     return new DelegationTelemetryInfo(funcName);
                 default:
-                    return new DelegationTelemetryInfo(node.ToString());
+                    //  PII-free unformatted prints of powerapps formulas.
+                    return new DelegationTelemetryInfo(StructuralPrint.Print(node, binding));
             }
+        }
+
+        public static DelegationTelemetryInfo CreateAsyncNodeTelemetryInfo(TexlNode node, TexlBinding binding = null)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertValueOrNull(binding);
+
+            switch (node.Kind)
+            {
+                case NodeKind.Call:
+                    var callNode = node.AsCall();
+                    var funcName = binding?.GetInfo(callNode)?.Function?.Name ?? string.Empty;
+                    return new DelegationTelemetryInfo(funcName);
+                default:
+                    //  PII-free unformatted prints of powerapps formulas.
+                    return new DelegationTelemetryInfo(StructuralPrint.Print(node, binding));
+            }
+        }
+
+        public static DelegationTelemetryInfo CreateUnsupportArgTelemetryInfo(DType dType)
+        {
+            Contracts.AssertValue(dType);
+
+            return new DelegationTelemetryInfo(dType.Kind.ToString());
+        }
+
+        public static DelegationTelemetryInfo CreateUnSupportedDistinctArgTelemetryInfo(int condition)
+        {
+            return new DelegationTelemetryInfo(condition.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

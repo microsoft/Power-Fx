@@ -1,4 +1,6 @@
-﻿// Blank table
+﻿#SETUP: ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
+
+// Blank table
 >> Distinct(If(1<0,[1,2]), true)
 Blank()
 

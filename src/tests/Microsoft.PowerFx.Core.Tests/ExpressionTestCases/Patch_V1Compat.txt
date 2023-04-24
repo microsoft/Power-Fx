@@ -1,0 +1,19 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
+
+// field22 is missing
+>> Patch(
+     Table(
+       {field1:2, field2:{field21:"earth",field22:"venus"}},
+       {field1:3, field2:{field21:"moon",field22:"phobos"}}),
+     {field2:{field21:"moon"}},
+     {field1:7})
+#SKIP: awaiting https://github.com/microsoft/Power-Fx/issues/1383
+
+>> Patch(
+     Table(
+       {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
+       {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
+    {Properties:{Moon:{Name:"Phobos"}}},
+    {Planet:"Jupter"})
+#SKIP: awaiting https://github.com/microsoft/Power-Fx/issues/1383

@@ -333,16 +333,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("With(RecordNest, SomeString + nest2.datetest)", "With(RecordNest, SomeString + nest2.Foo)", "RecordNest.nest2.datetest", "Foo")]
         [InlineData("With({value: RecordNest.SomeString}, value & B)", "With({value: RecordNest.'abcd efg'}, value & B)", "RecordNest.SomeString", "abcd efg")]
         [InlineData("If(B, Text(B), \"B\")", "If(A, Text(A), \"B\")", "B", "A")]
-        [InlineData("Num", "Num2", "Num", "Num2")]
-        [InlineData("DisplayNum", "DisplayNum2", "DisplayNum", "DisplayNum2")]
         [InlineData("B & Invalid()", "A & Invalid()", "B", "A")] // Rename with bind errors
         [InlineData("B + + + ", "A + + + ", "B", "A")] // Rename with parse errors
         [InlineData("With({x: RecordNest, y: RecordNest}, x.SomeString & y.SomeString)", "With({x: RecordNest, y: RecordNest}, x.S2 & y.S2)", "RecordNest.SomeString", "S2")]
-        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1ValueRenamed", "Os1Value", "Os1ValueRenamed")] // Globals
-        [InlineData("firstos.option_1 <> Os1Value", "newOsName.Option1 <> Os1Value", "firstos", "newOsName")]
-        [InlineData("TestFirstOptionSet.option_1 <> Os1Value", "newOsName.option_1 <> Os1Value", "TestFirstOptionSet", "newOsName")]
-        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_5 <> Os1Value", "firstos.option_1", "firstos.option_5")]
-        [InlineData("firstos.Option1 <> Os1Value", "firstos.Option6 <> Os1Value", "firstos.Option1", "firstos.Option6")]
         [InlineData("TestSecondOptionSet.Option3 = DisplayOS2Value", "secondos.option_3 = Os2ValueRenamed", "Os2Value", "Os2ValueRenamed")]
         [InlineData("If(false, TestSecondOptionSet.Option4, Os2Value)", "If(false, secondos.option_4, Os2ValueRenamed)", "Os2Value", "Os2ValueRenamed")]
 
@@ -409,6 +402,39 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 Assert.Equal(engine.GetInvariantExpression(expressionBase, r1), renamer.ApplyRename(expressionBase));
             }
+        }
+
+        [Theory]
+        [InlineData("firstos.option_1 <> Os1Value", "newOsName.Option1 <> Os1Value", "firstos", "newOsName")]
+        [InlineData("firstos.option_1 <> firstos.option_2", "firstos.option_5 <> firstos.option_2", "firstos.option_1", "option_5")]
+        [InlineData("firstos.option_1 <> option_1", "firstos.option_5 <> option_1", "firstos.option_1", "option_5")]
+        [InlineData("firstos.option_1 <> Os1Value", "firstos.option_1 <> Os1Value", "Unknown", "Unknown2")]
+        [InlineData("firstos.option_1 <> firstos.option_2", "firstos.option_1 <> firstos.option_2", "firstos.Unknown", "Unknown2")]
+        public void RenameParameter_OptionSet(string expressionBase, string expectedExpression, string oldName, string newName)
+        {
+            PowerFxConfig config = new PowerFxConfig();
+            OptionSet optionSet1 = new OptionSet("firstos", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+
+            config.AddOptionSet(optionSet1, new DName("TestFirstOptionSet"));
+
+            RecordType r1 = RecordType.Empty()
+                .Add(new NamedFormulaType("Os1Value", optionSet1.FormulaType, "DisplayOS1Value"))
+                .Add(new NamedFormulaType("option_1", FormulaType.Number, "DisplayNum"));
+
+            DPath oldNameAsPath = DPath.Root;
+            foreach (var segment in oldName.Split('.'))
+            {
+                oldNameAsPath = oldNameAsPath.Append(new DName(segment));
+            }
+
+            Engine engine = new Engine(config);
+
+            RenameDriver renamer = engine.CreateOptionSetRenamer(r1, oldNameAsPath, new DName(newName), CultureInfo.InvariantCulture);
+            Assert.Equal(expectedExpression, renamer.ApplyRename(expressionBase));
         }
 
         [Fact]

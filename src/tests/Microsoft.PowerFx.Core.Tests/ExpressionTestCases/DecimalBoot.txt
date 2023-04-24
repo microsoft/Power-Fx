@@ -1,5 +1,5 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
-#SKIPFILE:disable:NumberIsFloat
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,ConsistentOneColumnTableResult
+#SETUP: NumberIsFloat
 
 // Tests that can't be run in decimal yet and have #SKIP directives
 // Once decimal is done, this #SKIPs can be removed and this file can be removed
