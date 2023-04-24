@@ -15,7 +15,7 @@ Test expression can be multiple lines using significant white space at the begin
 
 These tests are run with different configurations of features and parser options.
 Most tests are not impacted by these differences and should be placed in a top level file
-with a suffix with no #SKIPFILE directives and few #SEUTP directives for features that are not
+with no suffix and few #SEUTP directives for features that are not
 directly being tested.
 
 There may be some tests that are sensitive to the configuration.  These should be broken
@@ -25,13 +25,19 @@ For example:
 - **MinMax.txt**: Tests common Min and Max function scenarios that are not sensitive to the configuration.  
   For example, `Max(1,2)` is always `2`.
 - **MinMax_NumberIsFloat.txt**: Tests that are specific to floating point operation and would not work properly with
-  Decimal numbers.  For example, `Max(1e300,1.1e300)`.  This file contains a `#SKIPFILE disable:NumberIsFloat` directive.
+  Decimal numbers.  For example, `Max(1e300,1.1e300)`.  This file contains a `#SETUP: NumberIsFloat` directive.
 - **MinMax_V1Compat.txt**: Tests that have the old behavior before PowerFxV1CompatibilityRules was introduced.
-  This file contains a `#SKIPFILE disable:PowerFxV1CompaitilibyRules` to prevent it from being run if that switch is disabled.
+  This file contains a `#SETUP: PowerFxV1CompaitilibyRules` to prevent it from being run if that switch is disabled.
 - **MinMax_V1CompatDisabled.txt**: Tests for the new PowerFxV1CompatibilityRules behavior.
-  This file contains a `#SKIPFILE PowerFxV1CompaitilibyRules` to prevent it from being run if that switch is disabled.
+  This file contains a `#SETUP: disable:PowerFxV1CompaitilibyRules` to prevent it from being run if that switch is disabled.
 
 ## File Directives
+
+File directives appear at the top of the file.
+
+Each direcive may be followed by an end of line comment.
+
+Multiple directives are allowed in a file, except for #OVERRIDE.
 
 ### SETUP
 
@@ -39,19 +45,28 @@ For example:
 #SETUP: handler | [disable:]flag
 ```
 
-Specifies the handler to use and/or a Feature or ParserOption flag to enable or disable.
+Specifies the setup handler, engine Features, and ParserOption flags required by this test.
 
-It is OK to turn on flags that are not directly being tested.  For example, `#SETUP TableSyntaxDoesntWrapRecords` is common 
-as many tests are written using [ ] notation.
+If the test environment cannot satisfy the needs of #SETUP, the test file is skipped.
 
-### SKIPFILE
+It is OK to turn on flags that are not directly being tested.  For example, `#SETUP: TableSyntaxDoesntWrapRecords` is common 
+as many tests are written using [ ] notation for defining tables.
+
+### OVERRIDE
 
 ```
-#SKIPFILE: [disable:]flag
+#OVERRIDE: filename
 ```
 
-If the flag is set (or not set if `disable:` is used) then the file is not included in the test run.  
-Tests skipped in this manner are not included in the tally of skipped tests. 
+Test results or #SKIP in this file override the same test in the named file.
+
+### DISABLE
+
+```
+#DISABLE: filename
+```
+
+Disables a test file.  All #DISABLE directives are handled before any tests are run.
 
 ## Test Directives
 
