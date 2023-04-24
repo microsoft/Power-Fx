@@ -232,8 +232,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            // The 2nd and 3rd arguments can be validated using the same logic as the normal Text function
-            TextFunction.ValidateFormatArgs(Name, context, args, argTypes, errors, ref nodeToCoercedTypeMap, ref isValid);
+            if (args.Length >= 2)
+            {
+                // The 2nd and 3rd arguments can be validated using the same logic as the normal Text function
+                TextFunction.ValidateFormatArgs(Name, context, args, argTypes, errors, ref nodeToCoercedTypeMap, ref isValid);
+            }
 
             return isValid;
         }
