@@ -1465,6 +1465,14 @@
     <value>इनपुट</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>संशोधक</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>संशोधक</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>किसी लेख मान के प्रारंभ से वर्णों की संख्या लौटाता है.</value>
     
@@ -1801,20 +1809,8 @@
     <value>'{0}' का पहला तर्क एक स्तंभ वाली तालिका होना चाहिए.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>अमान्य स्कीमा, '{0}' के लिए पाठ मानों वाला स्तंभ अपेक्षित था.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>अमान्य स्कीमा, '{0}' के लिए दिनांक मानों वाला स्तंभ अपेक्षित था.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>अमान्य स्कीमा, '{0}' के लिए सांख्यिक मानों वाला स्तंभ अपेक्षित था.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>अमान्य स्कीमा, '{0}' के लिए रंग मानों वाला स्तंभ अपेक्षित था.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>अमान्य स्कीमा, '{1}' के लिए {0} मानों का एक कॉलम अपेक्षित है.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>सांख्यिक मान बहुत बड़ा है.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>एक आरक्षित शब्द का उपयोग जो वर्तमान में समर्थित नहीं है.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>गणित और सांख्यिकीय</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>जानकारी</value>
@@ -4789,6 +4792,26 @@
     <value>नामित सूत्र एक व्यंजक होना चाहिए.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>उपयोगकर्ता परिभाषित फ़ंक्शन में एक निकाय होना चाहिए.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>फ़ंक्शन {0} पहले से ही परिभाषित है.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>पैरामीटर {0} डुप्लीकेट है.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>अज्ञात प्रकार {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>कथित फ़ंक्शन, रिटर्न प्रकार फ़ंक्शन बॉडी के रिटर्न प्रकार से मेल नहीं खाता है.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' पहले से मौजूद है.</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0}' मान्यता प्राप्त लेकिन समर्थित फ़ंक्शन नहीं है.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>प्रकार रूपांतरण विफल रहा क्योंकि दिया गया मूल्य '{0}' प्रकार का था, जिसकी उम्मीद '{1}' प्रकार थी.</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>टेबल '{0}' पर इस ऑपरेशन को प्रत्यायोजित करना समर्थित नहीं है.</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>यह पुष्टि हमेशा सच होगी. क्या आप ThisRecord या [@ ] का इस्तेमाल करना चाहते थे?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} को प्रतिनिधि नहीं कर सकते हैं: केवल प्राथमिक कुंजी फ़ील्ड '{1}' पर लुकअप के लिए प्रत्यायोजन का समर्थन करते हैं.</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>{0} को प्रतिनिधि नहीं कर सकते हैं: Id व्यंजक इस रिकॉर्ड को संदर्भित करता है.</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>{0} को प्रतिनिधि नहीं कर सकते हैं: एक व्यवहार फ़ंक्‍शन '{1}' शामिल है.</value>
     
   </data>
 </root>
