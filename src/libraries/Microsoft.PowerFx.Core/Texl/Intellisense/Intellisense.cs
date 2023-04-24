@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.CheckValue(binding, "binding");
             Contracts.CheckValue(formula, "formula");
 
-            var allSupportedFunctions = binding.NameResolver.Functions;
-            
+            IEnumerable<TexlFunction> allFunctionOverloads = null;
+
             // TODO: Hoist scenario tracking out of language module.
             // Guid suggestScenarioGuid = Common.Telemetry.Log.Instance.StartScenario("IntellisenseSuggest");
 
@@ -48,7 +48,8 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 if (!TryInitializeIntellisenseContext(context, binding, formula, out var intellisenseData))
                 {
-                    return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allSupportedFunctions);
+                    allFunctionOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
+                    return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allFunctionOverloads);
                 }
 
                 foreach (var handler in _suggestionHandlers)
@@ -65,7 +66,7 @@ namespace Microsoft.PowerFx.Intellisense
             {
                 // If there is any exception, we don't need to crash. Instead, Suggest() will simply 
                 // return an empty result set along with exception for client use.
-                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allSupportedFunctions, ex);
+                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allFunctionOverloads, ex);
             }
 
             // TODO: Hoist scenario tracking out of language module.
@@ -266,7 +267,6 @@ namespace Microsoft.PowerFx.Intellisense
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(intellisenseData);
-            var allSupportedFunctions = intellisenseData.Binding.NameResolver.Functions;
             var expectedType = intellisenseData.ExpectedType;
 
             TypeMatchPriority(expectedType, intellisenseData.Suggestions, _config.Features.PowerFxV1CompatibilityRules);
@@ -286,7 +286,18 @@ namespace Microsoft.PowerFx.Intellisense
             intellisenseData.SubstringSuggestions.Sort(culture);
             resultSuggestions.Sort(new IntellisenseSuggestionComparer(culture));
 
-            return new IntellisenseResult(intellisenseData, resultSuggestions, allSupportedFunctions);
+            var allFunctionsOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
+            return new IntellisenseResult(intellisenseData, resultSuggestions, allFunctionsOverloads);
+        }
+
+        public static IEnumerable<TexlFunction> GetFunctionOverloads(INameResolver resolver, TexlFunction function)
+        {
+            if (resolver == null || function == null)
+            {
+                return null;
+            }
+
+            return resolver.LookupFunctions(function.Namespace, function.Name);
         }
     }
 

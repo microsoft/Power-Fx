@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// </summary>
         private readonly int _currentArgumentIndex;
 
-        internal IntellisenseResult(IIntellisenseData data, List<IntellisenseSuggestion> suggestions, TexlFunctionSet allFunctions, Exception exception = null)
+        internal IntellisenseResult(IIntellisenseData data, List<IntellisenseSuggestion> suggestions, IEnumerable<TexlFunction> possibleOverloads, Exception exception = null)
         {
             Contracts.AssertValue(suggestions);
 
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Intellisense
             _currentArgumentIndex = argIndex;
             Exception = exception;
 
-            if (func == null)
+            if (func == null || possibleOverloads == null)
             {
                 IsFunctionScope = false;
             }
@@ -84,7 +84,6 @@ namespace Microsoft.PowerFx.Intellisense
                 var highlightEnd = -1;
                 var minMatchingArgCount = int.MaxValue;
                 
-                var possibleOverloads = allFunctions.WithInvariantName(func.LocaleInvariantName);
                 foreach (var possibleOverload in possibleOverloads)
                 {
                     foreach (var signature in possibleOverload.GetSignatures(argCount))
