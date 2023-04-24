@@ -297,37 +297,43 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
         }
 
-        public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var impl = args[0].Impl;
+            var arg0 = (UntypedObjectValue)args[0];
+            var impl = arg0.Impl;
 
+            FormulaValue newArg0 = null;
             if (impl.Type == FormulaType.String)
             {
                 var str = impl.GetString();
-                return new StringValue(irContext, str);
+                newArg0 = new StringValue(irContext, str);
             }
             else if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
             {
                 var str = impl.GetUntypedNumber();
-                return new StringValue(irContext, str);
+                newArg0 = new StringValue(irContext, str);
             }
             else if (impl.Type == FormulaType.Number)
             {
-                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
-                return Text(runner, context, irContext, new FormulaValue[] { n });
+                newArg0 = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
             }
             else if (impl.Type == FormulaType.Decimal)
             {
-                var n = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), impl.GetDecimal());
-                return Text(runner, context, irContext, new FormulaValue[] { n });
+                newArg0 = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), impl.GetDecimal());
             }
             else if (impl.Type == FormulaType.Boolean)
             {
                 var b = impl.GetBoolean();
-                return new StringValue(irContext, PowerFxBooleanToString(b));
+                newArg0 = new StringValue(irContext, PowerFxBooleanToString(b));
+            }
+            else
+            {
+                return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
+            var newArgs = new List<FormulaValue>() { newArg0 };
+            newArgs.AddRange(args.Skip(1));
+            return Text(runner, context, irContext, newArgs.ToArray());
         }
 
         public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
