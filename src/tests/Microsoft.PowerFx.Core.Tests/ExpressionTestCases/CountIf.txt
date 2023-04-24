@@ -53,3 +53,12 @@ Error({Kind:ErrorKind.Numeric})
 
 >> CountIf([1, 2, 3, 4], Today())
 Errors: Error 22-29: Invalid argument type (Date). Expecting a Boolean value instead.|Error 0-30: The function 'CountIf' has some invalid arguments.
+
+>> CountIf(Table({a:1},Blank(),{a:3}), IsBlank(ThisRecord))
+1
+
+>> CountIf([1,Blank(),3], IsBlank(ThisRecord))
+0
+
+>> CountIf(Table({a:1},Blank(),{a:3}, If(1<0,{a:4})), IsBlank(ThisRecord))
+2
