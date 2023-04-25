@@ -434,30 +434,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            var uri = new Uri(semanticTokensParams.TextDocument.Uri);
-            var queryParams = HttpUtility.ParseQueryString(uri.Query);
-            var expression = queryParams?.Get("expression") ?? string.Empty;
-
-            if (string.IsNullOrEmpty(expression))
-            {
-                // Empty tokens for the empty expression
-                SendEmptySemanticTokensResponse(id);
-                return;
-            }
-
-            // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
-            var eol = queryParams?.Get("eol");
-            eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
-
-            var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams.Get("tokenTypesToSkip"));
-            var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
-            var checkResult = scope.Check(expression);
-
-            // Skip over the token types that clients don't want in the response
-            var tokens = checkResult.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
-
-            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens);
         }
 
         /// <summary>
@@ -479,9 +456,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens);
+        }
+
+        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method) 
+            where T : SemanticTokensParams
+        {
             var uri = new Uri(semanticTokensParams.TextDocument.Uri);
             var queryParams = HttpUtility.ParseQueryString(uri.Query);
-            var expression = queryParams.Get("expression");
+            var expression = queryParams?.Get("expression") ?? string.Empty;
 
             if (string.IsNullOrEmpty(expression))
             {
@@ -490,28 +473,38 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
-            var eol = queryParams.Get("eol");
-            eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
+            var isRangeSemanticTokensMethod = method == TextDocumentNames.RangeDocumentSemanticTokens;
 
-            var (startIndex, endIndex) = PositionRangeHelper.ConvertRangeToPositions(semanticTokensParams.Range, expression, eol);
-            if (startIndex < 0 || endIndex < 0)
+            // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
+            var eol = queryParams?.Get("eol");
+            eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
+            
+            var startIndex = -1;
+            var endIndex = -1;
+            if (isRangeSemanticTokensMethod)
             {
-                SendEmptySemanticTokensResponse(id);
-                return;
+                (startIndex, endIndex) = PositionRangeHelper.ConvertRangeToPositions((semanticTokensParams as SemanticTokensRangeParams).Range, expression, eol);
+                if (startIndex < 0 || endIndex < 0)
+                {
+                    SendEmptySemanticTokensResponse(id);
+                    return;
+                }
             }
 
-            var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams.Get("tokenTypesToSkip"));
+            var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
             var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
             var result = scope.Check(expression);
 
             // Skip over the token types that clients don't want in the response
             var tokens = result.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
 
-            // Only consider overlapping tokens. end index is exlcusive
-            var overlappingTokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
-            var encodedTokens = SemanticTokensEncoder.EncodeTokens(overlappingTokens, expression, eol);
+            if (isRangeSemanticTokensMethod)
+            {
+                // Only consider overlapping tokens. end index is exlcusive
+                tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
+            }
 
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
         }
 
