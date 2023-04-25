@@ -16,15 +16,3 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Len(GUID() & GUID())
 Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
-
-// String representation - only 4 dashes
->> With({g:GUID()}, Sum(Sequence(Len(GUID())), If(Mid(g,Value,1) = "-", 1, 0)))
-Error({Kind:ErrorKind.InvalidArgument})
-
-// String representation - position of dashes
->> With({g:GUID()}, Mid(g,9,1) = "-" And Mid(g,14,1) = "-" And Mid(g,19,1) = "-" And Mid(g,24,1) = "-")
-Error({Kind:ErrorKind.InvalidArgument})
-
-// String representation - [0-9a-f]
->> With({g:GUID()}, Sum(Sequence(Len(g)), If(Mid(g,Value,1) exactin "abcdef0123456789", 1, 0)))
-Error({Kind:ErrorKind.InvalidArgument})

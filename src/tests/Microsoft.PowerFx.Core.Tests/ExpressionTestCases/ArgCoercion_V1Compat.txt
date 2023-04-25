@@ -17,7 +17,7 @@ true
 72
 
 // String representation - only 4 dashes
->> With({g:GUID()}, Sum(Sequence(Len(GUID())), If(Mid(g,Value,1) = "-", 1, 0)))
+>> With({g:GUID()}, Sum(Sequence(Len(g)), If(Mid(g,Value,1) = "-", 1, 0)))
 4
 
 // String representation - position of dashes
