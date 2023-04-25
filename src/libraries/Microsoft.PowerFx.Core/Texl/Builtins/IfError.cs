@@ -92,7 +92,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+            
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                return CheckTypesLatest(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            }
+            else
+            {
+                return CheckTypesLegacy(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            }
+        }
 
+        public bool CheckTypesLegacy(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
             var count = args.Length;
             nodeToCoercedTypeMap = null;
 
@@ -167,6 +179,95 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 if (i == count)
                 {
                     i--;
+                }
+            }
+
+            returnType = type;
+            return fArgsValid;
+        }
+
+        public bool CheckTypesLatest(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var count = args.Length;
+            nodeToCoercedTypeMap = null;
+
+            var fArgsValid = true;
+
+            /*
+            If we were to write IfError(v1, f1, v2, f2, ..., vn, fn) in a try...catch way, it would look something like:
+                
+            var result
+            try {
+                result = v1();
+            } catch {
+                return f1();
+            }
+            try {
+                result = v2();
+            } catch {
+                return f2();
+            }
+            ...
+            try {
+                result = vn();
+            } catch {
+                return fn();  // omit this last catch if there is an odd number of arguments
+            }
+            return result;
+
+            In this case, we prefer the type of the last v_i as the return type.
+            Possible return values are:
+            Even case: f1, f2, ..., vn, fn
+            Odd case: f1, f2, ..., vn
+            */
+
+            var preferredTypeIndex = (count % 2) == 0 ? count - 2 : count - 1;
+            var type = argTypes[preferredTypeIndex];
+            if (type.IsError)
+            {
+                errors.EnsureError(args[preferredTypeIndex], TexlStrings.ErrTypeError);
+                fArgsValid = false;
+            }
+
+            for (var i = count - 1; i >= 0; i -= 2)
+            {
+                var nodeArg = args[i];
+                var typeArg = argTypes[i];
+
+                var typeSuper = type.IsError ? typeArg : DType.Supertype(type, typeArg, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+
+                if (!typeSuper.IsError)
+                {
+                    // If preferred type was error or null (due to Blank or Error) assign new type in hierarchy
+                    if (type.IsError || type == DType.ObjNull)
+                    {
+                        type = typeSuper;
+                    }
+                }
+                else
+                {
+                    if (typeArg.IsVoid)
+                    {
+                        type = DType.Void;
+                    }
+                    else if (typeArg.IsError)
+                    {
+                        errors.EnsureError(args[i], TexlStrings.ErrTypeError);
+                        fArgsValid = false;
+                    }
+                    else if (!type.IsError && typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                    }
+                    else
+                    {
+                        type = DType.Void;
+                    }
+                }
+
+                if ((count % 2) != 0 && i == count - 1)
+                {
+                    i++;
                 }
             }
 
