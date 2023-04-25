@@ -106,6 +106,7 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction FirstN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Add(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Add(new ForAllFunction_UO());
+        public static readonly TexlFunction GUIDNoArg = _library.Add(new GUIDNoArgFunction());
         public static readonly TexlFunction GUIDPure = _library.Add(new GUIDPureFunction());
         public static readonly TexlFunction GUID_UO = _library.Add(new GUIDPureFunction_UO());
         public static readonly TexlFunction Hex2Dec = _library.Add(new Hex2DecFunction());
@@ -239,7 +240,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
         public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
         public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
-        public static readonly TexlFunction GUIDNoArg = _featureGateFunctions.Add(new GUIDNoArgFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
