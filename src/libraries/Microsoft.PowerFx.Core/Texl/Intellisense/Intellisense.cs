@@ -297,7 +297,8 @@ namespace Microsoft.PowerFx.Intellisense
                 return null;
             }
 
-            return resolver.LookupFunctions(function.Namespace, function.Name);
+            // Default to input function, because if the function was a control property name-space won't be found in lookup. 
+            return resolver.LookupFunctions(function.Namespace, function.Name).DefaultIfEmpty(function);
         }
     }
 
