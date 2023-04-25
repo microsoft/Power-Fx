@@ -34,6 +34,19 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public TexlNode UdfBody { get; }
 
+        public override bool IsSelfContained => !_isImperative;
+
+        public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args, RecordType parametersRecordType)
+        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnTypeToken.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.VarType.GetFormulaType()._type).ToArray())
+        {
+            this._returnTypeToken = returnTypeToken;
+            this._args = args;
+            this._parametersRecordType = parametersRecordType;
+            this._isImperative = isImperative;
+
+            this.UdfBody = body;
+        }
+
         public int GetArgIndex(string argName)
         {
             var argIndex = -1;
@@ -52,19 +65,6 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             return argIndex;
-        }
-
-        public override bool IsSelfContained => !_isImperative;
-
-        public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args, RecordType parametersRecordType)
-        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnTypeToken.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.VarType.GetFormulaType()._type).ToArray())
-        {
-            this._returnTypeToken = returnTypeToken;
-            this._args = args;
-            this._parametersRecordType = parametersRecordType;
-            this._isImperative = isImperative;
-
-            this.UdfBody = body;
         }
 
         public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null, INameResolver functionNameResolver = null)
