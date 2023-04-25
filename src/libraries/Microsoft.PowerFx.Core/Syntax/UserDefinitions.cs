@@ -99,17 +99,19 @@ namespace Microsoft.PowerFx.Syntax
 
             foreach (var udf in uDFs)
             {
-                CheckParameters(udf.Args, errors, out var paramsRecordType);
-                CheckReturnType(udf.ReturnType, errors);
-
                 var udfName = udf.Ident.Name;
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType, udf.Body, udf.IsImperative, udf.Args, paramsRecordType);
-
                 if (texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
                     continue;
                 }
+
+                if (!(CheckParameters(udf.Args, errors) & CheckReturnType(udf.ReturnType, errors)))
+                {
+                    continue;
+                }
+                
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType, udf.Body, udf.IsImperative, udf.Args);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -130,9 +132,9 @@ namespace Microsoft.PowerFx.Syntax
             }
         }
 
-        private void CheckParameters(ISet<UDFArg> args, List<TexlError> errors, out RecordType paramRecordType)
+        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
         {
-            paramRecordType = RecordType.Empty();
+            var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
 
             foreach (var arg in args)
@@ -140,6 +142,7 @@ namespace Microsoft.PowerFx.Syntax
                 if (argsAlreadySeen.Contains(arg.VarIdent.Name))
                 {
                     errors.Add(new TexlError(arg.VarIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.VarIdent.Name));
+                    isParamCheckSuccessful = false;
                 }
                 else
                 {
@@ -148,21 +151,26 @@ namespace Microsoft.PowerFx.Syntax
                     if (arg.VarType.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
                     {
                         errors.Add(new TexlError(arg.VarType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.VarType.Name));
+                        isParamCheckSuccessful = false;
                     }
-
-                    paramRecordType = paramRecordType.Add(new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType()));
                 }
             }
+
+            return isParamCheckSuccessful;
         }
 
-        private void CheckReturnType(IdentToken returnType, List<TexlError> errors)
+        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
         {
             var returnTypeFormulaType = returnType.GetFormulaType()._type;
+            var isReturnTypeCheckSuccessful = true;
 
             if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind))
             {
                 errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
+                isReturnTypeCheckSuccessful = false;
             }
+
+            return isReturnTypeCheckSuccessful;
         }
     }
 }

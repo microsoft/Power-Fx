@@ -29,19 +29,17 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private readonly bool _isImperative;
         private readonly IdentToken _returnTypeToken;
-        private readonly ISet<UDFArg> _args;
-        private readonly RecordType _parametersRecordType;
+        private readonly IEnumerable<UDFArg> _args;
 
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
 
-        public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args, RecordType parametersRecordType)
+        public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args)
         : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnTypeToken.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.VarType.GetFormulaType()._type).ToArray())
         {
             this._returnTypeToken = returnTypeToken;
             this._args = args;
-            this._parametersRecordType = parametersRecordType;
             this._isImperative = isImperative;
 
             this.UdfBody = body;
@@ -126,24 +124,15 @@ namespace Microsoft.PowerFx.Core.Functions
             private readonly IReadOnlyDictionary<string, UDFArg> _args;
             private readonly INameResolver _functionNameResolver;
 
-            public static INameResolver Create(INameResolver globalNameResolver, ISet<UDFArg> args, INameResolver functionNameResolver)
+            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver)
             {
                 return new UserDefinitionsNameResolver(globalNameResolver, args, functionNameResolver);
             }
 
-            private UserDefinitionsNameResolver(INameResolver globalNameResolver, ISet<UDFArg> args, INameResolver functionNameResolver = null)
+            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver = null)
             {
                 this._globalNameResolver = globalNameResolver;
-                var argsByName = new Dictionary<string, UDFArg>();
-                foreach (UDFArg arg in args)
-                {
-                    if (!argsByName.ContainsKey(arg.VarIdent.Name.Value))
-                    {
-                        argsByName.Add(arg.VarIdent.Name.Value, arg);
-                    }
-                }
-
-                this._args = argsByName;
+                this._args = args.ToDictionary(arg => arg.VarIdent.Name.Value, arg => arg);
                 this._functionNameResolver = functionNameResolver;
             }
 
