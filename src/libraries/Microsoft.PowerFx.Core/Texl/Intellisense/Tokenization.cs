@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="comments">Colllection of comment tokens extracted from the given expression.</param>
         /// <param name="comparer">optional comparer to sort tokens.</param>
         /// <param name="computeHiddenTokens">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
-        /// <returns>Ordered or undordered collection of tokens.</returns>
+        /// <returns>Ordered or unordered collection of tokens.</returns>
         internal static ICollection<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool computeHiddenTokens = false)
         {
             var tokens = new List<ITokenTextSpan>();
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
             foreach (var call in binding.GetCalls())
             {
-                // Skip the compiler generated nodes as they don't appear in the actual source code and should not up as a token
+                // Skip the compiler generated nodes as they don't appear in the actual source code and should not show up as a token
                 if (complilerGeneratedCallNodes.Contains(call.Node.Id))
                 {
                     continue;
