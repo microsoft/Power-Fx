@@ -668,6 +668,12 @@ true
 >> Time(9,0,1) = Time(9,0,0)
 false
 
+>> Time(-6,0,0) = Time(18,0,0)
+false
+
+>> Time(30,0,0) = Time(6,0,0)
+false
+
 // comp todo: type mismatch error (time and date)
 >> Time(9,0,0) = Date(1900,1,2)
 false
