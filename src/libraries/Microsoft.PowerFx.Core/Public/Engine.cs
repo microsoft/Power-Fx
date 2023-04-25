@@ -127,6 +127,15 @@ namespace Microsoft.PowerFx
             return symbols;
         }
 
+        /// <summary>
+        /// Overriable method to be able to supply custom implementation of IExternalRuleScopeResolver.
+        /// Defauls to Null.
+        /// </summary>
+        /// <returns>Implementation of IExternalRuleScopeResolver.</returns>
+        // <para>IExternalRuleScopeResolver is used in Canvas App backend when calling TexlBinding.Run(). 
+        // There was no option to supply a custom implementation of this in Engine, 
+        // so following the existing pattern in Engine, 
+        // added this virtual function for the derived classes of Engine to override and supply custom implementation.</para>
         private protected virtual IExternalRuleScopeResolver CreateExternalRuleScopeResolver()
         {
             return null;
