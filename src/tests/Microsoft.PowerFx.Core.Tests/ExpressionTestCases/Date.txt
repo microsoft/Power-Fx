@@ -469,3 +469,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Date(1970,5,-1e28)
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Negation
+>> -Date(1900,1,1)
+Date(1899,12,28)
+
+>> Value(-Date(1900,1,1))
+-2
+
+>> With({d:Today()}, Value(d) + Value(-d))
+0

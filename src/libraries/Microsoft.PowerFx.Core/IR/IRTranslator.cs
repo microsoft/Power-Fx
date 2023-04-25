@@ -157,6 +157,40 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, new CallNode(irContext, BuiltinFunctionsCore.Table, children), context);
             }
 
+            private static IntermediateNode GenerateNegateDateTimeNode(IRContext irc, IntermediateNode child)
+            {
+                UnaryOpKind datetimeToNumberConversion;
+                UnaryOpKind numberToDateTimeConversion;
+                if (irc.ResultType == FormulaType.Time)
+                {
+                    datetimeToNumberConversion = UnaryOpKind.TimeToNumber;
+                    numberToDateTimeConversion = UnaryOpKind.NumberToTime;
+                }
+                else if (irc.ResultType == FormulaType.Date)
+                {
+                    datetimeToNumberConversion = UnaryOpKind.DateToNumber;
+                    numberToDateTimeConversion = UnaryOpKind.NumberToDate;
+                }
+                else if (irc.ResultType == FormulaType.DateTime)
+                {
+                    datetimeToNumberConversion = UnaryOpKind.DateTimeToNumber;
+                    numberToDateTimeConversion = UnaryOpKind.NumberToDateTime;
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
+
+                return new UnaryOpNode(
+                    irc,
+                    numberToDateTimeConversion,
+                    new UnaryOpNode(
+                        IRContext.NotInSource(FormulaType.Number),
+                        UnaryOpKind.Negate,
+                        new UnaryOpNode(
+                            IRContext.NotInSource(FormulaType.Number), datetimeToNumberConversion, child)));
+            }
+
             public override IntermediateNode Visit(TexlUnaryOpNode node, IRTranslatorContext context)
             {
                 Contracts.AssertValue(node);
@@ -172,7 +206,15 @@ namespace Microsoft.PowerFx.Core.IR
                         result = new CallNode(irc, BuiltinFunctionsCore.Not, child);
                         break;
                     case UnaryOp.Minus:
-                        result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.NegateDecimal : UnaryOpKind.Negate, child);
+                        if (irc.ResultType == FormulaType.Time || irc.ResultType == FormulaType.Date || irc.ResultType == FormulaType.DateTime)
+                        {
+                            result = GenerateNegateDateTimeNode(irc, child);
+                        }
+                        else
+                        {
+                            result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.NegateDecimal : UnaryOpKind.Negate, child);
+                        }
+
                         break;
                     case UnaryOp.Percent:
                         result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.PercentDecimal : UnaryOpKind.Percent, child);
@@ -183,6 +225,10 @@ namespace Microsoft.PowerFx.Core.IR
 
                 return MaybeInjectCoercion(node, result, context);
             }
+
+            private static bool IsDateOrTimeToNumberConversion(UnaryOpKind k) => k == UnaryOpKind.DateToNumber || k == UnaryOpKind.TimeToNumber || k == UnaryOpKind.DateTimeToNumber;
+
+            private static bool IsNumberToDateOrTimeConversion(UnaryOpKind k) => k == UnaryOpKind.NumberToDate || k == UnaryOpKind.NumberToTime || k == UnaryOpKind.NumberToDateTime;
 
             public override IntermediateNode Visit(TexlBinaryOpNode node, IRTranslatorContext context)
             {
@@ -247,13 +293,27 @@ namespace Microsoft.PowerFx.Core.IR
                     // Date Diff pulls from nested unary op
                     case BinaryOpKind.DateDifference:
                     case BinaryOpKind.TimeDifference:
+
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate)
+                        if (right is UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate)
+                        {
+                            // Date diff pulled from nested unary op
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, unaryNegate.Child);
+                        }
+                        else if (right is UnaryOpNode outerConversion &&
+                            IsNumberToDateOrTimeConversion(outerConversion.Op) &&
+                            outerConversion.Child is UnaryOpNode { Op: UnaryOpKind.Negate } conversionNegate &&
+                            conversionNegate.Child is UnaryOpNode innerConversion &&
+                            IsDateOrTimeToNumberConversion(innerConversion.Op))
+                        {
+                            // Unpacking conversion
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, innerConversion.Child);
+                        }
+                        else
                         {
                             throw new NotSupportedException();
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, unaryNegate.Child);
                         break;
 
                     case BinaryOpKind.AddDateAndTime:
@@ -271,22 +331,46 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.SubtractNumberAndDate:
                     case BinaryOpKind.SubtractNumberAndDateTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
+                        if (right is UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
+                        {
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
+                        }
+                        else if (right is UnaryOpNode outerConversion &&
+                            IsNumberToDateOrTimeConversion(outerConversion.Op) &&
+                            outerConversion.Child is UnaryOpNode { Op: UnaryOpKind.Negate } conversionNegate &&
+                            conversionNegate.Child is UnaryOpNode innerConversion &&
+                            IsDateOrTimeToNumberConversion(innerConversion.Op))
+                        {
+                            // Unpacking conversion
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, innerConversion.Child);
+                        }
+                        else
                         {
                             throw new NotSupportedException();
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
                         break;
 
                     case BinaryOpKind.SubtractNumberAndTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate5)
+                        if (right is UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate5)
+                        {
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
+                        }
+                        else if (right is UnaryOpNode outerConversion &&
+                            IsNumberToDateOrTimeConversion(outerConversion.Op) &&
+                            outerConversion.Child is UnaryOpNode { Op: UnaryOpKind.Negate } conversionNegate &&
+                            conversionNegate.Child is UnaryOpNode innerConversion &&
+                            IsDateOrTimeToNumberConversion(innerConversion.Op))
+                        {
+                            // Unpacking conversion
+                            binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, innerConversion.Child);
+                        }
+                        else
                         {
                             throw new NotSupportedException();
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
                         break;
 
                     // All others used directly
