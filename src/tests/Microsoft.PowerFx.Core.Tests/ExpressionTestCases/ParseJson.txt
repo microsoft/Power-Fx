@@ -491,3 +491,12 @@ Blank()
 
 >> Boolean(IfError(ParseJSON("{""field1"":true}").field1, ParseJSON("false")))
 true
+
+>> Text(ParseJSON("1.234"), "#.##")
+"1.23"
+
+>> Text(ParseJSON("""1.234"""), "#.##")
+"1.23"
+
+>> Text(ParseJSON("""2011-01-30T08:00:00.000"""), "dddd mm/dd/yy")
+"Sunday 01/30/11"
