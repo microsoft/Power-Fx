@@ -538,7 +538,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                 return tokenTypesToSkip;
             }
-            catch
+            catch (Exception ex) when (ex is ArgumentNullException || ex is JsonException || ex is NotSupportedException)
             {
                 return tokenTypesToSkip;
             }

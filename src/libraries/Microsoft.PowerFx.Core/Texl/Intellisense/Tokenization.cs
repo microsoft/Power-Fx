@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="binding">Binding which would be used to tokenize the operation and determine the type of each token.</param>
         /// <param name="comments">Colllection of comment tokens extracted from the given expression.</param>
         /// <returns>Ordered collection of tokens.</returns>
-        internal static ICollection<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null)
+        internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null)
         {
             return Tokenize(expression, binding, comments, new TokenTextSpanComparer(), true);
         }
@@ -36,9 +36,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="binding">Binding which would be used to tokenize the operation and determine the type of each token.</param>
         /// <param name="comments">Colllection of comment tokens extracted from the given expression.</param>
         /// <param name="comparer">optional comparer to sort tokens.</param>
-        /// <param name="computeHiddenTokens">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
+        /// <param name="allowTokenHiding">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
         /// <returns>Ordered or unordered collection of tokens.</returns>
-        internal static ICollection<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool computeHiddenTokens = false)
+        // allowTokenHiding flag is off by default as we don't want to compute hiddenness of the tokens for the new formula bar as we are not going to support that.
+        // However, we want to keep this for old formula bar as long as it exists and once we consume the changes in Canvas App backend,
+        // we would update the tokenization logic behind old formula bar to use this one instead and allowTokenHiding would be true for old formula bar.
+        internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false)
         {
             var tokens = new List<ITokenTextSpan>();
             if (binding == null)
@@ -47,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             }
 
             Span span;
-            var complilerGeneratedCallNodes = new HashSet<int>();
+            var compilerGeneratedCallNodes = new HashSet<int>();
 
             foreach (var firstName in binding.GetFirstNames())
             {
@@ -56,7 +59,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 TokenType type = MapBindKindToTokenType(firstName.Kind);
 
                 // Try to set the canHide flag if the FirstName type is Enum
-                var canHide = computeHiddenTokens && CanHideNamespaceOfDottedName(firstName, binding);
+                var canHide = allowTokenHiding && CanHideLeftHandSideOfDottedName(firstName, binding);
 
                 // If the first name can be hidden, Create and Add a token for the dot.
                 if (canHide && expression.Length > span.Lim && (TexlLexer.PunctuatorDot + TexlLexer.PunctuatorBang).IndexOf(expression.Substring(span.Lim, 1), StringComparison.Ordinal) >= 0)
@@ -83,12 +86,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             }
 
             // String interpolations
-            ExtractTokensFromStringInterpolationNodesList(tokens, binding, complilerGeneratedCallNodes);
+            ExtractTokensFromStringInterpolationNodesList(tokens, binding, compilerGeneratedCallNodes);
 
             foreach (var call in binding.GetCalls())
             {
                 // Skip the compiler generated nodes as they don't appear in the actual source code and should not show up as a token
-                if (complilerGeneratedCallNodes.Contains(call.Node.Id))
+                if (compilerGeneratedCallNodes.Contains(call.Node.Id))
                 {
                     continue;
                 }
@@ -161,13 +164,13 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         }
 
         /// <summary>
-        /// Determines if namespaces can be hidden to reduce complexity when the right-hand side of a dotted name is unique.
+        /// Determines if left-hand side of the dotted name can be hidden to reduce complexity when the right-hand side of a dotted name is unique.
         /// When there is a conflict, we need to show the fully qualified name.
         /// </summary>
         /// <param name="nameInfo">NameInfo.</param>
         /// <param name="binding">TexlBinding.</param>
-        /// <returns>True if the namespace can be hidden or false otherwise.</returns>
-        private static bool CanHideNamespaceOfDottedName(NameInfo nameInfo, TexlBinding binding)
+        /// <returns>True if the left-hand side of the dotted name can be hidden or false otherwise.</returns>
+        private static bool CanHideLeftHandSideOfDottedName(NameInfo nameInfo, TexlBinding binding)
         {
             DottedNameNode dottedNameParent;
             if (binding?.Document?.GlobalScope == null || nameInfo?.Node?.Parent == null || (dottedNameParent = nameInfo.Node.Parent.AsDottedName()) == null)

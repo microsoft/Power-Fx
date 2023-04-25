@@ -21,28 +21,22 @@ namespace Microsoft.PowerFx.Core.Tests.IntellisenseTests
     {
         [Theory]
         [InlineData("gallery1", 1, 0, "gallery1", 0, 8, TokenType.Control, false)]
-        [InlineData("gallery1!Selected!nestedLabel1", 3, 0, "gallery1", 0, 8, TokenType.Control, false)]
         [InlineData("gallery1.Selected.nestedLabel1", 3, 0, "gallery1", 0, 8, TokenType.Control, false)]
         [InlineData("gallery1.Selected.nestedLabel1", 3, 2, "Selected", 9, 17, TokenType.DottedNamePart, false)]
-        [InlineData("gallery1!Selected!label2", 3, 0, "gallery1", 0, 8, TokenType.Control, false)]
         [InlineData("gallery1.Selected.label2", 3, 0, "gallery1", 0, 8, TokenType.Control, false)]
-        [InlineData("label2!Text", 2, 0, "label2", 0, 6, TokenType.Control, false)]
         [InlineData("label2.Text", 2, 0, "label2", 0, 6, TokenType.Control, false)]
         [InlineData("label2.Text & \" Hello\"", 4, 2, TokenizerConstants.BinaryOp, 12, 13, TokenType.BinaryOp, false)]
-        [InlineData("Text(label2!Text)", 3, 0, "label2", 5, 11, TokenType.Control, false)]
         [InlineData("Text(label2.Text)", 3, 0, "label2", 5, 11, TokenType.Control, false)]
         [InlineData("Text(true)", 2, 0, "Text", 0, 4, TokenType.Function, false)]
         [InlineData("Text(true)", 2, 1, TokenizerConstants.BooleanLiteral, 5, 9, TokenType.BoolLit, false)]
         [InlineData("Text(123)", 2, 1, TokenizerConstants.NumericLiteral, 5, 8, TokenType.NumLit, false)]
-        [InlineData("Color!Green", 2, 0, "Color", 0, 5, TokenType.Enum, false)]
+        [InlineData("Color.Green", 2, 1, "Green", 6, 11, TokenType.DottedNamePart, false)]
         [InlineData("Color.Blue", 2, 0, "Color", 0, 5, TokenType.Enum, false)]
-        [InlineData("First(foo)!test", 3, 0, "foo", 6, 9, TokenType.Data, false)]
         [InlineData("First(foo).test", 3, 0, "foo", 6, 9, TokenType.Data, false)]
         [InlineData("name", 1, 0, "name", 0, 4, TokenType.Alias, false)]
-        [InlineData("ThisItem!Income", 2, 0, "ThisItem", 0, 8, TokenType.ThisItem, false)]
         [InlineData("ThisItem.Income", 2, 0, "ThisItem", 0, 8, TokenType.ThisItem, false)]
-        [InlineData("ThisItem!Name", 2, 0, "ThisItem", 0, 8, TokenType.ThisItem, false)]
         [InlineData("ThisItem.Name", 2, 0, "ThisItem", 0, 8, TokenType.ThisItem, false)]
+        [InlineData("!true", 1, 0, TokenizerConstants.BooleanLiteral, 1, 5, TokenType.BoolLit, false)]
         internal void TestBasicTokenizationWithDefaultComparer(string inputText, int expectedTokenCount, int targetTokenIndex, string targetTokenName, int targetTokenStart, int targetTokenEnd, TokenType targetTokenType, bool targetTokenHidden)
         {
             // Arrange
@@ -54,7 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests.IntellisenseTests
             // Assert
             Assert.NotNull(tokens);
             var targetToken = tokens.ElementAt(targetTokenIndex);
-            Assert.Equal(expectedTokenCount, tokens.Count);
+            Assert.Equal(expectedTokenCount, tokens.Count());
             Assert.Equal(targetTokenName, targetToken.TokenName);
             Assert.Equal(targetTokenStart, targetToken.StartIndex);
             Assert.Equal(targetTokenEnd, targetToken.EndIndex);

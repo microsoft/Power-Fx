@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
@@ -129,7 +128,7 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Overriable method to be able to supply custom implementation of IExternalRuleScopeResolver.
-        /// Defauls to Null.
+        /// Defaults to Null.
         /// </summary>
         /// <returns>Implementation of IExternalRuleScopeResolver.</returns>
         // <para>IExternalRuleScopeResolver is used in Canvas App backend when calling TexlBinding.Run(). 
@@ -296,7 +295,18 @@ namespace Microsoft.PowerFx
             bool useThisRecordForRuleScope = ruleScope != null;
 
             var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope, result.Parse.Options.NumberIsFloat);
-            var binding = TexlBinding.Run(glue, externalRuleScopeResolver, new DataSourceToQueryOptionsMap(), parse.Root, resolver, bindingConfig, false, ruleScope?._type, false, null, Config.Features);
+            var binding = TexlBinding.Run(
+                            glue, 
+                            externalRuleScopeResolver, 
+                            new DataSourceToQueryOptionsMap(), 
+                            parse.Root, 
+                            resolver, 
+                            bindingConfig, 
+                            false, 
+                            ruleScope?._type, 
+                            false, 
+                            null, 
+                            Config.Features);
 
             return (binding, combinedSymbols);
         }

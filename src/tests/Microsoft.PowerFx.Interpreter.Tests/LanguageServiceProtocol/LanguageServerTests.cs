@@ -1690,8 +1690,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private static void AssertErrorPayload(string response, string id, JsonRpcHelper.ErrorCode expectedCode)
         {
             Assert.NotNull(response);
-            var derializedResponse = JsonDocument.Parse(response);
-            var root = derializedResponse.RootElement;
+            var deserializedResponse = JsonDocument.Parse(response);
+            var root = deserializedResponse.RootElement;
             Assert.True(root.TryGetProperty("id", out var responseId));
             Assert.Equal(id, responseId.GetString());
             Assert.True(root.TryGetProperty("error", out var errElement));
@@ -1703,23 +1703,23 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         private static T AssertAndGetResponsePayload<T>(string response, string id)
         {
             Assert.NotNull(response);
-            var derializedResponse = JsonDocument.Parse(response);
-            var root = derializedResponse.RootElement;
+            var deserializedResponse = JsonDocument.Parse(response);
+            var root = deserializedResponse.RootElement;
             root.TryGetProperty("id", out var responseId);
             Assert.Equal(id, responseId.GetString());
             root.TryGetProperty("result", out var resultElement);
-            var @params = JsonSerializer.Deserialize<T>(resultElement.GetRawText(), _jsonSerializerOptions);
-            return @params;
+            var paramsObj = JsonSerializer.Deserialize<T>(resultElement.GetRawText(), _jsonSerializerOptions);
+            return paramsObj;
         }
 
-        private static (string payload, string id) GetRangeDocumentSemanticTokensRequestPayload(SemanticTokensRangeParams @params, string id = null)
+        private static (string payload, string id) GetRangeDocumentSemanticTokensRequestPayload(SemanticTokensRangeParams semanticTokenRangeParams, string id = null)
         {
-            return GetReqestPayload(@params, TextDocumentNames.RangeDocumentSemanticTokens, id);
+            return GetRequestPayload(semanticTokenRangeParams, TextDocumentNames.RangeDocumentSemanticTokens, id);
         }
 
-        private static (string payload, string id) GetFullDocumentSemanticTokensRequestPayload(SemanticTokensParams @params, string id = null)
+        private static (string payload, string id) GetFullDocumentSemanticTokensRequestPayload(SemanticTokensParams semanticTokenParams, string id = null)
         {
-            return GetReqestPayload(@params, TextDocumentNames.FullDocumentSemanticTokens, id);
+            return GetRequestPayload(semanticTokenParams, TextDocumentNames.FullDocumentSemanticTokens, id);
         }
         
         private static string GetUri(string queryParams = null)
@@ -1731,7 +1731,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             return uriBuilder.Uri.AbsoluteUri;
         }
 
-        private static (string payload, string id) GetReqestPayload<T>(T @params, string method, string id = null)
+        private static (string payload, string id) GetRequestPayload<T>(T paramsObj, string method, string id = null)
         {
             id ??= Guid.NewGuid().ToString();
             var payload = JsonSerializer.Serialize(
@@ -1740,7 +1740,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 jsonrpc = "2.0",
                 id,
                 method,
-                @params
+                @params = paramsObj
             }, _jsonSerializerOptions);
             return (payload, id);
         }

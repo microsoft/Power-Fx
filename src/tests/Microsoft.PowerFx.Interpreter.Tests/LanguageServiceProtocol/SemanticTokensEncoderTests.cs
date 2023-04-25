@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             TestMultilineTokensAreEncodedCorrectly(expression);
         }
 
-        private static void AssertEncodedTokens(ICollection<uint> encodedTokensCollection, ICollection<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
+        private static void AssertEncodedTokens(ICollection<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
         {
             var encodedTokens = encodedTokensCollection.ToArray();
             var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(encodedTokens, expression, eol);
@@ -231,13 +231,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 decodedTokens = nonBrokenTokens.Concat(tokensPutTogether).OrderBy(tok => tok, new TokensComparer()).ToList();
             }
 
-            Assert.True(encodedTokens.Length / SemanticTokensEncoder.SlotsPerToken >= tokens.Count);
+            Assert.True(encodedTokens.Length / SemanticTokensEncoder.SlotsPerToken >= tokens.Count());
             for (var i = SemanticTokensEncoder.SlotsPerToken - 1; i >= 0 && i < encodedTokens.Length; i += SemanticTokensEncoder.SlotsPerToken)
             {
                 Assert.Equal(0u, encodedTokens[i]);
             }
 
-            Assert.Equal(tokens.Count, decodedTokens.Count);
+            Assert.Equal(tokens.Count(), decodedTokens.Count);
             Assert.All(tokens.Zip(decodedTokens), (tokens) =>
             {
                 var expectedToken = tokens.First;

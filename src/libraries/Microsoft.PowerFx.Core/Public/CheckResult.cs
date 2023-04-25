@@ -597,9 +597,9 @@ namespace Microsoft.PowerFx
         /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
         /// </summary>
         /// <param name="comparer">Optional comparer to sort tokens.</param>
-        /// <param name="computeHiddenTokens">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
+        /// <param name="allowTokenHiding">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
         /// <returns>Ordered or undordered collection of tokens.</returns>
-        internal ICollection<ITokenTextSpan> GetTokens(IComparer<ITokenTextSpan> comparer = null, bool computeHiddenTokens = false) => Tokenization.Tokenize(_expression, _binding, Parse.Comments, comparer, computeHiddenTokens);
+        internal IEnumerable<ITokenTextSpan> GetTokens(IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false) => Tokenization.Tokenize(_expression, _binding, Parse.Comments, comparer, allowTokenHiding);
 
         private string _expressionInvariant;
 
