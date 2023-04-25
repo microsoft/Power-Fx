@@ -47,24 +47,27 @@ namespace Microsoft.PowerFx.Core.Functions
             this.UdfBody = body;
         }
 
+        /// <summary>
+        /// Gets the index of the given parameter.
+        /// </summary>
+        /// <param name="argName">Parameter name. </param>
+        /// <returns>Returns index >= 0 on a valid param, else -1. </returns>
         public int GetArgIndex(string argName)
         {
-            var argIndex = -1;
-
             if (string.IsNullOrEmpty(argName))
             {
-                return argIndex;
+                return -1;
             }
 
             foreach (var arg in _args)
             {
                 if (arg.VarIdent.Name.Value == argName)
                 {
-                    argIndex = arg.ArgIndex;
+                    return arg.ArgIndex;
                 }
             }
 
-            return argIndex;
+            return -1;
         }
 
         public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null, INameResolver functionNameResolver = null)
