@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx
                             });
                     }
                     
-                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType || func is IfErrorFunction))
+                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
                     }
