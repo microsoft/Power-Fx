@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Functions
         private partial class UserDefinitionsNameResolver : INameResolver
         {
             private readonly INameResolver _globalNameResolver;
-            private readonly Dictionary<string, UDFArg> _args;
+            private readonly IReadOnlyDictionary<string, UDFArg> _args;
             private readonly INameResolver _functionNameResolver;
 
             public static INameResolver Create(INameResolver globalNameResolver, ISet<UDFArg> args, INameResolver functionNameResolver)
@@ -135,16 +135,16 @@ namespace Microsoft.PowerFx.Core.Functions
             private UserDefinitionsNameResolver(INameResolver globalNameResolver, ISet<UDFArg> args, INameResolver functionNameResolver = null)
             {
                 this._globalNameResolver = globalNameResolver;
-                this._args = new Dictionary<string, UDFArg>();
-
+                var argsByName = new Dictionary<string, UDFArg>();
                 foreach (UDFArg arg in args)
                 {
-                    if (!this._args.ContainsKey(arg.VarIdent.Name.Value))
+                    if (!argsByName.ContainsKey(arg.VarIdent.Name.Value))
                     {
-                        this._args.Add(arg.VarIdent.Name.Value, arg);
+                        argsByName.Add(arg.VarIdent.Name.Value, arg);
                     }
                 }
 
+                this._args = argsByName;
                 this._functionNameResolver = functionNameResolver;
             }
 
