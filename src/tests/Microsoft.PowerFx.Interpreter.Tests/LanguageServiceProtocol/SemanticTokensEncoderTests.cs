@@ -5,10 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Entities.Delegation;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
@@ -16,7 +15,6 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
-using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
@@ -77,8 +75,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("1")]
         [InlineData("true")]
         [InlineData("If(Len(Phone_Number) < 10,\r\nNotify(InvalidPhoneWarningText)\r\n,Notify({\r\nPhoneNumber: Phone_Number\r\n}.PhoneNumber))")]
-        [InlineData("1+-2;true;\"String Literal\";Color.Blue;Max(1,2,3);DataVar;$\"1 + 2 = {3}\";// This is Comment")]
-        public void TestNoOverlappingAndAllSingleTokensAreEncodedCorrectly(string expression)
+        [InlineData("1+-2;true;\"String Literal\";Color.Blue;Max(1,2,3);DataVar;DataVar.Prop1;$\"1 + 2 = {3}\";// This is Comment")]
+        public void TestNoOverlappingAndAllSingleLineTokensAreEncodedCorrectly(string expression)
         {
             // Arrange
             var checkResult = GetDefaultCheckResult(expression);
@@ -100,7 +98,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("true")]
         [InlineData("If(Len(Phone_Number) < 10,\r\nNotify(InvalidPhoneWarningText)\r\n,Notify({\r\nPhoneNumber: Phone_Number\r\n}.PhoneNumber))")]
         [InlineData("1+-2;true;\"String Literal\";Color.Blue;Max(1,2,3);DataVar;$\"1 + 2 = {3}\";// This is Comment")]
-        public void TestOverlappingAndAllSingleTokensAreEncodedCorrectly(string expression)
+        public void TestOverlappingAndAllSingleLineTokensAreEncodedCorrectly(string expression)
         {
             // Arrange
             const int MaxOverlappingToks = 5;
@@ -263,14 +261,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         private static CheckResult GetDefaultCheckResult(string expression)
         {
             var powerFxConfig = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
-            powerFxConfig.SymbolTable.AddVariable("Phone_Number", FormulaType.String);
-            powerFxConfig.SymbolTable.AddVariable("InvalidPhoneWarningText", FormulaType.String);
-            powerFxConfig.SymbolTable.AddEntity(new DataSource(), DName.MakeValid("DataVar", out var _));
+            var mockSymbolTable = new MockSymbolTable();
+            mockSymbolTable.Add("Phone_Number", new NameLookupInfo(BindKind.PowerFxResolvedObject, DType.String, DPath.Root, 0));
+            mockSymbolTable.AddRecord("DataVar", null, new TypedName(DType.String, DName.MakeValid("Prop1", out _)));
+            mockSymbolTable.Add("InvalidPhoneWarningText", new NameLookupInfo(BindKind.PowerFxResolvedObject, DType.String, DPath.Root, 0));
             powerFxConfig.SymbolTable.AddFunction(new NotifyFunc());
-            var engine = new RecalcEngine(powerFxConfig);
-            var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true });
-            Assert.False(checkResult.Errors.Any());
+            var engine = new Engine(powerFxConfig);
+            var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }, mockSymbolTable);
+            Assert.False(checkResult.Errors.Any(), string.Join(Environment.NewLine, checkResult.Errors));
             return checkResult;
+        }
+
+        private class NotifyFunc : TexlFunction
+        {
+            public NotifyFunc()
+                : base(DPath.Root, "Notify", "Notify", null, FunctionCategories.Behavior, DType.Void, BigInteger.Zero, 1, 1, DType.String)
+            {
+            }
+
+            public override bool IsSelfContained => true;
+
+            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            {
+                return Enumerable.Empty<TexlStrings.StringGetter[]>();
+            }
         }
 
         private class TokenWithAdjustment : ITokenTextSpan
@@ -308,44 +322,28 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             }
         }
 
-        private class NotifyFunc : TexlFunction
+        /// <summary>
+        /// Just a small handy mock of symbol table to be able to customize binder to compute different token types.
+        /// Might not be 100% correct but it works and allows testing against different token types.
+        /// </summary>
+        private class MockSymbolTable : ReadOnlySymbolTable
         {
-            public NotifyFunc()
-                : base(DPath.Root, "Notify", "Notify", null, FunctionCategories.Behavior, DType.Void, BigInteger.Zero, 1, 1, DType.String)
+            public void Add(string name, NameLookupInfo info)
             {
+                _variables.Add(name, info);
             }
 
-            public override bool IsSelfContained => true;
-
-            public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
+            public void AddRecord(string name, BindKind? type = null, params TypedName[] keyValues)
             {
-                return Enumerable.Empty<TexlStrings.StringGetter[]>();  
+                type ??= BindKind.Data;
+                var recordType = DType.CreateRecord(keyValues);
+                Add(name, new NameLookupInfo(type.Value, recordType, DPath.Root, 0, displayName: DName.MakeValid(name, out _)));
             }
-        }
 
-        private class DataSource : IExternalDataSource
-        {
-            public string Name => "DataSource";
-
-            public bool IsSelectable => true;
-
-            public bool IsDelegatable => true;
-
-            public bool RequiresAsync => true;
-
-            public IExternalDataEntityMetadataProvider DataEntityMetadataProvider => null;
-
-            public DataSourceKind Kind => DataSourceKind.Collection;
-
-            public IExternalTableMetadata TableMetadata => null;
-
-            public IDelegationMetadata DelegationMetadata => null;
-
-            public DName EntityName => DName.MakeValid(Name, out var _);
-
-            public DType Type => DType.EmptyTable;
-
-            public bool IsPageable => true;
+            internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
+            {
+                return _variables.TryGetValue(name.Value, out nameInfo);
+            }
         }
     }
 }

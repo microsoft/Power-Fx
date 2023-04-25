@@ -1400,6 +1400,111 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(3, decodedTokens.Where(tok => tok.TokenType == TokenType.NumLit || tok.TokenType == TokenType.DecLit).Count());
         }
 
+        [Theory]
+        [InlineData("Create", TokenType.Function, TokenType.BoolLit)]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("[2, 3")]
+        [InlineData("Create", TokenType.StrInterpStart, TokenType.BinaryOp, TokenType.NumLit, TokenType.DecLit, TokenType.Control)]
+        [InlineData("[]")]
+        [InlineData("1,2]")]
+        [InlineData("[98]")]
+        [InlineData("Create", (TokenType)78)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, (TokenType)78)]
+        [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
+        [InlineData("   ")]
+        [InlineData("NotPresent")]
+        internal void TestCorrectFullSemanticTokensAreReturnedWithCertainTokenTypesSkipped(string tokenTypesToSkipParam, params TokenType[] tokenTypesToSkip)
+        {
+            // Arrange
+            var expression = "1+-2;true;\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment";
+            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Comment, TokenType.Function, TokenType.StrInterpStart, TokenType.IslandEnd, TokenType.IslandStart, TokenType.StrLit, TokenType.StrInterpEnd, TokenType.Delimiter, TokenType.BinaryOp };
+            if (tokenTypesToSkip.Length > 0)
+            {
+                expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
+            }
+
+            if (tokenTypesToSkipParam == "Create")
+            {
+                tokenTypesToSkipParam = JsonSerializer.Serialize(tokenTypesToSkip.Select(tokType => (int)tokType).ToList());
+            }
+
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}" + (tokenTypesToSkipParam == "NotPresent" ? string.Empty : "&tokenTypesToSkip=" + tokenTypesToSkipParam)) }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            var actualTypes = decodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            Assert.Equal(expectedTypes.OrderBy(type => type), actualTypes.OrderBy(type => type));
+        }
+
+        [Theory]
+        [InlineData("Create", TokenType.Function, TokenType.BoolLit)]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("[2, 3")]
+        [InlineData("Create", TokenType.StrInterpStart, TokenType.BinaryOp, TokenType.NumLit, TokenType.DecLit, TokenType.Control)]
+        [InlineData("[]")]
+        [InlineData("1,2]")]
+        [InlineData("[98]")]
+        [InlineData("Create", (TokenType)78)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, (TokenType)78)]
+        [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
+        [InlineData("   ")]
+        [InlineData("NotPresent")]
+        internal void TestCorrectRangeSemanticTokensAreReturnedWithCertainTokenTypesSkipped(string tokenTypesToSkipParam, params TokenType[] tokenTypesToSkip)
+        {
+            // Arrange & Assert
+            var expression = "1+1+1+1+1+1+1+1;Sqrt(1);1+-2;true;\n\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment;//This is comment2;false";
+            var range = SemanticTokensRelatedTestsHelper.CreateRange(1, 2, 3, 45);
+
+            // Calculate distinct token types within the range without skipping any token type
+            var preSemanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") },
+                Range = range
+            };
+            var prePayload = GetRangeDocumentSemanticTokensRequestPayload(preSemanticTokenParams);
+            _testServer.OnDataReceived(prePayload.payload);
+            var preResponse = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), prePayload.id);
+            var preDecodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(preResponse, expression);
+            var expectedTypes = preDecodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            if (tokenTypesToSkip.Length > 0)
+            {
+                expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
+            }
+
+            if (tokenTypesToSkipParam == "Create")
+            {
+                tokenTypesToSkipParam = JsonSerializer.Serialize(tokenTypesToSkip.Select(tokType => (int)tokType).ToList());
+            }
+
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}" + (tokenTypesToSkipParam == "NotPresent" ? string.Empty : "&tokenTypesToSkip=" + tokenTypesToSkipParam)) },
+                Range = range
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.Skip(1).FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            var actualTypes = decodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            Assert.Equal(expectedTypes.OrderBy(type => type), actualTypes.OrderBy(type => type));
+        }
+
         [Fact]
         public void TestErrorResponseReturnedWhenUriIsNullForFullSemanticTokensRequest()
         {

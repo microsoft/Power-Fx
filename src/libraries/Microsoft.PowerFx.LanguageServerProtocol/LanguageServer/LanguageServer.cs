@@ -9,6 +9,7 @@ using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -448,9 +449,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var eol = queryParams?.Get("eol");
             eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
 
+            var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams.Get("tokenTypesToSkip"));
             var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
             var checkResult = scope.Check(expression);
-            var tokens = checkResult.GetTokens();
+
+            // Skip over the token types that clients don't want in the response
+            var tokens = checkResult.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
             var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
@@ -497,14 +501,47 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
+            var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams.Get("tokenTypesToSkip"));
             var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
             var result = scope.Check(expression);
-            var tokens = result.GetTokens();
+
+            // Skip over the token types that clients don't want in the response
+            var tokens = result.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
 
             // Only consider overlapping tokens. end index is exlcusive
             var overlappingTokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
             var encodedTokens = SemanticTokensEncoder.EncodeTokens(overlappingTokens, expression, eol);
+
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+        }
+
+        private static ICollection<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
+        {
+            var tokenTypesToSkip = new HashSet<TokenType>();    
+            if (string.IsNullOrWhiteSpace(rawTokenTypesToSkipParam))
+            {
+                return tokenTypesToSkip;
+            }
+
+            try
+            {
+                var tokenTypesToSkipParam = JsonSerializer.Deserialize<List<int>>(rawTokenTypesToSkipParam);
+                foreach (var tokenTypeValue in tokenTypesToSkipParam)
+                {
+                    var tokenType = (TokenType)tokenTypeValue;
+                    if (tokenType != TokenType.Lim)
+                    {
+                        tokenType = tokenType == TokenType.Min ? TokenType.Unknown : tokenType;
+                        tokenTypesToSkip.Add(tokenType);
+                    }
+                }
+
+                return tokenTypesToSkip;
+            }
+            catch
+            {
+                return tokenTypesToSkip;
+            }
         }
 
         private bool TryParseAndValidateSemanticTokenParams<T>(string id, string paramsJson, out T semanticTokenParams)

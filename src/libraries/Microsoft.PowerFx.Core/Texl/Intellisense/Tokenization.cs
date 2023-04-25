@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <returns>Ordered collection of tokens.</returns>
         internal static ICollection<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null)
         {
-            return Tokenize(expression, binding, comments, new TokenTextSpanComparer());
+            return Tokenize(expression, binding, comments, new TokenTextSpanComparer(), true);
         }
 
         /// <summary>
@@ -36,8 +36,9 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="binding">Binding which would be used to tokenize the operation and determine the type of each token.</param>
         /// <param name="comments">Colllection of comment tokens extracted from the given expression.</param>
         /// <param name="comparer">optional comparer to sort tokens.</param>
+        /// <param name="computeHiddenTokens">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
         /// <returns>Ordered or undordered collection of tokens.</returns>
-        internal static ICollection<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null)
+        internal static ICollection<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool computeHiddenTokens = false)
         {
             var tokens = new List<ITokenTextSpan>();
             if (binding == null)
@@ -55,7 +56,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 TokenType type = MapBindKindToTokenType(firstName.Kind);
 
                 // Try to set the canHide flag if the FirstName type is Enum
-                var canHide = CanHideNamespaceOfDottedName(firstName, binding);
+                var canHide = computeHiddenTokens && CanHideNamespaceOfDottedName(firstName, binding);
 
                 // If the first name can be hidden, Create and Add a token for the dot.
                 if (canHide && expression.Length > span.Lim && (TexlLexer.PunctuatorDot + TexlLexer.PunctuatorBang).IndexOf(expression.Substring(span.Lim, 1), StringComparison.Ordinal) >= 0)
