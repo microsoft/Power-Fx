@@ -7,7 +7,7 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Binding.BindInfo
 {
     /// <summary>
-    /// Lookup info for a parameters in user defined functions.
+    /// Lookup info for parameters in user defined functions.
     /// </summary>
     internal sealed class UDFParameterInfo
     {
