@@ -34,6 +34,26 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public TexlNode UdfBody { get; }
 
+        public int GetArgIndex(string argName)
+        {
+            var argIndex = -1;
+
+            if (string.IsNullOrEmpty(argName))
+            {
+                return argIndex;
+            }
+
+            foreach (var arg in _args)
+            {
+                if (arg.VarIdent.Name.Value == argName)
+                {
+                    argIndex = arg.ArgIndex;
+                }
+            }
+
+            return argIndex;
+        }
+
         public override bool IsSelfContained => !_isImperative;
 
         public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args, RecordType parametersRecordType)
@@ -60,7 +80,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            var binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Merge(nameResolver, _parametersRecordType, functionNameResolver), bindingConfig, features: features);
+            var binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features);
 
             CheckTypesOnDeclaration(binding.CheckTypesContext, binding.ResultType, binding.ErrorContainer);
             userDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(binding, _args, binding.ErrorContainer);
@@ -92,7 +112,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            yield return new[] { SG("Arg 1") };
+            return new[] { _args.Select<UDFArg, TexlStrings.StringGetter>(key => _ => key.VarIdent.Name.Value).ToArray() };
         }
 
         /// <summary>
@@ -101,18 +121,27 @@ namespace Microsoft.PowerFx.Core.Functions
         private partial class UserDefinitionsNameResolver : INameResolver
         {
             private readonly INameResolver _globalNameResolver;
-            private readonly INameResolver _parameterNamedResolver;
+            private readonly Dictionary<string, UDFArg> _args;
             private readonly INameResolver _functionNameResolver;
 
-            public static INameResolver Merge(INameResolver globalNameResolver, RecordType parametersRecordType, INameResolver functionNameResolver)
+            public static INameResolver Create(INameResolver globalNameResolver, ISet<UDFArg> args, INameResolver functionNameResolver)
             {
-                return new UserDefinitionsNameResolver(globalNameResolver, ReadOnlySymbolTable.NewFromRecord(parametersRecordType), functionNameResolver);
+                return new UserDefinitionsNameResolver(globalNameResolver, args, functionNameResolver);
             }
 
-            private UserDefinitionsNameResolver(INameResolver globalNameResolver, INameResolver parameterNamedResolver, INameResolver functionNameResolver = null)
+            private UserDefinitionsNameResolver(INameResolver globalNameResolver, ISet<UDFArg> args, INameResolver functionNameResolver = null)
             {
                 this._globalNameResolver = globalNameResolver;
-                this._parameterNamedResolver = parameterNamedResolver;
+                this._args = new Dictionary<string, UDFArg>();
+
+                foreach (UDFArg arg in args)
+                {
+                    if (!this._args.ContainsKey(arg.VarIdent.Name.Value))
+                    {
+                        this._args.Add(arg.VarIdent.Name.Value, arg);
+                    }
+                }
+
                 this._functionNameResolver = functionNameResolver;
             }
 
@@ -133,7 +162,15 @@ namespace Microsoft.PowerFx.Core.Functions
             public bool Lookup(DName name, out NameLookupInfo nameInfo, NameLookupPreferences preferences = NameLookupPreferences.None)
             {
                 // lookup in the local scope i.e., function params & body and then look in global scope.
-                return _parameterNamedResolver.Lookup(name, out nameInfo, preferences) || _globalNameResolver.Lookup(name, out nameInfo, preferences);
+                if (_args.TryGetValue(name, out var value))
+                {
+                    var type = value.VarType.GetFormulaType()._type;
+                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.VarIdent.Name));
+
+                    return true;
+                }
+
+                return _globalNameResolver.Lookup(name, out nameInfo, preferences);
             }
 
             public bool LookupDataControl(DName name, out NameLookupInfo lookupInfo, out DName dataControlName)

@@ -95,11 +95,13 @@ namespace Microsoft.PowerFx.Core.Parser
     {
         internal IdentToken VarIdent;
         internal IdentToken VarType;
+        internal int ArgIndex;
 
-        public UDFArg(IdentToken varIdent, IdentToken varType)
+        public UDFArg(IdentToken varIdent, IdentToken varType, int argIndex)
         {
             VarIdent = varIdent;
             VarType = varType;
+            ArgIndex = argIndex;
         } 
     }
 }
