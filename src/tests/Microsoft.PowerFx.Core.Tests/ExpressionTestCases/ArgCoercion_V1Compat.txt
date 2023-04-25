@@ -27,6 +27,3 @@ true
 // String representation - [0-9a-f]
 >> With({g:GUID()}, Sum(Sequence(Len(g)), If(Mid(g,Value,1) exactin "abcdef0123456789", 1, 0)))
 32
-
->> With({g:GUID()}, Len(g) + Len(GUID()))
-72

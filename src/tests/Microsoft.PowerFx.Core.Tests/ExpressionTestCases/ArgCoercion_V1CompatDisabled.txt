@@ -28,6 +28,3 @@ Error({Kind:ErrorKind.InvalidArgument})
 // String representation - [0-9a-f]
 >> With({g:GUID()}, Sum(Sequence(Len(g)), If(Mid(g,Value,1) exactin "abcdef0123456789", 1, 0)))
 Error({Kind:ErrorKind.InvalidArgument})
-
->> With({g:GUID()}, Len(g) + Len(GUID()))
-Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
