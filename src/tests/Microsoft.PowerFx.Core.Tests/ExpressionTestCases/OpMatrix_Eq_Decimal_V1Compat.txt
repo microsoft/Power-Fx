@@ -595,10 +595,10 @@ Errors: Error 12-13: Incompatible types for comparison. These types can't be com
 Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Time, Boolean.
 
 >> Time(24,0,0) = 0
-true
+false
 
 >> Time(24,0,0) = 1
-false
+true
 
 >> Time(9,0,0) = Blank()
 false
@@ -610,6 +610,12 @@ true
 true
 
 >> Time(9,0,1) = Time(9,0,0)
+false
+
+>> Time(-6,0,0) = Time(18,0,0)
+false
+
+>> Time(30,0,0) = Time(6,0,0)
 false
 
 >> Time(9,0,0) = Date(1900,1,2)
