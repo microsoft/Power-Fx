@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Microsoft.PowerFx.Types;
@@ -14,57 +16,63 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
-        // File expression tests are run TWICE - once with and once without NumberIsFloat
+        // File expression tests are run multiple times for the different ways a host can use Power Fx.
+        // 
+        // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
+        // 2. Feautres.PowerFxV1 with NumberIsFloat - for hosts that wish to use floating point instead of Decimal.
+        // 3. Default Canvas features with NumberIsFloat - the current default for Canvas apps.  Canvas
+        //    has an internal relationship with the compiler that allows it to run with a different mix of features.
+        // 4. No features with NumberIsFloat (occasional) - important for back compat convertes in Canvas as the
+        //    back compat converters depend on the feature mix being the same as when the original app was serialized.
         //
-        // Most tests are not sensitive to float vs. decimal and will pass in both modes without modification.
-        // If you aren't speficically testing numeric limits, stick to numbers that are less than +/-1E20 which is
-        // a safe range for both float and decimal and practically where most makers will work.  
-        //
-        // For testing large float numbers (for example, 1E100 or 1E300) or high precision decimals
-        // (for example, 1.00000000000000000000001), individual files can be excluded from one of the two modes
-        // with a directive at the top of the file:
-        //   #SKIPFILE: NumberIsFloat          // skips the file if NumberIsFloat is enabled (float mode)
-        //   #SKIPFILE: disable:NumberIsFloat  // skips the file if NumberIsFloat is disabled (decimal mode)
-        //
-        // Skipped files do not show up in the list of skipped tests, tests are skipped before being added in TxtFileData.
-        // The intent of SKIPFILE is to be a permanent mode selection for tests that are range/precision sensitive.
+        // See the README.md in the ExpressionTestCases directory for more details.
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), false)]
-        public void InterpreterTestCase(ExpressionTestCase testCase)
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,NumberIsFloat")]
+        public void Canvas_Float(ExpressionTestCase testCase)
         {
-            // This is running against embedded resources, so if you're updating the .txt files,
-            // make sure they build is actually copying them over.
-            Assert.True(testCase.FailMessage == null, testCase.FailMessage);
-
-            var runner = new InterpreterRunner() { NumberIsFloat = false };
-            var (result, msg) = runner.RunTestCase(testCase);
-
-            var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
-            switch (result)
+            // current default features in Canvas abc
+            var features = new Features()
             {
-                case TestResult.Pass:
-                    break;
+                TableSyntaxDoesntWrapRecords = true,
+                ConsistentOneColumnTableResult = true
+            };
 
-                case TestResult.Fail:
-                    Assert.True(false, prefix + msg);
-                    break;
-
-                case TestResult.Skip:
-                    Skip.If(true, prefix + msg);
-                    break;
-            }
+            RunExpressionTestCase(testCase, features, numberIsFloat: true);
         }
 
         [InterpreterTheory]
-        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), true)]
-        public void InterpreterTestCase_NumberIsFloat(ExpressionTestCase testCase)
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,disable:NumberIsFloat")]
+        public void V1_Decimal(ExpressionTestCase testCase)
+        {
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: false);
+        }
+
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "PowerFxV1,NumberIsFloat")]
+        public void V1_Float(ExpressionTestCase testCase)
+        {
+            RunExpressionTestCase(testCase, Features.PowerFxV1, numberIsFloat: true);
+        }
+
+#if false
+        // This does not need to be run every time, but should be run periodically.
+        // Keeping this clean ensures that back compat converters in Canvas continue to function properly.
+        [InterpreterTheory]
+        [TxtFileData("ExpressionTestCases", "InterpreterExpressionTestCases", nameof(InterpreterRunner), "NumberIsFloat")]
+        public void None_Float(ExpressionTestCase testCase)
+        {
+            RunExpressionTestCase(testCase, Features.None, numberIsFloat: true);
+        }
+#endif
+
+        private void RunExpressionTestCase(ExpressionTestCase testCase, Features features, bool numberIsFloat)
         {
             // This is running against embedded resources, so if you're updating the .txt files,
             // make sure they build is actually copying them over.
             Assert.True(testCase.FailMessage == null, testCase.FailMessage);
 
-            var runner = new InterpreterRunner() { NumberIsFloat = true };
+            var runner = new InterpreterRunner() { NumberIsFloat = numberIsFloat, Features = features };
             var (result, msg) = runner.RunTestCase(testCase);
 
             var prefix = $"Test {Path.GetFileName(testCase.SourceFile)}:{testCase.SourceLine}: ";
@@ -129,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(numberIsFloat: true, path);
+            testRunner.AddFile(TestRunner.ParseSetupString("NumberIsFloat"), path);
 
             var result = testRunner.RunTests();
 
@@ -145,7 +153,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ScanForTxtParseErrors()
         {
-            var method = GetType().GetMethod(nameof(InterpreterTestCase));
+            var method = GetType().GetMethod(nameof(Canvas_Float));
             var attr = (TxtFileDataAttribute)method.GetCustomAttributes(typeof(TxtFileDataAttribute), false)[0];
 
             // Verify this runs without throwing an exception.
@@ -173,7 +181,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var runner = new TestRunner();
 
             // Verify this runs without throwing an exception.
-            runner.AddDir(numberIsFloat: false, path);
+            runner.AddDir(new Dictionary<string, bool>(), path);
 
             // Ensure that we actually found tests and not pointed to an empty directory
             Assert.True(runner.Tests.Count > 10);

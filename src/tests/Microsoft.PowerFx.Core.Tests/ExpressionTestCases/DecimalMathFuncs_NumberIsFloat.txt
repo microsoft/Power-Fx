@@ -1,4 +1,4 @@
-#SKIPFILE: disable:NumberIsFloat
+#SETUP: NumberIsFloat
 
 // Float() calls from the original DecimalMathFuncs have been replaced with Value() for compatibility with Canvas
 

@@ -1,6 +1,10 @@
+#SETUP: disable:NumberIsFloat
+
 // ^ Exponentation
 
 // As exponentation is all floating point with no Decimal support, there is no need to have separate files with and without NumberIsFloat.
+// There is a separate _Float version without Decimal functions and Float translated to Value functions for running in PA Client
+// Once PA Client adds Decimal, we can delete the _Float version.
 
 // In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
 // and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.

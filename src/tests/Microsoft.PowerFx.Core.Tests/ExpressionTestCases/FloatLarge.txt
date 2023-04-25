@@ -1,4 +1,4 @@
-﻿#SKIPFILE:disable:NumberIsFloat
+﻿#SETUP: NumberIsFloat
 
 // Tests that take or result in large floating point values, outside the range of Decimal (~ +/- 1E29)
 // These cause problems with the serialization/deserialization test in BaseRunner.cs/RunAsync2

@@ -128,19 +128,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TexlParser.Flags.EnableExpressionChaining, iSetup.Flags);
             Assert.Equal("SomeHandler", iSetup.HandlerName);
             Assert.False(iSetup.Features.TableSyntaxDoesntWrapRecords);
-            Assert.True(iSetup.Features.ConsistentOneColumnTableResult);
-        }
-
-        [Fact]
-        public void InternalSetup_Parse_EnableFlagAlreadyEnabled()
-        {
-            Assert.Throws<InvalidOperationException>(() => InternalSetup.Parse($"TableSyntaxDoesntWrapRecords"));
-        }
-
-        [Fact]
-        public void InternalSetup_Parse_DisableFlagAlreadyDisabled()
-        {
-            Assert.Throws<InvalidOperationException>(() => InternalSetup.Parse($"disable:EnableExpressionChaining"));
         }
 
         [Fact]

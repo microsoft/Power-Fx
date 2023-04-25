@@ -1,4 +1,6 @@
-﻿>> Hex2Dec("0")
+﻿#SETUP: ConsistentOneColumnTableResult
+
+>> Hex2Dec("0")
 0
 
 // Positive Integer Parameters

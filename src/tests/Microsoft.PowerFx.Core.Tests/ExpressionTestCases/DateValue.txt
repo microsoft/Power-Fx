@@ -1,4 +1,5 @@
-﻿
+﻿#SETUP: disable:StronglyTypedBuiltinEnums
+
 // Use of DateValue, DateTimeValue
 
 >> DateValue("")

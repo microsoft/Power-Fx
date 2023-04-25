@@ -1,0 +1,79 @@
+#SETUP: disable:ConsistentOneColumnTableResult
+
+>> Mid("Hello world", [3, 7])
+Table({Result:"llo world"},{Result:"world"})
+
+>> Mid("Hello world", [3, 7], [2, 3])
+Table({Result:"ll"},{Result:"wor"})
+
+>> Mid(["Hello", "world"], [3, 2])
+Table({Value:"llo"},{Value:"orld"})
+
+>> Mid(["Hello", "world"], [3, 2], [4, 2])
+Table({Value:"llo"},{Value:"or"})
+
+>> Mid(["Hello", "world"], 3)
+Table({Value:"llo"},{Value:"rld"})
+
+>> Mid(["Hello", "world"], 3, 2)
+Table({Value:"ll"},{Value:"rl"})
+
+>> Mid(["Hello", "world"], [1, 0])
+Table({Value:"Hello"},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid(["Hello", "world"], [2, 3], [2,0])
+Table({Value:"el"},{Value:""})
+
+// #### Empty tables
+>> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Mid(emptyTable, 1))
+Table()
+
+>> With({emptyTable:Filter([1], Value > 10)}, Mid("Hello", emptyTable))
+Table()
+
+>> With({emptyTable:Filter([1], Value > 10)}, Mid("Hello", emptyTable, emptyTable))
+Table()
+
+>> Mid(["Hello", "world"], [2])
+Table({Value:"ello"},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+>> Mid(["Hello", "world"], [2,3], [3])
+Table({Value:"ell"},{Value:Error({Kind:ErrorKind.NotApplicable})})
+
+// ##### Blank arguments
+>> Mid(If(1<0,"Hello world"), [4, 5])
+Table({Result:""},{Result:""})
+
+>> Mid(If(1<0,["Hello", "world"]), [4, 5])
+Blank()
+
+>> Mid(["Hello", "world"], If(1<0,2))
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Mid(["Hello", "world"], If(1<0,[2]))
+Blank()
+
+>> Mid(["Hello", "world"], 2, If(1<0,2))
+Table({Value:""},{Value:""})
+
+>> Mid(["Hello", "world"], 2, If(1<0,[2]))
+Blank()
+
+// ##### Error arguments
+>> Mid(If(1/0<2,"Hello world"), [4, 5])
+Table({Result:Error({Kind:ErrorKind.Div0})},{Result:Error({Kind:ErrorKind.Div0})})
+
+>> Mid(If(1/0<2,["Hello", "world"]), [4, 5])
+Error({Kind:ErrorKind.Div0})
+
+>> Mid(["Hello", "world"], If(1/0<2,2))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Mid(["Hello", "world"], If(1/0<2,[2]))
+Error({Kind:ErrorKind.Div0})
+
+>> Mid(["Hello", "world"], 2, If(1/0<2,2))
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+>> Mid(["Hello", "world"], 2, If(1/0<2,[2]))
+Error({Kind:ErrorKind.Div0})

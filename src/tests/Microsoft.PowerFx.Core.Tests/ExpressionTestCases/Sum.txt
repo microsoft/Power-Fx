@@ -1,3 +1,5 @@
+#SETUP: disable:SupportColumnNamesAsIdentifiers
+
 // ******** INTEGER PARAMETERS ********
 
 // Positive Integer Parameters
