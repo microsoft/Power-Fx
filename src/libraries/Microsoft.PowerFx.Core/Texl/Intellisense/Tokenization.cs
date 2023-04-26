@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Types;
@@ -13,7 +14,7 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Intellisense
 {
     /// <summary>
-    /// An entity with methods to compute ordered or unordered enumeration enumeration of token text spans in a expression rule with their start and end indices and token type.
+    /// An entity with methods to compute enumeration of tokens in a expression with their start and end indices and token type.
     /// </summary>
     internal static class Tokenization
     {
@@ -36,8 +37,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="binding">Binding which would be used to tokenize the operation and determine the type of each token.</param>
         /// <param name="comments">Colllection of comment tokens extracted from the given expression.</param>
         /// <param name="comparer">optional comparer to sort tokens.</param>
-        /// <param name="allowTokenHiding">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
-        /// <returns>Ordered or unordered collection of tokens.</returns>
+        /// <param name="allowTokenHiding">Optional: This flag determines whether to compute the value of a CanBeHidden property for tokens generated out of first names present in the expression.</param>
+        /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
         // allowTokenHiding flag is off by default as we don't want to compute hiddenness of the tokens for the new formula bar as we are not going to support that.
         // However, we want to keep this for old formula bar as long as it exists and once we consume the changes in Canvas App backend,
         // we would update the tokenization logic behind old formula bar to use this one instead and allowTokenHiding would be true for old formula bar.

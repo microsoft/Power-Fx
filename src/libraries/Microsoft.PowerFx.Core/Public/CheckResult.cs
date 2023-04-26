@@ -597,8 +597,11 @@ namespace Microsoft.PowerFx
         /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
         /// </summary>
         /// <param name="comparer">Optional comparer to sort tokens.</param>
-        /// <param name="allowTokenHiding">Optional flag to indicate whether to compute whether token can be hidden or not.</param>
-        /// <returns>Ordered or undordered collection of tokens.</returns>
+        /// <param name="allowTokenHiding">Optional: This flag determines whether to compute the value of a CanBeHidden property for tokens generated out of first names present in the expression.</param>
+        /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
+        // allowTokenHiding flag is off by default as we don't want to compute hiddenness of the tokens for the new formula bar as we are not going to support that.
+        // However, we want to keep this for old formula bar as long as it exists and once we consume the changes in Canvas App backend,
+        // we would update the tokenization logic behind old formula bar to use this one instead and allowTokenHiding would be true for old formula bar.
         internal IEnumerable<ITokenTextSpan> GetTokens(IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false) => Tokenization.Tokenize(_expression, _binding, Parse.Comments, comparer, allowTokenHiding);
 
         private string _expressionInvariant;

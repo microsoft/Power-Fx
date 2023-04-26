@@ -1409,8 +1409,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("[]")]
         [InlineData("1,2]")]
         [InlineData("[98]")]
-        [InlineData("Create", (TokenType)78)]
-        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, (TokenType)78)]
+        [InlineData("Create", TokenType.Lim)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, TokenType.Lim)]
         [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
         [InlineData("   ")]
         [InlineData("NotPresent")]
@@ -1455,8 +1455,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         [InlineData("[]")]
         [InlineData("1,2]")]
         [InlineData("[98]")]
-        [InlineData("Create", (TokenType)78)]
-        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, (TokenType)78)]
+        [InlineData("Create", TokenType.Lim)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, TokenType.Lim)]
         [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
         [InlineData("   ")]
         [InlineData("NotPresent")]
@@ -1464,19 +1464,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             // Arrange & Assert
             var expression = "1+1+1+1+1+1+1+1;Sqrt(1);1+-2;true;\n\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment;//This is comment2;false";
-            var range = SemanticTokensRelatedTestsHelper.CreateRange(1, 2, 3, 45);
-
-            // Calculate distinct token types within the range without skipping any token type
-            var preSemanticTokenParams = new SemanticTokensRangeParams
-            {
-                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") },
-                Range = range
-            };
-            var prePayload = GetRangeDocumentSemanticTokensRequestPayload(preSemanticTokenParams);
-            _testServer.OnDataReceived(prePayload.payload);
-            var preResponse = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), prePayload.id);
-            var preDecodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(preResponse, expression);
-            var expectedTypes = preDecodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            var range = SemanticTokensRelatedTestsHelper.CreateRange(1, 2, 3, 35);
+            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Function,  TokenType.StrLit,  TokenType.Delimiter, TokenType.BinaryOp };
             if (tokenTypesToSkip.Length > 0)
             {
                 expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
@@ -1498,7 +1487,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _testServer.OnDataReceived(payload.payload);
 
             // Assert
-            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.Skip(1).FirstOrDefault(), payload.id);
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData.FirstOrDefault(), payload.id);
             Assert.NotEmpty(response.Data);
             var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
             var actualTypes = decodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
