@@ -3,3 +3,27 @@
 
 >> Last([ {a:2}, {a:true, b:true, c:20}, {a:2, b:2, c:true} ]).c
 1
+
+>> Len(GUID())
+36
+
+>> GUID() & GUID() <> ""
+true
+
+>> Len(Lower(GUID()))
+36
+
+>> Len(GUID() & GUID())
+72
+
+// String representation - only 4 dashes
+>> With({g:GUID()}, Sum(Sequence(Len(g)), If(Mid(g,Value,1) = "-", 1, 0)))
+4
+
+// String representation - position of dashes
+>> With({g:GUID()}, Mid(g,9,1) = "-" And Mid(g,14,1) = "-" And Mid(g,19,1) = "-" And Mid(g,24,1) = "-")
+true
+
+// String representation - [0-9a-f]
+>> With({g:GUID()}, Sum(Sequence(Len(g)), If(Mid(g,Value,1) exactin "abcdef0123456789", 1, 0)))
+32
