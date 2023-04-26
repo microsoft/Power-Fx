@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Types;
@@ -56,9 +57,29 @@ namespace Microsoft.PowerFx
         {
             get
             {
-                foreach (var kv in _type.GetFieldTypes())
+                // Don't build type if row scope has external sources as that can take a lot of time and hang intellisense
+                // https://github.com/microsoft/Power-Fx/issues/1212
+                if (_type._type.AssociatedDataSources.Any())
                 {
-                    yield return new KeyValuePair<string, NameLookupInfo>(kv.Name, Create(kv.Name, kv.Type));
+                    foreach (var field in _type.FieldNames)
+                    {
+                        DType.TryGetDisplayNameForColumn(_type._type, field, out var displayName);
+                        DName dName = default;
+                        if (DName.IsValidDName(displayName))
+                        {
+                            dName = new DName(displayName);
+                        }
+
+                        var info = new NameLookupInfo(BindKind.TypeName, DType.Deferred, DPath.Root, 0, displayName: dName);
+                        yield return new KeyValuePair<string, NameLookupInfo>(field, info);
+                    }
+                }
+                else
+                {
+                    foreach (var kv in _type.GetFieldTypes())
+                    {
+                        yield return new KeyValuePair<string, NameLookupInfo>(kv.Name, Create(kv.Name, kv.Type));
+                    }
                 }
 
                 if (_allowThisRecord)
