@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Linq.Expressions;
-
 namespace Microsoft.PowerFx.Core.Localization
 {
     internal static class TexlStrings
