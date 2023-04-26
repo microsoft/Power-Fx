@@ -21,7 +21,7 @@ true
 >> IsMatch("Hi", "H", MatchOptions.Contains & MatchOptions.Complete)
 false
 
->> IsMatch("Hi", "H", MatchOptions.Contains & MatchOptions.BeginWith)
+>> IsMatch("Hi", "H", MatchOptions.Contains & MatchOptions.BeginsWith)
 true
 
 >> IsMatch("Hi", "H", "$c")
@@ -67,22 +67,22 @@ true
 false
 
 >> IsMatch(1/0, "Hi")
-Errors: Error 9-10: Expected text. We expect text at this point in the formula.
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsMatch(Blank(), "Hi")
 false
 
 >> IsMatch("Foo", Blank())
-Errors: Error 8-13: Expected text. We expect text at this point in the formula.|Error 0-23: The function 'IsMatch' has some invalid arguments.
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsMatch("Foo", 17)
-Errors: Error 8-13: Expected text. We expect text at this point in the formula.|Error 0-18: The function 'IsMatch' has some invalid arguments.
+false
 
 >> IsMatch(28, "Bar")
-Errors: Error 8-10: Expected text. We expect text at this point in the formula.|Error 0-18: The function 'IsMatch' has some invalid arguments.
+false
 
 >> IsMatch("Foo", 1/0)
-Errors: Error 8-13: Expected text. We expect text at this point in the formula.|Error 0-19: The function 'IsMatch' has some invalid arguments.
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> IsMatch("", "")
 true

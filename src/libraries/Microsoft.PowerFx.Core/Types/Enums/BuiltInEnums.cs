@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Types.Enums
 
         public static readonly EnumSymbol MatchOptionsEnum = new EnumSymbol(new DName(LanguageConstants.MatchOptionsEnumString), DType.String, new Dictionary<string, object>()
         {
-            { "BeginWith", "^c" },
+            { "BeginsWith", "^c" },
             { "EndsWith", "$c" },
             { "Complete", "^c$" },
             { "Contains", "c" },

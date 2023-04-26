@@ -82,42 +82,153 @@ namespace Microsoft.PowerFx.Functions
         // Match( Text, Pattern [, MatchOptions ] )
         internal class MatchFunction : MatchFunctionBase
         {
+            private readonly string _cachePrefix;            
+
             public MatchFunction(TimeSpan regExTimeout)
               : base(regExTimeout, "Match", DType.EmptyRecord, TexlStrings.AboutMatch, "c")
             {
+                _cachePrefix = "rec_";
             }
 
             protected MatchFunction(TimeSpan regExTimeout, string name, DType returnType, StringGetter about, string example)
               : base(regExTimeout, name, returnType, about, example)
             {
+                _cachePrefix = "tbl_";
             }
 
             public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
             {
+                Contracts.AssertValue(args);
+                Contracts.AssertAllValues(args);
+                Contracts.AssertValue(argTypes);
+                Contracts.Assert(args.Length == argTypes.Length);
+                Contracts.Assert(args.Length == 2 || args.Length == 3);
+                Contracts.AssertValue(errors);
+
                 bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-                if (fValid)
-                {                   
-                    if (argTypes[1].Kind != DKind.String || !BinderUtils.TryGetConstantValue(context, args[1], out string regularExpression))
-                    {
-                        errors.EnsureError(args[1], TexlStrings.ErrVariableRegEx);
-                        return false;
-                    }
-
-                    try
-                    {
-                        returnType = GetRecordTypeFromRegularExpression(regularExpression);
-                    }
-
-                    // Internal exception till .Net 7 where it becomes public
-                    catch (Exception rexParseEx) when (rexParseEx.GetType().Name.Equals("RegexParseException", StringComparison.OrdinalIgnoreCase))
-                    {
-                        errors.EnsureError(args[1], TexlStrings.ErrBadRegex);
-                        fValid = false;                        
-                    }
+                Contracts.Assert(returnType.IsRecord || returnType.IsTable);
+                TexlNode regExNode = args[1];
+                
+                if (argTypes[1].Kind != DKind.String || !BinderUtils.TryGetConstantValue(context, regExNode, out string nodeValue))
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrVariableRegEx);
+                    return false;
                 }
 
-                return fValid;
+                string regularExpression = nodeValue;
+                return fValid && TryCreateReturnType(regExNode, regularExpression, errors, ref returnType);
+            }
+
+            // Creates a typed result: [Match:s, Captures:*[Value:s], NamedCaptures:r[<namedCaptures>:s]]
+            private bool TryCreateReturnType(TexlNode regExNode, string regexPattern, IErrorContainer errors, ref DType returnType)
+            {
+                Contracts.AssertValue(regexPattern);
+                string prefixedRegexPattern = this._cachePrefix + regexPattern;
+
+                //if (_regexTypeCache.ContainsKey(prefixedRegexPattern))
+                //{
+                //    var cachedType = _regexTypeCache[prefixedRegexPattern];
+                //    if (cachedType != null)
+                //    {
+                //        returnType = cachedType.Item1;
+                //        AddWarnings(regExNode, errors, cachedType.Item2, cachedType.Item3, cachedType.Item4);
+                //        return true;
+                //    }
+                //    else
+                //    {
+                //        errors.EnsureError(regExNode, CanvasStringResources.ErrInvalidRegEx);
+                //        return false;
+                //    }
+                //}
+
+                //if (_regexTypeCache.Count >= 5000)
+                //{
+                //    // To preserve memory during authoring, we clear the cache if it gets
+                //    // too large. This should only happen in a minority of cases and
+                //    // should have no impact on deployed apps.
+                //    _regexTypeCache.Clear();
+                //}
+
+                try
+                {
+                    var regex = new Regex(regexPattern);
+
+                    List<TypedName> propertyNames = new List<TypedName>();
+                    bool fullMatchHidden = false, subMatchesHidden = false, startMatchHidden = false;
+
+                    foreach (var captureName in regex.GetGroupNames())
+                    {
+                        int unused;
+                        if (int.TryParse(captureName, out unused))
+                        {
+                            // Unnamed captures are returned as integers, ignoring them
+                            continue;
+                        }
+
+                        if (captureName == ColumnName_FullMatch.Value)
+                        {
+                            fullMatchHidden = true;
+                        }
+                        else if (captureName == ColumnName_SubMatches.Value)
+                        {
+                            subMatchesHidden = true;
+                        }
+                        else if (captureName == ColumnName_StartMatch.Value)
+                        {
+                            startMatchHidden = true;
+                        }
+
+                        bool unusedFlag;
+                        propertyNames.Add(new TypedName(DType.String, DName.MakeValid(captureName, out unusedFlag)));
+                    }
+
+                    if (!fullMatchHidden)
+                    {
+                        propertyNames.Add(new TypedName(DType.String, ColumnName_FullMatch));
+                    }
+
+                    if (!subMatchesHidden)
+                    {
+                        propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
+                    }
+
+                    if (!startMatchHidden)
+                    {
+                        propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
+                    }
+
+                    returnType = returnType.IsRecord 
+                        ? DType.CreateRecord(propertyNames) 
+                        : DType.CreateTable(propertyNames);
+
+                    AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
+                    //_regexTypeCache[prefixedRegexPattern] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
+                    return true;
+                }
+                catch (ArgumentException)
+                {
+                    errors.EnsureError(regExNode, TexlStrings.ErrBadRegex);
+                    //_regexTypeCache[prefixedRegexPattern] = null; // Cache to avoid evaluating again
+                    return false;
+                }
+            }
+
+            private void AddWarnings(TexlNode regExNode, IErrorContainer errors, bool hidesFullMatch, bool hidesSubMatches, bool hidesStartMatch)
+            {
+                if (hidesFullMatch)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedFullMatchField, ColumnName_FullMatch.Value);
+                }
+
+                if (hidesSubMatches)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedSubMatchesField, ColumnName_SubMatches.Value);
+                }
+
+                if (hidesStartMatch)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Suggestion, regExNode, TexlStrings.InfoRegExCaptureNameHidesPredefinedStartMatchField, ColumnName_StartMatch.Value);
+                }
             }
 
             internal DType GetRecordTypeFromRegularExpression(string regularExpression)
@@ -201,7 +312,7 @@ namespace Microsoft.PowerFx.Functions
 
         internal abstract class MatchFunctionBase : BuiltinFunction, IAsyncTexlFunction
         {
-            public override bool IsSelfContained => true;
+            public override bool IsSelfContained => true;            
 
             public string DefaultMatchOption { get; }
 
@@ -219,34 +330,7 @@ namespace Microsoft.PowerFx.Functions
                 yield return new[] { TexlStrings.MatchArg1, TexlStrings.MatchArg2 };
                 yield return new[] { TexlStrings.MatchArg1, TexlStrings.MatchArg2, TexlStrings.MatchOptions };
             }
-
-            public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
-            {
-                bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-                if (argTypes[0].Kind != DKind.String && argTypes[0].Kind != DKind.ObjNull)
-                {
-                    fValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrStringExpected);
-                }
-
-                if (argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue)
-                {
-                    fValid = false;
-                    errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrStringExpected);
-                }
-
-                if (argTypes.Length == 3)
-                {
-                    if (argTypes[0].Kind != DKind.String && argTypes[0].Kind != DKind.ObjNull)
-                    {
-                        fValid = false;
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[3], TexlStrings.ErrStringExpected);
-                    }
-                }
-
-                return fValid;
-            }
+          
 
             public virtual async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
             {
@@ -254,9 +338,17 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), false);
                 }
+                if (args[0] is not StringValue sv0)
+                {
+                    return CommonErrors.GenericInvalidArgument(args[0].IRContext);
+                }
+                if (args[1] is not StringValue sv1)
+                {
+                    return CommonErrors.GenericInvalidArgument(args[1].IRContext);
+                }
 
-                string inputString = ((StringValue)args[0]).Value;
-                string regularExpression = ((StringValue)args[1]).Value;
+                string inputString = sv0.Value;
+                string regularExpression = sv1.Value;
                 string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : DefaultMatchOption;
                 RegexOptions regOptions = RegexOptions.None;
 

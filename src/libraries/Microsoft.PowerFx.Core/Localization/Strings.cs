@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Linq.Expressions;
+
 namespace Microsoft.PowerFx.Core.Localization
 {
     internal static class TexlStrings
@@ -625,6 +627,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
         public static ErrorResourceKey ErrBadRegex = new ErrorResourceKey("ErrBadRegex");
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
+
+        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedFullMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedFullMatchField");
+        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedSubMatchesField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedSubMatchesField");
+        public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedStartMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedStartMatchField");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");

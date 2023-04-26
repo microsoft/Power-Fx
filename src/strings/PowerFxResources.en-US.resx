@@ -5185,6 +5185,18 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>
-    <comment>Error Message.</comment>
-  </data>  
+    <comment>Error Message.</comment>    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the full match of the regular expression. Consider renaming it if you want to use that named property to extract the full match in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the group matches in the regular expression. Consider renaming it if you want to use that named property to extract all the sub-matches in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'SubMatches' in the function result.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the location of the match of the regular expression. Consider renaming it if you want to use that named property to extract the position of the full match in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'StartMatch' in the function result.</comment>
+  </data>
 </root>
