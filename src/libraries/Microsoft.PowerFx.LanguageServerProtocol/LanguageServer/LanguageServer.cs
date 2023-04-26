@@ -423,7 +423,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         }
 
         /// <summary>
-        /// Handles requests to compute semantic requests for the full document or expression.
+        /// Handles requests to compute semantic tokens for the full document or expression.
         /// </summary>
         /// <param name="id">Request Id.</param>
         /// <param name="paramsJson">Request Params Stringified Body.</param>
@@ -438,7 +438,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         }
 
         /// <summary>
-        /// Handles requests to compute semantic requests for the a specific part of document or expression.
+        /// Handles requests to compute semantic tokens for the a specific part of document or expression.
         /// </summary>
         /// <param name="id">Request Id.</param>
         /// <param name="paramsJson">Request Params Stringified Body.</param>
