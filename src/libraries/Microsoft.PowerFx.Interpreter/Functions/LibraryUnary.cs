@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 UnaryOpKind.Negate,
-                StandardErrorHandling<NumberValue>(
+                StandardErrorHandling<FormulaValue>(
                     "-",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithFloatZero,
@@ -32,14 +32,14 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 UnaryOpKind.NegateDecimal,
-                StandardErrorHandling<DecimalValue>(
+                StandardErrorHandling<FormulaValue>(
                     "-",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithDecimalZero,
-                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: DecimalNegate)
+                    targetFunction: NumericNegate)
             },
             {
                 UnaryOpKind.Percent,
@@ -474,16 +474,40 @@ namespace Microsoft.PowerFx.Functions
 #endregion
 
 #region Unary Operator Implementations
-        private static NumberValue NumericNegate(IRContext irContext, NumberValue[] args)
+        private static FormulaValue NumericNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var result = -args[0].Value;
-            return new NumberValue(irContext, result);
+            switch (args[0])
+            {
+                case NumberValue nv:
+                    return new NumberValue(irContext, -nv.Value);
+                case DecimalValue dv:
+                    return new DecimalValue(irContext, -dv.Value);
+                case TimeValue tv:
+                    return new TimeValue(irContext, -tv.Value);
+                case DateValue _:
+                case DateTimeValue _:
+                    return DateNegate(runner, context, irContext, args);
+                default:
+                    return CommonErrors.RuntimeTypeMismatch(irContext);
+            }
         }
 
-        private static DecimalValue DecimalNegate(IRContext irContext, DecimalValue[] args)
+        private static FormulaValue DateNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var result = -args[0].Value;
-            return new DecimalValue(irContext, result);
+            var numericValue = DateToNumber(runner, context, IRContext.NotInSource(FormulaType.Number), args);
+            if (numericValue is NumberValue nv)
+            {
+                if (irContext.ResultType == FormulaType.Date)
+                {
+                    return NumberToDate(irContext, new[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), -nv.Value) });
+                }
+                else
+                {
+                    return NumberToDateTime(runner, context, irContext, new[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), -nv.Value) });
+                }
+            }
+
+            return numericValue; // error
         }
 
         private static NumberValue NumericPercent(IRContext irContext, NumberValue[] args)
