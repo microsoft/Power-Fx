@@ -615,7 +615,7 @@ Errors: Error 16-21: Invalid argument type. Expecting one of the following: Numb
 false
 
 >> Time(24,0,0) <  1
-true
+false
 
 >> Time(9,0,0) <  Blank()
 #SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
