@@ -171,6 +171,9 @@ namespace Microsoft.PowerFx
         }
     }
 
+    /// <summary>
+    /// Used to compare CheckResult.Errors and avoid duplicates.
+    /// </summary>
     internal class ExpressionErrorComparer : EqualityComparer<ExpressionError>
     {
         // We compare only Message
