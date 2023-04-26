@@ -306,40 +306,12 @@ namespace Microsoft.PowerFx.Functions
             if (impl.Type == FormulaType.String)
             {
                 var str = impl.GetString();
-                var stringArg0 = new StringValue(irContext, str);
-                newArg0 = stringArg0;
-
-                // The second argument to Text is a format, if it exists then we need to convert the string to a type that
-                // can be formatted. We try to convert to number first and if that fails we try dates.
-                if (args.Length > 1)
-                {
-                    var numArg0 = Value_UO(runner, context, IRContext.NotInSource(FormulaType.Number), new UntypedObjectValue[] { arg0 });
-                    if (numArg0 is not ErrorValue)
-                    {
-                        newArg0 = numArg0;
-                    }
-                    else
-                    {
-                        // Use DateTimeValue_UO to apply format restrictions
-                        var dateArg0 = DateTimeValue_UO(runner, context, IRContext.NotInSource(FormulaType.DateTime), new UntypedObjectValue[] { arg0 });
-                        if (dateArg0 is not ErrorValue)
-                        {
-                            newArg0 = dateArg0;
-                        }
-                    }
-                }
+                newArg0 = new StringValue(irContext, str);
             }
             else if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
             {
                 var str = impl.GetUntypedNumber();
                 newArg0 = new StringValue(irContext, str);
-
-                // If a second argument is provided, then we cannot guarantee that the original precison will be
-                // preserved. We convert to a number, either Float or Decimal depending on the settings.
-                if (args.Length > 1)
-                {
-                    newArg0 = Value_UO(runner, context, IRContext.NotInSource(FormulaType.Number), new UntypedObjectValue[] { arg0 });
-                }
             }
             else if (impl.Type == FormulaType.Number)
             {
@@ -593,6 +565,62 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), impl);
+        }
+
+        public static FormulaValue UntypedStringToUntypedFloat(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String || (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber))
+            {
+                var valueRes = Value_UO(runner, context, IRContext.NotInSource(FormulaType.Number), new UntypedObjectValue[] { args[0] });
+
+                if (valueRes is NumberValue nv)
+                {
+                    return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new FloatUntypedObject(nv.Value));
+                }
+
+                var dateTimeRes = DateTimeValue_UO(runner, context, IRContext.NotInSource(FormulaType.DateTime), new UntypedObjectValue[] { args[0] });
+
+                if (dateTimeRes is not ErrorValue)
+                {
+                    var valueRes2 = Value(runner, context, IRContext.NotInSource(FormulaType.Number), new FormulaValue[] { dateTimeRes });
+                    if (valueRes2 is NumberValue nv2)
+                    {
+                        return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new FloatUntypedObject(nv2.Value));
+                    }
+                }
+            }
+
+            return args[0];
+        }
+
+        public static FormulaValue UntypedStringToUntypedDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type == FormulaType.String || (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber))
+            {
+                var valueRes = Value_UO(runner, context, IRContext.NotInSource(FormulaType.Decimal), new UntypedObjectValue[] { args[0] });
+
+                if (valueRes is DecimalValue dv)
+                {
+                    return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new DecimalUntypedObject(dv.Value));
+                }
+
+                var dateTimeRes = DateTimeValue_UO(runner, context, IRContext.NotInSource(FormulaType.DateTime), new UntypedObjectValue[] { args[0] });
+
+                if (dateTimeRes is not ErrorValue)
+                {
+                    var valueRes2 = Value(runner, context, IRContext.NotInSource(FormulaType.Decimal), new FormulaValue[] { dateTimeRes });
+                    if (valueRes2 is DecimalValue dv2)
+                    {
+                        return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), new DecimalUntypedObject(dv2.Value));
+                    }
+                }
+            }
+
+            return args[0];
         }
     }
 }

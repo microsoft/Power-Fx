@@ -363,7 +363,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < len; i++)
                 {
                     IntermediateNode convertedNode;
-                    var argPreprocessor = func.GetArgPreprocessor(i);
+                    var argPreprocessor = func.GetArgPreprocessor(i, node);
 
                     switch (argPreprocessor)
                     {
@@ -389,6 +389,17 @@ namespace Microsoft.PowerFx.Core.IR
                         case ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable:
                             var callIRContext_SCT = context.GetIRContext(node);
                             convertedNode = ReplaceBlankWithCallTypedZero_Scalar(args[i], ((TableType)callIRContext_SCT.ResultType).SingleColumnFieldType);
+                            break;
+                        case ArgPreprocessor.UntypedStringToUntypedNumber:
+                            if (context.Binding.BindingConfig.NumberIsFloat)
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedFloat, args[i]);
+                            }
+                            else
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedDecimal, args[i]);
+                            }
+
                             break;
                         default:
                             convertedNode = args[i];

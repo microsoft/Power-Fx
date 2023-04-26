@@ -25,8 +25,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public const string TextInvariantFunctionName = "Text";
+
         public TextFunction()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
+            : base(TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
         {
         }
 
@@ -214,7 +216,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public TextFunction_UO()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 2, DType.UntypedObject, DType.String)
+            : base(TextFunction.TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 2, DType.UntypedObject, DType.String)
         {
         }
 
@@ -232,13 +234,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            if (args.Length >= 2)
+            if (args.Length > 1)
             {
                 // The 2nd argument can be validated using the same logic as the normal Text function
                 TextFunction.ValidateFormatArgs(Name, context, args, argTypes, errors, ref nodeToCoercedTypeMap, ref isValid);
             }
 
             return isValid;
+        }
+
+        public override ArgPreprocessor GetArgPreprocessor(int index, CallNode node)
+        {
+            if (index == 0 && node.Args.Count > 1)
+            {
+                return ArgPreprocessor.UntypedStringToUntypedNumber;
+            }
+
+            return base.GetArgPreprocessor(index, node);
         }
     }
 }
