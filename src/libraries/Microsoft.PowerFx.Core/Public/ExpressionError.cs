@@ -170,4 +170,18 @@ namespace Microsoft.PowerFx
             }
         }
     }
+
+    internal class ExpressionErrorComparer : EqualityComparer<ExpressionError>
+    {
+        // We compare only Message
+        public override bool Equals(ExpressionError error1, ExpressionError error2)
+        {
+            return error1.ToString() == error2.ToString();
+        }
+
+        public override int GetHashCode(ExpressionError error)
+        {
+            return 0;
+        }
+    }
 }
