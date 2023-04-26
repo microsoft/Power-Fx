@@ -1,0 +1,71 @@
+﻿#SETUP: RegEx
+
+>> Match("Hello", "\w").FullMatch
+"H"
+
+>> Match("Hello", "\w")
+{FullMatch:"H",StartMatch:1,SubMatches:Table()}
+
+>> Match("Hello", "\w").StartMatch
+1
+
+>> Match("Hello", "llo").FullMatch
+"llo"
+
+>> Match("Hello", "llo", "c").FullMatch
+"llo"
+
+>> Match("Hello", "llo", MatchOptions.Complete).FullMatch
+Blank()
+
+>> Match("Hello", "llo", MatchOptions.Complete).StartMatch
+Blank()
+
+>> Match("Hello", "llo", MatchOptions.Complete).SubMatches
+Blank()
+
+>> Match("Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>").email
+"bob.jones@contoso.com"
+
+>> Match("Bob Jones <invalidEmailAddress>", "<(?<email>" & Match.Email & ")>").email
+Blank()
+
+>> Match("PT2H1M39S", "PT(?:(?<hours>\d+)H)?(?:(?<minutes>\d+)M)?(?:(?<seconds>\d+)S)?").hours
+"2"
+
+>> Match( "Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>").FullMatch
+"<bob.jones@contoso.com>"
+
+>> Match( "Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>").StartMatch
+11
+
+>> Concat(ForAll(Match( "Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>").SubMatches, With({x:Value}, x)), Value, ", ")
+"bob.jones@contoso.com"
+
+>> Match("Hello", "(?<p1>\w)l(?<p2>\w)").FullMatch
+"ell"
+
+>> Match("Hello", "(?<p1>\w)l(?<p2>\w)").StartMatch
+2
+
+>> Match("Hello", "(?<p1>\w)l(?<p2>\w)").p1
+"e"
+
+>> Match("Hello", "(?<p1>\w)l(?<p2>\w)").p2
+"l"
+
+>> Index(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, 1).Value
+"e"
+
+>> Index(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, 2).Value
+"l"
+
+>> Concat(ForAll(Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches, With({x:Value}, x)), Value, ", ")
+"e, l"
+
+>> With(Match("PT2H1M39S", "PT(?:(?<hours>\d+)H)?(?:(?<minutes>\d+)M)?(?:(?<seconds>\d+)S)?"), Time(Value(hours), Value(minutes), Value(seconds)))
+Time(2,1,39,0)
+
+>> Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches
+Table({Value:"e"},{Value:"l"})
+

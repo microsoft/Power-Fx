@@ -2,12 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
 {
@@ -30,6 +27,28 @@ namespace Microsoft.PowerFx
         public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
         {
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
+        }
+
+        /// <summary>
+        /// Enables Match/IsMatch/MatchAll functions.
+        /// </summary>
+        /// <param name="powerFxConfig">Power Fx configuration.</param>
+        /// <param name="regExTimeout">Timeout duration for regular expression execution. 0 will default to 30 seconds.</param>
+        public static void EnableRegExFunctions(this PowerFxConfig powerFxConfig, TimeSpan regExTimeout = default)
+        {
+            if (regExTimeout == TimeSpan.Zero)
+            {
+                regExTimeout = TimeSpan.FromSeconds(30);
+            }
+
+            if (regExTimeout.TotalMilliseconds < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(regExTimeout), "Timeout duration for regular expression execution must be positive.");
+            }
+
+            powerFxConfig.AddFunction(new IsMatchFunction(regExTimeout));
+            powerFxConfig.AddFunction(new MatchFunction(regExTimeout));
+            powerFxConfig.AddFunction(new MatchAllFunction(regExTimeout));
         }
 
         /// <summary>

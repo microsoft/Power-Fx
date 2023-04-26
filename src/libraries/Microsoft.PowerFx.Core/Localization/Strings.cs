@@ -505,6 +505,13 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutEncodeUrl = (b) => StringResources.Get("AboutEncodeUrl", b);
         public static StringGetter EncodeUrlArg1 = (b) => StringResources.Get("EncodeUrlArg1", b);
 
+        public static StringGetter AboutIsMatch = (b) => StringResources.Get("AboutIsMatch", b);
+        public static StringGetter AboutMatch = (b) => StringResources.Get("AboutMatch", b);
+        public static StringGetter AboutMatchAll = (b) => StringResources.Get("AboutMatchAll", b);
+        public static StringGetter MatchArg1 = (b) => StringResources.Get("MatchArg1", b);
+        public static StringGetter MatchArg2 = (b) => StringResources.Get("MatchArg2", b);
+        public static StringGetter MatchOptions = (b) => StringResources.Get("MatchOptions", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -616,6 +623,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
         public static ErrorResourceKey ErrInvalidFunction = new ErrorResourceKey("ErrInvalidFunction");
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
+        public static ErrorResourceKey ErrBadRegex = new ErrorResourceKey("ErrBadRegex");
+        public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
 
         public static ErrorResourceKey ErrErrorIrrelevantField = new ErrorResourceKey("ErrErrorIrrelevantField");
         public static ErrorResourceKey ErrAsNotInContext = new ErrorResourceKey("ErrAsNotInContext");

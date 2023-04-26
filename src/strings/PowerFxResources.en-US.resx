@@ -5158,4 +5158,33 @@
     <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>IsMatch is used to validate a string corresponds to a defined pattern.</value>
+    <comment>Description of 'IsMatch' function.</comment>
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Searches the supplied text for the specified regular expression, returning the first match from it.</value>
+    <comment>Description of 'Match' function.</comment>
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Searches the supplied text for the specified regular expression, returning all matches from it.</value>
+    <comment>Description of 'MatchAll' function.</comment>
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>The text to be compared against the format.</value>    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>The format to check the text against. It may be a value of the Match enum or a regular expression.</value>    
+  </data>
+  <data name="MatchOptions" xml:space="preserve">
+    <value>This determines what part of the text we want to match. It may be a value of the MatchOptions enum.</value>    
+  </data>
+  <data name="ErrorResource_ErrBadRegex_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression.</value>
+    <comment>This error occurs when a regular expression entered by the user is invalid.</comment>
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regular expressions must be constant values.</value>
+    <comment>Error Message.</comment>
+  </data>  
 </root>
