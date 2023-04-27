@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
@@ -44,6 +43,9 @@ namespace Microsoft.PowerFx.Functions
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
+
+        // Functions that are only enabled if requested by the host
+        internal static readonly IDictionary<TexlFunction, AsyncFunctionPtr> ConfigDependentFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
 
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
@@ -917,17 +919,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.IsError,
                 NoErrorHandling(IsError)
-            },
-            {
-                new IsMatchFunction(), // Function is not part of the core library (added on-demand)
-                StandardErrorHandlingAsync<FormulaValue>(
-                    "IsMatch",
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: IsMatchImpl)
             },
             {
                 BuiltinFunctionsCore.IsNumeric,

@@ -38,7 +38,6 @@ namespace Microsoft.PowerFx
         }
 
         private static readonly TimeSpan DefaultRegexTimeout = TimeSpan.FromSeconds(1);
-        private static bool regexFunctionsAdded = false;
 
         /// <summary>
         /// Enables Match/IsMatch/MatchAll functions.
@@ -57,11 +56,9 @@ namespace Microsoft.PowerFx
                 throw new ArgumentOutOfRangeException(nameof(regExTimeout), "Timeout duration for regular expression execution must be positive.");
             }
 
-            Library.RegexTimeout = regExTimeout;
-            if (!regexFunctionsAdded)
+            foreach (var function in Library.EnableRegexFunctions(regExTimeout))
             {
-                powerFxConfig.AddFunction(new IsMatchFunction());
-                regexFunctionsAdded = true;
+                powerFxConfig.AddFunction(function);
             }
         }
 

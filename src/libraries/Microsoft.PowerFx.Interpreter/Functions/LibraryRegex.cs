@@ -2,10 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
@@ -15,9 +19,27 @@ namespace Microsoft.PowerFx.Functions
     internal static partial class Library
     {
         // Default timeout for Regex operations of 1 second
-        internal static TimeSpan RegexTimeout { get; set; } = TimeSpan.FromSeconds(1);
+        private static TimeSpan RegexTimeout { get; set; } = TimeSpan.FromSeconds(1);
 
         private const string DefaultIsMatchOptions = "^c$";
+
+        internal static IEnumerable<TexlFunction> EnableRegexFunctions(TimeSpan regexTimeout)
+        {
+            var isMatchFunction = new IsMatchFunction();
+            RegexTimeout = regexTimeout;
+            ConfigDependentFunctions.Add(
+                isMatchFunction,
+                StandardErrorHandlingAsync<FormulaValue>(
+                    "IsMatch",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithEmptyString,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsMatchImpl));
+
+            return new TexlFunction[] { isMatchFunction };
+        }
 
         private static async ValueTask<FormulaValue> IsMatchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {

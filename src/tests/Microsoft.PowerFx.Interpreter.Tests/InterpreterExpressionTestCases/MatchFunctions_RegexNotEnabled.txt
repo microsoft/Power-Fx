@@ -1,0 +1,8 @@
+>> IsMatch("Hi", "Hi")
+Errors: Error 0-19: 'IsMatch' is a recognized but not supported function.
+
+>> Match("Hi", "Hi")
+Errors: Error 0-17: 'Match' is a recognized but not supported function.
+
+>> MatchAll("Hi", "Hi")
+Errors: Error 0-20: 'MatchAll' is a recognized but not supported function.

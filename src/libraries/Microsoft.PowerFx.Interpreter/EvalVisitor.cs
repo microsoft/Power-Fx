@@ -271,7 +271,7 @@ namespace Microsoft.PowerFx
             }
             else
             {               
-                if (FunctionImplementations.TryGetValue(func, out var ptr))
+                if (FunctionImplementations.TryGetValue(func, out var ptr) || ConfigDependentFunctions.TryGetValue(func, out ptr))
                 {
                     try
                     {
