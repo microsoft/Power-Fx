@@ -99,6 +99,10 @@ namespace Microsoft.PowerFx.Types
             return new KnownRecordType();
         }
 
+        /// <summary>
+        /// Static builder method for constructing a Polymorphic record type.
+        /// Used for Dataverse Polymorphic types.
+        /// </summary>
         public static RecordType Polymorphic()
         {
             return new KnownRecordType(DType.Polymorphic);
