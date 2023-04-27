@@ -117,3 +117,10 @@ Errors: Error 0-10: 'Wyz' is an unknown or unsupported function.
 
 >> Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
+
+// No duplicated errors
+>> 1.2.3
+Errors: Error 3-5: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 5-5: Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "& _ ' so that the result is 'Hi there'.
+
+>> 1.2.3 + 1.2.3
+Errors: Error 3-5: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 6-7: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 8-11: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
