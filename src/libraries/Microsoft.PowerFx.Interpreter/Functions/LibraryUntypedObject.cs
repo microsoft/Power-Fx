@@ -582,24 +582,13 @@ namespace Microsoft.PowerFx.Functions
         {
             var impl = args[0].Impl;
 
-            if (impl.Type == FormulaType.String || (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber))
+            if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
             {
                 var valueRes = Value_UO(runner, context, IRContext.NotInSource(numberType), new UntypedObjectValue[] { args[0] });
 
                 if (valueRes is T nv)
                 {
                     return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), constructUO(nv));
-                }
-
-                var dateTimeRes = DateTimeValue_UO(runner, context, IRContext.NotInSource(FormulaType.DateTime), new UntypedObjectValue[] { args[0] });
-
-                if (dateTimeRes is not ErrorValue)
-                {
-                    var valueRes2 = Value(runner, context, IRContext.NotInSource(numberType), new FormulaValue[] { dateTimeRes });
-                    if (valueRes2 is T nv2)
-                    {
-                        return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), constructUO(nv2));
-                    }
                 }
             }
 

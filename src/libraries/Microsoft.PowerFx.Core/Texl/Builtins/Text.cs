@@ -216,7 +216,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public TextFunction_UO()
-            : base(TextFunction.TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 2, DType.UntypedObject, DType.String)
+            : base(TextFunction.TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 3, DType.UntypedObject, DType.String, DType.String)
         {
         }
 
@@ -236,7 +236,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             if (args.Length > 1)
             {
-                // The 2nd argument can be validated using the same logic as the normal Text function
+                // The 2nd and 3rd arguments can be validated using the same logic as the normal Text function
                 TextFunction.ValidateFormatArgs(Name, context, args, argTypes, errors, ref nodeToCoercedTypeMap, ref isValid);
             }
 
