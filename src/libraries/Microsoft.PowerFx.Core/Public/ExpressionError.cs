@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx
 
         public override int GetHashCode(ExpressionError error)
         {
-            return 0;
+            return error.ToString().GetHashCode();
         }
     }
 }
