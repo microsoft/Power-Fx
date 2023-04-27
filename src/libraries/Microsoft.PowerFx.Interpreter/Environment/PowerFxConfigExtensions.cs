@@ -37,23 +37,6 @@ namespace Microsoft.PowerFx
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
         }
 
-        private static readonly Dictionary<TexlFunction, AsyncFunctionPtr> RegexFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>
-        {
-            {
-                new IsMatchFunction(),
-                Library.IsMatch
-            },
-
-            //{
-            //    new MatchFunction(),
-            //    null
-            //},
-            //{
-            //    new MatchAllFunction(),
-            //    null
-            //},
-        };
-
         private static readonly TimeSpan DefaultRegexTimeout = TimeSpan.FromSeconds(1);
         private static bool regexFunctionsAdded = false;
 

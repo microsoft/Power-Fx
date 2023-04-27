@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Functions
         // Async - can invoke lambads.
         public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
-        public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys.Concat(ConfigDependentFunctions.Keys);
+        public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
