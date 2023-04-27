@@ -476,20 +476,14 @@ namespace Microsoft.PowerFx.Functions
 #region Unary Operator Implementations
         private static FormulaValue NumericNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            switch (args[0])
+            return args[0] switch
             {
-                case NumberValue nv:
-                    return new NumberValue(irContext, -nv.Value);
-                case DecimalValue dv:
-                    return new DecimalValue(irContext, -dv.Value);
-                case TimeValue tv:
-                    return new TimeValue(irContext, -tv.Value);
-                case DateValue _:
-                case DateTimeValue _:
-                    return DateNegate(runner, context, irContext, args);
-                default:
-                    return CommonErrors.RuntimeTypeMismatch(irContext);
-            }
+                NumberValue nv => new NumberValue(irContext, -nv.Value),
+                DecimalValue dv => new DecimalValue(irContext, -dv.Value),
+                TimeValue tv => new TimeValue(irContext, -tv.Value),
+                DateValue _ or DateTimeValue _ => DateNegate(runner, context, irContext, args),
+                _ => CommonErrors.RuntimeTypeMismatch(irContext)
+            };
         }
 
         private static FormulaValue DateNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
