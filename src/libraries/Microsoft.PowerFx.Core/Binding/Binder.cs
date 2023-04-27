@@ -3249,7 +3249,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // In order for the node to be constant, it must be a member of an enum,
                 // a member of a constant aggregate,
                 // or a reference to a constant rule (checked later).
-                var isConstant = leftType.IsEnum || (leftType.IsAggregate && _txb.IsConstant(node.Left));
+                var isConstant = leftType.IsEnum || leftType.IsOptionSet || (leftType.IsAggregate && _txb.IsConstant(node.Left));
 
                 // Some nodes are never pageable, use this to
                 // skip the check for pageability and default to non-pageable;

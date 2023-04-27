@@ -42,7 +42,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            if (!binding.IsConstant(args[1]) || argTypes[1]?.Kind != DKind.String)
+            var regexIsConstant = binding.IsConstant(args[1]);
+            var regexNodeKind = argTypes[1].Kind == DKind.OptionSetValue ?
+                argTypes[1].OptionSetInfo.BackingKind :
+                argTypes[1].Kind;
+            if (!regexIsConstant || regexNodeKind != DKind.String)
             {
                 errors.EnsureError(args[1], TexlStrings.ErrVariableRegEx);
             }
