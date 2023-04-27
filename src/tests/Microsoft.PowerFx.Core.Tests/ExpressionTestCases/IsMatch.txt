@@ -67,7 +67,7 @@ true
 false
 
 >> IsMatch(1/0, "Hi")
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.Div0})
 
 >> IsMatch(Blank(), "Hi")
 false
