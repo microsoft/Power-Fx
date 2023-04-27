@@ -31,8 +31,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
             { "OptionSetSortTestSetup", OptionSetSortTestSetup },
             { "AllEnumsSetup", AllEnumsSetup },
+            { "RegEx", RegexSetup },
         };
-                
+
+        private static (RecalcEngine engine, RecordValue parameters) RegexSetup(PowerFxConfig config, bool numberIsFloat)
+        {
+            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+            return (new RecalcEngine(config), null);
+        }
+
         private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config, bool numberIsFloat)
         {
             return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);

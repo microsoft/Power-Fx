@@ -5,9 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
 {
@@ -30,6 +35,51 @@ namespace Microsoft.PowerFx
         public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
         {
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
+        }
+
+        private static readonly Dictionary<TexlFunction, AsyncFunctionPtr> RegexFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>
+        {
+            {
+                new IsMatchFunction(),
+                Library.IsMatch
+            },
+
+            //{
+            //    new MatchFunction(),
+            //    null
+            //},
+            //{
+            //    new MatchAllFunction(),
+            //    null
+            //},
+        };
+
+        private static readonly TimeSpan DefaultRegexTimeout = TimeSpan.FromSeconds(1);
+        private static bool regexFunctionsAdded = false;
+
+        /// <summary>
+        /// Enables Match/IsMatch/MatchAll functions.
+        /// </summary>
+        /// <param name="powerFxConfig">Power Fx configuration.</param>
+        /// <param name="regExTimeout">Timeout duration for regular expression execution. 0 will default to 30 seconds.</param>
+        public static void EnableRegExFunctions(this PowerFxConfig powerFxConfig, TimeSpan regExTimeout = default)
+        {
+            if (regExTimeout == TimeSpan.Zero)
+            {
+                regExTimeout = DefaultRegexTimeout;
+            }
+
+            if (regExTimeout.TotalMilliseconds < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(regExTimeout), "Timeout duration for regular expression execution must be positive.");
+            }
+
+            Library.RegexTimeout = regExTimeout;
+            if (!regexFunctionsAdded)
+            {
+                powerFxConfig.AddFunction(new IsMatchFunction());
+                regexFunctionsAdded = true;
+            }
         }
 
         /// <summary>

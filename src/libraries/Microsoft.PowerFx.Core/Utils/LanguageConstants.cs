@@ -38,6 +38,16 @@ namespace Microsoft.PowerFx.Core.Utils
         public static string SortOrderEnumString => "SortOrder";
 
         /// <summary>
+        /// The string value representing MatchOptions enum.
+        /// </summary>
+        public static string MatchOptionsEnumString => "MatchOptions";
+
+        /// <summary>
+        /// The string value representing Match enum.
+        /// </summary>
+        public static string MatchEnumString => "Match";
+
+        /// <summary>
         /// Defines ascending sort order string constant.
         /// </summary>
         internal const string AscendingSortOrderString = "ascending";
