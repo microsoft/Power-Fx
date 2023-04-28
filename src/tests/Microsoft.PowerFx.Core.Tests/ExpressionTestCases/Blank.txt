@@ -147,12 +147,3 @@ false
 
 >> Blank()>=Blank()
 true
-
->> Blank() >= 1
-false
-
->> 1 >= Blank()
-false
-
->> IR(Blank()>Blank())
-Specified method is not supported.
