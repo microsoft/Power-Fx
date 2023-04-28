@@ -1158,13 +1158,8 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Power(IRContext irContext, NumberValue[] args)
         {
-            if (args.Length < 2 || args[0] == null || args[1] == null)
-            {
-                return CommonErrors.GenericInvalidArgument(irContext);
-            }
-
-            var number = args[0].Value;
-            var exponent = args[1].Value;
+            var number = args[0] == null ? 0 : args[0].Value;
+            var exponent = args[1] == null ? 0 : args[1].Value;
 
             if (number == 0)
             {

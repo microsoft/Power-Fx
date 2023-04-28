@@ -238,7 +238,7 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 4.201210403790501E+25
 
 >> 16^Blank()
-Error({Kind:ErrorKind.InvalidArgument})
+1
 
 >> Blank()^16
-Error({Kind:ErrorKind.InvalidArgument})
+0
