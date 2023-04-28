@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -41,6 +42,14 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
+        private static readonly Regex _tdTagRegex = new Regex("<\\s*([tT][dD])\\s*\\/{0,1}>", RegExFlags);
+        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*([bB][rR]|[lL][iI])\\s*\\/{0,1}>", RegExFlags);
+        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*([dD][iI][vV]|[pP]|[tT][rR])\\s*\\/{0,1}>", RegExFlags);
+        private static readonly Regex _commentTagRegex = new Regex("<!--[\\s\\S]*?--\\s*>", RegExFlags);
+        private static readonly Regex _headerTagRegex = new Regex("<\\s*[hH][eE][aA][dD][eE][rR][\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*[hH][eE][aA][dD][eE][rR]\\s*>", RegExFlags);
+        private static readonly Regex _scriptTagRegex = new Regex("<\\s*[sS][cC][rR][iI][pP][tT][\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*[sS][cC][rR][iI][pP][tT]\\s*>", RegExFlags);
+        private static readonly Regex _styleTagRegex = new Regex("<\\s*[sS][tT][yY][lL][eE][\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*[sS][tT][yY][lL][eE]\\s*>", RegExFlags);
+        private static readonly Regex _htmlTagsRegex = new Regex("<[^\\>]*\\>", RegExFlags);
 
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
@@ -1054,6 +1063,34 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             var logicalName = optionSet.Option;
             return new StringValue(irContext, logicalName);
+        }
+
+        public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
+        {
+            //Decode html specific characters
+            string text = WebUtility.HtmlDecode(args[0].Value.Trim());
+
+            // Replace header/script/style tags with empty text.
+            text = _headerTagRegex.Replace(text, string.Empty);
+            text = _scriptTagRegex.Replace(text, string.Empty);
+            text = _styleTagRegex.Replace(text, string.Empty);
+
+            // Remove all comments.
+            text = _commentTagRegex.Replace(text, string.Empty);
+
+            // Insert empty string in place of <td>
+            text = _tdTagRegex.Replace(text, string.Empty);
+
+            //Replace <br> or <li> with line break
+            text = _lineBreakTagRegex.Replace(text, Environment.NewLine);
+
+            // Insert double line breaks in place of <div>, <p> and <tr> tags.
+            text = _doubleLineBreakTagRegex.Replace(text, Environment.NewLine + Environment.NewLine);
+
+            // Replace all other tags with empty text.
+            text = _htmlTagsRegex.Replace(text, string.Empty);
+
+            return new StringValue(irContext, text.Trim());
         }
 
         private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)

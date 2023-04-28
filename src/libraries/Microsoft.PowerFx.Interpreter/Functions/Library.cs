@@ -1701,6 +1701,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Language,
                 NoErrorHandling(Language)
+            },
+            {
+                BuiltinFunctionsCore.PlainText,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.PlainText.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: PlainText)
             }
         };
 

@@ -5158,4 +5158,15 @@
     <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>The PlainText function removes HTML and XML tags.</value>
+    <comment>Description of 'PlainText' function.</comment>
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>PlainText</value>
+    <comment>Function_parameter - First parameter for the PlainText function</comment>
+  </data>
+  <data name="AboutPlainText_PlainText" xml:space="preserve">
+    <value>Text to remove HTML and XML tags.</value>
+  </data>
 </root>

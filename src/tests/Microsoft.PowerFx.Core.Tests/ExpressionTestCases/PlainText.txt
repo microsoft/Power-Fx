@@ -1,0 +1,44 @@
+>> PlainText("")
+""
+
+>> PlainText("<>")
+""
+
+>> PlainText("</>")
+""
+
+>> PlainText("No Tags in text")
+"No Tags in text"
+
+>> PlainText("Test <td valign=top style=\'border:none;border-right:solid white 1.0pt;background:#DEE8F2;padding:1.45pt .05in 1.45pt .05in\'>Input Text</td>")
+"Test Input Text"
+
+>> PlainText("<   header B=Test >Input \n\nText\t <\r\n/>< /   header>")
+""
+
+>> PlainText("<Script>Input Text</ Script      >")
+""
+
+>> PlainText("<style >New style</ Style      >")
+""
+
+>> PlainText("<!-- Input Text <td></td> {}      -->")
+""
+
+>> PlainText("<!-- \r\nInput \n\n Text\t <td>\r\n</td> {}      -->")
+""
+
+>> PlainText("< customTag  a=10, b=20   >                    Column1</   customTag >")
+"Column1"
+
+>> PlainText("1<td>2<td>3<td>4<td>5")
+"12345"
+
+>> PlainText("  <  xml><p>Input<tr>  </xml>")
+"Input"
+
+>> PlainText("http&#x3a;//microsoft.com")
+"http://microsoft.com"
+
+>> PlainText("http&#58;//microsoft.com")
+"http://microsoft.com"

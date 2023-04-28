@@ -504,6 +504,9 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutEncodeUrl = (b) => StringResources.Get("AboutEncodeUrl", b);
         public static StringGetter EncodeUrlArg1 = (b) => StringResources.Get("EncodeUrlArg1", b);
+        
+        public static StringGetter AboutPlainText = (b) => StringResources.Get("AboutPlainText", b);
+        public static StringGetter PlainTextArg1 = (b) => StringResources.Get("PlainTextArg1", b);
 
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
