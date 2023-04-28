@@ -42,7 +42,10 @@ namespace Microsoft.PowerFx.Functions
 
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
-        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;        
+        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
+
+        // Functions that are only enabled if requested by the host
+        internal static readonly IDictionary<TexlFunction, AsyncFunctionPtr> ConfigDependentFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();           
 
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {

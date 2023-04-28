@@ -17,3 +17,12 @@ Table({FullMatch:"PT2H1M39S",StartMatch:1,SubMatches:Table({Value:"2"},{Value:"1
 
 >> MatchAll("Hello", "(?<p1>\w)l(?<p2>\w)")
 Table({FullMatch:"ell",StartMatch:2,SubMatches:Table({Value:"e"},{Value:"l"}),p1:"e",p2:"l"})
+
+>> MatchAll("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
+Table({FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})},{FullMatch:"Sam 208",StartMatch:9,SubMatches:Table({Value:"Sam"},{Value:"208"})})
+
+>> MatchAll(Blank(), ".")
+Table()
+
+>> MatchAll(Blank(), Blank())
+Errors: Error 18-25: Regular expressions must be constant values.|Error 0-26: The function 'MatchAll' has some invalid arguments.

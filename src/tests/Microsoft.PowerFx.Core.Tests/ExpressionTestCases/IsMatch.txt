@@ -67,25 +67,31 @@ true
 false
 
 >> IsMatch(1/0, "Hi")
-Error({Kind:ErrorKind.InvalidArgument})
+Error({Kind:ErrorKind.Div0})
 
 >> IsMatch(Blank(), "Hi")
 false
 
 >> IsMatch("Foo", Blank())
-Error({Kind:ErrorKind.InvalidArgument})
+Errors: Error 15-22: Regular expressions must be constant values.
 
 >> IsMatch("Foo", 17)
-false
+Errors: Error 15-17: Regular expressions must be constant values.
 
 >> IsMatch(28, "Bar")
 false
 
 >> IsMatch("Foo", 1/0)
-Error({Kind:ErrorKind.InvalidArgument})
+Errors: Error 16-17: Regular expressions must be constant values.
 
 >> IsMatch("", "")
 true
+
+>> IsMatch(Blank(), ".")
+false
+
+>> IsMatch(Blank(), Blank())
+Errors: Error 17-24: Regular expressions must be constant values.
 
 >> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
 false
@@ -111,7 +117,10 @@ Error({Kind:ErrorKind.BadRegex})
 
 // Dangerous Regex, will timeout (should take >2h on a fast CPU)
 >> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
-Error({Kind:ErrorKind.QuotaExceeded})
+Error({Kind:ErrorKind.Timeout})
 
 >> IsMatch("Hi", "Hi", "foo")
 false
+
+>> IsMatch("28", 28)
+Errors: Error 14-16: Regular expressions must be constant values.

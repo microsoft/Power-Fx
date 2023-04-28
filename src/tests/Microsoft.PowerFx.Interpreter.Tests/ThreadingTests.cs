@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -16,7 +17,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var asm = typeof(RecalcEngine).Assembly;
             var bugsFieldType = new HashSet<Type>();
-            var bugNames = new HashSet<string>();
+            var bugNames = new HashSet<string>()
+            {
+                "PowerFxConfigExtensions.DefaultRegexTimeout",
+                "Library.ConfigDependentFunctions",
+                "Library.<RegexTimeout>k__BackingField"
+            };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }

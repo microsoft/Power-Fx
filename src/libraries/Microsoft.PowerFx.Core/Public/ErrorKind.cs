@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx
         InvalidArgument = 25,
         Internal = 26,
         NotApplicable = 27,
+        Timeout = 28,
         Custom = 1000,
     }
 }

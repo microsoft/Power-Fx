@@ -270,8 +270,8 @@ namespace Microsoft.PowerFx
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
             }
             else
-            {               
-                if (FunctionImplementations.TryGetValue(func, out var ptr))
+            {
+                if (FunctionImplementations.TryGetValue(func, out var ptr) || ConfigDependentFunctions.TryGetValue(func, out ptr))
                 {
                     try
                     {

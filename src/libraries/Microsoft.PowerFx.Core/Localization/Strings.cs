@@ -508,9 +508,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter AboutIsMatch = (b) => StringResources.Get("AboutIsMatch", b);
         public static StringGetter AboutMatch = (b) => StringResources.Get("AboutMatch", b);
         public static StringGetter AboutMatchAll = (b) => StringResources.Get("AboutMatchAll", b);
+        public static StringGetter IsMatchArg1 = (b) => StringResources.Get("IsMatchArg1", b);
+        public static StringGetter IsMatchArg2 = (b) => StringResources.Get("IsMatchArg2", b);
+        public static StringGetter IsMatchArg3 = (b) => StringResources.Get("IsMatchArg3", b);
         public static StringGetter MatchArg1 = (b) => StringResources.Get("MatchArg1", b);
         public static StringGetter MatchArg2 = (b) => StringResources.Get("MatchArg2", b);
-        public static StringGetter MatchOptions = (b) => StringResources.Get("MatchOptions", b);
+        public static StringGetter MatchArg3 = (b) => StringResources.Get("MatchArg3", b);
 
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
@@ -623,9 +626,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
         public static ErrorResourceKey ErrInvalidFunction = new ErrorResourceKey("ErrInvalidFunction");
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
-        public static ErrorResourceKey ErrBadRegex = new ErrorResourceKey("ErrBadRegex");
-        public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
 
+        public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
+        public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedFullMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedFullMatchField");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedSubMatchesField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedSubMatchesField");
         public static ErrorResourceKey InfoRegExCaptureNameHidesPredefinedStartMatchField = new ErrorResourceKey("InfoRegExCaptureNameHidesPredefinedStartMatchField");

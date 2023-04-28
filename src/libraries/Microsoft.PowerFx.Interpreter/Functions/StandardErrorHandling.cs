@@ -649,13 +649,23 @@ namespace Microsoft.PowerFx.Functions
             {
                 return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
             }
-
+            
             return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
         }
 
         private static FormulaValue DateOrDateTime(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is DateValue || arg is DateTimeValue || arg is BlankValue || arg is ErrorValue)
+            {
+                return arg;
+            }
+
+            return CommonErrors.RuntimeTypeMismatch(irContext);
+        }
+
+        private static FormulaValue OptionSetOrString(IRContext irContext, int index, FormulaValue arg)
+        {
+            if (arg is StringValue || arg is OptionSetValue)
             {
                 return arg;
             }

@@ -6,6 +6,9 @@
 >> Match("Hello", "\w")
 {FullMatch:"H",StartMatch:1,SubMatches:Table()}
 
+>> Match("Hello", "(?<SubMatches>\w)")
+{FullMatch:"H",StartMatch:1,SubMatches:"H"}
+
 >> Match("Hello", "\w").StartMatch
 1
 
@@ -68,4 +71,23 @@ Time(2,1,39,0)
 
 >> Match("Hello", "(?<p1>\w)l(?<p2>\w)").SubMatches
 Table({Value:"e"},{Value:"l"})
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete)
+Blank()
+
+>> Match("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
+{FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})}
+
+>> Match("JohnDoe@microsoft.com", Match.Email)
+{FullMatch:"JohnDoe@microsoft.com",StartMatch:1,SubMatches:Table()}
+
+
+>> Match(Blank(), ".")
+Blank()
+
+>> Match(Blank(), Blank())
+Errors: Error 15-22: Regular expressions must be constant values.|Error 0-23: The function 'Match' has some invalid arguments.
+
+>> Match("28", 28)
+Errors: Error 12-14: Regular expressions must be constant values.|Error 0-15: The function 'Match' has some invalid arguments.
 
