@@ -1,7 +1,7 @@
 {
   "Signatures": [
     {
-      "Label": "If(logical_test, true_value)",
+      "Label": "If(logical_test, true_value, ...)",
       "Documentation": "Checks if any one of the specified conditions are met and returns the corresponding value. If none of the conditions are met, the function returns the specified default value.",
       "Parameters": [
         {
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "Label": "If(logical_test, true_value, else_value)",
+      "Label": "If(logical_test, true_value, else_value, ...)",
       "Documentation": "Checks if any one of the specified conditions are met and returns the corresponding value. If none of the conditions are met, the function returns the specified default value.",
       "Parameters": [
         {
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "Label": "If(logical_test, true_value, logical_test, true_value)",
+      "Label": "If(logical_test, true_value, logical_test, true_value, ...)",
       "Documentation": "Checks if any one of the specified conditions are met and returns the corresponding value. If none of the conditions are met, the function returns the specified default value.",
       "Parameters": [
         {

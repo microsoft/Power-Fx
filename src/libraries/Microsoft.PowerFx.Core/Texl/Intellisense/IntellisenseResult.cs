@@ -134,7 +134,10 @@ namespace Microsoft.PowerFx.Intellisense
                             argumentSeparator = listSep;
                         }
 
-                        if (func.MaxArity > func.MinArity && func.MaxArity > argCount)
+                        // Add ... at the end of function display string. e.g. Text(value, Format_text,...)
+                        var shouldAddEllipsis = func.MaxArity > func.MinArity && func.MaxArity > argCount;
+
+                        if (shouldAddEllipsis)
                         {
                             funcDisplayString.Append(argumentSeparator + "...");
                         }
@@ -143,7 +146,7 @@ namespace Microsoft.PowerFx.Intellisense
                         var signatureInformation = new SignatureInformation()
                         {
                             Documentation = func.Description,
-                            Label = CreateFunctionSignature(func.Name, parameters),
+                            Label = CreateFunctionSignature(func.Name, parameters, shouldAddEllipsis),
                             Parameters = parameters.ToArray()
                         };
                         _functionSignatures.Add(signatureInformation);
@@ -195,10 +198,11 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="parameters">
         ///     List of parameters in the relevant signature for <paramref name="functionName"/>.
         /// </param>
+        /// <param name="shouldAddEllipsis">If it should add Ellipsis(...) at the end of function.</param>
         /// <returns>
         /// A label that represents the call signature; e.g. <code>Set(variable, lambda)</code>
         /// </returns>
-        private string CreateFunctionSignature(string functionName, IEnumerable<ParameterInformation> parameters = null)
+        private string CreateFunctionSignature(string functionName, IEnumerable<ParameterInformation> parameters = null, bool shouldAddEllipsis = false)
         {
             Contracts.AssertValue(functionName);
             Contracts.AssertValue(functionName);
@@ -214,7 +218,8 @@ namespace Microsoft.PowerFx.Intellisense
                 parameterString = string.Empty;
             }
 
-            return $"{functionName}({parameterString})";
+            var functionDisplayString = $"{functionName}({parameterString}{(shouldAddEllipsis ? LocalizationUtils.CurrentLocaleListSeparator + " ..." : string.Empty)})";
+            return functionDisplayString;
         }
 
         /// <summary>
