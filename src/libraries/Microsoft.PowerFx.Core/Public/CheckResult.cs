@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx
         {
             culture ??= _defaultErrorCulture ?? ParserCultureInfo;
 
-            foreach (var error in this._errors)
+            foreach (var error in this._errors.Distinct(new ExpressionErrorComparer()))
             {
                 yield return error.GetInLocale(culture);
             }

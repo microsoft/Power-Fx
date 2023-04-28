@@ -90,5 +90,13 @@ namespace Microsoft.PowerFx.Tests
             Assert.Null(opt.LogicalNames);
             Assert.False(opt.TryGetValue("random", out _));
         }
+
+        [Fact]
+        public void PolymorphicRecordTypeTest()
+        {
+            var recordType = RecordType.Polymorphic();
+            Assert.True(recordType is RecordType);
+            Assert.True(recordType._type.IsPolymorphic);
+        }
     }
 }

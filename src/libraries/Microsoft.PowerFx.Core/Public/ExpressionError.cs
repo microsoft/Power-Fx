@@ -170,4 +170,31 @@ namespace Microsoft.PowerFx
             }
         }
     }
+
+    /// <summary>
+    /// Used to compare CheckResult.Errors and avoid duplicates.
+    /// </summary>
+    internal class ExpressionErrorComparer : EqualityComparer<ExpressionError>
+    {
+        // We compare only Message
+        public override bool Equals(ExpressionError error1, ExpressionError error2)
+        {
+            if (error1 == null && error2 == null)
+            {
+                return true;
+            }
+
+            if (error1 == null || error2 == null)
+            {
+                return false;
+            }
+
+            return error1.ToString() == error2.ToString();
+        }
+
+        public override int GetHashCode(ExpressionError error)
+        {            
+            return error.ToString().GetHashCode();
+        }
+    }
 }

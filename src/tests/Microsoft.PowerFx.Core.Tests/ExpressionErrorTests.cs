@@ -114,6 +114,21 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("Името не е валидно. „name“ не е разпознато.", errorBg.Message);
         }
 
+        [Fact]
+        public void NoDuplicatedErrorsTest()
+        {
+            var engine = new Engine();
+            var parseOpt = new ParserOptions() { Culture = CultureInfo.CreateSpecificCulture("fr-FR") };
+
+            var check = engine.Check("1.2", parseOpt);
+
+            Assert.False(check.IsSuccess);
+
+            var count = check.Errors.Where(err => err.Message == "Un opérateur était attendu. Nous attendons un opérateur tel que +, *, ou &  à ce stade de la formule.").Count();
+                        
+            Assert.Equal(1, count);
+        }
+
         // Can create an error with a default culture. 
         [Fact]
         public void LocalizeDefault()
