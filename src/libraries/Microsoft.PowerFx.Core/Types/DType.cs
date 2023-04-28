@@ -2825,6 +2825,16 @@ namespace Microsoft.PowerFx.Core.Types
                         isMatchingExpandType = IsMatchingExpandType(field2Type, field1Type);
                         expandType = field2Type;
                     }
+                    else if (field1Type.HasPolymorphicInfo && field2Type.IsAggregate)
+                    {
+                        isMatchingExpandType = true;
+                        expandType = field1Type;
+                    }
+                    else if (field2Type.HasPolymorphicInfo && field1Type.IsAggregate)
+                    {
+                        isMatchingExpandType = true;
+                        expandType = field2Type;
+                    }
 
                     if (!isMatchingExpandType)
                     {
