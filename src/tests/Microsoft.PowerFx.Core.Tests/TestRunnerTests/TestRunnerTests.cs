@@ -510,7 +510,7 @@ namespace Microsoft.PowerFx.Core.Tests
         private static void AddFile(TestRunner runner, string filename)
         {
             var test1 = Path.GetFullPath(filename, TxtFileDataAttribute.GetDefaultTestDir("TestRunnerTests"));
-            runner.AddFile(numberIsFloat: false, test1);
+            runner.AddFile(TestRunner.ParseSetupString(string.Empty), test1);
         }
     }
 }

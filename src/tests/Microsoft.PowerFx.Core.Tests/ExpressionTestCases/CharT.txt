@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 >> Char([36,37])
 Table({Value:"$"},{Value:"%"})
 

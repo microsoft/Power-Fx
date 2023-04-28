@@ -1,0 +1,874 @@
+#SETUP: NumberIsFloat,disable:PowerFxV1CompatibilityRules
+
+// Float() has been replaced with Value() for PA client compatibility.  
+// When in NumberIsFloat mode, Value and Float functions are effectively the same.
+
+// NOT EQUALS
+
+// In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
+// and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
+// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+
+// Basic Float and Decimal without constructors
+
+>> 1 <> 1
+false
+
+>> 1 <> 2
+true
+
+>> 1 <> 0
+true
+
+>> 1.00000000000000000000000001 <> 1.00000000000000000000000001
+false
+
+>> 1.00000000000000000000000001 <> 1.00000000000000000000000002
+false
+
+>> 1.00000000000000000000000001 <> 1.00000000000000000000000000
+false
+
+>> 1E100 <> 1E100
+false
+
+>> 1E100 <> 1.1E100
+true
+
+>> 1E100 <> 9.9E99
+true
+
+>> 1E-100 <> 1E-100
+false
+
+>> 1E-100 <> 1.1E-100
+true
+
+>> 1E-100 <> 9.9E-101
+true
+
+// Float
+
+>> Value(16) <> Value(14)
+true
+
+>> Value(16) <> Value(16)
+false
+
+>> Value(16) <> Value("1e100")
+true
+
+>> Value(16) <> Value(18)
+true
+
+>> Value(16) <> "16"
+true
+
+>> Value(16) <> "16.000000000000000000002"
+true
+
+>> Value(16) <> "14"
+true
+
+>> Value(16) <> "18"
+true
+
+>> Value(16) <> "1e20"
+true
+
+>> Value(1e20) <> "1e20"
+true
+
+>> Value(1) <> true
+true
+
+>> Value(1) <> false
+true
+
+>> Value(0) <> true
+true
+
+>> Value(0) <> false
+true
+
+>> Value(2) <> true
+true
+
+>> Value(2) <> false
+true
+
+>> Value(0) <> Blank()
+true
+
+>> Value(1) <> Blank()
+true
+
+>> Value(2) <> Blank()
+true
+
+>> If(1<0,Value(1)) <> Blank()
+false
+
+>> Value(2) <> Date(1900,1,1)
+false
+
+>> Value(Date(2000,1,1))
+36526
+
+>> Value(36526) <> Date(2000,1,1)
+false
+
+>> Value(36526) <> Date(2001,12,12)
+true
+
+>> Value(DateTime(2000,1,1,12,0,0))
+36526.5
+
+>> Value(36526.5) <> DateTime(2000,1,1,12,0,0)
+false
+
+>> Value(36526.5) <> DateTime(2020,12,20,0,0,0)
+true
+
+>> Value(Time(12,0,0))
+0.5
+
+>> Value(0.5) <> Time(12,0,0)
+false
+
+>> Value(0.5) <> Time(9,0,0)
+true
+
+// comparison done in floating point, decimal rounded
+>> Value(16) <> Decimal("16.000000000000000000002")
+false
+
+>> Value(16) <> Decimal("16")
+false
+
+>> Value("1e100") <> Decimal("2.00000000000000000000002")
+true
+
+>> Value(16) <> ParseJSON("16")
+false
+
+>> Value(16) <> ParseJSON("16.0")
+false
+
+>> Value(16) <> ParseJSON("1.6e1")
+false
+
+// comparison done in floating point, decimal rounded
+>> Value(16) <> ParseJSON("16.0000000000000000000002")
+false
+
+// comparison done in floating point, decimal rounded
+>> Value("16.0000000000000000000002") <> ParseJSON("16.0000000000000000000002")
+false
+
+>> Value(16) <> ParseJSON("1e100")
+true
+
+>> Value("1e100") <> ParseJSON("2")
+true
+
+>> Value("1e100") <> ParseJSON("1e100")
+false
+
+// Text - Text can only be compared with other text
+
+>> "16" <> Value(16)
+true
+
+>> "16" <> Value(18)
+true
+
+>> "16" <> Value(14)
+true
+
+>> "1e100" <> Value(2)
+true
+
+>> "" <> Value(0)
+true
+
+>> "16" <> "16"
+false
+
+>> "16" <> "18"
+true
+
+>> "16" <> "14"
+true
+
+>> "16" <> "16.00000000000000000000000002"
+true
+
+>> "1e100" <> "2"
+true
+
+>> "1" <> true
+true
+
+>> "1e100" <> true
+true
+
+>> "16" <> Blank()
+true
+
+>> "1" <> Blank()
+true
+
+>> "0" <> Blank()
+true
+
+>> "" <> Blank()
+true
+
+>> "1e100" <> Blank()
+true
+
+>> "36526" <> Date(2000,1,1)
+true
+
+>> "36526.5" <> DateTime(2000,1,1,12,0,0)
+true
+
+>> "16" <> Time(12,0,0)
+true
+
+>> "2" <> Decimal("2.000000000000000000000002")
+true
+
+>> "1e100" <> Decimal("2.000000000000000000000002")
+true
+
+// string comparisons with ParseJSON of a number are done on the underlying text representation of the number in the JSON, 
+// without roundtripping through float or decimal.  So "16" will not be the same thing as "16.0".
+>> "16" <> ParseJSON("16")
+false
+
+>> "16" <> ParseJSON("14")
+true
+
+>> "16" <> ParseJSON("18")
+true
+
+>> "16" <> ParseJSON("16.0")
+true
+
+>> "16" <> ParseJSON("1.6e1")
+true
+
+>> "16" <> ParseJSON("""16""")
+false
+
+>> "16" <> ParseJSON("""14""")
+true
+
+>> "16" <> ParseJSON("""18""")
+true
+
+>> "16" <> ParseJSON("""16.0""")
+true
+
+>> "16" <> ParseJSON("""1.6e1""")
+true
+
+>> "1e100" <> ParseJSON("1e100")
+false
+
+>> "1e100" <> ParseJSON("1E+100")
+true
+
+>> "1e100" <> ParseJSON("""1e100""")
+false
+
+>> "1e100" <> ParseJSON("""1E+100""")
+true
+
+>> "true" <> ParseJSON("true")
+false
+
+>> "true" <> ParseJSON("false")
+true
+
+>> "false" <> ParseJSON("false")
+false
+
+>> "false" <> ParseJSON("true")
+true
+
+>> "1e100" <> ParseJSON("2")
+true
+
+// Boolean
+
+>> true <> Value(2)
+true
+
+>> true <> Value(1)
+true
+
+>> true <> Value(0)
+true
+
+>> false <> Value(2)
+true
+
+>> false <> Value(1)
+true
+
+>> false <> Value(0)
+true
+
+>> true <> Value("1e100")
+true
+
+>> true <> "1"
+true
+
+>> false <> "0"
+true
+
+>> false <> "1"
+true
+
+>> true <> "1E+100"
+true
+
+// returns false in Excel
+>> true <> "true"
+true
+
+>> false <> "false"
+true
+
+>> true <> true
+false
+
+>> true <> false
+true
+
+>> true <> Blank()
+true
+
+>> false <> Blank()
+true
+
+>> true <> Date(1927,5,18)
+true
+
+>> true <> DateTime(1927,5,18,0,0,0)
+true
+
+>> true <> Time(12,0,0)
+true
+
+>> false <> Date(1927,5,18)
+true
+
+>> false <> DateTime(1927,5,18,0,0,0)
+true
+
+>> false <> Time(12,0,0)
+true
+
+>> true <> Decimal("1.000000000000000000000002")
+true
+
+>> true <> Decimal(1)
+true
+
+>> true <> Decimal(0)
+true
+
+>> false <> Decimal("1.000000000000000000000002")
+true
+
+>> false <> Decimal(1)
+true
+
+>> false <> Decimal(0)
+true
+
+>> true <> ParseJSON("2")
+false
+
+>> true <> ParseJSON("1")
+false
+
+>> true <> ParseJSON("0")
+true
+
+>> true <> ParseJSON("true")
+false
+
+>> true <> ParseJSON("false")
+true
+
+>> false <> ParseJSON("2")
+true
+
+>> false <> ParseJSON("1")
+true
+
+>> false <> ParseJSON("0")
+false
+
+>> false <> ParseJSON("true")
+true
+
+>> false <> ParseJSON("false")
+false
+
+>> true <> ParseJSON("1e100")
+false
+
+>> false <> ParseJSON("null")
+true
+
+// Blank
+
+>> Blank() <> Value(2)
+true
+
+>> Blank() <> Value("1e100")
+true
+
+>> Blank() <> "2"
+true
+
+>> Blank() <> Value(0)
+true
+
+>> Blank() <> "1e100"
+true
+
+>> Blank() <> true
+true
+
+>> Blank() <> Blank()
+false
+
+>> Blank() <> Date(2000,1,1)
+true
+
+>> Blank() <> DateTime(2000,1,1,12,0,0)
+true
+
+>> Blank() <> Time(12,0,0)
+true
+
+>> Blank() <> Decimal("2.000000000000000000000002")
+true
+
+>> Blank() <> Decimal("0")
+true
+
+>> Blank() <> ParseJSON("2")
+true
+
+>> Blank() <> ParseJSON("1e100")
+true
+
+>> Blank() <> ParseJSON("null")
+false
+
+>> Blank() <> ParseJSON("0")
+true
+
+// Date
+
+>> Date(2000,1,1) <> Value(2)
+true
+
+>> Date(1900,1,1) <> Value(2)
+false
+
+>> Date(1900,1,1) <> "2"
+true
+
+>> Date(1900,1,0) <> true
+true
+
+>> Date(2000,1,1) <> Blank()
+true
+
+>> Date(1954,10,3) <> Date(1927,5,18)
+true
+
+>> Date(1954,10,3) <> Date(1954,10,3)
+false
+
+>> Date(1954,10,3) <> Date(1900,1,1)
+true
+
+>> Date(1954,10,3) <> DateTime(1954,10,3,0,0,0)
+false
+
+>> Date(1954,10,3) <> Now()
+true
+
+>> Date(1954,10,3) <> Today()
+true
+
+>> Date(2000,1,1) <> Time(12,0,0)
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Date(1900,1,1) <> Decimal("2.000000000000000000000002")
+false
+
+>> Date(1900,1,1) <> ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(2000,1,1) <> ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// DateTime
+
+>> DateTime(1900,1,1,12,0,0) <> Value(2.5)
+false
+
+>> DateTime(1900,1,1,12,0,0) <> "2.5"
+true
+
+>> DateTime(2000,1,1,12,0,0) <> true
+true
+
+>> DateTime(2000,1,0,0,0,0) <> true
+true
+
+>> DateTime(2000,1,1,12,0,0) <> Blank()
+true
+
+>> DateTime(1927,5,18,0,0,0) <> Date(1927,5,18)
+false
+
+>> DateTime(1927,5,18,0,0,1) <> Date(1927,5,18)
+true
+
+>> DateTime(1900,1,1,0,0,0) <> Date(1900,1,1)
+false
+
+>> DateTime(1900,1,1,12,0,0) <> Date(1900,1,1)
+true
+
+>> DateTime(1927,5,18,1,2,3) <> DateTime(1927,5,18,1,2,3)
+false
+
+>> DateTime(1900,1,1,12,0,0) <> Time(12,0,0)
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> DateTime(1900,1,1,12,0,0) <> Decimal("2.5000000000000000000002")
+false
+
+>> DateTime(2000,1,1,12,0,0) <> ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) <> ParseJSON("2.5")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) <> ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateTime(2000,1,1,12,0,0) <> ParseJSON("""2000-01-01T12:00:00""")
+false
+
+>> DateTime(2000,1,1,12,0,1) <> ParseJSON("""2000-01-01T12:00:01""")
+false
+
+>> DateTime(2000,1,1,12,0,0) <> ParseJSON("""2000-01-01T12:00:01""")
+true
+
+// Time
+
+>> Time(9,0,0) <> Value(0.375)
+false
+
+>> Time(9,0,0) <> "0.375"
+true
+
+>> Time(9,0,0) <> true
+true
+
+>> Time(24,0,0) <> false
+true
+
+>> Time(24,0,0) <> 0
+true
+
+>> Time(24,0,0) <> 1
+false
+
+>> Time(9,0,0) <> Blank()
+true
+
+>> If(1<0,Time(9,0,0)) <> Blank()
+false
+
+>> Time(9,0,0) <> Time(9,0,0)
+false
+
+>> Time(9,0,1) <> Time(9,0,0)
+true
+
+>> Time(9,0,0) <> Date(1900,1,2)
+true
+
+>> Time(1,0,0) <> DateTime(1899,12,30,1,0,0)
+true
+
+>> Time(3,0,0) <> Decimal("0.125")
+false
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Time(3,0,0) <> Decimal("0.125000000000000000000001")
+false
+
+>> Time(3,0,0) <> ParseJSON("2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) <> ParseJSON("0.125")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) <> ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(3,0,0) <> ParseJSON("""03:00:00""")
+false
+
+>> Time(3,0,0) <> ParseJSON("""03:00:01""")
+true
+
+>> Time(3,0,1) <> ParseJSON("""03:00:01""")
+false
+
+// Decimal
+
+>> Decimal("2.000000000000000000000001") <> Value(2)
+false
+
+>> Decimal("16.000000000000000000000001") <> "16"
+true
+
+>> Decimal("1.000000000000000000000001") <> true
+true
+
+>> Decimal("0.000000000000000000000001") <> Blank()
+true
+
+>> Decimal(0) <> Blank()
+true
+
+>> If(1<0,Decimal(1)) <> Blank()
+false
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Decimal("16.0000000000000000000001") <> Date(1900,1,15)
+false
+
+>> Decimal("16") <> Date(1900,1,15)
+false
+
+>> Decimal(2) <> Date(1900,1,1)
+false
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Decimal("2.0000000000000000000001") <> Date(1900,1,1)
+false
+
+>> Decimal(2) <> DateTime(1900,1,1,0,0,0)
+false
+
+>> Decimal("2.0000000000000000000001") <> DateTime(1900,1,1,12,0,0)
+true
+
+>> Decimal(2.5) <> DateTime(1900,1,1,12,0,0)
+false
+
+>> Decimal(".5") <> Time(12,0,0)
+false
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Decimal(".5000000000000000000001") <> Time(12,0,0)
+false
+
+>> Decimal("16.000000000000000000000002") <> Decimal("16.000000000000000000000001")
+true
+
+>> Decimal("16.000000000000000000000002") <> Decimal("16.000000000000000000000002")
+false
+
+>> Decimal("16.000000000000000000000002") <> ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Decimal("16.000000000000000000000002") <> ParseJSON("16.000000000000000000000002")
+false
+
+>> Decimal("16.000000000000000000000002") <> ParseJSON("16.000000000000000000000001")
+true
+
+>> Decimal(16) <> ParseJSON("16")
+false
+
+>> Decimal(16) <> ParseJSON("16.0")
+false
+
+>> Decimal(16) <> ParseJSON("1.6e1")
+false
+
+// Untyped
+
+>> ParseJSON("16.00000000000000000000001") <> Value(2)
+true
+
+// comparisons with float are done in float
+>> ParseJSON("16.00000000000000000000001") <> Value(16)
+false
+
+>> ParseJSON("1e100") <> Value(2)
+true
+
+>> ParseJSON("16.00000000000000000000001") <> "2"
+true
+
+>> ParseJSON("16.00000000000000000000001") <> "16"
+true
+
+>> ParseJSON("16.00000000000000000000001") <>  "16.00000000000000000000001"
+false
+
+>> ParseJSON("16.00000000000000000000001") <>  16 + ".00000000000000000000001"
+false
+
+>> ParseJSON("16") <> "16"
+false
+
+>> ParseJSON("1e100") <> "2"
+true
+
+>> ParseJSON("16.000000000000000000000001") <> true
+false
+
+>> ParseJSON("1.000000000000000000000001") <> true
+false
+
+>> ParseJSON("0") <> true
+true
+
+>> ParseJSON("0") <> false
+false
+
+>> ParseJSON("1") <> true
+false
+
+>> ParseJSON("1") <> false
+true
+
+>> ParseJSON("true") <> true
+false
+
+>> ParseJSON("false") <> false
+false
+
+>> ParseJSON("false") <> true
+true
+
+>> ParseJSON("true") <> false
+true
+
+>> ParseJSON("1e100") <> true
+false
+
+>> ParseJSON("16.000000000000000000000001") <> Blank()
+true
+
+>> ParseJSON("0") <> Blank()
+true
+
+>> ParseJSON("null") <> Blank()
+false
+
+>> ParseJSON("1e100") <> Blank()
+true
+
+>> ParseJSON("2") <> Date(1900,1,1)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.0000000000000000000001") <> Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""1900-01-01""") <> Date(1900,1,1)
+false
+
+>> ParseJSON("""1900-01-01T09:00:01""") <> Date(1900,1,1)
+#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1299, expected: false
+
+>> ParseJSON("16") <> Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100") <> Date(1900,1,15)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("null") <> Date(1900,1,15)
+true
+
+>> ParseJSON("16.500000000000000000001") <> DateTime(1900,1,15,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.5") <> DateTime(1900,1,15,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""1900-01-01T12:00:00""") <> DateTime(1900,1,1,12,0,0)
+false
+
+>> ParseJSON("""1900-01-01T09:00:00""") <> DateTime(1900,1,1,12,0,0)
+true
+
+>> ParseJSON("1e100") <> DateTime(1900,1,7,12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("16.000000000000000000001") <> Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1") <> Time(24,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("""12:00:01""") <> Time(12,0,1)
+false
+
+>> ParseJSON("""12:00:02""") <> Time(12,0,1)
+true
+
+>> ParseJSON("0.250000000000000000000001") <> Time(6,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("0.25") <> Time(6,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("1e100") <> Time(12,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("2.000000000000000000000000001") <> Decimal("2.000000000000000000000000001")
+false
+
+>> ParseJSON("1e100") <> Decimal("2.000000000000000000000000001")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> ParseJSON("2.000000000000000000000000001") <> ParseJSON("2.000000000000000000000000001")
+Errors: Error 43-45: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("2.000000000000000000000002") <> ParseJSON("2")
+Errors: Error 40-42: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("1e100") <> ParseJSON("2")
+Errors: Error 19-21: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("16.000000000000000000000002") <> ParseJSON("1e100")
+Errors: Error 41-43: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.
+
+>> ParseJSON("1e100") <> ParseJSON("1e100")
+Errors: Error 19-21: Incompatible types for comparison. These types can't be compared: UntypedObject, UntypedObject.

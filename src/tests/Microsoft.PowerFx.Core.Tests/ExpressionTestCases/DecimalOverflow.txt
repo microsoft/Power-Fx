@@ -1,4 +1,4 @@
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat
 
 // 79228162514264337593543950335 is the max decimal number, and -79228162514264337593543950335 is the min decimal number (same as C# limits)
 

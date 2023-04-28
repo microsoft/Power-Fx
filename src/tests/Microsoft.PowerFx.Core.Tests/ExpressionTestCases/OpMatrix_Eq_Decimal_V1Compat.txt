@@ -1,4 +1,4 @@
-#SKIPFILE: disable:NumberIsFloat
+#SETUP: disable:NumberIsFloat,PowerFxV1CompatibilityRules
 
 // EQUALS
 
@@ -21,28 +21,30 @@ false
 true
 
 >> 1.00000000000000000000000001 = 1.00000000000000000000000002
-true
+false
 
 >> 1.00000000000000000000000001 = 1.00000000000000000000000000
-true
+false
 
+// overflow error on decimal
 >> 1E100 = 1E100
-true
+Errors: Error 0-5: Numeric value is too large.|Error 8-13: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
 
 >> 1E100 = 1.1E100
-false
+Errors: Error 0-5: Numeric value is too large.|Error 8-15: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
 
 >> 1E100 = 9.9E99
-false
+Errors: Error 0-5: Numeric value is too large.|Error 8-14: Numeric value is too large.|Error 6-7: Incompatible types for comparison. These types can't be compared: Error, Error.
 
+// underfow to zero on decimal
 >> 1E-100 = 1E-100
 true
 
 >> 1E-100 = 1.1E-100
-false
+true
 
 >> 1E-100 = 9.9E-101
-false
+true
 
 // Float
 
@@ -58,53 +60,41 @@ false
 >> Float(16) = Float(18)
 false
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) = "16"
-false
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) = "16.000000000000000000002"
-false
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) = "14"
-false
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) = "18"
-false
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) = "1e20"
-false
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Number, Text.
 
-// comp todo: type mismatch error (string and number)
 >> Float(1e20) = "1e20"
-false
+Errors: Error 12-13: Incompatible types for comparison. These types can't be compared: Number, Text.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(1) = true
-false
+Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(1) = false
-false
+Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(0) = true
-false
+Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(0) = false
-false
+Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(2) = true
-false
+Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(2) = false
-false
+Errors: Error 9-10: Incompatible types for comparison. These types can't be compared: Number, Boolean.
 
 >> Float(0) = Blank()
 false
@@ -186,25 +176,20 @@ true
 
 // Text - Text can only be compared with other text
 
-// comp todo: type mismatch error (string and number)
 >> "16" = Float(16)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Number.
 
-// comp todo: type mismatch error (string and number)
 >> "16" = Float(18)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Number.
 
-// comp todo: type mismatch error (string and number)
 >> "16" = Float(14)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Number.
 
-// comp todo: type mismatch error (string and number)
 >> "1e100" = Float(2)
-false
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Text, Number.
 
-// comp todo: type mismatch error (string and number)
 >> "" = Float(0)
-false
+Errors: Error 3-4: Incompatible types for comparison. These types can't be compared: Text, Number.
 
 >> "16" = "16"
 true
@@ -221,13 +206,11 @@ false
 >> "1e100" = "2"
 false
 
-// comp todo: type mismatch error (string and boolean)
 >> "1" = true
-false
+Errors: Error 4-5: Incompatible types for comparison. These types can't be compared: Text, Boolean.
 
-// comp todo: type mismatch error (string and boolean)
 >> "1e100" = true
-false
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Text, Boolean.
 
 >> "16" = Blank()
 false
@@ -244,28 +227,23 @@ false
 >> "1e100" = Blank()
 false
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "36526" = Date(2000,1,1)
-false
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Text, Date.
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "36526.5" = DateTime(2000,1,1,12,0,0)
-false
+Errors: Error 10-11: Incompatible types for comparison. These types can't be compared: Text, DateTime.
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "16" = Time(12,0,0)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Text, Time.
 
-// comp todo: type mismatch error (string and number)
 >> "2" = Decimal("2.000000000000000000000002")
-false
+Errors: Error 4-5: Incompatible types for comparison. These types can't be compared: Text, Decimal.
 
-// comp todo: type mismatch error (string and number)
 >> "1e100" = Decimal("2.000000000000000000000002")
-false
+Errors: Error 8-9: Incompatible types for comparison. These types can't be compared: Text, Decimal.
 
 // string comparisons with ParseJSON of a number are done on the underlying text representation of the number in the JSON, 
-// without roundtripping through float or decimal.  So "16" will not be the same thing as "16.0".
+// without round-tripping through float or decimal.  So "16" will not be the same thing as "16.0".
 >> "16" = ParseJSON("16")
 true
 
@@ -325,57 +303,45 @@ false
 
 // Boolean
 
-// comp todo: type mismatch error (boolean and number)
 >> true = Float(2)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
-// comp todo: type mismatch error (boolean and number)
 >> true = Float(1)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
-// comp todo: type mismatch error (boolean and number)
 >> true = Float(0)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
-// comp todo: type mismatch error (boolean and number)
 >> false = Float(2)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
-// comp todo: type mismatch error (boolean and number)
 >> false = Float(1)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
-// comp todo: type mismatch error (boolean and number)
 >> false = Float(0)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
 >> true = Float("1e100")
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Number.
 
-// comp todo: type mismatch error (string and boolean)
 >> true = "1"
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Text.
 
-// comp todo: type mismatch error (string and boolean)
 >> false = "0"
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Text.
 
-// comp todo: type mismatch error (string and boolean)
 >> false = "1"
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Text.
 
-// comp todo: type mismatch error (string and boolean)
 >> true = "1E+100"
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Text.
 
-// comp todo: type mismatch error (string and boolean)
 // returns false in Excel
 >> true = "true"
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Text.
 
-// comp todo: type mismatch error (string and boolean)
 >> false = "false"
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Text.
 
 >> true = true
 true
@@ -389,53 +355,41 @@ false
 >> false = Blank()
 false
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true = Date(1927,5,18)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Date.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true = DateTime(1927,5,18,0,0,0)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, DateTime.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true = Time(12,0,0)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Time.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false = Date(1927,5,18)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Date.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false = DateTime(1927,5,18,0,0,0)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, DateTime.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false = Time(12,0,0)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Time.
 
-// comp todo: type mismatch error (boolean and number)
 >> true = Decimal("1.000000000000000000000002")
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
 
-// comp todo: type mismatch error (boolean and number)
 >> true = Decimal(1)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
 
-// comp todo: type mismatch error (boolean and number)
 >> true = Decimal(0)
-false
+Errors: Error 5-6: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
 
-// comp todo: type mismatch error (boolean and number)
 >> false = Decimal("1.000000000000000000000002")
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
 
-// comp todo: type mismatch error (boolean and number)
 >> false = Decimal(1)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
 
-// comp todo: type mismatch error (boolean and number)
 >> false = Decimal(0)
-false
+Errors: Error 6-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
 
 >> true = ParseJSON("2")
 true
@@ -531,13 +485,11 @@ false
 >> Date(1900,1,1) = Float(2)
 true
 
-// comp todo: type mismatch error (string and date/datetime)
 >> Date(1900,1,1) = "2"
-false
+Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Date, Text.
 
-// comp todo: type mismatch error (boolean and number)
 >> Date(1900,1,0) = true
-false
+Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Date, Boolean.
 
 >> Date(2000,1,1) = Blank()
 false
@@ -560,13 +512,11 @@ false
 >> Date(1954,10,3) = Today()
 false
 
-// comp todo: type mismatch error (date and time)
 >> Date(2000,1,1) = Time(12,0,0)
 false
 
-// comparison done on floating point due to Date/DateTime/Time
 >> Date(1900,1,1) = Decimal("2.000000000000000000000002")
-true
+false
 
 >> Date(1900,1,1) = ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -579,16 +529,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateTime(1900,1,1,12,0,0) = Float(2.5)
 true
 
-// comp todo: type mismatch error (date/datetime and string)
 >> DateTime(1900,1,1,12,0,0) = "2.5"
-false
+Errors: Error 26-27: Incompatible types for comparison. These types can't be compared: DateTime, Text.
 
-// comp todo: type mismatch error (date/datetime and boolean)
 >> DateTime(2000,1,1,12,0,0) = true
-false
+Errors: Error 26-27: Incompatible types for comparison. These types can't be compared: DateTime, Boolean.
 
 >> DateTime(2000,1,0,0,0,0) = true
-false
+Errors: Error 25-26: Incompatible types for comparison. These types can't be compared: DateTime, Boolean.
 
 >> DateTime(2000,1,1,12,0,0) = Blank()
 false
@@ -611,9 +559,8 @@ true
 >> DateTime(1900,1,1,12,0,0) = Time(12,0,0)
 false
 
-// comparison done on floating point due to Date/DateTime/Time
 >> DateTime(1900,1,1,12,0,0) = Decimal("2.5000000000000000000002")
-true
+false
 
 >> DateTime(2000,1,1,12,0,0) = ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -638,23 +585,20 @@ false
 >> Time(9,0,0) = Float(0.375)
 true
 
-// comp todo: type mismatch error (time and string)
 >> Time(9,0,0) = "0.375"
-false
+Errors: Error 12-13: Incompatible types for comparison. These types can't be compared: Time, Text.
 
-// comp todo: type mismatch error (time and boolean)
 >> Time(9,0,0) = true
-false
+Errors: Error 12-13: Incompatible types for comparison. These types can't be compared: Time, Boolean.
 
-// comp todo: type mismatch error (time and boolean)
 >> Time(24,0,0) = false
-false
+Errors: Error 13-14: Incompatible types for comparison. These types can't be compared: Time, Boolean.
 
 >> Time(24,0,0) = 0
-true
+false
 
 >> Time(24,0,0) = 1
-false
+true
 
 >> Time(9,0,0) = Blank()
 false
@@ -668,20 +612,23 @@ true
 >> Time(9,0,1) = Time(9,0,0)
 false
 
-// comp todo: type mismatch error (time and date)
+>> Time(-6,0,0) = Time(18,0,0)
+false
+
+>> Time(30,0,0) = Time(6,0,0)
+false
+
 >> Time(9,0,0) = Date(1900,1,2)
 false
 
-// comp todo: but we allow time and datetime?
 >> Time(1,0,0) = DateTime(1899,12,30,1,0,0)
-false
+true
 
 >> Time(3,0,0) = Decimal("0.125")
 true
 
-// comparison done on floating point due to Date/DateTime/Time
 >> Time(3,0,0) = Decimal("0.125000000000000000000001")
-true
+false
 
 >> Time(3,0,0) = ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -706,13 +653,11 @@ true
 >> Decimal("2.000000000000000000000001") = Float(2)
 true
 
-// comp todo: type mismatch error (number and string)
 >> Decimal("16.000000000000000000000001") = "16"
-false
+Errors: Error 39-40: Incompatible types for comparison. These types can't be compared: Decimal, Text.
 
-// comp todo: type mismatch error (number and boolean)
 >> Decimal("1.000000000000000000000001") = true
-false
+Errors: Error 38-39: Incompatible types for comparison. These types can't be compared: Decimal, Boolean.
 
 >> Decimal("0.000000000000000000000001") = Blank()
 false
@@ -723,9 +668,8 @@ false
 >> If(1<0,Decimal(1)) = Blank()
 true
 
-// comparison done on floating point due to Date/DateTime/Time
 >> Decimal("16.0000000000000000000001") = Date(1900,1,15)
-true
+false
 
 >> Decimal("16") = Date(1900,1,15)
 true
@@ -733,9 +677,8 @@ true
 >> Decimal(2) = Date(1900,1,1)
 true
 
-// comparison done on floating point due to Date/DateTime/Time
 >> Decimal("2.0000000000000000000001") = Date(1900,1,1)
-true
+false
 
 >> Decimal(2) = DateTime(1900,1,1,0,0,0)
 true
@@ -749,9 +692,8 @@ true
 >> Decimal(".5") = Time(12,0,0)
 true
 
-// comparison done on floating point due to Date/DateTime/Time
 >> Decimal(".5000000000000000000001") = Time(12,0,0)
-true
+false
 
 >> Decimal("16.000000000000000000000002") = Decimal("16.000000000000000000000001")
 false

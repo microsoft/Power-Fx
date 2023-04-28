@@ -1,0 +1,37 @@
+﻿#SETUP: StronglyTypedBuiltinEnums
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
+Errors: Error 44-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "days")
+Errors: Error 44-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "DaYs")
+Errors: Error 44-50: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "milliseconds")
+Errors: Error 44-58: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "seconds")
+Errors: Error 44-53: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "minutes")
+Errors: Error 44-53: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "hours")
+Errors: Error 44-51: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30), "quarters")
+Errors: Error 44-54: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2011,1,15) , Date(2011,7,30), "quarters")
+Errors: Error 44-54: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2021,1,1), Date(2000,1,1), "Years")
+Errors: Error 41-48: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(Date(2021,1,1), Date(2021,2,1), "Months")
+Errors: Error 41-49: Invalid argument type (Text). Expecting a Enum (TimeUnit) value instead.
+
+>> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), 1/0)
+Errors: Error 71-72: Invalid argument type (Decimal). Expecting a Enum (TimeUnit) value instead.

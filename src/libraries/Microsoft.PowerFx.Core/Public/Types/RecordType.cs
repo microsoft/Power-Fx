@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Types
         internal RecordType(DType type)
             : base(type)
         {
-            Contracts.Assert(type.IsRecord);
+            Contracts.Assert(type.IsRecord || type.IsPolymorphic);
         }
 
         /// <summary>
@@ -97,6 +97,15 @@ namespace Microsoft.PowerFx.Types
         public static RecordType Empty()
         {
             return new KnownRecordType();
+        }
+
+        /// <summary>
+        /// Static builder method for constructing a Polymorphic record type.
+        /// Used for Dataverse Polymorphic types.
+        /// </summary>
+        public static RecordType Polymorphic()
+        {
+            return new KnownRecordType(DType.Polymorphic);
         }
 
         internal override void DefaultExpressionValue(StringBuilder sb)

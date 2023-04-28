@@ -1,4 +1,4 @@
-﻿#SETUP: DisableMemChecks
+﻿#SETUP: DisableMemChecks,TableSyntaxDoesntWrapRecords
 
 // Basic LookUp
 >> LookUp(Table({ Id: 1, Name: "Element 1" }, { Id:2, Name: "Element 2"}), Id = 2)

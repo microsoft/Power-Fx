@@ -1,3 +1,5 @@
+#SETUP: TableSyntaxDoesntWrapRecords
+
 >> Index([10, 20, 30, 40, 50], 3)
 {Value:30}
 

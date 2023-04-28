@@ -457,7 +457,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Guid)
+                    targetFunction: GuidPure)
             },
             {
                 UnaryOpKind.GUIDToText,
@@ -839,7 +839,7 @@ namespace Microsoft.PowerFx.Functions
             TimeZoneInfo timeZoneInfo = runner.TimeZoneInfo;
             DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            var time = arg0.TimeOfDay;
+            var time = arg0.Subtract(_epoch);
             return new TimeValue(irContext, time);
         }
 

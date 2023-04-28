@@ -1,11 +1,10 @@
-#SKIPFILE: disable:NumberIsFloat
-#SETUP: PowerFxV1CompatibilityRules
+#SETUP: disable:PowerFxV1CompatibilityRules
 
 >> 1 = "1"
-Errors: Error 2-3: Incompatible types for comparison. These types can't be compared: Number, Text.
+false
 
 >> 0 = false
-Errors: Error 2-3: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+false
 
 // Second comparison ensures the test doesn't fail if it runs exactly at midnight
 >> With({n:Now(),t:Today()}, (t = n) && (Mod(Value(n), 1) > 0))
@@ -32,12 +31,6 @@ true
 >> Date(1899,12,29) = Time(0,0,0)
 false
 
->> Time(12,0,0) = DateTime(1899,12,30,12,0,0)
-true
-
->> Time(12,0,0) = DateTime(1899,12,31,12,0,0)
-false
-
 >> ErrorKind.Custom = 100
 false
 
@@ -48,4 +41,16 @@ true
 false
 
 >> 1000 = ErrorKind.Custom
+true
+
+>> "abc" = 23
+false
+
+>> 23 = "abc"
+false
+
+>> "abc" <> 23
+true
+
+>> 23 <> "abc"
 true
