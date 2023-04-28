@@ -500,7 +500,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 var type = argTypes[i];
-                if (type.IsError ||
+                if (type.IsError || 
                     type.IsVoid)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrBadType);
@@ -1406,7 +1406,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DelegationValidationStrategy(this);
         }
 
-        #endregion
+#endregion
 
         internal TransportSchemas.FunctionInfo Info(string locale)
         {
