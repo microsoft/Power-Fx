@@ -447,30 +447,19 @@ namespace Microsoft.PowerFx
                     bool notCoerceToType = false;
                     if (_allowCoerceToType)
                     {
-                        if (this._expectedReturnType == FormulaType.String)
+                        switch (this._expectedReturnType)
                         {
-                            if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
-                            {
-                                notCoerceToType = true;
-                            }
-                        }
-                        else if (this._expectedReturnType == FormulaType.Number)
-                        {
-                            if (!NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType))
-                            {
-                                notCoerceToType = true;
-                            }
-                        }
-                        else if (this._expectedReturnType == FormulaType.Decimal)
-                        {
-                            if (!DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType))
-                            {
-                                notCoerceToType = true;
-                            }
-                        }
-                        else
-                        {
-                            throw new NotImplementedException();
+                            case StringType:                                
+                                notCoerceToType = !StringValue.AllowedListConvertToString.Contains(this.ReturnType);
+                                break;
+                            case NumberType:
+                                notCoerceToType = !NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType);
+                                break;
+                            case DecimalType:
+                                notCoerceToType = !DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType);
+                                break;
+                            default:
+                                throw new NotImplementedException();
                         }
                     }
 
