@@ -42,3 +42,21 @@
 
 >> PlainText("http&#58;//microsoft.com")
 "http://microsoft.com"
+
+>> PlainText(Blank())
+Blank()
+
+>> PlainText(12.34)
+"12.34"
+
+>> PlainText(-12.34)
+"-12.34"
+
+>> PlainText(Date(2023,1,1))
+"1/1/2023"
+
+>> PlainText(DateTime(2023,1,1,12,34,56))
+"1/1/2023 12:34 PM"
+
+>> PlainText(Time(8,1,15))
+"8:01 AM"

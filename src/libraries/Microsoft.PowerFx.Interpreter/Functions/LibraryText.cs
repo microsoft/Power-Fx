@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -1070,32 +1071,37 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, logicalName);
         }
 
-        public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
+        public static FormulaValue PlainText(IRContext irContext, FormulaValue[] args)
         {
-            //Decode html specific characters
-            string text = WebUtility.HtmlDecode(args[0].Value.Trim());
+            if (args[0].Type == FormulaType.String)
+            {                
+                //Decode html specific characters
+                string text = WebUtility.HtmlDecode(((StringValue)args[0]).Value.Trim());
 
-            // Replace header/script/style tags with empty text.
-            text = _headerTagRegex.Replace(text, string.Empty);
-            text = _scriptTagRegex.Replace(text, string.Empty);
-            text = _styleTagRegex.Replace(text, string.Empty);
+                // Replace header/script/style tags with empty text.
+                text = _headerTagRegex.Replace(text, string.Empty);
+                text = _scriptTagRegex.Replace(text, string.Empty);
+                text = _styleTagRegex.Replace(text, string.Empty);
 
-            // Remove all comments.
-            text = _commentTagRegex.Replace(text, string.Empty);
+                // Remove all comments.
+                text = _commentTagRegex.Replace(text, string.Empty);
 
-            // Insert empty string in place of <td>
-            text = _tdTagRegex.Replace(text, string.Empty);
+                // Insert empty string in place of <td>
+                text = _tdTagRegex.Replace(text, string.Empty);
 
-            //Replace <br> or <li> with line break
-            text = _lineBreakTagRegex.Replace(text, Environment.NewLine);
+                //Replace <br> or <li> with line break
+                text = _lineBreakTagRegex.Replace(text, Environment.NewLine);
 
-            // Insert double line breaks in place of <div>, <p> and <tr> tags.
-            text = _doubleLineBreakTagRegex.Replace(text, Environment.NewLine + Environment.NewLine);
+                // Insert double line breaks in place of <div>, <p> and <tr> tags.
+                text = _doubleLineBreakTagRegex.Replace(text, Environment.NewLine + Environment.NewLine);
 
-            // Replace all other tags with empty text.
-            text = _htmlTagsRegex.Replace(text, string.Empty);
+                // Replace all other tags with empty text.
+                text = _htmlTagsRegex.Replace(text, string.Empty);
 
-            return new StringValue(irContext, text.Trim());
+                return new StringValue(irContext, text.Trim());
+            }
+
+            return args[0];
         }
 
         private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)
