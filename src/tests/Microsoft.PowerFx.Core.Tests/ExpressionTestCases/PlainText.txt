@@ -60,3 +60,14 @@ Blank()
 
 >> PlainText(Time(8,1,15))
 "8:01 AM"
+
+// Empty Parameter
+>> PlainText()
+Errors: Error 0-11: Invalid number of arguments: received 0, expected 1.
+
+// ErrorKind Parameter
+>> PlainText(Error({Kind:ErrorKind.Div0}))
+Error({Kind:ErrorKind.Div0})
+
+>> PlainText(If(1<0, "text"))
+Blank()

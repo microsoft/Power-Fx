@@ -1216,7 +1216,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: PlainText)
             },
             {
