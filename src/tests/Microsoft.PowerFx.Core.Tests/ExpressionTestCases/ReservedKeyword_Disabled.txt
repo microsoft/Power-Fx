@@ -38,4 +38,4 @@
 
 // different error message with and without reserved keywords
 >> 3 Is 4
-Errors: Error 2-4: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 2-4: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
+Errors: Error 2-4: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
