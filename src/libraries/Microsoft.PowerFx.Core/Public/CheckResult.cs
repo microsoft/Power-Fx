@@ -447,14 +447,30 @@ namespace Microsoft.PowerFx
                     bool notCoerceToType = false;
                     if (_allowCoerceToType)
                     {
-                        if (this._expectedReturnType != FormulaType.String)
+                        if (this._expectedReturnType == FormulaType.String)
+                        {
+                            if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
+                            {
+                                notCoerceToType = true;
+                            }
+                        }
+                        else if (this._expectedReturnType == FormulaType.Number)
+                        {
+                            if (!NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType))
+                            {
+                                notCoerceToType = true;
+                            }
+                        }
+                        else if (this._expectedReturnType == FormulaType.Decimal)
+                        {
+                            if (!DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType))
+                            {
+                                notCoerceToType = true;
+                            }
+                        }
+                        else
                         {
                             throw new NotImplementedException();
-                        }
-
-                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
-                        {
-                            notCoerceToType = true;
                         }
                     }
 
