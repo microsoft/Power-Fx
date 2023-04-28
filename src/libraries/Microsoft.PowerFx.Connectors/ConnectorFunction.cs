@@ -45,13 +45,15 @@ namespace Microsoft.PowerFx.Connectors
 
         public FormulaType ReturnType => Operation.GetReturnType(NumberIsFloat);
 
+        public ConnectorType ConnectorReturnType => Operation.GetConnectorReturnType(NumberIsFloat);
+
         public bool IsBehavior => OpenApiParser.IsSafeHttpMethod(HttpMethod);
 
-        public ConnectorParameter[] RequiredParameters => _requiredParameters ??= ArgumentMapper.RequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
+        public ConnectorParameter[] RequiredParameters => _requiredParameters ??= ArgumentMapper.RequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
 
-        internal ConnectorParameter[] HiddenRequiredParameters => _hiddenRequiredParameters ??= ArgumentMapper.HiddenRequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
+        internal ConnectorParameter[] HiddenRequiredParameters => _hiddenRequiredParameters ??= ArgumentMapper.HiddenRequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
 
-        public ConnectorParameter[] OptionalParameters => _optionalParameters ??= ArgumentMapper.OptionalParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
+        public ConnectorParameter[] OptionalParameters => _optionalParameters ??= ArgumentMapper.OptionalParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
 
         public int ArityMin => ArgumentMapper.ArityMin;
 
@@ -195,16 +197,19 @@ namespace Microsoft.PowerFx.Connectors
 
         public FormulaType FormulaType { get; }
 
+        public ConnectorType ConnectorType { get; }
+
         public string Description { get; }
 
         public string Summary { get; }
 
         public FormulaValue DefaultValue { get; }
 
-        public ConnectorParameter(string name, FormulaType type, string description, string summary, FormulaValue defaultValue)
+        public ConnectorParameter(string name, FormulaType type, ConnectorType connectorType, string description, string summary, FormulaValue defaultValue)
         {
             Name = name;
             FormulaType = type;
+            ConnectorType = connectorType;
             Description = description;
             Summary = summary;
             DefaultValue = defaultValue;
@@ -221,14 +226,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public string[] ParameterNames { get; internal set; }
 
-        public ConnectorParameterWithSuggestions(string name, FormulaType type, string description, string summary, FormulaValue defaultValue)
-            : base(name, type, description, summary, defaultValue)
+        public ConnectorParameterWithSuggestions(string name, FormulaType type, ConnectorType connectorType, string description, string summary, FormulaValue defaultValue)
+            : base(name, type, connectorType, description, summary, defaultValue)
         {
             Suggestions = new List<ConnectorSuggestion>();
         }
 
         public ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue value)
-            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue)
+            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.ConnectorType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue)
         {
             Suggestions = new List<ConnectorSuggestion>();
             Value = value;
@@ -236,7 +241,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue[] values)
-            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue)
+            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.ConnectorType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue)
         {
             Suggestions = new List<ConnectorSuggestion>();
             Value = null;
