@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
         internal AggregateType(DType type)
             : base(type)
         {
-            Contracts.Assert(type.IsAggregate);
+            Contracts.Assert(type.IsAggregate || type.IsPolymorphic);
         }
 
         public AggregateType(bool isTable)
