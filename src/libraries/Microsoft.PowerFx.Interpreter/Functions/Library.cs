@@ -1681,6 +1681,21 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: VarTable)
             },
             {
+                BuiltinFunctionsCore.Weekday,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Weekday.Name,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrTimeOrDateTime,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Weekday)
+            },
+            {
                 BuiltinFunctionsCore.With,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.With.Name,

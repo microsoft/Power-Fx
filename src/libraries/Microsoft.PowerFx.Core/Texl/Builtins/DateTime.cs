@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool HasPreciseErrors => true;
 
         public WeekdayFunction()
-            : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, BuiltInEnums.StartOfWeekEnum.FormulaType._type)
+            : base("Weekday", TexlStrings.AboutWeekday, FunctionCategories.DateTime, DType.Number, 0, 1, 2, DType.DateTime, DType.Number)
         {
         }
 
