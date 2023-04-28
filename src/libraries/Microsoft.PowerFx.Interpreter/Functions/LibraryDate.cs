@@ -469,19 +469,21 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue TimeImpl(IRContext irContext, int hour, int minute, int second, int millisecond)
         {
-            // The final time is built up this way to allow for inputs which overflow,
-            // such as: Time(10, 70, 360) -> 11:16 AM
-            var result = new TimeSpan(hour, 0, 0)
-                .Add(new TimeSpan(0, minute, 0))
-                .Add(new TimeSpan(0, 0, second))
-                .Add(TimeSpan.FromMilliseconds(millisecond));
-
-            if (result.TotalDays >= 1)
+            try
             {
-                result = result.Subtract(TimeSpan.FromDays((int)result.TotalDays));
-            }
+                // The final time is built up this way to allow for inputs which overflow,
+                // such as: Time(10, 70, 360) -> 11:16 AM
+                var result = new TimeSpan(hour, 0, 0)
+                    .Add(new TimeSpan(0, minute, 0))
+                    .Add(new TimeSpan(0, 0, second))
+                    .Add(TimeSpan.FromMilliseconds(millisecond));
 
-            return new TimeValue(irContext, result);
+                return new TimeValue(irContext, result);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return CommonErrors.InvalidDateTimeError(irContext);
+            }
         }
 
         public static FormulaValue DateTimeFunction(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
