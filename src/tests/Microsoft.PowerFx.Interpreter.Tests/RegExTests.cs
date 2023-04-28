@@ -45,5 +45,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 powerFxConfig.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), -2);
             });
         }
+
+        [Fact]
+        public void TestRegExEnableTwice()
+        {
+            PowerFxConfig powerFxConfig = new PowerFxConfig();
+            powerFxConfig.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), 20);
+            Assert.Throws<InvalidOperationException>(() => powerFxConfig.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), 50));
+        }
+
+        [Fact]
+        public void TestRegExEnableTwice2()
+        {
+            PowerFxConfig powerFxConfig = new PowerFxConfig();
+            powerFxConfig.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), 20);
+
+            PowerFxConfig powerFxConfig2 = new PowerFxConfig();
+            powerFxConfig2.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), 20);
+        }
     }
 }

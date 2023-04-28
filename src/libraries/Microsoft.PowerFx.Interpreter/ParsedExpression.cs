@@ -2,10 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Interpreter;
@@ -80,7 +81,7 @@ namespace Microsoft.PowerFx
             var irResult = result.ApplyIR();
             result.ThrowOnErrors();
 
-            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.ParserCultureInfo)
+            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.Engine.Config.ConfigDependentFunctions, result.ParserCultureInfo)
             {
                 _globals = globals,
                 _allSymbols = result.Symbols,
@@ -97,16 +98,18 @@ namespace Microsoft.PowerFx
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
         private readonly StackDepthCounter _stackMarker;
+        private readonly IDictionary<TexlFunction, object> _configDependentFunctions;
 
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, IDictionary<TexlFunction, object> configDependentFunctions, CultureInfo cultureInfo = null)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
+            _configDependentFunctions = configDependentFunctions;
 
             // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
@@ -114,11 +117,7 @@ namespace Microsoft.PowerFx
         
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
-            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
-                false,
-                _allSymbols,
-                runtimeConfig?.Values,
-                _globals);
+            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(false, _allSymbols, runtimeConfig?.Values, _globals);
 
             IServiceProvider innerServices = null;
             if (_cultureInfo != null)
@@ -133,6 +132,8 @@ namespace Microsoft.PowerFx
                 Values = symbolValues,
                 ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
             };
+
+            runtimeConfig2.AddService(_configDependentFunctions);
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
 
@@ -152,7 +153,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal async Task<FormulaValue> EvalAsyncInternal(RecordValue parameters, CancellationToken cancel, StackDepthCounter stackMarker)
+        internal async Task<FormulaValue> EvalAsyncInternal(RecordValue parameters, CancellationToken cancel, StackDepthCounter stackMarker, IDictionary<TexlFunction, object> configDependentFunctions)
         {
             var symbolValues = SymbolValues.NewFromRecord(_parameterSymbolTable, parameters);
             parameters = RecordValue.Empty();
@@ -165,6 +166,8 @@ namespace Microsoft.PowerFx
             {
                 runtimeConfig2.SetCulture(_cultureInfo);
             }
+
+            runtimeConfig2.AddService(configDependentFunctions);
 
             // We don't catch the max call depth exception here becuase someone could swallow the error with an "IfError" check.
             // Instead we only catch at the top of parsed expression, which is the above function.

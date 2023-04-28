@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx
 
         private readonly IServiceProvider _services;
 
+        private readonly IDictionary<TexlFunction, object> _configDependentFunctions;
+
         public IServiceProvider FunctionServices => _services;
 
         public CultureInfo CultureInfo { get; private set; }
@@ -48,13 +50,11 @@ namespace Microsoft.PowerFx
         {
             _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
-
             _services = config.ServiceProvider ?? new BasicServiceProvider();
-
-            TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
-
-            Governor = GetService<Governor>() ?? new Governor();
             
+            _configDependentFunctions = GetService<IDictionary<TexlFunction, object>>();
+            TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
+            Governor = GetService<Governor>() ?? new Governor();            
             CultureInfo = GetService<CultureInfo>();
         }
 
@@ -271,8 +271,14 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                if (FunctionImplementations.TryGetValue(func, out var ptr) || ConfigDependentFunctions.TryGetValue(func, out ptr))
+                object ptr2 = null;
+                if (FunctionImplementations.TryGetValue(func, out var ptr) || _configDependentFunctions.TryGetValue(func, out ptr2))
                 {
+                    if (ptr2 != null)
+                    {
+                        ptr = (AsyncFunctionPtr)ptr2;
+                    }
+
                     try
                     {
                         result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Interpreter.UDF;
 using Microsoft.PowerFx.Types;
 
@@ -33,7 +34,7 @@ namespace Microsoft.PowerFx.Interpreter
             // because Eval wants a Record rather than a resolved arg array.                 
             var parameters = FormulaValue.NewRecordFromFields(UDFHelper.Zip(_parameterNames.ToArray(), args));
 
-            var result = await GetExpression().EvalAsyncInternal(parameters, cancel, stackMarker).ConfigureAwait(false);
+            var result = await GetExpression().EvalAsyncInternal(parameters, cancel, stackMarker, new Dictionary<TexlFunction, object>()).ConfigureAwait(false);
 
             return result;
         }

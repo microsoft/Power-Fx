@@ -38,10 +38,11 @@ namespace Microsoft.PowerFx.Functions
         /// <summary>
         /// Enable [Is]Match[All] functions.
         /// </summary>
+        /// <param name="configDependentFunctions"></param>
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
         /// <param name="regexCacheSize">Regular expression cache size. 0=no limit. -1=disabled.</param>
         /// <returns></returns>
-        internal static IEnumerable<TexlFunction> EnableRegexFunctions(TimeSpan regexTimeout, int regexCacheSize = -1)
+        internal static IEnumerable<TexlFunction> EnableRegexFunctions(IDictionary<TexlFunction, object> configDependentFunctions, TimeSpan regexTimeout, int regexCacheSize = -1)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -64,7 +65,12 @@ namespace Microsoft.PowerFx.Functions
             TexlFunction matchFunction = new MatchFunction(regexTypeCache, regexCacheSize);
             TexlFunction matchAllFunction = new MatchAllFunction(regexTypeCache, regexCacheSize);
 
-            ConfigDependentFunctions.Add(
+            if (configDependentFunctions.Keys.Any(k => k is IsMatchFunction || k is MatchFunction || k is MatchAllFunction))
+            {
+                throw new InvalidOperationException("Cannot add RegEx functions more than once.");
+            }
+
+            configDependentFunctions.Add(
                 isMatchFunction,
                 StandardErrorHandlingAsync<FormulaValue>(
                     "IsMatch",
@@ -75,7 +81,7 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => IsMatchImpl(ev, evCtx, irCtx, fv, regexTimeout)));            
 
-            ConfigDependentFunctions.Add(
+            configDependentFunctions.Add(
                matchFunction,
                StandardErrorHandlingAsync<FormulaValue>(
                    "Match",
@@ -86,7 +92,7 @@ namespace Microsoft.PowerFx.Functions
                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                    targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => MatchImpl(ev, evCtx, irCtx, fv, regexTimeout)));
 
-            ConfigDependentFunctions.Add(
+            configDependentFunctions.Add(
                matchAllFunction,
                StandardErrorHandlingAsync<FormulaValue>(
                    "MatchAll",

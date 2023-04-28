@@ -19,9 +19,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var bugsFieldType = new HashSet<Type>();
             var bugNames = new HashSet<string>()
             {
-                "PowerFxConfigExtensions.DefaultRegexTimeout",
-                "Library.ConfigDependentFunctions",
-                "Library.<RegexTimeout>k__BackingField"
+                "Library.ConfigDependentFunctions"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);

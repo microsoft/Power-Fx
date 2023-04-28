@@ -37,16 +37,13 @@ namespace Microsoft.PowerFx.Functions
         // Sync FunctionPtr - all args are evaluated before invoking this function.  
         public delegate FormulaValue FunctionPtr(SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
-        // Async - can invoke lambads.
+        // Async - can invoke lambdas.
         public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
-
-        // Functions that are only enabled if requested by the host
-        internal static readonly IDictionary<TexlFunction, AsyncFunctionPtr> ConfigDependentFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();           
-
+       
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
             return new FormattingInfo()

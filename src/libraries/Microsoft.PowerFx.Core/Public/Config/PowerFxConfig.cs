@@ -31,6 +31,8 @@ namespace Microsoft.PowerFx
         {
             DebugName = "DefaultConfig"
         };
+        
+        internal IDictionary<TexlFunction, object /*AsyncFunctionPtr*/> ConfigDependentFunctions = new Dictionary<TexlFunction, object>();
 
         [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;

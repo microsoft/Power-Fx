@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx
         /// <param name="regexCacheSize">Size of the regular expression cache. -1 = disabled. 0 = infinite.</param>
         public static void EnableRegExFunctions(this PowerFxConfig powerFxConfig, TimeSpan regExTimeout = default, int regexCacheSize = -1)
         {            
-            foreach (var function in Library.EnableRegexFunctions(regExTimeout, regexCacheSize))
+            foreach (var function in Library.EnableRegexFunctions(powerFxConfig.ConfigDependentFunctions, regExTimeout, regexCacheSize))
             {
                 powerFxConfig.AddFunction(function);
             }
