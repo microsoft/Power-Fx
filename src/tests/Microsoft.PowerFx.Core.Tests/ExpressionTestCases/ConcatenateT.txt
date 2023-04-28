@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 >> Concatenate("Jane", Table({a: "Doe"}, {a: "Smith"}, {a: "Williams"}))
 Table({Value:"JaneDoe"},{Value:"JaneSmith"},{Value:"JaneWilliams"})
 

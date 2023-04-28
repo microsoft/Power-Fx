@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 >> Split( "Hello, World", "," )
 Table({Value:"Hello"},{Value:" World"})
 

@@ -1,4 +1,4 @@
-#SKIPFILE: disable:NumberIsFloat
+#SETUP: NumberIsFloat
 
 // Samea as DecimalMathFuncs_NumberIsFloat but includes the constructors.  
 // This file will not run on Canvas before Decimal is implemented there.

@@ -1,4 +1,5 @@
-﻿>> DateDiff(Date(2011,1,15) , Date(2011,1,30))
+﻿
+>> DateDiff(Date(2011,1,15) , Date(2011,1,30))
 15
 
 >> DateDiff(Date(-1, 2, 3), Date(2011,1,30))
@@ -19,35 +20,8 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Days)
 15
 
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "Days")
-15
-
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "days")
-15
-
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "DaYs")
-15
-
 >> DateDiff(Date(2013,1,15) , Date(2012,1,30), TimeUnit.Days)
 -351
-
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "milliseconds")
-1296000000
-
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "seconds")
-1296000
-
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "minutes")
-21600
-
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "hours")
-360
-
->> DateDiff(Date(2011,1,15) , Date(2011,1,30), "quarters")
-0
-
->> DateDiff(Date(2011,1,15) , Date(2011,7,30), "quarters")
-2
 
 >> DateDiff(Date(2011,1,15) , Date(2011,1,30), TimeUnit.Milliseconds)
 1296000000
@@ -70,13 +44,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> DateDiff(Date(2021,1,1), Date(2000,1,1), TimeUnit.Years)
 -21
 
->> DateDiff(Date(2021,1,1), Date(2000,1,1), "Years")
--21
-
 >> DateDiff(Date(2021,1,1), Date(2021,2,1), TimeUnit.Months)
-1
-
->> DateDiff(Date(2021,1,1), Date(2021,2,1), "Months")
 1
 
 >> DateDiff(Date(2021,1,1), Date(2021,1,20), TimeUnit.Months)
@@ -207,9 +175,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.Div0})
 
 >> DateDiff(DateTime(2004,1,1,0,0,0), 1/0)
-Error({Kind:ErrorKind.Div0})
-
->> DateDiff(DateTime(2005,12,31,23,59,59,999), DateTime(2007,1,1,0,0,0), 1/0)
 Error({Kind:ErrorKind.Div0})
 
 // ******************************** COERCIONS ********************************

@@ -1,4 +1,6 @@
-﻿// Scalar + Table
+﻿#SETUP: ConsistentOneColumnTableResult
+
+// Scalar + Table
 >> Concatenate("a", LastN(Table({b:"1"},{b:"2"}), 0))
 Table()
 

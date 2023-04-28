@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx
                             });
                     }
                     
-                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType || func is IfErrorFunction))
+                    if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
                     }
@@ -614,14 +614,7 @@ namespace Microsoft.PowerFx
             if (node.Value is ScopeSymbol s2)
             {
                 var r = context.SymbolContext.ScopeValues[s2.Id];
-                if (r is RecordScope r2)
-                {
-                    return r2._context;
-                }
-                else if (r is UntypedObjectThisRecordScope r3)
-                {
-                    return r3._thisRecord;
-                }
+                return r.Resolve(string.Empty);
             }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);

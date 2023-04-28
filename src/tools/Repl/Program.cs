@@ -10,7 +10,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -31,6 +30,10 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
+        private const string OptionFeaturesNone = "FeaturesNone";
+
+        private const string OptionPowerFxV1 = "PowerFxV1";
+
         private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
@@ -49,6 +52,8 @@ namespace Microsoft.PowerFx
                 { OptionFormatTable, OptionFormatTable },
                 { OptionNumberIsFloat, OptionNumberIsFloat },
                 { OptionLargeCallDepth, OptionLargeCallDepth },
+                { OptionFeaturesNone, OptionFeaturesNone },
+                { OptionPowerFxV1, OptionPowerFxV1 }
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -612,10 +617,39 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionPowerFxV1.ToLower(CultureInfo.InvariantCulture))
+                {
+                    foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    {
+                        if (prop.PropertyType == typeof(bool) && prop.CanWrite && (bool)prop.GetValue(Features.PowerFxV1))
+                        {
+                            prop.SetValue(_features, value.Value);
+                        }
+                    }
+
+                    ResetEngine();
+                    return value;
+                }
+
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionFeaturesNone.ToLower(CultureInfo.InvariantCulture))
+                {
+                    foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    {
+                        if (prop.PropertyType == typeof(bool) && prop.CanWrite)
+                        {
+                            prop.SetValue(_features, value.Value);
+                        }
+                    }
+
+                    ResetEngine();
+                    return value;
+                }
+
                 var featureProperty = typeof(Features).GetProperty(option.Value, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 if (featureProperty?.CanWrite == true)
                 {
                     featureProperty.SetValue(_features, value.Value);
+                    ResetEngine();
                     return value;
                 }
 

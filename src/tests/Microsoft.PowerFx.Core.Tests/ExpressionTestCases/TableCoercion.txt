@@ -1,4 +1,4 @@
-﻿#SETUP:PowerFxV1CompatibilityRules
+﻿#SETUP:PowerFxV1CompatibilityRules,TableSyntaxDoesntWrapRecords
 
 //Table()
 >> Table({a:0}, {a:true}, {a:2})

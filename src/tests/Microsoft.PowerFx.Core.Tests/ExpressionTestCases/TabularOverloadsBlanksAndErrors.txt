@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 // *********** Single-argument functions ***********
 
 >> Abs(If(1/0<2,[1]))

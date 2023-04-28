@@ -775,6 +775,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll_UO)
             },
             {
+                BuiltinFunctionsCore.GUIDNoArg,
+                NoErrorHandling(GuidNoArg)
+            },
+            {
                 BuiltinFunctionsCore.GUIDPure,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.GUIDPure.Name,
@@ -783,7 +787,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Guid)
+                    targetFunction: GuidPure)
             },
             {
                 BuiltinFunctionsCore.GUID_UO,
@@ -2158,18 +2162,20 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(new InMemoryRecordValue(IRContext.NotInSource(ifErrorScopeParamType), scopeVariables));
 
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    var errorHandlingBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    return MaybeAdjustToCompileTimeType(errorHandlingBranchResult, irContext);
                 }
 
                 if (i + 1 == args.Length - 1)
                 {
-                    return res.ToFormulaValue();
+                    return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
                 }
 
                 if (i + 2 == args.Length - 1)
                 {
-                    var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    var otherwiseBranch = args[i + 2];
+                    var otherwiseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(otherwiseBranch, context, otherwiseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    return MaybeAdjustToCompileTimeType(otherwiseBranchResult, irContext);
                 }
             }
 
@@ -2350,19 +2356,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                SymbolContext childContext;
-                if (row.IsValue)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Value);
-                }
-                else if (row.IsError)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Error);
-                }
-                else
-                {
-                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
-                }
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 // Filter evals to a boolean
                 var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
@@ -2381,7 +2375,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 runner.CheckCancel();
 
-                SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 // Filter evals to a boolean
                 var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();

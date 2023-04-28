@@ -1,3 +1,5 @@
+#SETUP: disable:StronglyTypedBuiltinEnums,disable:SupportColumnNamesAsIdentifiers
+
 >> Abs(1/0)
 Error({Kind:ErrorKind.Div0})
 

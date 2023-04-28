@@ -1,4 +1,5 @@
-﻿
+﻿#SETUP: disable:SupportColumnNamesAsIdentifiers
+
 >> DropColumns(Table({a:1,b:2},{a:3,b:4}), "b")
 Table({a:1},{a:3})
 

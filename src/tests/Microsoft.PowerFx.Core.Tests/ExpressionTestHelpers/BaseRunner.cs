@@ -86,10 +86,14 @@ namespace Microsoft.PowerFx.Core.Tests
         public static TimeSpan Timeout = TimeSpan.FromSeconds(20);
 
         /// <summary>
-        /// Should the NumberIsFloat parser flag be in effect?
-        /// Also impacts what tests will be run through #SKIPFILE directives.
+        /// Should the NumberIsFloat parser flag be in effect.
         /// </summary>
         public bool NumberIsFloat { get; set; }
+
+        /// <summary>
+        /// What base Features should be enabled, before adding file level #SETUP and #DISABLE.
+        /// </summary>
+        public Features Features = Features.None;
 
         /// <summary>
         /// Runs a PowerFx test case, with optional setup.
@@ -209,12 +213,15 @@ namespace Microsoft.PowerFx.Core.Tests
                         var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
                         var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
 
-                        if (NumberIsFloat)
-                        {
-                            expected = Regex.Replace(expected, "(\\s|'|\\()Decimal(\\s|'|\\)|\\.)", "$1Number$2");
-                        }
-
+                        // Try both unaltered comparison and by replacing Decimal with Number for errors,
+                        // for tests that are run with and without NumberIsFloat set.
                         if (actualStr.Contains(expected))
+                        {
+                            // Compiler errors result in exceptions
+                            return (TestResult.Pass, null);
+                        }
+                        else if (NumberIsFloat && expected.StartsWith("Errors:") && 
+                                 actualStr.Contains(Regex.Replace(expected, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2")))
                         {
                             // Compiler errors result in exceptions
                             return (TestResult.Pass, null);

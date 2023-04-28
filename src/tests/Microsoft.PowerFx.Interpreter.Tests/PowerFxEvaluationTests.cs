@@ -276,7 +276,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 RecalcEngine engine;
                 RecordValue parameters;
-                var iSetup = InternalSetup.Parse(setupHandlerName, NumberIsFloat);
+                var iSetup = InternalSetup.Parse(setupHandlerName, Features, NumberIsFloat);
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
 

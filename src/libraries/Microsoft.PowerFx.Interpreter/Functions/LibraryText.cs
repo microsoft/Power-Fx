@@ -79,19 +79,7 @@ namespace Microsoft.PowerFx.Functions
                     sb.Append(separator);
                 }
 
-                SymbolContext childContext;
-                if (row.IsValue)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Value);
-                }
-                else if (row.IsBlank)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
-                }
-                else
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Error);
-                }
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
@@ -1046,7 +1034,12 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        public static FormulaValue Guid(IRContext irContext, StringValue[] args)
+        public static FormulaValue GuidNoArg(IRContext irContext, FormulaValue[] args)
+        {
+            return new GuidValue(irContext, Guid.NewGuid());
+        }
+
+        public static FormulaValue GuidPure(IRContext irContext, StringValue[] args)
         {
             var text = args[0].Value;
             try

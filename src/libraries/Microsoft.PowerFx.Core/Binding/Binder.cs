@@ -3396,7 +3396,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // If the reference is to Control.Property and the rule for that Property is a constant,
                     // we need to mark the node as constant, and save the control info so we may look up the
                     // rule later.
-                    if (controlInfo?.GetRule(property.InvariantName) is { HasErrors: false } rule && rule.Binding.IsConstant(rule.Binding.Top))
+                    if (controlInfo?.GetRule(property.InvariantName) is { HasErrorsOrWarnings: false } rule && rule.Binding.IsConstant(rule.Binding.Top))
                     {
                         value = controlInfo;
                         isConstant = true;
