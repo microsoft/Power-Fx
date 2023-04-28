@@ -508,7 +508,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
         }
 
-        private static ICollection<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
+        private static HashSet<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
         {
             var tokenTypesToSkip = new HashSet<TokenType>();    
             if (string.IsNullOrWhiteSpace(rawTokenTypesToSkipParam))

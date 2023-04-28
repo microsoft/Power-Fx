@@ -9,6 +9,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     {
         public string ResultId { get; set; } = null;
 
-        public ICollection<uint> Data { get; set; } = new uint[0];
+        public IEnumerable<uint> Data { get; set; } = new uint[0];
     }
 }

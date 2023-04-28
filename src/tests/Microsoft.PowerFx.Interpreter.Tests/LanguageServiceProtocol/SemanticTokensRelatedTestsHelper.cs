@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         /// <param name="expression">Expression.</param>
         /// <param name="eol">End od Line.</param>
         /// <returns>Partially Decoded Tokens.</returns>
-        public static ICollection<ITokenTextSpan> DecodeEncodedSemanticTokensPartially(SemanticTokensResponse tokensResponse, string expression, string eol = "\n")
+        public static IEnumerable<ITokenTextSpan> DecodeEncodedSemanticTokensPartially(SemanticTokensResponse tokensResponse, string expression, string eol = "\n")
         {
             return DecodeEncodedSemanticTokensPartially(tokensResponse.Data, expression, eol);
         }
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         /// <param name="expression">Expression.</param>
         /// <param name="eol">End od Line.</param>
         /// <returns>Partially Decoded Tokens.</returns>
-        public static ICollection<ITokenTextSpan> DecodeEncodedSemanticTokensPartially(ICollection<uint> data, string expression, string eol = "\n")
+        public static IEnumerable<ITokenTextSpan> DecodeEncodedSemanticTokensPartially(IEnumerable<uint> data, string expression, string eol = "\n")
         {
             var lastLineNumber = 0u;
             var lastStartIdx = 0u;

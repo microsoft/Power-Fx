@@ -26,12 +26,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <summary>
         /// A mapping from token type to its unsigned interger encoded value. Each token type is encoded using its position in the TokenType enum.
         /// </summary>
-        private static readonly IDictionary<TokenType, uint> EncodedTokenTypes = Enum.GetValues(typeof(TokenType))
-                                                                                     .OfType<TokenType>()
-                                                                                     .Where(tokenType => tokenType == TokenType.Unknown || (tokenType != TokenType.Min && tokenType != TokenType.Lim))
-                                                                                     .Distinct()
-                                                                                     .Select((tokenType, index) => (tokenType, index))
-                                                                                     .ToDictionary((tokenTypeAndIndex) => tokenTypeAndIndex.tokenType, (tokenTypeAndIndex) => (uint)tokenTypeAndIndex.index);
+        private static readonly IReadOnlyDictionary<TokenType, uint> EncodedTokenTypes = Enum.GetValues(typeof(TokenType))
+                                                                                             .OfType<TokenType>()
+                                                                                             .Where(tokenType => tokenType == TokenType.Unknown || (tokenType != TokenType.Min && tokenType != TokenType.Lim))
+                                                                                             .Distinct()
+                                                                                             .Select((tokenType, index) => (tokenType, index))
+                                                                                             .ToDictionary((tokenTypeAndIndex) => tokenTypeAndIndex.tokenType, (tokenTypeAndIndex) => (uint)tokenTypeAndIndex.index);
 
         /// <summary>
         /// Encodes the given collection of tokens into an unsigned integer array. 
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// <param name="eol">End of line character indiciating the line breaks in the given expression.</param>
         /// <returns>Encoded Tokens.</returns>
         // This encoding is done according to LSP specification for semantic tokens methods https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens
-        public static ICollection<uint> EncodeTokens(IEnumerable<ITokenTextSpan> tokens, string expression, string eol)
+        public static IEnumerable<uint> EncodeTokens(IEnumerable<ITokenTextSpan> tokens, string expression, string eol)
         {
             if (tokens == null)
             {

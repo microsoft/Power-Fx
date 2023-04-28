@@ -171,7 +171,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             TestMultilineTokensAreEncodedCorrectly(expression);
         }
 
-        private static void AssertEncodedTokens(ICollection<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
+        private static void AssertEncodedTokens(IEnumerable<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
         {
             var encodedTokens = encodedTokensCollection.ToArray();
             var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(encodedTokens, expression, eol);
@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 Assert.Equal(0u, encodedTokens[i]);
             }
 
-            Assert.Equal(tokens.Count(), decodedTokens.Count);
+            Assert.Equal(tokens.Count(), decodedTokens.Count());
             Assert.All(tokens.Zip(decodedTokens), (tokens) =>
             {
                 var expectedToken = tokens.First;
