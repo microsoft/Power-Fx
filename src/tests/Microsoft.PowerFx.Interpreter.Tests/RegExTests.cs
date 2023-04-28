@@ -22,7 +22,6 @@ using Microsoft.PowerFx.Types;
 using Xunit;
 using Xunit.Sdk;
 
-
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class RegExTests
@@ -38,12 +37,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public void TestRegExTimeIsSet()
+        public void TestRegExNegativeCacheSize()
         {
-            PowerFxConfig powerFxConfig = new PowerFxConfig();
-            powerFxConfig.EnableRegExFunctions(TimeSpan.FromMilliseconds(1707));
-
-            Assert.Equal(1707, Library.RegexTimeout.TotalMilliseconds);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                PowerFxConfig powerFxConfig = new PowerFxConfig();
+                powerFxConfig.EnableRegExFunctions(TimeSpan.FromMilliseconds(50), -2);
+            });
         }
     }
 }

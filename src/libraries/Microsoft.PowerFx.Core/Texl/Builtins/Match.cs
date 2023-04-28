@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Match(text:s, regular_expression:s, [options:s])
     internal class MatchFunction : BaseMatchFunction
     {
-        public MatchFunction()
-            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord)
+        public MatchFunction(ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> cache, int regexCacheSize)
+            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, cache, regexCacheSize)
         {
         }
     }
@@ -31,26 +31,28 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // MatchAll(text:s, regular_expression:s, [options:s])
     internal class MatchAllFunction : BaseMatchFunction
     {
-        public MatchAllFunction()
-            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable)
+        public MatchAllFunction(ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> cache, int regexCacheSize)
+            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, cache, regexCacheSize)
         {
         }
     }
 
     internal class BaseMatchFunction : BuiltinFunction
-    {
-        [ThreadSafeProtectedByLock(nameof(_regexTypeCache))]
-        private static readonly ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> _regexTypeCache = new ();
+    {        
+        private readonly ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> _regexTypeCache;
         private readonly string _cachePrefix;
+        private readonly int _regexCacheSize;
 
         public override bool IsSelfContained => true;
 
         public override bool SupportsParamCoercion => true;
 
-        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType)
+        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> cache, int regexCacheSize)
             : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, DType.String, DType.String)
         {
             _cachePrefix = returnType.IsTable ? "tbl_" : "rec_";
+            _regexTypeCache = cache;
+            _regexCacheSize = regexCacheSize;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -93,7 +95,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(regexPattern);
             string prefixedRegexPattern = this._cachePrefix + regexPattern;
 
-            if (_regexTypeCache.ContainsKey(prefixedRegexPattern))
+            if (_regexTypeCache != null && _regexTypeCache.ContainsKey(prefixedRegexPattern))
             {
                 var cachedType = _regexTypeCache[prefixedRegexPattern];
                 if (cachedType != null)
@@ -109,7 +111,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            if (_regexTypeCache.Count >= 5000)
+            if (_regexTypeCache != null && _regexTypeCache.Count >= _regexCacheSize)
             {
                 // To preserve memory during authoring, we clear the cache if it gets
                 // too large. This should only happen in a minority of cases and
@@ -155,9 +157,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (!subMatchesHidden)
                 {
-                    propertyNames.Add(new TypedName(
-                        DType.CreateTable(new TypedName(DType.String, ColumnName_Value)),
-                        ColumnName_SubMatches));
+                    propertyNames.Add(new TypedName(DType.CreateTable(new TypedName(DType.String, ColumnName_Value)), ColumnName_SubMatches));
                 }
 
                 if (!startMatchHidden)
@@ -165,12 +165,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
                 }
 
-                returnType = returnType.IsRecord ?
-                    DType.CreateRecord(propertyNames) :
-                    DType.CreateTable(propertyNames);
+                returnType = returnType.IsRecord 
+                    ? DType.CreateRecord(propertyNames) 
+                    : DType.CreateTable(propertyNames);
 
                 AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
-                _regexTypeCache[prefixedRegexPattern] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
+
+                if (_regexTypeCache != null)
+                {
+                    _regexTypeCache[prefixedRegexPattern] = Tuple.Create(returnType, fullMatchHidden, subMatchesHidden, startMatchHidden);
+                }
+
                 return true;
             }
             catch (ArgumentException)

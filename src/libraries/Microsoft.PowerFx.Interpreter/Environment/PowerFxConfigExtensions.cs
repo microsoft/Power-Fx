@@ -27,28 +27,17 @@ namespace Microsoft.PowerFx
         public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
         {
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
-        }
-
-        private static readonly TimeSpan DefaultRegexTimeout = TimeSpan.FromSeconds(1);
+        }        
 
         /// <summary>
         /// Enables Match/IsMatch/MatchAll functions.
         /// </summary>
         /// <param name="powerFxConfig">Power Fx configuration.</param>
         /// <param name="regExTimeout">Timeout duration for regular expression execution. 0 will default to 1 second.</param>
-        public static void EnableRegExFunctions(this PowerFxConfig powerFxConfig, TimeSpan regExTimeout = default)
-        {
-            if (regExTimeout == TimeSpan.Zero)
-            {
-                regExTimeout = DefaultRegexTimeout;
-            }
-
-            if (regExTimeout.TotalMilliseconds < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(regExTimeout), "Timeout duration for regular expression execution must be positive.");
-            }
-
-            foreach (var function in Library.EnableRegexFunctions(regExTimeout))
+        /// <param name="regexCacheSize">Size of the regular expression cache. -1 = disabled. 0 = infinite.</param>
+        public static void EnableRegExFunctions(this PowerFxConfig powerFxConfig, TimeSpan regExTimeout = default, int regexCacheSize = -1)
+        {            
+            foreach (var function in Library.EnableRegexFunctions(regExTimeout, regexCacheSize))
             {
                 powerFxConfig.AddFunction(function);
             }

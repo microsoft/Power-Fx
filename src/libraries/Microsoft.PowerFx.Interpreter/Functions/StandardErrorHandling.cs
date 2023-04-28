@@ -665,7 +665,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static FormulaValue OptionSetOrString(IRContext irContext, int index, FormulaValue arg)
         {
-            if (arg is StringValue || arg is OptionSetValue)
+            if (arg is StringValue || (arg is OptionSetValue osv && osv.Type._type.OptionSetInfo.BackingKind == DKind.String))
             {
                 return arg;
             }

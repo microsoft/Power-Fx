@@ -81,7 +81,6 @@ Blank()
 >> Match("JohnDoe@microsoft.com", Match.Email)
 {FullMatch:"JohnDoe@microsoft.com",StartMatch:1,SubMatches:Table()}
 
-
 >> Match(Blank(), ".")
 Blank()
 

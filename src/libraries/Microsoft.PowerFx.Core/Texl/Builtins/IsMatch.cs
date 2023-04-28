@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -43,11 +44,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
-        {
-            var regexIsConstant = binding.IsConstant(args[1]);
+        {            
             var regexNodeKind = argTypes[1].Kind == DKind.OptionSetValue ? argTypes[1].OptionSetInfo.BackingKind : argTypes[1].Kind;
 
-            if (!regexIsConstant || regexNodeKind != DKind.String)
+            if (regexNodeKind != DKind.String)
             {
                 errors.EnsureError(args[1], TexlStrings.ErrVariableRegEx);
             }
