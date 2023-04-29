@@ -44,7 +44,7 @@
 "http://microsoft.com"
 
 >> PlainText(Blank())
-Blank()
+""
 
 >> PlainText(12.34)
 "12.34"
@@ -70,4 +70,4 @@ Errors: Error 0-11: Invalid number of arguments: received 0, expected 1.
 Error({Kind:ErrorKind.Div0})
 
 >> PlainText(If(1<0, "text"))
-Blank()
+""

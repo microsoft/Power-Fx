@@ -5159,14 +5159,14 @@
     <comment>Warning message.</comment>
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>The PlainText function removes HTML and XML tags.</value>
+    <value>Removes all formatting and returns a plain text value.</value>
     <comment>Description of 'PlainText' function.</comment>
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>PlainText</value>
-    <comment>Function_parameter - First parameter for the PlainText function</comment>
+    <value>text</value>
+    <comment>Function_parameter - First argument of the PlainText function - the text to have its HTML and XML tags removed.</comment>
   </data>
-  <data name="AboutPlainText_PlainText" xml:space="preserve">
-    <value>Text to remove HTML and XML tags.</value>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

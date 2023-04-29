@@ -1210,13 +1210,13 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.PlainText,
-                StandardErrorHandling<FormulaValue>(
+                StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.PlainText.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    replaceBlankValues: ReplaceBlankWith(new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
+                    checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
                     targetFunction: PlainText)
             },
             {
