@@ -827,33 +827,75 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue SequenceFloat(IRContext irContext, int count, NumberValue start, NumberValue step)
         {
-            var rows = LazySequenceFloat(count, start.Value, step.Value).Select(n => new NumberValue(IRContext.NotInSource(FormulaType.Number), n));
+            var rows = LazySequenceFloat(irContext, count, start.Value, step.Value);
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
         public static FormulaValue SequenceDecimal(IRContext irContext, int count, DecimalValue start, DecimalValue step)
         {
-            var rows = LazySequenceDecimal(count, start.Value, step.Value).Select(n => new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), n));
+            var rows = LazySequenceDecimal(irContext, count, start.Value, step.Value);
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: true));
         }
 
-        private static IEnumerable<double> LazySequenceFloat(int records, double start, double step)
+        private static IEnumerable<FormulaValue> LazySequenceFloat(IRContext irContext, int records, double start, double step)
         {
             var x = start;
+            bool isValid = true;
             for (var i = 1; i <= records; i++)
             {
-                yield return x;
-                x += step;
+                if (isValid)
+                {
+                    yield return new NumberValue(IRContext.NotInSource(FormulaType.Number), x);
+                }
+                else
+                {
+                    yield return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = x > 0 ? $"Number is larger than maximum double." : $"Number is less than minimum double.",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.Numeric
+                    });
+                }
+
+                if (isValid && ((double)(x / 2) + (double)(step / 2) <= (double)(double.MaxValue / 2)) && ((double)(x / 2) + (double)(step / 2) >= (double)(double.MinValue / 2)))
+                {
+                    x += step;
+                }
+                else
+                {
+                    isValid = false;
+                }
             }
         }
 
-        private static IEnumerable<decimal> LazySequenceDecimal(int records, decimal start, decimal step)
+        private static IEnumerable<FormulaValue> LazySequenceDecimal(IRContext irContext, int records, decimal start, decimal step)
         {
             var x = start;
+            bool isValid = true;
             for (var i = 1; i <= records; i++)
-            {
-                yield return x;
-                x += step;
+            {                
+                if (isValid)
+                {
+                    yield return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), x);
+                }
+                else
+                {
+                    yield return new ErrorValue(irContext, new ExpressionError()
+                    {
+                        Message = x > 0 ? $"Number is larger than maximum decimal." : $"Number is less than minimum decimal.",
+                        Span = irContext.SourceContext,
+                        Kind = ErrorKind.Numeric
+                    });
+                }
+
+                if (isValid && ((decimal)(x / 2) + (decimal)(step / 2) <= (decimal)(decimal.MaxValue / 2)) && ((decimal)(x / 2) + (decimal)(step / 2) >= (decimal)(decimal.MinValue / 2)))
+                {
+                    x += step;
+                }
+                else
+                {
+                    isValid = false;
+                }
             }
         }
 

@@ -50,6 +50,8 @@
 
   <ItemGroup>
     <None Remove="expressiontestcases\README.md" />
+    <None Remove="expressiontestcases\Sequence_Decimal.txt" />
+    <None Remove="expressiontestcases\Sequence_Float.txt" />
   </ItemGroup>
   
   <ItemGroup>
