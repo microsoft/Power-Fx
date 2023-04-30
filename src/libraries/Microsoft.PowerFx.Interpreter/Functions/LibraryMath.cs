@@ -851,19 +851,16 @@ namespace Microsoft.PowerFx.Functions
                 {
                     yield return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = x > 0 ? $"Number is larger than maximum double." : $"Number is less than minimum double.",
+                        Message = $"The expression returned a non-finite number.",
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.Numeric
                     });
                 }
 
-                if (isValid && ((double)(x / 2) + (double)(step / 2) <= (double)(double.MaxValue / 2)) && ((double)(x / 2) + (double)(step / 2) >= (double)(double.MinValue / 2)))
+                if (isValid)
                 {
                     x += step;
-                }
-                else
-                {
-                    isValid = false;
+                    isValid = !double.IsInfinity(x);                   
                 }
             }
         }
@@ -882,19 +879,22 @@ namespace Microsoft.PowerFx.Functions
                 {
                     yield return new ErrorValue(irContext, new ExpressionError()
                     {
-                        Message = x > 0 ? $"Number is larger than maximum decimal." : $"Number is less than minimum decimal.",
+                        Message = $"The expression returned a number that is beyond the range of decimal values.",
                         Span = irContext.SourceContext,
                         Kind = ErrorKind.Numeric
                     });
                 }
 
-                if (isValid && ((decimal)(x / 2) + (decimal)(step / 2) <= (decimal)(decimal.MaxValue / 2)) && ((decimal)(x / 2) + (decimal)(step / 2) >= (decimal)(decimal.MinValue / 2)))
+                if (isValid)
                 {
-                    x += step;
-                }
-                else
-                {
-                    isValid = false;
+                    try
+                    {
+                        x += step;
+                    }
+                    catch (OverflowException)
+                    {
+                        isValid = false;
+                    }
                 }
             }
         }
