@@ -1264,11 +1264,18 @@ namespace Microsoft.PowerFx.Tests
         private class TestRandService : IRandomService
         {
             public double _value = 0.5;
+            public decimal _decimalValue = 0.5m;
 
             // Returns between 0 and 1. 
             public double NextDouble()
             {
                 return _value;
+            }
+
+            // Returns between 0 and 1. 
+            public decimal NextDecimal()
+            {
+                return _decimalValue;
             }
         }
 

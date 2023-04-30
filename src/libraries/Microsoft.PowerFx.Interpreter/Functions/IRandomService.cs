@@ -21,6 +21,14 @@ namespace Microsoft.PowerFx.Functions
         /// </summary>
         /// <returns></returns>
         double NextDouble();
+
+        /// <summary>
+        /// Returns a random decimal number that is greater than or equal to 0.0, and less than 1.0.
+        /// Should be from a linear distribution. 
+        /// Expected this call is thread-safe and may be called concurrently from multiple threads.
+        /// </summary>
+        /// <returns></returns>
+        decimal NextDecimal();
     }
 
     // Default implementation of IRandomService
@@ -31,11 +39,24 @@ namespace Microsoft.PowerFx.Functions
         [ThreadSafeProtectedByLock(nameof(_randomizerLock))]
         private static readonly Random _random = new Random();
 
+        private static readonly object _randomizerDecimalLock = new object();
+
+        [ThreadSafeProtectedByLock(nameof(_randomizerDecimalLock))]
+        private static readonly Random _randomDecimal = new Random();
+
         public virtual double NextDouble()
         {
             lock (_randomizerLock)
             {
                 return _random.NextDouble();
+            }
+        }
+
+        public virtual decimal NextDecimal()
+        {
+            lock (_randomizerDecimalLock)
+            {
+                return new decimal(_randomDecimal.Next(), _randomDecimal.Next(), _randomDecimal.Next(542101087), false, 28);
             }
         }
     }
