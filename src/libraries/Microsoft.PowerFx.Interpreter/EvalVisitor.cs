@@ -349,8 +349,6 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.EqDecimals:
                     return OperatorBinaryEq(this, context, node.IRContext, args);
                 case BinaryOpKind.EqNullUntyped:
-                case BinaryOpKind.GeqNull:
-                case BinaryOpKind.LeqNull:
                     return OperatorBinaryEqNullUntyped(this, context, node.IRContext, args);
                 case BinaryOpKind.EqPolymorphic:
                     return OperatorBinaryEqPolymorphic(this, context, node.IRContext, args);
@@ -380,11 +378,13 @@ namespace Microsoft.PowerFx
                 case BinaryOpKind.GtNull:
                     return OperatorBinaryGt(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqNumbers:
+                case BinaryOpKind.GeqNull:
                     return OperatorBinaryGeq(this, context, node.IRContext, args);
                 case BinaryOpKind.LtNumbers:
                 case BinaryOpKind.LtNull:
                     return OperatorBinaryLt(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqNumbers:
+                case BinaryOpKind.LeqNull:
                     return OperatorBinaryLeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtDecimals:
