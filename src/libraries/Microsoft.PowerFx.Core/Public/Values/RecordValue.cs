@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
-        public FormulaValue ShallowCopy()
+        public FormulaValue ShallowCopyTop()
         {
             return (RecordValue)this.MemberwiseClone();
         }

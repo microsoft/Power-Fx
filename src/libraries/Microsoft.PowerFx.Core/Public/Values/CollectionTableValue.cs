@@ -90,9 +90,9 @@ namespace Microsoft.PowerFx.Types
 
         private RefCount _refCount;
 
-        public override TableValue MaybeMutableShallowCopy()
+        public override TableValue MaybeShallowCopyTop()
         {
-            if (IsMutable)
+            if (IsCopyOnWrite)
             {
                 _refCount.Count++;
                 var copy = (CollectionTableValue<T>)this.MemberwiseClone();
@@ -111,7 +111,7 @@ namespace Microsoft.PowerFx.Types
 
         private void MaybeShallowCopyRowsOnWrite()
         {
-            if (IsMutable && _refCount.Count > 0)
+            if (IsCopyOnWrite && _refCount.Count > 0)
             {
                 _refCount.Count--;
                 _refCount = new RefCount();

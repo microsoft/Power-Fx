@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx
 
                 if (value is TableValue col)
                 {
-                    value = col.MaybeMutableShallowCopy();
+                    value = col.MaybeShallowCopyTop();
                 }
 
                 Set(slot, value);
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx
 
                 if (value is TableValue col)
                 {
-                    value = col.MaybeMutableShallowCopy();
+                    value = col.MaybeShallowCopyTop();
                 }
 
                 _symbolValues[slot.SlotIndex] = Tuple.Create(slot, value);

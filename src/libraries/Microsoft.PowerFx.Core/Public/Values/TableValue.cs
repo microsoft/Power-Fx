@@ -39,11 +39,11 @@ namespace Microsoft.PowerFx.Types
 
         public new TableType Type => (TableType)base.Type;
 
-        public virtual bool IsMutable => false;
+        public virtual bool IsCopyOnWrite => false;
 
-        public virtual TableValue MaybeMutableShallowCopy()
+        public virtual TableValue MaybeShallowCopyTop()
         {
-            if (IsMutable)
+            if (IsCopyOnWrite)
             {
                 throw new NotImplementedException();
             }

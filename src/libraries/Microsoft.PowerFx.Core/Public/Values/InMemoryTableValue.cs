@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly RecordType _recordType;
 
-        public override bool IsMutable => true;
+        public override bool IsCopyOnWrite => true;
 
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
             : base(irContext, MaybeAdjustType(irContext, records).ToList())
@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Types
 
             foreach (var record in records)
             {
-                copy.Add(record.IsValue ? DValue<RecordValue>.Of((RecordValue)record.Value.ShallowCopy()) : record);
+                copy.Add(record.IsValue ? DValue<RecordValue>.Of((RecordValue)record.Value.ShallowCopyTop()) : record);
             }
 
             return copy;
@@ -62,19 +62,12 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly RecordType _recordType;
 
-        public override bool IsMutable => false;
-
         internal RecordsOnlyTableValue(IRContext irContext, IEnumerable<RecordValue> records)
             : base(irContext, records)
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
-        }
-
-        internal override IEnumerable<RecordValue> ShallowCopyRows(IEnumerable<RecordValue> records)
-        {
-            return records.Select(item => (RecordValue)item.ShallowCopy());
         }
 
         protected override DValue<RecordValue> Marshal(RecordValue record)
