@@ -21,17 +21,28 @@ namespace Microsoft.PowerFx.Functions
         {
             {
                 UnaryOpKind.Negate,
-                StandardErrorHandling<FormulaValue>(
+                StandardErrorHandling<NumberValue>(
                     "-",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithFloatZero,
-                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: NumericNegate)
             },
             {
                 UnaryOpKind.NegateDecimal,
+                StandardErrorHandling<DecimalValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: ExactValueType<DecimalValue>,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DecimalNegate)
+            },
+            {
+                UnaryOpKind.NegateDate,
                 StandardErrorHandling<FormulaValue>(
                     "-",
                     expandArguments: NoArgExpansion,
@@ -39,7 +50,29 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: DateNumberTimeOrDateTime,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: NumericNegate)
+                    targetFunction: DateTimeNegate)
+            },
+            {
+                UnaryOpKind.NegateDateTime,
+                StandardErrorHandling<FormulaValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DateTimeNegate)
+            },
+            {
+                UnaryOpKind.NegateTime,
+                StandardErrorHandling<TimeValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: TimeNegate)
             },
             {
                 UnaryOpKind.Percent,
@@ -471,22 +504,28 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Text)
             },
         };
-#endregion
+        #endregion
 
-#region Unary Operator Implementations
-        private static FormulaValue NumericNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        #region Unary Operator Implementations
+        private static NumberValue NumericNegate(IRContext irContext, NumberValue[] args)
         {
-            return args[0] switch
-            {
-                NumberValue nv => new NumberValue(irContext, -nv.Value),
-                DecimalValue dv => new DecimalValue(irContext, -dv.Value),
-                TimeValue tv => new TimeValue(irContext, -tv.Value),
-                DateValue _ or DateTimeValue _ => DateNegate(runner, context, irContext, args),
-                _ => CommonErrors.RuntimeTypeMismatch(irContext)
-            };
+            var result = -args[0].Value;
+            return new NumberValue(irContext, result);
         }
 
-        private static FormulaValue DateNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static DecimalValue DecimalNegate(IRContext irContext, DecimalValue[] args)
+        {
+            var result = -args[0].Value;
+            return new DecimalValue(irContext, result);
+        }
+
+        private static TimeValue TimeNegate(IRContext irContext, TimeValue[] args)
+        {
+            var result = -args[0].Value;
+            return new TimeValue(irContext, result);
+        }
+
+        private static FormulaValue DateTimeNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             var numericValue = DateToNumber(runner, context, IRContext.NotInSource(FormulaType.Number), args);
             if (numericValue is NumberValue nv)
