@@ -39,11 +39,6 @@ namespace Microsoft.PowerFx.Functions
         [ThreadSafeProtectedByLock(nameof(_randomizerLock))]
         private static readonly Random _random = new Random();
 
-        private static readonly object _randomizerDecimalLock = new object();
-
-        [ThreadSafeProtectedByLock(nameof(_randomizerDecimalLock))]
-        private static readonly Random _randomDecimal = new Random();
-
         public virtual double NextDouble()
         {
             lock (_randomizerLock)
@@ -54,9 +49,15 @@ namespace Microsoft.PowerFx.Functions
 
         public virtual decimal NextDecimal()
         {
-            lock (_randomizerDecimalLock)
+            lock (_randomizerLock)
             {
-                return new decimal(_randomDecimal.Next(), _randomDecimal.Next(), _randomDecimal.Next(542101087), false, 28);
+                var randomDecimal = new decimal(_random.Next(), _random.Next(), _random.Next(542101087), false, 28);
+                if (randomDecimal > 1)
+                {
+                    randomDecimal -= Math.Floor(randomDecimal);
+                }   
+                
+                return randomDecimal;
             }
         }
     }
