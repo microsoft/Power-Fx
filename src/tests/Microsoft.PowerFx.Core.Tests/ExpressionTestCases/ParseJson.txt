@@ -66,9 +66,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(ParseJSON("""s""")) = Text("s")
 true
 
->> Text(ParseJSON("null"))
-Blank()
-
 >> Text(ParseJSON("true"))
 "true"
 
@@ -499,13 +496,16 @@ true
 "1,23"
 
 >> Text(ParseJSON("null"), "#.##")
-Blank()
+""
 
 >> Text(ParseJSON("null"), "#.##", "fr-fr")
-Blank()
+""
 
 >> Text(ParseJSON("1.234"), Blank())
-Blank()
+""
 
 >> Text(ParseJSON("1.234"), "#.##", Blank())
+""
+
+>> Text(ParseJSON("null"))
 Blank()
