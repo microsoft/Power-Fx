@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     internal abstract class StringOneArgFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, CallNode node)
         {
             return base.GetGenericArgPreprocessor(index);
         }

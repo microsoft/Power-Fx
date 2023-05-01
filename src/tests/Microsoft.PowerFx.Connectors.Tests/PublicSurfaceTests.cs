@@ -38,7 +38,9 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorParameter",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
               "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
-              "Microsoft.PowerFx.Connectors.ConnectorParameters"
+              "Microsoft.PowerFx.Connectors.ConnectorParameters",
+              "Microsoft.PowerFx.Connectors.ConnectorParameterType",
+              "Microsoft.PowerFx.Connectors.ConnectorType"
             };
 
             var sb = new StringBuilder();
