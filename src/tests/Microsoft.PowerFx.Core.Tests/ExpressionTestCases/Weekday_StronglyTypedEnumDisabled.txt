@@ -54,6 +54,11 @@
 >> Weekday(Date(2016, 2, 29))
 2
 
+// **************** OTHER NUMERIC ENUM NOT STARTOFWEEK ****************
+// Sunday, start on Wednesday
+>> Weekday(Date(2016, 1, 3), ErrorKind.Div0)
+5
+
 // **************** INVALID EXCEL CODES AS STARTOFWEEK PARAMETER  ****************
 
 // 0 not in list of supported StartofWeek Excel codes

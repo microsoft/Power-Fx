@@ -50,6 +50,11 @@ Errors: Error 25-27: Invalid argument type (Decimal). Expecting a Enum (StartOfW
 >> Weekday(Date(2016, 1, 3),16)
 Errors: Error 25-27: Invalid argument type (Decimal). Expecting a Enum (StartOfWeek) value instead.
 
+// **************** OTHER NUMERIC ENUM NOT STARTOFWEEK ****************
+// Sunday, start on Wednesday
+>> Weekday(Date(2016, 1, 3), ErrorKind.Div0)
+Errors: Error 35-40: Invalid argument type (Enum (ErrorKind)). Expecting a Enum (StartOfWeek) value instead.
+
 // **************** INVALID EXCEL CODES AS STARTOFWEEK PARAMETER  ****************
 
 // 0 not in list of supported StartofWeek Excel codes
