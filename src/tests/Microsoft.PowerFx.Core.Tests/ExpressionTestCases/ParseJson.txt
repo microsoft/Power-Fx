@@ -402,6 +402,9 @@ true
 >> Text(ParseJSON("{""a"":null,""b"":""""}").b) = Blank()
 false
 
+>> Text(ParseJSON("{""a"":null,""b"":""""}").c) = Blank()
+true
+
 >> Value(First(ParseJSON("[1, 2, 3, 4]")))
 1
 
