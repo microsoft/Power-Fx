@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -30,6 +31,9 @@ namespace Microsoft.PowerFx.Core.Functions
         private readonly bool _isImperative;
         private readonly IdentToken _returnTypeToken;
         private readonly IEnumerable<UDFArg> _args;
+        private TexlBinding _binding;
+
+        public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
 
         public TexlNode UdfBody { get; }
 
@@ -67,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null, INameResolver functionNameResolver = null)
+        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null, INameResolver functionNameResolver = null, IExternalRule rule = null)
         {
             if (nameResolver is null)
             {
@@ -80,12 +84,12 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            var binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features, rule: rule);
 
-            CheckTypesOnDeclaration(binding.CheckTypesContext, binding.ResultType, binding.ErrorContainer);
-            userDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(binding, _args, binding.ErrorContainer);
+            CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding.ErrorContainer);
+            userDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(_binding, _args, _binding.ErrorContainer);
 
-            return binding;
+            return _binding;
         }
 
         /// <summary>
