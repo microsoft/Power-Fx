@@ -299,12 +299,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            if ((args[0] is UntypedObjectValue uo && uo.Type == FormulaType.Blank) || args[0] is BlankValue)
+            if ((args[0] is UntypedObjectValue uo && uo.Impl.Type == FormulaType.Blank) || args[0] is BlankValue)
             {
                 if (args.Length == 1)
                 {
                     // As a special case, blank propagates for the single argument only
-                    return args[0];
+                    return new BlankValue(irContext);
                 }
 
                 return new StringValue(irContext, string.Empty);
