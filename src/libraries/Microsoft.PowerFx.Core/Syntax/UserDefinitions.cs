@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Syntax
             return TexlParser.ParseUserDefinitionScript(script, numberAsFloat, loc);
         }
 
-        public static bool ProcessUserDefnitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false, Features features = null)
+        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false, Features features = null)
         {
             var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, loc, numberAsFloat, userDefinitionSemanticsHandler, features);
 
