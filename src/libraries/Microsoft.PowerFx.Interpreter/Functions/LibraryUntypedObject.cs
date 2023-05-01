@@ -260,7 +260,7 @@ namespace Microsoft.PowerFx.Functions
                 return Float(runner, context, irContext, new FormulaValue[] { str });
             }
             else if ((impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber) ||
-                      impl.Type == FormulaType.Number)  
+                      impl.Type == FormulaType.Number)
             {
                 var number = impl.GetDouble();
                 if (IsInvalidDouble(number))
@@ -297,37 +297,64 @@ namespace Microsoft.PowerFx.Functions
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Value_UO.Name, DType.Number.GetKindString(), impl);
         }
 
-        public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            var impl = args[0].Impl;
+            if ((args[0] is UntypedObjectValue uo && uo.Impl.Type == FormulaType.Blank) || args[0] is BlankValue)
+            {
+                if (args.Length == 1)
+                {
+                    // As a special case, blank propagates for the single argument only
+                    return new BlankValue(irContext);
+                }
 
+                return new StringValue(irContext, string.Empty);
+            }
+
+            if (args.Length >= 2 && args[1] is BlankValue)
+            {
+                return new StringValue(irContext, string.Empty);
+            }
+
+            if (args.Length == 3 && args[2] is BlankValue)
+            {
+                return new StringValue(irContext, string.Empty);
+            }
+
+            var arg0 = (UntypedObjectValue)args[0];
+            var impl = arg0.Impl;
+
+            FormulaValue newArg0 = null;
             if (impl.Type == FormulaType.String)
             {
                 var str = impl.GetString();
-                return new StringValue(irContext, str);
+                newArg0 = new StringValue(irContext, str);
             }
             else if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
             {
                 var str = impl.GetUntypedNumber();
-                return new StringValue(irContext, str);
+                newArg0 = new StringValue(irContext, str);
             }
             else if (impl.Type == FormulaType.Number)
             {
-                var n = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
-                return Text(runner, context, irContext, new FormulaValue[] { n });
+                newArg0 = new NumberValue(IRContext.NotInSource(FormulaType.Number), impl.GetDouble());
             }
             else if (impl.Type == FormulaType.Decimal)
             {
-                var n = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), impl.GetDecimal());
-                return Text(runner, context, irContext, new FormulaValue[] { n });
+                newArg0 = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), impl.GetDecimal());
             }
             else if (impl.Type == FormulaType.Boolean)
             {
                 var b = impl.GetBoolean();
-                return new StringValue(irContext, PowerFxBooleanToString(b));
+                newArg0 = new StringValue(irContext, PowerFxBooleanToString(b));
+            }
+            else
+            {
+                return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
             }
 
-            return GetTypeMismatchError(irContext, BuiltinFunctionsCore.Text_UO.Name, DType.String.GetKindString(), impl);
+            var newArgs = new List<FormulaValue>() { newArg0 };
+            newArgs.AddRange(args.Skip(1));
+            return Text(runner, context, irContext, newArgs.ToArray());
         }
 
         public static FormulaValue Table_UO(IRContext irContext, UntypedObjectValue[] args)
@@ -466,7 +493,7 @@ namespace Microsoft.PowerFx.Functions
                 if (IsValidDateTimeUO(s) && DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime datetime))
                 {
                     datetime = MakeValidDateTime(runner, datetime, runner.TimeZoneInfo);
-                    
+
                     datetime = DateTimeValue.GetConvertedDateTimeValue(datetime, runner.TimeZoneInfo);
 
                     return new DateTimeValue(irContext, datetime);
@@ -559,6 +586,34 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return GetTypeMismatchError(irContext, BuiltinFunctionsCore.ColorValue_UO.Name, DType.String.GetKindString(), impl);
+        }
+
+        public static FormulaValue UntypedStringToUntypedFloat(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        {
+            return UntypedStringToUntypedNumber<NumberValue>(runner, context, irContext, args, FormulaType.Number, nv => new FloatUntypedObject(nv.Value));
+        }
+
+        public static FormulaValue UntypedStringToUntypedDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args)
+        {
+            return UntypedStringToUntypedNumber<DecimalValue>(runner, context, irContext, args, FormulaType.Decimal, nv => new DecimalUntypedObject(nv.Value));
+        }
+
+        public static FormulaValue UntypedStringToUntypedNumber<T>(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, UntypedObjectValue[] args, FormulaType numberType, Func<T, IUntypedObject> constructUO)
+            where T : ValidFormulaValue
+        {
+            var impl = args[0].Impl;
+
+            if (impl.Type is ExternalType et && et.Kind == ExternalTypeKind.UntypedNumber)
+            {
+                var valueRes = Value_UO(runner, context, IRContext.NotInSource(numberType), new UntypedObjectValue[] { args[0] });
+
+                if (valueRes is T nv)
+                {
+                    return new UntypedObjectValue(IRContext.NotInSource(FormulaType.UntypedObject), constructUO(nv));
+                }
+            }
+
+            return args[0];
         }
     }
 }
