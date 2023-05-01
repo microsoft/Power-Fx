@@ -67,7 +67,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 true
 
 >> Text(ParseJSON("null"))
-""
+Blank()
 
 >> Text(ParseJSON("true"))
 "true"
@@ -157,7 +157,7 @@ Table({Value:Blank()},{Value:Blank()},{Value:Blank()})
 Table({Value:5},{Value:Blank()},{Value:7})
 
 >> ForAll(ParseJSON("[""hi"", null, ""hello""]"), Text(ThisRecord))
-Table({Value:"hi"},{Value:""},{Value:"hello"})
+Table({Value:"hi"},{Value:Blank()},{Value:"hello"})
 
 >> ForAll(ParseJSON("[true, null, false]"), Boolean(ThisRecord))
 Table({Value:true},{Value:Blank()},{Value:false})
@@ -346,7 +346,7 @@ Blank()
 "str"
 
 >> Text(Index(ParseJSON("[ { ""a"" : 10 }, { ""b"" : ""str"" } ]"),2).a)
-""
+Blank()
 
 >> ColorValue(ParseJSON("""#01020304"""))
 RGBA(1,2,3,0.016)
@@ -397,13 +397,13 @@ true
 true
 
 >> Text(ParseJSON("{""a"":null,""b"":""""}").a) = ""
-true
+false
 
 >> Text(ParseJSON("{""a"":null,""b"":""""}").b) = ""
 true
 
 >> Text(ParseJSON("{""a"":null,""b"":""""}").c) = ""
-true
+false
 
 >> Value(First(ParseJSON("[1, 2, 3, 4]")))
 1
