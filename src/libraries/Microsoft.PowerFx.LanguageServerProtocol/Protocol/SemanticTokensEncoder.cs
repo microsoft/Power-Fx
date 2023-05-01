@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
                 return new uint[0];
             }
 
-            ICollection<uint> encodedTokens = new LinkedList<uint>();
+            var encodedTokens = new LinkedList<uint>();
             var currentLineNumber = 0u;
             var previousTokenLineNumber = 0u;
             var previousTokenStartIdx = 0u;
