@@ -39,6 +39,20 @@ namespace Microsoft.PowerFx.Types
 
         public new TableType Type => (TableType)base.Type;
 
+        public virtual bool IsMutable => false;
+
+        public virtual TableValue MaybeMutableShallowCopy()
+        {
+            if (IsMutable)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                return this;
+            }
+        }
+
         /// <summary>
         /// Casts <paramref name="record"/> to the table's record type.
         /// </summary>

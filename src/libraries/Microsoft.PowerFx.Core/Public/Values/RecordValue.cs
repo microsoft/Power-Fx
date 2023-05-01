@@ -28,6 +28,11 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         public IEnumerable<NamedValue> Fields => GetFields();
 
+        public FormulaValue ShallowCopy()
+        {
+            return (RecordValue)this.MemberwiseClone();
+        }
+
         /// <summary>
         /// Unique key associated to each record in application.
         /// NOTE: If two table has a same record instance, then the key should be same.

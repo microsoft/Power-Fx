@@ -62,6 +62,12 @@ namespace Microsoft.PowerFx
             if (_symTable is SymbolTable symTableEditable)
             {
                 var slot = symTableEditable.AddVariable(name, value.Type, mutable: true);
+
+                if (value is TableValue col)
+                {
+                    value = col.MaybeMutableShallowCopy();
+                }
+
                 Set(slot, value);
 
                 return this;
@@ -81,6 +87,12 @@ namespace Microsoft.PowerFx
             else
             {
                 _symTable.ValidateAccepts(slot, value.Type);
+
+                if (value is TableValue col)
+                {
+                    value = col.MaybeMutableShallowCopy();
+                }
+
                 _symbolValues[slot.SlotIndex] = Tuple.Create(slot, value);
             }
 

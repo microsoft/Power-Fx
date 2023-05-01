@@ -13,8 +13,8 @@ namespace Microsoft.PowerFx.Types
     // Represent record backed by known list of values. 
     internal class InMemoryRecordValue : RecordValue
     {
-        protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
-        private readonly IDictionary<string, FormulaValue> _mutableFields;
+        protected IReadOnlyDictionary<string, FormulaValue> _fields;
+        private IDictionary<string, FormulaValue> _mutableFields;
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
           : this(irContext, ToDict(fields))
@@ -56,6 +56,12 @@ namespace Microsoft.PowerFx.Types
             return _fields.TryGetValue(fieldName, out result);
         }
 
+        private void ShallowCopyFieldsOnWrite()
+        {
+            _fields = new Dictionary<string, FormulaValue>(_mutableFields);
+            _mutableFields = _fields as IDictionary<string, FormulaValue>;
+        }
+
         public override async Task<DValue<RecordValue>> UpdateFieldsAsync(RecordValue changeRecord, CancellationToken cancellationToken)
         {
             return await UpdateAllowedFieldsAsync(changeRecord, _fields, cancellationToken).ConfigureAwait(false);
@@ -70,6 +76,8 @@ namespace Microsoft.PowerFx.Types
                 return await base.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
             }
 
+            ShallowCopyFieldsOnWrite();
+
             await foreach (var field in changeRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
                 _mutableFields[field.Name] = field.Value;
@@ -79,7 +87,7 @@ namespace Microsoft.PowerFx.Types
 
             foreach (var kvp in allowedFields)
             {
-                fields.Add(new NamedValue(kvp.Key, kvp.Value));
+                fields.Add(new NamedValue(kvp.Key, _fields[kvp.Key]));
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));

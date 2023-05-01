@@ -19,12 +19,12 @@ namespace Microsoft.PowerFx.Types
     public abstract class CollectionTableValue<T> : TableValue
     {
         // Required - basic enumeration. This is the source object. 
-        private readonly IEnumerable<T> _enumerator; // required. supports enumeration;
+        private IEnumerable<T> _enumerator; // required. supports enumeration;
 
         // Additional capabilities. 
-        private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
-        private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
-        private readonly ICollection<T> _sourceList; // maybe null. supports mutation;
+        private IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
+        private IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
+        private ICollection<T> _sourceList; // maybe null. supports mutation;
 
         public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)
@@ -35,6 +35,8 @@ namespace Microsoft.PowerFx.Types
         internal CollectionTableValue(IRContext irContext, IEnumerable<T> source)
          : base(irContext)
         {
+            _refCount = new RefCount();
+
             _enumerator = source ?? throw new ArgumentNullException(nameof(source));
 
             _sourceIndex = source as IReadOnlyList<T>;
@@ -80,6 +82,48 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
+        // RefCount wraps an integer Count in an object so that we retain refernece semantics
+        private class RefCount
+        {
+            public int Count;
+        }
+
+        private RefCount _refCount;
+
+        public override TableValue MaybeMutableShallowCopy()
+        {
+            if (IsMutable)
+            {
+                _refCount.Count++;
+                var copy = (CollectionTableValue<T>)this.MemberwiseClone();
+                return copy;
+            }
+            else
+            {
+                return this;
+            }
+        }
+
+        internal virtual IEnumerable<T> ShallowCopyRows(IEnumerable<T> records)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void MaybeShallowCopyRowsOnWrite()
+        {
+            if (IsMutable && _refCount.Count > 0)
+            {
+                _refCount.Count--;
+                _refCount = new RefCount();
+
+                _enumerator = ShallowCopyRows(_enumerator);
+
+                _sourceList = _enumerator as ICollection<T>;
+                _sourceCount = _enumerator as IReadOnlyCollection<T>;
+                _sourceIndex = _enumerator as IReadOnlyList<T>;
+            }
+        }
+
         public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
         {
             if (_sourceList == null)
@@ -87,6 +131,8 @@ namespace Microsoft.PowerFx.Types
                 cancellationToken.ThrowIfCancellationRequested();
                 return await base.AppendAsync(record, cancellationToken).ConfigureAwait(false);
             }
+
+            MaybeShallowCopyRowsOnWrite();
 
             var item = MarshalInverse(record);
 
@@ -103,6 +149,8 @@ namespace Microsoft.PowerFx.Types
             {
                 return await base.ClearAsync(cancellationToken).ConfigureAwait(false);
             }
+
+            MaybeShallowCopyRowsOnWrite();
 
             _sourceList.Clear();
 
@@ -139,6 +187,8 @@ namespace Microsoft.PowerFx.Types
                 return await base.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
             }
 
+            MaybeShallowCopyRowsOnWrite();
+
             foreach (RecordValue recordToRemove in recordsToRemove)
             {
                 var deleteList = new List<T>();
@@ -172,6 +222,8 @@ namespace Microsoft.PowerFx.Types
 
         protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            MaybeShallowCopyRowsOnWrite();
+
             var actual = await FindAsync(baseRecord, cancellationToken).ConfigureAwait(false);
 
             if (actual != null)

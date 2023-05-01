@@ -124,6 +124,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
         [InlineData("ForAllMutate.txt")]
+        [InlineData("SetCopyOnWrite.txt")]
         public void RunMutationTests(string file)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);

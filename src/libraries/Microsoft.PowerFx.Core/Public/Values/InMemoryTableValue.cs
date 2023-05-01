@@ -17,6 +17,8 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly RecordType _recordType;
 
+        public override bool IsMutable => true;
+
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
             : base(irContext, MaybeAdjustType(irContext, records).ToList())
         {
@@ -28,6 +30,18 @@ namespace Microsoft.PowerFx.Types
         private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
         {
             return records.Select(record => record.IsValue ? DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(((TableType)irContext.ResultType).ToRecord(), record.Value)) : record);
+        }
+
+        internal override IEnumerable<DValue<RecordValue>> ShallowCopyRows(IEnumerable<DValue<RecordValue>> records)
+        {
+            var copy = new List<DValue<RecordValue>>();
+
+            foreach (var record in records)
+            {
+                copy.Add(record.IsValue ? DValue<RecordValue>.Of((RecordValue)record.Value.ShallowCopy()) : record);
+            }
+
+            return copy;
         }
 
         protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)
@@ -48,12 +62,19 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly RecordType _recordType;
 
+        public override bool IsMutable => false;
+
         internal RecordsOnlyTableValue(IRContext irContext, IEnumerable<RecordValue> records)
             : base(irContext, records)
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
+        }
+
+        internal override IEnumerable<RecordValue> ShallowCopyRows(IEnumerable<RecordValue> records)
+        {
+            return records.Select(item => (RecordValue)item.ShallowCopy());
         }
 
         protected override DValue<RecordValue> Marshal(RecordValue record)
