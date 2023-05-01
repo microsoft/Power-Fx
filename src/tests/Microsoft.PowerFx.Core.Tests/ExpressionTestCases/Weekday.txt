@@ -116,7 +116,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 // Valid date passed as string in DateTimeValue parameter
->> Weekday(Date(2022,1,2),StartOfWeek.Sunday)
+>> Weekday("2023-01-01",StartOfWeek.Sunday)
 1
 
 // ******************************** NULL AND ERROR PARAMETERS ********************************
