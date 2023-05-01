@@ -272,13 +272,17 @@ namespace Microsoft.PowerFx.Core.IR
                     switch (node.Op)
                     {
                         case BinaryOp.NotEqual:
-                        case BinaryOp.Less:
-                        case BinaryOp.Greater:
                             return BinaryOpKind.NeqNull;
                         case BinaryOp.Equal:
-                        case BinaryOp.LessEqual:
-                        case BinaryOp.GreaterEqual:
                             return BinaryOpKind.EqNull;
+                        case BinaryOp.Less:
+                            return BinaryOpKind.LtNull;
+                        case BinaryOp.LessEqual:
+                            return BinaryOpKind.LeqNull;
+                        case BinaryOp.Greater:
+                            return BinaryOpKind.GtNull;
+                        case BinaryOp.GreaterEqual:
+                            return BinaryOpKind.GeqNull;
                         default:
                             throw new NotSupportedException();
                     }
