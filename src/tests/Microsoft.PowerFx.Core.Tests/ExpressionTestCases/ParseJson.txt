@@ -66,9 +66,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(ParseJSON("""s""")) = Text("s")
 true
 
->> Text(ParseJSON("null"))
-Blank()
-
 >> Text(ParseJSON("true"))
 "true"
 
@@ -491,3 +488,24 @@ Blank()
 
 >> Boolean(IfError(ParseJSON("{""field1"":true}").field1, ParseJSON("false")))
 true
+
+>> Text(ParseJSON("1.234"), "#.##")
+"1.23"
+
+>> Text(ParseJSON("1.234"), "#.##", "fr-fr")
+"1,23"
+
+>> Text(ParseJSON("null"), "#.##")
+""
+
+>> Text(ParseJSON("null"), "#.##", "fr-fr")
+""
+
+>> Text(ParseJSON("1.234"), Blank())
+""
+
+>> Text(ParseJSON("1.234"), "#.##", Blank())
+""
+
+>> Text(ParseJSON("null"))
+Blank()
