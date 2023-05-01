@@ -497,3 +497,15 @@ true
 
 >> Text(ParseJSON("1.234"), "#.##", "fr-fr")
 "1,23"
+
+>> Text(ParseJSON("null"), "#.##")
+Blank()
+
+>> Text(ParseJSON("null"), "#.##", "fr-fr")
+Blank()
+
+>> Text(ParseJSON("1.234"), Blank())
+Blank()
+
+>> Text(ParseJSON("1.234"), "#.##", Blank())
+Blank()
