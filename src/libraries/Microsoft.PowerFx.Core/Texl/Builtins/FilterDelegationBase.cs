@@ -188,15 +188,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             // Only boolean option set, boolean fields and views are allowed to delegate
             var nodeDType = binding.GetType(dsNode);
-            if (binding.IsValidBooleanDelegableNode(dsNode)
-                || (nodeDType == DType.ViewValue))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return binding.IsValidBooleanDelegableNode(dsNode) || (nodeDType == DType.ViewValue);
         }
     }
 }
