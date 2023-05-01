@@ -209,7 +209,9 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Call Node Replacements:
                     case BinaryOpKind.Power:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
+                        var args = new List<IntermediateNode> { left, right };
+                        args = AttachArgPreprocessor(args, BuiltinFunctionsCore.Power, node, context);
+                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, args);
                         break;
                     case BinaryOpKind.Concatenate:
                         binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
@@ -385,7 +387,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
-            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlCallNode node, IRTranslatorContext context)
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlNode node, IRTranslatorContext context)
             {
                 var len = args.Count;
                 List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);

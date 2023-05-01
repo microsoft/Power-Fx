@@ -237,4 +237,12 @@ Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.InvalidArgument}))
 >> Power(Exp(29.5),2)
 4.201210403790501E+25
 
+>> 16 ^ Blank()
+1
+
+>> Blank() ^ 16
+0
+
+>> Blank() ^ Blank()
+1
 
