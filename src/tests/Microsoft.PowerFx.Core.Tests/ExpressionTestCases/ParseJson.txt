@@ -396,13 +396,10 @@ true
 >> IsBlank(ParseJSON("{""a"":null,""b"":""""}").c)
 true
 
->> Text(ParseJSON("{""a"":null,""b"":""""}").a) = ""
-false
-
->> Text(ParseJSON("{""a"":null,""b"":""""}").b) = ""
+>> Text(ParseJSON("{""a"":null,""b"":""""}").a) = Blank()
 true
 
->> Text(ParseJSON("{""a"":null,""b"":""""}").c) = ""
+>> Text(ParseJSON("{""a"":null,""b"":""""}").b) = Blank()
 false
 
 >> Value(First(ParseJSON("[1, 2, 3, 4]")))
