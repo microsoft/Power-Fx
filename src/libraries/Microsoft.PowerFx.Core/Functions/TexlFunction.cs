@@ -1462,9 +1462,9 @@ namespace Microsoft.PowerFx.Core.Functions
         /// By default, function does not attach any pre-processing for arguments.
         /// </summary>
         /// <param name="index">0 based index of argument.</param>
-        /// <param name="node">The original call node.</param>
+        /// <param name="argCount">The count of argument to call the function.</param>
         /// <returns></returns>
-        public virtual ArgPreprocessor GetArgPreprocessor(int index, CallNode node)
+        public virtual ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return ArgPreprocessor.None;
         }

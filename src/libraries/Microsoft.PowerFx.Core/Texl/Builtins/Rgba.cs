@@ -12,7 +12,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // RGBA(red, green, blue, alpha)
     internal sealed class RGBAFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index, CallNode node)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             if (index >= 0 && index <= 2)
             {
