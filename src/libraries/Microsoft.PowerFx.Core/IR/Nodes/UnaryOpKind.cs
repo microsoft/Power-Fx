@@ -10,6 +10,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         Percent,
         NegateDecimal,
         PercentDecimal,
+        NegateDate,
+        NegateDateTime,
+        NegateTime,
 
         // Coercion operations
         BooleanToNumber,
@@ -104,5 +107,12 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         /// All Interpreter(backed) must implement this.
         /// </summary>
         BlankToEmptyString,
+
+        /// <summary>
+        /// Used for pre-processing untyped function arguments from string to number.
+        /// All Interpreter(backed) must implement this.
+        /// </summary>
+        UntypedStringToUntypedFloat,
+        UntypedStringToUntypedDecimal,
     }
 }
