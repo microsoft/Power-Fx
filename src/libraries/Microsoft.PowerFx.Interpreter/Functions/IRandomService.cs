@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Microsoft.PowerFx.Functions
@@ -51,13 +52,16 @@ namespace Microsoft.PowerFx.Functions
         {
             lock (_randomizerLock)
             {
-                var randomDecimal = new decimal(_random.Next(), _random.Next(), _random.Next(542101087), false, 28);
-                if (randomDecimal > 1)
-                {
-                    randomDecimal -= Math.Floor(randomDecimal);
-                }   
+                var randomDecimal = new decimal(_random.Next(), _random.Next(), _random.Next(), false, 28);
+                var randStr = randomDecimal.ToString(CultureInfo.InvariantCulture);
+                randStr = "0." + randStr.Replace(".", string.Empty).Substring(1);
                 
-                return randomDecimal;
+                if (decimal.TryParse(randStr, out decimal decimalResult))
+                {
+                    return decimalResult;
+                }
+
+                return decimal.MaxValue;
             }
         }
     }
