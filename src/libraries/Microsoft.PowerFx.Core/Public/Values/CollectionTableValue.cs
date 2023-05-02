@@ -35,8 +35,6 @@ namespace Microsoft.PowerFx.Types
         internal CollectionTableValue(IRContext irContext, IEnumerable<T> source)
          : base(irContext)
         {
-            _refCount = new RefCount();
-
             _enumerator = source ?? throw new ArgumentNullException(nameof(source));
 
             _sourceIndex = source as IReadOnlyList<T>;
@@ -82,19 +80,10 @@ namespace Microsoft.PowerFx.Types
             }
         }
 
-        // RefCount wraps an integer Count in an object so that we retain refernece semantics
-        private class RefCount
-        {
-            public int Count;
-        }
-
-        private RefCount _refCount;
-
         public override TableValue MaybeShallowCopyTop()
         {
             if (IsCopyOnWrite)
             {
-                _refCount.Count++;
                 var copy = (CollectionTableValue<T>)this.MemberwiseClone();
                 return copy;
             }
@@ -111,11 +100,8 @@ namespace Microsoft.PowerFx.Types
 
         private void MaybeShallowCopyRowsOnWrite()
         {
-            if (IsCopyOnWrite && _refCount.Count > 0)
+            if (IsCopyOnWrite)
             {
-                _refCount.Count--;
-                _refCount = new RefCount();
-
                 _enumerator = ShallowCopyRows(_enumerator);
 
                 _sourceList = _enumerator as ICollection<T>;
