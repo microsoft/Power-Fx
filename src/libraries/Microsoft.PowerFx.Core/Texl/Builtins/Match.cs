@@ -165,8 +165,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
                 }
 
-                returnType = returnType.IsRecord 
-                    ? DType.CreateRecord(propertyNames) 
+                returnType = returnType.IsRecord
+                    ? DType.CreateRecord(propertyNames)
                     : DType.CreateTable(propertyNames);
 
                 AddWarnings(regExNode, errors, hidesFullMatch: fullMatchHidden, hidesSubMatches: subMatchesHidden, hidesStartMatch: startMatchHidden);
@@ -181,7 +181,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             catch (ArgumentException)
             {
                 errors.EnsureError(regExNode, TexlStrings.ErrInvalidRegEx);
-                _regexTypeCache[prefixedRegexPattern] = null; // Cache to avoid evaluating again
+                if (_regexTypeCache != null)
+                {
+                    _regexTypeCache[prefixedRegexPattern] = null; // Cache to avoid evaluating again
+                }
+
                 return false;
             }
         }
