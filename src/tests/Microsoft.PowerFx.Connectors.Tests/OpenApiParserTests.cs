@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
@@ -81,6 +80,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].FormulaType);
             Assert.Equal("Body", function.RequiredParameters[0].Description);
             Assert.Null(function.RequiredParameters[0].DefaultValue);
+            Assert.NotNull(function.RequiredParameters[0].ConnectorType);
+            Assert.Equal("analysisInput", function.RequiredParameters[0].ConnectorType.Name);
+            Assert.Null(function.RequiredParameters[0].ConnectorType.DisplayName);
+            Assert.Equal("The input ConversationItem and its optional parameters", function.RequiredParameters[0].ConnectorType.Description);
+            Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].ConnectorType.FormulaType);
+            Assert.True(function.RequiredParameters[0].ConnectorType.IsRequired);
+            Assert.Single(function.RequiredParameters[0].ConnectorType.Fields);
+            Assert.Equal("conversationItem", function.RequiredParameters[0].ConnectorType.Fields[0].Name);
+            Assert.Null(function.RequiredParameters[0].ConnectorType.Fields[0].DisplayName);
+            Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[0].ConnectorType.Fields[0].Description);
+            Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);            
 
             // -- Parameter 2 --
             Assert.Equal("parameters", function.RequiredParameters[1].Name);
@@ -142,6 +152,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.Equal(rt3Name, returnTypeName);
             Assert.True((FormulaType)expectedReturnType == returnType);
+
+            ConnectorType connectorReturnType = function.ConnectorReturnType;
+            Assert.NotNull(connectorReturnType);
+            Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
+            Assert.Equal(2, connectorReturnType.Fields.Length);
+            Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);            
         }
 #pragma warning restore SA1118, SA1137
 

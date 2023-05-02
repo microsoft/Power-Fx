@@ -1,0 +1,13 @@
+#SETUP: NumberIsFloat
+
+>> Sequence(3,1E+307, 1E+307)
+Table({Value:1E+307},{Value:2E+307},{Value:3E+307})
+
+>> Sequence(2,1E+308, 1E+308)
+Table({Value:1E+308},{Value:Error({Kind:ErrorKind.Numeric})})
+
+>> Sequence(4,-1E+307, -1E+307)
+Table({Value:-1E+307},{Value:-2E+307},{Value:-3E+307},{Value:-4E+307})
+
+>> Sequence(3,-1E+308, -1E+308)
+Table({Value:-1E+308},{Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})})
