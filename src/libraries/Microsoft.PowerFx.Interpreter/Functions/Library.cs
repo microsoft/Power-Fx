@@ -2251,6 +2251,17 @@ namespace Microsoft.PowerFx.Functions
                     case OptionSetValue osv:
                         errorKind = (ErrorKind)Convert.ToInt32(osv.ExecutionValue, CultureInfo.InvariantCulture);
                         break;
+                    case StringValue sv:
+                        if (!int.TryParse(sv.Value, out var kindInt))
+                        {
+                            return CommonErrors.RuntimeTypeMismatch(irContext);
+                        }
+
+                        errorKind = (ErrorKind)kindInt;
+                        break;
+                    case BooleanValue bv:
+                        errorKind = (ErrorKind)Convert.ToInt32(bv.Value, CultureInfo.InvariantCulture);
+                        break;
                     default:
                         return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
