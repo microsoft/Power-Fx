@@ -72,11 +72,11 @@ namespace Microsoft.PowerFx
         internal static IExpressionEvaluator GetEvaluator(this CheckResult result, StackDepthCounter stackMarker)
         {
             ReadOnlySymbolValues globals = null;
-                
+
             if (result.Engine is RecalcEngine recalcEngine)
             {
                 // Pull global values from the engine. 
-                globals = recalcEngine._symbolValues;                
+                globals = recalcEngine._symbolValues;
             }
 
             var irResult = result.ApplyIR();
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
-        private readonly StackDepthCounter _stackMarker;        
+        private readonly StackDepthCounter _stackMarker;
 
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
@@ -110,12 +110,12 @@ namespace Microsoft.PowerFx
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
-            _stackMarker = stackMarker;            
+            _stackMarker = stackMarker;
 
             // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
-        
+
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
             ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(false, _allSymbols, runtimeConfig?.Values, _globals);
@@ -132,8 +132,8 @@ namespace Microsoft.PowerFx
             {
                 Values = symbolValues,
                 ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
-            };         
-            
+            };
+
             foreach (Action<IBasicServiceProvider> addFunctionImplementation in _config.AddFunctionImplementations)
             {
                 addFunctionImplementation(runtimeConfig2.ServiceProvider);
@@ -157,21 +157,20 @@ namespace Microsoft.PowerFx
             }
         }
 
-        internal async Task<FormulaValue> EvalAsyncInternal(RecordValue parameters, CancellationToken cancel, StackDepthCounter stackMarker, IDictionary<TexlFunction, object> configDependentFunctions)
+        internal async Task<FormulaValue> EvalAsyncInternal(RecordValue parameters, CancellationToken cancel, StackDepthCounter stackMarker)
         {
             var symbolValues = SymbolValues.NewFromRecord(_parameterSymbolTable, parameters);
             parameters = RecordValue.Empty();
 
             var runtimeConfig2 = new RuntimeConfig
             {
-                Values = symbolValues                
+                Values = symbolValues
             };
+
             if (_cultureInfo != null)
             {
                 runtimeConfig2.SetCulture(_cultureInfo);
             }
-
-            runtimeConfig2.AddService(configDependentFunctions);
 
             // We don't catch the max call depth exception here becuase someone could swallow the error with an "IfError" check.
             // Instead we only catch at the top of parsed expression, which is the above function.

@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int, FormulaType)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(
-            string functionName, 
+            string functionName,
             AsyncFunctionPtr targetFunction,
             Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues)
             where TScalar : FormulaValue => StandardErrorHandlingAsync<TableValue>(
@@ -417,7 +417,7 @@ namespace Microsoft.PowerFx.Functions
                         var namedValue = new NamedValue(columnNameStr, rowResult);
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
-                    }    
+                    }
                 }
 
                 if (maxTableSize != minTableSize)
@@ -458,11 +458,11 @@ namespace Microsoft.PowerFx.Functions
         private static IEnumerable<FormulaValue> SequenceFunctionExpandArgs(IRContext irContext, IEnumerable<FormulaValue> args)
         {
             var res = new List<FormulaValue>(args);
-            
+
             while (res.Count < 3)
             {
                 if (((TableType)irContext.ResultType).SingleColumnFieldType == FormulaType.Decimal)
-                { 
+                {
                     var count = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 1m);
                     res.Add(count);
                 }
@@ -649,7 +649,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 return ExactValueTypeOrBlank<TableValue>(irContext, index, arg);
             }
-            
+
             return ExactValueTypeOrBlank<StringValue>(irContext, index, arg);
         }
 
