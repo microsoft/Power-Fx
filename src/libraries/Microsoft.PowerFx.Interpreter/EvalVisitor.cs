@@ -378,12 +378,16 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryNeqPolymorphic(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
+                case BinaryOpKind.GtNull:
                     return OperatorBinaryGt(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqNumbers:
+                case BinaryOpKind.GeqNull:
                     return OperatorBinaryGeq(this, context, node.IRContext, args);
                 case BinaryOpKind.LtNumbers:
+                case BinaryOpKind.LtNull:
                     return OperatorBinaryLt(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqNumbers:
+                case BinaryOpKind.LeqNull:
                     return OperatorBinaryLeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtDecimals:
