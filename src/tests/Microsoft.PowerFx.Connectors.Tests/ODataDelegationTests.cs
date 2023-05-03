@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData("FirstN(Sort(Filter(Table, x > 10), date), 10)", "https://contoso.com/api/list?$filter=x+gt+10&$orderby=date&$top=10")]
         public void TestDelegation(string expression, string uriExpected)
         {
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("myNumber", FormulaValue.New(50));
 

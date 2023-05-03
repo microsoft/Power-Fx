@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx
 
         internal bool PowerFxV1CompatibilityRules { get; set; }
 
-        internal static Features None => new Features();
+        public static Features None => new Features();
 
         public static Features PowerFxV1 => new Features
         {
