@@ -145,3 +145,9 @@ Error({Kind:ErrorKind.Sync})
 
 >> Error ({Kind:"4"})
 Error({Kind:ErrorKind.EditPermissions})
+
+>> IfError(Error (Table({Kind:0,Message:"Custom error message NONE"}, {Kind:1,Message:"Custom error message SYNC"})), Concat(AllErrors,$"{Kind}:{Message}",", "))
+"0:Custom error message NONE, 1:Custom error message SYNC"
+
+>> IfError(Error(Table({Kind:0,Message:"Custom error message NONE"}, {Kind:1,Message:"Custom error message SYNC"})),Concat(AllErrors,Message,","))
+"Custom error message NONE,Custom error message SYNC"
