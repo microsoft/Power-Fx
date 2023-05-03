@@ -18,7 +18,8 @@ namespace Microsoft.PowerFx.Functions
             AlwaysEvaluateAndReturnResult,
             ReturnBlankIfAnyArgIsBlank,
             ReturnEmptyStringIfAnyArgIsBlank,
-            ReturnFalseIfAnyArgIsBlank
+            ReturnFalseIfAnyArgIsBlank,
+            ReturnBlankIfOneArgIsBlankAndEmptyStringForOtherArgIsBlank
         }
 
         private static bool IsInvalidDouble(double number)
@@ -98,6 +99,20 @@ namespace Microsoft.PowerFx.Functions
 
                         break;
                     case ReturnBehavior.AlwaysEvaluateAndReturnResult:
+                        break;
+                    case ReturnBehavior.ReturnBlankIfOneArgIsBlankAndEmptyStringForOtherArgIsBlank:
+                        if (anyValueBlank)
+                        {
+                            if (args.Length == 1)
+                            {
+                                return new BlankValue(IRContext.NotInSource(irContext.ResultType));
+                            }
+                            else
+                            {
+                                return new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty);
+                            }
+                        }
+
                         break;
                 }
 
