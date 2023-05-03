@@ -139,18 +139,18 @@ namespace Microsoft.PowerFx.Syntax
 
             foreach (var arg in args)
             {
-                if (argsAlreadySeen.Contains(arg.VarIdent.Name))
+                if (argsAlreadySeen.Contains(arg.NameIdent.Name))
                 {
-                    errors.Add(new TexlError(arg.VarIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.VarIdent.Name));
+                    errors.Add(new TexlError(arg.NameIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.NameIdent.Name));
                     isParamCheckSuccessful = false;
                 }
                 else
                 {
-                    argsAlreadySeen.Add(arg.VarIdent.Name);
+                    argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    if (arg.VarType.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
+                    if (arg.TypeIdent.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
                     {
-                        errors.Add(new TexlError(arg.VarType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.VarType.Name));
+                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
                     }
                 }

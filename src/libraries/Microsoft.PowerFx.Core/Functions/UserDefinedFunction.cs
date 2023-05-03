@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Core.Functions
         public override bool IsSelfContained => !_isImperative;
 
         public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnTypeToken.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.VarType.GetFormulaType()._type).ToArray())
+        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnTypeToken.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
         {
             this._returnTypeToken = returnTypeToken;
             this._args = args;
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             foreach (var arg in _args)
             {
-                if (arg.VarIdent.Name.Value == argName)
+                if (arg.NameIdent.Name.Value == argName)
                 {
                     argIndex = arg.ArgIndex;
 
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override IEnumerable<StringGetter[]> GetSignatures()
         {
-            return new[] { _args.Select<UDFArg, TexlStrings.StringGetter>(key => _ => key.VarIdent.Name.Value).ToArray() };
+            return new[] { _args.Select<UDFArg, TexlStrings.StringGetter>(key => _ => key.NameIdent.Name.Value).ToArray() };
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Core.Functions
             private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver = null)
             {
                 this._globalNameResolver = globalNameResolver;
-                this._args = args.ToDictionary(arg => arg.VarIdent.Name.Value, arg => arg);
+                this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
                 this._functionNameResolver = functionNameResolver;
             }
 
@@ -159,8 +159,8 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    var type = value.VarType.GetFormulaType()._type;
-                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.VarIdent.Name));
+                    var type = value.TypeIdent.GetFormulaType()._type;
+                    nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
 
                     return true;
                 }

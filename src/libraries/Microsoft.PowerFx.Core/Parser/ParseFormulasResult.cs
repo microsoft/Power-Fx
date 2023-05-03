@@ -93,14 +93,14 @@ namespace Microsoft.PowerFx.Core.Parser
 
     internal class UDFArg
     {
-        internal IdentToken VarIdent;
-        internal IdentToken VarType;
+        internal IdentToken NameIdent;
+        internal IdentToken TypeIdent;
         internal int ArgIndex;
 
-        public UDFArg(IdentToken varIdent, IdentToken varType, int argIndex)
+        public UDFArg(IdentToken nameIdent, IdentToken typeIdent, int argIndex)
         {
-            VarIdent = varIdent;
-            VarType = varType;
+            NameIdent = nameIdent;
+            TypeIdent = typeIdent;
             ArgIndex = argIndex;
         } 
     }
