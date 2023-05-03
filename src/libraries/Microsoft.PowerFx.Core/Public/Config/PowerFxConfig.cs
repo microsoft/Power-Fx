@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
             DebugName = "DefaultConfig"
         };
 
-        internal List<Action<IBasicServiceProvider>> AddFunctionImplementations = new List<Action<IBasicServiceProvider>>();
+        internal readonly List<Action<IBasicServiceProvider>> AddFunctionImplementations = new List<Action<IBasicServiceProvider>>();
 
         [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
