@@ -160,10 +160,10 @@ Table({Value:"hi"},{Value:Blank()},{Value:"hello"})
 Table({Value:true},{Value:Blank()},{Value:false})
 
 >> ForAll(ParseJSON("[""2011-01-15"", null]"), Text(DateValue(ThisRecord), "yyyy-MM-dd"))
-Table({Value:"2011-01-15"},{Value:""})
+Table({Value:"2011-01-15"},{Value:Blank()})
 
 >> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisRecord), "HH:mm:ss"))
-Table({Value:"08:03:05"},{Value:""})
+Table({Value:"08:03:05"},{Value:Blank()})
 
 >> ForAll(ParseJSON("[""5cc45615-f759-4a53-b225-d3a2497f60ad"", null]"), GUID(ThisRecord))
 Table({Value:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")},{Value:Blank()})

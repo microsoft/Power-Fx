@@ -5,7 +5,7 @@
 "123.400"
 
 >> Text(Blank(), "#.000")
-""
+Blank()
 
 // ******** NUMBER PARAMETERS ********
 
@@ -121,10 +121,10 @@
 
 //Excel needs two parameters for Text function
 >> Text(Blank())
-""
+Blank()
 
 >> Text(Blank(), Blank())
-""
+Blank()
 
 //Excel needs two parameters for Text function
 >> Text("")
@@ -136,31 +136,36 @@
 
 //Excel returns "$"
 >> Text(Blank(), "$ #,###")
-""
+Blank()
 
 >> Text(Blank(), "#,#")
-""
+Blank()
 
 >> Text(Blank(), "#,###")
-""
+Blank()
 
 >> Text(123.4, Blank())
-""
+Blank()
 
 //Excel throws error
 >> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
-""
+Blank()
 
 //Excel throws error
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), Blank())
-""
+Blank()
 
 >> Text(Date(2016,1,31), "pqr")
 "pqr"
 
-
 >> Text(1/0, "#.000")
 Error({Kind:ErrorKind.Div0})
+
+>> Text(If(1<0,2))
+Blank()
+
+>> Text(ParseJSON("null"))
+Blank()
 
 // ******** DATE/TIME PARAMETERS ********
 
@@ -287,7 +292,7 @@ Error({Kind:ErrorKind.Div0})
 
 //Excel throws error
 >> Text(DateTimeValue(""), DateTimeFormat.ShortDate)
-""
+Blank()
 
 //Excel doesnt support three arguments
 >> Text(Date(2016,1,31), "dddd mmmm d", "")
