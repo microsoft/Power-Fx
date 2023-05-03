@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Functions
                         checkRuntimeTypes: OptionSetOrString,
                         checkRuntimeValues: DeferRuntimeValueChecking,
                         returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => IsMatchImpl(ev, evCtx, irCtx, fv, regexTimeout))) ),
+                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => IsMatchImpl(ev, evCtx, irCtx, fv, regexTimeout)))),
                 (matchFunction, (IBasicServiceProvider basicServiceProvider) =>
                     basicServiceProvider.AddFunction(matchFunction.GetType(), StandardErrorHandlingAsync<FormulaValue>(
                         "Match",
@@ -123,7 +123,7 @@ namespace Microsoft.PowerFx.Functions
                 Regex rex = new Regex(regex, options, regexTimeout);
                 MatchCollection mc = rex.Matches(input);
 
-                List<RecordValue> records = new();
+                List<RecordValue> records = new ();
 
                 foreach (Match m in mc)
                 {
@@ -136,7 +136,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static RecordValue GetRecordFromMatch(Regex rex, Match m)
         {
-            Dictionary<string, NamedValue> fields = new()
+            Dictionary<string, NamedValue> fields = new ()
                 {
                     { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
                     { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(m.Index + 1)) }
@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static DType GetRecordTypeFromRegularExpression(string regularExpression)
         {
-            Dictionary<string, TypedName> propertyNames = new();
+            Dictionary<string, TypedName> propertyNames = new ();
             Regex rex = new Regex(regularExpression);
 
             propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
