@@ -276,6 +276,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("12", false, true, "")]
         [InlineData("12", true, true, "")]
+        [InlineData("\"test string\"", true, true, "")]
+        [InlineData("\"test string\"", false, false, "The type of this expression does not match the expected type 'Number'")]
         [InlineData("{a:12, b:15}", true, false, "The method or operation is not implemented")]
         [InlineData("{a:12, b:15}", false, false, "The type of this expression does not match the expected type 'Number'")]
         public void CheckResultExpectedReturnValueNumber(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg)
