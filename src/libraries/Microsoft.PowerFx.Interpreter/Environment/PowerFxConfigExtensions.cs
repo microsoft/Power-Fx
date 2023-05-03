@@ -2,9 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
+using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Public.Config;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
-using static Microsoft.PowerFx.Functions.Library;
 
 namespace Microsoft.PowerFx
 {
@@ -27,20 +30,6 @@ namespace Microsoft.PowerFx
         public static void EnableSetFunction(this PowerFxConfig powerFxConfig)
         {
             powerFxConfig.AddFunction(new RecalcEngineSetFunction());
-        }        
-
-        /// <summary>
-        /// Enables Match/IsMatch/MatchAll functions.
-        /// </summary>
-        /// <param name="powerFxConfig">Power Fx configuration.</param>
-        /// <param name="regExTimeout">Timeout duration for regular expression execution. 0 will default to 1 second.</param>
-        /// <param name="regexCacheSize">Size of the regular expression cache. -1 = disabled. 0 = infinite.</param>
-        public static void EnableRegExFunctions(this PowerFxConfig powerFxConfig, TimeSpan regExTimeout = default, int regexCacheSize = -1)
-        {            
-            foreach (var function in Library.EnableRegexFunctions(powerFxConfig.ConfigDependentFunctions, regExTimeout, regexCacheSize))
-            {
-                powerFxConfig.AddFunction(function);
-            }
         }
 
         /// <summary>
@@ -55,6 +44,22 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
             symbolTable.AddFunction(new ClearCollectFunction());
+        }
+
+        public static void EnableRegExFunctions(this PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
+        {
+            ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> regexTypeCache = regexCacheSize == -1 ? null : new ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>>();
+
+            foreach ((TexlFunction function, Action<IBasicServiceProvider> addFunctionImpl) in Library.RegexFunctions(regExTimeout, regexTypeCache, regexCacheSize))
+            {
+                if (config.SymbolTable.Functions.AnyWithName(function.Name))
+                {
+                    throw new InvalidOperationException("Cannot add RegEx functions more than once.");
+                }
+                
+                config.SymbolTable.AddFunction(function);
+                config.AddFunctionImplementations.Add(addFunctionImpl);
+            }
         }
     }
 }

@@ -3,13 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -31,13 +31,13 @@ namespace Microsoft.PowerFx
         {
             DebugName = "DefaultConfig"
         };
-        
-        internal IDictionary<TexlFunction, object /*AsyncFunctionPtr*/> ConfigDependentFunctions = new Dictionary<TexlFunction, object>();
+
+        internal List<Action<IBasicServiceProvider>> AddFunctionImplementations = new List<Action<IBasicServiceProvider>>();
 
         [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
 
-        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);        
+        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);
 
         public Features Features { get; }
 

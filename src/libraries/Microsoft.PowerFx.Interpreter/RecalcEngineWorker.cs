@@ -71,9 +71,7 @@ namespace Microsoft.PowerFx
 
                 var scope = this;
                 var symbols = _parent._symbolValues;
-                var runtimeConfig = new RuntimeConfig(symbols, _cultureInfo);
-              
-                runtimeConfig.AddService(_parent.Config.ConfigDependentFunctions);              
+                var runtimeConfig = new RuntimeConfig(symbols, _cultureInfo);                             
 
                 var v = new EvalVisitor(runtimeConfig, CancellationToken.None);
 

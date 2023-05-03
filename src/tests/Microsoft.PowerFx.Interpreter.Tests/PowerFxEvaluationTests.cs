@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         };
 
         private static (RecalcEngine engine, RecordValue parameters) RegExSetup(PowerFxConfig config, bool numberIsFloat)
-        {
+        {            
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
             return (new RecalcEngine(config), null);
         }

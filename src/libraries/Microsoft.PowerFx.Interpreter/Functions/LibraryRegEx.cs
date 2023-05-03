@@ -6,20 +6,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -29,7 +23,7 @@ namespace Microsoft.PowerFx.Functions
 
         public const string FULLMATCH = "FullMatch";
         public const string STARTMATCH = "StartMatch";
-        public const string SUBMATCHES = "SubMatches";           
+        public const string SUBMATCHES = "SubMatches";
 
         private const string DefaultIsMatchOptions = "^c$";
         private const string DefaultMatchOptions = "c";
@@ -37,12 +31,12 @@ namespace Microsoft.PowerFx.Functions
 
         /// <summary>
         /// Enable [Is]Match[All] functions.
-        /// </summary>
-        /// <param name="configDependentFunctions"></param>
+        /// </summary>        
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
-        /// <param name="regexCacheSize">Regular expression cache size. 0=no limit. -1=disabled.</param>
+        /// <param name="regexTypeCache">Regular expression type cache.</param>
+        /// <param name="regexCacheSize">Regular expression cache size. 0=no limit. -1=disabled.</param>        
         /// <returns></returns>
-        internal static IEnumerable<TexlFunction> EnableRegexFunctions(IDictionary<TexlFunction, object> configDependentFunctions, TimeSpan regexTimeout, int regexCacheSize = -1)
+        internal static IEnumerable<(TexlFunction, Action<IBasicServiceProvider>)> RegexFunctions(TimeSpan regexTimeout, ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> regexTypeCache = null, int regexCacheSize = -1)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -59,51 +53,40 @@ namespace Microsoft.PowerFx.Functions
                 throw new ArgumentOutOfRangeException(nameof(regexCacheSize), "Regular expression cache size must be -1 (disabled) or positive.");
             }
 
-            ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> regexTypeCache = regexCacheSize == -1 ? null : new ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>>();
-
             TexlFunction isMatchFunction = new IsMatchFunction();
             TexlFunction matchFunction = new MatchFunction(regexTypeCache, regexCacheSize);
             TexlFunction matchAllFunction = new MatchAllFunction(regexTypeCache, regexCacheSize);
-
-            if (configDependentFunctions.Keys.Any(k => k is IsMatchFunction || k is MatchFunction || k is MatchAllFunction))
+            
+            return new (TexlFunction, Action<IBasicServiceProvider>)[]
             {
-                throw new InvalidOperationException("Cannot add RegEx functions more than once.");
-            }
-
-            configDependentFunctions.Add(
-                isMatchFunction,
-                StandardErrorHandlingAsync<FormulaValue>(
-                    "IsMatch",
-                    expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWithEmptyString,
-                    checkRuntimeTypes: OptionSetOrString,
-                    checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => IsMatchImpl(ev, evCtx, irCtx, fv, regexTimeout)));            
-
-            configDependentFunctions.Add(
-               matchFunction,
-               StandardErrorHandlingAsync<FormulaValue>(
-                   "Match",
-                   expandArguments: NoArgExpansion,
-                   replaceBlankValues: ReplaceBlankWithEmptyString,
-                   checkRuntimeTypes: OptionSetOrString,
-                   checkRuntimeValues: DeferRuntimeValueChecking,
-                   returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                   targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => MatchImpl(ev, evCtx, irCtx, fv, regexTimeout)));
-
-            configDependentFunctions.Add(
-               matchAllFunction,
-               StandardErrorHandlingAsync<FormulaValue>(
-                   "MatchAll",
-                   expandArguments: NoArgExpansion,
-                   replaceBlankValues: ReplaceBlankWithEmptyString,
-                   checkRuntimeTypes: OptionSetOrString,
-                   checkRuntimeValues: DeferRuntimeValueChecking,
-                   returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                   targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => MatchAllImpl(ev, evCtx, irCtx, fv, regexTimeout)));
-
-            return new TexlFunction[] { isMatchFunction, matchFunction, matchAllFunction };
+                (isMatchFunction, (IBasicServiceProvider basicServiceProvider) =>
+                    basicServiceProvider.AddFunction(isMatchFunction.GetType(), StandardErrorHandlingAsync<FormulaValue>(
+                        "IsMatch",
+                        expandArguments: NoArgExpansion,
+                        replaceBlankValues: ReplaceBlankWithEmptyString,
+                        checkRuntimeTypes: OptionSetOrString,
+                        checkRuntimeValues: DeferRuntimeValueChecking,
+                        returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => IsMatchImpl(ev, evCtx, irCtx, fv, regexTimeout))) ),
+                (matchFunction, (IBasicServiceProvider basicServiceProvider) =>
+                    basicServiceProvider.AddFunction(matchFunction.GetType(), StandardErrorHandlingAsync<FormulaValue>(
+                        "Match",
+                        expandArguments: NoArgExpansion,
+                        replaceBlankValues: ReplaceBlankWithEmptyString,
+                        checkRuntimeTypes: OptionSetOrString,
+                        checkRuntimeValues: DeferRuntimeValueChecking,
+                        returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => MatchImpl(ev, evCtx, irCtx, fv, regexTimeout)))),
+                (matchAllFunction, (IBasicServiceProvider basicServiceProvider) =>
+                    basicServiceProvider.AddFunction(matchAllFunction.GetType(), StandardErrorHandlingAsync<FormulaValue>(
+                        "MatchAll",
+                        expandArguments: NoArgExpansion,
+                        replaceBlankValues: ReplaceBlankWithEmptyString,
+                        checkRuntimeTypes: OptionSetOrString,
+                        checkRuntimeValues: DeferRuntimeValueChecking,
+                        returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => MatchAllImpl(ev, evCtx, irCtx, fv, regexTimeout))))
+            };
         }
 
         private static async ValueTask<FormulaValue> IsMatchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, TimeSpan regexTimeout)
@@ -140,7 +123,7 @@ namespace Microsoft.PowerFx.Functions
                 Regex rex = new Regex(regex, options, regexTimeout);
                 MatchCollection mc = rex.Matches(input);
 
-                List<RecordValue> records = new ();
+                List<RecordValue> records = new();
 
                 foreach (Match m in mc)
                 {
@@ -153,7 +136,7 @@ namespace Microsoft.PowerFx.Functions
 
         private static RecordValue GetRecordFromMatch(Regex rex, Match m)
         {
-            Dictionary<string, NamedValue> fields = new ()
+            Dictionary<string, NamedValue> fields = new()
                 {
                     { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
                     { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(m.Index + 1)) }
@@ -189,14 +172,14 @@ namespace Microsoft.PowerFx.Functions
             if (!fields.ContainsKey(SUBMATCHES))
             {
                 fields.Add(SUBMATCHES, new NamedValue(SUBMATCHES, TableValue.NewSingleColumnTable(subMatches.Select(s => StringValue.New(s)).ToArray())));
-            }            
+            }
 
             return RecordValue.NewRecordFromFields(fields.Values);
         }
 
         private static DType GetRecordTypeFromRegularExpression(string regularExpression)
         {
-            Dictionary<string, TypedName> propertyNames = new ();
+            Dictionary<string, TypedName> propertyNames = new();
             Regex rex = new Regex(regularExpression);
 
             propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
@@ -286,6 +269,6 @@ namespace Microsoft.PowerFx.Functions
                     Kind = ErrorKind.BadRegex
                 });
             }
-        }        
+        }
     }
 }

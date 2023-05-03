@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
+using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -75,17 +76,18 @@ namespace Microsoft.PowerFx
             if (result.Engine is RecalcEngine recalcEngine)
             {
                 // Pull global values from the engine. 
-                globals = recalcEngine._symbolValues;
+                globals = recalcEngine._symbolValues;                
             }
 
             var irResult = result.ApplyIR();
             result.ThrowOnErrors();
 
-            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.Engine.Config.ConfigDependentFunctions, result.ParserCultureInfo)
+            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.ParserCultureInfo)
             {
                 _globals = globals,
                 _allSymbols = result.Symbols,
-                _parameterSymbolTable = result.Parameters
+                _parameterSymbolTable = result.Parameters,
+                _config = result.Engine.Config
             };
 
             return expr;
@@ -97,19 +99,18 @@ namespace Microsoft.PowerFx
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
-        private readonly StackDepthCounter _stackMarker;
-        private readonly IDictionary<TexlFunction, object> _configDependentFunctions;
+        private readonly StackDepthCounter _stackMarker;        
 
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
+        internal PowerFxConfig _config;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, IDictionary<TexlFunction, object> configDependentFunctions, CultureInfo cultureInfo = null)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
-            _stackMarker = stackMarker;
-            _configDependentFunctions = configDependentFunctions;
+            _stackMarker = stackMarker;            
 
             // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
@@ -127,13 +128,16 @@ namespace Microsoft.PowerFx
                 innerServices = temp;
             }
 
-            var runtimeConfig2 = new RuntimeConfig
+            RuntimeConfig runtimeConfig2 = new RuntimeConfig
             {
                 Values = symbolValues,
                 ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
-            };
-
-            runtimeConfig2.AddService(_configDependentFunctions);
+            };         
+            
+            foreach (Action<IBasicServiceProvider> addFunctionImplementation in _config.AddFunctionImplementations)
+            {
+                addFunctionImplementation(runtimeConfig2.ServiceProvider);
+            }
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
 

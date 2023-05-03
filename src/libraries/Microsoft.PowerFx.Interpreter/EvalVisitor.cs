@@ -12,7 +12,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -34,8 +33,6 @@ namespace Microsoft.PowerFx
 
         private readonly IServiceProvider _services;
 
-        private readonly IDictionary<TexlFunction, object> _configDependentFunctions;
-
         public IServiceProvider FunctionServices => _services;
 
         public CultureInfo CultureInfo { get; private set; }
@@ -51,8 +48,7 @@ namespace Microsoft.PowerFx
             _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
             _services = config.ServiceProvider ?? new BasicServiceProvider();
-            
-            _configDependentFunctions = GetService<IDictionary<TexlFunction, object>>();
+                        
             TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
             Governor = GetService<Governor>() ?? new Governor();            
             CultureInfo = GetService<CultureInfo>();
@@ -254,7 +250,7 @@ namespace Microsoft.PowerFx
 
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
-            FormulaValue result;
+            FormulaValue result;            
             if (func is IAsyncTexlFunction asyncFunc)
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
@@ -268,17 +264,11 @@ namespace Microsoft.PowerFx
             {
                 // If custom function throws an exception, don't catch it - let it propagate up to the host.
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
-            }
+            }            
             else
-            {
-                object ptr2 = null;
-                if (FunctionImplementations.TryGetValue(func, out var ptr) || _configDependentFunctions.TryGetValue(func, out ptr2))
-                {
-                    if (ptr2 != null)
-                    {
-                        ptr = (AsyncFunctionPtr)ptr2;
-                    }
-
+            {                                
+                if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr) || TryGetServiceFunctionPtr(func, out ptr))
+                {                    
                     try
                     {
                         result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
@@ -299,7 +289,7 @@ namespace Microsoft.PowerFx
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
-                    }
+                    }                
                 }
                 else
                 {
@@ -309,6 +299,13 @@ namespace Microsoft.PowerFx
 
             CheckCancel();
             return result;
+        }
+
+        private bool TryGetServiceFunctionPtr(TexlFunction func, out AsyncFunctionPtr ptr)
+        {            
+            PowerFxFunctionPtr pfxFunctionPtr = (PowerFxFunctionPtr)_services.GetService(typeof(PowerFxFunctionPtr<>).MakeGenericType(func.GetType()));
+            ptr = pfxFunctionPtr?.AsyncFunctionPtr;
+            return ptr != null;
         }
 
         public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, EvalVisitorContext context)
