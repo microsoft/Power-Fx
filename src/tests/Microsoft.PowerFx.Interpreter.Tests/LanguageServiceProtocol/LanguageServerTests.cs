@@ -1376,6 +1376,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
         }
 
+        [Fact]
+        public async Task TestExpectedReturnValueForEmptyExpression()
+        {
+            var scope = TestCreateEditorScope(string.Empty);
+
+            var result = scope.Check(string.Empty);
+
+            Assert.True(result.IsSuccess);
+        }
+
         private EditorContextScope TestCreateEditorScope(string documentUri)
         {
             var engine = new Engine();
