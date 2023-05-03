@@ -124,3 +124,38 @@ Errors: Error 3-5: Expected operator. We expect an operator such as +, *, or & a
 
 >> 1.2.3 + 1.2.3
 Errors: Error 3-5: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 6-7: Unexpected characters. Characters are used in the formula in an unexpected way.|Error 8-11: Expected operator. We expect an operator such as +, *, or & at this point in the formula.
+
+>> IfError(Error(Table({Kind:0},{Kind:1})),Concat(AllErrors,Kind,","))
+"0,1"
+
+>> IfError(Error(Table({Kind:"0"},{Kind:"1"})),Concat(AllErrors,Kind,","))
+"0,1"
+
+>> IfError(Error(Table({Kind:Float(0)},{Kind:Float(1)})),Concat(AllErrors,Kind,","))
+"0,1"
+
+>> Error (Table({Kind:"2"},{Kind:"4"}))
+Error(Table({Kind:ErrorKind.MissingRequired},{Kind:ErrorKind.EditPermissions}))
+
+>> Error (Table({Kind:true},{Kind:false}))
+Error(Table({Kind:ErrorKind.Sync},{Kind:ErrorKind.None}))
+
+>> Error ({Kind:true})
+Error({Kind:ErrorKind.Sync})
+
+>> Error ({Kind:"4"})
+Error({Kind:ErrorKind.EditPermissions})
+
+>> IfError(Error (Table({Kind:0,Message:"Custom error message NONE"}, {Kind:1,Message:"Custom error message SYNC"})), Concat(AllErrors,$"{Kind}:{Message}",", "))
+"0:Custom error message NONE, 1:Custom error message SYNC"
+
+>> IfError(Error(Table({Kind:0,Message:"Custom error message NONE"}, {Kind:1,Message:"Custom error message SYNC"})),Concat(AllErrors,Message,","))
+"Custom error message NONE,Custom error message SYNC"
+
+// Coercion from string, with message
+>> IfError(Error([{Kind:"12"},{Kind:"13",Message:"With message"}]), Concat(AllErrors, $"{Kind}:{Message}", ", "))
+"12:, 13:With message"
+
+// Coercion from string, with coerced message
+>> IfError(Error([{Kind:"12",Message:333},{Kind:"13",Message:444}]), Concat(AllErrors, $"{Kind}:{Message}", ", "))
+"12:333, 13:444"
