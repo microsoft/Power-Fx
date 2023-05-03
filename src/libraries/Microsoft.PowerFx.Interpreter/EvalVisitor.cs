@@ -42,15 +42,15 @@ namespace Microsoft.PowerFx
         public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
-        
+
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
             _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
             _services = config.ServiceProvider ?? new BasicServiceProvider();
-                        
+
             TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
-            Governor = GetService<Governor>() ?? new Governor();            
+            Governor = GetService<Governor>() ?? new Governor();
             CultureInfo = GetService<CultureInfo>();
         }
 
@@ -250,7 +250,7 @@ namespace Microsoft.PowerFx
 
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
-            FormulaValue result;            
+            FormulaValue result;
             if (func is IAsyncTexlFunction asyncFunc)
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
@@ -264,11 +264,11 @@ namespace Microsoft.PowerFx
             {
                 // If custom function throws an exception, don't catch it - let it propagate up to the host.
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
-            }            
+            }
             else
-            {                                
+            {
                 if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr) || TryGetServiceFunctionPtr(func, out ptr))
-                {                    
+                {
                     try
                     {
                         result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx
                     {
                         var irContext = node.IRContext;
                         result = new ErrorValue(
-                            irContext, 
+                            irContext,
                             new ExpressionError()
                             {
                                 Message = ex.Message,
@@ -285,11 +285,11 @@ namespace Microsoft.PowerFx
                                 Kind = ex.ErrorKind
                             });
                     }
-                    
+
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
-                    }                
+                    }
                 }
                 else
                 {
@@ -302,7 +302,7 @@ namespace Microsoft.PowerFx
         }
 
         private bool TryGetServiceFunctionPtr(TexlFunction func, out AsyncFunctionPtr ptr)
-        {            
+        {
             PowerFxFunctionPtr pfxFunctionPtr = (PowerFxFunctionPtr)_services.GetService(typeof(PowerFxFunctionPtr<>).MakeGenericType(func.GetType()));
             ptr = pfxFunctionPtr?.AsyncFunctionPtr;
             return ptr != null;
@@ -693,7 +693,7 @@ namespace Microsoft.PowerFx
         {
             switch (node.Value)
             {
-                case NameSymbol name: 
+                case NameSymbol name:
                     return GetVariableOrFail(node, name);
                 case FormulaValue fi:
                     return fi;
