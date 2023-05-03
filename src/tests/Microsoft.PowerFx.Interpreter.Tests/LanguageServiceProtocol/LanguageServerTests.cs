@@ -11,12 +11,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
@@ -1381,9 +1383,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             var scope = TestCreateEditorScope(string.Empty);
 
-            var result = scope.Check(string.Empty);
+            var check = scope.Check(string.Empty);
 
-            Assert.True(result.IsSuccess);
+            Assert.True(check.IsSuccess);
+
+            var run = check.GetEvaluator();
+
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
+
+            Assert.Null(result.ToObject());
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)
