@@ -210,6 +210,9 @@ namespace Microsoft.PowerFx.Core.IR
                     // Call Node Replacements:
                     case BinaryOpKind.Power:
                         var args = new List<IntermediateNode> { left, right };
+
+                        // Since we are directly injecting Power Function and Power function delegates arg preprocessing to IR.
+                        // we need to make sure that the arguments are attached with preprocessor e.g. Blank to Zero.
                         args = AttachArgPreprocessor(args, BuiltinFunctionsCore.Power, node, 2, context);
                         binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, args);
                         break;
