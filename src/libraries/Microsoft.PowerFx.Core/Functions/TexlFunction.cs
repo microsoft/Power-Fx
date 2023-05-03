@@ -1462,7 +1462,8 @@ namespace Microsoft.PowerFx.Core.Functions
         /// By default, function does not attach any pre-processing for arguments.
         /// </summary>
         /// <param name="index">0 based index of argument.</param>
-        /// <param name="argCount">The count of argument to call the function.</param>
+        /// <param name="argCount">The count of arguments to the called function. 
+        /// e.g. Text() function, argCount can be 2 or 3 depending on the expression.</param>
         /// <returns></returns>
         public virtual ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
