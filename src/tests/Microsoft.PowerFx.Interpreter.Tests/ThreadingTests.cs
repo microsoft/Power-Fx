@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Functions;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
