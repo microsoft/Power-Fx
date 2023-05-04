@@ -1465,6 +1465,14 @@
     <value>entrada</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Devolve o número de caracteres especificado do inicio dun valor de texto.</value>
     
@@ -1801,20 +1809,8 @@
     <value>O primeiro argumento de '{0}' debe ser unha táboa dunha columna.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Esquema non válido. Esperábase unha columna de valores de texto para '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Esquema non válido. Esperábase unha columna de valores de data para '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Esquema non válido. Esperábase unha columna de valores numéricos para '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Esquema non válido. Esperábase unha columna de valores de cor para '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Esquema non válido. Esperábase unha columna de valores de "{0}" para "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>O valor numérico é demasiado longo.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Uso dunha palabra reservada que actualmente non se admite.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemáticas e estatística</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Información</value>
@@ -2964,7 +2967,7 @@
     
   </data>
   <data name="Icon_GlobeChangesPending_DisplayName" xml:space="preserve">
-    <value>Globo: Cambios pendentes</value>
+    <value>Globo: Modificacións pendentes</value>
     
   </data>
   <data name="Icon_GlobeWarning_DisplayName" xml:space="preserve">
@@ -4789,6 +4792,26 @@
     <value>A fórmula con nome debe ser unha expresión.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>A función definida polo usuario debe ter un corpo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>A función {0} xa está definida.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>O parámetro {0} é un duplicado.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tipo {0} descoñecido.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>O tipo de devolución da función indicada non coincide co tipo de devolución do corpo da función.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A fórmula denominada "{0}" xa existe.</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" é unha función recoñecida, pero non se admite.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Produciuse un erro na conversión do tipo porque o valor indicado era do tipo "{0}" e esperábase o tipo "{1}".</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Non se admite a delegación desta operación na táboa "{0}".</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>Este predicado sempre será verdadeiro. Pretendía usar ThisRecord ou [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Non se pode delegar {0}: só se admite a delegación para buscar no campo de clave principal "{1}".</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>Non se pode delegar {0}: a expresión do ID fai referencia a ThisRecord.</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>Non se pode delegar {0}: contén unha función de comportamento "{1}".</value>
     
   </data>
 </root>
