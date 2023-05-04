@@ -1465,6 +1465,14 @@
     <value>vstup</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikátor</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikátor</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Vráti zadaný počet znakov od začiatku textovej hodnoty.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Prvý argument pre {0} má byť jednostĺpcová tabuľka.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec textových hodnôt pre {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec dátumových hodnôt pre {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec numerických hodnôt pre {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec hodnôt farieb pre {0}.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Neplatná schéma, očakával sa stĺpec {0} hodnôt pre {1}.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Numerická hodnota je príliš veľká.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Bolo použité vyhradené slovo, ktoré momentálne nie je podporované.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematické a štatistické</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informácie</value>
@@ -4789,6 +4792,26 @@
     <value>Pomenovaný vzorec musí byť výraz.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Funkcia definovaná používateľom musí mať telo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkcia {0} je už definovaná.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} je duplikát.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Neznámy typ {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Uvedený typ vrátenej hodnoty funkcie sa nezhoduje s typom vrátenej hodnoty tela funkcie.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} už existuje.</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} je rozpoznaná, ale nepodporovaná funkcia.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Konverzia typu zlyhala, pretože zadaná hodnota bola typu {0}, no očakávaný bol typ {1}.</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Delegovanie tejto operácie na tabuľku {0} nie je podporované.</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>Tento predikát bude mať vždy hodnotu true. Chceli ste použiť ThisRecord alebo [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} nie je možné delegovať: podporuje iba delegovanie pri vyhľadávaní v poli primárneho kľúča {1}.</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>{0} nie je možné delegovať: výraz ID odkazuje na ThisRecord.</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>{0} nie je možné delegovať: obsahuje funkciu správania {1}.</value>
     
   </data>
 </root>

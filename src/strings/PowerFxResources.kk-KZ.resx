@@ -1465,6 +1465,14 @@
     <value>кіріс</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>түрлендіргіш</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>түрлендіргіш</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Мәтіндік мәннің басынан таңбалардың көрсетілген санын қайтарады.</value>
     
@@ -1801,20 +1809,8 @@
     <value>"{0}" бірінші аргументі бір бағанды кесте болуы тиіс.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Жарамсыз схема, "{0}" үшін мәтіндік мәндер бағаны күтілді.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Жарамсыз схема, "{0}" үшін күн мәндерінің бағаны күтілді.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Жарамсыз схема, "{0}" үшін сандық мәндер бағаны күтілді.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Жарамсыз схема, "{0}" үшін түс мәндерінің бағаны күтілді.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Жарамсыз схема, "{0}" үшін "{1}" мәндерінен тұратын баған күтілді.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Сандық мән тым үлкен.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Қазір қолдау көрсетілмейтін резервтегі сөзді пайдалану.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Математикалық және статистикалық</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>Пайдаланушы анықтайтын</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Ақпарат</value>
@@ -4789,6 +4792,26 @@
     <value>Аталған формула өрнек болуы керек.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Пайдаланушы анықтайтын функцияның негізгі мәтіні болуы керек.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>{0} функциясы анықталып қойған.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>{0} параметрі көшірме болып табылады.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>{0} түрі белгісіз.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Мәлімделген функцияны қайтару түрі функцияның негізгі мәтінінің қайтару түріне сәйкес келмейді.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" бұрыннан бар.</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" — танылған, бірақ қолдау көрсетілмейтін функция.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}" болған, түрі "{1}" болады деп күтілген.</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Бұл әрекетке "{0}" кестесінде сенім білдіруге қолдау көрсетілмейді.</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>Бұл әдіс барлық уақытта шын болады. ThishRecord немесе [@ ] пайдаланғыңыз келді ме?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} сенім білдіру мүмкін емес: тек негізгі "{1}" өрісінен іздеу үшін сенім білдіруді қолдау.</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>{0} сенім білдіру мүмкін емес: идентификатор өрнегі ThasRecord білдіреді.</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>{0} сенім білдіру мүмкін емес: құрамында "{1}" тәртіптік функциясы бар.</value>
     
   </data>
 </root>
