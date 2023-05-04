@@ -243,14 +243,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return isValid;
         }
 
-        public override ArgPreprocessor GetArgPreprocessor(int index, CallNode node)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
-            if (index == 0 && node.Args.Count > 1)
+            if (index == 0 && argCount > 1)
             {
                 return ArgPreprocessor.UntypedStringToUntypedNumber;
             }
 
-            return base.GetArgPreprocessor(index, node);
+            return base.GetArgPreprocessor(index, argCount);
         }
     }
 }

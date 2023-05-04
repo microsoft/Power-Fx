@@ -209,7 +209,12 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Call Node Replacements:
                     case BinaryOpKind.Power:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
+                        var args = new List<IntermediateNode> { left, right };
+
+                        // Since we are directly injecting Power Function and Power function delegates arg preprocessing to IR.
+                        // we need to make sure that the arguments are attached with preprocessor e.g. Blank to Zero.
+                        args = AttachArgPreprocessor(args, BuiltinFunctionsCore.Power, node, 2, context);
+                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, args);
                         break;
                     case BinaryOpKind.Concatenate:
                         binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
@@ -376,7 +381,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
                 // based on the function.
-                args = AttachArgPreprocessor(args, func, node, context);
+                args = AttachArgPreprocessor(args, func, node, node.Args.Count, context);
 
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
@@ -385,7 +390,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
-            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlCallNode node, IRTranslatorContext context)
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlNode node, int argCount, IRTranslatorContext context)
             {
                 var len = args.Count;
                 List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
@@ -393,7 +398,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < len; i++)
                 {
                     IntermediateNode convertedNode;
-                    var argPreprocessor = func.GetArgPreprocessor(i, node);
+                    var argPreprocessor = func.GetArgPreprocessor(i, argCount);
 
                     switch (argPreprocessor)
                     {

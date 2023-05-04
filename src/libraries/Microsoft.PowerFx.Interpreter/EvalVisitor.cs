@@ -547,16 +547,23 @@ namespace Microsoft.PowerFx
                     {
                         var fields = new List<NamedValue>();
                         var scopeContext = context.SymbolContext.WithScope(node.Scope);
-                        foreach (var coercion in node.FieldCoercions)
+
+                        foreach (var field in row.Value.Fields)
                         {
                             CheckCancel();
 
-                            var record = row.Value;
-                            var newScope = scopeContext.WithScopeValues(record);
+                            if (node.FieldCoercions.TryGetValue(new Core.Utils.DName(field.Name), out var coercion))
+                            {
+                                var record = row.Value;
+                                var newScope = scopeContext.WithScopeValues(record);
+                                var newValue = await coercion.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
 
-                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
-                            var name = coercion.Key;
-                            fields.Add(new NamedValue(name.Value, newValue));
+                                fields.Add(new NamedValue(field.Name, newValue));
+                            }
+                            else
+                            {
+                                fields.Add(field);
+                            }
                         }
 
                         resultRows.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(tableType.ToRecord()), fields)));

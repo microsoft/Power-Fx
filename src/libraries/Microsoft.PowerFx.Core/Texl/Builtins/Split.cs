@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Split(text:s, separator:s)
     internal class SplitFunction : StringTwoArgFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index, CallNode node)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }

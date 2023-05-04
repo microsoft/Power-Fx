@@ -1,0 +1,542 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Microsoft Dataverse",
+    "description": "Provides access to the org-based database on Microsoft Dataverse in current environment.",
+    "version": "1.0"
+  },
+  "host": "aurorabapenv767ef.crm10.dynamics.com",
+  "basePath": "/api",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/data/v9.1/leads": {
+      "get": {
+        "description": "Search for Lead records. The available fields/attributes available to build a query can be obtained from the body specification of Create Lead record.",
+        "operationId": "GetLead",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$select",
+            "description": "Enter a comma-separated list of column unique names to limit which columns are listed",
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$filter",
+            "description": "Enter an OData style filter expression to limit which rows are listed",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "required": [
+                "lastname",
+                "msdyn_company@odata.bind",
+                "subject"
+              ],
+              "properties": {
+                "leadid": {
+                  "title": "Lead Id",
+                  "description": "Unique identifier of the lead.",
+                  "type": "string"
+                },
+                "jobtitle": {
+                  "title": "Job Title",
+                  "description": "Type the job title of the primary contact for this lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "leadsourcecode": {
+                  "description": "Source of the lead",
+                  "maxLength": 100,
+                  "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "type": "integer",
+                  "x-ms-enum-display-name": [
+                    "Advertisement",
+                    "Employee Referral",
+                    "External Referral",
+                    "Partner",
+                    "Public Relations",
+                    "Seminar",
+                    "Trade Show",
+                    "Web",
+                    "Word of Mouth",
+                    "Other"
+                  ]
+                },
+                "emailaddress1": {
+                  "title": "Email",
+                  "description": "Type the primary email address for the lead.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "companyname": {
+                  "title": "Account Name",
+                  "description": "Type the name of the company associated with the lead. This becomes the account name when the lead is qualified and converted to a customer account.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "subject": {
+                  "title": "Topic",
+                  "description": "Type a subject or descriptive name, such as the expected order, company name, or marketing source list, to identify the lead.",
+                  "maxLength": 300,
+                  "type": "string"
+                },
+                "lastname": {
+                  "title": "Last Name",
+                  "description": "Type the last name of the primary contact for the lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 50,
+                  "type": "string"
+                },
+                "msdyn_company@odata.bind": {
+                  "description": "Select Company",
+                  "maxLength": 50,
+                  "enum": [
+                    "2b629105-4a26-4607-97a5-0715059e0a55",
+                    "5cacddd3-d47f-4023-a68e-0ce3e0d401fb",
+                    "cde14b9a-32f8-4e36-8553-0db5046b12a5",
+                    "b9467fcc-d4cf-4b7d-a32f-203b78de3cfb",
+                    "676cf9c2-4ecd-4c86-aa70-2d436d3610d5",
+                    "73e3feed-5253-4dde-a5e6-3c041425c74e",
+                    "c3da73a2-3062-4c39-bd63-436710298489",
+                    "a8695a3a-62ba-440c-bd41-44aa0051a02c",
+                    "f99ca69b-1563-4ff3-816c-4644167d7b3e",
+                    "898edaf5-d7ff-44dd-b6da-4a89bae391e8"
+                  ],
+                  "type": "string",
+                  "x-ms-enum-display-name": [
+                    "INMF",
+                    "MYMF",
+                    "JPMF",
+                    "DEMF",
+                    "GLCO",
+                    "USRT",
+                    "MXMF",
+                    "USP2",
+                    "ITCO",
+                    "USMF"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-ms-require-user-confirmation": false
+      },
+      "post": {
+        "description": "Creates a Lead record. A Lead is a prospect or potential sales opportunity. Leads are converted into accounts, contacts, or opportunities when they are qualified. Otherwise, they are deleted or archived",
+        "operationId": "PostLead",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "required": [
+                "lastname",
+                "msdyn_company@odata.bind",
+                "subject"
+              ],
+              "properties": {
+                "leadid": {
+                  "title": "Lead Id",
+                  "description": "Unique identifier of the lead.",
+                  "type": "string"
+                },
+                "jobtitle": {
+                  "title": "Job Title",
+                  "description": "Type the job title of the primary contact for this lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "leadsourcecode": {
+                  "description": "Source of the lead",
+                  "maxLength": 100,
+                  "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "type": "integer",
+                  "x-ms-enum-display-name": [
+                    "Advertisement",
+                    "Employee Referral",
+                    "External Referral",
+                    "Partner",
+                    "Public Relations",
+                    "Seminar",
+                    "Trade Show",
+                    "Web",
+                    "Word of Mouth",
+                    "Other"
+                  ]
+                },
+                "emailaddress1": {
+                  "title": "Email",
+                  "description": "Type the primary email address for the lead.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "companyname": {
+                  "title": "Account Name",
+                  "description": "Type the name of the company associated with the lead. This becomes the account name when the lead is qualified and converted to a customer account.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "subject": {
+                  "title": "Topic",
+                  "description": "Type a subject or descriptive name, such as the expected order, company name, or marketing source list, to identify the lead.",
+                  "maxLength": 300,
+                  "type": "string"
+                },
+                "lastname": {
+                  "title": "Last Name",
+                  "description": "Type the last name of the primary contact for the lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 50,
+                  "type": "string"
+                },
+                "msdyn_company@odata.bind": {
+                  "description": "Select Company",
+                  "maxLength": 50,
+                  "enum": [
+                    "2b629105-4a26-4607-97a5-0715059e0a55",
+                    "5cacddd3-d47f-4023-a68e-0ce3e0d401fb",
+                    "cde14b9a-32f8-4e36-8553-0db5046b12a5",
+                    "b9467fcc-d4cf-4b7d-a32f-203b78de3cfb",
+                    "676cf9c2-4ecd-4c86-aa70-2d436d3610d5",
+                    "73e3feed-5253-4dde-a5e6-3c041425c74e",
+                    "c3da73a2-3062-4c39-bd63-436710298489",
+                    "a8695a3a-62ba-440c-bd41-44aa0051a02c",
+                    "f99ca69b-1563-4ff3-816c-4644167d7b3e",
+                    "898edaf5-d7ff-44dd-b6da-4a89bae391e8"
+                  ],
+                  "type": "string",
+                  "x-ms-enum-display-name": [
+                    "INMF",
+                    "MYMF",
+                    "JPMF",
+                    "DEMF",
+                    "GLCO",
+                    "USRT",
+                    "MXMF",
+                    "USP2",
+                    "ITCO",
+                    "USMF"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "required": [
+                "lastname",
+                "msdyn_company@odata.bind",
+                "subject"
+              ],
+              "properties": {
+                "leadid": {
+                  "title": "Lead Id",
+                  "description": "Unique identifier of the lead.",
+                  "type": "string"
+                },
+                "jobtitle": {
+                  "title": "Job Title",
+                  "description": "Type the job title of the primary contact for this lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "leadsourcecode": {
+                  "description": "Source of the lead",
+                  "maxLength": 100,
+                  "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "type": "integer",
+                  "x-ms-enum-display-name": [
+                    "Advertisement",
+                    "Employee Referral",
+                    "External Referral",
+                    "Partner",
+                    "Public Relations",
+                    "Seminar",
+                    "Trade Show",
+                    "Web",
+                    "Word of Mouth",
+                    "Other"
+                  ]
+                },
+                "emailaddress1": {
+                  "title": "Email",
+                  "description": "Type the primary email address for the lead.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "companyname": {
+                  "title": "Account Name",
+                  "description": "Type the name of the company associated with the lead. This becomes the account name when the lead is qualified and converted to a customer account.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "subject": {
+                  "title": "Topic",
+                  "description": "Type a subject or descriptive name, such as the expected order, company name, or marketing source list, to identify the lead.",
+                  "maxLength": 300,
+                  "type": "string"
+                },
+                "lastname": {
+                  "title": "Last Name",
+                  "description": "Type the last name of the primary contact for the lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 50,
+                  "type": "string"
+                },
+                "msdyn_company@odata.bind": {
+                  "description": "Select Company",
+                  "maxLength": 50,
+                  "enum": [
+                    "2b629105-4a26-4607-97a5-0715059e0a55",
+                    "5cacddd3-d47f-4023-a68e-0ce3e0d401fb",
+                    "cde14b9a-32f8-4e36-8553-0db5046b12a5",
+                    "b9467fcc-d4cf-4b7d-a32f-203b78de3cfb",
+                    "676cf9c2-4ecd-4c86-aa70-2d436d3610d5",
+                    "73e3feed-5253-4dde-a5e6-3c041425c74e",
+                    "c3da73a2-3062-4c39-bd63-436710298489",
+                    "a8695a3a-62ba-440c-bd41-44aa0051a02c",
+                    "f99ca69b-1563-4ff3-816c-4644167d7b3e",
+                    "898edaf5-d7ff-44dd-b6da-4a89bae391e8"
+                  ],
+                  "type": "string",
+                  "x-ms-enum-display-name": [
+                    "INMF",
+                    "MYMF",
+                    "JPMF",
+                    "DEMF",
+                    "GLCO",
+                    "USRT",
+                    "MXMF",
+                    "USP2",
+                    "ITCO",
+                    "USMF"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-ms-require-user-confirmation": true
+      }
+    },
+    "/data/v9.1/leads({leadId})/Microsoft.Dynamics.CRM.QualifyLead": {
+      "post": {
+        "description": "Qualify a Lead.",
+        "operationId": "QualifyLead",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "leadId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "required": [
+                "CreateAccount",
+                "CreateContact",
+                "CreateOpportunity",
+                "Status"
+              ],
+              "properties": {
+                "CreateAccount": {
+                  "title": "Create Account?",
+                  "description": "Set to true to create an account while qualifying",
+                  "default": false,
+                  "type": "boolean",
+                  "x-ms-explicit-input": true
+                },
+                "CreateContact": {
+                  "title": "Create Contact?",
+                  "description": "Set to true to create a contact while qualifying",
+                  "default": false,
+                  "type": "boolean",
+                  "x-ms-explicit-input": true
+                },
+                "CreateOpportunity": {
+                  "title": "Create CreateOpportunity?",
+                  "description": "Set to true to create an opportunity while qualifying",
+                  "default": false,
+                  "type": "boolean",
+                  "x-ms-explicit-input": true
+                },
+                "Status": {
+                  "title": "StateCode",
+                  "description": "StateCode",
+                  "default": 3,
+                  "type": "integer",
+                  "x-ms-visibility": "internal"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "required": [
+                "lastname",
+                "msdyn_company@odata.bind",
+                "subject"
+              ],
+              "properties": {
+                "leadid": {
+                  "title": "Lead Id",
+                  "description": "Unique identifier of the lead.",
+                  "type": "string"
+                },
+                "jobtitle": {
+                  "title": "Job Title",
+                  "description": "Type the job title of the primary contact for this lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "leadsourcecode": {
+                  "description": "Source of the lead",
+                  "maxLength": 100,
+                  "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                  ],
+                  "type": "integer",
+                  "x-ms-enum-display-name": [
+                    "Advertisement",
+                    "Employee Referral",
+                    "External Referral",
+                    "Partner",
+                    "Public Relations",
+                    "Seminar",
+                    "Trade Show",
+                    "Web",
+                    "Word of Mouth",
+                    "Other"
+                  ]
+                },
+                "emailaddress1": {
+                  "title": "Email",
+                  "description": "Type the primary email address for the lead.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "companyname": {
+                  "title": "Account Name",
+                  "description": "Type the name of the company associated with the lead. This becomes the account name when the lead is qualified and converted to a customer account.",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "subject": {
+                  "title": "Topic",
+                  "description": "Type a subject or descriptive name, such as the expected order, company name, or marketing source list, to identify the lead.",
+                  "maxLength": 300,
+                  "type": "string"
+                },
+                "lastname": {
+                  "title": "Last Name",
+                  "description": "Type the last name of the primary contact for the lead to make sure the prospect is addressed correctly in sales calls, email, and marketing campaigns.",
+                  "maxLength": 50,
+                  "type": "string"
+                },
+                "msdyn_company@odata.bind": {
+                  "description": "Select Company",
+                  "maxLength": 50,
+                  "enum": [
+                    "2b629105-4a26-4607-97a5-0715059e0a55",
+                    "5cacddd3-d47f-4023-a68e-0ce3e0d401fb",
+                    "cde14b9a-32f8-4e36-8553-0db5046b12a5",
+                    "b9467fcc-d4cf-4b7d-a32f-203b78de3cfb",
+                    "676cf9c2-4ecd-4c86-aa70-2d436d3610d5",
+                    "73e3feed-5253-4dde-a5e6-3c041425c74e",
+                    "c3da73a2-3062-4c39-bd63-436710298489",
+                    "a8695a3a-62ba-440c-bd41-44aa0051a02c",
+                    "f99ca69b-1563-4ff3-816c-4644167d7b3e",
+                    "898edaf5-d7ff-44dd-b6da-4a89bae391e8"
+                  ],
+                  "type": "string",
+                  "x-ms-enum-display-name": [
+                    "INMF",
+                    "MYMF",
+                    "JPMF",
+                    "DEMF",
+                    "GLCO",
+                    "USRT",
+                    "MXMF",
+                    "USP2",
+                    "ITCO",
+                    "USMF"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "x-ms-require-user-confirmation": true
+      }
+    }
+  }
+}

@@ -121,6 +121,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private bool ParseUDFArgs(out HashSet<UDFArg> args)
         {
             args = new HashSet<UDFArg>();
+            int argIndex = 0;
             if (TokEat(TokKind.ParenOpen) == null)
             {
                 return false;
@@ -147,7 +148,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 ParseTrivia();
 
-                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
+                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>(), argIndex++));
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
