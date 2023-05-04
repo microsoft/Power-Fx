@@ -275,6 +275,14 @@ namespace Microsoft.PowerFx.Core.IR
                             return BinaryOpKind.NeqNull;
                         case BinaryOp.Equal:
                             return BinaryOpKind.EqNull;
+                        case BinaryOp.Less:
+                            return BinaryOpKind.LtNull;
+                        case BinaryOp.LessEqual:
+                            return BinaryOpKind.LeqNull;
+                        case BinaryOp.Greater:
+                            return BinaryOpKind.GtNull;
+                        case BinaryOp.GreaterEqual:
+                            return BinaryOpKind.GeqNull;
                         default:
                             throw new NotSupportedException();
                     }
