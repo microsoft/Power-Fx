@@ -296,14 +296,15 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length == 1 && (args[0] is BlankValue || (args[0] is UntypedObjectValue untypedObjectValue && untypedObjectValue.Impl.Type == FormulaType.Blank)))
+            if (args.Length == 1 && args[0].IsBlank())
             {
+                // When used as a pure conversion function (single argument, no format string), this function propagates null values
                 return new BlankValue(irContext);
             }
 
             foreach (var arg in args)
             {
-                if (arg is BlankValue || (arg is UntypedObjectValue untypedObject && untypedObject.Impl.Type == FormulaType.Blank))
+                if (arg.IsBlank())
                 {
                     return new StringValue(irContext, string.Empty);
                 }
