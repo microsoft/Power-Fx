@@ -101,6 +101,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 ConnectorDynamicValue connectorDynamicValue = GetDynamicValue(param);
                 string summary = GetSummary(param);
+                bool explicitInput = GetExplicitInput(param);
 
                 if (cpt.HiddenRecordType != null)
                 {
@@ -365,12 +366,12 @@ namespace Microsoft.PowerFx.Connectors
         internal static string GetSummary(IOpenApiExtensible param)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
-            if (param.Extensions != null && param.Extensions.TryGetValue("x-ms-summary", out IOpenApiExtension ext) && ext is OpenApiString apiStr)
-            {
-                return apiStr.Value;
-            }
+            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-summary", out IOpenApiExtension ext) && ext is OpenApiString apiStr ? apiStr.Value : null;            
+        }
 
-            return null;
+        internal static bool GetExplicitInput(IOpenApiExtensible param)
+        {
+            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-explicit-input", out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool ? apiBool.Value : false;            
         }
 
         private static ConnectorDynamicValue GetDynamicValue(IOpenApiExtensible param)
@@ -535,7 +536,15 @@ namespace Microsoft.PowerFx.Connectors
 
             internalParameter.OpenApiParameter.Schema.TryGetDefaultValue(internalParameter.Type, out FormulaValue defaultValue, numberIsFloat: numberIsFloat);
 
-            return new ServiceFunctionParameterTemplate(internalParameter.Type, internalParameter.ConnectorType, typedName, internalParameter.OpenApiParameter.Description, internalParameter.Summary, defaultValue, internalParameter.DynamicValue, internalParameter.DynamicSchema);
+            return new ServiceFunctionParameterTemplate(
+                        internalParameter.Type, 
+                        internalParameter.ConnectorType, 
+                        typedName, 
+                        internalParameter.OpenApiParameter.Description, 
+                        internalParameter.Summary, 
+                        defaultValue, 
+                        internalParameter.DynamicValue, 
+                        internalParameter.DynamicSchema);
         }
 
         private static ServiceFunctionParameterTemplate Convert(KeyValuePair<string, ConnectorSchemaInternal> internalParameter, bool numberIsFloat)
@@ -545,7 +554,15 @@ namespace Microsoft.PowerFx.Connectors
 
             internalParameter.Value.Schema.TryGetDefaultValue(internalParameter.Value.Type, out FormulaValue defaultValue, numberIsFloat: numberIsFloat);
 
-            return new ServiceFunctionParameterTemplate(internalParameter.Value.Type, internalParameter.Value.ConnectorType, typedName, "Body", internalParameter.Value.Summary, defaultValue, internalParameter.Value.DynamicValue, internalParameter.Value.DynamicSchema);
+            return new ServiceFunctionParameterTemplate(
+                        internalParameter.Value.Type, 
+                        internalParameter.Value.ConnectorType, 
+                        typedName, 
+                        "Body", 
+                        internalParameter.Value.Summary, 
+                        defaultValue, 
+                        internalParameter.Value.DynamicValue, 
+                        internalParameter.Value.DynamicSchema);
         }
     }
 
@@ -568,8 +585,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public ConnectorType ConnectorType { get; }
 
+        /// <summary>
+        /// "x-ms-dynamic-values".
+        /// </summary>
         public ConnectorDynamicValue DynamicValue { get; }
 
+        /// <summary>
+        /// "x-ms-dynamic-schema".
+        /// </summary>
         public ConnectorDynamicSchema DynamicSchema { get; }
 
         public string Summary { get; }
@@ -581,7 +604,7 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorType = connectorType;
             Summary = summary;
             DynamicValue = dynamicValue;
-            DynamicSchema = dynamicSchema;
+            DynamicSchema = dynamicSchema;            
         }
     }
 }
