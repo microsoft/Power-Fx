@@ -25,44 +25,113 @@ namespace Microsoft.PowerFx.Connectors
     [DebuggerDisplay("{Name}")]
     public class ConnectorFunction
     {
+        /// <summary>
+        /// Normlalized name of the function.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Namespace of the function (not contained in swagger file).
+        /// </summary>
         public string Namespace { get; private set; }
 
+        /// <summary>
+        /// Name as it appears in the swagger file.
+        /// </summary>
         public string OriginalName => Operation.OperationId;
 
+        /// <summary>
+        /// Operation's description.
+        /// </summary>
         public string Description => Operation.Description ?? $"Invoke {Name}";
 
+        /// <summary>
+        /// Operation's summary.
+        /// </summary>
         public string Summary => Operation.Summary;
 
+        /// <summary>
+        /// Operation's path. Includes the base path if any.
+        /// </summary>
         public string OperationPath { get; }
 
+        /// <summary>
+        /// HTTP method.
+        /// </summary>
         public HttpMethod HttpMethod { get; }
 
+        /// <summary>
+        /// Swagger's operation.
+        /// </summary>
         internal OpenApiOperation Operation { get; }
 
-        public string Visibility => Operation.Extensions.TryGetValue("x-ms-visibility", out IOpenApiExtension openExt) && openExt is OpenApiString str ? str.Value : null;
+        /// <summary>
+        /// Visibility defined as "x-ms-visibility" string content.
+        /// </summary>
+        public string Visibility => Operation.GetVisibility();
 
+        /// <summary>
+        /// Defined as "x-ms-require-user-confirmation" boolean content.
+        /// </summary>
+        public bool RequiresUserConfirmation => Operation.GetRequiresUserConfirmation();
+
+        /// <summary>
+        /// Return type of the function.
+        /// </summary>
         public FormulaType ReturnType => Operation.GetReturnType(NumberIsFloat);
 
+        /// <summary>
+        /// Connector return type of the function (contains inner "x-ms-summary" and descriptions).
+        /// </summary>
         public ConnectorType ConnectorReturnType => Operation.GetConnectorReturnType(NumberIsFloat);
 
+        /// <summary>
+        /// Defines behavioral functions (GET and HEAD HTTP methods).
+        /// </summary>
         public bool IsBehavior => OpenApiParser.IsSafeHttpMethod(HttpMethod);
 
+        /// <summary>
+        /// Required parameters.
+        /// </summary>
         public ConnectorParameter[] RequiredParameters => _requiredParameters ??= ArgumentMapper.RequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
 
+        /// <summary>
+        /// Hidden required parameters.
+        /// Defined as 
+        /// - part "required" swagger array
+        /// - "x-ms-visibility" string set to "internal" 
+        /// - has a default value.
+        /// </summary>
         internal ConnectorParameter[] HiddenRequiredParameters => _hiddenRequiredParameters ??= ArgumentMapper.HiddenRequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
 
+        /// <summary>
+        /// Optional parameters.
+        /// </summary>
         public ConnectorParameter[] OptionalParameters => _optionalParameters ??= ArgumentMapper.OptionalParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
 
+        /// <summary>
+        /// Minimum number of arguments.
+        /// </summary>
         public int ArityMin => ArgumentMapper.ArityMin;
 
+        /// <summary>
+        /// Maximum number of arguments.
+        /// </summary>
         public int ArityMax => ArgumentMapper.ArityMax;
 
+        /// <summary>
+        /// Numbers are defined as "double" type (otherwise "decimal").
+        /// </summary>
         public bool NumberIsFloat { get; }
 
+        /// <summary>
+        /// ArgumentMapper class.
+        /// </summary>
         internal ArgumentMapper ArgumentMapper => _argumentMapper ??= new ArgumentMapper(Operation.Parameters, Operation, NumberIsFloat);
 
+        /// <summary>
+        /// True if the function has a service function.
+        /// </summary>
         internal bool HasServiceFunction => _defaultServiceFunction != null;
 
         private ArgumentMapper _argumentMapper;
@@ -191,18 +260,37 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
+    [DebuggerDisplay("{Name} {FormulaType._type}")]
     public class ConnectorParameter
     {
+        /// <summary>
+        /// Parameter name.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Parameter type.
+        /// </summary>
         public FormulaType FormulaType { get; }
 
+        /// <summary>
+        /// Parameter ConnectorType.
+        /// </summary>
         public ConnectorType ConnectorType { get; }
 
+        /// <summary>
+        /// Parameter description.
+        /// </summary>
         public string Description { get; }
 
+        /// <summary>
+        /// Parameter summary (defined in "x-ms-summary").
+        /// </summary>
         public string Summary { get; }
 
+        /// <summary>
+        /// Parameter default value.
+        /// </summary>
         public FormulaValue DefaultValue { get; }
 
         public ConnectorParameter(string name, FormulaType type, ConnectorType connectorType, string description, string summary, FormulaValue defaultValue)
