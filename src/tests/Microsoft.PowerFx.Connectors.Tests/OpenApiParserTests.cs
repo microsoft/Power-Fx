@@ -466,6 +466,54 @@ namespace Microsoft.PowerFx.Connectors.Tests
             List<ServiceFunction> functionList = OpenApiParser.Parse("SQL", doc);
             Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "sQL__GetProcedureV2");
         }
+
+        [Fact]
+        public void Dataverse_Sample()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\DataverseSample.json");
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(doc).ToArray();
+
+            Assert.NotNull(functions);
+            Assert.Equal(3, functions.Count());
+
+            Assert.Equal(new List<string>() { "GetLead", "PostLead", "QualifyLead" }, functions.Select(f => f.Name).ToList());
+            Assert.Equal(new List<string>() { "GetLead", "PostLead", "QualifyLead" }, functions.Select(f => f.OriginalName).ToList());
+
+            // "x-ms-require-user-confirmation"
+            Assert.Equal(new List<bool>() { false, true, true }, functions.Select(f => f.RequiresUserConfirmation).ToList());
+
+            // "x-ms-explicit-input" in "QualifyLead" function parameters       
+            Assert.Equal(4, functions[2].RequiredParameters.Length);
+            Assert.False(functions[2].RequiredParameters[0].ConnectorType.ExplicitInput); // "leadId"
+            Assert.True(functions[2].RequiredParameters[1].ConnectorType.ExplicitInput);  // "CreateAccount"
+            Assert.True(functions[2].RequiredParameters[2].ConnectorType.ExplicitInput);  // "CreateContact"
+            Assert.True(functions[2].RequiredParameters[3].ConnectorType.ExplicitInput);  // "CreateOpportunity"
+            Assert.Single(functions[2].HiddenRequiredParameters);
+            Assert.False(functions[2].HiddenRequiredParameters[0].ConnectorType.ExplicitInput); // "Status"
+            Assert.Empty(functions[2].OptionalParameters);
+
+            // "enum"
+            Assert.Equal(FormulaType.Decimal, functions[1].OptionalParameters[2].ConnectorType.FormulaType); // "leadsourcecode"
+            Assert.True(functions[1].OptionalParameters[2].ConnectorType.IsEnum);
+            Assert.Equal(Enumerable.Range(1, 10).Select(i => (decimal)i).ToArray(), functions[1].OptionalParameters[2].ConnectorType.EnumValues.Select(fv => (decimal)fv.ToObject()));
+
+            // "x-ms-enum-display-name"
+            Assert.NotNull(functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames);
+            Assert.Equal("Advertisement", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[0]);
+            Assert.Equal("Employee Referral", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[1]);
+            
+            Assert.True(functions[1].RequiredParameters[2].ConnectorType.IsEnum); // "msdyn_company@odata.bind"
+            Assert.Equal("2b629105-4a26-4607-97a5-0715059e0a55", functions[1].RequiredParameters[2].ConnectorType.EnumValues[0].ToObject());
+            Assert.Equal("5cacddd3-d47f-4023-a68e-0ce3e0d401fb", functions[1].RequiredParameters[2].ConnectorType.EnumValues[1].ToObject());
+            Assert.Equal("INMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[0]);
+            Assert.Equal("MYMF", functions[1].RequiredParameters[2].ConnectorType.EnumDisplayNames[1]);
+
+            OptionSet os1 = functions[1].RequiredParameters[2].ConnectorType.OptionSet;
+
+            Assert.NotNull(os1);
+            Assert.Equal("msdyn_company@odata.bind", os1.EntityName);
+            Assert.Equal("msdyn_company@odata.bind", os1.FormulaType.OptionSetName);
+        }
     }
 
     public static class Extensions

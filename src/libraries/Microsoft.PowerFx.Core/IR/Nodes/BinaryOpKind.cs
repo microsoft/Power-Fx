@@ -116,5 +116,10 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         AddDayAndDate,
         AddNumberAndTime,
         AddDayAndDateTime,
+
+        LtNull,
+        LeqNull,
+        GtNull,
+        GeqNull,
     }
 }

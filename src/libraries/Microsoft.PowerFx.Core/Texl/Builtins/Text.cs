@@ -25,8 +25,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public const string TextInvariantFunctionName = "Text";
+
         public TextFunction()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
+            : base(TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
         {
         }
 
@@ -60,8 +62,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (
                 !DType.Decimal.Accepts(
                     arg0Type,
-                    exact: true, 
-                    useLegacyDateTimeAccepts: false, 
+                    exact: true,
+                    useLegacyDateTimeAccepts: false,
                     usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules) &&
                 (checkTypesContext.NumberIsFloat || DType.Number.Accepts(arg0Type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules)))
             {
@@ -121,6 +123,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return isValid;
             }
 
+            ValidateFormatArgs(Name, checkTypesContext, args, argTypes, errors, ref nodeToCoercedTypeMap, ref isValid);
+
+            if (isValid)
+            {
+                if (arg0CoercedType.IsValid)
+                {
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, arg0, arg0CoercedType);
+                    return true;
+                }
+            }
+            else
+            {
+                nodeToCoercedTypeMap = null;
+            }
+
+            return isValid;
+        }
+
+        internal static void ValidateFormatArgs(string name, CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, ref bool isValid)
+        {
             if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
             {
                 // Coerce enum values to string
@@ -158,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (hasDateTimeFmt && hasNumericFmt)
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, Name);
+                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
                     isValid = false;
                 }
             }
@@ -172,21 +194,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     isValid = false;
                 }
             }
-
-            if (isValid)
-            {
-                if (arg0CoercedType.IsValid)
-                {
-                    CollectionUtils.Add(ref nodeToCoercedTypeMap, arg0, arg0CoercedType);
-                    return true;
-                }
-            }
-            else
-            {
-                nodeToCoercedTypeMap = null;
-            }
-
-            return isValid;
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -209,7 +216,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public TextFunction_UO()
-            : base("Text", TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 1, DType.UntypedObject)
+            : base(TextFunction.TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Text, DType.String, 0, 1, 3, DType.UntypedObject, DType.String, DType.String)
         {
         }
 
@@ -221,6 +228,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
         {
             return GetUniqueTexlRuntimeName(suffix: "_UO");
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+
+            if (args.Length > 1)
+            {
+                // The 2nd and 3rd arguments can be validated using the same logic as the normal Text function
+                TextFunction.ValidateFormatArgs(Name, context, args, argTypes, errors, ref nodeToCoercedTypeMap, ref isValid);
+            }
+
+            return isValid;
+        }
+
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            if (index == 0 && argCount > 1)
+            {
+                return ArgPreprocessor.UntypedStringToUntypedNumber;
+            }
+
+            return base.GetArgPreprocessor(index, argCount);
         }
     }
 }

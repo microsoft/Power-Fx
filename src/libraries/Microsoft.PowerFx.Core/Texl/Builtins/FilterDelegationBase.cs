@@ -105,8 +105,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.FirstName:
                         {
-                            // Only boolean option sets and boolean fields are allowed to delegate
-                            if (!binding.IsValidBooleanDelegableNode(dsNode))
+                            if (!IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -122,10 +121,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                     case NodeKind.DottedName:
                         {
-                            // Only boolean option set, boolean fields and views are allowed to delegate
-                            var nodeDType = binding.GetType(dsNode);
-                            if (!(binding.IsValidBooleanDelegableNode(dsNode)
-                                || (nodeDType == DType.ViewValue)))
+                            if (!IsNodeBooleanOptionSetorBooleanFieldorView(dsNode, binding))
                             {
                                 SuggestDelegationHint(dsNode, binding);
                                 return false;
@@ -174,7 +170,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                             break;
                         }
-                    }
+                }
             }
             finally
             {
@@ -186,6 +182,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return true;
+        }
+
+        private bool IsNodeBooleanOptionSetorBooleanFieldorView(TexlNode dsNode, TexlBinding binding)
+        {
+            // Only boolean option set, boolean fields and views are allowed to delegate
+            var nodeDType = binding.GetType(dsNode);
+            return binding.IsValidBooleanDelegableNode(dsNode) || (nodeDType == DType.ViewValue);
         }
     }
 }
