@@ -459,7 +459,7 @@ namespace Microsoft.PowerFx
                                 notCoerceToType = !DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType);
                                 break;
                             default:
-                                throw new NotImplementedException();
+                                throw new NotImplementedException($"Setting ExpectedReturnType to {_expectedReturnType.GetType().FullName} is not implemented");
                         }
                     }
 
