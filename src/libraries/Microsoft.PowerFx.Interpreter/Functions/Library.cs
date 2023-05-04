@@ -1523,7 +1523,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfOneArgIsBlankAndEmptyStringForOtherArgIsBlank,
+                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
                     targetFunction: Text)
             },
             {
