@@ -10,6 +10,9 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         Percent,
         NegateDecimal,
         PercentDecimal,
+        NegateDate,
+        NegateDateTime,
+        NegateTime,
 
         // Coercion operations
         BooleanToNumber,

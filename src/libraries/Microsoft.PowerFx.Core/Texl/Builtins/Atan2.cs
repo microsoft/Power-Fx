@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent Excel function: Atan2
     internal sealed class Atan2Function : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index, CallNode node)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }
