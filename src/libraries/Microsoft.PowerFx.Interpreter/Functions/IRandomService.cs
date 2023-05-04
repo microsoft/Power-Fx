@@ -52,10 +52,16 @@ namespace Microsoft.PowerFx.Functions
         {
             lock (_randomizerLock)
             {
-                var randomDecimal = new decimal(_random.Next(), _random.Next(), _random.Next(), false, 28);
-                var randStr = randomDecimal.ToString(CultureInfo.InvariantCulture);
-                randStr = "0." + randStr.Replace(".", string.Empty).Substring(1);
-                
+                var randChars = new char[30];
+                randChars[0] = '0';
+                randChars[1] = '.';
+
+                for (int i = 2; i < 30; i++)
+                {
+                    randChars[i] = (char)_random.Next(48, 58);
+                }
+
+                var randStr = new string(randChars);
                 if (decimal.TryParse(randStr, out decimal decimalResult))
                 {
                     return decimalResult;
