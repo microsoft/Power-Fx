@@ -26,3 +26,6 @@ Table()
 
 >> MatchAll(Blank(), Blank())
 Errors: Error 18-25: Regular expressions must be constant values.|Error 0-26: The function 'MatchAll' has some invalid arguments.
+
+>> MatchAll(1/0, "Hi")
+Error({Kind:ErrorKind.Div0})

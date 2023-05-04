@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Functions
             string regularExpression = sv1.Value;
             string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : defaultMatchOptions;
 
-            RegexOptions regOptions = RegexOptions.None;
+            RegexOptions regOptions = RegexOptions.CultureInvariant;
 
             if (!matchOptions.Contains("c"))
             {
