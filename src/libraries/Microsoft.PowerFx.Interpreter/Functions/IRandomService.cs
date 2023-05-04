@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Functions
                     return decimalResult;
                 }
 
-                return decimal.MaxValue;
+                return 0.5M;
             }
         }
     }
