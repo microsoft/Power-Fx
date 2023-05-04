@@ -434,3 +434,13 @@ Time(18,0,0,0)
 
 >> Time(1e28,0,0)
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> -Time(6,0,0)
+Time(18,0,0,0)
+
+>> Value(-Time(6,0,0))
+-0.25
+
+// Negation may lose precision as Time values have smaller precision than numbers
+>> With({t:Time(RandBetween(0,23), RandBetween(0,59), RandBetween(0,59))}, Abs(Value(t) + Value(-t)) < 0.000001)
+true
