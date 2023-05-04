@@ -198,8 +198,8 @@ namespace Microsoft.PowerFx.Connectors
                 // OpenAPI spec: Format could be <null>, byte, binary, date, date-time, password
                 case "string":
 
-                    // We don't want to have OptionSets in connections, we'll only get string/number for now
-                    // No need to test schema.Enum
+                    // We don't want to have OptionSets in connections, we'll only get string/number for now in FormulaType
+                    // Anyhow, we'll have schema.Enum content in ConnertorType
 
                     switch (schema.Format)
                     {
@@ -404,6 +404,16 @@ namespace Microsoft.PowerFx.Connectors
         public static FormulaType GetReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
             return GetConnectorParameterReturnType(op, numberIsFloat).Type;
+        }
+
+        public static string GetVisibility(this OpenApiOperation op)
+        {
+            return op.Extensions.TryGetValue("x-ms-visibility", out IOpenApiExtension openExt) && openExt is OpenApiString str ? str.Value : null;
+        }
+
+        public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
+        { 
+            return op.Extensions.TryGetValue("x-ms-require-user-confirmation", out IOpenApiExtension openExt) && openExt is OpenApiBoolean b ? b.Value : false;            
         }
 
         private static ConnectorParameterType GetConnectorParameterReturnType(OpenApiOperation op, bool numberIsFloat)

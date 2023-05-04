@@ -1,11 +1,16 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Diagnostics;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    // Wrapper class around FormulaType and ConnectorType
+    // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
+    // ConnectorType contains more details information coming from the swagger file and extensions
+    [DebuggerDisplay("{Type._type}")]
     public class ConnectorParameterType
     {
         public FormulaType Type { get; }
