@@ -25,8 +25,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("Abs(x)", udf.Body.ToString());
             Assert.Equal("Number", udf.ReturnType.ToString());
             var arg = udf.Args.First();
-            Assert.Equal("x", arg.VarIdent.ToString());
-            Assert.Equal("Number", arg.VarType.ToString());
+            Assert.Equal("x", arg.NameIdent.ToString());
+            Assert.Equal("Number", arg.TypeIdent.ToString());
         }
 
         [Theory]

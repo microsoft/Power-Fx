@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding Excel function: Char
     internal sealed class CharFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }

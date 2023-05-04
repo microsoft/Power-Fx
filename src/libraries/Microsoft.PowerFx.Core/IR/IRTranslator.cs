@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -172,7 +173,15 @@ namespace Microsoft.PowerFx.Core.IR
                         result = new CallNode(irc, BuiltinFunctionsCore.Not, child);
                         break;
                     case UnaryOp.Minus:
-                        result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.NegateDecimal : UnaryOpKind.Negate, child);
+                        UnaryOpKind unaryOpKind = irc.ResultType._type.Kind switch
+                        {
+                            DKind.Decimal => UnaryOpKind.NegateDecimal,
+                            DKind.Date => UnaryOpKind.NegateDate,
+                            DKind.DateTime => UnaryOpKind.NegateDateTime,
+                            DKind.Time => UnaryOpKind.NegateTime,
+                            _ => UnaryOpKind.Negate
+                        };
+                        result = new UnaryOpNode(irc, unaryOpKind, child);
                         break;
                     case UnaryOp.Percent:
                         result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.PercentDecimal : UnaryOpKind.Percent, child);
@@ -200,7 +209,12 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Call Node Replacements:
                     case BinaryOpKind.Power:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
+                        var args = new List<IntermediateNode> { left, right };
+
+                        // Since we are directly injecting Power Function and Power function delegates arg preprocessing to IR.
+                        // we need to make sure that the arguments are attached with preprocessor e.g. Blank to Zero.
+                        args = AttachArgPreprocessor(args, BuiltinFunctionsCore.Power, node, 2, context);
+                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, args);
                         break;
                     case BinaryOpKind.Concatenate:
                         binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
@@ -248,16 +262,23 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.DateDifference:
                     case BinaryOpKind.TimeDifference:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate)
+                        if (right is UnaryOpNode unaryNegate)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate.Op == UnaryOpKind.Negate ||
+                                unaryNegate.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, unaryNegate.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, unaryNegate.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     case BinaryOpKind.AddDateAndTime:
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate3)
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate or UnaryOpKind.NegateTime } unaryNegate3)
                         {
                             binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, right);
                         }
@@ -271,23 +292,37 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.SubtractNumberAndDate:
                     case BinaryOpKind.SubtractNumberAndDateTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
+                        if (right is UnaryOpNode unaryNegate4)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate4.Op == UnaryOpKind.Negate ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate4.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     case BinaryOpKind.SubtractNumberAndTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate5)
+                        if (right is UnaryOpNode unaryNegate5)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate5.Op == UnaryOpKind.Negate ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate5.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     // All others used directly
                     default:
@@ -346,7 +381,7 @@ namespace Microsoft.PowerFx.Core.IR
 
                 // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
                 // based on the function.
-                args = AttachArgPreprocessor(args, func, node, context);
+                args = AttachArgPreprocessor(args, func, node, node.Args.Count, context);
 
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
@@ -355,7 +390,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
-            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlCallNode node, IRTranslatorContext context)
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlNode node, int argCount, IRTranslatorContext context)
             {
                 var len = args.Count;
                 List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
@@ -363,7 +398,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < len; i++)
                 {
                     IntermediateNode convertedNode;
-                    var argPreprocessor = func.GetArgPreprocessor(i);
+                    var argPreprocessor = func.GetArgPreprocessor(i, argCount);
 
                     switch (argPreprocessor)
                     {
@@ -389,6 +424,17 @@ namespace Microsoft.PowerFx.Core.IR
                         case ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable:
                             var callIRContext_SCT = context.GetIRContext(node);
                             convertedNode = ReplaceBlankWithCallTypedZero_Scalar(args[i], ((TableType)callIRContext_SCT.ResultType).SingleColumnFieldType);
+                            break;
+                        case ArgPreprocessor.UntypedStringToUntypedNumber:
+                            if (context.Binding.BindingConfig.NumberIsFloat)
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedFloat, args[i]);
+                            }
+                            else
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedDecimal, args[i]);
+                            }
+
                             break;
                         default:
                             convertedNode = args[i];
