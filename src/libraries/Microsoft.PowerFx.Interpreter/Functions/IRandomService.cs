@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 
 namespace Microsoft.PowerFx.Functions
@@ -22,14 +21,6 @@ namespace Microsoft.PowerFx.Functions
         /// </summary>
         /// <returns></returns>
         double NextDouble();
-
-        /// <summary>
-        /// Returns a random decimal number that is greater than or equal to 0.0, and less than 1.0.
-        /// Should be from a linear distribution. 
-        /// Expected this call is thread-safe and may be called concurrently from multiple threads.
-        /// </summary>
-        /// <returns></returns>
-        decimal NextDecimal();
     }
 
     // Default implementation of IRandomService
@@ -45,29 +36,6 @@ namespace Microsoft.PowerFx.Functions
             lock (_randomizerLock)
             {
                 return _random.NextDouble();
-            }
-        }
-
-        public virtual decimal NextDecimal()
-        {
-            lock (_randomizerLock)
-            {
-                var randChars = new char[30];
-                randChars[0] = '0';
-                randChars[1] = '.';
-
-                for (int i = 2; i < 30; i++)
-                {
-                    randChars[i] = (char)_random.Next(48, 58);
-                }
-
-                var randStr = new string(randChars);
-                if (decimal.TryParse(randStr, NumberStyles.Float, CultureInfo.InvariantCulture, out decimal decimalResult))
-                {
-                    return decimalResult;
-                }
-
-                return 0.5M;
             }
         }
     }
