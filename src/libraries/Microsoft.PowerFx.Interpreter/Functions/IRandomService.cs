@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 var randStr = new string(randChars);
-                if (decimal.TryParse(randStr, out decimal decimalResult))
+                if (decimal.TryParse(randStr, NumberStyles.Float, CultureInfo.InvariantCulture, out decimal decimalResult))
                 {
                     return decimalResult;
                 }
