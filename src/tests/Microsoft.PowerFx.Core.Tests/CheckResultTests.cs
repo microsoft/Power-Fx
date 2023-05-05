@@ -262,69 +262,37 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("\"test string\"", false, true)]
-        [InlineData("\"test string\"", true, true)]
-        [InlineData("12", false, false)]       
-        [InlineData("12", true, true)]
-        [InlineData("{a:12, b:15}", true, false)]
-        [InlineData("{a:12, b:15}", false, false)]
-        public void CheckResultExpectedReturnValueString(string inputExpr, bool allowCoerceTo, bool isSuccess)
+        [InlineData("\"test string\"", false, true, "")]
+        [InlineData("\"test string\"", true, true, "")]
+        [InlineData("12", false, false, "The type of this expression does not match the expected type 'Text'")]       
+        [InlineData("12", true, true, "")]
+        [InlineData("{a:12, b:15}", true, false, "The type of this expression does not match the expected type 'Text'")]
+        [InlineData("{a:12, b:15}", false, false, "The type of this expression does not match the expected type 'Text'")]
+        public void CheckResultExpectedReturnValueString(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg)
         {
-            var check = new CheckResult(new Engine())
-                .SetText(inputExpr)
-                .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.String, allowCoerceTo);
-
-            if (isSuccess)
-            {
-                Assert.True(check.IsSuccess);
-            }
-            else
-            {
-                var errors = check.ApplyErrors();
-
-                Assert.False(check.IsSuccess);
-                Assert.Single(errors);
-                var error = errors.First();
-                Assert.Contains("The type of this expression does not match the expected type 'Text'", error.ToString());
-            }
+            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.String);
         }
 
         [Theory]
         [InlineData("12", false, true, "")]
         [InlineData("12", true, true, "")]
-        [InlineData("\"test string\"", true, false, "The method or operation is not implemented")]
+        [InlineData("\"test string\"", true, true, "")]
         [InlineData("\"test string\"", false, false, "The type of this expression does not match the expected type 'Number'")]
         [InlineData("{a:12, b:15}", true, false, "The method or operation is not implemented")]
         [InlineData("{a:12, b:15}", false, false, "The type of this expression does not match the expected type 'Number'")]
         public void CheckResultExpectedReturnValueNumber(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg)
         {
-            var check = new CheckResult(new Engine())
-                .SetText(inputExpr)
-                .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.Number, allowCoerceTo);
+            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.Number);
+        }
 
-            if (isSuccess)
-            {
-                Assert.True(check.IsSuccess);
-            }
-            else
-            {
-                string exMsg = null;
-
-                try
-                {
-                    var errors = check.ApplyErrors();
-                    exMsg = errorMsg.ToString();
-                    Assert.False(check.IsSuccess);
-                }
-                catch (Exception ex)
-                {
-                    exMsg = ex.ToString();
-                }
-
-                Assert.Contains(errorMsg, exMsg);
-            }
+        [Theory]
+        [InlineData("23.45", false, true, "")]
+        [InlineData("23.45", true, true, "")]
+        [InlineData("{a:12, b:15}", true, false, "The method or operation is not implemented")]
+        [InlineData("{a:12, b:15}", false, false, "The type of this expression does not match the expected type 'Decimal'")]
+        public void CheckResultExpectedReturnValueDecimal(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg)
+        {
+            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.Decimal);
         }
 
         [Fact]
@@ -479,6 +447,36 @@ namespace Microsoft.PowerFx.Core.Tests
             var log = check.ApplyGetLogging();
             Assert.Equal(success, check.IsSuccess);
             Assert.Equal(execptedLog, log);
+        }
+
+        private void CheckResultExpectedReturnValue(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg, FormulaType returnType)
+        {
+            var check = new CheckResult(new Engine())
+                .SetText(inputExpr)
+                .SetBindingInfo()
+                .SetExpectedReturnValue(returnType, allowCoerceTo);
+
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);
+            }
+            else
+            {
+                string exMsg = null;
+
+                try
+                {
+                    var errors = check.ApplyErrors();
+                    exMsg = errorMsg.ToString();
+                    Assert.False(check.IsSuccess);
+                }
+                catch (Exception ex)
+                {
+                    exMsg = ex.ToString();
+                }
+
+                Assert.Contains(errorMsg, exMsg);
+            }
         }
     }
 }

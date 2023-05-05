@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         /// <param name="signatureHelp">
         /// Signature help value to test.
         /// </param>
-        private void CheckSignatureHelpTest(SignatureHelp signatureHelp, int helpId)
+        internal void CheckSignatureHelpTest(SignatureHelp signatureHelp, int helpId)
         {
             var directory = _signatureHelpDirectory;
             var signatureHelpPath = Path.Join(_signatureHelpDirectory, helpId + ".json");
@@ -57,7 +57,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 }
                 else
                 {
+                    #pragma warning disable CS0162 // Unreachable code due to a local switch to regenerate baseline files
                     Assert.True(JToken.DeepEquals(actualSignatureHelp, expectedSignatureHelp));
+                    #pragma warning restore CS0162
                 }
             }
             else

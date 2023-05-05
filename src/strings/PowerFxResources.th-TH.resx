@@ -571,7 +571,7 @@
     <value>แปลง 'ข้อความ' ที่อยู่ในรูปของตัวเลขให้เป็นค่าตัวเลขทศนิยม</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>โค้ดภาษาที่จะใช้ขณะแปลงเป็นค่า</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>ค่าข้อความที่จะแปลงเป็นค่าตัวเลขทศนิยม</value>
@@ -580,7 +580,7 @@
     <value>แปลง 'ข้อความ' ที่อยู่ในรูปของตัวเลขให้เป็นค่าตัวเลขทศนิยม</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>โค้ดภาษาที่จะใช้ขณะแปลงเป็นค่า</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
     <value>ค่าข้อความที่จะแปลงเป็นค่าเป็นทศนิยมลอยตัว</value>
@@ -1465,6 +1465,14 @@
     <value>ป้อนข้อมูล</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>ตัวปรับเปลี่ยน</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>ตัวปรับเปลี่ยน</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>คืนค่าตัวเลขที่กำหนดของอักขระเริ่มต้นของข้อความ</value>
     
@@ -1801,20 +1809,8 @@
     <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นตารางคอลัมน์เดียว</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าตัวอักษรสำหรับ '{0}'</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าวันที่สำหรับ '{0}'</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าตัวเลขสำหรับ '{0}'</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าสีสำหรับ '{0}'</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>สคีมาไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่า {0} สำหรับ '{1}'</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>ค่าตัวเลขสูงเกินไป</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>การใช้คำสงวนที่ไม่รองรับในขณะนี้</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>คณิตศาสตร์และทางสถิติ</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>ข้อมูล</value>
@@ -4789,6 +4792,26 @@
     <value>สูตรที่มีชื่อต้องเป็นนิพจน์</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>ฟังก์ชันที่ผู้ใช้กำหนดต้องมีเนื้อหา</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>มีการกำหนดฟังก์ชัน {0} ไว้แล้ว</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>พารามิเตอร์ {0} ซ้ำกัน</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>ชนิดที่ไม่รู้จัก {0}</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>ประเภทการส่งคืนฟังก์ชันที่ระบุไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>มี NamedFormula '{0}' อยู่แล้ว</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' เป็นฟังก์ชันที่ได้รับการยอมรับ แต่ไม่รองรับ</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>การแปลงชนิดล้มเหลวเนื่องจากค่าที่ระบุเป็นชนิด '{0}' แต่คาดหวังว่าจะเป็นชนิด '{1}'</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>ไม่รองรับการมอบหมายการดำเนินการนี้บนตาราง '{0}'</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>เพรดิเคตนี้จะเป็นจริงเสมอ คุณหมายถึงการใช้ ThisRecord หรือ [@ ]</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: รองรับเฉพาะการมอบสิทธิ์สำหรับการค้นหาในฟิลด์คีย์หลัก '{1}' เท่านั้น</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: รหัสนิพจน์อ้างอิงถึง ThisRecord</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
     
   </data>
 </root>
