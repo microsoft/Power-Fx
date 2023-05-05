@@ -2,10 +2,8 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Public.Config;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 
@@ -48,17 +46,17 @@ namespace Microsoft.PowerFx
 
         public static void EnableRegExFunctions(this PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
         {
-            ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> regexTypeCache = regexCacheSize == -1 ? null : new ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>>();
+            RegexCache regexTypeCache = new (regexCacheSize);
 
-            foreach ((TexlFunction function, Action<IBasicServiceProvider> addFunctionImpl) in Library.RegexFunctions(regExTimeout, regexTypeCache, regexCacheSize))
+            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
             {
-                if (config.SymbolTable.Functions.AnyWithName(function.Name))
+                if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
                 
-                config.SymbolTable.AddFunction(function);
-                config.AddFunctionImplementations.Add(addFunctionImpl);
+                config.SymbolTable.AddFunction(func.Key);
+                config.AdditionalFunctions.Add(func.Key, func.Value);
             }
         }
     }

@@ -2,14 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -33,10 +32,9 @@ namespace Microsoft.PowerFx.Functions
         /// Enable [Is]Match[All] functions.
         /// </summary>        
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
-        /// <param name="regexTypeCache">Regular expression type cache.</param>
-        /// <param name="regexCacheSize">Regular expression cache size. 0=no limit. -1=disabled.</param>        
+        /// <param name="regexCache">Regular expression type cache.</param>        
         /// <returns></returns>
-        internal static IEnumerable<(TexlFunction, Action<IBasicServiceProvider>)> RegexFunctions(TimeSpan regexTimeout, ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> regexTypeCache = null, int regexCacheSize = -1)
+        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexCache regexCache)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -48,90 +46,91 @@ namespace Microsoft.PowerFx.Functions
                 throw new ArgumentOutOfRangeException(nameof(regexTimeout), "Timeout duration for regular expression execution must be positive.");
             }
 
-            if (regexCacheSize < -1)
+            return new Dictionary<TexlFunction, IAsyncTexlFunction>()
             {
-                throw new ArgumentOutOfRangeException(nameof(regexCacheSize), "Regular expression cache size must be -1 (disabled) or positive.");
-            }
-
-            TexlFunction isMatchFunction = new IsMatchFunction();
-            TexlFunction matchFunction = new MatchFunction(regexTypeCache, regexCacheSize);
-            TexlFunction matchAllFunction = new MatchAllFunction(regexTypeCache, regexCacheSize);
-            
-            return new (TexlFunction, Action<IBasicServiceProvider>)[]
-            {
-                (isMatchFunction, (IBasicServiceProvider basicServiceProvider) =>
-                    basicServiceProvider.AddFunction(isMatchFunction.GetType(), StandardErrorHandlingAsync<FormulaValue>(
-                        "IsMatch",
-                        expandArguments: NoArgExpansion,
-                        replaceBlankValues: ReplaceBlankWithEmptyString,
-                        checkRuntimeTypes: OptionSetOrString,
-                        checkRuntimeValues: DeferRuntimeValueChecking,
-                        returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => IsMatchImpl(ev, evCtx, irCtx, fv, regexTimeout)))),
-                (matchFunction, (IBasicServiceProvider basicServiceProvider) =>
-                    basicServiceProvider.AddFunction(matchFunction.GetType(), StandardErrorHandlingAsync<FormulaValue>(
-                        "Match",
-                        expandArguments: NoArgExpansion,
-                        replaceBlankValues: ReplaceBlankWithEmptyString,
-                        checkRuntimeTypes: OptionSetOrString,
-                        checkRuntimeValues: DeferRuntimeValueChecking,
-                        returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => MatchImpl(ev, evCtx, irCtx, fv, regexTimeout)))),
-                (matchAllFunction, (IBasicServiceProvider basicServiceProvider) =>
-                    basicServiceProvider.AddFunction(matchAllFunction.GetType(), StandardErrorHandlingAsync<FormulaValue>(
-                        "MatchAll",
-                        expandArguments: NoArgExpansion,
-                        replaceBlankValues: ReplaceBlankWithEmptyString,
-                        checkRuntimeTypes: OptionSetOrString,
-                        checkRuntimeValues: DeferRuntimeValueChecking,
-                        returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                        targetFunction: (EvalVisitor ev, EvalVisitorContext evCtx, IRContext irCtx, FormulaValue[] fv) => MatchAllImpl(ev, evCtx, irCtx, fv, regexTimeout))))
+                { new IsMatchFunction(), new IsMatchImplementation(regexTimeout) },
+                { new MatchFunction(regexCache), new MatchImplementation(regexTimeout) },
+                { new MatchAllFunction(regexCache), new MatchAllImplementation(regexTimeout) }
             };
         }
 
-        private static async ValueTask<FormulaValue> IsMatchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, TimeSpan regexTimeout)
+        internal class IsMatchImplementation : CommonMatchImplementation, IAsyncTexlFunction
         {
-            return CommonMatchImpl(runner, context, irContext, args, defaultMatchOptions: DefaultIsMatchOptions, (input, regex, options) =>
-            {
-                Regex rex = new Regex(regex, options, regexTimeout);
-                bool b = rex.IsMatch(input);
+            private readonly TimeSpan _regexTimeout;
 
-                return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), b);
-            });
+            public IsMatchImplementation(TimeSpan regexTimeout)
+            {
+                _regexTimeout = regexTimeout;
+            }
+
+            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                return CommonMatchImpl(args, DefaultIsMatchOptions, (input, regex, options) =>
+                {
+                    Regex rex = new Regex(regex, options, _regexTimeout);
+                    bool b = rex.IsMatch(input);
+
+                    return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), b);
+                });
+            }
         }
 
-        private static async ValueTask<FormulaValue> MatchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, TimeSpan regexTimeout)
+        internal class MatchImplementation : CommonMatchImplementation, IAsyncTexlFunction
         {
-            return CommonMatchImpl(runner, context, irContext, args, defaultMatchOptions: DefaultMatchOptions, (input, regex, options) =>
+            private readonly TimeSpan _regexTimeout;
+            public MatchImplementation(TimeSpan regexTimeout)
             {
-                Regex rex = new Regex(regex, options, regexTimeout);
-                Match m = rex.Match(input);
+                _regexTimeout = regexTimeout;
+            }
 
-                if (!m.Success)
+            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                return CommonMatchImpl(args, DefaultMatchOptions, (input, regex, options) =>
                 {
-                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regex))));
-                }
+                    Regex rex = new Regex(regex, options, _regexTimeout);
+                    Match m = rex.Match(input);
 
-                return GetRecordFromMatch(rex, m);
-            });
+                    if (!m.Success)
+                    {
+                        return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regex))));
+                    }
+
+                    return GetRecordFromMatch(rex, m);
+                });
+            }
         }
 
-        private static async ValueTask<FormulaValue> MatchAllImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, TimeSpan regexTimeout)
+        internal class MatchAllImplementation : CommonMatchImplementation, IAsyncTexlFunction
         {
-            return CommonMatchImpl(runner, context, irContext, args, defaultMatchOptions: DefaultMatchAllOptions, (input, regex, options) =>
+            private readonly TimeSpan _regexTimeout;
+
+            public MatchAllImplementation(TimeSpan regexTimeout)
             {
-                Regex rex = new Regex(regex, options, regexTimeout);
-                MatchCollection mc = rex.Matches(input);
+                _regexTimeout = regexTimeout;
+            }
 
-                List<RecordValue> records = new ();
+            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-                foreach (Match m in mc)
+                return CommonMatchImpl(args, DefaultMatchAllOptions, (input, regex, options) =>
                 {
-                    records.Add(GetRecordFromMatch(rex, m));
-                }
+                    Regex rex = new Regex(regex, options, _regexTimeout);
+                    MatchCollection mc = rex.Matches(input);
+                    List<RecordValue> records = new ();
 
-                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regex)), records.ToArray());
-            });
+                    foreach (Match m in mc)
+                    {
+                        records.Add(GetRecordFromMatch(rex, m));
+                    }
+
+                    return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regex)), records.ToArray());
+                });
+            }
         }
 
         private static RecordValue GetRecordFromMatch(Regex rex, Match m)
@@ -202,72 +201,75 @@ namespace Microsoft.PowerFx.Functions
             return DType.CreateRecord(propertyNames.Values);
         }
 
-        private static FormulaValue CommonMatchImpl(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args, string defaultMatchOptions, Func<string, string, RegexOptions, FormulaValue> impl)
+        internal class CommonMatchImplementation
         {
-            if (args[0] is not StringValue sv0)
+            protected internal static Task<FormulaValue> CommonMatchImpl(FormulaValue[] args, string defaultMatchOptions, Func<string, string, RegexOptions, FormulaValue> implementation)
             {
-                return CommonErrors.GenericInvalidArgument(args[0].IRContext);
-            }
+                if (args[0] is not StringValue && args[0] is not BlankValue)
+                {                    
+                    return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.GenericInvalidArgument(args[0].IRContext));
+                }
 
-            if (args[1] is not StringValue sv1)
-            {
-                return CommonErrors.GenericInvalidArgument(args[1].IRContext);
-            }
-
-            string inputString = sv0.Value;
-            string regularExpression = sv1.Value;
-            string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : defaultMatchOptions;
-
-            RegexOptions regOptions = RegexOptions.CultureInvariant;
-
-            if (!matchOptions.Contains("c"))
-            {
-                return FormulaValue.New(false);
-            }
-
-            if (matchOptions.Contains("i"))
-            {
-                regOptions |= RegexOptions.IgnoreCase;
-            }
-
-            if (matchOptions.Contains("m"))
-            {
-                regOptions |= RegexOptions.Multiline;
-            }
-
-            if (matchOptions.Contains("^") && !regularExpression.StartsWith("^", StringComparison.Ordinal))
-            {
-                regularExpression = "^" + regularExpression;
-            }
-
-            if (matchOptions.Contains("$") && !regularExpression.EndsWith("$", StringComparison.Ordinal))
-            {
-                regularExpression += "$";
-            }
-
-            try
-            {
-                return impl(inputString, regularExpression, regOptions);
-            }
-            catch (RegexMatchTimeoutException rexTimeoutEx)
-            {
-                return new ErrorValue(args[0].IRContext, new ExpressionError()
+                if (args[1] is not StringValue sv1)
                 {
-                    Message = $"Regular expression timeout (above {rexTimeoutEx.MatchTimeout.TotalMilliseconds} ms) - {rexTimeoutEx.Message}",
-                    Span = args[0].IRContext.SourceContext,
-                    Kind = ErrorKind.Timeout
-                });
-            }
+                    return Task.FromResult<FormulaValue>(args[1] is ErrorValue ? args[1] : CommonErrors.GenericInvalidArgument(args[1].IRContext));
+                }
 
-            // Internal exception till .Net 7 where it becomes public
-            catch (Exception rexParseEx) when (rexParseEx.GetType().Name.Equals("RegexParseException", StringComparison.OrdinalIgnoreCase))
-            {
-                return new ErrorValue(args[1].IRContext, new ExpressionError()
+                string inputString = args[0] is StringValue sv0 ? sv0.Value : string.Empty;
+                string regularExpression = sv1.Value;
+                string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : defaultMatchOptions;
+
+                RegexOptions regOptions = RegexOptions.CultureInvariant;
+
+                if (!matchOptions.Contains("c"))
                 {
-                    Message = $"Invalid regular expression - {rexParseEx.Message}",
-                    Span = args[1].IRContext.SourceContext,
-                    Kind = ErrorKind.BadRegex
-                });
+                    return Task.FromResult<FormulaValue>(FormulaValue.New(false));
+                }
+
+                if (matchOptions.Contains("i"))
+                {
+                    regOptions |= RegexOptions.IgnoreCase;
+                }
+
+                if (matchOptions.Contains("m"))
+                {
+                    regOptions |= RegexOptions.Multiline;
+                }
+
+                if (matchOptions.Contains("^") && !regularExpression.StartsWith("^", StringComparison.Ordinal))
+                {
+                    regularExpression = "^" + regularExpression;
+                }
+
+                if (matchOptions.Contains("$") && !regularExpression.EndsWith("$", StringComparison.Ordinal))
+                {
+                    regularExpression += "$";
+                }
+
+                try
+                {
+                    return Task.FromResult<FormulaValue>(implementation(inputString, regularExpression, regOptions));
+                }
+                catch (RegexMatchTimeoutException rexTimeoutEx)
+                {
+                    return Task.FromResult<FormulaValue>(new ErrorValue(args[0].IRContext, new ExpressionError()
+                    {
+                        Message = $"Regular expression timeout (above {rexTimeoutEx.MatchTimeout.TotalMilliseconds} ms) - {rexTimeoutEx.Message}",
+                        Span = args[0].IRContext.SourceContext,
+                        Kind = ErrorKind.Timeout
+                    }));
+                }
+
+                // Internal exception till .Net 7 where it becomes public
+                catch (Exception rexParseEx) when (rexParseEx.GetType().Name.Equals("RegexParseException", StringComparison.OrdinalIgnoreCase))
+                {
+                    return Task.FromResult<FormulaValue>(new ErrorValue(args[1].IRContext, new ExpressionError()
+                    {
+                        Message = $"Invalid regular expression - {rexParseEx.Message}",
+                        Span = args[1].IRContext.SourceContext,
+                        Kind = ErrorKind.BadRegex
+                    }));
+                }
             }
         }
     }

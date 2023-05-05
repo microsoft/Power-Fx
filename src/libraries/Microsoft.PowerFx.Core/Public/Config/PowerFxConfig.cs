@@ -9,7 +9,6 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -32,7 +31,7 @@ namespace Microsoft.PowerFx
             DebugName = "DefaultConfig"
         };
 
-        internal readonly List<Action<IBasicServiceProvider>> AddFunctionImplementations = new List<Action<IBasicServiceProvider>>();
+        internal readonly Dictionary<TexlFunction, IAsyncTexlFunction> AdditionalFunctions = new ();
 
         [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;

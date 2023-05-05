@@ -3,14 +3,13 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Public.Config;
 
 namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Trivial <see cref="IServiceProvider"/> implementation that allows chaining and composition. 
     /// </summary>
-    public sealed class BasicServiceProvider : IBasicServiceProvider
+    public sealed class BasicServiceProvider : IServiceProvider
     {
         // Chain to list of inner service providers. 
         private readonly IServiceProvider[] _inners;

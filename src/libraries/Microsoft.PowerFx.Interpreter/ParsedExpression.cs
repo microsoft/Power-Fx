@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Public.Config;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -87,7 +86,7 @@ namespace Microsoft.PowerFx
                 _globals = globals,
                 _allSymbols = result.Symbols,
                 _parameterSymbolTable = result.Parameters,
-                _config = result.Engine.Config
+                _additionalFunctions = result.Engine.Config.AdditionalFunctions
             };
 
             return expr;
@@ -104,7 +103,7 @@ namespace Microsoft.PowerFx
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
-        internal PowerFxConfig _config;
+        internal Dictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
 
         internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
@@ -119,25 +118,26 @@ namespace Microsoft.PowerFx
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
             ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(false, _allSymbols, runtimeConfig?.Values, _globals);
+            BasicServiceProvider innerServices = new BasicServiceProvider();
+            bool hasInnerServices = false;
 
-            IServiceProvider innerServices = null;
             if (_cultureInfo != null)
+            {                
+                innerServices.AddService(_cultureInfo);
+                hasInnerServices = true;
+            }
+
+            if (_additionalFunctions.Any())
             {
-                var temp = new BasicServiceProvider();
-                temp.AddService(_cultureInfo);
-                innerServices = temp;
+                innerServices.AddService(_additionalFunctions);
+                hasInnerServices = true;
             }
 
             RuntimeConfig runtimeConfig2 = new RuntimeConfig
             {
                 Values = symbolValues,
-                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
-            };
-
-            foreach (Action<IBasicServiceProvider> addFunctionImplementation in _config.AddFunctionImplementations)
-            {
-                addFunctionImplementation(runtimeConfig2.ServiceProvider);
-            }
+                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, hasInnerServices ? innerServices : null)
+            };            
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
 

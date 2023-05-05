@@ -22,8 +22,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Match(text:s, regular_expression:s, [options:s])
     internal class MatchFunction : BaseMatchFunction
     {
-        public MatchFunction(ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> cache, int regexCacheSize)
-            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, cache, regexCacheSize)
+        public MatchFunction(RegexCache regexCache)
+            : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, regexCache)
         {
         }
     }
@@ -31,8 +31,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // MatchAll(text:s, regular_expression:s, [options:s])
     internal class MatchAllFunction : BaseMatchFunction
     {
-        public MatchAllFunction(ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> cache, int regexCacheSize)
-            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, cache, regexCacheSize)
+        public MatchAllFunction(RegexCache regexCache)
+            : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, regexCache)
         {
         }
     }
@@ -47,12 +47,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> cache, int regexCacheSize)
+        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexCache regexCache)
             : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, DType.String, DType.String)
         {
             _cachePrefix = returnType.IsTable ? "tbl_" : "rec_";
-            _regexTypeCache = cache;
-            _regexCacheSize = regexCacheSize;
+            _regexTypeCache = regexCache.RegexTypeCache;
+            _regexCacheSize = regexCache.RegexCacheSize;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

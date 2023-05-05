@@ -251,7 +251,9 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
-            if (func is IAsyncTexlFunction asyncFunc)
+            Dictionary<TexlFunction, IAsyncTexlFunction> extraFunctionds = _services.GetService<Dictionary<TexlFunction, IAsyncTexlFunction>>();
+
+            if (func is IAsyncTexlFunction asyncFunc || extraFunctionds?.TryGetValue(func, out asyncFunc) == true)
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
             }
@@ -267,7 +269,7 @@ namespace Microsoft.PowerFx
             }
             else
             {
-                if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr) || TryGetServiceFunctionPtr(func, out ptr))
+                if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
                 {
                     try
                     {
@@ -299,13 +301,6 @@ namespace Microsoft.PowerFx
 
             CheckCancel();
             return result;
-        }
-
-        private bool TryGetServiceFunctionPtr(TexlFunction func, out AsyncFunctionPtr ptr)
-        {
-            PowerFxFunctionPtr pfxFunctionPtr = (PowerFxFunctionPtr)_services.GetService(typeof(PowerFxFunctionPtr<>).MakeGenericType(func.GetType()));
-            ptr = pfxFunctionPtr?.AsyncFunctionPtr;
-            return ptr != null;
         }
 
         public override async ValueTask<FormulaValue> Visit(BinaryOpNode node, EvalVisitorContext context)
