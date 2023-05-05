@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Functions
         private const string DefaultMatchAllOptions = "c";
 
         /// <summary>
-        /// Enable [Is]Match[All] functions.
+        /// Creates instances of the [Is]Match[All] functions and returns them so they can be added to the runtime.
         /// </summary>        
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
         /// <param name="regexCache">Regular expression type cache.</param>        

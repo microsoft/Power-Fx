@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Functions
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
-       
+
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
             return new FormattingInfo()
@@ -2097,7 +2097,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    
+
                     return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 

@@ -25,8 +25,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool HasPreciseErrors => true;
 
-        public override bool SupportsParamCoercion => true;
-
         public IsMatchFunction()
             : base("IsMatch", TexlStrings.AboutIsMatch, FunctionCategories.Text, DType.Boolean, 0, 2, 3, DType.String, DType.String, DType.String)
         {
@@ -41,16 +39,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2 };
             yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2, TexlStrings.IsMatchArg3 };
-        }
-
-        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
-        {            
-            var regexNodeKind = argTypes[1].Kind == DKind.OptionSetValue ? argTypes[1].OptionSetInfo.BackingKind : argTypes[1].Kind;
-
-            if (regexNodeKind != DKind.String)
-            {
-                errors.EnsureError(args[1], TexlStrings.ErrVariableRegEx);
-            }
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

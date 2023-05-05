@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx
             bool hasInnerServices = false;
 
             if (_cultureInfo != null)
-            {                
+            {
                 innerServices.AddService(_cultureInfo);
                 hasInnerServices = true;
             }
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx
             {
                 Values = symbolValues,
                 ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, hasInnerServices ? innerServices : null)
-            };            
+            };
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
 
