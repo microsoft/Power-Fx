@@ -29,7 +29,6 @@ namespace Microsoft.PowerFx.Core.Functions
     internal class UserDefinedFunction : TexlFunction
     {
         private readonly bool _isImperative;
-        private readonly IdentToken _returnTypeToken;
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
 
@@ -39,10 +38,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsSelfContained => !_isImperative;
 
-        public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnTypeToken.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
+        public UserDefinedFunction(string name, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
+        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
         {
-            this._returnTypeToken = returnTypeToken;
             this._args = args;
             this._isImperative = isImperative;
 
@@ -100,9 +98,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(errorContainer);
 
-            var returnTypeFormulaType = _returnTypeToken.GetFormulaType()._type;
-
-            if (!returnTypeFormulaType.Kind.Equals(actualBodyReturnType.Kind) || !returnTypeFormulaType.CoercesTo(returnTypeFormulaType, true, false, context.Features.PowerFxV1CompatibilityRules))
+            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind) || !ReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
             {
                 errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
             }
