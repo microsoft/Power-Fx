@@ -1465,6 +1465,14 @@
     <value>вхідні_дані</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>модифікатор</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>модифікатор</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Повертає вказану кількість символів із початку текстового значення.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Перший аргумент функції "{0}" має бути таблицею з одним стовпцем.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Неприпустима схема. Очікувався стовпець текстових значень для елемента "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Неприпустима схема. Очікувався стовпець значень дати для елемента "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Неприпустима схема. Очікувався стовпець числових значень для елемента "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Неприпустима схема. Очікувався стовпець колірних значень для елемента "{0}".</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Неприпустима схема. Очікувався стовпець {0} значень для елемента "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Числове значення завелике.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Використання зарезервованого слова, яке наразі не підтримується.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Математичний і статистичний</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Відомості</value>
@@ -4789,6 +4792,26 @@
     <value>Іменована формула має бути виразом.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Визначена користувачем функція повинна мати тіло.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Функцію {0} уже визначено.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Параметр {0} є дублікатом.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Невідомий тип {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Зазначений тип повернення функції не відповідає типу повернення тіла функції.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" вже існує.</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>"{0}" є розпізнаною, але непідтримуваною функцією.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Не вдалося перетворити тип, оскільки надано значення типу "{0}", а очікується тип "{1}".</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Делегування цієї операції в таблиці "{0}" не підтримується.</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>Цей предикат завжди матиме значення "Істина". Ви хотіли використати ThisRecord або [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле основного ключа "{1}".</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>Не вдалося делегувати {0}: вираз ідентифікатора посилається на ThisRecord.</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>Не вдалося делегувати {0}: містить поведінкову функцію "{1}".</value>
     
   </data>
 </root>

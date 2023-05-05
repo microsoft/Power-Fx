@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         // Tests use | to indicate cursor position within an expression string. 
         // Return the cursos position and string (without the |). 
-        internal (string, int) Decode(string expression)
+        internal static (string, int) Decode(string expression)
         {
             Assert.NotNull(expression);
 
