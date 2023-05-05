@@ -335,6 +335,11 @@ namespace Microsoft.PowerFx.Functions
 
             var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
 
+            if (!isText && result != null)
+            {
+                return CommonErrors.BadLanguageCode(irContext, result.Value);
+            }
+
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
@@ -357,16 +362,29 @@ namespace Microsoft.PowerFx.Functions
             string enUsCultureName = "en-US";
             CultureInfo formatCulture = culture;
             string revFormatStr = formatString;
-            if (!string.IsNullOrEmpty(formatString) && formatString.Contains("[$-"))
+
+            if (!string.IsNullOrEmpty(formatString) && formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase))
             {
-                hasFormatCulture = true;
                 int startIdx = formatString.IndexOf("[$-", StringComparison.Ordinal) + 3;
                 int endIdx = formatString.IndexOf("]", StringComparison.Ordinal);
-                formatCulture = CultureInfo.GetCultureInfo(formatString.Substring(startIdx, endIdx - startIdx));
-                formatString = formatString.Substring(endIdx + 1);
-                revFormatStr = formatString.Replace(",", "!");
-                revFormatStr = revFormatStr.Replace(".", ",");
-                revFormatStr = revFormatStr.Replace("!", ".");
+
+                if (endIdx > 0)
+                {
+                    hasFormatCulture = true;
+                    string formatCultureName = formatString.Substring(startIdx, endIdx - startIdx);
+
+                    if (!TryGetCulture(formatCultureName, out formatCulture))
+                    {
+                        result = new StringValue(irContext, formatCultureName);
+                        return false;
+                    }
+
+                    formatString = formatString.Substring(endIdx + 1);
+                    revFormatStr = formatString.Replace(",", "!");
+                    revFormatStr = revFormatStr.Replace(".", ",");
+                    revFormatStr = revFormatStr.Replace(" ", ",");
+                    revFormatStr = revFormatStr.Replace("!", ".");
+                }
             }
 
             switch (value)
