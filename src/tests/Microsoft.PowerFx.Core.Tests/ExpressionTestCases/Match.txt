@@ -95,3 +95,7 @@ Error({Kind:ErrorKind.Div0})
 
 >> Match("Hello", Right("llo", 3)).FullMatch
 Errors: Error 15-30: Regular expressions must be constant values.|Error 0-31: The function 'Match' has some invalid arguments.|Error 31-41: Name isn't valid. 'FullMatch' isn't recognized.
+
+>> Match("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+{FullMatch:"(555) 123-4567",StartMatch:1,SubMatches:Table()}
+
