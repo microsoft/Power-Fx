@@ -663,16 +663,6 @@ namespace Microsoft.PowerFx.Functions
             return CommonErrors.RuntimeTypeMismatch(irContext);
         }
 
-        private static FormulaValue OptionSetOrString(IRContext irContext, int index, FormulaValue arg)
-        {
-            if (arg is StringValue || (arg is OptionSetValue osv && osv.Type._type.OptionSetInfo.BackingKind == DKind.String))
-            {
-                return arg;
-            }
-
-            return CommonErrors.RuntimeTypeMismatch(irContext);
-        }
-
         private static FormulaValue TimeOrDateTime(IRContext irContext, int index, FormulaValue arg)
         {
             if (arg is TimeValue || arg is DateTimeValue || arg is BlankValue || arg is ErrorValue)
