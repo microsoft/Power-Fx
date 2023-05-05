@@ -80,6 +80,7 @@ namespace Microsoft.PowerFx.Functions
         internal class MatchImplementation : CommonMatchImplementation, IAsyncTexlFunction
         {
             private readonly TimeSpan _regexTimeout;
+
             public MatchImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
