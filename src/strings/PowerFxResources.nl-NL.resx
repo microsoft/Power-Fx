@@ -1465,6 +1465,14 @@
     <value>invoer</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Hiermee wordt het opgegeven aantal tekens vanaf de start van een tekstwaarde geretourneerd.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Het eerste argument van {0} moet een tabel met één kolom zijn.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met tekstwaarden voor {0} verwacht.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met datumwaarden voor {0} verwacht.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met numerieke waarden voor {0} verwacht.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met kleurwaarden voor {0} verwacht.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Het schema is ongeldig. Er wordt een kolom met waarden met {0} voor {1} verwacht.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>De numerieke waarde is te groot.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Gebruik van een gereserveerd woord dat momenteel niet wordt ondersteund.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Wiskundig en statistisch</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informatie</value>
@@ -4789,6 +4792,26 @@
     <value>De genoemde formule moet een expressie zijn.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Door de gebruiker gedefinieerde functie moet een hoofdtekst hebben.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Functie {0} is al gedefinieerd.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} is een duplicaat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Onbekend type {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Het vermelde retourtype van de werkfunctie komt niet overeen met het retourtype van de functiehoofdtekst.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} bestaat al.</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} is een herkende maar niet ondersteunde functie.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Typeconversie is mislukt omdat de gegeven waarde van het type {0} was en type {1} werd verwacht.</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Het machtigen van deze bewerking op tabel {0} wordt niet ondersteund.</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>Dit predicaat is altijd waar. Wilde u ThisRecord of [@ ] gebruiken?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Kan {0} niet machtigen: machtiging alleen ondersteund voor opzoekactie van primaire-sleutelveld {1}.</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>Kan {0} niet machtigen: de id-expressie verwijst naar ThisRecord.</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
     
   </data>
 </root>
