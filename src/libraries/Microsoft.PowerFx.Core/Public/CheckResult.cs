@@ -442,19 +442,24 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this._expectedReturnType != null)
+                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank && this._expectedReturnType != null)
                 {
                     bool notCoerceToType = false;
                     if (_allowCoerceToType)
                     {
-                        if (this._expectedReturnType != FormulaType.String)
+                        switch (this._expectedReturnType)
                         {
-                            throw new NotImplementedException();
-                        }
-
-                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
-                        {
-                            notCoerceToType = true;
+                            case StringType:                                
+                                notCoerceToType = !StringValue.AllowedListConvertToString.Contains(this.ReturnType);
+                                break;
+                            case NumberType:
+                                notCoerceToType = !NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType);
+                                break;
+                            case DecimalType:
+                                notCoerceToType = !DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Setting ExpectedReturnType to {_expectedReturnType.GetType().FullName} is not implemented");
                         }
                     }
 

@@ -57,3 +57,6 @@ Error({Kind:ErrorKind.Numeric})
 // Just like Excel, if there is no integer between the two numbers, take ceiling
 >> Sum(Sequence(100), RandBetween(3.5, 3.7))
 400
+
+>> Find("000000000000", Text(RandBetween(-1e28, 1e28)))
+Blank()
