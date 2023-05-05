@@ -149,7 +149,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public DPath CurrentEntityPath => _globalNameResolver.CurrentEntityPath;
 
-            public TexlFunctionSet Functions => _functionNameResolver?.Functions ?? _globalNameResolver.Functions;
+            public TexlFunctionSet Functions => _functionNameResolver?.Functions == null ? _globalNameResolver.Functions : new TexlFunctionSet(new List<TexlFunctionSet>() { _globalNameResolver.Functions, _functionNameResolver.Functions });
 
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
