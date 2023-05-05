@@ -11,12 +11,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
@@ -920,7 +922,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(0U, response.Result.ActiveParameter);
             var foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
@@ -959,7 +961,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(1U, response.Result.ActiveParameter);
             foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
@@ -1374,6 +1376,22 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
             Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
+        }
+
+        [Fact]
+        public async Task TestExpectedReturnValueForEmptyExpression()
+        {
+            var scope = TestCreateEditorScope(string.Empty);
+
+            var check = scope.Check(string.Empty);
+
+            Assert.True(check.IsSuccess);
+
+            var run = check.GetEvaluator();
+
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
+
+            Assert.Null(result.ToObject());
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)

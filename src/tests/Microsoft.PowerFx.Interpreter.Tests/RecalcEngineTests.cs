@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
-                $"{ns}.{nameof(TypeCoercionProvider)}",                             
+                $"{ns}.{nameof(TypeCoercionProvider)}",
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"

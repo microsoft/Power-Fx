@@ -3392,7 +3392,8 @@ namespace Microsoft.PowerFx.Core.Types
                                  Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                                 Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
