@@ -151,7 +151,7 @@ Error({Kind:ErrorKind.EditPermissions})
 
 // Coercion from string, with message
 >> IfError(Error([{Kind:"12"},{Kind:"13",Message:"With message"}]), Concat(AllErrors, $"{Kind}:{Message}", ", "))
-#skip
+"12:, 13:With message"
 
 // Coercion from string, with coerced message
 >> IfError(Error([{Kind:"12",Message:333},{Kind:"13",Message:444}]), Concat(AllErrors, $"{Kind}:{Message}", ", "))
@@ -159,4 +159,4 @@ Error({Kind:ErrorKind.EditPermissions})
 
 // Skipping until function Float is available in PA
 >> IfError(Error(Table({Kind:Float(0)},{Kind:Float(1)})),Concat(AllErrors,Kind,","))
-#skip
+"0,1"

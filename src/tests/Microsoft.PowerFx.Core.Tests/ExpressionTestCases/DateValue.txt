@@ -105,7 +105,7 @@ DateTime(2011,1,30,8,0,0,123)
 true
 
 >> DateTimeValue("12:34:56")
-#skip
+DateTime(1899,12,30,12,34,56,0)
 
 >> DateValue("12:34:56")
-#skip
+Date(1899,12,30)
