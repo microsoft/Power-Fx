@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// </summary>
         private readonly int _currentArgumentIndex;
 
-        internal IntellisenseResult(IIntellisenseData data, List<IntellisenseSuggestion> suggestions, Exception exception = null)
+        internal IntellisenseResult(IIntellisenseData data, List<IntellisenseSuggestion> suggestions, IEnumerable<TexlFunction> possibleOverloads, Exception exception = null)
         {
             Contracts.AssertValue(suggestions);
 
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Intellisense
             _currentArgumentIndex = argIndex;
             Exception = exception;
 
-            if (func == null)
+            if (func == null || possibleOverloads == null)
             {
                 IsFunctionScope = false;
             }
@@ -83,74 +83,81 @@ namespace Microsoft.PowerFx.Intellisense
                 var highlightStart = -1;
                 var highlightEnd = -1;
                 var minMatchingArgCount = int.MaxValue;
-                foreach (var signature in func.GetSignatures(argCount))
+                
+                foreach (var possibleOverload in possibleOverloads)
                 {
-                    var signatureIndex = 0;
-                    var argumentSeparator = string.Empty;
-                    var highlightedFuncParamDescription = string.Empty;
-
-                    // $$$ can't use current culture
-                    var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
-                    var funcDisplayString = new StringBuilder(func.Name);
-                    funcDisplayString.Append('(');
-
-                    var parameters = new List<ParameterInformation>();
-                    while (signatureIndex < signature.Count())
+                    foreach (var signature in possibleOverload.GetSignatures(argCount))
                     {
-                        Contracts.AssertValue(signature[signatureIndex]);
-                        funcDisplayString.Append(argumentSeparator);
+                        var signatureIndex = 0;
+                        var argumentSeparator = string.Empty;
+                        var highlightedFuncParamDescription = string.Empty;
 
-                        // We need to change the highlight information if the argument should be highlighted, but
-                        // otherwise we still want to collect parameter information
-                        var unalteredParamName = signature[signatureIndex]();
-                        var invariantParamName = signature[signatureIndex]("en-US");
-                        (var paramName, var parameterHighlightStart, var parameterHighlightEnd, var funcParamDescription) = GetParameterHighlightAndDescription(data, unalteredParamName, invariantParamName, funcDisplayString);
-                        parameters.Add(new ParameterInformation()
-                        {
-                            Documentation = funcParamDescription,
-                            Label = paramName
-                        });
+                        // $$$ can't use current culture
+                        var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+                        var funcDisplayString = new StringBuilder(func.Name);
+                        funcDisplayString.Append('(');
 
-                        if (ArgNeedsHighlight(func, argCount, argIndex, signature.Count(), signatureIndex))
+                        var parameters = new List<ParameterInformation>();
+                        while (signatureIndex < signature.Count())
                         {
-                            (highlightStart, highlightEnd, highlightedFuncParamDescription) = (parameterHighlightStart, parameterHighlightEnd, funcParamDescription);
+                            Contracts.AssertValue(signature[signatureIndex]);
+                            funcDisplayString.Append(argumentSeparator);
+
+                            // We need to change the highlight information if the argument should be highlighted, but
+                            // otherwise we still want to collect parameter information
+                            var unalteredParamName = signature[signatureIndex]();
+                            var invariantParamName = signature[signatureIndex]("en-US");
+                            (var paramName, var parameterHighlightStart, var parameterHighlightEnd, var funcParamDescription) = GetParameterHighlightAndDescription(data, unalteredParamName, invariantParamName, funcDisplayString);
+                            parameters.Add(new ParameterInformation()
+                            {
+                                Documentation = funcParamDescription,
+                                Label = paramName
+                            });
+
+                            if (ArgNeedsHighlight(func, argCount, argIndex, signature.Count(), signatureIndex))
+                            {
+                                (highlightStart, highlightEnd, highlightedFuncParamDescription) = (parameterHighlightStart, parameterHighlightEnd, funcParamDescription);
+                            }
+
+                            // For variadic function, we want to generate FuncName(arg1,arg1,...,arg1,...) as description.
+                            if (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && CanParamOmit(func, argCount, argIndex, signature.Count(), signatureIndex))
+                            {
+                                funcDisplayString.Append("...");
+                                signatureIndex += func.SignatureConstraint.RepeatSpan;
+                            }
+                            else
+                            {
+                                funcDisplayString.Append(signature[signatureIndex]());
+                                signatureIndex++;
+                            }
+
+                            argumentSeparator = listSep;
                         }
 
-                        // For variadic function, we want to generate FuncName(arg1,arg1,...,arg1,...) as description.
-                        if (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength && CanParamOmit(func, argCount, argIndex, signature.Count(), signatureIndex))
+                        // Add ... at the end of function display string. e.g. Text(value, Format_text,...)
+                        var shouldAddEllipsis = func.MaxArity > func.MinArity && func.MaxArity > argCount;
+
+                        if (shouldAddEllipsis)
                         {
-                            funcDisplayString.Append("...");
-                            signatureIndex += func.SignatureConstraint.RepeatSpan;
-                        }
-                        else
-                        {
-                            funcDisplayString.Append(signature[signatureIndex]());
-                            signatureIndex++;
+                            funcDisplayString.Append(argumentSeparator + "...");
                         }
 
-                        argumentSeparator = listSep;
-                    }
+                        funcDisplayString.Append(')');
+                        var signatureInformation = new SignatureInformation()
+                        {
+                            Documentation = func.Description,
+                            Label = CreateFunctionSignature(func.Name, parameters, shouldAddEllipsis),
+                            Parameters = parameters.ToArray()
+                        };
+                        _functionSignatures.Add(signatureInformation);
+                        _functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, signatureIndex, func.Description, func.Name, highlightedFuncParamDescription));
 
-                    if (func.MaxArity > func.MinArity && func.MaxArity > argCount)
-                    {
-                        funcDisplayString.Append(argumentSeparator + "...");
-                    }
-
-                    funcDisplayString.Append(')');
-                    var signatureInformation = new SignatureInformation()
-                    {
-                        Documentation = func.Description,
-                        Label = CreateFunctionSignature(func.Name, parameters),
-                        Parameters = parameters.ToArray()
-                    };
-                    _functionSignatures.Add(signatureInformation);
-                    _functionOverloads.Add(new IntellisenseSuggestion(new UIString(funcDisplayString.ToString(), highlightStart, highlightEnd), SuggestionKind.Function, SuggestionIconKind.Function, func.ReturnType, signatureIndex, func.Description, func.Name, highlightedFuncParamDescription));
-
-                    if ((signatureIndex >= argCount || (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength)) && minMatchingArgCount > signatureIndex)
-                    {
-                        // _functionOverloads has at least one item at this point.
-                        CurrentFunctionOverloadIndex = _functionOverloads.Count - 1;
-                        minMatchingArgCount = signatureIndex;
+                        if ((signatureIndex >= argCount || (func.SignatureConstraint != null && argCount > func.SignatureConstraint.RepeatTopLength)) && minMatchingArgCount > signatureIndex)
+                        {
+                            // _functionOverloads has at least one item at this point.
+                            CurrentFunctionOverloadIndex = _functionOverloads.Count - 1;
+                            minMatchingArgCount = signatureIndex;
+                        }
                     }
                 }
 
@@ -191,10 +198,11 @@ namespace Microsoft.PowerFx.Intellisense
         /// <param name="parameters">
         ///     List of parameters in the relevant signature for <paramref name="functionName"/>.
         /// </param>
+        /// <param name="shouldAddEllipsis">If it should add Ellipsis(...) at the end of function.</param>
         /// <returns>
         /// A label that represents the call signature; e.g. <code>Set(variable, lambda)</code>
         /// </returns>
-        private string CreateFunctionSignature(string functionName, IEnumerable<ParameterInformation> parameters = null)
+        private string CreateFunctionSignature(string functionName, IEnumerable<ParameterInformation> parameters = null, bool shouldAddEllipsis = false)
         {
             Contracts.AssertValue(functionName);
             Contracts.AssertValue(functionName);
@@ -210,7 +218,8 @@ namespace Microsoft.PowerFx.Intellisense
                 parameterString = string.Empty;
             }
 
-            return $"{functionName}({parameterString})";
+            var functionDisplayString = $"{functionName}({parameterString}{(shouldAddEllipsis ? LocalizationUtils.CurrentLocaleListSeparator + " ..." : string.Empty)})";
+            return functionDisplayString;
         }
 
         /// <summary>
