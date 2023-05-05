@@ -9,9 +9,12 @@ namespace Microsoft.PowerFx
 {
     /// <summary>
     /// Stores the regular expression cache.
+    /// This is for compile time only, not runtime.
     /// </summary>
     internal class RegexTypeCache
     {
+        // Key is ("tbl_" or "rec_" + regex expression)
+        // See Match.cs code for details
         internal ConcurrentDictionary<string, Tuple<DType, bool, bool, bool>> Cache { get; }
 
         internal int CacheSize { get; }
