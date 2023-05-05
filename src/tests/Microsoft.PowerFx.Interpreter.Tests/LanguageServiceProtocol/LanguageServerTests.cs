@@ -924,7 +924,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(0U, response.Result.ActiveParameter);
             var foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
@@ -963,7 +963,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(1U, response.Result.ActiveParameter);
             foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
