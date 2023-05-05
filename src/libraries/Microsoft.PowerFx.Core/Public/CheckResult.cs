@@ -442,7 +442,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this._expectedReturnType != null)
+                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank && this._expectedReturnType != null)
                 {
                     bool notCoerceToType = false;
                     if (_allowCoerceToType)
