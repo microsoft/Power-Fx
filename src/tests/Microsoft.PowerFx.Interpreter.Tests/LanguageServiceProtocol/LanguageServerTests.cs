@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
@@ -19,6 +20,7 @@ using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
+using Newtonsoft.Json.Linq;
 using Xunit;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
@@ -597,7 +599,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editor);
             var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
-            
+
             var errorList = new List<Exception>();
 
             testServer.LogUnhandledExceptionHandler += (ex) =>
@@ -1264,7 +1266,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
         }
-        
+
         [Fact]
         public void ErrorIsLocalized()
         {
@@ -1308,7 +1310,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void ParseAndErrorLocaleAreDifferent()
         {
             var engine = new Engine(new PowerFxConfig());
-                        
+
             var parseLocale = CultureInfo.CreateSpecificCulture("fr-FR");
             var errorLocale = CultureInfo.CreateSpecificCulture("es-ES");
 
@@ -1346,7 +1348,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Checking if contains text in the correct locale
             // the value should be localized. Resx files have this localized.
             // If it's a different error message, then we may have a bug in the parser locale. 
-            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message); 
+            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message);
         }
 
         // Test showing how LSP can fully customize check result. 
@@ -1465,7 +1467,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Arrange & Assert
             var expression = "1+1+1+1+1+1+1+1;Sqrt(1);1+-2;true;\n\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment;//This is comment2;false";
             var range = SemanticTokensRelatedTestsHelper.CreateRange(1, 2, 3, 35);
-            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Function,  TokenType.StrLit,  TokenType.Delimiter, TokenType.BinaryOp };
+            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Function, TokenType.StrLit, TokenType.Delimiter, TokenType.BinaryOp };
             if (tokenTypesToSkip.Length > 0)
             {
                 expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
@@ -1710,7 +1712,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             return GetRequestPayload(semanticTokenParams, TextDocumentNames.FullDocumentSemanticTokens, id);
         }
-        
+
         private static string GetUri(string queryParams = null)
         {
             var uriBuilder = new UriBuilder("powerfx://app")
@@ -1732,6 +1734,22 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 @params = paramsObj
             }, _jsonSerializerOptions);
             return (payload, id);
+        }
+
+        [Fact]
+        public async Task TestExpectedReturnValueForEmptyExpression()
+        {
+            var scope = TestCreateEditorScope(string.Empty);
+
+            var check = scope.Check(string.Empty);
+
+            Assert.True(check.IsSuccess);
+
+            var run = check.GetEvaluator();
+
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
+
+            Assert.Null(result.ToObject());
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)

@@ -535,8 +535,13 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.AdjustToUniversal, out var result))
+            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var result))
             {
+                if (result.Year == 1)
+                {
+                    result = _epoch.Add(result.TimeOfDay);
+                }
+
                 var tzi = runner.TimeZoneInfo;
 
                 result = DateTimeValue.GetConvertedDateTimeValue(result, tzi);
@@ -567,8 +572,13 @@ namespace Microsoft.PowerFx.Functions
         {
             result = null;
 
-            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal, out var dateTime))
+            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var dateTime))
             {
+                if (dateTime.Year == 1)
+                {
+                    dateTime = _epoch.Add(dateTime.TimeOfDay);
+                }
+
                 dateTime = DateTimeValue.GetConvertedDateTimeValue(dateTime, formatInfo.TimeZoneInfo);
                 result = new DateTimeValue(irContext, dateTime);
             }
