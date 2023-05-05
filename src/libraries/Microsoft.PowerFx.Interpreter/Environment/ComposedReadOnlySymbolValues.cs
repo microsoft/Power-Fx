@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -153,7 +154,7 @@ namespace Microsoft.PowerFx
                     if (symbolTable2.NeedsValues) 
                     {
                         var msg = $"Missing SymbolValues for {symbolTable.DebugName()}";
-                        throw new InvalidOperationException(msg);
+                        throw new MissingSymbolValuesException(msg);
                     }
                 }
 

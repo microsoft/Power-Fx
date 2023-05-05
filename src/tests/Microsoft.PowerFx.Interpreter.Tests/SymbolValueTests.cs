@@ -605,8 +605,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Pass in symbolValues that aren't associated with symTable1 used in check. 
             Assert.NotSame(symTable1, symValues2.SymbolTable);
 
-            // Catch and proactively get error. 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2).ConfigureAwait(false)).ConfigureAwait(false);
+            var result = await run.EvalAsync(CancellationToken.None, symValues2).ConfigureAwait(false);
+
+            // Catch and proactively get error.
+            //await Assert.ThrowsAsync<InvalidOperationException>(async () => await run.EvalAsync(CancellationToken.None, symValues2).ConfigureAwait(false)).ConfigureAwait(false);
+
+            Assert.IsType<ErrorValue>(result);
+            Assert.Contains("Missing SymbolValues for", ((ErrorValue)result).Errors.First().Message);
 
             // Works when we pass in right symbol values (tied to what we checked against)
             var symValues1 = symTable1.CreateValues();
