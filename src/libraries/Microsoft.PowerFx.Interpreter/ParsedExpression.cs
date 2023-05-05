@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
-        internal Dictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
+        internal IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
 
         internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {

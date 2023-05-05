@@ -251,7 +251,7 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
-            Dictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<Dictionary<TexlFunction, IAsyncTexlFunction>>();
+            IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
 
             if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
             {

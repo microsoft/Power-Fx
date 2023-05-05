@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Match(text:s, regular_expression:s, [options:s])
     internal class MatchFunction : BaseMatchFunction
     {
-        public MatchFunction(RegexCache regexCache)
+        public MatchFunction(RegexTypeCache regexCache)
             : base("Match", TexlStrings.AboutMatch, DType.EmptyRecord, regexCache)
         {
         }
@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // MatchAll(text:s, regular_expression:s, [options:s])
     internal class MatchAllFunction : BaseMatchFunction
     {
-        public MatchAllFunction(RegexCache regexCache)
+        public MatchAllFunction(RegexTypeCache regexCache)
             : base("MatchAll", TexlStrings.AboutMatchAll, DType.EmptyTable, regexCache)
         {
         }
@@ -47,12 +47,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool SupportsParamCoercion => true;
 
-        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexCache regexCache)
+        public BaseMatchFunction(string functionName, TexlStrings.StringGetter aboutGetter, DType returnType, RegexTypeCache regexCache)
             : base(functionName, aboutGetter, FunctionCategories.Text, returnType, 0, 2, 3, DType.String, DType.String, DType.String)
         {
             _cachePrefix = returnType.IsTable ? "tbl_" : "rec_";
-            _regexTypeCache = regexCache.RegexTypeCache;
-            _regexCacheSize = regexCache.RegexCacheSize;
+            _regexTypeCache = regexCache.Cache;
+            _regexCacheSize = regexCache.CacheSize;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

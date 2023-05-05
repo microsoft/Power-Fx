@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="regexTimeout">Timeout duration for regular expression execution. Default is 1 second.</param>
         /// <param name="regexCache">Regular expression type cache.</param>        
         /// <returns></returns>
-        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexCache regexCache)
+        internal static Dictionary<TexlFunction, IAsyncTexlFunction> RegexFunctions(TimeSpan regexTimeout, RegexTypeCache regexCache)
         {
             if (regexTimeout == TimeSpan.Zero)
             {
@@ -54,93 +54,84 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        internal class IsMatchImplementation : CommonMatchImplementation, IAsyncTexlFunction
+        internal class IsMatchImplementation : RegexCommonImplementation
         {
             private readonly TimeSpan _regexTimeout;
+
+            protected override string RegexOptions => DefaultIsMatchOptions;
 
             public IsMatchImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                Regex rex = new Regex(regex, options, _regexTimeout);
+                bool b = rex.IsMatch(input);
 
-                return CommonMatchImpl(args, DefaultIsMatchOptions, (input, regex, options) =>
-                {
-                    Regex rex = new Regex(regex, options, _regexTimeout);
-                    bool b = rex.IsMatch(input);
-
-                    return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), b);
-                });
+                return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), b);
             }
         }
 
-        internal class MatchImplementation : CommonMatchImplementation, IAsyncTexlFunction
+        internal class MatchImplementation : RegexCommonImplementation
         {
             private readonly TimeSpan _regexTimeout;
+
+            protected override string RegexOptions => DefaultMatchOptions;
 
             public MatchImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                Regex rex = new Regex(regex, options, _regexTimeout);
+                Match m = rex.Match(input);
 
-                return CommonMatchImpl(args, DefaultMatchOptions, (input, regex, options) =>
+                if (!m.Success)
                 {
-                    Regex rex = new Regex(regex, options, _regexTimeout);
-                    Match m = rex.Match(input);
+                    return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regex))));
+                }
 
-                    if (!m.Success)
-                    {
-                        return new BlankValue(IRContext.NotInSource(new KnownRecordType(GetRecordTypeFromRegularExpression(regex))));
-                    }
-
-                    return GetRecordFromMatch(rex, m);
-                });
+                return GetRecordFromMatch(rex, m);
             }
         }
 
-        internal class MatchAllImplementation : CommonMatchImplementation, IAsyncTexlFunction
+        internal class MatchAllImplementation : RegexCommonImplementation
         {
             private readonly TimeSpan _regexTimeout;
+
+            protected override string RegexOptions => DefaultMatchAllOptions;
 
             public MatchAllImplementation(TimeSpan regexTimeout)
             {
                 _regexTimeout = regexTimeout;
             }
 
-            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+            protected override FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                Regex rex = new Regex(regex, options, _regexTimeout);
+                MatchCollection mc = rex.Matches(input);
+                List<RecordValue> records = new ();
 
-                return CommonMatchImpl(args, DefaultMatchAllOptions, (input, regex, options) =>
+                foreach (Match m in mc)
                 {
-                    Regex rex = new Regex(regex, options, _regexTimeout);
-                    MatchCollection mc = rex.Matches(input);
-                    List<RecordValue> records = new ();
+                    records.Add(GetRecordFromMatch(rex, m));
+                }
 
-                    foreach (Match m in mc)
-                    {
-                        records.Add(GetRecordFromMatch(rex, m));
-                    }
-
-                    return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regex)), records.ToArray());
-                });
+                return TableValue.NewTable(new KnownRecordType(GetRecordTypeFromRegularExpression(regex)), records.ToArray());
             }
         }
 
         private static RecordValue GetRecordFromMatch(Regex rex, Match m)
         {
             Dictionary<string, NamedValue> fields = new ()
-                {
-                    { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
-                    { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(m.Index + 1)) }
-                };
+            {
+                { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
+                { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(m.Index + 1)) }
+            };
 
             List<string> subMatches = new List<string>();
             string[] groupNames = rex.GetGroupNames();
@@ -202,12 +193,18 @@ namespace Microsoft.PowerFx.Functions
             return DType.CreateRecord(propertyNames.Values);
         }
 
-        internal class CommonMatchImplementation
+        internal abstract class RegexCommonImplementation : IAsyncTexlFunction
         {
-            protected internal static Task<FormulaValue> CommonMatchImpl(FormulaValue[] args, string defaultMatchOptions, Func<string, string, RegexOptions, FormulaValue> implementation)
+            protected abstract FormulaValue InvokeRegexFunction(string input, string regex, RegexOptions options);
+
+            protected abstract string RegexOptions { get; }
+
+            public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (args[0] is not StringValue && args[0] is not BlankValue)
-                {                    
+                {
                     return Task.FromResult<FormulaValue>(args[0] is ErrorValue ? args[0] : CommonErrors.GenericInvalidArgument(args[0].IRContext));
                 }
 
@@ -218,9 +215,9 @@ namespace Microsoft.PowerFx.Functions
 
                 string inputString = args[0] is StringValue sv0 ? sv0.Value : string.Empty;
                 string regularExpression = sv1.Value;
-                string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : defaultMatchOptions;
+                string matchOptions = args.Length == 3 ? ((StringValue)args[2]).Value : RegexOptions;
 
-                RegexOptions regOptions = RegexOptions.CultureInvariant;
+                RegexOptions regOptions = System.Text.RegularExpressions.RegexOptions.CultureInvariant;
 
                 if (!matchOptions.Contains("c"))
                 {
@@ -229,12 +226,12 @@ namespace Microsoft.PowerFx.Functions
 
                 if (matchOptions.Contains("i"))
                 {
-                    regOptions |= RegexOptions.IgnoreCase;
+                    regOptions |= System.Text.RegularExpressions.RegexOptions.IgnoreCase;
                 }
 
                 if (matchOptions.Contains("m"))
                 {
-                    regOptions |= RegexOptions.Multiline;
+                    regOptions |= System.Text.RegularExpressions.RegexOptions.Multiline;
                 }
 
                 if (matchOptions.Contains("^") && !regularExpression.StartsWith("^", StringComparison.Ordinal))
@@ -249,7 +246,7 @@ namespace Microsoft.PowerFx.Functions
 
                 try
                 {
-                    return Task.FromResult<FormulaValue>(implementation(inputString, regularExpression, regOptions));
+                    return Task.FromResult(InvokeRegexFunction(inputString, regularExpression, regOptions));
                 }
                 catch (RegexMatchTimeoutException rexTimeoutEx)
                 {

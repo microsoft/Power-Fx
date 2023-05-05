@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx
 
         public static void EnableRegExFunctions(this PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
         {
-            RegexCache regexTypeCache = new (regexCacheSize);
+            RegexTypeCache regexTypeCache = new (regexCacheSize);
 
             foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
             {
