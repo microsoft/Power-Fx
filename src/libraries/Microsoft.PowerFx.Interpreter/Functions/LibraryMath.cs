@@ -1235,31 +1235,18 @@ namespace Microsoft.PowerFx.Functions
             return random.SafeNextDouble();
         }
 
-        private static decimal SafeNextDecimal(this IRandomService random)
-        {
-            // Decimal can have up to 29 digits, but with 29 digits it would only go to a 7.9 mantissa. So limiting it to 28 significant digits gives a uniform distribution
-            var randChars = new char[30];
-            randChars[0] = '0';
-            randChars[1] = '.';
-
-            for (int i = 2; i < 30; i++)
-            {
-                randChars[i] = (char)(48.0 + (random.SafeNextDouble() * 10.0));
-            }
-
-            var randStr = new string(randChars);
-            if (decimal.TryParse(randStr, NumberStyles.Float, CultureInfo.InvariantCulture, out decimal decimalResult))
-            {
-                return decimalResult;
-            }
-
-            return (decimal)random.SafeNextDouble();
-        }
-
         private static decimal SafeNextDecimal(this IServiceProvider services)
         {
             var random = services.GetService<IRandomService>(_defaultRandService);
-            return random.SafeNextDecimal();
+            var value = random.NextDecimal();
+
+            if (value < 0 || value > 1)
+            {
+                // This is a bug in the host's IRandomService.
+                throw new InvalidOperationException($"IRandomService ({random.GetType().FullName}) returned an illegal value {value}. Must be between 0 and 1");
+            }
+
+            return value;
         }
 
         private static async ValueTask<FormulaValue> Rand(
