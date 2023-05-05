@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null, INameResolver functionNameResolver = null, IExternalRule rule = null)
+        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, INameResolver functionNameResolver = null, IExternalRule rule = null)
         {
             if (nameResolver is null)
             {
@@ -87,7 +87,6 @@ namespace Microsoft.PowerFx.Core.Functions
             _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding.ErrorContainer);
-            userDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(_binding, _args, _binding.ErrorContainer);
 
             return _binding;
         }

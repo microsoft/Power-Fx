@@ -58,6 +58,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; };", 1, 0, false)]
         [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; ;", 0, 0, true)]
         [InlineData("Add(a:Number, a:Number): Number { a; };", 0, 0, true)]
+        [InlineData(@"F2(b: Number): Number  = F1(b*3); F1(a:Number): Number = a*2;", 2, 0, false)]
         public void TestUDFNamedFormulaCounts(string script, int udfCount, int namedFormulaCount, bool expectErrors)
         {
             var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, out var userDefinitionResult);
