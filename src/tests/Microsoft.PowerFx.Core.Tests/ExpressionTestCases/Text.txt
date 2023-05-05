@@ -389,3 +389,39 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
 "1899-12-30 12:34:56"
+
+>> Text(Value("1,234","en-US"),"[$-fr-FR]#,###","fr-FR")
+"1234"
+
+>> Text(Value("1,234","en-US"),"[$-vi-VN]#,###","vi-VN")
+"1234"
+
+>> Text(Value("1,234","en-US"),"[$-en-US]#,###","fr-FR")
+"1 234"
+
+>> Text(Value("1,234","en-US"),"#,###","fr-FR")
+"1 234"
+
+>> Text(Value("1.234","vi-VN"),"[$-fr-FR]#,###","fr-FR")
+"1234"
+
+>> Text(Value("1.234","vi-VN"),"[$-en-US]#,###","en-US")
+"1,234"
+
+>> Text(1.23, "[$-fr-FR]0,00", "fr-FR")
+"1,23"
+
+>> Text(Value("1.23","en-US"), "[$-en-US]0.00", "fr-FR")
+"1,23"
+
+>> Text(Value("1.23","en-US"), "0.00", "vi-VN")
+"1,23"
+
+>> Text(Value("1,23","vi-VN"), "[$-fr-FR]0,00", "fr-FR")
+"1,23"
+
+>> Text(Value("1,23","vi-VN"), "[$-en-US]0.00", "en-US")
+"1.23"
+
+>> Text(Value("1,234.56","en-US"),"[$-vi-VN]#.###,##","vi-VN")
+"1.234,56"

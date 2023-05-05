@@ -353,6 +353,22 @@ namespace Microsoft.PowerFx.Functions
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
+            bool hasFormatCulture = false;
+            string enUsCultureName = "en-US";
+            CultureInfo formatCulture = culture;
+            string revFormatStr = formatString;
+            if (!string.IsNullOrEmpty(formatString) && formatString.Contains("[$-"))
+            {
+                hasFormatCulture = true;
+                int startIdx = formatString.IndexOf("[$-", StringComparison.Ordinal) + 3;
+                int endIdx = formatString.IndexOf("]", StringComparison.Ordinal);
+                formatCulture = CultureInfo.GetCultureInfo(formatString.Substring(startIdx, endIdx - startIdx));
+                formatString = formatString.Substring(endIdx + 1);
+                revFormatStr = formatString.Replace(",", "!");
+                revFormatStr = revFormatStr.Replace(".", ",");
+                revFormatStr = revFormatStr.Replace("!", ".");
+            }
+
             switch (value)
             {
                 case StringValue sv:
@@ -368,7 +384,24 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
+                        if (!string.IsNullOrEmpty(formatString))
+                        {
+                            if (hasFormatCulture)
+                            {                                
+                                if (revFormatStr != formatString
+                                    && (num.Value.ToString(formatString, formatCulture) != num.Value.ToString(formatString, CultureInfo.GetCultureInfo(enUsCultureName))
+                                        || num.Value.ToString(revFormatStr, formatCulture) != num.Value.ToString(revFormatStr, CultureInfo.GetCultureInfo(enUsCultureName))))
+                                {
+                                    formatString = revFormatStr;
+                                }
+                            }
+
+                            result = new StringValue(irContext, num.Value.ToString(formatString, culture));
+                        }
+                        else
+                        {
+                            result = new StringValue(irContext, num.Value.ToString("g", culture));
+                        }
                     }
 
                     break;
@@ -384,7 +417,25 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var normalized = dec.Normalize();
-                        result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
+
+                        if (!string.IsNullOrEmpty(formatString))
+                        {
+                            if (hasFormatCulture)
+                            {
+                                if (revFormatStr != formatString
+                                    && (normalized.ToString(formatString, formatCulture) != normalized.ToString(formatString, CultureInfo.GetCultureInfo(enUsCultureName))
+                                        || normalized.ToString(revFormatStr, formatCulture) != normalized.ToString(revFormatStr, CultureInfo.GetCultureInfo(enUsCultureName))))
+                                {
+                                    formatString = revFormatStr;
+                                }
+                            }
+
+                            result = new StringValue(irContext, normalized.ToString(formatString, culture));
+                        }
+                        else
+                        {
+                            result = new StringValue(irContext, normalized.ToString("g", culture));
+                        }                        
                     }
 
                     break;
