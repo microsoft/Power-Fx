@@ -3,15 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
@@ -20,7 +13,6 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Syntax
 {
@@ -37,41 +29,34 @@ namespace Microsoft.PowerFx.Syntax
         /// A script containing one or more UDFs.
         /// </summary>
         private readonly string _script;
-
-        /// <summary>
-        /// The language settings used for parsing this script.
-        /// May be null if the script is to be parsed in the current locale.
-        /// </summary>
-        private readonly CultureInfo _loc;
-        private readonly bool _numberAsFloat;
+        private readonly ParserOptions _parserOptions;
         private readonly Features _features;
 
-        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, CultureInfo loc = null, bool numberAsFloat = false, Features features = null)
+        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, Features features = null)
         {
             _features = features ?? Features.None;
             _globalNameResolver = globalNameResolver;
             _documentBinderGlue = documentBinderGlue;
             _bindingConfig = bindingConfig;
             _script = script ?? throw new ArgumentNullException(nameof(script));
-            _loc = loc;
-            _numberAsFloat = numberAsFloat;
+            _parserOptions = parserOptions;
         }
 
-        public static ParseUserDefinitionResult Parse(string script, bool numberAsFloat = false, CultureInfo loc = null)
+        public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
         {
-            return TexlParser.ParseUserDefinitionScript(script, numberAsFloat, loc);
+            return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 
-        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, out UserDefinitionResult userDefinitionResult, CultureInfo loc = null, bool numberAsFloat = false, Features features = null)
+        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
         {
-            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, loc, numberAsFloat, features);
+            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, features);
 
             return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
         }
 
         public bool ProcessUserDefnitions(out UserDefinitionResult userDefinitionResult)
         {
-            var parseResult = TexlParser.ParseUserDefinitionScript(_script, _numberAsFloat, _loc);
+            var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
 
             if (parseResult.HasErrors)
             {
@@ -104,7 +89,9 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                if (!(CheckParameters(udf.Args, errors) & CheckReturnType(udf.ReturnType, errors)))
+                var parametersOk = CheckParameters(udf.Args, errors);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
+                if (!parametersOk || !returnTypeOk)
                 {
                     continue;
                 }

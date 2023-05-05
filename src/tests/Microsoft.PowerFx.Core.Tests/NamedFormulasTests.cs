@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x=1;Foo(:Number):Number = 10 * x;", 1, 0, true)]
         public void NamedFormulaAndUdfTest(string script, int namedFormulaCount, int udfCount, bool expectErrors)
         {
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions: new ParserOptions());
 
             Assert.Equal(namedFormulaCount, parsedNamedFormulasAndUDFs.NamedFormulas.Count());
             Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count());
