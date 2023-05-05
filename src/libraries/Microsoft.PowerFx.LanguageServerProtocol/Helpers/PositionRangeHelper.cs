@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="eol">End of line character.</param>
         /// <param name="oneBasedRange">Optional: Indicates whether range is one based or zero based.</param>
         /// <returns>Start and end indexes.</returns>
-        public static (int startIndex, int endIndex) ConvertRangeToPositions(Range range, string expression, string eol, bool oneBasedRange = true)
+        public static (int startIndex, int endIndex) ConvertRangeToPositions(this Range range, string expression, string eol, bool oneBasedRange = true)
         {
             if (!range.IsValid())
             {

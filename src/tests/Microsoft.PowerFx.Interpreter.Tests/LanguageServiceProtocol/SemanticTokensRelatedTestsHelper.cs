@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 var startIdx = encodedTokens[i] == 0 ? encodedTokens[i + 1] + lastStartIdx : encodedTokens[i + 1];
                 var length = encodedTokens[i + 2];
                 var decodedTokenType = SemanticTokensEncoder.TestOnly_GetTokenTypeFromEncodedValue(encodedTokens[i + 3]);
-                var (flatStartIndex, flatEndIndex) = PositionRangeHelper.ConvertRangeToPositions(CreateRange((int)lineNumber, (int)lineNumber, (int)startIdx, (int)(startIdx + length)), expression, eol, false);
+                var (flatStartIndex, flatEndIndex) = CreateRange((int)lineNumber, (int)lineNumber, (int)startIdx, (int)(startIdx + length)).ConvertRangeToPositions(expression, eol, false);
                 decodedTokens.Add(new TokenTextSpan(string.Empty, flatStartIndex, flatEndIndex, decodedTokenType, false));
                 lastLineNumber = lineNumber;
                 lastStartIdx = startIdx;

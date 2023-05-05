@@ -483,7 +483,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var endIndex = -1;
             if (isRangeSemanticTokensMethod)
             {
-                (startIndex, endIndex) = PositionRangeHelper.ConvertRangeToPositions((semanticTokensParams as SemanticTokensRangeParams).Range, expression, eol);
+                (startIndex, endIndex) = (semanticTokensParams as SemanticTokensRangeParams).Range.ConvertRangeToPositions(expression, eol);
                 if (startIndex < 0 || endIndex < 0)
                 {
                     SendEmptySemanticTokensResponse(id);
@@ -508,17 +508,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
         }
 
-        private static HashSet<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
+        private HashSet<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
         {
-            var tokenTypesToSkip = new HashSet<TokenType>();    
+            var tokenTypesToSkip = new HashSet<TokenType>();
             if (string.IsNullOrWhiteSpace(rawTokenTypesToSkipParam))
             {
                 return tokenTypesToSkip;
             }
 
-            try
+            if (TryParseParams(rawTokenTypesToSkipParam, out List<int> tokenTypesToSkipParam))
             {
-                var tokenTypesToSkipParam = JsonSerializer.Deserialize<List<int>>(rawTokenTypesToSkipParam);
                 foreach (var tokenTypeValue in tokenTypesToSkipParam)
                 {
                     var tokenType = (TokenType)tokenTypeValue;
@@ -528,13 +527,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         tokenTypesToSkip.Add(tokenType);
                     }
                 }
+            }
 
-                return tokenTypesToSkip;
-            }
-            catch (Exception ex) when (ex is ArgumentNullException || ex is JsonException || ex is NotSupportedException)
-            {
-                return tokenTypesToSkip;
-            }
+            return tokenTypesToSkip;
         }
 
         private bool TryParseAndValidateSemanticTokenParams<T>(string id, string paramsJson, out T semanticTokenParams)

@@ -1582,7 +1582,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // Assert
             var response = AssertAndGetSemanticTokensResponse(_sendToClientData.FirstOrDefault(), payload.id);
-            var (startIndex, endIndex) = PositionRangeHelper.ConvertRangeToPositions(semanticTokenParams.Range, expression, eol);
+            var (startIndex, endIndex) = semanticTokenParams.Range.ConvertRangeToPositions(expression, eol);
             var decodedResponse = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression, eol);
 
             var leftMostTok = decodedResponse.Min(tok => tok.StartIndex);

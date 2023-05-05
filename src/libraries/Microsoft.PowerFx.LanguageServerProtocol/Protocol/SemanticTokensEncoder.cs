@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 
         /// <summary>
         /// Encodes the given collection of tokens into an unsigned integer array. 
-        /// <para>Eaxh token is encoded to 5 integer values and therefore the size of the encoded array is 5 * number of given tokens.</para>
+        /// <para>Each token is encoded to 5 integer values and therefore the size of the encoded array is 5 * number of given tokens.</para>
         /// <para>1) First integer for each token is the line number relative to the line number of previous token (currentTokenLineNumber - previousTokenLineNumber).</para>
         /// 
         /// <para>2) Second integer for each token is the start index on the line it is on relative to the start index of previous token. 
