@@ -1523,7 +1523,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Text)
             },
             {
@@ -1990,16 +1990,21 @@ namespace Microsoft.PowerFx.Functions
         {
             // Blank or empty. 
             var arg0 = args[0];
-            return new BooleanValue(irContext, IsBlank(arg0));
+            return new BooleanValue(irContext, IsBlankOrEmpty(arg0));
         }
 
-        private static bool IsBlank(FormulaValue arg)
+        internal static bool IsBlank(this FormulaValue arg)
         {
-            if (arg is BlankValue)
+            if ((arg is BlankValue) || (arg is UntypedObjectValue uo && uo.Impl.Type == FormulaType.Blank))
             {
                 return true;
             }
 
+            return false;
+        }
+
+        private static bool IsBlankOrEmpty(FormulaValue arg)
+        {
             if (arg is StringValue str)
             {
                 return str.Value.Length == 0;
@@ -2010,7 +2015,7 @@ namespace Microsoft.PowerFx.Functions
                 return uo.Impl.GetString().Length == 0;
             }
 
-            return false;
+            return arg.IsBlank();
         }
 
         private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
@@ -2508,7 +2513,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue IsBlankOrError(IRContext irContext, FormulaValue[] args)
         {
-            if (IsBlank(args[0]) || args[0] is ErrorValue)
+            if (IsBlankOrEmpty(args[0]) || args[0] is ErrorValue)
             {
                 return new BooleanValue(irContext, true);
             }
