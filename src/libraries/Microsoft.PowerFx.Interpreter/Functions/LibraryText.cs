@@ -359,17 +359,18 @@ namespace Microsoft.PowerFx.Functions
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
             bool hasFormatCulture = false;
-            string enUsCultureName = "en-US";
             CultureInfo formatCulture = culture;
+            CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
             string revFormatStr = formatString;
 
-            if (!string.IsNullOrEmpty(formatString) && formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(formatString))
             {
-                int startIdx = formatString.IndexOf("[$-", StringComparison.Ordinal) + 3;
-                int endIdx = formatString.IndexOf("]", StringComparison.Ordinal);
+                int startIdx = formatString.IndexOf("[$-", StringComparison.OrdinalIgnoreCase);
+                int endIdx = formatString.IndexOf("]", StringComparison.OrdinalIgnoreCase);
 
-                if (endIdx > 0)
+                if (startIdx > -1 && endIdx > 2)
                 {
+                    startIdx += 3;
                     hasFormatCulture = true;
                     string formatCultureName = formatString.Substring(startIdx, endIdx - startIdx);
 
@@ -380,10 +381,10 @@ namespace Microsoft.PowerFx.Functions
                     }
 
                     formatString = formatString.Substring(endIdx + 1);
-                    revFormatStr = formatString.Replace(",", "!");
+                    revFormatStr = formatString.Replace(",", "comma");
                     revFormatStr = revFormatStr.Replace(".", ",");
                     revFormatStr = revFormatStr.Replace(" ", ",");
-                    revFormatStr = revFormatStr.Replace("!", ".");
+                    revFormatStr = revFormatStr.Replace("comma", ".");
                 }
             }
 
@@ -405,13 +406,8 @@ namespace Microsoft.PowerFx.Functions
                         if (!string.IsNullOrEmpty(formatString))
                         {
                             if (hasFormatCulture)
-                            {                                
-                                if (revFormatStr != formatString
-                                    && (num.Value.ToString(formatString, formatCulture) != num.Value.ToString(formatString, CultureInfo.GetCultureInfo(enUsCultureName))
-                                        || num.Value.ToString(revFormatStr, formatCulture) != num.Value.ToString(revFormatStr, CultureInfo.GetCultureInfo(enUsCultureName))))
-                                {
-                                    formatString = revFormatStr;
-                                }
+                            {
+                                formatString = GetFormatString(num.Value, formatString, revFormatStr, formatCulture, enUsCulture);
                             }
 
                             result = new StringValue(irContext, num.Value.ToString(formatString, culture));
@@ -440,12 +436,7 @@ namespace Microsoft.PowerFx.Functions
                         {
                             if (hasFormatCulture)
                             {
-                                if (revFormatStr != formatString
-                                    && (normalized.ToString(formatString, formatCulture) != normalized.ToString(formatString, CultureInfo.GetCultureInfo(enUsCultureName))
-                                        || normalized.ToString(revFormatStr, formatCulture) != normalized.ToString(revFormatStr, CultureInfo.GetCultureInfo(enUsCultureName))))
-                                {
-                                    formatString = revFormatStr;
-                                }
+                                formatString = GetFormatString(normalized, formatString, revFormatStr, formatCulture, enUsCulture);
                             }
 
                             result = new StringValue(irContext, normalized.ToString(formatString, culture));
@@ -1166,6 +1157,20 @@ namespace Microsoft.PowerFx.Functions
 
             outputValue = (int)inputValue;
             return true;
+        }
+
+        private static string GetFormatString(object value, string formatString, string revFormatStr, CultureInfo formatCulture, CultureInfo enUsCulture)
+        {
+            var formattableValue = value as IFormattable;
+
+            if (formattableValue != null && revFormatStr != formatString && 
+                  (formattableValue.ToString(formatString, formatCulture) != formattableValue.ToString(formatString, enUsCulture)
+                    || formattableValue.ToString(revFormatStr, formatCulture) != formattableValue.ToString(revFormatStr, enUsCulture)))
+            {
+                return revFormatStr;
+            }
+
+            return formatString;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             hasDateTimeFmt = (formatArg.IndexOfAny(new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' }) >= 0) 
-                && (formatArg.ToLower(CultureInfo.InvariantCulture).IndexOf("us", StringComparison.Ordinal) < 0);
+                && (formatArg.IndexOf("us", StringComparison.OrdinalIgnoreCase) < 0);
 
             hasNumericFmt = formatArg.IndexOfAny(new char[] { '0', '#' }) >= 0;
             if (hasDateTimeFmt && hasNumericFmt)
