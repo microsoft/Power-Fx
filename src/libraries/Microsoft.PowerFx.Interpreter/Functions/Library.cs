@@ -2351,6 +2351,9 @@ namespace Microsoft.PowerFx.Functions
                 case ErrorKind.NotApplicable:
                     // Default message that is shown to users when they try to combine tables of different lenghts in a tabular function
                     return "Not applicable";
+                case ErrorKind.Timeout:
+                    // Default message that is shown to users when they execute an operation that was cancelled because of a timeout
+                    return "Timeout error";
                 case ErrorKind.Custom:
                     // Default message that is shown to users when they create an error with a custom kind
                     return "Custom error";

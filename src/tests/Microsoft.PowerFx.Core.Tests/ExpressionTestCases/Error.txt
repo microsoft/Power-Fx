@@ -246,6 +246,9 @@ Error({Kind:ErrorKind.EditPermissions})
 >> IfError(Error({Kind:ErrorKind.NotApplicable}), $"{FirstError.Kind}: {FirstError.Message}")
 "27: Not applicable"
 
+>> IfError(Error({Kind:ErrorKind.NotApplicable}), $"{FirstError.Kind}: {FirstError.Message}")
+"28: Timeout error"
+
 >> IfError(Error({Kind:ErrorKind.Custom}), $"{FirstError.Kind}: {FirstError.Message}")
 "1000: Custom error"
 
