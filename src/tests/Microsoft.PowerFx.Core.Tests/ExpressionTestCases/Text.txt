@@ -408,9 +408,11 @@ Error({Kind:ErrorKind.BadLanguageCode})
 >> Text(1234.5678, "[$-en-US]#,##0.00", "pt-BR")
 "1.234,57"
 
+// If not closed by a ']', then not interpreted as a format specifier
 >> Text(1234.5678, "[$-en-US#,##0.00", "en-US")
 "[$-en-US1,234.57"
 
+// Unknown locales would default to en-US in C# (error in Power Apps)
 >> Text(1234.5678, "[$-a]0,0", "en-US")
 Error({Kind:ErrorKind.BadLanguageCode})
 
