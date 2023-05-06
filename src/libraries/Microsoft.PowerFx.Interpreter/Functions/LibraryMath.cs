@@ -1235,6 +1235,20 @@ namespace Microsoft.PowerFx.Functions
             return random.SafeNextDouble();
         }
 
+        private static decimal SafeNextDecimal(this IServiceProvider services)
+        {
+            var random = services.GetService<IRandomService>(_defaultRandService);
+            var value = random.NextDecimal();
+
+            if (value < 0 || value > 1)
+            {
+                // This is a bug in the host's IRandomService.
+                throw new InvalidOperationException($"IRandomService ({random.GetType().FullName}) returned an illegal value {value}. Must be between 0 and 1");
+            }
+
+            return value;
+        }
+
         private static async ValueTask<FormulaValue> Rand(
             EvalVisitor runner,
             EvalVisitorContext context,
@@ -1297,7 +1311,7 @@ namespace Microsoft.PowerFx.Functions
             lower = Math.Ceiling(lower);
             upper = Math.Floor(upper);
 
-            decimal value = (decimal)services.SafeNextDouble();
+            decimal value = services.SafeNextDecimal();
 
             return new DecimalValue(irContext, Math.Floor((value * (upper - lower + 1m)) + lower));
         }
