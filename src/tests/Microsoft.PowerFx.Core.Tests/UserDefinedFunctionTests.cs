@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
-            Assert.Equal(expectErrors, userDefinitionResult.Errors.Any());
+            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
         }
     }
 }
