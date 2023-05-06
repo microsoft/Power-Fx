@@ -374,9 +374,9 @@ namespace Microsoft.PowerFx.Functions
                     hasFormatCulture = true;
                     string formatCultureName = formatString.Substring(startIdx, endIdx - startIdx);
 
+                        result = new StringValu
                     if (!TryGetCulture(formatCultureName, out formatCulture))
-                    {
-                        result = new StringValue(irContext, formatCultureName);
+                    {e(irContext, formatCultureName);
                         return false;
                     }
 
