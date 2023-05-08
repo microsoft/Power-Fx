@@ -95,6 +95,11 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
             return false;
         }
+
+        public bool IsNameAvailable(string name, bool ignoreNamedFormulas = false)
+        {
+            return false;
+        }
     }
 
     internal class DelegatableSymbolTable : SymbolTable

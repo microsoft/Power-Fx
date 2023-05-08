@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Texl;
@@ -122,6 +124,20 @@ namespace Microsoft.PowerFx
 
             symbols = ReadOnlySymbolTable.Compose(localSymbols, EngineSymbols, SupportedFunctions, Config.SymbolTable);
             return symbols;
+        }
+
+        /// <summary>
+        /// Overriable method to be able to supply custom implementation of IExternalRuleScopeResolver.
+        /// Defaults to Null.
+        /// </summary>
+        /// <returns>Implementation of IExternalRuleScopeResolver.</returns>
+        // <para>IExternalRuleScopeResolver is used in Canvas App backend when calling TexlBinding.Run(). 
+        // There was no option to supply a custom implementation of this in Engine, 
+        // so following the existing pattern in Engine, 
+        // added this virtual function for the derived classes of Engine to override and supply custom implementation.</para>
+        private protected virtual IExternalRuleScopeResolver CreateExternalRuleScopeResolver()
+        {
+            return null;
         }
 
         private protected virtual IBinderGlue CreateBinderGlue()
@@ -267,6 +283,8 @@ namespace Microsoft.PowerFx
             // We can still use that for intellisense.             
             var resolver = CreateResolverInternal(out var combinedSymbols, symbolTable);
 
+            var externalRuleScopeResolver = CreateExternalRuleScopeResolver();
+
             var glue = CreateBinderGlue();
 
             var ruleScope = this.GetRuleScope();
@@ -277,14 +295,18 @@ namespace Microsoft.PowerFx
             bool useThisRecordForRuleScope = ruleScope != null;
 
             var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope, result.Parse.Options.NumberIsFloat);
-
             var binding = TexlBinding.Run(
-                glue,
-                parse.Root,
-                resolver,
-                bindingConfig,
-                ruleScope: ruleScope?._type,
-                features: Config.Features);
+                            glue, 
+                            externalRuleScopeResolver, 
+                            new DataSourceToQueryOptionsMap(), 
+                            parse.Root, 
+                            resolver, 
+                            bindingConfig, 
+                            false, 
+                            ruleScope?._type, 
+                            false, 
+                            null, 
+                            Config.Features);
 
             return (binding, combinedSymbols);
         }
