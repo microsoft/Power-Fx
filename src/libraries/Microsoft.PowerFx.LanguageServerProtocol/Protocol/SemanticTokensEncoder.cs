@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         internal const int SlotsPerToken = 5;
 
         /// <summary>
-        /// A mapping from token type to its unsigned interger encoded value. Each token type is encoded using its position in the TokenType enum.
+        /// A mapping from token type to its unsigned integer encoded value. Each token type is encoded using its position in the TokenType enum.
         /// </summary>
         private static readonly IReadOnlyDictionary<TokenType, uint> EncodedTokenTypes = Enum.GetValues(typeof(TokenType))
                                                                                              .OfType<TokenType>()
