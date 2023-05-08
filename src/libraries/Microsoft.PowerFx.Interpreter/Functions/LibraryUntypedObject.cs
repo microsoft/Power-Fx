@@ -299,25 +299,18 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Text_UO(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            if ((args[0] is UntypedObjectValue uo && uo.Impl.Type == FormulaType.Blank) || args[0] is BlankValue)
+            if (args.Length == 1 && args[0].IsBlank())
             {
-                if (args.Length == 1)
+                // When used as a pure conversion function (single argument, no format string), this function propagates null values
+                return new BlankValue(irContext);
+            }
+
+            foreach (var arg in args)
+            {
+                if (arg.IsBlank())
                 {
-                    // As a special case, blank propagates for the single argument only
-                    return new BlankValue(irContext);
+                    return new StringValue(irContext, string.Empty);
                 }
-
-                return new StringValue(irContext, string.Empty);
-            }
-
-            if (args.Length >= 2 && args[1] is BlankValue)
-            {
-                return new StringValue(irContext, string.Empty);
-            }
-
-            if (args.Length == 3 && args[2] is BlankValue)
-            {
-                return new StringValue(irContext, string.Empty);
             }
 
             var arg0 = (UntypedObjectValue)args[0];
