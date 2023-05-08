@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(userDefinitionResult.NamedFormulas);
             Assert.Equal("Foo", udf.Name);
             Assert.True(udf.ReturnType.IsPrimitive);
-            Assert.Empty(userDefinitionResult.Errors);
+            Assert.Empty(userDefinitionResult.Errors ?? Enumerable.Empty<TexlError>());
         }
 
         [Theory]
