@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("IfError(Text(A), Switch(FirstError.Kind, ErrorKind.Div0, \"Division by zero\", ErrorKind.Numeric, \"Numeric error\", \"Other error\"))")]
         public void TestSwitchFunctionCompilation(string expression)
         {
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             engine.UpdateVariable("A", 15m);
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
