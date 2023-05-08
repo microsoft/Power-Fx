@@ -859,7 +859,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Text(OptionSet.option_1)", "Option1")]
         [InlineData("Text(OptionSet.Option1)", "Option1")]
         [InlineData("Text(Option1)", "Option1")]
-        [InlineData("Text(If(1<0, Option1))", "")]
+        [InlineData("Text(If(1<0, Option1))", null)]
 
         // OptionSetInfo() returns the logical name of the input option set value
         [InlineData("OptionSetInfo(OptionSet.option_1)", "option_1")]
