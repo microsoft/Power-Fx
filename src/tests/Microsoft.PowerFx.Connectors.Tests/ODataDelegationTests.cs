@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData("Sort(Table, date)", "https://contoso.com/api/list?$orderby=date")]
         public void TestDelegation(string expression, string uriExpected)
         {
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.PowerFxV1);
             var engine = new RecalcEngine(config);
             engine.UpdateVariable("myNumber", FormulaValue.New(50));
 
