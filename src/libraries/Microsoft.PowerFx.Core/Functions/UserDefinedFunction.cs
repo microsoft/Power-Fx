@@ -29,7 +29,6 @@ namespace Microsoft.PowerFx.Core.Functions
     internal class UserDefinedFunction : TexlFunction
     {
         private readonly bool _isImperative;
-        private readonly IdentToken _returnTypeToken;
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
 
@@ -39,10 +38,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsSelfContained => !_isImperative;
 
-        public UserDefinedFunction(string name, IdentToken returnTypeToken, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnTypeToken.GetFormulaType()._type, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
+        public UserDefinedFunction(string name, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
+        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
         {
-            this._returnTypeToken = returnTypeToken;
             this._args = args;
             this._isImperative = isImperative;
 
@@ -71,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null, INameResolver functionNameResolver = null, IExternalRule rule = null)
+        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, INameResolver functionNameResolver = null, IExternalRule rule = null)
         {
             if (nameResolver is null)
             {
@@ -87,7 +85,6 @@ namespace Microsoft.PowerFx.Core.Functions
             _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding.ErrorContainer);
-            userDefinitionSemanticsHandler?.CheckSemanticsOnDeclaration(_binding, _args, _binding.ErrorContainer);
 
             return _binding;
         }
@@ -101,11 +98,9 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(errorContainer);
 
-            var returnTypeFormulaType = _returnTypeToken.GetFormulaType()._type;
-
-            if (!returnTypeFormulaType.Kind.Equals(actualBodyReturnType.Kind) || !returnTypeFormulaType.CoercesTo(returnTypeFormulaType, true, false, context.Features.PowerFxV1CompatibilityRules))
+            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind) || !ReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
             {
-                errorContainer.EnsureError(DocumentErrorSeverity.Severe, _returnTypeToken, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
             }
         }
 
@@ -150,7 +145,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public DPath CurrentEntityPath => _globalNameResolver.CurrentEntityPath;
 
-            public TexlFunctionSet Functions => _functionNameResolver?.Functions ?? _globalNameResolver.Functions;
+            public TexlFunctionSet Functions => _functionNameResolver?.Functions == null ? _globalNameResolver.Functions : new TexlFunctionSet(new List<TexlFunctionSet>() { _globalNameResolver.Functions, _functionNameResolver.Functions });
 
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
