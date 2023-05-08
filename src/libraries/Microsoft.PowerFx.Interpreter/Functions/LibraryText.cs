@@ -374,11 +374,17 @@ namespace Microsoft.PowerFx.Functions
                         return false;
                     }
 
-                    formatString = formatString.Substring(endIdx + 1);
-                    revFormatStr = formatString.Replace(",", "comma");
-                    revFormatStr = revFormatStr.Replace(".", ",");
-                    revFormatStr = revFormatStr.Replace(" ", ",");
-                    revFormatStr = revFormatStr.Replace("comma", ".");
+                    var numberCultureFormat = formatCulture.NumberFormat;
+                    formatString = formatString.Substring(endIdx + 1);                    
+                    revFormatStr = formatString.Replace(numberCultureFormat.NumberGroupSeparator, "\uFEFF");
+
+                    if (string.IsNullOrWhiteSpace(numberCultureFormat.NumberGroupSeparator))
+                    {
+                        revFormatStr = revFormatStr.Replace(" ", "\uFEFF");
+                    }
+
+                    revFormatStr = revFormatStr.Replace(numberCultureFormat.NumberDecimalSeparator, ".");
+                    revFormatStr = revFormatStr.Replace("\uFEFF", ",");
                 }
             }
 
