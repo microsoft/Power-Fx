@@ -1074,9 +1074,8 @@ namespace Microsoft.PowerFx.Functions
         }
 
         public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
-        {        
-            //Decode html specific characters
-            string text = WebUtility.HtmlDecode(args[0].Value.Trim());
+        {
+            string text = args[0].Value.Trim();
 
             // Replace header/script/style tags with empty text.
             text = _headerTagRegex.Replace(text, string.Empty);
@@ -1097,6 +1096,9 @@ namespace Microsoft.PowerFx.Functions
 
             // Replace all other tags with empty text.
             text = _htmlTagsRegex.Replace(text, string.Empty);
+
+            //Decode html specific characters
+            text = WebUtility.HtmlDecode(text);
 
             return new StringValue(irContext, text.Trim());
         }

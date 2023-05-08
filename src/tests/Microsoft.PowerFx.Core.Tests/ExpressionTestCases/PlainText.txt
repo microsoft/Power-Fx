@@ -87,7 +87,7 @@ Error({Kind:ErrorKind.Div0})
 >> Substitute(Substitute(PlainText("1<div>2<p>3<tr>4"), Char(13), "\r"), Char(10), "\n")
 "1\r\n\r\n2\r\n\r\n3\r\n\r\n4"
 
->> Substitute(Substitute(PlainText("1<Div/>2<p/>3<Tr/>4"), Char(13), "\r"), Char(10), "\n")
+>> Substitute(Substitute(PlainText("1<Div>2<p>3<Tr>4"), Char(13), "\r"), Char(10), "\n")
 "1\r\n\r\n2\r\n\r\n3\r\n\r\n4"
 
 >> Substitute(Substitute(PlainText("1<  br  >2<  Li />3"), Char(13), "\r"), Char(10), "\n")
@@ -95,3 +95,6 @@ Error({Kind:ErrorKind.Div0})
 
 >> Substitute(Substitute(PlainText("1<div  class = 'div2'>2< P />3<  tr>4"), Char(13), "\r"), Char(10), "\n")
 "1\r\n\r\n2\r\n\r\n3\r\n\r\n4"
+
+>> PlainText("Hello&lt;br/&gt;world")
+"Hello<br/>world"
