@@ -412,9 +412,8 @@ Error({Kind:ErrorKind.BadLanguageCode})
 >> Text(1234.5678, "[$-en-US#,##0.00", "en-US")
 "[$-en-US1,234.57"
 
-// Unknown locales would default to en-US in C# (error in Power Apps)
 >> Text(1234.5678, "[$-a]0,0", "en-US")
-Error({Kind:ErrorKind.BadLanguageCode})
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1234.5678,"[$-en-US]0 # # # !!!", "en-US")
 "1 2 3 5 !!!"

@@ -335,11 +335,6 @@ namespace Microsoft.PowerFx.Functions
 
             var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
 
-            if (!isText && result != null)
-            {
-                return CommonErrors.BadLanguageCode(irContext, result.Value);
-            }
-
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
@@ -376,7 +371,6 @@ namespace Microsoft.PowerFx.Functions
 
                     if (!TryGetCulture(formatCultureName, out formatCulture))
                     {
-                        result = new StringValue(irContext, formatCultureName);
                         return false;
                     }
 
