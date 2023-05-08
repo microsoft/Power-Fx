@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Connectors
             return node.Op switch
             {
                 UnaryOpKind.Negate => NotOp(node.Child, runContext),
-                _ => SerializeLiteralValue(runContext.EvalAsync(node).Result),
+                _ => SerializeLiteralValue(runContext.EvalAsync(node).Result)
             };
         }
 
