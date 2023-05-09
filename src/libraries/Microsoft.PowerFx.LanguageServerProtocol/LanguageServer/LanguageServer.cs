@@ -494,7 +494,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
             var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
             var result = scope?.Check(expression);
-            if (scope == null)
+            if (result == null)
             {
                 SendEmptySemanticTokensResponse(id);
                 return;
