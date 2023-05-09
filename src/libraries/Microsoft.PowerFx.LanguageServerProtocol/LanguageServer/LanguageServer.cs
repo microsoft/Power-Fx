@@ -493,7 +493,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
             var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
-            var result = scope.Check(expression);
+            var result = scope?.Check(expression);
+            if (scope == null)
+            {
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
 
             // Skip over the token types that clients don't want in the response
             var tokens = result.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
