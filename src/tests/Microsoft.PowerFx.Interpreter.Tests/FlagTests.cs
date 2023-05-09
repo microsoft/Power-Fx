@@ -26,8 +26,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Filter(A, A[@Value] = 2)")]
         public void Parser_DisableRowScopeDisambiguationSyntax(string expression)
         {
-            var engine = new RecalcEngine(new PowerFxConfig(features: new Features { DisableRowScopeDisambiguationSyntax = true }));
-            var engineWithoutFlag = new RecalcEngine(new PowerFxConfig());
+            var engine = new RecalcEngine();
+            var engineWithoutFlag = new RecalcEngine(new PowerFxConfig(Features.None));
             
             NumberValue r1 = FormulaValue.New(1);
             NumberValue r2 = FormulaValue.New(2);

@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>          
         public PowerFxConfig()
-            : this(Features.None)
+            : this(Features.PowerFxV1)
         {
         }
 
