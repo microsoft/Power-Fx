@@ -1,0 +1,31 @@
+#SETUP: RegEx
+
+>> MatchAll("Hello", "\w")
+Table({FullMatch:"H",StartMatch:1,SubMatches:Table()},{FullMatch:"e",StartMatch:2,SubMatches:Table()},{FullMatch:"l",StartMatch:3,SubMatches:Table()},{FullMatch:"l",StartMatch:4,SubMatches:Table()},{FullMatch:"o",StartMatch:5,SubMatches:Table()})
+
+>> MatchAll("Hello", "llo", "c")
+Table({FullMatch:"llo",StartMatch:3,SubMatches:Table()})
+
+>> MatchAll("Hello", "llo", MatchOptions.Complete)
+Table()
+
+>> MatchAll("Bob Jones <bob.jones@contoso.com>", "<(?<email>" & Match.Email & ")>")
+Table({FullMatch:"<bob.jones@contoso.com>",StartMatch:11,SubMatches:Table({Value:"bob.jones@contoso.com"}),email:"bob.jones@contoso.com"})
+
+>> MatchAll("PT2H1M39S", "PT(?:(?<hours>\d+)H)?(?:(?<minutes>\d+)M)?(?:(?<seconds>\d+)S)?")
+Table({FullMatch:"PT2H1M39S",StartMatch:1,SubMatches:Table({Value:"2"},{Value:"1"},{Value:"39"}),hours:"2",minutes:"1",seconds:"39"})
+
+>> MatchAll("Hello", "(?<p1>\w)l(?<p2>\w)")
+Table({FullMatch:"ell",StartMatch:2,SubMatches:Table({Value:"e"},{Value:"l"}),p1:"e",p2:"l"})
+
+>> MatchAll("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
+Table({FullMatch:"Joe 164",StartMatch:1,SubMatches:Table({Value:"Joe"},{Value:"164"})},{FullMatch:"Sam 208",StartMatch:9,SubMatches:Table({Value:"Sam"},{Value:"208"})})
+
+>> MatchAll(Blank(), ".")
+Table()
+
+>> MatchAll(Blank(), Blank())
+Errors: Error 18-25: Regular expressions must be constant values.|Error 0-26: The function 'MatchAll' has some invalid arguments.
+
+>> MatchAll(1/0, "Hi")
+Error({Kind:ErrorKind.Div0})
