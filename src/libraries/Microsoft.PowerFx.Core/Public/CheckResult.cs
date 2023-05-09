@@ -602,7 +602,7 @@ namespace Microsoft.PowerFx
         /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
         /// </summary>
         /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
-        internal IEnumerable<ITokenTextSpan> GetTokens() => Tokenization.Tokenize(_expression, _binding, Parse.Comments, null, false);
+        internal IEnumerable<ITokenTextSpan> GetTokens() => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false);
 
         private string _expressionInvariant;
 
