@@ -1,0 +1,138 @@
+﻿#SETUP: RegEx
+
+>> IsMatch("Hi", "H")
+false
+
+>> IsMatch("Hi", "Hi")
+true
+
+>> IsMatch("Hi", "Hi", MatchOptions.Complete)
+true
+
+>> IsMatch("Bye", "H")
+false
+
+>> IsMatch("Hi", "H", "c")
+true
+
+>> IsMatch("Hi", "H", MatchOptions.Contains)
+true
+
+>> IsMatch("Hi", "H", MatchOptions.Contains & MatchOptions.Complete)
+false
+
+>> IsMatch("Hi", "H", MatchOptions.Contains & MatchOptions.BeginsWith)
+true
+
+>> IsMatch("Hi", "H", "$c")
+false
+
+>> IsMatch("Hi", "H", "c$")
+false
+
+>> IsMatch("Hi", "H", "^c")
+true
+
+>> IsMatch("Hi", "H", "c^")
+true
+
+>> IsMatch("Hi", "i", "c$")
+true
+
+>> IsMatch("Hi", "I", "c$")
+false
+
+>> IsMatch("Hi", "I", "c$i")
+true
+
+>> IsMatch("Hi", "H.*")
+true
+
+>> IsMatch("Hi", "H.*i")
+true
+
+>> IsMatch("000", Match.Digit & Match.Digit & Match.Digit)
+true
+
+>> IsMatch("JohnDoe@microsoft.com", Match.Email)
+true
+
+>> IsMatch("JohnDoe@microsoftcom", Match.Email)
+false
+
+>> IsMatch("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete & MatchOptions.Multiline)
+true
+
+>> IsMatch("Joe 164" & Char(10) & "Sam 208" & Char(10), "(\w+)\s(\d+)", MatchOptions.Complete)
+false
+
+>> IsMatch(1/0, "Hi")
+Error({Kind:ErrorKind.Div0})
+
+>> IsMatch(Blank(), "Hi")
+false
+
+>> IsMatch("Foo", Blank())
+Errors: Error 15-22: Regular expressions must be constant values.
+
+>> IsMatch("Foo", 17)
+Errors: Error 15-17: Regular expressions must be constant values.
+
+>> IsMatch(28, "Bar")
+false
+
+>> IsMatch("Foo", 1/0)
+Errors: Error 16-17: Regular expressions must be constant values.
+
+>> IsMatch("", "")
+true
+
+>> IsMatch(Blank(), ".")
+false
+
+>> IsMatch(Blank(), Blank())
+Errors: Error 17-24: Regular expressions must be constant values.
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}")
+false
+
+// With Icelandic Eth
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` A 1234567890", "\p{L}", "c")
+true
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~`  1234567890", "\p{L}", "c")
+false
+
+>> IsMatch("!@#$%^&*()-=_+<>,.:;\'{}[]\|?/~` Ð 1234567890", "\p{L}", "c")
+true
+
+>> IsMatch("Foo", "J(")
+Error({Kind:ErrorKind.BadRegex})
+
+// Dangerous Regex, will timeout (should take >2h on a fast CPU)
+>> IsMatch("ababababababababababababababababababababababababababababababababababa", "^((ab)*)+$")
+Error({Kind:ErrorKind.Timeout})
+
+>> IsMatch("Hi", "Hi", "foo")
+false
+
+>> IsMatch("28", 28)
+Errors: Error 14-16: Regular expressions must be constant values.
+
+>> IsMatch("(555) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+true
+
+>> IsMatch("(555)_123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+false
+
+>> IsMatch("147 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+true
+
+>> IsMatch("(44) 123-4567", "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$")
+false

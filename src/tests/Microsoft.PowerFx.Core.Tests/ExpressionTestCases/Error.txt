@@ -131,9 +131,6 @@ Errors: Error 3-5: Expected operator. We expect an operator such as +, *, or & a
 >> IfError(Error(Table({Kind:"0"},{Kind:"1"})),Concat(AllErrors,Kind,","))
 "0,1"
 
->> IfError(Error(Table({Kind:Float(0)},{Kind:Float(1)})),Concat(AllErrors,Kind,","))
-"0,1"
-
 >> Error (Table({Kind:"2"},{Kind:"4"}))
 Error(Table({Kind:ErrorKind.MissingRequired},{Kind:ErrorKind.EditPermissions}))
 
@@ -159,6 +156,9 @@ Error({Kind:ErrorKind.EditPermissions})
 // Coercion from string, with coerced message
 >> IfError(Error([{Kind:"12",Message:333},{Kind:"13",Message:444}]), Concat(AllErrors, $"{Kind}:{Message}", ", "))
 "12:333, 13:444"
+
+>> IfError(Error(Table({Kind:Float(0)},{Kind:Float(1)})),Concat(AllErrors,Kind,","))
+"0,1"
 
 // ************* Default error messages *************
 
@@ -245,6 +245,9 @@ Error({Kind:ErrorKind.EditPermissions})
 
 >> IfError(Error({Kind:ErrorKind.NotApplicable}), $"{FirstError.Kind}: {FirstError.Message}")
 "27: Not applicable"
+
+>> IfError(Error({Kind:ErrorKind.Timeout}), $"{FirstError.Kind}: {FirstError.Message}")
+"28: Timeout error"
 
 >> IfError(Error({Kind:ErrorKind.Custom}), $"{FirstError.Kind}: {FirstError.Message}")
 "1000: Custom error"

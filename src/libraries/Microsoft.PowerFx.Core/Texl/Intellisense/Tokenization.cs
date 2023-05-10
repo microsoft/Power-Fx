@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false)
         {
             var tokens = new List<ITokenTextSpan>();
-            if (binding == null)
+            if (expression == null || binding == null)
             {
                 return tokens;
             }

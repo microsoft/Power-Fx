@@ -37,12 +37,12 @@ namespace Microsoft.PowerFx.Functions
         // Sync FunctionPtr - all args are evaluated before invoking this function.  
         public delegate FormulaValue FunctionPtr(SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
-        // Async - can invoke lambads.
+        // Async - can invoke lambdas.
         public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
-        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;        
+        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
@@ -2102,7 +2102,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    
+
                     return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
@@ -2351,6 +2351,9 @@ namespace Microsoft.PowerFx.Functions
                 case ErrorKind.NotApplicable:
                     // Default message that is shown to users when they try to combine tables of different lenghts in a tabular function
                     return "Not applicable";
+                case ErrorKind.Timeout:
+                    // Default message that is shown to users when they execute an operation that was cancelled because of a timeout
+                    return "Timeout error";
                 case ErrorKind.Custom:
                     // Default message that is shown to users when they create an error with a custom kind
                     return "Custom error";

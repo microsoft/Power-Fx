@@ -569,7 +569,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CanRunWithWarnings()
         {
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             var engine = new RecalcEngine(config);
 
             var result = engine.Check("T.Var = 23", RecordType.Empty()
@@ -648,7 +648,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckBindEnum()
         {
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var result = engine.Check("TimeUnit.Hours");
 
             Assert.True(result.IsSuccess);
@@ -905,7 +905,7 @@ namespace Microsoft.PowerFx.Tests
                     { "option_2", "Option2" }
             }));
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
             var checkResult = recalcEngine.Check(expression, RecordType.Empty());
@@ -1025,7 +1025,7 @@ namespace Microsoft.PowerFx.Tests
         public void TestWithTimeZoneInfo()
         {
             // CultureInfo not set in PowerFxConfig as we use Symbols
-            var pfxConfig = new PowerFxConfig();
+            var pfxConfig = new PowerFxConfig(Features.None);
             var recalcEngine = new RecalcEngine(pfxConfig);
             var symbols = new RuntimeConfig();
 

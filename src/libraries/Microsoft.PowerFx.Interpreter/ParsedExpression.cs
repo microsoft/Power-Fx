@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Interpreter;
@@ -70,7 +71,7 @@ namespace Microsoft.PowerFx
         internal static IExpressionEvaluator GetEvaluator(this CheckResult result, StackDepthCounter stackMarker)
         {
             ReadOnlySymbolValues globals = null;
-                
+
             if (result.Engine is RecalcEngine recalcEngine)
             {
                 // Pull global values from the engine. 
@@ -84,7 +85,8 @@ namespace Microsoft.PowerFx
             {
                 _globals = globals,
                 _allSymbols = result.Symbols,
-                _parameterSymbolTable = result.Parameters
+                _parameterSymbolTable = result.Parameters,
+                _additionalFunctions = result.Engine.Config.AdditionalFunctions
             };
 
             return expr;
@@ -101,6 +103,7 @@ namespace Microsoft.PowerFx
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
+        internal IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
 
         internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
@@ -111,27 +114,29 @@ namespace Microsoft.PowerFx
             // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
-        
+
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
-            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
-                false,
-                _allSymbols,
-                runtimeConfig?.Values,
-                _globals);
+            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(false, _allSymbols, runtimeConfig?.Values, _globals);
+            BasicServiceProvider innerServices = new BasicServiceProvider();
+            bool hasInnerServices = false;
 
-            IServiceProvider innerServices = null;
             if (_cultureInfo != null)
             {
-                var temp = new BasicServiceProvider();
-                temp.AddService(_cultureInfo);
-                innerServices = temp;
+                innerServices.AddService(_cultureInfo);
+                hasInnerServices = true;
             }
 
-            var runtimeConfig2 = new RuntimeConfig
+            if (_additionalFunctions.Any())
+            {
+                innerServices.AddService(_additionalFunctions);
+                hasInnerServices = true;
+            }
+
+            RuntimeConfig runtimeConfig2 = new RuntimeConfig
             {
                 Values = symbolValues,
-                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
+                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, hasInnerServices ? innerServices : null)
             };
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
@@ -159,8 +164,9 @@ namespace Microsoft.PowerFx
 
             var runtimeConfig2 = new RuntimeConfig
             {
-                Values = symbolValues                
+                Values = symbolValues
             };
+
             if (_cultureInfo != null)
             {
                 runtimeConfig2.SetCulture(_cultureInfo);
