@@ -12,7 +12,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -43,18 +42,15 @@ namespace Microsoft.PowerFx
         public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
-        
+
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
             _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
-
             _services = config.ServiceProvider ?? new BasicServiceProvider();
 
             TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
-
             Governor = GetService<Governor>() ?? new Governor();
-            
             CultureInfo = GetService<CultureInfo>();
         }
 
@@ -255,7 +251,9 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
-            if (func is IAsyncTexlFunction asyncFunc)
+            IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
+
+            if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
             }
@@ -270,8 +268,8 @@ namespace Microsoft.PowerFx
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
             }
             else
-            {               
-                if (FunctionImplementations.TryGetValue(func, out var ptr))
+            {
+                if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
                 {
                     try
                     {
@@ -281,7 +279,7 @@ namespace Microsoft.PowerFx
                     {
                         var irContext = node.IRContext;
                         result = new ErrorValue(
-                            irContext, 
+                            irContext,
                             new ExpressionError()
                             {
                                 Message = ex.Message,
@@ -289,7 +287,7 @@ namespace Microsoft.PowerFx
                                 Kind = ex.ErrorKind
                             });
                     }
-                    
+
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
@@ -547,16 +545,23 @@ namespace Microsoft.PowerFx
                     {
                         var fields = new List<NamedValue>();
                         var scopeContext = context.SymbolContext.WithScope(node.Scope);
-                        foreach (var coercion in node.FieldCoercions)
+
+                        foreach (var field in row.Value.Fields)
                         {
                             CheckCancel();
 
-                            var record = row.Value;
-                            var newScope = scopeContext.WithScopeValues(record);
+                            if (node.FieldCoercions.TryGetValue(new Core.Utils.DName(field.Name), out var coercion))
+                            {
+                                var record = row.Value;
+                                var newScope = scopeContext.WithScopeValues(record);
+                                var newValue = await coercion.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
 
-                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
-                            var name = coercion.Key;
-                            fields.Add(new NamedValue(name.Value, newValue));
+                                fields.Add(new NamedValue(field.Name, newValue));
+                            }
+                            else
+                            {
+                                fields.Add(field);
+                            }
                         }
 
                         resultRows.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(tableType.ToRecord()), fields)));
@@ -690,7 +695,7 @@ namespace Microsoft.PowerFx
         {
             switch (node.Value)
             {
-                case NameSymbol name: 
+                case NameSymbol name:
                     return GetVariableOrFail(node, name);
                 case FormulaValue fi:
                     return fi;

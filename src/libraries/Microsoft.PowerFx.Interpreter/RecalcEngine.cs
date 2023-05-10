@@ -191,7 +191,7 @@ namespace Microsoft.PowerFx
                 udf.ReturnType.GetFormulaType(),
                 udf.IsImperative,
                 udf.NumberIsFloat,
-                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType())).ToArray())).ToArray();
+                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), arg.TypeIdent.GetFormulaType())).ToArray())).ToArray();
 
             return DefineFunctions(udfDefinitions);
         }

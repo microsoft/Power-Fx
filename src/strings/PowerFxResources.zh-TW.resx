@@ -568,22 +568,22 @@
     
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+    <value>將代表數字的 'text' 轉換為十進位值。</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>轉換值時要使用的語言代碼。</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a Decimal value.</value>
+    <value>要轉換為十進位值的文字值。</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Float value.</value>
+    <value>將代表數字的 'text' 轉換為浮點值。</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>轉換值時要使用的語言代碼。</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>要轉換為浮點值的文字值。</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>文字</value>
@@ -1465,6 +1465,14 @@
     <value>輸入</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>修飾元</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>修飾元</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>傳回從字元值開頭起算到指定字元數的內容。</value>
     
@@ -1801,20 +1809,8 @@
     <value>'{0}' 的第一個引數應為單一資料行的資料表。</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的文字值資料行。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的日期值資料行。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的數值資料行。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>結構描述無效，應為 '{0}' 的色彩值資料行。</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>結構描述無效，應為 '{1}' 的 {0} 值資料行。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>數值太大。</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>使用目前不受支援的保留字。</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>數學與統計</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>資訊</value>
@@ -4789,6 +4792,26 @@
     <value>命名公式必須是運算式。</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>使用者定義的函式必須有主體。</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>函式 {0} 已經定義。</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>參數 {0} 重複。</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>未知的類型 {0}。</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>指定的函式傳回類型與函式主體的傳回類型不相符。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>
@@ -4912,7 +4935,31 @@
     <value>要編碼的 URL。</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>'{0}' 是可識別但不受支援的函式。</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>類型轉換失敗，因為指定值的類型為 '{0}'，必須是 '{1}' 類型。</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>不支援對資料表 '{0}' 委派此作業。</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>此述詞將永遠為 true。您要使用 ThisRecord 還是 [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>無法委派 {0}: 僅支援委派對主索引鍵欄位 '{1}' 的查詢。</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>無法委派 {0}: 識別碼運算式參考 ThisRecord。</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
     
   </data>
 </root>

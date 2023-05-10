@@ -22,7 +22,6 @@ namespace Microsoft.PowerFx
         public UserDefinitionResult(IEnumerable<UserDefinedFunction> uDFs, IEnumerable<TexlError> errors, IEnumerable<NamedFormula> namedFormulas)
         {
             UDFs = uDFs;
-            Errors = errors;
             NamedFormulas = namedFormulas;
 
             if (errors?.Any() ?? false)

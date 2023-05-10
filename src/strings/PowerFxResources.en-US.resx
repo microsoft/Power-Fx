@@ -5158,4 +5158,94 @@
     <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determines if the supplied text has a match of the supplied text format.</value>
+    <comment>Description of 'IsMatch' function.</comment>
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>The text to be compared against the format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>The format to check the text against. It may be a value of the TextFormat enum or a regular expression.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>This determines what part of the text we want to match. It may be a value of the MatchOptions enum.</value>
+    <comment>{Locked=MatchOptions} Tooltip for the third argument of the IsMatch function.</comment>
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>function_parameter - First argument to the IsMatch function - the text to be compared against the format.</comment>
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    <comment>function_parameter - Second argument to the IsMatch function - a regular expression format used to match the input text.</comment>
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>extent</value>
+    <comment>function_parameter - Third argument to the IsMatch function. An optional parameter of flags used to determine the extent with which the format is matched to the text.</comment>
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Searches the supplied text for the specified regular expression, returning the first match from it.</value>
+    <comment>Description of 'Match' function.</comment>
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Searches the supplied text for the specified regular expression, returning all matches from it.</value>
+    <comment>Description of 'MatchAll' function.</comment>
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>The text to be searched against the regular expression.</value>
+    <comment>Tooltip for the first argument of the Match function.</comment>
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>The regular expression to check the text against. It can contain captures (values between parenthesis) that will be returned in case of a successful match.</value>
+    <comment>Tooltip for the second argument of the Match function.</comment>
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>This determines what part of the text we want to match. It may be a value of the MatchOptions enum.</value>
+    <comment>{Locked=MatchOptions} Tooltip for the third argument of the MatchAll function.</comment>
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>The text to be searched against the regular expression.</value>
+    <comment>Tooltip for the first argument of the MatchAll function.</comment>
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>The regular expression to check the text against. It can contain captures (values between parenthesis) that will be returned in case of a successful match.</value>
+    <comment>Tooltip for the second argument of the MatchAll function.</comment>
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>This determines what part of the text we want to match. It may be a value of the MatchOptions enum.</value>
+    <comment>{Locked=MatchOptions} Tooltip for the third argument of the MatchAll function.</comment>
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>function_parameter - First argument to the Match function - the text to be compared against the regular expression.</comment>
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regular_expression</value>
+    <comment>function_parameter - Second argument to the Match function - a regular expression to match against the input text. Translate this string. Maintain as a single word (do not add spaces)</comment>
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>options</value>
+    <comment>function_parameter - Third argument to the Match function. An optional parameter of flags used to determine the extent with which the regular expression is matched to the text.</comment>
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression.</value>
+    <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regular expressions must be constant values.</value>
+    <comment>Error Message.</comment>    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the full match of the regular expression. Consider renaming it if you want to use that named property to extract the full match in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the group matches in the regular expression. Consider renaming it if you want to use that named property to extract all the sub-matches in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'SubMatches' in the function result.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the location of the match of the regular expression. Consider renaming it if you want to use that named property to extract the position of the full match in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'StartMatch' in the function result.</comment>  
+  </data>
 </root>
