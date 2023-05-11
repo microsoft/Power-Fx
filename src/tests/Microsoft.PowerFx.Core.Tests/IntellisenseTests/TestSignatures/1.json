@@ -1,7 +1,7 @@
 {
   "Signatures": [
     {
-      "Label": "Filter(source, logical_test)",
+      "Label": "Filter(source, logical_test, ...)",
       "Documentation": "Returns the rows from the table for which all the specified conditions are true.",
       "Parameters": [
         {
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "Label": "Filter(source, logical_test, logical_test)",
+      "Label": "Filter(source, logical_test, logical_test, ...)",
       "Documentation": "Returns the rows from the table for which all the specified conditions are true.",
       "Parameters": [
         {
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "Label": "Filter(source, logical_test, logical_test, logical_test)",
+      "Label": "Filter(source, logical_test, logical_test, logical_test, ...)",
       "Documentation": "Returns the rows from the table for which all the specified conditions are true.",
       "Parameters": [
         {

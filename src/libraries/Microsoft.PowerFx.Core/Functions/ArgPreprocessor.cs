@@ -8,7 +8,7 @@ using System.Text;
 namespace Microsoft.PowerFx.Core.Functions
 {
     // This enum provides the different ways that an argument to a function can be pre processed before entering the function.
-    // The function classes typically define public override ArgPreprocessor GetArgPreprocessor(int index) to provide which
+    // The function classes typically define public override ArgPreprocessor GetArgPreprocessor(int index, CallNode node) to provide which
     // pro-processor should be used for each argument by index.
     // 
     // For example, an argument may speficy ReplaceBlankWithFloatZero.  All of these "ReplaceBlank" by injecting a Coalesce call 
@@ -31,5 +31,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // Scalar and SingleColumnTable is for a function that returns a scalar number or a single column table of numbers, respectively.
         ReplaceBlankWithCallZero_Scalar = 6,
         ReplaceBlankWithCallZero_SingleColumnTable = 7,
+
+        // Untyped object to untyped object preprocessors
+        UntypedStringToUntypedNumber = 8,
     }
 }

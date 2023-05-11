@@ -568,22 +568,22 @@
     
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+    <value>Teisendab arvu tähistava teksti kümnendväärtuseks.</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Väärtuse teisendamisel kasutatav keelekood.</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a Decimal value.</value>
+    <value>Kümnendväärtuseks teisendatav tekstväärtus.</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Float value.</value>
+    <value>Teisendab arvu tähistava teksti ujukomaarvväärtuseks.</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Väärtuse teisendamisel kasutatav keelekood.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>Ujukomaarvväärtuseks teisendatav tekstväärtus.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
@@ -1465,6 +1465,14 @@
     <value>sisend</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikaator</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikaator</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Tagastab tekstväärtuse algusest määratud arvu märke.</value>
     
@@ -1801,20 +1809,8 @@
     <value>Funktsiooni {0} esimene argument peab olema ühe veeruga tabel.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati tekstväärtuste veergu.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati kuupäevaväärtuste veergu.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati arvväärtuste veergu.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati värviväärtuste veergu.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Sobimatu skeem, üksuse „{1}“ jaoks eeldati väärtuste {0} veergu.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Arvväärtus on liiga suur.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Reserveeritud sõna kasutamine, mida praegu ei toetata.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemaatika ja statistika</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Teave</value>
@@ -4789,6 +4792,26 @@
     <value>Nimega valem peab olema avaldis.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Kasutaja määratletud funktsioonil peab olema sisu.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funktsioon {0} on juba määratletud.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameeter {0} on duplikaat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tundmatu tüüp {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Märgitud funktsiooni tagastustüüp ei vasta funktsiooni sisu tagastustüübile.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on juba olemas.</value>
   </data>
@@ -4912,7 +4935,31 @@
     <value>Kodeeritav URL.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>„{0}“ on tuntud, kuid toetuseta funktsioon.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Tüübi teisendamine nurjus, kuna antud väärtus oli tüübiga „{0}“, eeldati tüüpi „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>Selle toimingu delegeerimist tabelile „{0}“ ei toetata.</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>See predikaat on alati tõene. Kas soovisite kasutada argumenti ThisRecord või [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Üksust {0} ei saa delegeerida: ainult toe delegeerimine primaarvõtme väljal „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>Üksust {0} ei saa delegeerida: ID avaldis viitab üksusele ThisRecord.</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
     
   </data>
 </root>
