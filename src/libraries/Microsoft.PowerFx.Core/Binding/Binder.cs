@@ -2804,7 +2804,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
                 {
-                    _txb.SetMutable(node, true);
+                    var nameSymbol = lookupInfo.Data as NameSymbol;
+                    _txb.SetMutable(node, nameSymbol?.IsMutable ?? false);
                 }
 
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaField);

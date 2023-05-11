@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -222,6 +223,24 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 Check(engine, formatedExpression);
             }
+        }
+
+        // Immutable arguments
+        [Theory]
+        [InlineData("Patch([1,2,3], {Value:1}, {Value:9})")]
+        [InlineData("With({x:[1,2,3]},Patch(x, {Value:1}, {Value:9}))")]
+        [InlineData("Patch(namedFormula, {Value:1}, {Value:9})")]
+
+        [InlineData("Collect([1,2,3], {Value:9})")]
+        [InlineData("With({x:[1,2,3]},Collect(x, {Value:9}))")]
+        [InlineData("Collect(namedFormula, {Value:9})")]
+        public void MutationCheckFailImmutableNodesTests(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            engine.Config.SymbolTable.AddVariable("namedFormula", new TableType(TestUtils.DT("*[Value:n]")), mutable: false);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            var check = engine.Check(expression, options: _opts);
+            Assert.False(check.IsSuccess);
         }
 
         protected void Check(Engine engine, string expression)
