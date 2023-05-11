@@ -5139,7 +5139,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Delegation warning. Table '{0}' part might not work correctly on large tables (>{1} rows).</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     <comment>Warning message.</comment>
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
