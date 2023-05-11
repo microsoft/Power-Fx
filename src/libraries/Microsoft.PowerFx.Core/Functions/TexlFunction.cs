@@ -210,6 +210,13 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool RequireAllParamColumns => false;
 
         /// <summary>
+        /// Indicates whether the function will propagate the mutability of its first argument.
+        /// For example, if x is a mutable reference (i.e., a variable), then First(x) will still
+        /// be mutable (since First is one function which propagates mutability).
+        /// </summary>
+        public virtual bool PropagatesMutability => false;
+
+        /// <summary>
         /// Indicates whether the function sets a value.
         /// </summary>
         public virtual bool ModifiesValues => false;
