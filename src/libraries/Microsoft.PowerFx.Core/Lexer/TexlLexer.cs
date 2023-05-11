@@ -899,6 +899,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly bool _disableReservedKeywords;
 
             private int _currentTokenPos; // The start of the current token.
+            private bool _previousHasEndLineComment = false;
 
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
             {
@@ -916,6 +917,7 @@ namespace Microsoft.PowerFx.Syntax
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
+                _previousHasEndLineComment = false;
             }
 
             // If the mode stack is empty, this is already an parse, use NormalMode as a default
@@ -1107,6 +1109,7 @@ namespace Microsoft.PowerFx.Syntax
                     var str = _sb.ToString();
                     if (!_lex.TryGetPunctuator(str, out var tidCur))
                     {
+                        _previousHasEndLineComment = false;
                         break;
                     }
 
@@ -1114,7 +1117,6 @@ namespace Microsoft.PowerFx.Syntax
                     {
                         tidPunc = tidCur;
                         punctuatorLength = _sb.Length;
-
                         return LexComment(_sb.Length);
                     }
 
@@ -1122,6 +1124,10 @@ namespace Microsoft.PowerFx.Syntax
                     {
                         tidPunc = tidCur;
                         punctuatorLength = _sb.Length;
+                    }
+                    else
+                    {
+                        _previousHasEndLineComment = false;
                     }
 
                     _sb.Append(PeekChar(_sb.Length));
@@ -1613,22 +1619,25 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 // Preceding,
-                while (startingPosition > 0)
+                if (!_previousHasEndLineComment)
                 {
-                    var previousChar = _text[startingPosition - 1];
-                    if (!char.IsWhiteSpace(previousChar))
+                    while (startingPosition > 0)
                     {
-                        break;
-                    }
+                        var previousChar = _text[startingPosition - 1];
+                        if (!char.IsWhiteSpace(previousChar))
+                        {
+                            break;
+                        }
 
-                    if (IsNewLineCharacter(previousChar))
-                    {
-                        _sb.Insert(0, previousChar);
-                        _currentTokenPos = --startingPosition;
-                        break;
-                    }
+                        if (IsNewLineCharacter(previousChar))
+                        {
+                            _sb.Insert(0, previousChar);
+                            _currentTokenPos = --startingPosition;
+                            break;
+                        }
 
-                    startingPosition--;
+                        startingPosition--;
+                    }
                 }
 
                 var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
@@ -1637,6 +1646,7 @@ namespace Microsoft.PowerFx.Syntax
                     commentToken.IsOpenBlock = true;
                 }
 
+                _previousHasEndLineComment = _sb.ToString().EndsWith("\n", StringComparison.Ordinal);
                 return commentToken;
             }
 
