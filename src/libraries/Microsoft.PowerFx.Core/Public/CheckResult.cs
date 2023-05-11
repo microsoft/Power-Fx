@@ -180,6 +180,7 @@ namespace Microsoft.PowerFx
 
         private FormulaType _expectedReturnType;
         private bool _allowCoerceToType = false;
+        private FormulaType[] _allowedInputTypes;
 
         public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
@@ -187,6 +188,12 @@ namespace Microsoft.PowerFx
 
             _expectedReturnType = type;
             _allowCoerceToType = allowCoerceTo;
+            return this;
+        }
+
+        public CheckResult SetAllowedInputType(FormulaType[] allowedTypes)
+        {
+            _allowedInputTypes = allowedTypes;
             return this;
         }
 
@@ -450,7 +457,7 @@ namespace Microsoft.PowerFx
                     {
                         switch (this._expectedReturnType)
                         {
-                            case StringType:                                
+                            case StringType:
                                 notCoerceToType = !StringValue.AllowedListConvertToString.Contains(this.ReturnType);
                                 break;
                             case NumberType:
@@ -461,6 +468,11 @@ namespace Microsoft.PowerFx
                                 break;
                             default:
                                 throw new NotImplementedException($"Setting ExpectedReturnType to {_expectedReturnType.GetType().FullName} is not implemented");
+                        }
+
+                        if (_allowedInputTypes != null)
+                        {
+                            notCoerceToType = notCoerceToType || !_allowedInputTypes.Contains(this.ReturnType);
                         }
                     }
 
