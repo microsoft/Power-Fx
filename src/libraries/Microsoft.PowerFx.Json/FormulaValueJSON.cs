@@ -163,14 +163,12 @@ namespace Microsoft.PowerFx.Types
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
-            var records = new List<RecordValue>();            
-            bool isArray = tableType?._type.IsColumn == true;
-            FormulaType ft = isArray ? tableType.ToRecord().GetFieldType("Value") : tableType?.ToRecord();
+            var records = new List<RecordValue>();
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 JsonElement element = array[i];
-                var val = GuaranteeRecord(FromJson(element, ft, numberIsFloat));
+                var val = GuaranteeRecord(FromJson(element, tableType?.ToRecord(), numberIsFloat));
 
                 records.Add(val);
             }
