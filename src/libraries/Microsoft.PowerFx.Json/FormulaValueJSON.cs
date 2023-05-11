@@ -4,16 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
-using System.Xml.Schema;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -27,7 +22,6 @@ namespace Microsoft.PowerFx.Types
             try
             {
                 using JsonDocument document = JsonDocument.Parse(jsonString);
-                using MemoryStream jsonMemStream = new MemoryStream();
                 JsonElement propBag = document.RootElement;
 
                 return FromJson(propBag, formulaType, numberIsFloat);
@@ -165,10 +159,16 @@ namespace Microsoft.PowerFx.Types
 
             var records = new List<RecordValue>();
 
+            // Single Column table (e.g. [1,2,3]) Pattern for table is unique
+            // since in that case nested elements are not object and hence needs to be handled differently.
+            var nestedElementsAreObjects = array.EnumerateArray().Any(nestedElement => nestedElement.ValueKind == JsonValueKind.Object);
+            bool isArray = tableType?._type.IsColumn == true && !nestedElementsAreObjects;
+            FormulaType ft = isArray ? tableType.ToRecord().GetFieldType("Value") : tableType?.ToRecord();
+
             for (var i = 0; i < array.GetArrayLength(); ++i)
             {
                 JsonElement element = array[i];
-                var val = GuaranteeRecord(FromJson(element, tableType?.ToRecord(), numberIsFloat));
+                var val = GuaranteeRecord(FromJson(element, ft, numberIsFloat));
 
                 records.Add(val);
             }
