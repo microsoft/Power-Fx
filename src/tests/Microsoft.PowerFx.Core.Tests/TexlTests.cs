@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:n]")]
         public void TexlDateTableFunctions_Float(string expression, string expectedType)
         {
-            var engine = new Engine(new PowerFxConfig());
+            var engine = new Engine(new PowerFxConfig(Features.None));
             var options = new ParserOptions() { NumberIsFloat = true };
             var result = engine.Check(expression, options);
 
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("DateDiff([Date(2000,1,1)],Date(2001,1,1),\"years\")", "*[Result:w]")]
         public void TexlDateTableFunctions(string expression, string expectedType)
         {
-            var engine = new Engine(new PowerFxConfig());
+            var engine = new Engine(new PowerFxConfig(Features.None));
             var result = engine.Check(expression);
 
             Assert.True(DType.TryParse(expectedType, out var expectedDType));
@@ -3450,17 +3450,14 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private void TestBindingWarning(string script, DType expectedType, int? expectedErrorCount, SymbolTable symbolTable = null, bool numberIsFloat = false)
         {
-            var config = new PowerFxConfig
-            {
-                SymbolTable = symbolTable
-            };
+            var config = new PowerFxConfig(Features.None);
             var parserOptions = new ParserOptions()
             {
                 NumberIsFloat = numberIsFloat
             };
 
             var engine = new Engine(config);
-            var result = engine.Check(script, parserOptions);
+            var result = engine.Check(script, parserOptions, symbolTable);
             
             Assert.Equal(expectedType, result.Binding.ResultType);
             Assert.True(result.Binding.ErrorContainer.HasErrors());

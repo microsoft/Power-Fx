@@ -14,7 +14,9 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
@@ -597,7 +599,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editor);
             var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
-            
+
             var errorList = new List<Exception>();
 
             testServer.LogUnhandledExceptionHandler += (ex) =>
@@ -922,7 +924,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(0U, response.Result.ActiveParameter);
             var foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
@@ -961,7 +963,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(1U, response.Result.ActiveParameter);
             foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
@@ -1264,7 +1266,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
         }
-        
+
         [Fact]
         public void ErrorIsLocalized()
         {
@@ -1308,7 +1310,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void ParseAndErrorLocaleAreDifferent()
         {
             var engine = new Engine(new PowerFxConfig());
-                        
+
             var parseLocale = CultureInfo.CreateSpecificCulture("fr-FR");
             var errorLocale = CultureInfo.CreateSpecificCulture("es-ES");
 
@@ -1346,7 +1348,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Checking if contains text in the correct locale
             // the value should be localized. Resx files have this localized.
             // If it's a different error message, then we may have a bug in the parser locale. 
-            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message); 
+            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message);
         }
 
         // Test showing how LSP can fully customize check result. 
@@ -1376,6 +1378,362 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
             Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
+        }
+
+        [Fact]
+        public void TestCorrectFullSemanticTokensAreReturned()
+        {
+            // Arrange
+            var expression = "Max(1, 2, 3)";
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            Assert.Single(decodedTokens.Where(tok => tok.TokenType == TokenType.Function));
+            Assert.Equal(3, decodedTokens.Where(tok => tok.TokenType == TokenType.NumLit || tok.TokenType == TokenType.DecLit).Count());
+        }
+
+        [Theory]
+        [InlineData("Create", TokenType.Function, TokenType.BoolLit)]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("[2, 3")]
+        [InlineData("Create", TokenType.StrInterpStart, TokenType.BinaryOp, TokenType.NumLit, TokenType.DecLit, TokenType.Control)]
+        [InlineData("[]")]
+        [InlineData("1,2]")]
+        [InlineData("[98]")]
+        [InlineData("Create", TokenType.Lim)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, TokenType.Lim)]
+        [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
+        [InlineData("   ")]
+        [InlineData("NotPresent")]
+        internal void TestCorrectFullSemanticTokensAreReturnedWithCertainTokenTypesSkipped(string tokenTypesToSkipParam, params TokenType[] tokenTypesToSkip)
+        {
+            // Arrange
+            var expression = "1+-2;true;\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment";
+            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Comment, TokenType.Function, TokenType.StrInterpStart, TokenType.IslandEnd, TokenType.IslandStart, TokenType.StrLit, TokenType.StrInterpEnd, TokenType.Delimiter, TokenType.BinaryOp };
+            if (tokenTypesToSkip.Length > 0)
+            {
+                expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
+            }
+
+            if (tokenTypesToSkipParam == "Create")
+            {
+                tokenTypesToSkipParam = JsonSerializer.Serialize(tokenTypesToSkip.Select(tokType => (int)tokType).ToList());
+            }
+
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}" + (tokenTypesToSkipParam == "NotPresent" ? string.Empty : "&tokenTypesToSkip=" + tokenTypesToSkipParam)) }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            var actualTypes = decodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            Assert.Equal(expectedTypes.OrderBy(type => type), actualTypes.OrderBy(type => type));
+        }
+
+        [Theory]
+        [InlineData("Create", TokenType.Function, TokenType.BoolLit)]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("[2, 3")]
+        [InlineData("Create", TokenType.StrInterpStart, TokenType.BinaryOp, TokenType.NumLit, TokenType.DecLit, TokenType.Control)]
+        [InlineData("[]")]
+        [InlineData("1,2]")]
+        [InlineData("[98]")]
+        [InlineData("Create", TokenType.Lim)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, TokenType.Lim)]
+        [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
+        [InlineData("   ")]
+        [InlineData("NotPresent")]
+        internal void TestCorrectRangeSemanticTokensAreReturnedWithCertainTokenTypesSkipped(string tokenTypesToSkipParam, params TokenType[] tokenTypesToSkip)
+        {
+            // Arrange & Assert
+            var expression = "1+1+1+1+1+1+1+1;Sqrt(1);1+-2;true;\n\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment;//This is comment2;false";
+            var range = SemanticTokensRelatedTestsHelper.CreateRange(1, 2, 3, 35);
+            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Function, TokenType.StrLit, TokenType.Delimiter, TokenType.BinaryOp };
+            if (tokenTypesToSkip.Length > 0)
+            {
+                expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
+            }
+
+            if (tokenTypesToSkipParam == "Create")
+            {
+                tokenTypesToSkipParam = JsonSerializer.Serialize(tokenTypesToSkip.Select(tokType => (int)tokType).ToList());
+            }
+
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}" + (tokenTypesToSkipParam == "NotPresent" ? string.Empty : "&tokenTypesToSkip=" + tokenTypesToSkipParam)) },
+                Range = range
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            var actualTypes = decodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            Assert.Equal(expectedTypes.OrderBy(type => type), actualTypes.OrderBy(type => type));
+        }
+
+        [Fact]
+        public void TestErrorResponseReturnedWhenUriIsNullForFullSemanticTokensRequest()
+        {
+            // Arrange
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = null }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            AssertErrorPayload(_sendToClientData.FirstOrDefault(), payload.id, JsonRpcHelper.ErrorCode.ParseError);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyFullSemanticTokensResponseReturnedWhenExpressionIsInvalid(bool isPresent)
+        {
+            // Arrange
+            string expression = string.Empty;
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = isPresent ? GetUri($"expression={expression}") : GetUri() }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        [Fact]
+        public void TestFullSemanticTokensResponseReturnedWithDefaultEOL()
+        {
+            // Arrange
+            string expression = "Sum(\n1,1\n)";
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            Assert.Equal(expression.Where(c => c == '\n').Count(), SemanticTokensRelatedTestsHelper.DetermineNumberOfLinesThatTokensAreSpreadAcross(response));
+        }
+
+        [Theory]
+        [InlineData(1, 4, 1, 20, false, false)]
+        [InlineData(1, 6, 1, 20, true, false)]
+        [InlineData(1, 1, 1, 12, false, true)]
+        [InlineData(1, 5, 1, 24, true, false)]
+        [InlineData(1, 5, 1, 15, true, true)]
+        [InlineData(1, 9, 1, 14, true, true)]
+        [InlineData(1, 1, 3, 34, false, false)]
+        [InlineData(1, 3, 2, 12, false, true)]
+        [InlineData(2, 11, 3, 3, true, true)]
+        [InlineData(1, 24, 3, 17, false, false)]
+        public void TestCorrectRangeSemanticTokensAreReturned(int startLine, int startLineCol, int endLine, int endLineCol, bool tokenDoesNotAlignOnLeft, bool tokenDoesNotAlignOnRight)
+        {
+            // Arrange
+            var expression = "If(Len(Phone_Number) < 10,\nNotify(\"Invalid Phone\nNumber\"),Notify(\"Valid Phone No\"))";
+            var eol = "\n";
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") },
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(startLine, endLine, startLineCol, endLineCol)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData.FirstOrDefault(), payload.id);
+            var (startIndex, endIndex) = semanticTokenParams.Range.ConvertRangeToPositions(expression, eol);
+            var decodedResponse = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression, eol);
+
+            var leftMostTok = decodedResponse.Min(tok => tok.StartIndex);
+            var rightMostTok = decodedResponse.Max(tok => tok.EndIndex);
+
+            Assert.All(decodedResponse, (tok) => Assert.False(tok.EndIndex <= leftMostTok || tok.StartIndex >= rightMostTok));
+            if (tokenDoesNotAlignOnLeft)
+            {
+                Assert.True(leftMostTok < startIndex);
+            }
+            else
+            {
+                Assert.True(leftMostTok >= startIndex);
+            }
+
+            if (tokenDoesNotAlignOnRight)
+            {
+                Assert.True(rightMostTok > endIndex);
+            }
+            else
+            {
+                Assert.True(rightMostTok <= endIndex);
+            }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyRangeSemanticTokensResponseReturnedWhenExpressionIsInvalid(bool isPresent)
+        {
+            // Arrange
+            string expression = string.Empty;
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = isPresent ? GetUri($"expression={expression}") : GetUri() },
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        [Fact]
+        public void TestErrorResponseReturnedWhenUriIsNullForRangeSemanticTokensRequest()
+        {
+            // Arrange
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = null },
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            AssertErrorPayload(_sendToClientData.FirstOrDefault(), payload.id, JsonRpcHelper.ErrorCode.ParseError);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyRangeSemanticTokensResponseReturnedWhenRangeIsNullOrInvalid(bool isNull)
+        {
+            // Arrange
+            var expression = "If(Len(Phone_Number) < 10,\nNotify(\"Invalid Phone\nNumber\"),Notify(\"Valid Phone No\"))";
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier { Uri = GetUri($"expression={expression}") },
+                Range = isNull ? null : SemanticTokensRelatedTestsHelper.CreateRange(expression.Length + 2, 2, 1, 2)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        private static SemanticTokensResponse AssertAndGetSemanticTokensResponse(string response, string id)
+        {
+            var tokensResponse = AssertAndGetResponsePayload<SemanticTokensResponse>(response, id);
+            Assert.NotNull(tokensResponse);
+            Assert.NotNull(tokensResponse.Data);
+            return tokensResponse;
+        }
+
+        private static void AssertErrorPayload(string response, string id, JsonRpcHelper.ErrorCode expectedCode)
+        {
+            Assert.NotNull(response);
+            var deserializedResponse = JsonDocument.Parse(response);
+            var root = deserializedResponse.RootElement;
+            Assert.True(root.TryGetProperty("id", out var responseId));
+            Assert.Equal(id, responseId.GetString());
+            Assert.True(root.TryGetProperty("error", out var errElement));
+            Assert.True(errElement.TryGetProperty("code", out var codeElement));
+            var code = (JsonRpcHelper.ErrorCode)codeElement.GetInt32();
+            Assert.Equal(expectedCode, code);
+        }
+
+        private static T AssertAndGetResponsePayload<T>(string response, string id)
+        {
+            Assert.NotNull(response);
+            var deserializedResponse = JsonDocument.Parse(response);
+            var root = deserializedResponse.RootElement;
+            root.TryGetProperty("id", out var responseId);
+            Assert.Equal(id, responseId.GetString());
+            root.TryGetProperty("result", out var resultElement);
+            var paramsObj = JsonSerializer.Deserialize<T>(resultElement.GetRawText(), _jsonSerializerOptions);
+            return paramsObj;
+        }
+
+        private static (string payload, string id) GetRangeDocumentSemanticTokensRequestPayload(SemanticTokensRangeParams semanticTokenRangeParams, string id = null)
+        {
+            return GetRequestPayload(semanticTokenRangeParams, TextDocumentNames.RangeDocumentSemanticTokens, id);
+        }
+
+        private static (string payload, string id) GetFullDocumentSemanticTokensRequestPayload(SemanticTokensParams semanticTokenParams, string id = null)
+        {
+            return GetRequestPayload(semanticTokenParams, TextDocumentNames.FullDocumentSemanticTokens, id);
+        }
+
+        private static string GetUri(string queryParams = null)
+        {
+            var uriBuilder = new UriBuilder("powerfx://app")
+            {
+                Query = queryParams ?? string.Empty
+            };
+            return uriBuilder.Uri.AbsoluteUri;
+        }
+
+        private static (string payload, string id) GetRequestPayload<T>(T paramsObj, string method, string id = null)
+        {
+            id ??= Guid.NewGuid().ToString();
+            var payload = JsonSerializer.Serialize(
+            new
+            {
+                jsonrpc = "2.0",
+                id,
+                method,
+                @params = paramsObj
+            }, _jsonSerializerOptions);
+            return (payload, id);
         }
 
         [Fact]

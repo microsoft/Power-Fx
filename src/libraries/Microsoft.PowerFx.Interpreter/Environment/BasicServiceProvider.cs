@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Microsoft.PowerFx
-{    
+{
     /// <summary>
     /// Trivial <see cref="IServiceProvider"/> implementation that allows chaining and composition. 
     /// </summary>
