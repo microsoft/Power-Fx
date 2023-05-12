@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Types.Enums
@@ -72,5 +71,39 @@ namespace Microsoft.PowerFx.Core.Types.Enums
                 { "Ascending", "ascending" },
                 { "Descending", "descending" },
             });
+
+        public static readonly EnumSymbol MatchOptionsEnum = new EnumSymbol(new DName(LanguageConstants.MatchOptionsEnumString), DType.String, new Dictionary<string, object>()
+        {
+            { "BeginsWith", "^c" },
+            { "EndsWith", "$c" },
+            { "Complete", "^c$" },
+            { "Contains", "c" },
+            { "IgnoreCase", "i" },
+            { "Multiline", "m" }
+        });
+
+        public static readonly EnumSymbol MatchEnum = new EnumSymbol(new DName(LanguageConstants.MatchEnumString), DType.String, new Dictionary<string, object>()
+        {
+            { "Any", "." },
+            { "Comma", "," },
+            { "Digit", "\\d" },
+            { "Email", ".+@.+\\.[^.]{2,}" },
+            { "Hyphen", "\\-" },
+            { "LeftParen", "\\(" },
+            { "Letter", "\\p{L}" },
+            { "MultipleDigits", "\\d+" },
+            { "MultipleLetters", "\\p{L}+" },
+            { "MultipleNonSpaces", "\\S+" },
+            { "MultipleSpaces", "\\s+" },
+            { "NonSpace", "\\S" },
+            { "OptionalDigits", "\\d*" },
+            { "OptionalLetters", "\\p{L}*" },
+            { "OptionalNonSpaces", "\\S*" },
+            { "OptionalSpaces", "\\s*" },
+            { "Period", "\\." },
+            { "RightParen", "\\)" },
+            { "Space", "\\s" },
+            { "Tab", "\\t" }
+        });
     }
 }

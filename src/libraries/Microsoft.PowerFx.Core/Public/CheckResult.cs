@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
@@ -442,19 +443,24 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this._expectedReturnType != null)
+                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank && this._expectedReturnType != null)
                 {
                     bool notCoerceToType = false;
                     if (_allowCoerceToType)
                     {
-                        if (this._expectedReturnType != FormulaType.String)
+                        switch (this._expectedReturnType)
                         {
-                            throw new NotImplementedException();
-                        }
-
-                        if (!StringValue.AllowedListConvertToString.Contains(this.ReturnType))
-                        {
-                            notCoerceToType = true;
+                            case StringType:                                
+                                notCoerceToType = !StringValue.AllowedListConvertToString.Contains(this.ReturnType);
+                                break;
+                            case NumberType:
+                                notCoerceToType = !NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType);
+                                break;
+                            case DecimalType:
+                                notCoerceToType = !DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType);
+                                break;
+                            default:
+                                throw new NotImplementedException($"Setting ExpectedReturnType to {_expectedReturnType.GetType().FullName} is not implemented");
                         }
                     }
 
@@ -588,7 +594,15 @@ namespace Microsoft.PowerFx
 
         // Called by language server to get custom tokens.
         // If binding is available, returns context sensitive tokens.  $$$
+        // Keeping this temporarily for custom publish tokens notification
+        // Feature to auto fix casing of function name in the editor also depends on this function and custom publish tokens notification
         internal IReadOnlyDictionary<string, TokenResultType> GetTokens(GetTokensFlags flags) => GetTokensUtils.GetTokens(this._binding, flags);
+
+        /// <summary>
+        /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
+        /// </summary>
+        /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
+        internal IEnumerable<ITokenTextSpan> GetTokens() => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false);
 
         private string _expressionInvariant;
 

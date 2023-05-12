@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Texl;
@@ -18,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         private bool ProcessUserDefinitions(string script, out UserDefinitionResult userDefinitionResult)
         {
-            return UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, out userDefinitionResult);
+            return UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions: new ParserOptions(), out userDefinitionResult);
         }
 
         [Theory]
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(userDefinitionResult.NamedFormulas);
             Assert.Equal("Foo", udf.Name);
             Assert.True(udf.ReturnType.IsPrimitive);
-            Assert.Empty(userDefinitionResult.Errors);
+            Assert.Empty(userDefinitionResult.Errors ?? Enumerable.Empty<TexlError>());
         }
 
         [Theory]
@@ -58,13 +59,14 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; };", 1, 0, false)]
         [InlineData("Add(a:Number, b:Number): Number { /*this is a test*/ a + b; ;", 0, 0, true)]
         [InlineData("Add(a:Number, a:Number): Number { a; };", 0, 0, true)]
+        [InlineData(@"F2(b: Number): Number  = F1(b*3); F1(a:Number): Number = a*2;", 2, 0, false)]
         public void TestUDFNamedFormulaCounts(string script, int udfCount, int namedFormulaCount, bool expectErrors)
         {
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions: new ParserOptions(), out var userDefinitionResult);
 
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
-            Assert.Equal(expectErrors, userDefinitionResult.Errors.Any());
+            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
         }
     }
 }

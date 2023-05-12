@@ -4,8 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection.Metadata;
+using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -24,6 +27,25 @@ namespace Microsoft.PowerFx.Json.Tests
             var engine = new RecalcEngine(config);
             var result = engine.Eval("Value(ParseJSON(\"5\"))");
             Assert.Equal(5m, result.ToObject());
+        }
+
+        [Fact]
+        public void SingleColumnTableFromJson()
+        {
+            var tableType = RecordType.Empty().Add("Value", FormulaType.String).ToTable();
+            var res = FormulaValueJSON.FromJson("[ { \"Value\": \"Seattle\"}, { \"Value\": \"Redmond\"} ]", tableType);
+
+            var symbol = new SymbolTable();
+            var slot = symbol.AddVariable("table", res.Type);
+            var symValue = new SymbolValues(symbol);
+            symValue.Set(slot, res);
+
+            var config = new PowerFxConfig();
+            config.EnableParseJSONFunction();
+
+            var engine = new RecalcEngine(config);
+            var result = engine.EvalAsync("First(table).Value", CancellationToken.None, symValue).ConfigureAwait(false).GetAwaiter().GetResult();
+            Assert.Equal("Seattle", result.ToObject());
         }
 
         [Fact]

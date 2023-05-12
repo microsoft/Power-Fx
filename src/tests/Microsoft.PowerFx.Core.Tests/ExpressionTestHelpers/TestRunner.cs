@@ -98,6 +98,7 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("AsyncTestSetup");
             possible.Add("OptionSetSortTestSetup");
             possible.Add("AllEnumsSetup");
+            possible.Add("RegEx");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {

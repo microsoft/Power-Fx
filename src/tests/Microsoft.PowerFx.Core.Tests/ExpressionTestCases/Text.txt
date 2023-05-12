@@ -121,7 +121,7 @@
 
 //Excel needs two parameters for Text function
 >> Text(Blank())
-""
+Blank()
 
 >> Text(Blank(), Blank())
 ""
@@ -158,9 +158,11 @@
 >> Text(Date(2016,1,31), "pqr")
 "pqr"
 
-
 >> Text(1/0, "#.000")
 Error({Kind:ErrorKind.Div0})
+
+>> Text(If(1<0,2))
+Blank()
 
 // ******** DATE/TIME PARAMETERS ********
 
@@ -386,3 +388,6 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(DateTimeValue("2023-12-21T12:34:56.789Z"), DateTimeFormat.UTC)
 "2023-12-21T12:34:56.789Z"
+
+>> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
+"1899-12-30 12:34:56"

@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
-                $"{ns}.{nameof(TypeCoercionProvider)}",                             
+                $"{ns}.{nameof(TypeCoercionProvider)}",
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
@@ -569,7 +569,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CanRunWithWarnings()
         {
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             var engine = new RecalcEngine(config);
 
             var result = engine.Check("T.Var = 23", RecordType.Empty()
@@ -648,7 +648,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckBindEnum()
         {
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var result = engine.Check("TimeUnit.Hours");
 
             Assert.True(result.IsSuccess);
@@ -859,7 +859,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Text(OptionSet.option_1)", "Option1")]
         [InlineData("Text(OptionSet.Option1)", "Option1")]
         [InlineData("Text(Option1)", "Option1")]
-        [InlineData("Text(If(1<0, Option1))", "")]
+        [InlineData("Text(If(1<0, Option1))", null)]
 
         // OptionSetInfo() returns the logical name of the input option set value
         [InlineData("OptionSetInfo(OptionSet.option_1)", "option_1")]
@@ -905,7 +905,7 @@ namespace Microsoft.PowerFx.Tests
                     { "option_2", "Option2" }
             }));
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
             var checkResult = recalcEngine.Check(expression, RecordType.Empty());
@@ -1025,7 +1025,7 @@ namespace Microsoft.PowerFx.Tests
         public void TestWithTimeZoneInfo()
         {
             // CultureInfo not set in PowerFxConfig as we use Symbols
-            var pfxConfig = new PowerFxConfig();
+            var pfxConfig = new PowerFxConfig(Features.None);
             var recalcEngine = new RecalcEngine(pfxConfig);
             var symbols = new RuntimeConfig();
 

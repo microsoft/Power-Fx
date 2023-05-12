@@ -18,6 +18,15 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool TryGetEntity<T>(DName currentEntityEntityName, out T externalEntity)
             where T : class, IExternalEntity;
+
+        /// <summary>
+        /// Checks if the given name is available or not.
+        /// <para>This is used in Tokenization to determine if left-hand side of the dotted name can be hidden or not.</para>
+        /// </summary>
+        /// <param name="name">Name.</param>
+        /// <param name="ignoreNamedFormulas">Flag indicating whether to ignore named formulas or not when checking for the availability of the given name.</param>
+        /// <returns>True if name is available and not used or false otherwise.</returns>
+        bool IsNameAvailable(string name, bool ignoreNamedFormulas = false);
     }
 
     internal static class IExternalEntityScopeExtensions

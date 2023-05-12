@@ -37,12 +37,12 @@ namespace Microsoft.PowerFx.Functions
         // Sync FunctionPtr - all args are evaluated before invoking this function.  
         public delegate FormulaValue FunctionPtr(SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
-        // Async - can invoke lambads.
+        // Async - can invoke lambdas.
         public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
-        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;        
+        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
@@ -1523,7 +1523,7 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Text)
             },
             {
@@ -1990,16 +1990,21 @@ namespace Microsoft.PowerFx.Functions
         {
             // Blank or empty. 
             var arg0 = args[0];
-            return new BooleanValue(irContext, IsBlank(arg0));
+            return new BooleanValue(irContext, IsBlankOrEmpty(arg0));
         }
 
-        private static bool IsBlank(FormulaValue arg)
+        internal static bool IsBlank(this FormulaValue arg)
         {
-            if (arg is BlankValue)
+            if ((arg is BlankValue) || (arg is UntypedObjectValue uo && uo.Impl.Type == FormulaType.Blank))
             {
                 return true;
             }
 
+            return false;
+        }
+
+        private static bool IsBlankOrEmpty(FormulaValue arg)
+        {
             if (arg is StringValue str)
             {
                 return str.Value.Length == 0;
@@ -2010,7 +2015,7 @@ namespace Microsoft.PowerFx.Functions
                 return uo.Impl.GetString().Length == 0;
             }
 
-            return false;
+            return arg.IsBlank();
         }
 
         private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
@@ -2097,7 +2102,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    
+
                     return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
@@ -2255,10 +2260,114 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
-                result.Add(new ExpressionError { Kind = errorKind, Message = messageField?.Value as string });
+                var message = messageField != null ? messageField.Value : GetDefaultErrorMessage(errorKind);
+                result.Add(new ExpressionError { Kind = errorKind, Message = message });
             }
 
             return result;
+        }
+
+        private static string GetDefaultErrorMessage(ErrorKind errorKind)
+        {
+            switch (errorKind)
+            {
+                case ErrorKind.None:
+                    // Default message that is shown to users when an error was produced, but with kind = 'none'
+                    return "System no error";
+                case ErrorKind.Sync:
+                case ErrorKind.Unknown:
+                case ErrorKind.Internal:
+                    // Default message that is shown to users when a system error was produced
+                    return "System error";
+                case ErrorKind.MissingRequired:
+                    // Default message that is shown to users when they try to insert / update a record without all the required fields
+                    return "Missing required field";
+                case ErrorKind.CreatePermission:
+                    // Default message that is shown to users when they try to create a record without the appropriate permissions
+                    return "Create record permission denied";
+                case ErrorKind.EditPermissions:
+                    // Default message that is shown to users when they try to update a record without the appropriate permissions
+                    return "Update record permission denied";
+                case ErrorKind.DeletePermissions:
+                    // Default message that is shown to users when they try to remove a record without the appropriate permissions
+                    return "Delete record permission denied";
+                case ErrorKind.GeneratedValue:
+                    // Default message that is shown to users when they try to insert / update a record with a column that is generated on the server
+                    return "Column is generated by the server and cannot be modified";
+                case ErrorKind.Conflict:
+                    // Default message that is shown to users when they try to update a record but there is a conflict on the server
+                    return "Record update conflict, refresh record and reapply your change";
+                case ErrorKind.NotFound:
+                    // Default message that is shown to users when they try to access a record that does not exist
+                    return "Record could not be found";
+                case ErrorKind.ConstraintViolated:
+                    // Default message that is shown to users when they try to create or update a record but it validates some constraints set on the server
+                    return "Validation error";
+                case ErrorKind.ReadOnlyValue:
+                    // Default message that is shown to users when they try to update a column in a record that is read-only
+                    return "Column is read-only";
+                case ErrorKind.Validation:
+                    // Default message that is shown to users when they try to send a record to the server with invalid properties
+                    return "Record is invalid";
+                case ErrorKind.Div0:
+                    // Default message that is shown to users when they try to divide a number by zero
+                    return "Division by zero";
+                case ErrorKind.BadLanguageCode:
+                    // Default message that is shown to users when they try to pass a language code to a function that is invalid
+                    return "Bad langauge code or invalid value";
+                case ErrorKind.BadRegex:
+                    // Default message that is shown to users when they use an invalid regular expression in one of their formulas
+                    return "Syntax error in regular expression";
+                case ErrorKind.InvalidFunctionUsage:
+                    // Default message that is shown to users when they try to use a function in an invalid way
+                    return "Invalid function usage";
+                case ErrorKind.FileNotFound:
+                    // Default message that is shown to users when they try to access a file that does not exist
+                    return "File not found";
+                case ErrorKind.AnalysisError:
+                    // Default message that is shown to users when they encounter an analysis error from Power Apps
+                    return "System analysis error";
+                case ErrorKind.ReadPermission:
+                    // Default message that is shown to users when they try to read a record for which they do not have permissions
+                    return "Read record permission denied";
+                case ErrorKind.NotSupported:
+                    // Default message that is shown to users when they create try to call a function that is not supported in their current environment
+                    return "Operation not supported by this player or device";
+                case ErrorKind.InsufficientMemory:
+                    // Default message that is shown to users when they try to perform an operation that exhausts the memory/storage in their device
+                    return "Insufficient memory or device storage";
+                case ErrorKind.QuotaExceeded:
+                    // Default message that is shown to users when they try to use more storage quota than they have access to
+                    return "Storage quota exceeded";
+                case ErrorKind.Network:
+                    // Default message that is shown to users when they receive an error over the network
+                    return "Network error";
+                case ErrorKind.Numeric:
+                    // Default message that is shown to users when they try to use a numerical function in an erroneous way
+                    return "Numeric error";
+                case ErrorKind.InvalidArgument:
+                    // Default message that is shown to users when they pass an invalid argument to a function
+                    return "Invalid argument";
+                case ErrorKind.NotApplicable:
+                    // Default message that is shown to users when they try to combine tables of different lenghts in a tabular function
+                    return "Not applicable";
+                case ErrorKind.Timeout:
+                    // Default message that is shown to users when they execute an operation that was cancelled because of a timeout
+                    return "Timeout error";
+                case ErrorKind.Custom:
+                    // Default message that is shown to users when they create an error with a custom kind
+                    return "Custom error";
+                default:
+                    var intKind = (int)errorKind;
+                    if (intKind < 1000)
+                    {
+                        // Default message that is shown to users when they create an error with a custom kind within a range of reserved values. The argument is the error kind, a number
+                        return $"Reserved error ({intKind})";
+                    }
+
+                    // Default message that is shown to users when they create an error with a custom kind. The argument is the error kind, a number
+                    return $"Custom error ({intKind})";
+            }
         }
 
         // Switch( Formula, Match1, Result1 [, Match2, Result2, ... [, DefaultResult ] ] )
@@ -2407,7 +2516,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue IsBlankOrError(IRContext irContext, FormulaValue[] args)
         {
-            if (IsBlank(args[0]) || args[0] is ErrorValue)
+            if (IsBlankOrEmpty(args[0]) || args[0] is ErrorValue)
             {
                 return new BooleanValue(irContext, true);
             }
