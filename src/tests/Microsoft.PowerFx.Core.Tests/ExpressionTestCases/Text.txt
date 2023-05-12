@@ -420,12 +420,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234.5678,"[$-en-US]0 # # # !!!", "en-US")
 "1 2 3 5 !!!"
 
+// The thousands separator in the fi-FI locale is the no-break space (U+00A0)
 >> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "en-US")
 "12,345.68"
 
 >> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "fi-FI")
 "12 345,68"
 
+// The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
 >> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "en-US")
 "12,345.68"
 
