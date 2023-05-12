@@ -3249,7 +3249,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // In order for the node to be constant, it must be a member of an enum,
                 // a member of a constant aggregate,
                 // or a reference to a constant rule (checked later).
-                var isConstant = leftType.IsEnum || (leftType.IsAggregate && _txb.IsConstant(node.Left));
+                var isConstant = leftType.IsEnum || (leftType.IsAggregate && _txb.IsConstant(node.Left)) || leftType.IsOptionSet;
 
                 // Some nodes are never pageable, use this to
                 // skip the check for pageability and default to non-pageable;
@@ -5240,7 +5240,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (usePFxV1CompatRules)
                     {
-                        if (DType.TryUnionWithCoerce(exprType, childType, usePowerFxV1CompatibilityRules: true, out var returnType, out var needCoercion))
+                        if (DType.TryUnionWithCoerce(exprType, childType, usePowerFxV1CompatibilityRules: true, coerceToLeftTypeOnly: true, out var returnType, out var needCoercion))
                         {
                             exprType = returnType;
                             if (needCoercion)

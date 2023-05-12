@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -32,10 +31,12 @@ namespace Microsoft.PowerFx
             DebugName = "DefaultConfig"
         };
 
+        internal readonly Dictionary<TexlFunction, IAsyncTexlFunction> AdditionalFunctions = new ();
+
         [Obsolete("Use Config.EnumStore or symboltable directly")]
         internal EnumStoreBuilder EnumStoreBuilder => SymbolTable.EnumStoreBuilder;
 
-        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);        
+        internal IEnumStore EnumStore => ReadOnlySymbolTable.Compose(SymbolTable);
 
         public Features Features { get; }
 
@@ -55,7 +56,7 @@ namespace Microsoft.PowerFx
         /// Initializes a new instance of the <see cref="PowerFxConfig"/> class.        
         /// </summary>          
         public PowerFxConfig()
-            : this(Features.None)
+            : this(Features.PowerFxV1)
         {
         }
 

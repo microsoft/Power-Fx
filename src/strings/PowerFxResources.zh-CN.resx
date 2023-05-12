@@ -1465,6 +1465,14 @@
     <value>输入</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>修改者</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>修改者</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>从文本值开头返回指定数量的字符。</value>
     
@@ -1801,20 +1809,8 @@
     <value>'{0}' 的第一个参数应是由一列组成的表。</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的文本值组成的列。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的日期值组成的列。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的数值组成的列。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的颜色值组成的列。</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>架构无效，需要 '{1}' 的 {0} 值组成的列。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1851,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>数值太大。</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>使用当前不支持的保留词。</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2322,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>数学和统计</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>信息</value>
@@ -4789,6 +4792,26 @@
     <value>指定的公式必须为表达式。</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>用户定义的函数必须有正文。</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>函数 {0} 已定义。</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>参数 {0} 重复。</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>未知类型 {0}。</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>所说明的函数返回类型与函数正文的返回类型不匹配。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>
@@ -4913,6 +4936,30 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' 是一个可识别但不支持的函数。</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>类型转换失败，因为给定的值为 '{0}' 类型，但应为 '{1}' 类型。</value>
+    
+  </data>
+  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+    <value>不支持对表 '{0}' 委托此操作。</value>
+    
+  </data>
+  <data name="WrnDelagationPredicate" xml:space="preserve">
+    <value>此谓词将永远为 true。您是要使用 ThisRecord 还是 [@]?</value>
+    
+  </data>
+  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>无法委托 {0}: 仅支持委托查找主键字段 '{1}'。</value>
+    
+  </data>
+  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+    <value>无法委托 {0}: ID 表达式引用 ThisRecord。</value>
+    
+  </data>
+  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+    <value>无法委托 {0}: 包含行为函数 '{1}'。</value>
     
   </data>
 </root>

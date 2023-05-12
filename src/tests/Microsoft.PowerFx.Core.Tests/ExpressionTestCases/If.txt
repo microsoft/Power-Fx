@@ -236,3 +236,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 //DateTime to String Coercion
 >> If(false,DateTimeValue("11/1/2000 12:00:00:00 AM"),"Hello")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Numeric enums and numbers
+>> If(1<0, 1, ErrorKind.Validation)
+11

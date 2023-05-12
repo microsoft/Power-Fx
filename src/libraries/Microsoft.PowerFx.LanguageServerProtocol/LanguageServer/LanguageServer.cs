@@ -9,6 +9,7 @@ using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -115,6 +116,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                             break;
                         case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
+                            break;
+                        case TextDocumentNames.FullDocumentSemanticTokens:
+                            HandleFullDocumentSemanticTokens(id, paramsJson);
+                            break;
+                        case TextDocumentNames.RangeDocumentSemanticTokens:
+                            HandleRangeDocumentSemanticTokens(id, paramsJson);
                             break;
                         default:
                             _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.MethodNotFound));
@@ -413,6 +420,145 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, codeActions));
+        }
+
+        /// <summary>
+        /// Handles requests to compute semantic tokens for the full document or expression.
+        /// </summary>
+        /// <param name="id">Request Id.</param>
+        /// <param name="paramsJson">Request Params Stringified Body.</param>
+        private void HandleFullDocumentSemanticTokens(string id, string paramsJson)
+        {
+            if (!TryParseAndValidateSemanticTokenParams(id, paramsJson, out SemanticTokensParams semanticTokensParams))
+            {
+                return;
+            }
+
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens);
+        }
+
+        /// <summary>
+        /// Handles requests to compute semantic tokens for the a specific part of document or expression.
+        /// </summary>
+        /// <param name="id">Request Id.</param>
+        /// <param name="paramsJson">Request Params Stringified Body.</param>
+        private void HandleRangeDocumentSemanticTokens(string id, string paramsJson)
+        {
+            if (!TryParseAndValidateSemanticTokenParams(id, paramsJson, out SemanticTokensRangeParams semanticTokensParams))
+            {
+                return;
+            }
+
+            if (semanticTokensParams.Range == null)
+            {
+                // No tokens for invalid range
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens);
+        }
+
+        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method) 
+            where T : SemanticTokensParams
+        {
+            var uri = new Uri(semanticTokensParams.TextDocument.Uri);
+            var queryParams = HttpUtility.ParseQueryString(uri.Query);
+            var expression = queryParams?.Get("expression") ?? string.Empty;
+
+            if (string.IsNullOrEmpty(expression))
+            {
+                // Empty tokens for the empty expression
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            var isRangeSemanticTokensMethod = method == TextDocumentNames.RangeDocumentSemanticTokens;
+
+            // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
+            var eol = queryParams?.Get("eol");
+            eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
+            
+            var startIndex = -1;
+            var endIndex = -1;
+            if (isRangeSemanticTokensMethod)
+            {
+                (startIndex, endIndex) = (semanticTokensParams as SemanticTokensRangeParams).Range.ConvertRangeToPositions(expression, eol);
+                if (startIndex < 0 || endIndex < 0)
+                {
+                    SendEmptySemanticTokensResponse(id);
+                    return;
+                }
+            }
+
+            var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
+            var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
+            var result = scope?.Check(expression);
+            if (result == null)
+            {
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            // Skip over the token types that clients don't want in the response
+            var tokens = result.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
+
+            if (isRangeSemanticTokensMethod)
+            {
+                // Only consider overlapping tokens. end index is exlcusive
+                tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
+            }
+
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+        }
+
+        private HashSet<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
+        {
+            var tokenTypesToSkip = new HashSet<TokenType>();
+            if (string.IsNullOrWhiteSpace(rawTokenTypesToSkipParam))
+            {
+                return tokenTypesToSkip;
+            }
+
+            if (TryParseParams(rawTokenTypesToSkipParam, out List<int> tokenTypesToSkipParam))
+            {
+                foreach (var tokenTypeValue in tokenTypesToSkipParam)
+                {
+                    var tokenType = (TokenType)tokenTypeValue;
+                    if (tokenType != TokenType.Lim)
+                    {
+                        tokenType = tokenType == TokenType.Min ? TokenType.Unknown : tokenType;
+                        tokenTypesToSkip.Add(tokenType);
+                    }
+                }
+            }
+
+            return tokenTypesToSkip;
+        }
+
+        private bool TryParseAndValidateSemanticTokenParams<T>(string id, string paramsJson, out T semanticTokenParams)
+            where T : SemanticTokensParams
+        {
+            semanticTokenParams = null;
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return false;
+            }
+
+            if (!TryParseParams(paramsJson, out semanticTokenParams) || string.IsNullOrWhiteSpace(semanticTokenParams?.TextDocument?.Uri))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return false;
+            }
+
+            return true;
+        }
+
+        private void SendEmptySemanticTokensResponse(string id)
+        {
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse()));
         }
 
         private CompletionItemKind GetCompletionItemKind(SuggestionKind kind)
