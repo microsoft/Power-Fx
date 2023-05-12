@@ -15,7 +15,9 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool IsDelegatable { get; }
 
-        bool RequiresAsync { get; }
+        bool IsRefreshable { get; }
+
+        bool RequiresAsync { get; }       
 
         IExternalDataEntityMetadataProvider DataEntityMetadataProvider { get; }
 

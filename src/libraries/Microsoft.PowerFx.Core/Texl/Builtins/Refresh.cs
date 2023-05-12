@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Publish;
@@ -87,13 +88,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // ...we have no way of inferring statically what the possible result of evaluating the expression will be,
             // so it's not safe to flag the rule with errors. The runtime safety mechanisms will later kick in and prevent
             // crashes when the rule gets evaluated. If the argument evaluates to a non-refreshable data source, such as
-            // a collection or excel table, the Refresh invocation will simply be a no-op in that case.
-            DataSourceInfo dsInfo;
-            FirstNameInfo firstNameInfo;
-            if (binding.TryCastToFirstName(args[0], out firstNameInfo) &&
-                binding.IsInfoKindDataSource(firstNameInfo) &&
-                (dsInfo = firstNameInfo.Data as DataSourceInfo) != null &&
-                !dsInfo.IsRefreshable)
+            // a collection or excel table, the Refresh invocation will simply be a no-op in that case.                        
+            if (binding.TryCastToFirstName(args[0], out FirstNameInfo firstNameInfo) && binding.IsInfoKindDataSource(firstNameInfo) &&
+                firstNameInfo.Data is IExternalDataSource eds && !eds.IsRefreshable)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrDataSourceCannotBeRefreshed);
             }
