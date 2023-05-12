@@ -5240,7 +5240,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (usePFxV1CompatRules)
                     {
-                        if (DType.TryUnionWithCoerce(exprType, childType, usePowerFxV1CompatibilityRules: true, coerceToLeftTypeOnly: true, out var returnType, out var needCoercion))
+                        if (DType.TryUnionWithCoerce(
+                            exprType, 
+                            childType, 
+                            usePowerFxV1CompatibilityRules: true, 
+                            coerceToLeftTypeOnly: true, 
+                            out var returnType, 
+                            out var needCoercion))
                         {
                             exprType = returnType;
                             if (needCoercion)
