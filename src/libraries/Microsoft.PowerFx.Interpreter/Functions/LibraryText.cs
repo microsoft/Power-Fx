@@ -380,7 +380,7 @@ namespace Microsoft.PowerFx.Functions
 
                     if (string.IsNullOrWhiteSpace(numberCultureFormat.NumberGroupSeparator))
                     {
-                        revFormatStr = revFormatStr.Replace(" ", "\uFEFF");
+                        revFormatStr = revFormatStr.Replace(" ", "\uFEFF").Replace("\u202F", "\uFEFF");
                     }
 
                     revFormatStr = revFormatStr.Replace(numberCultureFormat.NumberDecimalSeparator, ".");
