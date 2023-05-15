@@ -20,3 +20,48 @@ Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Div0}))
 // void values are allowed in With function's argument.
 >> With({y:1}, If(true, {a:1}, "test"))
 If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> With( { x : 5 }, With( ThisRecord, ThisRecord.x + 1 ) )
+6
+
+>> With( { x : 5 }, With( ThisRecord, x + 1 ) )
+6
+
+>> With( { x : 5 }, With( ThisRecord As T2, T2.x +1 ) )
+6
+
+>> With( { x : 5 }, With( ThisRecord As T2, x + 1 ) )
+6
+
+>> With( { x : 5 } As T1, With( T1 As T2, T1.x + 1 ) )
+6
+
+>> With( { x : 5 } As T1, With( T1 As ThisRecord, ThisRecord.x + 1 ) )
+6
+
+>>  With( { x : 5, y : 2}, Mod(x, y) )
+1
+
+>>  With( { x : 5, y : 2}, Power(x, y) )
+25
+
+>>  With( { x : 5, y : 2}, Average(x, y) )
+3.5
+
+>> With( { x : 5, y : 0}, x / y )
+Error({Kind:ErrorKind.Div0})
+
+>> With( { x : 2, y : 3}, With( { x : x * 2, y : y + 2 }, x + y))
+9
+
+>> With( { x : 2, y : 3}, With( { x : x * 2, y : y + 2 }, With( { x : x * 2, y : y + 2 }, x * y ) ) )
+56
+
+>> With( { x : 2, y : 3}, With( { x : x * 2, y : y + 2 }, With( { x : x * 2, y : y + 2 }, With( { x : x * 2, y : y + 2 }, With( { x : x * 2, y : y + 2}, With( { x : x * 2, y : y + 2 }, x * y ) ) ) ) ) )
+832
+
+>> With( { hours : 2, minutes : 3, seconds : 32 }, Time( hours, minutes, seconds ) )
+Time(2,3,32,0)
+
+>> With( { year : 2023, month : 5, day : 15 }, DateTime( year, month, day, 0, 0, 0 ) )
+DateTime(2023,5,15,0,0,0,0)
