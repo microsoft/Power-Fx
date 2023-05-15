@@ -19,10 +19,12 @@ namespace Microsoft.PowerFx.Tests
 
             config.EnableSetFunction();
             engine.UpdateVariable("t", TableValue.NewTable(RecordType.Empty()));            
-            FormulaValue result = engine.Eval("Set(t, Table()); Refresh(t)", null, new ParserOptions { AllowsSideEffects = true });
+            FormulaValue result = engine.Eval("Refresh(t)", null, new ParserOptions { AllowsSideEffects = true });
+            
+            Assert.True(result is ErrorValue);
+            ErrorValue ev = (ErrorValue)result;
 
-            // Refresh function returns nothing, just check it's not an error
-            Assert.True(result is BlankValue);
+            Assert.Equal("Only managed connections can be refreshed.", ev.Errors[0].Message);
         }
 
         [Fact]
@@ -45,14 +47,13 @@ namespace Microsoft.PowerFx.Tests
         {
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
-            TestTableValue ttv = new TestTableValue(RecordType.Empty());
+            TestTableValue ttv = new TestTableValue(RecordType.Empty().Add(new NamedFormulaType("RefreshCount", FormulaType.Number)));
 
             engine.UpdateVariable("t", ttv);
-            FormulaValue result = engine.Eval("With({ before: First(t).RefreshCount }, Refresh(t); before & First(t).RefreshCount;", null, new ParserOptions { AllowsSideEffects = true });
-
-            // Validate no error + TableValue has been refreshed
-            Assert.True(result is BlankValue);
+            FormulaValue result = engine.Eval("With({ before: First(t).RefreshCount }, Refresh(t); before & First(t).RefreshCount)", null, new ParserOptions { AllowsSideEffects = true });
+                        
             Assert.Equal(1, ttv.RefreshCount);
+            Assert.Equal("01", result.ToObject());
         }
 
         public class TestTableValue : TableValue, IRefreshable

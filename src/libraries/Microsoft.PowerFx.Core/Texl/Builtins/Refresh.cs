@@ -101,20 +101,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertValue(args);
 
-            identifierNode = null;
-            if (args.Length == 0)
-            {
-                return null;
-            }
+            identifierNode = null;           
 
-            var firstNameNode = args[0]?.AsFirstName();
+            FirstNameNode firstNameNode = args[0]?.AsFirstName();
             identifierNode = firstNameNode;
+
             if (firstNameNode == null)
             {
                 return null;
             }
 
-            var identifiers = new List<Identifier>()
+            List<Identifier> identifiers = new ()
             {
                 firstNameNode.Ident
             };

@@ -643,9 +643,10 @@ namespace Microsoft.PowerFx.Functions
             if (args[0] is IRefreshable r)
             {
                 r.Refresh();
+                return FormulaValue.NewBlank();
             }
 
-            return FormulaValue.NewBlank();
+            return CommonErrors.CustomError(irContext, "Only managed connections can be refreshed.");
         }
 
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(
