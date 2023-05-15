@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("t", TableValue.NewTable(RecordType.Empty()));            
             FormulaValue result = engine.Eval("Set(t, Table()); Refresh(t)", null, new ParserOptions { AllowsSideEffects = true });
 
+            // Refresh function returns nothing, just check it's not an error
             Assert.True(result is BlankValue);
         }
 
@@ -30,11 +31,11 @@ namespace Microsoft.PowerFx.Tests
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
             TestTableValue ttv = new TestTableValue(RecordType.Empty());
-
-            config.EnableSetFunction();
+            
             engine.UpdateVariable("t", ttv);
             FormulaValue result = engine.Eval("Refresh(t)", null, new ParserOptions { AllowsSideEffects = true });
 
+            // Validate no error + TableValue has been refreshed
             Assert.True(result is BlankValue);
             Assert.True(ttv.HasBeenRefreshed);
         }
