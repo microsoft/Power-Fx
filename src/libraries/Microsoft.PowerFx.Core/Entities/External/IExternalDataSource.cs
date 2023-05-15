@@ -3,7 +3,6 @@
 
 using Microsoft.PowerFx.Core.Entities.Delegation;
 using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
@@ -13,9 +12,7 @@ namespace Microsoft.PowerFx.Core.Entities
 
         bool IsSelectable { get; }
 
-        bool IsDelegatable { get; }
-
-        bool IsRefreshable { get; }
+        bool IsDelegatable { get; }        
 
         bool RequiresAsync { get; }       
 

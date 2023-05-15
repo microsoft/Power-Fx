@@ -5240,6 +5240,9 @@
     <value>Expected a record or table value.</value>
     <comment>Error Message.</comment>
   </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Only managed connections can be refreshed.</value>
     <comment>Error message on non-service data sources passed to Refresh.</comment>

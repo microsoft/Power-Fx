@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable all multation functions which allows scripts to execute side effect behavior.
         /// </summary>
-        /// <param name="symbolTable"></param>
+        /// <param name="symbolTable"></param>        
         public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
-                
+
                 config.SymbolTable.AddFunction(func.Key);
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }

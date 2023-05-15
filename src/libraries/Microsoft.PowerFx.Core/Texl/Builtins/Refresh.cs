@@ -17,7 +17,7 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Refresh(source:*[...]) : b
-    // Refresh(source:![...]) : b    
+    // Refresh(source:![...]) : b
     internal sealed class RefreshFunction : BuiltinFunction
     {
         // This is a stateful asynchronous function with side effects.
@@ -37,7 +37,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public RefreshFunction()
             : base("Refresh", TexlStrings.AboutRefresh, FunctionCategories.Table, DType.Boolean, 0, 1, 1)
-        { }
+        { 
+        }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
@@ -90,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // crashes when the rule gets evaluated. If the argument evaluates to a non-refreshable data source, such as
             // a collection or excel table, the Refresh invocation will simply be a no-op in that case.                        
             if (binding.TryCastToFirstName(args[0], out FirstNameInfo firstNameInfo) && binding.IsInfoKindDataSource(firstNameInfo) &&
-                firstNameInfo.Data is IExternalDataSource eds && !eds.IsRefreshable)
+                firstNameInfo.Data is IRefreshable)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrDataSourceCannotBeRefreshed);
             }
@@ -113,8 +114,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return null;
             }
 
-            var identifiers = new List<Identifier>();
-            identifiers.Add(firstNameNode.Ident);
+            var identifiers = new List<Identifier>()
+            {
+                firstNameNode.Ident
+            };
+
             return identifiers;
         }
     }
