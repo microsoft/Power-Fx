@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.PowerFx.Core.Functions;
+using System.Text;
+using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 
@@ -33,7 +35,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable all multation functions which allows scripts to execute side effect behavior.
         /// </summary>
-        /// <param name="symbolTable"></param>        
+        /// <param name="symbolTable"></param>
         public static void EnableMutationFunctions(this SymbolTable symbolTable)
         {
             symbolTable.AddFunction(new RecalcEngineSetFunction());
@@ -42,22 +44,6 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new RemoveFunction());
             symbolTable.AddFunction(new ClearFunction());
             symbolTable.AddFunction(new ClearCollectFunction());
-        }
-
-        public static void EnableRegExFunctions(this PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
-        {
-            RegexTypeCache regexTypeCache = new (regexCacheSize);
-
-            foreach (KeyValuePair<TexlFunction, IAsyncTexlFunction> func in Library.RegexFunctions(regExTimeout, regexTypeCache))
-            {
-                if (config.SymbolTable.Functions.AnyWithName(func.Key.Name))
-                {
-                    throw new InvalidOperationException("Cannot add RegEx functions more than once.");
-                }
-
-                config.SymbolTable.AddFunction(func.Key);
-                config.AdditionalFunctions.Add(func.Key, func.Value);
-            }
         }
     }
 }

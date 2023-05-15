@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public virtual bool IsSelectable => throw new NotImplementedException();
 
-        public virtual bool IsDelegatable => throw new NotImplementedException();        
+        public virtual bool IsDelegatable => throw new NotImplementedException();
 
         public bool RequiresAsync => throw new NotImplementedException();
 
