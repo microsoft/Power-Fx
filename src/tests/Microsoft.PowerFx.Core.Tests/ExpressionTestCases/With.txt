@@ -66,5 +66,6 @@ Time(2,3,32,0)
 >> With( { year : 2023, month : 5, day : 15 }, DateTime( year, month, day, 0, 0, 0 ) )
 DateTime(2023,5,15,0,0,0,0)
 
+// Scope variables defined in With function are case sensitive
 >> With ( { x : 3 , X : 5 }, x ^ X )
 243
