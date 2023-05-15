@@ -37,23 +37,41 @@ namespace Microsoft.PowerFx.Tests
 
             // Validate no error + TableValue has been refreshed
             Assert.True(result is BlankValue);
-            Assert.True(ttv.HasBeenRefreshed);
+            Assert.Equal(1, ttv.RefreshCount);
+        }
+
+        [Fact]
+        public void RefreshTest_RefreshableTable2()
+        {
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            RecalcEngine engine = new RecalcEngine(config);
+            TestTableValue ttv = new TestTableValue(RecordType.Empty());
+
+            engine.UpdateVariable("t", ttv);
+            FormulaValue result = engine.Eval("With({ before: First(t).RefreshCount }, Refresh(t); before & First(t).RefreshCount;", null, new ParserOptions { AllowsSideEffects = true });
+
+            // Validate no error + TableValue has been refreshed
+            Assert.True(result is BlankValue);
+            Assert.Equal(1, ttv.RefreshCount);
         }
 
         public class TestTableValue : TableValue, IRefreshable
         {
-            public TestTableValue(RecordType recordType) 
+            public TestTableValue(RecordType recordType)
                 : base(recordType)
             {
             }
 
-            public bool HasBeenRefreshed = false;
+            public int RefreshCount = 0;
 
-            public override IEnumerable<DValue<RecordValue>> Rows => Enumerable.Empty<DValue<RecordValue>>();
+            public override IEnumerable<DValue<RecordValue>> Rows => new DValue<RecordValue>[]
+            {
+                DValue<RecordValue>.Of(RecordValue.NewRecordFromFields(new NamedValue("RefreshCount", FormulaValue.New(RefreshCount))))
+            };
 
             public void Refresh()
             {
-                HasBeenRefreshed = true;
+                RefreshCount++;
             }
         }
     }
