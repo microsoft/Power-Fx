@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -283,6 +284,12 @@ namespace Microsoft.PowerFx
             _variables.Add(entity.EntityName, nameInfo);
         }
 
+        // Sync version for convenience. 
+        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, FormulaValue> getValue)
+        {
+            this.AddHostObject(name, type, (sp) => Task.FromResult(getValue(sp)));
+        }
+
         /// <summary>
         /// Adds a host object schema, that can be referenced in the formula.
         /// Actual object is added in Runtime config service provider.
@@ -291,7 +298,7 @@ namespace Microsoft.PowerFx
         /// <param name="type">Type of the object.</param>
         /// <param name="getValue">Call back that will retrieve object from the service provider.
         /// It can throw CustomFunctionErrorException, that fx will convert to an error.</param>
-        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, FormulaValue> getValue)
+        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider,  Task<FormulaValue>> getValue)
         {
             var hostDName = ValidateName(name);
 
