@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RefreshTest_InMemoryTable()
         {
-            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);                        
+            PowerFxConfig config = new PowerFxConfig();                        
             RecalcEngine engine = new RecalcEngine(config);
 
             config.EnableSetFunction();
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void RefreshTest_RefreshableTable()
         {
-            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            PowerFxConfig config = new PowerFxConfig();
             RecalcEngine engine = new RecalcEngine(config);
             TestTableValue ttv = new TestTableValue(RecordType.Empty());
             
@@ -38,14 +38,15 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue result = engine.Eval("Refresh(t)", null, new ParserOptions { AllowsSideEffects = true });
 
             // Validate no error + TableValue has been refreshed
-            Assert.True(result is BlankValue);
+            Assert.True(result is BooleanValue);
+            Assert.True(((BooleanValue)result).Value);
             Assert.Equal(1, ttv.RefreshCount);
         }
 
         [Fact]
         public void RefreshTest_RefreshableTable2()
         {
-            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+            PowerFxConfig config = new PowerFxConfig();
             RecalcEngine engine = new RecalcEngine(config);
             TestTableValue ttv = new TestTableValue(RecordType.Empty().Add(new NamedFormulaType("RefreshCount", FormulaType.Number)));
 
