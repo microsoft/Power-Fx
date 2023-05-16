@@ -226,22 +226,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 recordWithRecord3
             });
 
-            var symbol = new SymbolTable();
+            var engine = new RecalcEngine(config);
+            var symbol = engine._symbolTable;
 
             symbol.EnableMutationFunctions();
 
-            symbol.AddConstant("t1", t1);
-            symbol.AddConstant("r1", r1);
-            symbol.AddConstant("r2", r2);
-            symbol.AddConstant("t2", t2);
-            symbol.AddConstant("rwr1", recordWithRecord1);
-            symbol.AddConstant("rwr2", recordWithRecord2);
-            symbol.AddConstant("rwr3", recordWithRecord3);
-            symbol.AddConstant("r_empty", rEmpty);
+            engine.UpdateVariable("t1", t1);
+            engine.UpdateVariable("r1", r1);
 
-            config.SymbolTable = symbol;
+            engine.UpdateVariable("r2", r2);
+            engine.UpdateVariable("t2", t2);
+            engine.UpdateVariable("rwr1", recordWithRecord1);
+            engine.UpdateVariable("rwr2", recordWithRecord2);
+            engine.UpdateVariable("rwr3", recordWithRecord3);
+            engine.UpdateVariable("r_empty", rEmpty);
 
-            return (new RecalcEngine(config), null);
+            //symbol.AddConstant("t1", t1);
+            //symbol.AddConstant("r1", r1);
+            //symbol.AddConstant("r2", r2);
+            //symbol.AddConstant("t2", t2);
+            //symbol.AddConstant("rwr1", recordWithRecord1);
+            //symbol.AddConstant("rwr2", recordWithRecord2);
+            //symbol.AddConstant("rwr3", recordWithRecord3);
+            //symbol.AddConstant("r_empty", rEmpty);
+
+            //config.SymbolTable = symbol;
+
+            //return (new RecalcEngine(config), null);
+
+            return (engine, null);
         }
 
         // Interpret each test case independently
