@@ -34,5 +34,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Untyped object to untyped object preprocessors
         UntypedStringToUntypedNumber = 8,
+
+        MutationCopy = 9,
     }
 }

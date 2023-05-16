@@ -17,12 +17,19 @@ namespace Microsoft.PowerFx.Types
     {
         private readonly RecordType _recordType;
 
+        public override bool IsMutationCopy => true;
+
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
             : base(irContext, MaybeAdjustType(irContext, records).ToList())
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
+        }
+
+        internal InMemoryTableValue(InMemoryTableValue orig)
+            : base(orig)
+        {
         }
 
         private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)

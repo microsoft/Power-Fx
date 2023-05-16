@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Run cases in MutationScripts
         // Normal tests have each line as an independent test case. 
-        // Whereas these are fed into a repl and each file maintains state. 
+        // Whereas these are fed into a repl and each file maintains state. ebeeee
         [Theory]
         [InlineData("Simple1.txt")]
         [InlineData("Collect.txt")]
@@ -124,6 +124,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
         [InlineData("ForAllMutate.txt")]
+        [InlineData("Set.txt")]
+        [InlineData("Set_DeepReference.txt")]
         public void RunMutationTests(string file)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);

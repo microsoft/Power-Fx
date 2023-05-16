@@ -644,6 +644,12 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
+
+            if (node.IRContext.MutationCopy)
+            {
+                record.ShallowCopyFieldInPlace(node.Field.Value);
+            }
+
             var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);
 
             return val;
@@ -696,7 +702,7 @@ namespace Microsoft.PowerFx
             switch (node.Value)
             {
                 case NameSymbol name:
-                    return GetVariableOrFail(node, name);
+                    return GetVariableOrFail(node, name, node.IRContext.MutationCopy);
                 case FormulaValue fi:
                     return fi;
                 case IExternalOptionSet optionSet:
@@ -722,13 +728,19 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
+        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot, bool mutationCopy = false)
         {
             if (_symbolValues != null)
             {
                 var value = _symbolValues.Get(slot);
                 if (value != null)
                 {
+                    if (mutationCopy)
+                    {
+                        value = value.MaybeShallowCopy();
+                        _symbolValues.Set(slot, value);
+                    }
+
                     return value;
                 }
             }

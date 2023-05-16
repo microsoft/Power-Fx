@@ -58,12 +58,24 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
+            if (irContext.MutationCopy)
+            {
+                arg0.ShallowCopyRecordInPlace(0);
+            }
+
             return arg0.Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
 
         public static FormulaValue Last(IRContext irContext, TableValue[] args)
         {
-            return args[0].Rows.LastOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+            var arg0 = args[0];
+
+            if (irContext.MutationCopy)
+            {
+                arg0.ShallowCopyRecordInPlace(-1);
+            }
+
+            return arg0.Rows.LastOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
 
         public static FormulaValue FirstN(IRContext irContext, FormulaValue[] args)
@@ -404,6 +416,11 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
             var rowIndex = (int)arg1.Value;
+
+            if (irContext.MutationCopy)
+            {
+                arg0.ShallowCopyRecordInPlace(rowIndex);
+            }
 
             return arg0.Index(rowIndex).ToFormulaValue();
         }

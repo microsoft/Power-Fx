@@ -15,15 +15,18 @@ namespace Microsoft.PowerFx.Core.IR
 
         public FormulaType ResultType { get; }
 
-        internal IRContext(Span sourceContext, FormulaType resultType)
+        public bool MutationCopy { get; }
+
+        internal IRContext(Span sourceContext, FormulaType resultType, bool mutationCopy = false)
         {
             SourceContext = sourceContext;
             ResultType = resultType;
+            MutationCopy = mutationCopy;
         }
 
-        public static IRContext NotInSource(FormulaType resultType)
+        public static IRContext NotInSource(FormulaType resultType, bool mutationCopy = false)
         {
-            return new IRContext(null, resultType);
+            return new IRContext(null, resultType, mutationCopy);
         }
     }
 }

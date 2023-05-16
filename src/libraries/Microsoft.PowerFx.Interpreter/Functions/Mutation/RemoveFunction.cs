@@ -32,6 +32,11 @@ namespace Microsoft.PowerFx.Functions
             return argNum >= 1;
         }
 
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            return index == 0 ? ArgPreprocessor.MutationCopy : ArgPreprocessor.None;
+        }
+
         public RemoveFunctionBase(DPath theNamespace, string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(theNamespace, name, /*localeSpecificName*/string.Empty, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {

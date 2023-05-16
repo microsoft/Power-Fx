@@ -47,6 +47,11 @@ namespace Microsoft.PowerFx.Interpreter
             return argNum >= 1;
         }
 
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            return index == 0 ? ArgPreprocessor.MutationCopy : ArgPreprocessor.None;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectFunction"/> class.
         /// To be consumed by ClearCollect function.

@@ -272,5 +272,15 @@ namespace Microsoft.PowerFx.Types
 
             sb.Append("}");
         }
+
+        internal virtual void ShallowCopyFieldInPlace(string fieldName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual int GetFieldsHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

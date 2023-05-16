@@ -436,6 +436,9 @@ namespace Microsoft.PowerFx.Core.IR
                             }
 
                             break;
+                        case ArgPreprocessor.MutationCopy:
+                            convertedNode = MutationCopy(args[i]);
+                            break;
                         default:
                             convertedNode = args[i];
                             break;
@@ -445,6 +448,37 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 return convertedArgs;
+            }
+
+            /// <summary>
+            /// Changes functions called or operator used to shallow copy the argument before mutation.
+            /// </summary>
+            private static IntermediateNode MutationCopy(IntermediateNode arg)
+            {
+                var convertedNode = arg;
+
+                if (arg is CallNode cn)
+                {
+                    if (cn.Function == BuiltinFunctionsCore.First || cn.Function == BuiltinFunctionsCore.Last ||
+                        cn.Function == BuiltinFunctionsCore.Index || cn.Function == BuiltinFunctionsCore.Table)
+                    { 
+                        return new CallNode(new IRContext(cn.IRContext.SourceContext, cn.IRContext.ResultType, mutationCopy: true), cn.Function, cn.Args);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Mutation thrgouh an accessor function that does not support mutation");
+                    }
+                }
+                else if (arg is RecordFieldAccessNode fa)
+                {
+                    return new RecordFieldAccessNode(new IRContext(fa.IRContext.SourceContext, fa.IRContext.ResultType, mutationCopy: true), MutationCopy(fa.From), fa.Field);
+                }
+                else if (arg is ResolvedObjectNode ro)
+                {
+                    return new ResolvedObjectNode(new IRContext(ro.IRContext.SourceContext, ro.IRContext.ResultType, mutationCopy: true), ro.Value);
+                }
+
+                throw new NotImplementedException("Mutation thrgouh an accessor node that does not support mutation");
             }
 
             /// <summary>

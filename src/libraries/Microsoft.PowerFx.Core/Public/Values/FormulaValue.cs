@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -25,9 +26,32 @@ namespace Microsoft.PowerFx.Types
 
         public FormulaType Type => IRContext.ResultType;
 
+        public virtual bool IsMutationCopy => false;
+
+        public virtual FormulaValue MaybeShallowCopy()
+        {
+            if (IsMutationCopy)
+            {
+                if (this is InMemoryTableValue imt)
+                {
+                    return new InMemoryTableValue(imt);
+                }
+                else if (this is InMemoryRecordValue imr)
+                {
+                    return new InMemoryRecordValue(imr);
+                }
+            }
+
+            return this;
+        }
+
         internal FormulaValue(IRContext irContext)
         {
             IRContext = irContext;
+        }
+
+        internal FormulaValue(FormulaValue orig)
+        {
         }
 
         /// <summary>

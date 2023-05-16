@@ -233,6 +233,14 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
+        internal virtual void ShallowCopyRecordInPlace(int index)
+        {
+            if (IsMutationCopy)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {
             // Table() is not legal, so we need an alternate expression to capture the table's type.
@@ -269,6 +277,11 @@ namespace Microsoft.PowerFx.Types
 
                 sb.Append(")");
             }
+        }
+
+        public virtual int GetRowsHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }

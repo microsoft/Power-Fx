@@ -118,6 +118,11 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            return index == 0 ? ArgPreprocessor.MutationCopy : ArgPreprocessor.None;
+        }
+
         public PatchFunction()
             : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
         {

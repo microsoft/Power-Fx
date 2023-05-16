@@ -34,6 +34,9 @@ namespace Microsoft.PowerFx
 
         private const string OptionPowerFxV1 = "PowerFxV1";
 
+        private const string OptionHashCodes = "HashCodes";
+        private static bool _hashCodes = false;
+
         private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
@@ -53,7 +56,8 @@ namespace Microsoft.PowerFx
                 { OptionNumberIsFloat, OptionNumberIsFloat },
                 { OptionLargeCallDepth, OptionLargeCallDepth },
                 { OptionFeaturesNone, OptionFeaturesNone },
-                { OptionPowerFxV1, OptionPowerFxV1 }
+                { OptionPowerFxV1, OptionPowerFxV1 },
+                { OptionHashCodes, OptionHashCodes }
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -402,7 +406,7 @@ namespace Microsoft.PowerFx
 
         private static string PrintResult(FormulaValue value, bool minimal = false)
         {
-            string resultString;
+            string resultString = string.Empty;
 
             if (value is BlankValue)
             {
@@ -429,7 +433,12 @@ namespace Microsoft.PowerFx
                 else
                 {
                     var separator = string.Empty;
-                    resultString = "{";
+                    if (_hashCodes)
+                    {
+                        resultString += " #" + record.GetHashCode() + "," + record.GetFieldsHashCode() + "#";
+                    }
+
+                    resultString += "{";
                     foreach (var field in record.Fields)
                     {
                         resultString += separator + $"{field.Name}:";
@@ -478,13 +487,23 @@ namespace Microsoft.PowerFx
                         }
                     }
 
+                    if (_hashCodes)
+                    {
+                        resultString += " #" + table.GetHashCode() + "," + table.GetRowsHashCode() + "#";
+                    }
+
                     // special treatment for single column table named Value
                     if (columnWidth.Length == 1 && table.Rows.First().Value != null && table.Rows.First().Value.Fields.First().Name == "Value")
                     {
                         var separator = string.Empty;
-                        resultString = "[";
+                        resultString += "[";
                         foreach (var row in table.Rows)
                         {
+                            if (_hashCodes)
+                            {
+                                resultString += " #" + row.Value.GetHashCode() + "," + row.Value.GetFieldsHashCode() + "#";
+                            }
+
                             resultString += separator + PrintResult(row.Value.Fields.First().Value);
                             separator = ", ";
                         }
@@ -495,7 +514,7 @@ namespace Microsoft.PowerFx
                     // otherwise a full table treatment is needed
                     else if (_formatTable)
                     {
-                        resultString = "\n ";
+                        resultString += "\n ";
                         var column = 0;
 
                         foreach (var row in table.Rows)
@@ -547,6 +566,11 @@ namespace Microsoft.PowerFx
                         var separator = string.Empty;
                         foreach (var row in table.Rows)
                         {
+                            if (_hashCodes)
+                            {
+                                resultString += " #" + row.Value.GetHashCode() + "," + row.Value.GetFieldsHashCode() + "#";
+                            }
+
                             resultString += separator + PrintResult(row.Value);
                             separator = ", ";
                         }
@@ -614,6 +638,12 @@ namespace Microsoft.PowerFx
                 {
                     _largeCallDepth = value.Value;
                     ResetEngine();
+                    return value;
+                }
+
+                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionHashCodes.ToLower(CultureInfo.InvariantCulture))
+                {
+                    _hashCodes = value.Value;
                     return value;
                 }
 

@@ -25,6 +25,11 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        {
+            return ArgPreprocessor.MutationCopy;
+        }
+
         public ClearFunction()
             : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
         {

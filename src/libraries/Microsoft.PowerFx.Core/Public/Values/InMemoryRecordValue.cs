@@ -16,6 +16,8 @@ namespace Microsoft.PowerFx.Types
         protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
         private readonly IDictionary<string, FormulaValue> _mutableFields;
 
+        public override bool IsMutationCopy => true;
+
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
           : this(irContext, ToDict(fields))
         {
@@ -37,6 +39,21 @@ namespace Microsoft.PowerFx.Types
             if (_mutableFields.IsReadOnly)
             {
                 _mutableFields = null;
+            }
+        }
+
+        public InMemoryRecordValue(InMemoryRecordValue orig)
+            : base(orig.IRContext)
+        {
+            _fields = new Dictionary<string, FormulaValue>(orig._mutableFields);
+            _mutableFields = _fields as IDictionary<string, FormulaValue>;
+        }
+
+        internal override void ShallowCopyFieldInPlace(string fieldName)
+        {
+            if (_fields.TryGetValue(fieldName, out FormulaValue result))
+            {
+                _mutableFields[fieldName] = result.MaybeShallowCopy();
             }
         }
 
@@ -79,10 +96,15 @@ namespace Microsoft.PowerFx.Types
 
             foreach (var kvp in allowedFields)
             {
-                fields.Add(new NamedValue(kvp.Key, kvp.Value));
+                fields.Add(new NamedValue(kvp.Key, _fields[kvp.Key]));
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));
+        }
+
+        public override int GetFieldsHashCode()
+        {
+            return _fields.GetHashCode();
         }
     }
 }

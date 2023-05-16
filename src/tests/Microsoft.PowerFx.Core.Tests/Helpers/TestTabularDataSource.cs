@@ -24,7 +24,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         {
             var st = Environment.StackTrace;
 
-            if (st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
+            if (st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches") || 
+                st.Contains("Microsoft.PowerFx.Types.FormulaValue.MaybeShallowCopy"))
             {
                 entityMetadata = new DataEntityMetadata();
                 return true;
