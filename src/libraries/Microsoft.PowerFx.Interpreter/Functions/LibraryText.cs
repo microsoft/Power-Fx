@@ -317,6 +317,10 @@ namespace Microsoft.PowerFx.Functions
         {
             const int formatSize = 100;
             string formatString = null;
+            int startIdx = -1;
+            int endIdx = -1;
+            bool hasDateTimeFmt = false;
+            bool hasNumberFmt = false;
 
             if (args.Length > 1 && args[1] is StringValue fs)
             {
@@ -341,29 +345,22 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out bool hasDateTimeFmt, out bool hasNumberFmt))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt, out startIdx, out endIdx))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
+            var isText = TryText(formatInfo, irContext, args[0], hasDateTimeFmt, hasNumberFmt, formatString, startIdx, endIdx, out StringValue result);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString, out StringValue result)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, bool hasDateTimeFmt, bool hasNumberFmt, string formatString, int startIdx, int endIdx, out StringValue result)
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
-            var hasDateTimeFmt = false;
-            var hasNumberFmt = false;
             result = null;
-
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
-            {
-                return false;
-            }
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
@@ -374,10 +371,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (!string.IsNullOrEmpty(formatString))
             {
-                int startIdx = formatString.IndexOf("[$-", StringComparison.OrdinalIgnoreCase);
-                int endIdx = formatString.IndexOf("]", StringComparison.OrdinalIgnoreCase);
-
-                if (startIdx > -1 && endIdx > 2)
+                if (startIdx == 0 && endIdx > 2)
                 {
                     startIdx += 3;
                     hasFormatCulture = true;

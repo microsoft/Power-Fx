@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result)
         {
-            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, null, out result);
+            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, false, false, null, -1, -1, out result);
         }
 
         /// <summary>

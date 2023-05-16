@@ -433,3 +433,21 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "fr-FR")
 "12 345,68"
+
+>> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
+
+>> Text(1234.5678, "[$-en-US]", "en-US")
+"1234.5678"
+
+>> Text(1234.5678, "[$-fr-FR]", "fr-FR")
+"1234,5678"
+
+>> Text(1234.5678, "[$-fr-FR]", "en-US")
+"1234.5678"
+
+>> Text(1234.5678,"[$-]")
+"1234.5678"
+
+>> Text(1234.5678,"[$-a")
+Error({Kind:ErrorKind.InvalidArgument})

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -11,18 +12,22 @@ namespace Microsoft.PowerFx.Core.Utils
     {
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
 
-        public static bool IsValidFormatArg(string formatArg, out bool hasDateTimeFmt, out bool hasNumericFmt)
+        public static bool IsValidFormatArg(string formatArg, out bool hasDateTimeFmt, out bool hasNumericFmt, out int startIdx, out int endIdx)
         {
             // Verify statically that the format string doesn't contain BOTH numeric and date/time
             // format specifiers. If it does, that's an error according to Excel and our spec.
+            hasDateTimeFmt = false;
+            hasNumericFmt = false;
+            endIdx = -1;
 
             // But firstly skip any locale-prefix
-            if (formatArg.StartsWith("[$-", StringComparison.Ordinal))
+            startIdx = formatArg.IndexOf("[$-", StringComparison.Ordinal);
+            if (startIdx == 0)
             {
-                var end = formatArg.IndexOf(']', 3);
-                if (end > 0)
+                endIdx = formatArg.IndexOf(']', 3);
+                if (endIdx > 0)
                 {
-                    formatArg = formatArg.Substring(end + 1);
+                    formatArg = formatArg.Substring(endIdx + 1);
                 }
             }
 
@@ -38,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 hasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
             }
 
-            if (hasDateTimeFmt && hasNumericFmt)
+            if ((hasDateTimeFmt && hasNumericFmt) || (startIdx > 0) || (startIdx == 0 && endIdx <= 0 && !hasNumericFmt))
             {
                 return false;
             }
