@@ -1213,7 +1213,7 @@ namespace Microsoft.PowerFx.Functions
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.PlainText.Name,
                     expandArguments: NoArgExpansion,
-                    replaceBlankValues: ReplaceBlankWith(new StringValue(IRContext.NotInSource(FormulaType.String), string.Empty)),
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactValueType<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,

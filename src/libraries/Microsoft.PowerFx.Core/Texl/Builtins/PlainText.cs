@@ -2,21 +2,18 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 
-namespace Microsoft.PowerFx.Core.Texl.Builtins
+namespace Microsoft.PowerFx.Core.Texl
 {
-    internal class PlainTextFunction : BuiltinFunction
+    internal class PlainTextFunction : StringOneArgFunction
     {
         public override bool IsSelfContained => true;
 
         public PlainTextFunction()
-            : base("PlainText", TexlStrings.AboutPlainText, FunctionCategories.Text, DType.String, 0, 1, 1, DType.String)
+            : base("PlainText", TexlStrings.AboutPlainText, FunctionCategories.Text)
         {
         }
 
