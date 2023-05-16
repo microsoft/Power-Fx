@@ -1,0 +1,7 @@
+#SETUP: NumberIsFloat
+
+>> With( { x : 4e306 }, x / 2 )
+2e306
+
+>> With( { x : 1e306 }, Power( x, x/3 ) )
+Error({Kind:ErrorKind.Numeric})
