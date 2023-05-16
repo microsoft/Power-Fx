@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -108,17 +109,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         // Anything goes with null
                         type = typeArg;
                     }
-                    else if (type.Accepts(typeArg, exact: false, useLegacyDateTimeAccepts: true, usePowerFxV1CompatibilityRules: true))
+                    else if (typeArg.Kind == DKind.ObjNull)
                     {
-                        // Parameter accepted without problems
+                        // ObjNull can be accepted by the current type
                     }
-                    else if (typeArg.CoercesTo(
-                            type,
-                            aggregateCoercion: true,
-                            isTopLevelCoercion: false,
-                            usePowerFxV1CompatibilityRules: true))
+                    else if (DType.TryUnionWithCoerce(
+                             type,
+                             typeArg,
+                             usePowerFxV1CompatibilityRules: true,
+                             coerceToLeftTypeOnly: true,
+                             out var unionType,
+                             out var coercionNeeded))
                     {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                        type = unionType;
+                        if (coercionNeeded)
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                        }
                     }
                     else
                     {

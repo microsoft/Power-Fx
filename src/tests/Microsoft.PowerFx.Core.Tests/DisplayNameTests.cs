@@ -592,21 +592,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(true, r1, r1).Display1", true)]
         [InlineData("If(true, Blank(), r1).Display1", true)]
 
-        // If types are different, you have no access to Display name, except with PFxV1 rules
-        [InlineData("If(true, r1, r2).Display1", false, true)]
-        [InlineData("If(true, r1, r2).Display0", false, true)]
+        // If types are different, you have no access to Display name
+        [InlineData("If(true, r1, r2).Display1", false)]
+        [InlineData("If(true, r1, r2).Display0", false)]
         [InlineData("If(true, r1, {Display1 : 123}).Display1", false, true)] // With PFxV1 rules
 
         // If types are different, you have access to logical name, only if the name and type are same!
         [InlineData("If(true, r1, r2).F1", true)]
         [InlineData("If(false, r1, r2).F1", true)]
         [InlineData("If(true, r1, r2).F0", false, true)]
-
-        // With PFxV1 rules, result type of If is the first type
-        [InlineData("If(true, r1, r3).Display1", false, true)]
-        [InlineData("If(false, r1, r3).F1", false, true)]
+        [InlineData("If(true, r1, r3).Display1", false)]
         [InlineData("If(true, r1, r3).Display3", false)]
-        [InlineData("If(true, r1, r3).F3", false)]
+
+        // With PFx V1 rules, can access the logical names
+        [InlineData("If(false, r1, r3).F1", false, true)]
+        [InlineData("If(true, r1, r3).F3", false, true)]
         public void DisplayNameTest(string input, bool succeeds, bool? succeedsWithPFxV1 = null)
         {
             foreach (var usePFxV1Features in new[] { false, true })
