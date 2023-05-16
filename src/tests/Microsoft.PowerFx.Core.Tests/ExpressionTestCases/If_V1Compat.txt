@@ -1,5 +1,8 @@
 #SETUP: PowerFxV1CompatibilityRules
 
+// With Power Fx V1 rules, if follows the "first-type rule" - the result of the expression
+// will be the type of the first argument
+
 >> If(1>0, {a:1}, {b:2})
 {a:1}
 
