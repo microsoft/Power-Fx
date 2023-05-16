@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Types
 
         internal virtual void ShallowCopyRecordInPlace(int index)
         {
-            if (IsMutationCopy)
+            if (this is IMutationCopy)
             {
                 throw new NotImplementedException();
             }

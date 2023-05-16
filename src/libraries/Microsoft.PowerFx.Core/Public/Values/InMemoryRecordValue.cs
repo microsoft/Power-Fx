@@ -11,12 +11,10 @@ using Microsoft.PowerFx.Core.IR;
 namespace Microsoft.PowerFx.Types
 {
     // Represent record backed by known list of values. 
-    internal class InMemoryRecordValue : RecordValue
+    internal class InMemoryRecordValue : RecordValue, IMutationCopy
     {
         protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
         private readonly IDictionary<string, FormulaValue> _mutableFields;
-
-        public override bool IsMutationCopy => true;
 
         public InMemoryRecordValue(IRContext irContext, IEnumerable<NamedValue> fields)
           : this(irContext, ToDict(fields))
@@ -43,10 +41,13 @@ namespace Microsoft.PowerFx.Types
         }
 
         public InMemoryRecordValue(InMemoryRecordValue orig)
-            : base(orig.IRContext)
+            : this(orig.IRContext, new Dictionary<string, FormulaValue>(orig._mutableFields))
         {
-            _fields = new Dictionary<string, FormulaValue>(orig._mutableFields);
-            _mutableFields = _fields as IDictionary<string, FormulaValue>;
+        }
+
+        FormulaValue IMutationCopy.ShallowCopy()
+        {
+            return (FormulaValue)new InMemoryRecordValue(this);
         }
 
         internal override void ShallowCopyFieldInPlace(string fieldName)

@@ -26,20 +26,11 @@ namespace Microsoft.PowerFx.Types
 
         public FormulaType Type => IRContext.ResultType;
 
-        public virtual bool IsMutationCopy => false;
-
         public virtual FormulaValue MaybeShallowCopy()
         {
-            if (IsMutationCopy)
+            if (this is IMutationCopy mc)
             {
-                if (this is InMemoryTableValue imt)
-                {
-                    return new InMemoryTableValue(imt);
-                }
-                else if (this is InMemoryRecordValue imr)
-                {
-                    return new InMemoryRecordValue(imr);
-                }
+                return mc.ShallowCopy();
             }
 
             return this;
@@ -82,5 +73,10 @@ namespace Microsoft.PowerFx.Types
 
             return sb.ToString();
         }
+    }
+
+    internal interface IMutationCopy
+    {
+        FormulaValue ShallowCopy();
     }
 }

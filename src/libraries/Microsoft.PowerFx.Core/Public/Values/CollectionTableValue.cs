@@ -56,24 +56,8 @@ namespace Microsoft.PowerFx.Types
         }
 
         internal CollectionTableValue(CollectionTableValue<T> orig)
-         : base(orig.IRContext)
+         : this(orig.IRContext, orig._enumerator.ToList())
         {
-            _enumerator = orig._enumerator.ToList();
-
-            _sourceIndex = _enumerator as IReadOnlyList<T>;
-            _sourceMutableIndex = _enumerator as IList<T>;
-            _sourceCount = _enumerator as IReadOnlyCollection<T>;
-            _sourceList = _enumerator as ICollection<T>;
-
-            if (_sourceList != null && _sourceList.IsReadOnly)
-            {
-                _sourceList = null;
-            }
-
-            if (_sourceMutableIndex != null && _sourceMutableIndex.IsReadOnly)
-            {
-                _sourceMutableIndex = null;
-            }
         }
 
         public RecordType RecordType { get; }
@@ -245,7 +229,7 @@ namespace Microsoft.PowerFx.Types
         /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
         protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
         {
-            if (IsMutationCopy && mutationCopy)
+            if (this is IMutationCopy && mutationCopy)
             {
                 for (var index = 0; index < _sourceList.Count; index++)
                 {

@@ -13,11 +13,9 @@ namespace Microsoft.PowerFx.Types
     /// In-memory table. Constructed over RecordValues. 
     /// DValue means items could be error or blank. 
     /// </summary>
-    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>
+    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>, IMutationCopy
     {
         private readonly RecordType _recordType;
-
-        public override bool IsMutationCopy => true;
 
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
             : base(irContext, MaybeAdjustType(irContext, records).ToList())
@@ -30,6 +28,11 @@ namespace Microsoft.PowerFx.Types
         internal InMemoryTableValue(InMemoryTableValue orig)
             : base(orig)
         {
+        }
+
+        FormulaValue IMutationCopy.ShallowCopy()
+        {
+            return (FormulaValue)new InMemoryTableValue(this);
         }
 
         private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
