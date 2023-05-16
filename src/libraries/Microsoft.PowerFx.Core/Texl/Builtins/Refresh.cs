@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            if (!argTypes[0].IsAggregate)
+            if (args[0] is not FirstNameNode)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedAgg);
                 return;
@@ -90,10 +90,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // so it's not safe to flag the rule with errors. The runtime safety mechanisms will later kick in and prevent
             // crashes when the rule gets evaluated. If the argument evaluates to a non-refreshable data source, such as
             // a collection or excel table, the Refresh invocation will simply be a no-op in that case.                        
-            if (binding.TryCastToFirstName(args[0], out FirstNameInfo firstNameInfo) &&
-                binding.IsInfoKindDataSource(firstNameInfo) &&
-                firstNameInfo.Data is IExternalDataSource dsInfo &&
-                !dsInfo.IsRefreshable)
+            if (binding.TryCastToFirstName(args[0], out FirstNameInfo firstNameInfo) && binding.IsInfoKindDataSource(firstNameInfo) && 
+                firstNameInfo.Data is IExternalDataSource dsInfo && !dsInfo.IsRefreshable)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrDataSourceCannotBeRefreshed);
             }
@@ -103,7 +101,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             Contracts.AssertValue(args);
 
-            identifierNode = null;           
+            identifierNode = null;
 
             FirstNameNode firstNameNode = args[0]?.AsFirstName();
             identifierNode = firstNameNode;
