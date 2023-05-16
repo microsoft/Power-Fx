@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx
     /// - This has a curated set of user identifiers. This list can grow (hence this is a class, not an interface). 
     /// - Host can specify which symbols are available, and leave these blank if not supported on this host. 
     /// - Some information may require a network call to fetch, so we use task and virtual. Different properties may require different fetches, so let host override each property (rather than a single virtual).
+    /// Callbacks can throw a CustomFunctionErrorException to specify a runtime error. 
     /// </summary>
     public class UserInfo
     {
@@ -50,7 +51,7 @@ namespace Microsoft.PowerFx
         /// Get the Power Fx type for a User object that has the given fields exposed. 
         /// </summary>
         /// <param name="fields">Valid subset of fields on user object.</param>
-        /// <returns></returns>
+        /// <returns>Returns a Power Fx type representing the User object with the given fields.</returns>
         public static FormulaType GetUserType(params string[] fields)
         {
             // User is currently a record, but other host objects (like 'Host') are actually

@@ -298,7 +298,7 @@ namespace Microsoft.PowerFx
         /// <param name="type">Type of the object.</param>
         /// <param name="getValue">Call back that will retrieve object from the service provider.
         /// It can throw CustomFunctionErrorException, that fx will convert to an error.</param>
-        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider,  Task<FormulaValue>> getValue)
+        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, Task<FormulaValue>> getValue)
         {
             var hostDName = ValidateName(name);
 

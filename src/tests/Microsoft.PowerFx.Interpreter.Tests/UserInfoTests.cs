@@ -239,6 +239,31 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await task.ConfigureAwait(false)).ConfigureAwait(false);
         }
 
+        // Test callback that throws an error. 
+        [Fact]
+        public async Task ErrorFromCallback()
+        {
+            var userInfo = new MyUserInfo();
+
+            SymbolTable symbol = new SymbolTable();
+
+            var config = new PowerFxConfig();
+            config.SymbolTable.AddUserInfoObject(nameof(UserInfo.DataverseUserTableId));
+
+            var engine = new RecalcEngine(config);
+
+            var rc = new RuntimeConfig();
+            rc.SetUserInfo(userInfo);
+
+            var check = engine.Check("User.DataverseUserTableId");
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval(rc);
+
+            var error = (ErrorValue)result;
+            Assert.Equal(MyUserInfo.ErrorMsg, error.Errors[0].Message);
+        }
+
         // Also demonstrates we can partially implement.
         public class MyUserInfo : UserInfo
         {
@@ -262,6 +287,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // Should never get here. Should have cancelled first. 
                 throw new Exception($"Shouldn't be here.");
+            }
+
+            public const string ErrorMsg = "Error Xyz";
+
+            public override Task<Guid> DataverseUserTableId(CancellationToken cancel = default)
+            {
+                throw new CustomFunctionErrorException(ErrorMsg);
             }
         }
     }
