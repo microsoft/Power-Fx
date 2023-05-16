@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Das Delegieren dieses Vorgangs in „{0}“ wird nicht unterstützt.</value>
+    <value>Dieser Vorgang für Tabelle „{0}“ funktioniert möglicherweise nicht, wenn sie mehr als {1} Zeilen enthält.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>{0} kann nicht delegiert werden: Enthält eine Verhaltensfunktion „{1}“.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Legt fest, ob der angegebene Text dem angegebenen Textformat entspricht.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Der Text, der mit dem Format abgeglichen wird.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Das Format, mit dem der Text abgeglichen wird. Es kann sich um einen Wert der TextFormat-Enumeration oder um einen regulären Ausdruck handeln.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Legt fest, welcher Teil des Textes abgeglichen werden soll. Es kann sich um einen Wert der MatchOptions-Enumeration handeln.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>Format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>Umfang</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Durchsucht den bereitgestellten Text nach dem angegebenen regulären Ausdruck und gibt die erste Übereinstimmung zurück.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Durchsucht den bereitgestellten Text nach dem angegebenen regulären Ausdruck und gibt alle Übereinstimmungen zurück.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Der Text, der anhand des regulären Ausdrucks durchsucht wird.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Der reguläre Ausdruck, nach dem der Text durchsucht wird. Dieser kann gruppierte Werte (Werte zwischen Klammern) enthalten, die im Falle einer erfolgreichen Übereinstimmung zurückgegeben werden.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Legt fest, welcher Teil des Textes abgeglichen werden soll. Es kann sich um einen Wert der MatchOptions-Enumeration handeln.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Der Text, der anhand des regulären Ausdrucks durchsucht wird.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Der reguläre Ausdruck, nach dem der Text durchsucht wird. Dieser kann gruppierte Werte (Werte zwischen Klammern) enthalten, die im Falle einer erfolgreichen Übereinstimmung zurückgegeben werden.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Legt fest, welcher Teil des Textes abgeglichen werden soll. Es kann sich um einen Wert der MatchOptions-Enumeration handeln.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulärer_Ausdruck</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>Optionen</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Reguläre Ausdrücke müssen konstante Werte sein.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die vollständige Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die Gruppenübereinstimmungen des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren aller untergeordneten Übereinstimmungen im angegebenen Text verwenden möchten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die Position der Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der Position der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

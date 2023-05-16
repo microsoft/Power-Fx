@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>テーブル '{0}' は、この操作の委任に対応していません。</value>
+    <value>テーブル '{0}' の行数が {1} を超える場合、この操作は機能しない可能性があります。</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>{0} を委任できません: 動作機能 '{1}' を含みます。</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>指定されたテキストが指定されたテキスト形式に一致しているかどうかを判定します。</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>形式と比較するテキスト。</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>テキストを照合する形式。これは、TextFormat 列挙型の値、または正規表現である場合があります。</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>これにより、照合するテキストの部分が決定します。これは、MatchOptions 列挙型の値である場合があります。</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>テキスト</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>形式</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>範囲</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>指定された正規表現の指定されたテキストを検索します。最初の一致項目が返されます。</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>指定された正規表現の指定されたテキストを検索します。すべての一致項目が返されます。</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>正規表現に対して検索するテキスト。</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>テキストをチェックする正規表現。キャプチャ (かっこ間の値) を含めることができます。その場合、一致項目があると返されます。</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>これにより、照合するテキストの部分が決定します。これは、MatchOptions 列挙型の値である場合があります。</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>正規表現に対して検索するテキスト。</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>テキストをチェックする正規表現。キャプチャ (かっこ間の値) を含めることができます。その場合、一致項目があると返されます。</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>これにより、照合するテキストの部分が決定します。これは、MatchOptions 列挙型の値である場合があります。</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>テキスト</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>正規表現</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>オプション</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>正規表現が無効です。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>正規表現は定数値である必要があります。</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>キャプチャ名 '{0}' は正規表現の完全一致を返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストから完全一致を抽出する場合は、名前の変更を検討してください。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>キャプチャ名 '{0}' は正規表現と一致するグループを返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストからすべての sub-match を抽出する場合は、名前の変更を検討してください。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>キャプチャ名 '{0}' は正規表現に一致する場所を返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストから完全一致の位置を抽出する場合は、名前の変更を検討してください。</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

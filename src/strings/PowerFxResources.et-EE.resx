@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Selle toimingu delegeerimist tabelile „{0}“ ei toetata.</value>
+    <value>See tegevus tabelis „{0}“ ei pruugi töötada, kui ridu on rohkem kui {1}.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Määrab, kas esitatud tekstil esineb esitatud tekstivormingu vaste.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Tekst, mida vorminguga võrreldakse.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Vorming, mille suhtes teksti kontrollida. See võib olla loetelu TextFormat või regulaaravaldise väärtus.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Määrab, millist teksti osa soovime vastendada. See võib olla loetelu MatchOptions väärtus.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>vorming</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>ulatus</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Otsib esitatud tekstist määratud regulaaravaldist, tagastades selle esimese vastenduse.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Otsib esitatud tekstist määratud regulaaravaldist, tagastades kõik selle vastendused.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Tekst, mida regulaaravaldise suhtes otsitakse.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Regulaaravaldis, mille suhtes teksti kontrollida. See võib sisaldada hõiveid (ümarsulgudes olevad väärtused), mis tagastatakse eduka vastenduse korral.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Määrab, millist teksti osa soovime vastendada. See võib olla loetelu MatchOptions väärtus.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Tekst, mida regulaaravaldise suhtes otsitakse.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Regulaaravaldis, mille suhtes teksti kontrollida. See võib sisaldada hõiveid (ümarsulgudes olevad väärtused), mis tagastatakse eduka vastenduse korral.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Määrab, millist teksti osa soovime vastendada. See võib olla loetelu MatchOptions väärtus.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulaaravaldis</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>suvandid</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Kehtetu regulaaravaldis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulaaravaldised peavad olema konstantsed väärtused.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise täieliku vaste. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täielik vaste.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise rühma vasted. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis kõik alamvasted.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise vaste asukoha. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täieliku vaste asukoha.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>
