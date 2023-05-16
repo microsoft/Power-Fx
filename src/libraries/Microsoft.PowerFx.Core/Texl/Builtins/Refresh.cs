@@ -76,7 +76,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            if (args[0] is not FirstNameNode)
+            if (binding.Features.PowerFxV1CompatibilityRules 
+                ? args[0] is not FirstNameNode
+                : !argTypes[0].IsAggregate)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedAgg);
                 return;
