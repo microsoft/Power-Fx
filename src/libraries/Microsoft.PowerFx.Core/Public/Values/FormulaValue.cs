@@ -26,16 +26,6 @@ namespace Microsoft.PowerFx.Types
 
         public FormulaType Type => IRContext.ResultType;
 
-        public virtual FormulaValue MaybeShallowCopy()
-        {
-            if (this is IMutationCopy mc)
-            {
-                return mc.ShallowCopy();
-            }
-
-            return this;
-        }
-
         internal FormulaValue(IRContext irContext)
         {
             IRContext = irContext;
@@ -55,6 +45,16 @@ namespace Microsoft.PowerFx.Types
         public abstract object ToObject();
 
         public abstract void Visit(IValueVisitor visitor);
+
+        public virtual FormulaValue MaybeShallowCopy()
+        {
+            if (this is IMutationCopy mc)
+            {
+                return mc.ShallowCopy();
+            }
+
+            return this;
+        }
 
         public abstract void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings);
 

@@ -25,8 +25,9 @@ namespace Microsoft.PowerFx.Types
             _recordType = tableType.ToRecord();
         }
 
+        // copy of rows made by constructor above with .ToList().
         internal InMemoryTableValue(InMemoryTableValue orig)
-            : base(orig)
+            : this(orig.IRContext, orig.Rows)
         {
         }
 

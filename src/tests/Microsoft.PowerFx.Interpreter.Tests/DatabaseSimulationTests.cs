@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        internal class DatabaseTable : InMemoryTableValue
+        internal class DatabaseTable : InMemoryTableValue, IMutationCopy
         {
             internal static TableType TestTableType => DatabaseRecord.TestRecordType.ToTable();
 
@@ -105,6 +105,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 : base(irContext, records)
             {
                 PatchDelay = patchDelay;
+            }
+
+            // Doesn't actually perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryTableValue
+            FormulaValue IMutationCopy.ShallowCopy()
+            {
+                return this;
             }
 
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
@@ -160,8 +167,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var st = Environment.StackTrace;
 
                 if (st.Contains("Microsoft.PowerFx.SymbolContext.GetScopeVar") ||
-                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches") ||
-                    st.Contains("Microsoft.PowerFx.Types.FormulaValue.MaybeShallowCopy"))
+                    st.Contains("Microsoft.PowerFx.Types.CollectionTableValue`1.Matches"))
                 {
                     return base.TryGetFieldAsync(fieldType, fieldName, cancellationToken);
                 }
