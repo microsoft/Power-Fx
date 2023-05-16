@@ -90,8 +90,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // so it's not safe to flag the rule with errors. The runtime safety mechanisms will later kick in and prevent
             // crashes when the rule gets evaluated. If the argument evaluates to a non-refreshable data source, such as
             // a collection or excel table, the Refresh invocation will simply be a no-op in that case.                        
-            if (binding.TryCastToFirstName(args[0], out FirstNameInfo firstNameInfo) && binding.IsInfoKindDataSource(firstNameInfo) &&
-                firstNameInfo.Data is IRefreshable)
+            if (binding.TryCastToFirstName(args[0], out FirstNameInfo firstNameInfo) &&
+                binding.IsInfoKindDataSource(firstNameInfo) &&
+                firstNameInfo.Data is IExternalDataSource dsInfo &&
+                !dsInfo.IsRefreshable)
             {
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrDataSourceCannotBeRefreshed);
             }
