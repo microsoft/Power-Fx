@@ -38,14 +38,16 @@ namespace Microsoft.PowerFx
 
         /// <summary>
         /// Dataverse User Table Id, coming from IExecutionContext.UserId. 
+        /// https://learn.microsoft.com/en-us/dotnet/api/microsoft.xrm.sdk.iexecutioncontext.userid?view=dataverse-sdk-latest#microsoft-xrm-sdk-iexecutioncontext-userid.
         /// This is a key into 'systemuser' table.
         /// </summary>
-        public virtual async Task<Guid> DataverseUserTableId(CancellationToken cancel = default) => throw Ex();
+        public virtual async Task<Guid> DataverseUserId(CancellationToken cancel = default) => throw Ex();
 
         /// <summary>
-        /// TBD - For Cards / PVA. 
+        /// For Teams Id. User for things running inside of Microsoft Teams, like Bots, Cards, etc. 
+        /// https://learn.microsoft.com/en-us/microsoftteams/platform/resources/bot-v3/bots-context.
         /// </summary>
-        public virtual async Task<Guid> BotMemberId(CancellationToken cancel = default) => throw Ex();
+        public virtual async Task<Guid> TeamsMemberId(CancellationToken cancel = default) => throw Ex();
 
         /// <summary>
         /// Get the Power Fx type for a User object that has the given fields exposed. 
@@ -89,8 +91,8 @@ namespace Microsoft.PowerFx
                     type = type.Add(new NamedFormulaType(field, FormulaType.String));
                 } 
                 else if (
-                    field == nameof(DataverseUserTableId) ||
-                    field == nameof(BotMemberId))
+                    field == nameof(DataverseUserId) ||
+                    field == nameof(TeamsMemberId))
                 {
                     type = type.Add(new NamedFormulaType(field, FormulaType.Guid));
                 }
@@ -114,9 +116,9 @@ namespace Microsoft.PowerFx
         
         public string FullName { get; set; }
 
-        public Guid DataverseUserTableId { get; set; }
+        public Guid DataverseUserId { get; set; }
 
-        public Guid BotMemberId { get; set; }
+        public Guid TeamsMemberId { get; set; }
 
         public UserInfo UserInfo => new Adapter(this);
         
@@ -136,9 +138,9 @@ namespace Microsoft.PowerFx
 
             public override async Task<string> Email(CancellationToken cancel) => _parent.Email;
 
-            public override async Task<Guid> DataverseUserTableId(CancellationToken cancel) => _parent.DataverseUserTableId;
+            public override async Task<Guid> DataverseUserId(CancellationToken cancel) => _parent.DataverseUserId;
 
-            public override async Task<Guid> BotMemberId(CancellationToken cancel) => _parent.BotMemberId;
+            public override async Task<Guid> TeamsMemberId(CancellationToken cancel) => _parent.TeamsMemberId;
         }
     }
 }

@@ -31,8 +31,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 FullName = "fullname",
                 Email = "me@contoso.com",
-                DataverseUserTableId = g1,
-                BotMemberId = g2,
+                DataverseUserId = g1,
+                TeamsMemberId = g2,
             };
 
             // Use string literals for properties here to ensure they didn't change. 
@@ -40,8 +40,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 { "FullName", userInfo.FullName },
                 { "Email", userInfo.Email },
-                { "DataverseUserTableId", userInfo.DataverseUserTableId },
-                { "BotMemberId", userInfo.BotMemberId }
+                { "DataverseUserId", userInfo.DataverseUserId },
+                { "TeamsMemberId", userInfo.TeamsMemberId }
             };
 
             var allKeys = props.Keys.ToArray();
@@ -181,8 +181,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var methods = typeof(UserInfo).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
             foreach (var method in methods)
             {
+                // Method should be a Task<T>. 
+                var returnType = method.ReturnType;
+                Assert.True(returnType.IsGenericType);
+                var r2 = returnType.GetGenericTypeDefinition();
+                Assert.True(r2 == typeof(Task<>));
+                var typeArg0 = returnType.GetGenericArguments()[0];
+
+                // Member names should be descriptive. Avoid things like "Id" because they are ambiguous. 
+                Assert.True(method.Name.Length > 3);
+
                 var prop = typeof(BasicUserInfo).GetProperty(method.Name, BindingFlags.Public | BindingFlags.Instance);
                 Assert.NotNull(prop);
+
+                // If Method it Task<T>, then property should be T.
+                Assert.Equal(prop.PropertyType, typeArg0);
             }
         }
 
@@ -248,14 +261,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             SymbolTable symbol = new SymbolTable();
 
             var config = new PowerFxConfig();
-            config.SymbolTable.AddUserInfoObject(nameof(UserInfo.DataverseUserTableId));
+            config.SymbolTable.AddUserInfoObject(nameof(UserInfo.DataverseUserId));
 
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();
             rc.SetUserInfo(userInfo);
 
-            var check = engine.Check("User.DataverseUserTableId");
+            var check = engine.Check("User.DataverseUserId");
             Assert.True(check.IsSuccess);
 
             var result = check.GetEvaluator().Eval(rc);
@@ -291,7 +304,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             public const string ErrorMsg = "Error Xyz";
 
-            public override Task<Guid> DataverseUserTableId(CancellationToken cancel = default)
+            public override Task<Guid> DataverseUserId(CancellationToken cancel = default)
             {
                 throw new CustomFunctionErrorException(ErrorMsg);
             }

@@ -51,11 +51,11 @@ namespace Microsoft.PowerFx
                     case nameof(UserInfo.FullName):
                         value = FormulaValue.New(await _userInfo.FullName(cancellationToken).ConfigureAwait(false));
                         break;
-                    case nameof(UserInfo.DataverseUserTableId):
-                        value = FormulaValue.New(await _userInfo.DataverseUserTableId(cancellationToken).ConfigureAwait(false));
+                    case nameof(UserInfo.DataverseUserId):
+                        value = FormulaValue.New(await _userInfo.DataverseUserId(cancellationToken).ConfigureAwait(false));
                         break;
-                    case nameof(UserInfo.BotMemberId):
-                        value = FormulaValue.New(await _userInfo.BotMemberId(cancellationToken).ConfigureAwait(false));
+                    case nameof(UserInfo.TeamsMemberId):
+                        value = FormulaValue.New(await _userInfo.TeamsMemberId(cancellationToken).ConfigureAwait(false));
                         break;
 
                     default:
