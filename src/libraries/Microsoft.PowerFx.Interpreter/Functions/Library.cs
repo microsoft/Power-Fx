@@ -940,6 +940,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsToday)
             },
             {
+                BuiltinFunctionsCore.Language,
+                NoErrorHandling(Language)
+            },
+            {
                 BuiltinFunctionsCore.Last,
                 StandardErrorHandling<TableValue>(
                     BuiltinFunctionsCore.Last.Name,
@@ -1203,6 +1207,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Pi,
                 NoErrorHandling(Pi)
+            },
+            {
+                BuiltinFunctionsCore.PlainText,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.PlainText.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    targetFunction: PlainText)
             },
             {
                 BuiltinFunctionsCore.Power,
@@ -1716,10 +1731,6 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Year)
-            },
-            {
-                BuiltinFunctionsCore.Language,
-                NoErrorHandling(Language)
             }
         };
 
