@@ -535,8 +535,13 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.AdjustToUniversal, out var result))
+            if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var result))
             {
+                if (result.Year == 1)
+                {
+                    result = _epoch.Add(result.TimeOfDay);
+                }
+
                 var tzi = runner.TimeZoneInfo;
 
                 result = DateTimeValue.GetConvertedDateTimeValue(result, tzi);
@@ -567,8 +572,13 @@ namespace Microsoft.PowerFx.Functions
         {
             result = null;
 
-            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal, out var dateTime))
+            if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var dateTime))
             {
+                if (dateTime.Year == 1)
+                {
+                    dateTime = _epoch.Add(dateTime.TimeOfDay);
+                }
+
                 dateTime = DateTimeValue.GetConvertedDateTimeValue(dateTime, formatInfo.TimeZoneInfo);
                 result = new DateTimeValue(irContext, dateTime);
             }
@@ -657,6 +667,46 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return CommonErrors.InvalidDateTimeError(irContext);
             }
+        }
+
+        public static FormulaValue Weekday(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
+            var arg0 = runner.GetNormalizedDateTime(args[0]);
+            var dow = arg0.DayOfWeek;
+            var startOfWeek = Math.Floor((args[1] as NumberValue).Value);
+
+            if (startOfWeek <= 0 || startOfWeek > 17 || (startOfWeek > 3 && startOfWeek < 11))
+            {
+                return CommonErrors.GenericInvalidArgument(
+                    irContext,
+                    "Expected a value from the StartOfWeek enumeration to indicate how to number the weekdays.");
+            }
+
+            var zeroIndex = false;
+
+            // Values defined at https://support.office.com/en-us/article/WEEKDAY-function-60e44483-2ed1-439f-8bd0-e404c190949a
+            if (startOfWeek == 3)
+            {
+                startOfWeek = 2; // same as 2, with zero index
+                zeroIndex = true;
+            }
+            
+            if (startOfWeek >= 11 && startOfWeek <= 17)
+            {
+                // For DAX code numbers 11 through 17, the values are 2 off from the appropriate modulo difference
+                startOfWeek = startOfWeek - 2;
+            }
+
+            var weekdayOffset = 15 - startOfWeek;
+
+            var weekday = ((int)dow + (int)weekdayOffset) % 7;
+            if (!zeroIndex)
+            {
+                weekday++;
+            }
+
+            return NumberOrDecimalValue(irContext, weekday);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all 1-arg math functions that return numeric values.
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return _nativeDecimal ? ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
         }
@@ -133,7 +133,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all 2-arg math functions that return numeric values.
     internal abstract class MathTwoArgFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return _nativeDecimal && (index == 0 || !_secondArgFloat) ? 
                         ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;

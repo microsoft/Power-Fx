@@ -4,22 +4,17 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -31,8 +26,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
             { "OptionSetSortTestSetup", OptionSetSortTestSetup },
             { "AllEnumsSetup", AllEnumsSetup },
+            { "RegEx", RegExSetup }
         };
-                
+
+        private static (RecalcEngine engine, RecordValue parameters) RegExSetup(PowerFxConfig config, bool numberIsFloat)
+        {            
+            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+            return (new RecalcEngine(config), null);
+        }
+
         private static (RecalcEngine engine, RecordValue parameters) AllEnumsSetup(PowerFxConfig config, bool numberIsFloat)
         {
             return (new RecalcEngine(PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet(), config.Features)), null);
@@ -120,7 +122,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
 
-            Func<double, FormulaValue> newNumber = number => 
+            Func<double, FormulaValue> newNumber = number =>
                 numberIsFloat ? FormulaValue.New(number) : FormulaValue.New((decimal)number);
 
             var rType = RecordType.Empty()

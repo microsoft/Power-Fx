@@ -25,8 +25,8 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("Abs(x)", udf.Body.ToString());
             Assert.Equal("Number", udf.ReturnType.ToString());
             var arg = udf.Args.First();
-            Assert.Equal("x", arg.VarIdent.ToString());
-            Assert.Equal("Number", arg.VarType.ToString());
+            Assert.Equal("x", arg.NameIdent.ToString());
+            Assert.Equal("Number", arg.TypeIdent.ToString());
         }
 
         [Theory]
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x=1;Foo(:Number):Number = 10 * x;", 1, 0, true)]
         public void NamedFormulaAndUdfTest(string script, int namedFormulaCount, int udfCount, bool expectErrors)
         {
-            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script);
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions: new ParserOptions());
 
             Assert.Equal(namedFormulaCount, parsedNamedFormulasAndUDFs.NamedFormulas.Count());
             Assert.Equal(udfCount, parsedNamedFormulasAndUDFs.UDFs.Count());

@@ -13,8 +13,8 @@ namespace Microsoft.PowerFx
         Sync = 1,
         MissingRequired = 2,
         CreatePermission = 3,
-        EditPermission = 4,
-        DeletePermission = 5,
+        EditPermissions = 4,
+        DeletePermissions = 5,
         Conflict = 6,
         NotFound = 7,
         ConstraintViolated = 8,
@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx
         InvalidArgument = 25,
         Internal = 26,
         NotApplicable = 27,
+        Timeout = 28,
         Custom = 1000,
     }
 }
