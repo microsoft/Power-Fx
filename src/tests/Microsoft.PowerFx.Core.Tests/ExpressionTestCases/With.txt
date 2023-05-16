@@ -13,10 +13,6 @@ Blank()
 >> With(First(First(LastN(ForAll(Table({Value:1}, {Value:0}, {Value:2}), Table({a: 1/ThisRecord.Value})), 2)).Value), a * a)
 Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Div0}))
 
-// since If uses the interaction of types, If(false, {x:1}, {z:2}) => {} hence the below is {}
->> With({y:1}, If(false, {x:1}, {z:2}))
-{}
-
 // void values are allowed in With function's argument.
 >> With({y:1}, If(true, {a:1}, "test"))
 If(true, {test:1}, "Mismatched args (result of the expression can't be used).")

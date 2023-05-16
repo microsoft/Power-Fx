@@ -1,0 +1,13 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+>> If(1>0, {a:1}, {b:2})
+{a:1}
+
+>> If(1<0, {a:1}, {b:2})
+{a:Blank()}
+
+>> If(false, {x:1, y:1}, {x:2, z:2})
+{x:2,y:Blank()}
+
+>> If(true, {x:1, y:1}, {x:2, z:2})
+{x:1,y:1}

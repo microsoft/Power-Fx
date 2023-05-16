@@ -2057,7 +2057,15 @@ namespace Microsoft.PowerFx.Core.Types
 
                     break;
                 case DKind.Currency:
-                    accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.DateTime:
                     if (usePowerFxV1CompatibilityRules)
