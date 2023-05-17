@@ -392,6 +392,8 @@ Error({Kind:ErrorKind.BadLanguageCode})
 >> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
 "1899-12-30 12:34:56"
 
+// ******** Format String ********
+
 >> Text(1234.5678, "[$-fr-FR]# ##0,00", "en-US")
 "1,234.57"
 
@@ -410,13 +412,6 @@ Error({Kind:ErrorKind.BadLanguageCode})
 >> Text(1234.5678, "[$-en-US]#,##0.00", "pt-BR")
 "1.234,57"
 
-// If not closed by a ']', then not interpreted as a format specifier
->> Text(1234.5678, "[$-en-US#,##0.00", "en-US")
-"[$-en-US1,234.57"
-
->> Text(1234.5678, "[$-a]0,0", "en-US")
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> Text(1234.5678,"[$-en-US]0 # # # !!!", "en-US")
 "1 2 3 5 !!!"
 
@@ -434,9 +429,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "fr-FR")
 "12 345,68"
 
->> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
-Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
-
 >> Text(1234.5678, "[$-en-US]", "en-US")
 "1234.5678"
 
@@ -446,8 +438,25 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-4
 >> Text(1234.5678, "[$-fr-FR]", "en-US")
 "1234.5678"
 
->> Text(1234.5678,"[$-]")
-"1234.5678"
+>> Text(1234.5678, "# ##0,00", "fr-FR")
+"1 234,57"
 
+// If have wrong format string, throw error
+>> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
+
+// If have empty language code, throw error
+>> Text(1234.5678,"[$-]")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// If not closed by a ']', throw error
 >> Text(1234.5678,"[$-a")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// If not closed by a ']', throw error
+>> Text(1234.5678, "[$-en-US#,##0.00", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// If does not have valid language code, throw error
+>> Text(1234.5678, "[$-a]0,0", "en-US")
 Error({Kind:ErrorKind.InvalidArgument})

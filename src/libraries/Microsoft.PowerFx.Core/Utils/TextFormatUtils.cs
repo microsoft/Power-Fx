@@ -5,6 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -12,22 +13,30 @@ namespace Microsoft.PowerFx.Core.Utils
     {
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
 
-        public static bool IsValidFormatArg(string formatArg, out bool hasDateTimeFmt, out bool hasNumericFmt, out int startIdx, out int endIdx)
+        public static bool IsValidFormatArg(string formatString, out string formatCultureName, out string formatArg, out bool hasDateTimeFmt, out bool hasNumericFmt)
         {
             // Verify statically that the format string doesn't contain BOTH numeric and date/time
             // format specifiers. If it does, that's an error according to Excel and our spec.
             hasDateTimeFmt = false;
             hasNumericFmt = false;
-            endIdx = -1;
+            int endIdx = -1;
+            formatCultureName = null;
+            formatArg = formatString;
 
             // But firstly skip any locale-prefix
-            startIdx = formatArg.IndexOf("[$-", StringComparison.Ordinal);
+            int startIdx = formatString.IndexOf("[$-", StringComparison.Ordinal);
             if (startIdx == 0)
             {
-                endIdx = formatArg.IndexOf(']', 3);
+                endIdx = formatString.IndexOf(']', 3);
                 if (endIdx > 0)
                 {
-                    formatArg = formatArg.Substring(endIdx + 1);
+                    formatCultureName = formatString.Substring(3, endIdx - 3);
+                    formatArg = formatString.Substring(endIdx + 1);
+
+                    if (string.IsNullOrEmpty(formatCultureName))
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -43,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 hasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
             }
 
-            if ((hasDateTimeFmt && hasNumericFmt) || (startIdx > 0) || (startIdx == 0 && endIdx <= 0 && !hasNumericFmt))
+            if ((hasDateTimeFmt && hasNumericFmt) || (startIdx > 0) || (startIdx == 0 && endIdx <= 0))
             {
                 return false;
             }

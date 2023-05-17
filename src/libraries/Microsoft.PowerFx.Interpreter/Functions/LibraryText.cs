@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -317,8 +318,8 @@ namespace Microsoft.PowerFx.Functions
         {
             const int formatSize = 100;
             string formatString = null;
-            int startIdx = -1;
-            int endIdx = -1;
+            string formatCultureName = null;
+            string formatArg = null;
             bool hasDateTimeFmt = false;
             bool hasNumberFmt = false;
 
@@ -345,55 +346,53 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt, out startIdx, out endIdx))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out formatCultureName, out formatArg, out hasDateTimeFmt, out hasNumberFmt))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], hasDateTimeFmt, hasNumberFmt, formatString, startIdx, endIdx, out StringValue result);
+            var isText = TryText(formatInfo, irContext, args[0], hasDateTimeFmt, hasNumberFmt, formatString, formatCultureName, formatArg, out StringValue result);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, bool hasDateTimeFmt, bool hasNumberFmt, string formatString, int startIdx, int endIdx, out StringValue result)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, bool hasDateTimeFmt, bool hasNumberFmt, string formatString, string formatCultureName, string formatArg, out StringValue result)
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
+            CultureInfo formatCulture = culture;
             result = null;
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
-            bool hasFormatCulture = false;
-            CultureInfo formatCulture = culture;
-            CultureInfo enUsCulture = CultureInfo.GetCultureInfo("en-US");
-            string revFormatStr = formatString;
-
-            if (!string.IsNullOrEmpty(formatString))
+            if (!string.IsNullOrEmpty(formatCultureName))
             {
-                if (startIdx == 0 && endIdx > 2)
+                if (!TryGetCulture(formatCultureName, out formatCulture))
                 {
-                    startIdx += 3;
-                    hasFormatCulture = true;
-                    string formatCultureName = formatString.Substring(startIdx, endIdx - startIdx);
-
-                    if (!TryGetCulture(formatCultureName, out formatCulture))
-                    {
-                        return false;
-                    }
-
-                    var numberCultureFormat = formatCulture.NumberFormat;
-                    formatString = formatString.Substring(endIdx + 1);                    
-                    revFormatStr = formatString.Replace(numberCultureFormat.NumberGroupSeparator, "\uFEFF");
-
-                    if (string.IsNullOrWhiteSpace(numberCultureFormat.NumberGroupSeparator))
-                    {
-                        revFormatStr = revFormatStr.Replace(" ", "\uFEFF").Replace("\u202F", "\uFEFF");
-                    }
-
-                    revFormatStr = revFormatStr.Replace(numberCultureFormat.NumberDecimalSeparator, ".");
-                    revFormatStr = revFormatStr.Replace("\uFEFF", ",");
+                    return false;
                 }
+
+                formatString = formatArg;
+            }
+    
+            if (!string.IsNullOrEmpty(formatArg))
+            {
+                // Get en-US numeric format string
+                // \uFEFF is a the zero width no-break space codepoint. This will be used to swap with number group seperator character.
+                string numberGroupSeperator = "\uFEFF";
+                formatString = formatArg;
+                var numberCultureFormat = formatCulture.NumberFormat;
+
+                formatString = formatString.Replace(numberCultureFormat.NumberGroupSeparator, numberGroupSeperator);
+
+                if (string.IsNullOrWhiteSpace(numberCultureFormat.NumberGroupSeparator))
+                {
+                    formatString = formatString.Replace(" ", numberGroupSeperator).Replace("\u202F", numberGroupSeperator);
+                }
+
+                formatString = formatString.Replace(numberCultureFormat.NumberDecimalSeparator, ".");
+                formatString = formatString.Replace(numberGroupSeperator, ",");
             }
 
             switch (value)
@@ -411,19 +410,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(formatString))
-                        {
-                            if (hasFormatCulture)
-                            {
-                                formatString = GetFormatString(num.Value, formatString, revFormatStr, formatCulture, enUsCulture);
-                            }
-
-                            result = new StringValue(irContext, num.Value.ToString(formatString, culture));
-                        }
-                        else
-                        {
-                            result = new StringValue(irContext, num.Value.ToString("g", culture));
-                        }
+                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
                     }
 
                     break;
@@ -439,20 +426,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var normalized = dec.Normalize();
-
-                        if (!string.IsNullOrEmpty(formatString))
-                        {
-                            if (hasFormatCulture)
-                            {
-                                formatString = GetFormatString(normalized, formatString, revFormatStr, formatCulture, enUsCulture);
-                            }
-
-                            result = new StringValue(irContext, normalized.ToString(formatString, culture));
-                        }
-                        else
-                        {
-                            result = new StringValue(irContext, normalized.ToString("g", culture));
-                        }                        
+                        result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
                     }
 
                     break;
@@ -1165,20 +1139,6 @@ namespace Microsoft.PowerFx.Functions
 
             outputValue = (int)inputValue;
             return true;
-        }
-
-        private static string GetFormatString(object value, string formatString, string revFormatStr, CultureInfo formatCulture, CultureInfo enUsCulture)
-        {
-            var formattableValue = value as IFormattable;
-
-            if (formattableValue != null && revFormatStr != formatString && 
-                  (formattableValue.ToString(formatString, formatCulture) != formattableValue.ToString(formatString, enUsCulture)
-                    || formattableValue.ToString(revFormatStr, formatCulture) != formattableValue.ToString(revFormatStr, enUsCulture)))
-            {
-                return revFormatStr;
-            }
-
-            return formatString;
         }
     }
 }
