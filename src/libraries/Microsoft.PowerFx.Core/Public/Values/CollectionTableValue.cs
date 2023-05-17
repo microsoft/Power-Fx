@@ -108,24 +108,6 @@ namespace Microsoft.PowerFx.Types
             return DValue<RecordValue>.Of(record);
         }
 
-#if false
-        internal override void ShallowCopyRecordInPlace(int index)
-        {
-            if (_sourceCount.Count != 0)
-            {
-                if (index == -1)
-                {
-                    index = _sourceCount.Count - 1;
-                }
-
-                if (index < _sourceCount.Count)
-                {
-                    _sourceMutableIndex[index] = MarshalInverse((RecordValue)Marshal(_sourceIndex[index]).Value.MaybeShallowCopy());
-                }
-            }
-        }
-#endif
-
         public override async Task<DValue<BooleanValue>> ClearAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
