@@ -465,11 +465,11 @@ namespace Microsoft.PowerFx.Core.IR
                 }
                 else if (arg is RecordFieldAccessNode fa)
                 {
-                    return new RecordFieldAccessNode(new IRContext(fa.IRContext.SourceContext, fa.IRContext.ResultType, mutationCopy: true), MutationCopy(fa.From), fa.Field);
+                    return new RecordFieldAccessNode(new IRContext(fa.IRContext.SourceContext, fa.IRContext.ResultType, isMutation: true), MutationCopy(fa.From), fa.Field);
                 }
                 else if (arg is ResolvedObjectNode ro)
                 {
-                    return new ResolvedObjectNode(new IRContext(ro.IRContext.SourceContext, ro.IRContext.ResultType, mutationCopy: true), ro.Value);
+                    return new ResolvedObjectNode(new IRContext(ro.IRContext.SourceContext, ro.IRContext.ResultType, isMutation: true), ro.Value);
                 }
 
                 throw new NotImplementedException("Mutation thrgouh an accessor node that does not support mutation");
