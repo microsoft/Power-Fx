@@ -199,7 +199,6 @@ namespace Microsoft.PowerFx.Tests
             // Asssert
             Assert.NotNull(result);
             Assert.Equal(expectedFormattedExpr, result);
-            var t = TexlLexer.InvariantLexer.RemoveWhiteSpace(result);
 
             // Act: Ensure idempotence
             result = Format(result, flags);
