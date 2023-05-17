@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Delegiranje ove operacije za tabelu „{0}“ nije podržano.</value>
+    <value>Ova operacija na tabeli „{0}'“ možda neće funkcionisati ako ima više od ovoliko redova: {1}.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Nije moguće delegirati {0}: sadrži funkciju ponašanja „{1}“.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Utvrđuje da li obezbeđeni tekst sadrži podudaranje sa obezbeđenim formatom teksta.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Tekst koji treba uporediti u odnosu na format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Format u odnosu na koji treba proveriti tekst. To može biti vrednost TextFormat enum ili regularni izraz.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ovim se određuje koji deo teksta želimo da se podudara. To može biti vrednost nabrajanja MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>područje</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Traži navedeni regularni izraz u datom tekstu i vraća prvo podudaranje iz njega.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Traži navedeni regularni izraz u datom tekstu i vraća sva podudaranja iz njega.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Tekst koji treba pretražiti u odnosu na regularni izraz.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Regularni izraz u odnosu na koji se proverava tekst. Može da sadrži zapise (vrednosti između zarada) koji će se vratiti u slučaju podudaranja.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ovim se određuje koji deo teksta želimo da se podudara. To može biti vrednost nabrajanja MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Tekst koji treba pretražiti u odnosu na regularni izraz.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Regularni izraz u odnosu na koji se proverava tekst. Može da sadrži zapise (vrednosti između zarada) koji će se vratiti u slučaju podudaranja.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ovim se određuje koji deo teksta želimo da se podudara. To može biti vrednost nabrajanja MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regularni_izraz</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opcije</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Nevažeći regularni izraz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regularni izrazi moraju predstavljati konstantne vrednosti.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Ime snimka „{0}“ skriva unapred definisano svojstvo koje je vraća potpuno podudaranje regularnog izraza. Trebalo bi da ga preimenujete ako želite da koristite to imenovano svojstvo da biste izdvojili potpuno podudaranje u navedenom tekstu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Ime snimka „{0}“ skriva unapred definisano svojstvo koje je vraća grupna podudaranja u regularnom izrazu. Trebalo bi da ga preimenujete ako želite da koristite to imenovano svojstvo da biste izdvojili sva potpodudaranja u navedenom tekstu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Ime snimka „{0}“ skriva unapred definisano svojstvo koje je vraća lokaciju podudaranja regularnog izraza. Trebalo bi da ga preimenujete ako želite da koristite to imenovano svojstvo da biste izdvojili položaj potpunog podudaranja u navedenom tekstu.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

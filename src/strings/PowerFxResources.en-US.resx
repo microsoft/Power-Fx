@@ -5139,7 +5139,7 @@
     <comment>Error Message.</comment>
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Delegating this operation on table '{0}' is not supported.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     <comment>Warning message.</comment>
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -5251,5 +5251,16 @@
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>The capture name '{0}' is hiding the predefined property that returns the location of the match of the regular expression. Consider renaming it if you want to use that named property to extract the position of the full match in the specified text.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'StartMatch' in the function result.</comment>  
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    <comment>Description of 'PlainText' function.</comment>
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>Function_parameter - First argument of the PlainText function - the text to have its HTML and XML tags removed.</comment>
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>
