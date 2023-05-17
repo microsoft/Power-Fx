@@ -20,8 +20,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
-        public override bool PropagatesMutability => true;
-
         public FirstLastNFunction(bool isFirst)
             : base(
                   isFirst ? "FirstN" : "LastN",

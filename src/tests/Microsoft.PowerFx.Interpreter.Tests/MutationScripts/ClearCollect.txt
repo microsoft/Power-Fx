@@ -49,9 +49,8 @@ Errors: Error 34-57: The specified column 'surname' does not exist. The column w
 >> Set(temp2, [{name:"hello"}])
 Table({name:"hello"})
 
-// Should this work?
 >> ClearCollect(FirstN(temp2, 0), {name: "textInput1"})
-{name:"textInput1"}
+Errors: Error 13-29: The value passed to the 'ClearCollect' function cannot be changed.
 
 >> ClearCollect(Foo,r1)
 Errors: Error 13-16: Name isn't valid. 'Foo' isn't recognized.|Error 17-19: The specified column 'a' does not exist.|Error 0-20: The function 'ClearCollect' has some invalid arguments.

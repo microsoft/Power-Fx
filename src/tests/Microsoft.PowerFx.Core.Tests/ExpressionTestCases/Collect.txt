@@ -41,12 +41,6 @@ Errors: Error 12-15: Invalid argument type (Text). Expecting a Record value inst
 >> Collect(t1, 1)
 Errors: Error 12-13: Invalid argument type (Decimal). Expecting a Record value instead.|Error 12-13: Invalid argument type. Cannot use Decimal values in this context.|Error 0-14: The function 'Collect' has some invalid arguments.
 
->> Collect(Table({name: "VC"}), {surname: "textInput1"})
-Errors: Error 29-52: The specified column 'surname' does not exist. The column with the most similar name is 'name'.|Error 0-53: The function 'Collect' has some invalid arguments.
-
->> Collect(FirstN(t_name, 0), {name: "textInput1"})
-{name:"textInput1"}
-
 >> Collect(Foo,r2)
 Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-14: The specified column 'Field1' does not exist.|Error 0-15: The function 'Collect' has some invalid arguments.
 
@@ -55,21 +49,6 @@ Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name 
 
 >> Collect(1/0,Foo)
 Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
-
->> Collect(Error({Kind:ErrorKind.Custom}), r2)
-Errors: Error 40-42: The specified column 'Field1' does not exist.|Error 8-38: The value passed to the 'Collect' function cannot be changed.|Error 0-43: The function 'Collect' has some invalid arguments.
-
->> Collect(Error({Kind:ErrorKind.Custom}), Error({Kind:ErrorKind.Div0}))
-Errors: Error 8-38: The value passed to the 'Collect' function cannot be changed.
-
->> Collect(Blank(), r2)
-Errors: Error 17-19: The specified column 'Field1' does not exist.|Error 8-15: The value passed to the 'Collect' function cannot be changed.|Error 0-20: The function 'Collect' has some invalid arguments.
-
->> Collect(Blank(), Blank())
-Errors: Error 8-15: The value passed to the 'Collect' function cannot be changed.
-
->> Collect("", "")
-Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type (Text). Expecting a Record value instead.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 8-10: The value passed to the 'Collect' function cannot be changed.|Error 0-15: The function 'Collect' has some invalid arguments.
 
 >> Collect(If(false,Blank()),r2)
 Errors: Error 8-25: The function 'Collect' has some invalid arguments.

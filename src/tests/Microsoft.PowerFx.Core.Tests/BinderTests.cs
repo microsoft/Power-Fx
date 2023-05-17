@@ -38,18 +38,24 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x.Tbl")]
         [InlineData("First(x.Tbl)")]
         [InlineData("First(x.Tbl).Value2")]
-        [InlineData("FirstN(x.Tbl, 3).Value2")]
         [InlineData("Last(x.Tbl).Value2")]
-        [InlineData("LastN(x.Tbl, 3).Value2")]
         [InlineData("Index(x.Tbl, 3).Value2")]
         [InlineData("x.Rec")]
         [InlineData("x.Rec.Value3")]
+        [InlineData("tbl")]
+        [InlineData("First(tbl)")]
+        [InlineData("Last(tbl)")]
+        [InlineData("Index(tbl, 3)")]
         public void TestMutableNodes(string expression)
         {
             var config = new PowerFxConfig();
             config.SymbolTable.AddVariable(
                 "x",
                 new KnownRecordType(TestUtils.DT("![Value:n,Tbl:*[Value2:n],Rec:![Value3:n,Value4:n]]")),
+                mutable: true);
+            config.SymbolTable.AddVariable(
+                "tbl",
+                TableType.Empty().Add("Value", FormulaType.Number),
                 mutable: true);
             var engine = new Engine(config);
             var checkResult = engine.Check(expression);
@@ -61,11 +67,24 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("nf")]
         [InlineData("const")]
+        [InlineData("FirstN(x.Tbl, 3).Value2")]
+        [InlineData("LastN(x.Tbl, 3).Value2")]
+        [InlineData("Filter(tbl, Value > 10)")]
+        [InlineData("FirstN(tbl, 2)")]
+        [InlineData("LastN(tbl, 2)")]
         public void TestImmutableNodes(string expression)
         {
             var config = new PowerFxConfig();
             config.SymbolTable.AddConstant("const", new NumberValue(IR.IRContext.NotInSource(FormulaType.Number), 2));
             config.SymbolTable.AddVariable("nf", new TableType(TestUtils.DT("*[Value:n]")), mutable: false);
+            config.SymbolTable.AddVariable(
+                "x",
+                new KnownRecordType(TestUtils.DT("![Value:n,Tbl:*[Value2:n],Rec:![Value3:n,Value4:n]]")),
+                mutable: true);
+            config.SymbolTable.AddVariable(
+                "tbl",
+                TableType.Empty().Add("Value", FormulaType.Number),
+                mutable: true);
             var engine = new Engine(config);
             var checkResult = engine.Check(expression);
             Assert.True(checkResult.IsSuccess);
