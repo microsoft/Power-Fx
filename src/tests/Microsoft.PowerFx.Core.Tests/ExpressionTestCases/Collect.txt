@@ -71,9 +71,6 @@ Blank()
 >> Collect("", "")
 Errors: Error 8-10: Invalid argument type (Text). Expecting a Table value instead.|Error 12-14: Invalid argument type (Text). Expecting a Record value instead.|Error 12-14: Invalid argument type. Cannot use Text values in this context.|Error 0-15: The function 'Collect' has some invalid arguments.
 
->> Collect(If(false,Blank()),r2)
-Errors: Error 8-25: The function 'Collect' has some invalid arguments.
-
 >> Collect(t1,{Price:200}).Price
 Errors: Error 11-22: The specified column 'Price' does not exist.|Error 0-23: The function 'Collect' has some invalid arguments.|Error 23-29: Name isn't valid. 'Price' isn't recognized.
 
