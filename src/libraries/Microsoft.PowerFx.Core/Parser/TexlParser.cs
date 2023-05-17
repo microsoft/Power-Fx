@@ -1767,11 +1767,11 @@ namespace Microsoft.PowerFx.Core.Parser
         }
 
         /// <summary>
-        /// Formats/Pretty Print the given expression to more a readable form.
+        /// Formats/Pretty Print the given expression text to more a readable form.
         /// </summary>
-        /// <param name="text">Expression Text to format.</param>
-        /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, Expression Chaining is enabled.</param>
-        /// <returns>Formatted Expression.</returns>
+        /// <param name="text">Expression text to format.</param>
+        /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, expression chaining is enabled.</param>
+        /// <returns>Formatted expression text.</returns>
         public static string Format(string text, Flags flags = Flags.EnableExpressionChaining)
         {
             var result = ParseScript(
