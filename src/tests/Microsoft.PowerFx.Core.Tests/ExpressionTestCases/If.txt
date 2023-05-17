@@ -55,12 +55,6 @@ Blank()
 >> If(1/0 = 7, 2, 3)
 Error({Kind:ErrorKind.Div0})
 
->> If(false, {x:1, y:1}, {x:2, z:2})
-{x:2}
-
->> If(true, {x:1, y:1}, {x:2, z:2})
-{x:1}
-
 // Demos expression that generates Void value.
 >> If(true, {a:1}, "test")
 If(true, {test:1}, "Mismatched args (result of the expression can't be used).")

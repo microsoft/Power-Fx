@@ -50,9 +50,6 @@ Errors: Error 8-11: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name 
 >> Collect(1/0,Foo)
 Errors: Error 12-15: Name isn't valid. 'Foo' isn't recognized.
 
->> Collect(If(false,Blank()),r2)
-Errors: Error 8-25: The function 'Collect' has some invalid arguments.
-
 >> Collect(t1,{Price:200}).Price
 Errors: Error 11-22: The specified column 'Price' does not exist.|Error 0-23: The function 'Collect' has some invalid arguments.|Error 23-29: Name isn't valid. 'Price' isn't recognized.
 

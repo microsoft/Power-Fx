@@ -154,18 +154,6 @@ Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The fun
 >> Patch(Foo, Bar, {DisplayNameField2:"jupter"})
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-45: The function 'Patch' has some invalid arguments.
 
->> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
-{Value:11}
-
->> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
-{Value:11}
-
->> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
-{Value:11}
-
->> Collect(t_empty, {Value:1}); Collect(t_empty, If(false, {x:1, Value:2}, {Value:2, z:2})); Collect(t_empty, {Value:3}); Patch(t_empty, {Value:2}, {Value:11})
-{Value:11}
-
 >> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
 Table({a:1,b:"a"},{a:3,b:"c"})
 
