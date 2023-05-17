@@ -1766,11 +1766,12 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        public static string Format(string text)
+        public static string Format(string text, Flags? flags = null)
         {
+            flags = flags ?? Flags.EnableExpressionChaining;
             var result = ParseScript(
                 text,
-                flags: Flags.EnableExpressionChaining);
+                flags: flags.Value);
 
             // Can't pretty print a script with errors.
             if (result.HasError)

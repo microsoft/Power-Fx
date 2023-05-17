@@ -163,14 +163,78 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("$\"This is {{\"Another\"}} interpolated {{string}}\"", "$\"This is {{\"Another\"}} interpolated {{string}}\"")]
         public void TestPrettyPrint(string script, string expected)
         {
+            // Act & Assert
             var result = Format(script);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
 
-            // Ensure idempotence
+            // Act & Assert: Ensure idempotence
             result = Format(result);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(TexlLexer.ReservedBlank)]
+        [InlineData(TexlLexer.ReservedChild)]
+        [InlineData(TexlLexer.ReservedChildren)]
+        [InlineData(TexlLexer.ReservedEmpty)]
+        [InlineData(TexlLexer.ReservedIs)]
+        [InlineData(TexlLexer.ReservedNone)]
+        [InlineData(TexlLexer.ReservedNothing)]
+        [InlineData(TexlLexer.ReservedNull)]
+        [InlineData(TexlLexer.ReservedSiblings)]
+        [InlineData(TexlLexer.ReservedThis)]
+        [InlineData(TexlLexer.ReservedUndefined)]
+        public void TestPrettyPrintWithDisabledReservedKeywordsFlag(string keyword)
+        {
+            // Arrange
+            var expression = $"Set({keyword}; true)";
+            var expectedFormattedExpr = $"Set(\n    {keyword};\n    true\n)";
+            var flags = Flags.DisableReservedKeywords | Flags.EnableExpressionChaining;
+
+            // Act
+            var result = Format(expression, flags);
+
+            // Asssert
+            Assert.NotNull(result);
+            Assert.Equal(expectedFormattedExpr, result);
+            var t = TexlLexer.InvariantLexer.RemoveWhiteSpace(result);
+
+            // Act: Ensure idempotence
+            result = Format(result, flags);
+            
+            // Assert: Ensure idempotence
+            Assert.NotNull(result);
+            Assert.Equal(expectedFormattedExpr, result);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        [InlineData(5)]
+        [InlineData(10)]
+        public void TestPrettyPrintAndRemoveWhitespaceRoundtripWithDisabledReservedKeywordsFlag(int trips)
+        {
+            // Arrange
+            var unformattedExpr = $"Set({TexlLexer.ReservedChildren}; true )";
+            var formatedExpr = $"Set(\n    {TexlLexer.ReservedChildren};\n    true\n)";
+            var expectedOutcome = trips % 2 == 0 ? unformattedExpr : formatedExpr;
+
+            // Act
+            var outcome = unformattedExpr;
+            for (var i = 1; i <= trips; ++i) 
+            {
+                outcome = i % 2 == 0 ?
+                          TexlLexer.InvariantLexer.RemoveWhiteSpace(outcome) :
+                          Format(outcome, Flags.DisableReservedKeywords | Flags.EnableExpressionChaining);
+            }
+
+            // Assert
+            Assert.Equal(expectedOutcome, outcome);
         }
     }
 }
