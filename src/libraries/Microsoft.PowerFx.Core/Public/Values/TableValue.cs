@@ -233,6 +233,7 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
+#if false
         /// <summary>
         /// Shallow copies the record, of a row, of a table in place.  
         /// For example, Set( var, [[1,2,3]] ); Patch( Index(var, 1).Value, {Value:1}, {Value:2} ) 
@@ -251,6 +252,7 @@ namespace Microsoft.PowerFx.Types
                 throw new NotImplementedException();
             }
         }
+#endif
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
         {

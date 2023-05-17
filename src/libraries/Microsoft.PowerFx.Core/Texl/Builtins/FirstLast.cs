@@ -23,8 +23,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class FirstLastFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
-        
-        public override bool IsMutationEnabled => true;
 
         private readonly bool _isFirst;
 

@@ -113,11 +113,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // abstract will force them to do so.
         public abstract bool IsSelfContained { get; }
 
-        // Return true of the function supports mutating a value through the function.  
-        // For example, Set( var, [[1,2,3],[4,5,6]] ); Patch( First( var ), {Value:2}, {Value:9} )
-        // is mutationg var through the First function.
-        public virtual bool IsMutationEnabled { get; }
-
         // Return true if the function is stateless (same result for same input), or false otherwise.
         public virtual bool IsStateless => true;
 
