@@ -1,0 +1,13 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> If(1>0, {a:1}, {b:2})
+{}
+
+>> If(1<0, {a:1}, {b:2})
+{}
+
+>> If(false, {x:1, y:1}, {x:2, z:2})
+{x:2}
+
+>> If(true, {x:1, y:1}, {x:2, z:2})
+{x:1}

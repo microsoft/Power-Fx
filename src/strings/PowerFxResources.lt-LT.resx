@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Šios operacijos perdavimas lentelėje „{0}“ nepalaikomas.</value>
+    <value>Ši operacija lentelėje „{0}“ gali neveikti, jei joje yra daugiau nei {1} eil.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Negalima perduoti {0}: yra veikimo funkcija „{1}“.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Nustatoma, ar yra pateikto teksto atitikmuo pateikto teksto formatu.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Tekstas, kuris bus tikrinamas pagal formatą.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formatas, pagal kurį tikrinamas tekstas. Tai gali būti TextFormat išvardijimo reikšmė arba paprastoji išraiška.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekstas</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formatas</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>sritis</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Pateiktame tekste ieškoma nurodytos paprastosios išraiškos ir pateikiamas pirmasis atitikmuo.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Pateiktame tekste ieškoma nurodytos paprastosios išraiškos ir pateikiami visi jos atitikmenys.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Tekstas, kurio reikia ieškoti pagal paprastąją išraišką.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Paprastoji išraiška, pagal kurią reikia tikrinti tekstą. Ji gali apimti užfiksuotus įrašus (reikšmes skliausteliuose), kurie bus pateikti sėkmingo sutapimo atveju.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Tekstas, kurio reikia ieškoti pagal paprastąją išraišką.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Paprastoji išraiška, pagal kurią reikia tikrinti tekstą. Ji gali apimti užfiksuotus įrašus (reikšmes skliausteliuose), kurie bus pateikti sėkmingo sutapimo atveju.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekstas</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguliarusis_reiškinys</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>parinktys</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Netinkama paprastoji išraiška.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Paprastosios išraiškos turi būti pastovios vertės.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia visišką paprastosios išraiškos atitiktį. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visišką atitiktį nurodytame tekste.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia atitikčių grupes paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visas dalines atitiktis nurodytame tekste.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia grupių atitiktis paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visiškos atitikties vietą nurodytame tekste.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

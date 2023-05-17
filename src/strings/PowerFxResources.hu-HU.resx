@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>A művelet '{0}' táblába történő delegálása nem támogatott.</value>
+    <value>Ez a művelet a(z) '{0}' táblán adott esetben nem működik, ha több mint {1} sorral rendelkezik.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>A(z) {0} nem delegálható: '{1}' viselkedési függvényt tartalmaz.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Azt határozza meg, hogy a megadott szöveg megfelel-e a megadott szövegformátumnak.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>A szöveg, melyet össze kell hasonlítani a formátummal.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>A formátum, amely alapján ellenőrizni kell a szöveget. Ez a TextFormat enumerálás egy értéke vagy egy reguláris kifejezés lehet.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions enumerálás értéke is lehet.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>szöveg</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formátum</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>mérték</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>A megadott reguláris kifejezés keresése a megadott szövegben, és az első egyezés visszaadása.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>A megadott reguláris kifejezés keresése a megadott szövegben, és az összes egyezés visszaadása.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Az a szöveg, amelyben a reguláris kifejezés alapján való keresést végre kell hajtani.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>A szövegbeli egyezés alapjául szolgáló reguláris kifejezés. Olyan befoglalásokat (zárójelbe tett értékeket) tartalmazhat, amelyeket sikeres egyezés esetén ad vissza a függvény.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions enumerálás értéke is lehet.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Az a szöveg, amelyben a reguláris kifejezés alapján való keresést végre kell hajtani.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>A szövegbeli egyezés alapjául szolgáló reguláris kifejezés. Olyan befoglalásokat (zárójelbe tett értékeket) tartalmazhat, amelyeket sikeres egyezés esetén ad vissza a függvény.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions enumerálás értéke is lehet.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>szöveg</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguláris_kifejezés</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>lehetőségek</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Érvénytelen reguláris kifejezés.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>A reguláris kifejezéseknek konstans értékeknek kell lenniük.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való teljes egyezést adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezést az elnevezett tulajdonsággal.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezésben található csoporttalálatokat adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található résztalálatokat az elnevezett tulajdonsággal.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való egyezés helyét adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezés helyét az elnevezett tulajdonsággal.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

@@ -1,0 +1,4 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+>> ForAll([1], If(false, {a:1}, {b:2}))
+Table({a:Blank(),b:2})

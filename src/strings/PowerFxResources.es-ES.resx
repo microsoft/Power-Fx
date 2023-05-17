@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>No se admite la delegación de esta operación en la tabla "{0}".</value>
+    <value>Es posible que esta operación de la tabla "{0}" no funcione si tiene más de {1} filas.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>No se puede delegar {0}: contiene una función de comportamiento "{1}".</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determina si el texto proporcionado coincide con el formato de texto proporcionado.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Texto que se comparará con el formato.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formato con el que se comprobará el texto. Puede que sea un valor de la enumeración TextFormat o una expresión regular.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Esto determina qué parte del texto queremos hacer coincidir. Puede ser un valor de la enumeración MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formato</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>extensión</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Busca la expresión regular especificada en el texto proporcionado y devuelve la primera coincidencia.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Busca la expresión regular especificada en el texto proporcionado y devuelve todas las coincidencias.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Texto que se buscará según la expresión regular.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Expresión regular con la que comprobar el texto. Puede contener capturas (valores entre paréntesis) que se devolverán en caso de una coincidencia correcta.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Esto determina qué parte del texto queremos hacer coincidir. Puede ser un valor de la enumeración MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Texto que se buscará según la expresión regular.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Expresión regular con la que comprobar el texto. Puede contener capturas (valores entre paréntesis) que se devolverán en caso de una coincidencia correcta.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Esto determina qué parte del texto queremos hacer coincidir. Puede ser un valor de la enumeración MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>expresión_regular</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opciones</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Expresión regular no válida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Las expresiones regulares deben ser valores constantes.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>El nombre de la captura "{0}" oculta la propiedad predefinida que devuelve la coincidencia completa de la expresión regular. Considere la posibilidad de cambiarle el nombre si quiere utilizar esa propiedad con nombre para extraer la coincidencia completa en el texto especificado.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>El nombre de la captura "{0}" oculta la propiedad predefinida que devuelve las coincidencias de grupo de la expresión regular. Considere la posibilidad de cambiarle el nombre si quiere utilizar esa propiedad con nombre para extraer todas las coincidencias secundarias en el texto especificado.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>El nombre de la captura "{0}" oculta la propiedad predefinida que devuelve la ubicación de la coincidencia de la expresión regular. Considere la posibilidad de cambiarle el nombre si quiere utilizar esa propiedad con nombre para extraer la posición de la coincidencia completa en el texto especificado.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>
