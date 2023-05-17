@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Het machtigen van deze bewerking op tabel {0} wordt niet ondersteund.</value>
+    <value>Deze bewerking op tabel {0} werkt mogelijk niet als deze meer {1} rijen bevat.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Bepaalt of er voor de opgegeven tekst een overeenkomst in de aangeleverde tekstindeling bestaat.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>De tekst die met de indeling moet worden vergeleken.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>De indeling waarop de tekst moet worden gecontroleerd. Dit kan een waarde van de enum TextFormat of een reguliere expressie zijn.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>indeling</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>omvang</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Hiermee wordt in de opgegeven tekst naar de opgegeven reguliere expressie gezocht en worden de eerste overeenkomsten uit deze expressie geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Hiermee wordt in de opgegeven tekst naar de opgegeven reguliere expressie gezocht en worden alle overeenkomsten uit deze expressie geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>De tekst waarop moet worden gezocht voor de reguliere expressie.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>De reguliere expressie om de tekst op te controleren. Kan opnamen (waarden tussen haakjes) bevatten die in het geval van een overeenkomst worden geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>De tekst waarop moet worden gezocht voor de reguliere expressie.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>De reguliere expressie om de tekst op te controleren. Kan opnamen (waarden tussen haakjes) bevatten die in het geval van een overeenkomst worden geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguliere_expressie</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opties</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Reguliere expressies moeten constante waarden zijn.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de volledige overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de groepsovereenkomsten in de reguliere expressie worden geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om alle subovereenkomsten in de opgegeven tekst te extraheren.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de locatie van de overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de positie van de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ ủy quyền thao tác này trên bảng "{0}".</value>
+    <value>Thao tác này trên bảng "{0}" có thể không hoạt động nếu bảng đó có nhiều hơn {1} hàng.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Không thể ủy quyền {0}: chứa hàm hành vi "{1}".</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Xác định xem văn bản được cung cấp có khớp với định dạng văn bản được cung cấp không.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Văn bản cần so sánh với định dạng.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Định dạng để kiểm tra văn bản dựa theo đó. Định dạng đó có thể là một giá trị TextFormat kiểu liệt kê hoặc một biểu thức chính quy.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Đối số này sẽ xác định phần văn bản mà chúng tôi muốn khớp. Đây có thể là một giá trị MatchOptions kiểu liệt kê.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>văn_bản</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>định_dạng</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>phạm_vi</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Tìm kiếm văn bản được cung cấp đối với biểu thức chính quy đã chỉ định, trả về giá trị khớp đầu tiên từ biểu thức đó.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Tìm kiếm văn bản được cung cấp đối với biểu thức chính quy đã chỉ định, trả về mọi giá trị khớp từ biểu thức đó.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Văn bản cần tìm kiếm dựa trên biểu thức chính quy.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Biểu thức thông thường để kiểm tra văn bản dựa trên đó. Có thể chứa nội dung thu được (các giá trị giữa các dấu ngoặc tròn) sẽ được trả về trong trường hợp khớp hoàn toàn.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Đối số này sẽ xác định phần văn bản mà chúng tôi muốn khớp. Đây có thể là một giá trị MatchOptions kiểu liệt kê.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Văn bản cần tìm kiếm dựa trên biểu thức chính quy.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Biểu thức thông thường để kiểm tra văn bản dựa trên đó. Có thể chứa nội dung thu được (các giá trị giữa các dấu ngoặc tròn) sẽ được trả về trong trường hợp khớp hoàn toàn.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Đối số này sẽ xác định phần văn bản mà chúng tôi muốn khớp. Đây có thể là một giá trị MatchOptions kiểu liệt kê.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>văn_bản</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>biểu_thức_chính_quy</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>tùy_chọn</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Biểu thức chính quy phải là các giá trị không đổi.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về kết quả khớp đầy đủ của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về kết quả khớp nhóm của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất mọi kết quả khớp phụ trong văn bản được chỉ định.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về vị trí kết quả khớp của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các vị trí kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

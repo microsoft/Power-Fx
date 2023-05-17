@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Бұл әрекетке "{0}" кестесінде сенім білдіруге қолдау көрсетілмейді.</value>
+    <value>"{0}" кестесінде {1} қатардан көп болса, ондағы бұл әрекет істемеуі мүмкін.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>{0} сенім білдіру мүмкін емес: құрамында "{1}" тәртіптік функциясы бар.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Берілген мәтіннің берілген мәтін пішіміне сәйкестігін анықтайды.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Пішім бойынша салыстырылатын мәтін.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Мәтін тексерілетін пішім. Ол TextFormat тізімінің мәні немесе тұрақты өрнек болуы мүмкін.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>мәтін</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>пішім</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>көлем</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Берілген мәтіннен көрсетілген тұрақты өрнекті іздеп, одан бірінші сәйкестікті қайтарады.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Берілген мәтіннен көрсетілген тұрақты өрнекті іздеп, одан барлық сәйкестікті қайтарады.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Тұрақты өрнек бойынша ізделетін мәтін.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Мәтін тексерілетін регуляр өрнек. Онда сәтті сәйкестік болған жағдайда қайтарылатын деректер (жақша ішіндегі мәндер) болуы мүмкін.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Тұрақты өрнек бойынша ізделетін мәтін.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Мәтін тексерілетін регуляр өрнек. Онда сәтті сәйкестік болған жағдайда қайтарылатын деректер (жақша ішіндегі мәндер) болуы мүмкін.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>мәтін</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>тұрақтыөрнек</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>параметрлер</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Жарамсыз тұрақты өрнек.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Тұрақты өрнектердің мәндері тұрақты болуы керек.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>"{0}" алу атауы регуляр өрнектің толық сәйкестігін қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестікті шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>"{0}" алу атауы регуляр өрнектегі топтық сәйкестіктерді қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық емес сәйкестіктерді шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>"{0}" алу атауы регуляр өрнектің сәйкестік орнын қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестіктің орнын шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>不支持对表 '{0}' 委托此操作。</value>
+    <value>如果表 '{0}' 超过 {1} 行，则此操作对该表可能不起作用。</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>无法委托 {0}: 包含行为函数 '{1}'。</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>确定提供的文本是否与所提供的文本格式匹配。</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>要对格式进行比较的文本。</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>要针对其来检查文本的格式。可能是一个 TextFormat 枚举值或正则表达式。</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>这将确定我们要匹配文本的哪一部分。可能是一个 MatchOptions 枚举值。</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>文本</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>格式</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>程度</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>在提供的文本中搜索指定的正则表达式，从中返回第一个匹配项。</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>在提供的文本中搜索指定的正则表达式，从中返回所有匹配项。</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>要根据正则表达式进行搜索的文本。</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>用于检查文本的正则表达式。它可以包含在成功匹配的情况下将返回的捕获(括号之间的值)。</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>这将确定我们要匹配文本的哪一部分。可能是一个 MatchOptions 枚举值。</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>要根据正则表达式进行搜索的文本。</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>用于检查文本的正则表达式。它可以包含在成功匹配的情况下将返回的捕获(括号之间的值)。</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>这将确定我们要匹配文本的哪一部分。可能是一个 MatchOptions 枚举值。</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>文本</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>正则表达式</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>选项</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>正则表达式必须是常数值。</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>捕获名称“{0}”将隐藏要返回正则表达式完整匹配的预定义属性。如果要使用该命名属性来提取指定文本中的完整匹配项，请对其重命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>捕获名称“{0}”将隐藏要返回正则表达式中组匹配项的预定义属性。如果要使用该命名属性来提取指定文本中的所有子匹配项，请对其重命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>捕获名称“{0}”将隐藏要返回正则表达式匹配项位置的预定义属性。如果要使用该命名属性来提取指定文本中完整匹配项的位置，请对其重命名。</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

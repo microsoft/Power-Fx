@@ -1,0 +1,100 @@
+>> PlainText("")
+""
+
+>> PlainText("<>")
+""
+
+>> PlainText("</>")
+""
+
+>> PlainText("No Tags in text")
+"No Tags in text"
+
+>> PlainText("Test <td valign=top style=\'border:none;border-right:solid white 1.0pt;background:#DEE8F2;padding:1.45pt .05in 1.45pt .05in\'>Input Text</td>")
+"Test Input Text"
+
+>> PlainText("<   header B=Test >Input \n\nText\t <\r\n/>< /   header>")
+""
+
+>> PlainText("<Script>Input Text</ Script      >")
+""
+
+>> PlainText("<style >New style</ Style      >")
+""
+
+>> PlainText("<!-- Input Text <td></td> {}      -->")
+""
+
+>> PlainText("<!-- \r\nInput \n\n Text\t <td>\r\n</td> {}      -->")
+""
+
+>> PlainText("< customTag  a=10, b=20   >                    Column1</   customTag >")
+"Column1"
+
+>> PlainText("1<td>2<td>3<td>4<td>5")
+"12345"
+
+>> PlainText("  <  xml><p>Input<tr>  </xml>")
+"Input"
+
+>> PlainText("http&#x3a;//microsoft.com")
+"http://microsoft.com"
+
+>> PlainText("http&#58;//microsoft.com")
+"http://microsoft.com"
+
+>> PlainText(Blank())
+""
+
+>> PlainText(12.34)
+"12.34"
+
+>> PlainText(-12.34)
+"-12.34"
+
+>> PlainText(Date(2023,1,1))
+"1/1/2023"
+
+>> PlainText(DateTime(2023,1,1,12,34,56))
+"1/1/2023 12:34 PM"
+
+>> PlainText(Time(8,1,15))
+"8:01 AM"
+
+// Empty Parameter
+>> PlainText()
+Errors: Error 0-11: Invalid number of arguments: received 0, expected 1.
+
+// ErrorKind Parameter
+>> PlainText(Error({Kind:ErrorKind.Div0}))
+Error({Kind:ErrorKind.Div0})
+
+>> PlainText(If(1<0, "text"))
+""
+
+>> Substitute(Substitute(PlainText("Test<br id = 'br1'>break line</  BR>"), Char(13), "\r"), Char(10), "\n")
+"Test\r\nbreak line"
+
+>> Substitute(Substitute(PlainText("1<br>2<li>3"), Char(13), "\r"), Char(10), "\n")
+"1\r\n2\r\n3"
+
+>> Substitute(Substitute(PlainText("1<BR/>2<li/>3"), Char(13), "\r"), Char(10), "\n")
+"1\r\n2\r\n3"
+
+>> Substitute(Substitute(PlainText("Test<p >double</  p><div >break line</ Div>"), Char(13), "\r"), Char(10), "\n")
+"Test\r\n\r\ndouble\r\n\r\nbreak line"
+
+>> Substitute(Substitute(PlainText("1<div>2<p>3<tr>4"), Char(13), "\r"), Char(10), "\n")
+"1\r\n\r\n2\r\n\r\n3\r\n\r\n4"
+
+>> Substitute(Substitute(PlainText("1<Div>2<p>3<Tr>4"), Char(13), "\r"), Char(10), "\n")
+"1\r\n\r\n2\r\n\r\n3\r\n\r\n4"
+
+>> Substitute(Substitute(PlainText("1<  br  >2<  Li />3"), Char(13), "\r"), Char(10), "\n")
+"1\r\n2\r\n3"
+
+>> Substitute(Substitute(PlainText("1<div  class = 'div2'>2< P />3<  tr>4"), Char(13), "\r"), Char(10), "\n")
+"1\r\n\r\n2\r\n\r\n3\r\n\r\n4"
+
+>> PlainText("Hello&lt;br/&gt;world")
+"Hello<br/>world"
