@@ -63,9 +63,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue Last(IRContext irContext, TableValue[] args)
         {
-            var arg0 = args[0];
-
-            return arg0.Rows.LastOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
+            return args[0].Rows.LastOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
         }
 
         public static FormulaValue FirstN(IRContext irContext, FormulaValue[] args)

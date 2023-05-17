@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Run cases in MutationScripts
         // Normal tests have each line as an independent test case. 
-        // Whereas these are fed into a repl and each file maintains state. ebeeee
+        // Whereas these are fed into a repl and each file maintains state.
         [Theory]
         [InlineData("Simple1.txt")]
         [InlineData("Collect.txt")]
