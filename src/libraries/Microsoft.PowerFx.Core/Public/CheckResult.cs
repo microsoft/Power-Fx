@@ -180,8 +180,9 @@ namespace Microsoft.PowerFx
 
         private FormulaType _expectedReturnType;
         private bool _allowCoerceToType = false;
-        private FormulaType[] _allowedInputTypes;
+        private FormulaType[] _expectedReturnTypeList;
 
+        // This function only injects errors but does not do any coercion.
         public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
             VerifyEngine();
@@ -191,9 +192,9 @@ namespace Microsoft.PowerFx
             return this;
         }
 
-        public CheckResult SetAllowedInputType(FormulaType[] allowedTypes)
+        public CheckResult SetExpectedReturnValue(FormulaType[] expectedReturnTypes)
         {
-            _allowedInputTypes = allowedTypes;
+            _expectedReturnTypeList = expectedReturnTypes;
             return this;
         }
 
@@ -450,35 +451,55 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank && this._expectedReturnType != null)
+                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank)
                 {
-                    bool notCoerceToType = false;
-                    if (_allowCoerceToType)
+                    if (this._expectedReturnType != null)
                     {
-                        switch (this._expectedReturnType)
+                        bool notCoerceToType = false;
+                        if (_allowCoerceToType)
                         {
-                            case StringType:
-                                notCoerceToType = !StringValue.AllowedListConvertToString.Contains(this.ReturnType);
-                                break;
-                            case NumberType:
-                                notCoerceToType = !NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType);
-                                break;
-                            case DecimalType:
-                                notCoerceToType = !DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType);
-                                break;
-                            default:
-                                throw new NotImplementedException($"Setting ExpectedReturnType to {_expectedReturnType.GetType().FullName} is not implemented");
+                            switch (this._expectedReturnType)
+                            {
+                                case StringType:
+                                    notCoerceToType = !StringValue.AllowedListConvertToString.Contains(this.ReturnType);
+                                    break;
+                                case NumberType:
+                                    notCoerceToType = !NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType);
+                                    break;
+                                case DecimalType:
+                                    notCoerceToType = !DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType);
+                                    break;
+                                default:
+                                    throw new NotImplementedException($"Setting ExpectedReturnType to {_expectedReturnType.GetType().FullName} is not implemented");
+                            }
                         }
 
-                        if (_allowedInputTypes != null)
+                        var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
+                        if (!valid)
                         {
-                            notCoerceToType = notCoerceToType || !_allowedInputTypes.Contains(this.ReturnType);
+                            _errors.Add(new ExpressionError
+                            {
+                                Kind = ErrorKind.Validation,
+                                Severity = ErrorSeverity.Critical,
+                                Span = new Span(0, this._expression.Length),
+                                MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
+                                _messageArgs = new object[]
+                                {
+                                    this._expectedReturnType._type.GetKindString(),
+                                    this.ReturnType._type.GetKindString()
+                                }
+                            });
                         }
                     }
 
-                    var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
-                    if (!valid)
+                    if (this._expectedReturnTypeList != null && !this._expectedReturnTypeList.Contains(this.ReturnType))
                     {
+                        string expectedTypesStr = this._expectedReturnTypeList[0]._type.GetKindString();
+                        for (int i = 1;  i < this._expectedReturnTypeList.Length; i++)
+                        {
+                            expectedTypesStr += ", " + this._expectedReturnTypeList[i]._type.GetKindString();
+                        }
+
                         _errors.Add(new ExpressionError
                         {
                             Kind = ErrorKind.Validation,
@@ -487,7 +508,7 @@ namespace Microsoft.PowerFx
                             MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
                             _messageArgs = new object[]
                             {
-                                this._expectedReturnType._type.GetKindString(),
+                                expectedTypesStr,
                                 this.ReturnType._type.GetKindString()
                             }
                         });
