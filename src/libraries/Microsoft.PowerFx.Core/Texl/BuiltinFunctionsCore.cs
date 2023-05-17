@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl
         internal static readonly IReadOnlyCollection<string> OtherKnownFunctions = new HashSet<string>()
         {
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
-            "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "PlainText", "Print", "ReadNFC",
+            "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
             "RecordInfo", "Refresh", "Relate", "RemoveAll", "RemoveIf", "RenameColumns", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Search", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "Trace", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm"
         };

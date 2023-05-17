@@ -504,6 +504,9 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutEncodeUrl = (b) => StringResources.Get("AboutEncodeUrl", b);
         public static StringGetter EncodeUrlArg1 = (b) => StringResources.Get("EncodeUrlArg1", b);
+        
+        public static StringGetter AboutPlainText = (b) => StringResources.Get("AboutPlainText", b);
+        public static StringGetter PlainTextArg1 = (b) => StringResources.Get("PlainTextArg1", b);
 
         public static StringGetter AboutIsMatch = (b) => StringResources.Get("AboutIsMatch", b);
         public static StringGetter AboutMatch = (b) => StringResources.Get("AboutMatch", b);
