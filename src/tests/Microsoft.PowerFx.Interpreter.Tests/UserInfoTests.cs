@@ -25,14 +25,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task UserInfoObjectTest()
         {
             var g1 = Guid.NewGuid();
-            var g2 = Guid.NewGuid();
 
             var userInfo = new BasicUserInfo
             {
                 FullName = "fullname",
                 Email = "me@contoso.com",
                 DataverseUserId = g1,
-                TeamsMemberId = g2,
+                TeamsMemberId = "teamsId",
             };
 
             // Use string literals for properties here to ensure they didn't change. 
@@ -43,6 +42,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 { "DataverseUserId", userInfo.DataverseUserId },
                 { "TeamsMemberId", userInfo.TeamsMemberId }
             };
+
+            foreach (var key in AllUserPropertyNames())
+            {
+                Assert.True(props.ContainsKey(key));
+            }
 
             var allKeys = props.Keys.ToArray();
             SymbolTable symbol = new SymbolTable();
@@ -172,14 +176,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(expected, result.ToObject());
         }
 
+        private static MethodInfo[] AllUserMethods()
+        {
+            var methods = typeof(UserInfo).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+            return methods;
+        }
+
+        // Return all the names on the UserInfo object. 
+        // Used to ensure we have test coverage for new methods. 
+        private static string[] AllUserPropertyNames()
+        {
+            var methods = typeof(UserInfo).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
+            return methods.Select(x => x.Name).ToArray();
+        }
+
         // BasicUserInfo has same properties as UserInfo
         [Fact]
         public void Consistency()
         {
             Assert.Equal("User", UserInfo.ObjectName);
 
-            var methods = typeof(UserInfo).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
-            foreach (var method in methods)
+            foreach (var method in AllUserMethods())
             {
                 // Method should be a Task<T>. 
                 var returnType = method.ReturnType;

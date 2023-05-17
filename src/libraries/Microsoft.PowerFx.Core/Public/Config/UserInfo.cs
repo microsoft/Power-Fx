@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx
         /// For Teams Id. User for things running inside of Microsoft Teams, like Bots, Cards, etc. 
         /// https://learn.microsoft.com/en-us/microsoftteams/platform/resources/bot-v3/bots-context.
         /// </summary>
-        public virtual async Task<Guid> TeamsMemberId(CancellationToken cancel = default) => throw Ex();
+        public virtual async Task<string> TeamsMemberId(CancellationToken cancel = default) => throw Ex();
 
         /// <summary>
         /// Get the Power Fx type for a User object that has the given fields exposed. 
@@ -86,13 +86,13 @@ namespace Microsoft.PowerFx
                 }
 
                 if (field == nameof(FullName) ||
-                    field == nameof(Email))
+                    field == nameof(Email) ||
+                    field == nameof(TeamsMemberId)) 
                 {
                     type = type.Add(new NamedFormulaType(field, FormulaType.String));
                 } 
                 else if (
-                    field == nameof(DataverseUserId) ||
-                    field == nameof(TeamsMemberId))
+                    field == nameof(DataverseUserId))                    
                 {
                     type = type.Add(new NamedFormulaType(field, FormulaType.Guid));
                 }
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx
 
         public Guid DataverseUserId { get; set; }
 
-        public Guid TeamsMemberId { get; set; }
+        public string TeamsMemberId { get; set; }
 
         public UserInfo UserInfo => new Adapter(this);
         
@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx
 
             public override async Task<Guid> DataverseUserId(CancellationToken cancel) => _parent.DataverseUserId;
 
-            public override async Task<Guid> TeamsMemberId(CancellationToken cancel) => _parent.TeamsMemberId;
+            public override async Task<string> TeamsMemberId(CancellationToken cancel) => _parent.TeamsMemberId;
         }
     }
 }
