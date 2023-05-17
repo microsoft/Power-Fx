@@ -205,7 +205,7 @@ namespace Microsoft.PowerFx.Interpreter
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
             base.CheckSemantics(binding, args, argTypes, errors);
-            if (!binding.IsMutable(args[0]))
+            if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsMutable(args[0]))
             {
                 errors.EnsureError(
                     args[0],

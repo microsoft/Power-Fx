@@ -118,6 +118,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              * Record r_empty => {}
              * Table t1(r1) => Type (Field1, Field2, Field3, Field4)
              * Table t2(rwr1, rwr2, rwr3)
+             * Table t_empty: *[Value:n] = []
+             * Table t_empty2: *[Value:n] = []
+             * Table t_an_bs: *[a:n,b:s] = []
+             * Table t_name: *[name:s] = []
              */
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
@@ -241,18 +245,17 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("rwr3", recordWithRecord3);
             engine.UpdateVariable("r_empty", rEmpty);
 
-            //symbol.AddConstant("t1", t1);
-            //symbol.AddConstant("r1", r1);
-            //symbol.AddConstant("r2", r2);
-            //symbol.AddConstant("t2", t2);
-            //symbol.AddConstant("rwr1", recordWithRecord1);
-            //symbol.AddConstant("rwr2", recordWithRecord2);
-            //symbol.AddConstant("rwr3", recordWithRecord3);
-            //symbol.AddConstant("r_empty", rEmpty);
+            var valueTableType = TableType.Empty().Add("Value", numberType);
+            var tEmpty = FormulaValue.NewTable(valueTableType.ToRecord());
+            var tEmpty2 = FormulaValue.NewTable(valueTableType.ToRecord());
+            engine.UpdateVariable("t_empty", tEmpty);
+            engine.UpdateVariable("t_empty2", tEmpty2);
 
-            //config.SymbolTable = symbol;
+            var abTableType = TableType.Empty().Add("a", numberType).Add("b", FormulaType.String);
+            engine.UpdateVariable("t_an_bs", FormulaValue.NewTable(abTableType.ToRecord()));
 
-            //return (new RecalcEngine(config), null);
+            var nameTableType = TableType.Empty().Add("name", FormulaType.String);
+            engine.UpdateVariable("t_name", FormulaValue.NewTable(nameTableType.ToRecord()));
 
             return (engine, null);
         }

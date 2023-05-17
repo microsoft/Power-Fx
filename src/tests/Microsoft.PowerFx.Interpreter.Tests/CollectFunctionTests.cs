@@ -46,8 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var t = FormulaValue.NewTable(r1.Type, listT);
 
-            //symbol.AddConstant("t", t.Type);
-            symbol.AddVariable("t", t.Type, mutable: true);
+            engine.UpdateVariable("t", t);
             symbol.AddConstant("r1", r1);
 
             var resultCount = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);

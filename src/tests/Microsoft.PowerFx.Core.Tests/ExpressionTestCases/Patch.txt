@@ -36,7 +36,7 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 Errors: Error 14-31: The specified column 'Field5' does not exist.|Error 0-32: The function 'Patch' has some invalid arguments.
 
 // This test would fail in PA.
->> Patch(Table(r1, r2), r1, {Field2:"Venus"})
+>> Patch(t1, r1, {Field2:"Venus"})
 {Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Patch(t1, First(t1), {Field2:"Venus"}).Field2
@@ -154,24 +154,23 @@ Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The fun
 >> Patch(Foo, Bar, {DisplayNameField2:"jupter"})
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-45: The function 'Patch' has some invalid arguments.
 
->> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
+>> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
 {Value:11}
 
->> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
+>> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
 {Value:11}
 
->> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
+>> Collect(t_empty, {Value:1}); Collect(t_empty, {Value:2}); Patch(t_empty, If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
 {Value:11}
 
->> Patch(Table({Value:1}, If(false, {x:1, Value:2}, {Value:2, z:2}), {Value:3}), {Value:2}, {Value:11})
+>> Collect(t_empty, {Value:1}); Collect(t_empty, If(false, {x:1, Value:2}, {Value:2, z:2})); Collect(t_empty, {Value:3}); Patch(t_empty, {Value:2}, {Value:11})
 {Value:11}
 
->> With({t1:Table({a:1, b:"a"}, {a:2, b:Blank()})}, Patch(t1, Last(t1), {a:3, b:"c"}); t1)
+>> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
 Table({a:1,b:"a"},{a:3,b:"c"})
 
->> With({t1:Table({a:1,b:If(false,"")},{a:Blank(),b:"1"})}, Patch(t1, Last(t1), {b:"2"}); t1)
+>> Set(t_an_bs, [{a:1,b:If(false,"")}, {a:Blank(),b:"1"}]); Patch(t_an_bs, Last(t_an_bs), {b:"2"}); t_an_bs
 Table({a:1,b:Blank()},{a:Blank(),b:"2"})
 
->> With({t1:Table({a:1,b:If(false,"")},{a:Blank(),b:"2"})}, Patch(t1, Last(t1), {a:2}); t1)
+>> Set(t_an_bs, Table({a:1,b:If(false,"")},{a:Blank(),b:"2"})); Patch(t_an_bs, Last(t_an_bs), {a:2}); t_an_bs
 Table({a:1,b:Blank()},{a:2,b:"2"})
-
