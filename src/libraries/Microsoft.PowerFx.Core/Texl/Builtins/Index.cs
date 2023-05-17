@@ -17,6 +17,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool IsMutationEnabled => true;
+
         public IndexFunction()
             : base(
                   "Index",

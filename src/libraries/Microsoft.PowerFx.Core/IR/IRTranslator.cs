@@ -451,23 +451,18 @@ namespace Microsoft.PowerFx.Core.IR
             }
 
             /// <summary>
-            /// Changes functions called or operator used to shallow copy the argument before mutation.
+            /// Adds IRContext.MutationCopy flag for arguments that are about to be mutated.
+            /// This flag is used to make shallow copies of data structures as the 
+            /// mutation function's argument are being evaluated.
+            /// Note that setting this flag is recursive for the dot operator.
             /// </summary>
             private static IntermediateNode MutationCopy(IntermediateNode arg)
             {
                 var convertedNode = arg;
 
-                if (arg is CallNode cn)
+                if (arg is CallNode cn && cn.Function.IsMutationEnabled)
                 {
-                    if (cn.Function == BuiltinFunctionsCore.First || cn.Function == BuiltinFunctionsCore.Last ||
-                        cn.Function == BuiltinFunctionsCore.Index || cn.Function == BuiltinFunctionsCore.Table)
-                    { 
-                        return new CallNode(new IRContext(cn.IRContext.SourceContext, cn.IRContext.ResultType, mutationCopy: true), cn.Function, cn.Args);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException("Mutation thrgouh an accessor function that does not support mutation");
-                    }
+                    return new CallNode(new IRContext(cn.IRContext.SourceContext, cn.IRContext.ResultType, mutationCopy: true), cn.Function, cn.Args);
                 }
                 else if (arg is RecordFieldAccessNode fa)
                 {

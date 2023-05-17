@@ -233,10 +233,21 @@ namespace Microsoft.PowerFx.Types
             visitor.Visit(this);
         }
 
+        /// <summary>
+        /// Shallow copies the record, of a row, of a table in place.  
+        /// For example, Set( var, [[1,2,3]] ); Patch( Index(var, 1).Value, {Value:1}, {Value:2} ) 
+        /// requires three things to be shallow copied:
+        ///     1. var's top level object, done with IMutationCopy.ShallowCopy
+        ///     2. var's colleciton that holds rows, done with IMutationCopy.ShallowCopy
+        ///     3. the first record of var's top level table, done with ShallowCopyRecordInPlace
+        /// If mutation copying is not required, this is a no-op.
+        /// </summary>
         internal virtual void ShallowCopyRecordInPlace(int index)
         {
             if (this is IMutationCopy)
             {
+                // Copying is required for mutating this table, but the derived class did not provide
+                // an implementation to copy the record in place.
                 throw new NotImplementedException();
             }
         }

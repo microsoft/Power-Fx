@@ -31,10 +31,6 @@ namespace Microsoft.PowerFx.Types
             IRContext = irContext;
         }
 
-        internal FormulaValue(FormulaValue orig)
-        {
-        }
-
         /// <summary>
         /// Converts to a .net object so host can easily consume the value. 
         /// Primitives (string, boolean, numbers, etc) convert directly to their .net type. 
@@ -46,6 +42,12 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void Visit(IValueVisitor visitor);
 
+        /// <summary>
+        /// Before mutation operations, call MaybeShallowCopy() to make a copy of the value.
+        /// For most values this is a no-op and will not make a copy. Only types which implement
+        /// IMutationCopy will have the opportunity to provide a copy.
+        /// </summary>
+        /// <returns>Shallow copy of FormulaValue.</returns>
         public virtual FormulaValue MaybeShallowCopy()
         {
             if (this is IMutationCopy mc)
@@ -75,8 +77,18 @@ namespace Microsoft.PowerFx.Types
         }
     }
 
+    /// <summary>
+    /// Indicates that a FormulaValue should be copied before being mutated, for Copy on Write semantics.
+    /// </summary>
     internal interface IMutationCopy
     {
+        /// <summary>
+        /// Returns a shallow copy of a FormulaValue. For potentially deep data structures such as a Table or Record,
+        /// this includes the head object and any first level collections for rows or fields respectively.
+        /// It stops there, for example even the records within the rows of a Table are not copied.
+        /// If a shallow copy is conditional or not desired, have ShallowCopy "return this;".
+        /// </summary>
+        /// <returns>Shallow copy.</returns>
         FormulaValue ShallowCopy();
     }
 }
