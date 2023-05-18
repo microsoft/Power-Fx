@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx
             return SetExpectedReturnValue(new FormulaType[] { type });
         }
 
-        public CheckResult SetExpectedReturnValue(FormulaType[] expectedReturnTypes)
+        public CheckResult SetExpectedReturnValue(params FormulaType[] expectedReturnTypes)
         {
             VerifyEngine();
 
