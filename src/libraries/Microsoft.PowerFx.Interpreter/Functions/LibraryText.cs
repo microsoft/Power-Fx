@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using System.Xml;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -22,11 +23,13 @@ namespace Microsoft.PowerFx.Functions
     internal static class LibraryFlags
     {
         public static readonly RegexOptions RegExFlags = RegexOptions.Compiled | RegexOptions.CultureInvariant;
+        public static readonly RegexOptions RegExFlags_IgnoreCase = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase;
     }
 
     internal static partial class Library
     {
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
+        private static readonly RegexOptions RegExFlags_IgnoreCase = LibraryFlags.RegExFlags_IgnoreCase;
 
         private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
         private static readonly Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegExFlags);
@@ -42,6 +45,14 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
+        private static readonly Regex _tdTagRegex = new Regex("<\\s*(td)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*(br|li)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*(div|p|tr)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _commentTagRegex = new Regex("<!--[\\s\\S]*?--\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _headerTagRegex = new Regex("<\\s*(header)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(header)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _scriptTagRegex = new Regex("<\\s*(script)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(script)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _styleTagRegex = new Regex("<\\s*(style)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(style)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _htmlTagsRegex = new Regex("<[^\\>]*\\>", RegExFlags_IgnoreCase);
 
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
@@ -318,13 +329,6 @@ namespace Microsoft.PowerFx.Functions
         {
             const int formatSize = 100;
             string formatString = null;
-            var textFormatArgs = new TextFormatArgs
-            {
-                FormatCultureName = null,
-                FormatArg = null,
-                HasDateTimeFmt = false,
-                HasNumericFmt = false
-            };
 
             if (args.Length > 1 && args[1] is StringValue fs)
             {
@@ -349,48 +353,31 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out textFormatArgs))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out bool hasDateTimeFmt, out bool hasNumberFmt))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], textFormatArgs, out StringValue result);
+            var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, out StringValue result)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString, out StringValue result)
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
-            CultureInfo formatCulture = culture;
-            var formatString = textFormatArgs.FormatArg;
+            var hasDateTimeFmt = false;
+            var hasNumberFmt = false;
             result = null;
 
-            Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
-
-            if (!string.IsNullOrEmpty(textFormatArgs.FormatCultureName) && !TryGetCulture(textFormatArgs.FormatCultureName, out formatCulture))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
             {
                 return false;
             }
-    
-            if (!string.IsNullOrEmpty(formatString) && textFormatArgs.HasNumericFmt)
-            {
-                // Get en-US numeric format string
-                // \uFEFF is the zero width no-break space codepoint. This will be used to swap with number group seperator character.
-                string numberGroupSeperator = "\uFEFF";
-                var numberCultureFormat = formatCulture.NumberFormat;
 
-                formatString = formatString.Replace(numberCultureFormat.NumberGroupSeparator, numberGroupSeperator);
-                if (string.IsNullOrWhiteSpace(numberCultureFormat.NumberGroupSeparator))
-                {
-                    formatString = formatString.Replace(" ", numberGroupSeperator).Replace("\u202F", numberGroupSeperator);
-                }
-
-                formatString = formatString.Replace(numberCultureFormat.NumberDecimalSeparator, ".");
-                formatString = formatString.Replace(numberGroupSeperator, ",");
-            }
+            Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
             switch (value)
             {
@@ -398,7 +385,7 @@ namespace Microsoft.PowerFx.Functions
                     result = sv;
                     break;
                 case NumberValue num:
-                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
+                    if (formatString != null && hasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
@@ -413,7 +400,7 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 case DecimalValue dec:
-                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
+                    if (formatString != null && hasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var decNum = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)dec.Value);
@@ -428,7 +415,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case DateTimeValue dateTimeValue:
-                    if (formatString != null && textFormatArgs.HasNumericFmt)
+                    if (formatString != null && hasNumberFmt)
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
                         var newNumber = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateTimeValue);
@@ -441,7 +428,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case DateValue dateValue:
-                    if (formatString != null && textFormatArgs.HasNumericFmt)
+                    if (formatString != null && hasNumberFmt)
                     {
                         NumberValue newDateNumber = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue) as NumberValue;
                         result = new StringValue(irContext, newDateNumber.Value.ToString(formatString, culture));
@@ -453,7 +440,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case TimeValue timeValue:
-                    if (formatString != null && textFormatArgs.HasNumericFmt)
+                    if (formatString != null && hasNumberFmt)
                     {
                         var newNumber = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { timeValue });
                         result = new StringValue(irContext, newNumber.Value.ToString(formatString, culture));
@@ -1098,6 +1085,36 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             var logicalName = optionSet.Option;
             return new StringValue(irContext, logicalName);
+        }
+
+        public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
+        {
+            string text = args[0].Value.Trim();
+
+            // Replace header/script/style tags with empty text.
+            text = _headerTagRegex.Replace(text, string.Empty);
+            text = _scriptTagRegex.Replace(text, string.Empty);
+            text = _styleTagRegex.Replace(text, string.Empty);
+
+            // Remove all comments.
+            text = _commentTagRegex.Replace(text, string.Empty);
+
+            // Insert empty string in place of <td>
+            text = _tdTagRegex.Replace(text, string.Empty);
+
+            //Replace <br> or <li> with line break
+            text = _lineBreakTagRegex.Replace(text, Environment.NewLine);
+
+            // Insert double line breaks in place of <div>, <p> and <tr> tags.
+            text = _doubleLineBreakTagRegex.Replace(text, Environment.NewLine + Environment.NewLine);
+
+            // Replace all other tags with empty text.
+            text = _htmlTagsRegex.Replace(text, string.Empty);
+
+            //Decode html specific characters
+            text = WebUtility.HtmlDecode(text);
+
+            return new StringValue(irContext, text.Trim());
         }
 
         private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)
