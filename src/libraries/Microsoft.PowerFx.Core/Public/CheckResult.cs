@@ -178,23 +178,34 @@ namespace Microsoft.PowerFx
             return this.SetBindingInfo(symbolTable);
         }
 
-        private FormulaType _expectedReturnType;
-        private bool _allowCoerceToType = false;
-        private FormulaType[] _expectedReturnTypeList;
+        private FormulaType[] _expectedReturnTypes;
 
         // This function only injects errors but does not do any coercion.
         public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
-            VerifyEngine();
-
-            _expectedReturnType = type;
-            _allowCoerceToType = allowCoerceTo;
-            return this;
+            if (allowCoerceTo)
+            {
+                switch (type)
+                {
+                    case StringType:
+                        return SetExpectedReturnValue(StringValue.AllowedListConvertToString.ToArray());
+                    case NumberType:
+                        return SetExpectedReturnValue(NumberValue.AllowedListConvertToNumber.ToArray());
+                    case DecimalType:
+                        return SetExpectedReturnValue(DecimalValue.AllowedListConvertToDecimal.ToArray());
+                    default:
+                        throw new NotImplementedException($"Setting ExpectedReturnType to {type.GetType().FullName} is not implemented");
+                }
+            }
+            
+            return SetExpectedReturnValue(new FormulaType[] { type });
         }
 
         public CheckResult SetExpectedReturnValue(FormulaType[] expectedReturnTypes)
         {
-            _expectedReturnTypeList = expectedReturnTypes;
+            VerifyEngine();
+
+            _expectedReturnTypes = expectedReturnTypes;
             return this;
         }
 
@@ -451,68 +462,26 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank)
+                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank && this._expectedReturnTypes != null && !this._expectedReturnTypes.Contains(this.ReturnType))
                 {
-                    if (this._expectedReturnType != null)
+                    string expectedTypesStr = this._expectedReturnTypes[0]._type.GetKindString();
+                    for (int i = 1;  i < this._expectedReturnTypes.Length; i++)
                     {
-                        bool notCoerceToType = false;
-                        if (_allowCoerceToType)
-                        {
-                            switch (this._expectedReturnType)
-                            {
-                                case StringType:
-                                    notCoerceToType = !StringValue.AllowedListConvertToString.Contains(this.ReturnType);
-                                    break;
-                                case NumberType:
-                                    notCoerceToType = !NumberValue.AllowedListConvertToNumber.Contains(this.ReturnType);
-                                    break;
-                                case DecimalType:
-                                    notCoerceToType = !DecimalValue.AllowedListConvertToDecimal.Contains(this.ReturnType);
-                                    break;
-                                default:
-                                    throw new NotImplementedException($"Setting ExpectedReturnType to {_expectedReturnType.GetType().FullName} is not implemented");
-                            }
-                        }
-
-                        var valid = this._expectedReturnType == this.ReturnType || (_allowCoerceToType && !notCoerceToType);
-                        if (!valid)
-                        {
-                            _errors.Add(new ExpressionError
-                            {
-                                Kind = ErrorKind.Validation,
-                                Severity = ErrorSeverity.Critical,
-                                Span = new Span(0, this._expression.Length),
-                                MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
-                                _messageArgs = new object[]
-                                {
-                                    this._expectedReturnType._type.GetKindString(),
-                                    this.ReturnType._type.GetKindString()
-                                }
-                            });
-                        }
+                        expectedTypesStr += ", " + this._expectedReturnTypes[i]._type.GetKindString();
                     }
 
-                    if (this._expectedReturnTypeList != null && !this._expectedReturnTypeList.Contains(this.ReturnType))
+                    _errors.Add(new ExpressionError
                     {
-                        string expectedTypesStr = this._expectedReturnTypeList[0]._type.GetKindString();
-                        for (int i = 1;  i < this._expectedReturnTypeList.Length; i++)
+                        Kind = ErrorKind.Validation,
+                        Severity = ErrorSeverity.Critical,
+                        Span = new Span(0, this._expression.Length),
+                        MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
+                        _messageArgs = new object[]
                         {
-                            expectedTypesStr += ", " + this._expectedReturnTypeList[i]._type.GetKindString();
+                            expectedTypesStr,
+                            this.ReturnType._type.GetKindString()
                         }
-
-                        _errors.Add(new ExpressionError
-                        {
-                            Kind = ErrorKind.Validation,
-                            Severity = ErrorSeverity.Critical,
-                            Span = new Span(0, this._expression.Length),
-                            MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
-                            _messageArgs = new object[]
-                            {
-                                expectedTypesStr,
-                                this.ReturnType._type.GetKindString()
-                            }
-                        });
-                    }
+                    });
                 }
             }
 
