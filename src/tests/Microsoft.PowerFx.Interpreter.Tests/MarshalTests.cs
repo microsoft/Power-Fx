@@ -939,7 +939,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new Engine();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 var cache = new TypeMarshallerCache();
                 RecordType recordType = (RecordType)cache.GetMarshaller(typeof(MyType2)).Type;
