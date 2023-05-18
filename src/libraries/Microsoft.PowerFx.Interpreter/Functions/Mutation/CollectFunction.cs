@@ -205,13 +205,7 @@ namespace Microsoft.PowerFx.Interpreter
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
             base.CheckSemantics(binding, args, argTypes, errors);
-            if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsMutable(args[0]))
-            {
-                errors.EnsureError(
-                    args[0],
-                    new ErrorResourceKey("ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue"),
-                    this.Name);
-            }
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.

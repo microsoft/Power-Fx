@@ -59,6 +59,12 @@ namespace Microsoft.PowerFx.Functions
             return fValid;
         }
 
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
+        }
+
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             if (args[0] is ErrorValue errorValue)
