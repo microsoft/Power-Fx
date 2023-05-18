@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
@@ -147,7 +148,15 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result)
         {
-            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, false, false, null, null, null, out result);
+            var textFormatArgs = new TextFormatArgs
+            {
+                FormatCultureName = null,
+                FormatArg = null,
+                HasDateTimeFmt = false,
+                HasNumericFmt = false
+            };
+
+            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, textFormatArgs, out result);
         }
 
         /// <summary>
