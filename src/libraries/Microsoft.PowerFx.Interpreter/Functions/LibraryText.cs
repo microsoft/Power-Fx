@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Corporation.
+﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
 using System;
@@ -388,7 +388,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (!string.IsNullOrEmpty(formatString) && textFormatArgs.HasNumericFmt)
             {
-                // Get en-US numeric format string
+                // Get en-US numeric format string.
                 // \uFEFF is the zero width no-break space codepoint. This will be used to swap with number group seperator character.
                 string numberGroupSeperator = "\uFEFF";
                 var numberCultureFormat = formatCulture.NumberFormat;
