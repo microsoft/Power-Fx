@@ -4,6 +4,9 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -32,14 +35,33 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Set UserInfo.
+        /// Set UserInfo at runtime. Called in conjuction with <see cref="AddUserInfoObject"/>.
         /// </summary>
         /// <param name="symbols">SymbolValues where to set the UserInfo.</param>
         /// <param name="userInfo">UserInfo to set.</param>
         /// <exception cref="ArgumentNullException">When userInfo is null.</exception>
-        public static void SetUserInfo(this RuntimeConfig symbols, IUserInfo userInfo)
+        public static void SetUserInfo(this RuntimeConfig symbols, UserInfo userInfo)
         {
             symbols.AddService(userInfo ?? throw new ArgumentNullException(nameof(userInfo)));
+        }
+
+        public static void SetUserInfo(this RuntimeConfig symbols, BasicUserInfo userInfo)
+        {
+            symbols.SetUserInfo(userInfo.UserInfo);            
+        }
+
+        /// <summary>
+        /// Adds a UserInfo object schema.
+        /// Actual object is added in Runtime config service provider via SetUserInfo()/>.
+        /// </summary>
+        /// <param name="symbolTable">Symbol table to add to.</param>
+        /// <param name="fields">The fields on <see cref="UserInfo"/> that the host is implementing.
+        /// These will show up in intellisense.</param>
+        public static void AddUserInfoObject(this SymbolTable symbolTable, params string[] fields)
+        {
+            var userInfoType = UserInfo.GetUserTypeWorker(fields);
+
+            symbolTable.AddHostObject(UserInfo.ObjectName, userInfoType, (sp) => UserInfoRecordValue.GetUserInfoObject(userInfoType, sp));
         }
 
         /// <summary>
