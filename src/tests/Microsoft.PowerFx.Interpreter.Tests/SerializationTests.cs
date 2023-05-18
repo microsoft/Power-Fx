@@ -3,14 +3,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -137,6 +137,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.True(checkRecord.IsSuccess);                
                 Assert.True(checkTable.IsSuccess);
             }
+        }
+
+        [Fact]
+        public async Task Test()
+        {
+            // Setup
+            CultureInfo culture = new CultureInfo("es-ES");
+            
+            //CultureInfo.CurrentCulture = culture;
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true };
+            RecalcEngine recalcEngine = new RecalcEngine();
+
+            var check = recalcEngine.Check("Float(\"4,99\")", parserOptions);
+            var run = check.GetEvaluator();
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
+
+            // Look at Result Value => Seems like 4.99
+            Assert.Equal(4.99, result.ToObject());
+        }
+
+        [Fact]
+        public async Task Test2()
+        {
+            // Setup
+            CultureInfo culture = new CultureInfo("en-US");
+
+            //CultureInfo.CurrentCulture = culture;
+            var parserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true };
+            RecalcEngine recalcEngine = new RecalcEngine();
+
+            var check = recalcEngine.Check("Float(\"4,99\")", parserOptions);
+            var run = check.GetEvaluator();
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
+
+            // Look at Result Value => Seems like 499
+            Assert.Equal(499D, result.ToObject());
         }
 
         internal class BooleanOptionSet : OptionSet, IExternalOptionSet
