@@ -357,6 +357,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
+                    var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
                     if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
@@ -366,16 +367,16 @@ namespace Microsoft.PowerFx.Core.IR
 
                         // Transform the identifier node as a string literal
                         var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
-                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));
+                        args.Add(new TextLiteralNode(argContext.GetIRContext(arg, DType.String), nodeName.Value));
                     }
                     else if (func.IsLazyEvalParam(i))
                     {
-                        var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? context.With(scope) : context);
-                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
+                        var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
+                        args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
                     }
                     else
                     {
-                        args.Add(arg.Accept(this, context));
+                        args.Add(arg.Accept(this, argContext));
                     }
                 }
 
@@ -436,9 +437,6 @@ namespace Microsoft.PowerFx.Core.IR
                             }
 
                             break;
-                        case ArgPreprocessor.MutationCopy:
-                            convertedNode = MutationCopy(args[i]);
-                            break;
                         default:
                             convertedNode = args[i];
                             break;
@@ -448,31 +446,6 @@ namespace Microsoft.PowerFx.Core.IR
                 }
 
                 return convertedArgs;
-            }
-
-            /// <summary>
-            /// Adds IRContext.MutationCopy flag for arguments that are about to be mutated.
-            /// This flag is used to make shallow copies of data structures as the 
-            /// mutation function's argument is being evaluated.
-            /// Note that setting this flag is recursive for the dot operator.
-            /// </summary>
-            private static IntermediateNode MutationCopy(IntermediateNode arg)
-            {
-                if (arg is CallNode)
-                {
-                    // assumes that the list of functions that can be mutated through is handled elsewhere
-                    return arg;
-                }
-                else if (arg is RecordFieldAccessNode fa)
-                {
-                    return new RecordFieldAccessNode(new IRContext(fa.IRContext.SourceContext, fa.IRContext.ResultType, isMutation: true), MutationCopy(fa.From), fa.Field);
-                }
-                else if (arg is ResolvedObjectNode ro)
-                {
-                    return new ResolvedObjectNode(new IRContext(ro.IRContext.SourceContext, ro.IRContext.ResultType, isMutation: true), ro.Value);
-                }
-
-                throw new NotImplementedException("Mutation thrgouh an accessor node that does not support mutation");
             }
 
             /// <summary>
@@ -1210,20 +1183,30 @@ namespace Microsoft.PowerFx.Core.IR
         {
             public readonly TexlBinding Binding;
             public ScopeSymbol[] Scopes;
+            public bool IsMutation;
 
-            public IRTranslatorContext(TexlBinding binding, ScopeSymbol baseScope)
+            public IRTranslatorContext(TexlBinding binding, ScopeSymbol baseScope, bool isMutation = false)
             {
                 Contracts.AssertValue(binding);
                 Contracts.AssertValue(baseScope);
 
                 Binding = binding;
                 Scopes = new ScopeSymbol[] { baseScope };
+                IsMutation = isMutation;
             }
 
-            private IRTranslatorContext(IRTranslatorContext context, ScopeSymbol newScope)
+            private IRTranslatorContext(IRTranslatorContext context, ScopeSymbol newScope, bool isMutation = false)
             {
                 Binding = context.Binding;
                 Scopes = context.Scopes.Concat(new List<ScopeSymbol>() { newScope }).ToArray();
+                IsMutation = isMutation;
+            }
+
+            public IRTranslatorContext(IRTranslatorContext context, bool isMutation)
+            {
+                Binding = context.Binding;
+                Scopes = context.Scopes;
+                IsMutation = isMutation;
             }
 
             public IRTranslatorContext With(ScopeSymbol scope)
@@ -1233,12 +1216,12 @@ namespace Microsoft.PowerFx.Core.IR
 
             public IRContext GetIRContext(TexlNode node)
             {
-                return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)));
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)), isMutation: IsMutation);
             }
 
             public IRContext GetIRContext(TexlNode node, DType type)
             {
-                return new IRContext(node.GetTextSpan(), FormulaType.Build(type));
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(type), isMutation: IsMutation);
             }
         }
     }

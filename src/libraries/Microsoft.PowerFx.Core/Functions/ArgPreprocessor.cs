@@ -34,9 +34,5 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Untyped object to untyped object preprocessors
         UntypedStringToUntypedNumber = 8,
-
-        // Argument is a mutation context (for example, first argument to Patch)
-        // IRContext InMutation flag is set throughout the argument node tree enabling copy on write
-        MutationCopy = 9,
     }
 }

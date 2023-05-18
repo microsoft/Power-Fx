@@ -32,9 +32,13 @@ namespace Microsoft.PowerFx.Functions
             return argNum >= 1;
         }
 
-        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
+        public override bool MutatesArg0 => true;
+
+        public override bool IsLazyEvalParam(int index)
         {
-            return index == 0 ? ArgPreprocessor.MutationCopy : ArgPreprocessor.None;
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
         }
 
         public RemoveFunctionBase(DPath theNamespace, string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
@@ -170,9 +174,12 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            if (args[0] is BlankValue)
+            var arg0lazy = (LambdaFormulaValue)args[0];
+            var arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+
+            if (arg0 is BlankValue)
             {
-                return args[0];
+                return arg0;
             }
 
             var argCount = args.Count();
@@ -191,7 +198,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var datasource = (TableValue)args[0];
+            var datasource = (TableValue)arg0;
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
             cancellationToken.ThrowIfCancellationRequested();
