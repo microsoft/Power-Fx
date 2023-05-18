@@ -27,10 +27,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
 
         [Theory]
-        [InlineData("Collect(t, r1); CountRows(t)", 1)]
-        [InlineData("Collect(t, r1);Collect(t, r1);Collect(t, r1); CountRows(t)", 3)]
-        [InlineData("Collect(t, r1);Collect(t, Blank()); CountRows(t)", 1)]
-        [InlineData("Collect(t, r1);Collect(t, {}); CountRows(t)", 2)]
+        [InlineData("Collect(t, r1)", 1)]
+        [InlineData("Collect(t, r1);Collect(t, r1);Collect(t, r1)", 3)]
+        [InlineData("Collect(t, r1);Collect(t, Blank())", 1)]
+        [InlineData("Collect(t, r1);Collect(t, {})", 2)]
         public async Task AppendCountTest(string script, int expected)
         {
             var engine = new RecalcEngine();
