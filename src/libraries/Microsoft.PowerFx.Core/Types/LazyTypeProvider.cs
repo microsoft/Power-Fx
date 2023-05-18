@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Types
     /// </summary>
     internal sealed class LazyTypeProvider
     {
-        private readonly Dictionary<DName, DType> _expandedFields = new ();
+        private readonly ConcurrentDictionary<DName, DType> _expandedFields = new ();
         public readonly AggregateType BackingFormulaType;
 
         internal IEnumerable<DName> FieldNames => BackingFormulaType.FieldNames.Select(field => new DName(field));
@@ -44,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Types
             else if (BackingFormulaType.TryGetFieldType(name.Value, out var fieldType))
             {
                 type = fieldType._type;
-                _expandedFields.Add(name, type);
+                _expandedFields.AddOrUpdate(name, type);
                 return true;
             }
 

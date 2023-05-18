@@ -933,6 +933,7 @@ namespace Microsoft.PowerFx.Tests
             public string Field1 { get; set; }
         }
 
+        // Stress test that sharing RecordType from GetMarshaller are thread safe. 
         [Fact]
         public void MarshalStress()
         {
