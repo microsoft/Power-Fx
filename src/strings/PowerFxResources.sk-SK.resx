@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Delegovanie tejto operácie na tabuľku {0} nie je podporované.</value>
+    <value>Táto operácia v tabuľke {0} možno nebude fungovať, ak je počet jej riadkov vyšší ako {1}.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>{0} nie je možné delegovať: obsahuje funkciu správania {1}.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Určuje, či zadaný text obsahuje zhodu zadaného formátu textu.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Text, ktorý sa má porovnať s formátom.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formát, s ktorým sa má text porovnať. Môže ísť o hodnotu enumerácie TextFormat alebo regulárny výraz.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Určuje, pre ktorú časť textu chceme nájsť zhodu. Môže ísť o hodnotu enumerácie MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formát</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>rozsah</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Vyhľadá v zadanom texte zadaný regulárny výraz a vráti z textu prvú zhodu.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Vyhľadá v zadanom texte zadaný regulárny výraz a vráti z textu všetky zhody.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Text, ktorý sa má vyhľadať podľa regulárneho výrazu.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Regulárny výraz, v súvislosti s ktorým sa má skontrolovať text. Môže obsahovať hodnoty medzi zátvorkami, ktoré sa vrátia v prípade úspešnej zhody.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Určuje, pre ktorú časť textu chceme nájsť zhodu. Môže ísť o hodnotu enumerácie MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Text, ktorý sa má vyhľadať podľa regulárneho výrazu.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Regulárny výraz, v súvislosti s ktorým sa má skontrolovať text. Môže obsahovať hodnoty medzi zátvorkami, ktoré sa vrátia v prípade úspešnej zhody.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Určuje, pre ktorú časť textu chceme nájsť zhodu. Môže ísť o hodnotu enumerácie MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulárny_výraz</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>možnosti</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulárne výrazy musia byť konštantné hodnoty.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia úplnú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie úplnej zhody v zadanom texte.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia skupinovú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie čiastočnej zhody v zadanom texte.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia miesto, kde nastala zhoda s daným regulárnym výrazom. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie pozície úplnej zhody v zadanom texte.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

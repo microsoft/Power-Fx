@@ -18,3 +18,14 @@ Errors: Error 151-176: Invalid argument type. Expecting a Record value, but of a
     {Planet:"Jupter"})
 Errors: Error 258-293: Invalid argument type. Expecting a Record value, but of a different schema.|Error 258-293: Missing column. Your formula is missing a column 'Color' with a type of 'Text'.|Error 0-318: The function 'Patch' has some invalid arguments.
 
+>> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
+{Value:11}
+
+>> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  {Value:11})
+{Value:11}
+
+>> Patch([1,2], If(false, {x:1, Value:2}, {Value:1, z:2}),  If(false, {x:1, Value:2}, {Value:11, z:2}))
+{Value:11}
+
+>> Patch(Table({Value:1}, If(false, {x:1, Value:2}, {Value:2, z:2}), {Value:3}), {Value:2}, {Value:11})
+{Value:11}

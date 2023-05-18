@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>ไม่รองรับการมอบหมายการดำเนินการนี้บนตาราง '{0}'</value>
+    <value>การดำเนินการนี้บนตาราง '{0}' อาจไม่ทำงาน ถ้าตารางมีแถวมากกว่า {1} แถว</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>กำหนดว่าข้อความที่ป้อนมีส่วนที่ตรงกับรูปแบบข้อความที่ป้อนหรือไม่</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>ข้อความที่จะเปรียบเทียบกับรูปแบบ</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>รูปแบบที่จะตรวจสอบข้อความ โดยอาจเป็นค่า Enum TextFormat หรือนิพจน์ปกติ</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการ โดยอาจเป็นค่าของ Enum MatchOptions</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>รูปแบบ</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>ส่วนเพิ่ม</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>ค้นหาข้อความที่ให้มาโดยใช้นิพจน์ปกติที่ระบุ และคืนค่าเป็นผลลัพธ์แรกที่ตรงกัน</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>ค้นหาข้อความที่ให้มาโดยใช้นิพจน์ปกติที่ระบุ และคืนค่าเป็นผลลัพธ์ที่ตรงกันทั้งหมด</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>ข้อความที่จะค้นหาโดยใช้นิพจน์ปกติ</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>นิพจน์ปกติเพื่อตรวจสอบข้อความเทียบ ซึ่งสามารถมีการบันทึก (ค่าระหว่างวงเล็บ) ที่จะถูกส่งกลับในกรณีที่การจับคู่สำเร็จ</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการ โดยอาจเป็นค่าของ Enum MatchOptions</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>ข้อความที่จะค้นหาโดยใช้นิพจน์ปกติ</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>นิพจน์ปกติเพื่อตรวจสอบข้อความเทียบ ซึ่งสามารถมีการบันทึก (ค่าระหว่างวงเล็บ) ที่จะถูกส่งกลับในกรณีที่การจับคู่สำเร็จ</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการ โดยอาจเป็นค่าของ Enum MatchOptions</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>นิพจน์ปกติ</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>ตัวเลือก</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติจะต้องเป็นค่าคงที่</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่ที่ตรงกันทั้งหมดของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่กลุ่มในนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่แบบย่อยทั้งหมดในข้อความที่ระบุ</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับตำแหน่งที่ตั้งของการจับคู่ของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกตำแหน่งของการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>
