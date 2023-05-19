@@ -946,10 +946,9 @@ namespace Microsoft.PowerFx.Tests
 
                 Parallel.For(
                     0,
-                    1,
+                    3,
                     (j) =>
                     {
-                        var i2 = i;
                         var symbolTable = new SymbolTable();
                         symbolTable.AddVariable("record", recordType);
 
