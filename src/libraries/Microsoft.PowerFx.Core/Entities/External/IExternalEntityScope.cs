@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Entities
 {
+    [ThreadSafeImmutable]
     internal interface IExternalEntityScope
     {
         bool TryGetNamedEnum(DName identName, out DType enumType);

@@ -24,13 +24,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }
 
+        // $$$ Supersedes ImmutabilityTests. This is more aggressive (incldues private fields). 
         [Fact]
-        public void CheckType()
-        {
-            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Core.Types.DType));
-            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Types.FormulaType));
-            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(DisabledDisplayNameProvider));
-
+        public void CheckImmutableType()
+        {            
             var asm1 = typeof(RecalcEngine).Assembly;
             var asm = typeof(Types.FormulaType).Assembly;
 
