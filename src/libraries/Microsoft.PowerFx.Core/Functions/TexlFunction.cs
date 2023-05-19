@@ -289,7 +289,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
                 return _signatureConstraint;
             }
-            protected set => _signatureConstraint = value;
+            protected init => _signatureConstraint = value;
         }
 
         /// <summary>
