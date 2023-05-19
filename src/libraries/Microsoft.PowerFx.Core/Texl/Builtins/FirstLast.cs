@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool PropagatesMutability => true;
+
         private readonly bool _isFirst;
 
         public FirstLastFunction(bool isFirst)
