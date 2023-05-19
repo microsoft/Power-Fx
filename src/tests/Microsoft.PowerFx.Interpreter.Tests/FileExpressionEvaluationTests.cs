@@ -130,8 +130,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
-            //path = @"D:\dev\pa2\Power-Fx\src\tests\Microsoft.PowerFx.Interpreter.Tests\MutationScripts\ForAllMutate.txt";
-
             var config = new PowerFxConfig();
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
