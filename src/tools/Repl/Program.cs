@@ -435,7 +435,7 @@ namespace Microsoft.PowerFx
                     var separator = string.Empty;
                     if (_hashCodes)
                     {
-                        resultString += " #" + record.GetHashCode() + "," + record.GetFieldsHashCode() + "#";
+                        resultString += "#" + record.GetHashCode() + "#";
                     }
 
                     resultString += "{";
@@ -489,7 +489,7 @@ namespace Microsoft.PowerFx
 
                     if (_hashCodes)
                     {
-                        resultString += " #" + table.GetHashCode() + "," + table.GetRowsHashCode() + "#";
+                        resultString += "#" + table.GetHashCode() + "#";
                     }
 
                     // special treatment for single column table named Value
@@ -499,12 +499,14 @@ namespace Microsoft.PowerFx
                         resultString += "[";
                         foreach (var row in table.Rows)
                         {
+                            resultString += separator;
+
                             if (_hashCodes)
                             {
-                                resultString += " #" + row.Value.GetHashCode() + "," + row.Value.GetFieldsHashCode() + "#";
+                                resultString += "#" + row.Value.GetHashCode() + "# ";
                             }
 
-                            resultString += separator + PrintResult(row.Value.Fields.First().Value);
+                            resultString += PrintResult(row.Value.Fields.First().Value);
                             separator = ", ";
                         }
 
@@ -566,12 +568,14 @@ namespace Microsoft.PowerFx
                         var separator = string.Empty;
                         foreach (var row in table.Rows)
                         {
+                            resultString += separator;
+
                             if (_hashCodes)
                             {
-                                resultString += " #" + row.Value.GetHashCode() + "," + row.Value.GetFieldsHashCode() + "#";
+                                resultString += "#" + row.Value.GetHashCode() + "# ";
                             }
 
-                            resultString += separator + PrintResult(row.Value);
+                            resultString += PrintResult(row.Value);
                             separator = ", ";
                         }
 

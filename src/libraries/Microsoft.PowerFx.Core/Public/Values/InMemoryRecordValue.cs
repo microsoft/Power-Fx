@@ -102,10 +102,5 @@ namespace Microsoft.PowerFx.Types
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));
         }
-
-        public override int GetFieldsHashCode()
-        {
-            return _fields.GetHashCode();
-        }
     }
 }

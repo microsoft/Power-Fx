@@ -277,10 +277,5 @@ namespace Microsoft.PowerFx.Types
         {
             throw new NotImplementedException();
         }
-
-        public virtual int GetFieldsHashCode()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

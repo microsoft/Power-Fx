@@ -280,10 +280,5 @@ namespace Microsoft.PowerFx.Types
 
             return ret;
         }
-
-        public override int GetRowsHashCode()
-        {
-            return _enumerator.GetHashCode();
-        }
     }
 }
