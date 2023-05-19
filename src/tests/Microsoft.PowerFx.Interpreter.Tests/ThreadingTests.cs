@@ -24,46 +24,55 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }
 
-        // $$$ Supersedes ImmutabilityTests. This is more aggressive (incldues private fields). 
+        // $$$ Supersedes ImmutabilityTests.
+        // This is more aggressive (includes private fields), but they don't all pass. So assert is disabled.
+        // Run this test under a debugger, and failure list is written to Debugger output window.
+        // Per https://github.com/microsoft/Power-Fx/issues/1519, enable assert here. 
         [Fact]
         public void CheckImmutableType()
         {
-            // https://github.com/microsoft/Power-Fx/issues/1519
+            // Per https://github.com/microsoft/Power-Fx/issues/1519,
             // Add ThreadSafeImmutable and get these to pass. 
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Core.IR.Nodes.IntermediateNode));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ReadOnlySymbolValues));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ComposedReadOnlySymbolValues));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(ParsedExpression));
 
-            var asm1 = typeof(RecalcEngine).Assembly;
-            var asm = typeof(Types.FormulaType).Assembly;
-
-            foreach (Type type in asm.GetTypes().Concat(asm1.GetTypes()))
+            var assemblies = new Assembly[] 
             {
-                // includes base types 
-                var attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>();
-                if (attr == null)
-                {
-                    continue;
-                }
+                typeof(RecalcEngine).Assembly,
+                typeof(Types.FormulaType).Assembly
+            };
 
-                // Common pattern is a writeable derived type (like Dict vs. IReadOnlyDict). 
-                var attrNotSafe = type.GetCustomAttribute<NotThreadSafeAttribute>(inherit: false);
-                if (attrNotSafe != null)
+            foreach (var assembly in assemblies)
+            {
+                foreach (Type type in assembly.GetTypes())
                 {
-                    attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
-                    if (attr != null)
+                    // includes base types 
+                    var attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>();
+                    if (attr == null)
                     {
-                        Assert.True(false); // Class can't have both safe & unsafe together. 
+                        continue;
                     }
 
-                    continue;
+                    // Common pattern is a writeable derived type (like Dict vs. IReadOnlyDict). 
+                    var attrNotSafe = type.GetCustomAttribute<NotThreadSafeAttribute>(inherit: false);
+                    if (attrNotSafe != null)
+                    {
+                        attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
+                        if (attr != null)
+                        {
+                            Assert.True(false); // Class can't have both safe & unsafe together. 
+                        }
+
+                        continue;
+                    }
+
+                    bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
+
+                    // Enable this, per  https://github.com/microsoft/Power-Fx/issues/1519
+                    // Assert.True(ok);                
                 }
-
-                bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
-
-                // https://github.com/microsoft/Power-Fx/issues/1519
-                // Assert.True(ok);                
             }
         }
     }

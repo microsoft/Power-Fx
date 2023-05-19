@@ -24,7 +24,6 @@ namespace Microsoft.PowerFx.Core.Tests
         {
             int errors = 0;
 
-            // Debugger.Log(0, string.Empty, $">> {t.FullName}\r\n");
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
             // Check out all fields and properties. 
