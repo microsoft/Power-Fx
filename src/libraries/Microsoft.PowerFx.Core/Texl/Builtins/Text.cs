@@ -155,10 +155,26 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg))
             {
-                if (!TextFormatUtils.IsValidCompiledTimeFormatArg(formatArg))
+                if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
+                {
+                    var textFormatArgs = new TextFormatArgs
+                    {
+                        FormatCultureName = null,
+                        FormatArg = null,
+                        HasDateTimeFmt = false,
+                        HasNumericFmt = false
+                    };
+
+                    isValid = TextFormatUtils.IsValidFormatArg(formatArg, out textFormatArgs);
+                }
+                else
+                {
+                    isValid = TextFormatUtils.IsValidCompiledTimeFormatArg(formatArg);
+                }
+
+                if (!isValid)
                 { 
                     errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
-                    isValid = false;
                 }
             }
 
