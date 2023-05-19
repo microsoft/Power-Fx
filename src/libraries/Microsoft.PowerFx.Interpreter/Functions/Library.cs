@@ -940,6 +940,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsToday)
             },
             {
+                BuiltinFunctionsCore.Language,
+                NoErrorHandling(Language)
+            },
+            {
                 BuiltinFunctionsCore.Last,
                 StandardErrorHandling<TableValue>(
                     BuiltinFunctionsCore.Last.Name,
@@ -1203,6 +1207,17 @@ namespace Microsoft.PowerFx.Functions
             {
                 BuiltinFunctionsCore.Pi,
                 NoErrorHandling(Pi)
+            },
+            {
+                BuiltinFunctionsCore.PlainText,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.PlainText.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    targetFunction: PlainText)
             },
             {
                 BuiltinFunctionsCore.Power,
@@ -1716,10 +1731,6 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Year)
-            },
-            {
-                BuiltinFunctionsCore.Language,
-                NoErrorHandling(Language)
             }
         };
 
@@ -2236,8 +2247,6 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var errorRecord in errorRecords)
             {
-                var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
-
                 var kindField = errorRecord.GetField(ErrorType.KindFieldName);
                 if (kindField is ErrorValue error)
                 {
@@ -2260,7 +2269,7 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
-                var message = messageField != null ? messageField.Value : GetDefaultErrorMessage(errorKind);
+                var message = errorRecord.GetField(ErrorType.MessageFieldName) is StringValue messageField ? messageField.Value : GetDefaultErrorMessage(errorKind);
                 result.Add(new ExpressionError { Kind = errorKind, Message = message });
             }
 

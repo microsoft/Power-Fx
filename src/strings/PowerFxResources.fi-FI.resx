@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Tämän toiminnon delegointia taulukkoon {0} ei tueta.</value>
+    <value>Tämä toiminto taulukossa {0}ei ehkä toimi, jos sillä on yli {1} riviä.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Ei voida delegoida kohdetta {0}: kohde sisältää käyttäytymisfunktion {1}.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Määrittää, onko annetulla tekstillä annetun tekstimuodon vastaavuus.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teksti, jota verrataan muotoon.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Muoto, jota vasten teksti tarkistetaan. Se voi olla TextFormat-luetteloinnin arvo tai säännöllinen lauseke.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Tämä määrittää, mille tekstin osalle vastaavuus halutaan. Se voi olla MatchOptions-luetteloinnin arvo.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>teksti</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>muoto</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>laajuus</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa sille ensimmäisen vastaavuuden.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa sille kaikki vastaavuudet.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Teksti, jota haetaan säännönmukaisesta lausekkeesta.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Säännöllinen lauseke, jota vasten teksti tarkistetaan. Se voi sisältää sieppauksia (sulkeiden sisällä olevia arvoja), jotka palautetaan, jos vastaavuus löytyy.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Tämä määrittää, mille tekstin osalle vastaavuus halutaan. Se voi olla MatchOptions-luetteloinnin arvo.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Teksti, jota haetaan säännönmukaisesta lausekkeesta.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Säännöllinen lauseke, jota vasten teksti tarkistetaan. Se voi sisältää sieppauksia (sulkeiden sisällä olevia arvoja), jotka palautetaan, jos vastaavuus löytyy.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Tämä määrittää, mille tekstin osalle vastaavuus halutaan. Se voi olla MatchOptions-luetteloinnin arvo.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>teksti</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>säännönmukainen_lauseke</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>asetukset</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Virheellinen säännöllinen lauseke.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Säännönmukaisten lausekkeiden on oltava vakioarvoja.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen koko vastaavuuden palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden poimimiseen.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen ryhmävastaavuudet palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin kaikkien alivastaavuuksien poimimiseen.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen vastaavuuden sijainnin palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden sijainnin poimimiseen.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

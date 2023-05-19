@@ -701,11 +701,11 @@ namespace Microsoft.PowerFx
                     return fi;
                 case IExternalOptionSet optionSet:
                     return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext);
-                case Func<IServiceProvider, FormulaValue> getHostObject:
+                case Func<IServiceProvider, Task<FormulaValue>> getHostObject:
                     FormulaValue hostObj;
                     try
                     {
-                        hostObj = getHostObject(_services);
+                        hostObj = await getHostObject(_services).ConfigureAwait(false);
                         if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
                         {
                             hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext);

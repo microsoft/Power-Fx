@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>La délégation de cette opération sur la table « {0} » n’est pas prise en charge.</value>
+    <value>Cette opération sur la table « {0} » peut ne pas fonctionner si elle a plus de {1} lignes.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Impossible de déléguer {0} : contient une fonction de comportement « {1} ».</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Détermine si le texte fourni a une correspondance avec le format texte fourni.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Texte à comparer au format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Format avec lequel comparer le texte. Il peut s’agir d’une valeur de l’enum TextFormat ou d’une expression régulière.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ceci détermine la partie du texte que nous souhaitons faire correspondre. Il peut s’agir d’une valeur de l’enum MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>texte</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>étendue</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Recherche dans le texte fourni l’expression régulière spécifiée et retourne la première correspondance associée.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Recherche dans le texte fourni l’expression régulière spécifiée et retourne toutes les correspondances associées.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Texte dans lequel rechercher l’expression régulière.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Expression régulière à rechercher dans le texte. Elle peut contenir des captures (valeurs entre parenthèses) qui sont retournées en cas de correspondance trouvée.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ceci détermine la partie du texte que nous souhaitons faire correspondre. Il peut s’agir d’une valeur de l’enum MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Texte dans lequel rechercher l’expression régulière.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Expression régulière à rechercher dans le texte. Elle peut contenir des captures (valeurs entre parenthèses) qui sont retournées en cas de correspondance trouvée.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ceci détermine la partie du texte que nous souhaitons faire correspondre. Il peut s’agir d’une valeur de l’enum MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>texte</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>expression_régulière</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>options</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Expression régulière non valide.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Les expressions régulières doivent être des valeurs constantes.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Le nom de capture « {0} » masque la propriété prédéfinie qui retourne la correspondance complète de l’expression régulière. Envisagez de lui donner un autre nom si vous voulez que la propriété nommée puisse extraire la correspondance complète dans le texte spécifié.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Le nom de capture « {0} » masque la propriété prédéfinie qui retourne les correspondances de groupes dans l’expression régulière. Envisagez de lui donner un autre nom si vous voulez que la propriété nommée puisse extraire toutes les sous-correspondances dans le texte spécifié.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Le nom de capture « {0} » masque la propriété prédéfinie qui retourne l’emplacement de la correspondance de l’expression régulière. Envisagez de lui donner un autre nom si vous voulez que la propriété nommée puisse extraire la position de la correspondance complète dans le texte spécifié.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

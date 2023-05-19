@@ -68,4 +68,4 @@ Blank()
 Errors: Error 13-15: Invalid argument type (Text). Expecting a Table value instead.|Error 17-19: Invalid argument type (Text). Expecting a Record value instead.|Error 17-19: Invalid argument type. Cannot use Text values in this context.|Error 0-20: The function 'ClearCollect' has some invalid arguments.
 
 >> ClearCollect(If(false,Blank()),r1)
-Errors: Error 13-30: The function 'ClearCollect' has some invalid arguments.
+Errors: Error 31-33: The specified column 'a' does not exist.|Error 0-34: The function 'ClearCollect' has some invalid arguments.

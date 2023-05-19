@@ -1,0 +1,7 @@
+#SETUP: disable:NumberIsFloat
+
+>> With( { x : 2e27 }, x * 2 )
+4e27
+
+>> With( { x : 2e28 , y : 1.234e28}, x * y )
+Error({Kind:ErrorKind.Numeric})

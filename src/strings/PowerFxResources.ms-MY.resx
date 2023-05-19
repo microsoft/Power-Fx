@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Menugaskan operasi ini pada jadual '{0}' adalah tidak disokong.</value>
+    <value>Operasi ini pada jadual '{0}' mungkin tidak berfungsi jika mempunyai lebih daripada {1} baris.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Tidak dapat menugaskan {0}: mengandungi fungsi kelakuan'{1}'.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Menentukan sama ada teks yang dibekalkan sepadan dengan format teks yang dibekalkan atau tidak.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teks untuk dibandingkan mengikut format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Format untuk disemak terhadap teks. Ia mungkin merupakan nilai enum TextFormat atau ungkapan biasa.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ini menentukan bahagian teks yang ingin kami padankan. Ia mungkin merupakan nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>lanjut</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Mencari teks yang dibekalkan untuk ungkapan biasa yang ditentukan dengan mengembalikan padanan pertama daripadanya.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Mencari teks yang dibekalkan untuk ungkapan biasa yang ditentukan dengan mengembalikan semua padanan daripadanya.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Teks untuk dicari mengikut ungkapan biasa.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Ungkapan biasa untuk menyemak teks. Boleh mengandungi tangkapan (nilai antara kurungan) yang akan dikembalikan jika padanan berjaya.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ini menentukan bahagian teks yang ingin kami padankan. Ia mungkin merupakan nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Teks untuk dicari mengikut ungkapan biasa.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Ungkapan biasa untuk menyemak teks. Boleh mengandungi tangkapan (nilai antara kurungan) yang akan dikembalikan jika padanan berjaya.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ini menentukan bahagian teks yang ingin kami padankan. Ia mungkin merupakan nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>ungkapan_biasa</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>pilihan</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa mestilah nilai yang tetap.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan padanan penuh bagi ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak padanan penuh dalam teks yang ditentukan.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan kumpulan yang sepadan dalam ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak semua subpadanan dalam teks yang ditentukan.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan lokasi padanan bagi ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak kedudukan padanan penuh dalam teks yang ditentukan.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>
