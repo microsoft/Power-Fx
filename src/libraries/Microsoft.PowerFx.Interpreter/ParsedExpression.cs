@@ -112,7 +112,7 @@ namespace Microsoft.PowerFx
             _stackMarker = stackMarker;
 
             // $$$ can't use current culture
-            _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
+            _cultureInfo = cultureInfo ?? CultureInfo.InvariantCulture;
         }
 
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)

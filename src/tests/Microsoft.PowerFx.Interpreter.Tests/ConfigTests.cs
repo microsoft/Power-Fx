@@ -326,7 +326,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
             Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
         }
 
@@ -354,7 +354,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             check = engine.Check(datetimeExpression).GetEvaluator();
 
-            Assert.Equal("10/6/2022 2:19 PM", (check.Eval() as StringValue).Value);
+            Assert.Equal("10/06/2022 14:19", (check.Eval() as StringValue).Value);
             Assert.Equal("6.10.2022 14:19", (check.Eval(runtimeConfig: tr_symbols) as StringValue).Value);
             Assert.Equal("10/6/2022 2:19 PM", (check.Eval(runtimeConfig: us_symbols) as StringValue).Value);
         }

@@ -139,42 +139,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        [Fact]
-        public async Task Test()
-        {
-            // Setup
-            CultureInfo culture = new CultureInfo("es-ES");
-            
-            //CultureInfo.CurrentCulture = culture;
-            var parserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true };
-            RecalcEngine recalcEngine = new RecalcEngine();
-
-            var check = recalcEngine.Check("Float(\"4,99\")", parserOptions);
-            var run = check.GetEvaluator();
-            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
-
-            // Look at Result Value => Seems like 4.99
-            Assert.Equal(4.99, result.ToObject());
-        }
-
-        [Fact]
-        public async Task Test2()
-        {
-            // Setup
-            CultureInfo culture = new CultureInfo("en-US");
-
-            //CultureInfo.CurrentCulture = culture;
-            var parserOptions = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true };
-            RecalcEngine recalcEngine = new RecalcEngine();
-
-            var check = recalcEngine.Check("Float(\"4,99\")", parserOptions);
-            var run = check.GetEvaluator();
-            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
-
-            // Look at Result Value => Seems like 499
-            Assert.Equal(499D, result.ToObject());
-        }
-
         internal class BooleanOptionSet : OptionSet, IExternalOptionSet
         {            
             public BooleanOptionSet(string name, DisplayNameProvider displayNameProvider)

@@ -469,7 +469,7 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValueOrNull(culture);
             var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
                              (flags.HasFlag(Flags.DisableReservedKeywords) ? TexlLexer.Flags.DisableReservedKeywords : 0);
-            culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
+            culture ??= CultureInfo.InvariantCulture; // $$$ can't use current culture
 
             return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
         }
