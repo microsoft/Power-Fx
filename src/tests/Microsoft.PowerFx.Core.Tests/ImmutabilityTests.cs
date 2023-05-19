@@ -16,6 +16,9 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     internal class ImmutabilityTests : PowerFxTest
     {
+        // Include non-public types
+        // Include non-public properties!
+        // Are private-setters ok?
         public static void CheckImmutability(Assembly asm)
         {
             var errors = new StringBuilder();

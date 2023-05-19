@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -16,32 +17,70 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     public class AnalyzeThreadSafety
     {
-        public static void VerifyThreadSafeImmutable(Type t)
+        // Return true if safe, false on error. 
+        public static bool VerifyThreadSafeImmutable(Type t)
         {
+            int errors = 0;
+
+            // Debugger.Log(0, string.Empty, $">> {t.FullName}\r\n");
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+
             // Check out all fields and properties. 
-            foreach (var prop in t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) 
+            foreach (var prop in t.GetProperties(flags)) 
             {
                 var name = prop.Name;
                 if (prop.CanWrite)
                 {
-                    // No mutable properties allowed. Init only ok. 
+                    var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(System.Runtime.CompilerServices.IsExternalInit));
+                    if (!isInitKeyword)
+                    {
+                        // No mutable properties allowed. Init only ok. 
+                        Debugger.Log(0, string.Empty, $"{t.Name}.{name} has setter\r\n");
+                        errors++;
+                    }
                 }
 
                 Assert.True(prop.CanRead);
 
                 var propType = prop.PropertyType;
-                    
+
                 if (!IsTypeImmutable(propType))
                 {
-                    // Fail. 
-                    Debugger.Log(0, string.Empty, $"{t.Name}.{propType} returns mutable value");
+                    // valuetypes are copies, so no contention
+                    if (!prop.PropertyType.IsValueType) 
+                    {
+                        // Fail. 
+                        Debugger.Log(0, string.Empty, $"{t.Name}.{name} returns mutable value\r\n");
+                        errors++;
+                    }
                 }
             }
             
-            foreach (var field in t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            foreach (var field in t.GetFields(flags))
             {
+                var name = field.Name;
+
+                if (name.StartsWith("<"))
+                {
+                    // Ignore compile generated fields.
+                    continue;
+                }
+
                 // ReadOnly
+                if (!field.IsInitOnly)
+                {
+                    Debugger.Log(0, string.Empty, $"{t.Name}.{name} is not readonly\r\n");
+                    errors++;
+                }
             }
+
+            if (errors > 0)
+            {
+                Debugger.Log(0, string.Empty, $"\r\n");
+                return false;
+            }
+
+            return true;
         }
 
         // Verify there are no "unsafe" static fields that could be threading issues.
@@ -201,6 +240,22 @@ namespace Microsoft.PowerFx.Core.Tests
                     var isValueArgSafe = IsTypeImmutable(valueArg);
                     return isValueArgSafe;
                 }
+
+                if (genericDef == typeof(KeyValuePair<,>))
+                {
+                    var typeArgs = t.GetGenericArguments();
+                    foreach (var arg in typeArgs)
+                    {
+                        var isArgSafe = IsTypeImmutable(arg) || arg.IsValueType;
+                        if (!isArgSafe)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
             }
 
             if (_knownImmutableTypes.Contains(t))
