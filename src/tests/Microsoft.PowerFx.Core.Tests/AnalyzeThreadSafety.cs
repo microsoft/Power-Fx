@@ -2,8 +2,10 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -70,6 +72,19 @@ namespace Microsoft.PowerFx.Core.Tests
                 if (!field.IsInitOnly)
                 {
                     Debugger.Log(0, string.Empty, $"{t.Name}.{name} is not readonly\r\n");
+                    errors++;
+                }
+
+                if (field.GetCustomAttributes<ThreadSafeProtectedByLockAttribute>().Any() ||
+                    IsTypeConcurrent(field.FieldType))
+                {
+                    continue;
+                }
+
+                if (!IsTypeImmutable(field.FieldType))
+                {
+                    // Fail. 
+                    Debugger.Log(0, string.Empty, $"{t.Name}.{name} returns mutable value\r\n");
                     errors++;
                 }
             }
@@ -174,6 +189,20 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Empty(errors);
         }
 
+        private static bool IsTypeConcurrent(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                var genericDef = type.GetGenericTypeDefinition();
+                if (genericDef == typeof(ConcurrentDictionary<,>))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         private static bool IsFieldVolatile(FieldInfo field)
         {
             var isVolatile = field
@@ -188,10 +217,20 @@ namespace Microsoft.PowerFx.Core.Tests
             // Primitives
             typeof(object),
             typeof(string),
+            typeof(System.Type),
             typeof(Random),
             typeof(DateTime),
             typeof(System.Text.RegularExpressions.Regex),
             typeof(System.Numerics.BigInteger),
+            typeof(NumberFormatInfo),
+
+            // Generics        
+            typeof(IReadOnlyDictionary<,>),
+            typeof(IReadOnlyCollection<>),
+            typeof(IReadOnlyList<>),
+            typeof(Nullable<>),
+            typeof(IEnumerable<>),
+            typeof(KeyValuePair<,>)
         };
 
         // If the instance is readonly, is the type itself immutable ?
@@ -218,31 +257,8 @@ namespace Microsoft.PowerFx.Core.Tests
             if (t.IsGenericType)
             {
                 var genericDef = t.GetGenericTypeDefinition();
-                if (genericDef == typeof(IReadOnlyDictionary<,>))
-                {
-                    // For a Dict<key,value>, need to make sure the values are also safe. 
-                    var valueArg = t.GetGenericArguments()[1];
-                    var isValueArgSafe = IsTypeImmutable(valueArg);
-                    return isValueArgSafe;
-                }
-
-                if (genericDef == typeof(IReadOnlyCollection<>))
-                {
-                    var keyArg = t.GetGenericArguments()[0];
-                    var isKeyArgSafe = IsTypeImmutable(keyArg);
-                    return isKeyArgSafe;
-                }
-
-                if (genericDef == typeof(IEnumerable<>)
-                    || genericDef == typeof(IReadOnlyList<>) || genericDef == typeof(Nullable<>))
-                {
-                    var valueArg = t.GetGenericArguments()[0];
-                    var isValueArgSafe = IsTypeImmutable(valueArg);
-                    return isValueArgSafe;
-                }
-
-                if (genericDef == typeof(KeyValuePair<,>))
-                {
+                if (_knownImmutableTypes.Contains(genericDef))
+                { 
                     var typeArgs = t.GetGenericArguments();
                     foreach (var arg in typeArgs)
                     {
@@ -255,7 +271,6 @@ namespace Microsoft.PowerFx.Core.Tests
 
                     return true;
                 }
-
             }
 
             if (_knownImmutableTypes.Contains(t))

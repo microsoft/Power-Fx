@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx
 
         // Mapping between slots and logical names on RecordType.
         // name --> Slot; used at design time to ensure same slot per field. 
+        [ThreadSafeProtectedByLock("_map")]
         private readonly Dictionary<string, NameSymbol> _map = new Dictionary<string, NameSymbol>();
 
         internal RecordType Type => _type;

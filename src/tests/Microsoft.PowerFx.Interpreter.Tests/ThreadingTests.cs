@@ -27,6 +27,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void CheckType()
         {
+            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Core.Types.DType));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Types.FormulaType));
             AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(DisabledDisplayNameProvider));
 
@@ -40,9 +41,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 {
                     continue;
                 }
-
-                // AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Microsoft.PowerFx.Syntax.Span));
-
+                                
                 bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
             }
         }
