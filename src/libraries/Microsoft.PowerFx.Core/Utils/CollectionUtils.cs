@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -192,6 +193,12 @@ namespace Microsoft.PowerFx.Core.Utils
 
             list.Add(item);
             return item;
+        }
+
+        // Overwrite the value. 
+        public static void AddOrUpdate<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key, TValue newValue)
+        {
+            dict.AddOrUpdate(key, newValue, (x1, y2) => newValue);
         }
     }
 }

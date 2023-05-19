@@ -927,5 +927,35 @@ namespace Microsoft.PowerFx.Tests
             var result2 = cache.Marshal(obj);
             Assert.Equal(333.0, result2.ToObject());
         }
+
+        public class MyType2
+        {
+            public string Field1 { get; set; }
+        }
+
+        // Stress test that sharing RecordType from GetMarshaller are thread safe. 
+        [Fact]
+        public void MarshalStress()
+        {
+            var engine = new Engine();
+
+            for (int i = 0; i < 100; i++)
+            {
+                var cache = new TypeMarshallerCache();
+                RecordType recordType = (RecordType)cache.GetMarshaller(typeof(MyType2)).Type;
+
+                Parallel.For(
+                    0,
+                    3,
+                    (j) =>
+                    {
+                        var symbolTable = new SymbolTable();
+                        symbolTable.AddVariable("record", recordType);
+
+                        var check = engine.Check("record.Field1", symbolTable: symbolTable);
+                        Assert.True(check.IsSuccess);
+                    });
+            }
+        }
     }
 }
