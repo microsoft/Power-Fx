@@ -20,5 +20,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }
+
+        [Fact]
+        public void CheckType()
+        {
+            AnalyzeThreadSafety.VerifyThreadSafeImmutable(typeof(Microsoft.PowerFx.Syntax.Span));
+        }
     }
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -15,6 +16,34 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     public class AnalyzeThreadSafety
     {
+        public static void VerifyThreadSafeImmutable(Type t)
+        {
+            // Check out all fields and properties. 
+            foreach (var prop in t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)) 
+            {
+                var name = prop.Name;
+                if (prop.CanWrite)
+                {
+                    // No mutable properties allowed. Init only ok. 
+                }
+
+                Assert.True(prop.CanRead);
+
+                var propType = prop.PropertyType;
+                    
+                if (!IsTypeImmutable(propType))
+                {
+                    // Fail. 
+                    Debugger.Log(0, string.Empty, $"{t.Name}.{propType} returns mutable value");
+                }
+            }
+            
+            foreach (var field in t.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                // ReadOnly
+            }
+        }
+
         // Verify there are no "unsafe" static fields that could be threading issues.
         // Bugs - list of field types types that don't work. This should be driven to 0. 
         // BugNames - list of "Type.Field" that don't work. This should be driven to 0. 
