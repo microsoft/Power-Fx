@@ -769,11 +769,12 @@ namespace Microsoft.PowerFx.Functions
 
             double result = arg0 - (arg1 * ((long)q));
 
-            // We validate the reminder is in a valid range.
-            // This is mainly to support very large numbers (like 1E+308) where the calculation could be incorrect
-            if (result < -Math.Abs(arg1) || result > Math.Abs(arg1))
+            // If result is overflow or (arg0 is more than 1e15 and result = 0 - highly wrong result), using C# mod function
+            if ((Math.Abs(arg0) > 1e15 && result == 0) || (result < -Math.Abs(arg1) || result > Math.Abs(arg1)))
             {
-                return CommonErrors.OverflowError(irContext);
+                // C# % result has the same sign with dividend.
+                // Using the following fomular to have the sign of mod result is the same as divisor as in Excel and PA Mod
+                result = (arg0 % arg1) * Math.Sign(arg0) * Math.Sign(arg1);
             }
 
             return new NumberValue(irContext, result);
@@ -793,7 +794,7 @@ namespace Microsoft.PowerFx.Functions
 
             // r = a – N × floor(a/b)
             try
-            {
+            { 
                 q = decimal.Floor(arg0 / arg1);
             }
             catch (OverflowException)

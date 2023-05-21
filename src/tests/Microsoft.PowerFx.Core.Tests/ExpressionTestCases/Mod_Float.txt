@@ -1,0 +1,40 @@
+#SETUP: NumberIsFloat
+
+>> Mod(1E+307, 3)
+1
+
+>> Mod(1E+307, -3)
+-1
+
+>> Mod(-1E+307, 3)
+1
+
+>> Mod(-1E+307, -3)
+-1
+
+>> Mod(1.7976931348623157E+300, 3)
+1
+
+>> Mod(1E+305, 123)
+112
+
+>> Mod(1.2345E+260, 67.89)
+41.28195726574958
+
+>> Mod(1.7976931348623157E+308, 25)
+18
+
+>> Mod(1E+13, 123)
+16
+
+>> Mod(1E+18, 123)
+16
+
+>> Mod(1E+25, 123)
+4
+
+>> Mod(1E+25, -123)
+-4
+
+>> Mod(1E+400, 3)
+Errors: Error 4-10: Numeric value is too large.|Error 0-14: The function 'Mod' has some invalid arguments.|Error 4-10: Invalid argument type (Error). Expecting a Number value instead.
