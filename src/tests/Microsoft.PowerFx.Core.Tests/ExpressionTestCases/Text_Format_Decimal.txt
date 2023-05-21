@@ -1,0 +1,23 @@
+#SETUP: disable:NumberIsFloat
+
+>> Text(123.466, "[$-en-US]$#0.0M") 
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 14-31: Incorrect format specifier for 'Text'.
+
+>> Text(1, "M#")
+Errors: Error 0-13: The function 'Text' has some invalid arguments.|Warning 8-12: Incorrect format specifier for 'Text'.
+
+// If have wrong format string, throw error
+>> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
+
+// If have empty language code, throw error
+>> Text(1234.5678,"[$-]")
+Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 15-21: Incorrect format specifier for 'Text'.
+
+// If not closed by a ']', throw error
+>> Text(1234.5678,"[$-a")
+Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 15-21: Incorrect format specifier for 'Text'.
+
+// If not closed by a ']', throw error
+>> Text(1234.5678, "[$-en-US#,##0.00", "en-US")
+Errors: Error 0-44: The function 'Text' has some invalid arguments.|Warning 16-34: Incorrect format specifier for 'Text'.
