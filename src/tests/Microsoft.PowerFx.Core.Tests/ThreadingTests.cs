@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Annotations;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -68,5 +70,4 @@ namespace Microsoft.PowerFx.Core.Tests
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
         }
-    }
 }
