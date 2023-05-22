@@ -22,6 +22,7 @@ namespace Microsoft.PowerFx
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
+    [NotThreadSafe]
     public class SymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
