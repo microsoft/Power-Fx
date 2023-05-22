@@ -762,6 +762,9 @@ namespace Microsoft.PowerFx.Functions
 
             double result = arg0 % arg1;
 
+            // % result has the same sign with dividend.
+            // Using the following fomular to have the sign of mod result is the same as divisor as in Excel and PA Mod.
+            // If result has different sign with divisor, plus result with divisor to flip the sign to be the same with divisor.
             if (Math.Sign(result) * Math.Sign(arg1) == -1)
             {
                 result = result + arg1;
@@ -783,6 +786,9 @@ namespace Microsoft.PowerFx.Functions
 
             decimal result = arg0 % arg1;
 
+            // % result has the same sign with dividend.
+            // Using the following fomular to have the sign of mod result is the same as divisor as in Excel and PA Mod.
+            // If result has different sign with divisor, plus result with divisor to flip the sign to be the same with divisor.
             if (Math.Sign(result) * Math.Sign(arg1) == -1)
             {
                 result = result + arg1;
