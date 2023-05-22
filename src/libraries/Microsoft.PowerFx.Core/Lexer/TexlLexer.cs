@@ -899,7 +899,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly bool _disableReservedKeywords;
 
             private int _currentTokenPos; // The start of the current token.
-            private bool _previousHasEndLineComment = false;
+            private bool _previousHasEndLineComment = false; // True/False if the last previous commment already process end line character
 
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
             {
@@ -917,7 +917,6 @@ namespace Microsoft.PowerFx.Syntax
 
                 _modeStack = new Stack<LexerMode>();
                 _modeStack.Push(LexerMode.Normal);
-                _previousHasEndLineComment = false;
             }
 
             // If the mode stack is empty, this is already an parse, use NormalMode as a default
@@ -1109,6 +1108,7 @@ namespace Microsoft.PowerFx.Syntax
                     var str = _sb.ToString();
                     if (!_lex.TryGetPunctuator(str, out var tidCur))
                     {
+                        // Reset the last previous comment end line to false when no comment is returned
                         _previousHasEndLineComment = false;
                         break;
                     }
@@ -1127,6 +1127,7 @@ namespace Microsoft.PowerFx.Syntax
                     }
                     else
                     {
+                        // Reset the last previous comment end line to false when none kind is returned
                         _previousHasEndLineComment = false;
                     }
 
@@ -1619,6 +1620,7 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 // Preceding,
+                // Only process previous end line character if it is not proceeded in the last previous comment
                 if (!_previousHasEndLineComment)
                 {
                     while (startingPosition > 0)
@@ -1646,7 +1648,9 @@ namespace Microsoft.PowerFx.Syntax
                     commentToken.IsOpenBlock = true;
                 }
 
+                // Set true if the current comment end with '\n' so next comment does not duplicate process it.
                 _previousHasEndLineComment = _sb.ToString().EndsWith("\n", StringComparison.Ordinal);
+
                 return commentToken;
             }
 

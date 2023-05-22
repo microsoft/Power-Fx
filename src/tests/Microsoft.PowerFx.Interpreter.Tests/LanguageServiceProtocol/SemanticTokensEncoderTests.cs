@@ -151,6 +151,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("//Comment one \n//Comment Two \n \"String One\n\";\"String One \n String Two \n\";")]
         [InlineData("\n//Comment one \n//Comment Two \n \"String One\n\";\"String One \n String Two \n\";")]
         [InlineData("/* One line \r\n Second Line */\r\n\r\n\r\n/*Third Comment First One \r\n Fourth Comment*/ \r\n //Comment one")]
+        [InlineData("//Comment one \n /* Comment Two */ \n//Comment Three \n \"String One\n\";\"String One \n String Two \n\";")]
+        [InlineData("/* Comment One */ \n//Comment Two \n //Comment Three \n \"String One\n\";\"String One \n String Two \n\";")]
         public void TestMultilineTokensAreEncodedCorrectly(string expression)
         {
             // Arrange
