@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Types
 
         FormulaValue IMutationCopy.ShallowCopy()
         {
-            return (FormulaValue)new InMemoryTableValue(this);
+            return new InMemoryTableValue(this);
         }
 
         private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)

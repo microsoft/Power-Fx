@@ -632,26 +632,26 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionNumberIsFloat.ToLower(CultureInfo.InvariantCulture))
+                if (option.Value.ToLowerInvariant() == OptionNumberIsFloat.ToLowerInvariant())
                 {
                     _numberIsFloat = value.Value;
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionLargeCallDepth.ToLower(CultureInfo.InvariantCulture))
+                if (option.Value.ToLowerInvariant() == OptionLargeCallDepth.ToLowerInvariant())
                 {
                     _largeCallDepth = value.Value;
                     ResetEngine();
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionHashCodes.ToLower(CultureInfo.InvariantCulture))
+                if (option.Value.ToLowerInvariant() == OptionHashCodes.ToLowerInvariant())
                 {
                     _hashCodes = value.Value;
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionPowerFxV1.ToLower(CultureInfo.InvariantCulture))
+                if (option.Value.ToLowerInvariant() == OptionPowerFxV1.ToLowerInvariant())
                 {
                     foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
@@ -665,7 +665,7 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionFeaturesNone.ToLower(CultureInfo.InvariantCulture))
+                if (option.Value.ToLowerInvariant() == OptionFeaturesNone.ToLowerInvariant())
                 {
                     foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
