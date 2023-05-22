@@ -107,11 +107,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PatchDelay = patchDelay;
             }
 
-            // Doesn't actually perform a copy.  Not needed for testing purposes and 
+            // Doesn't perform a copy.  Not needed for testing purposes and 
             // prevents this class from being replaced by a standard InMemoryTableValue
-            FormulaValue IMutationCopy.ShallowCopy()
+            bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
             {
-                return this;
+                copy = null;
+                return false;
             }
 
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)

@@ -45,9 +45,10 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        FormulaValue IMutationCopy.ShallowCopy()
+        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
         {
-            return new InMemoryRecordValue(this);
+            copy = new InMemoryRecordValue(this);
+            return true;
         }
 
         internal override void ShallowCopyFieldInPlace(string fieldName)

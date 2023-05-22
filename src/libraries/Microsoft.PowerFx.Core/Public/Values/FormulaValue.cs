@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Types
         {
             if (this is IMutationCopy mc)
             {
-                return mc.ShallowCopy();
+                return mc.TryShallowCopy(out FormulaValue copy) ? copy : this;
             }
 
             return this;
@@ -86,9 +86,8 @@ namespace Microsoft.PowerFx.Types
         /// Returns a shallow copy of a FormulaValue. For potentially deep data structures such as a Table or Record,
         /// this includes the head object and any first level collections for rows or fields respectively.
         /// It stops there, for example even the records within the rows of a Table are not copied.
-        /// If a shallow copy is conditional or not desired, have ShallowCopy "return this;".
         /// </summary>
         /// <returns>Shallow copy.</returns>
-        FormulaValue ShallowCopy();
+        bool TryShallowCopy(out FormulaValue shallowCopy);
     }
 }

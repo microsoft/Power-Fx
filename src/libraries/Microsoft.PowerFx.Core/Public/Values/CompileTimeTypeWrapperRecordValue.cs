@@ -35,9 +35,10 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        FormulaValue IMutationCopy.ShallowCopy()
+        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
         {
-            return new CompileTimeTypeWrapperRecordValue(this);
+            copy = new CompileTimeTypeWrapperRecordValue(this);
+            return true;
         }
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
