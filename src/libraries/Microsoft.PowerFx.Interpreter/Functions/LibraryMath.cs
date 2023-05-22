@@ -760,21 +760,11 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            // r = a – N × floor(a/b)
-            double q = Math.Floor(arg0 / arg1);
-            if (IsInvalidDouble(q))
-            {
-                return CommonErrors.OverflowError(irContext);
-            }
+            double result = arg0 % arg1;
 
-            double result = arg0 - (arg1 * ((long)q));
-
-            // If result is overflow or (arg0 is more than 1e15 and result = 0 - highly wrong result), using C# mod function
-            if ((Math.Abs(arg0) > 1e15 && result == 0) || (result < -Math.Abs(arg1) || result > Math.Abs(arg1)))
+            if (Math.Sign(result) * Math.Sign(arg1) == -1)
             {
-                // C# % result has the same sign with dividend.
-                // Using the following fomular to have the sign of mod result is the same as divisor as in Excel and PA Mod
-                result = (arg0 % arg1) * Math.Sign(arg0) * Math.Sign(arg1);
+                result = result + arg1;
             }
 
             return new NumberValue(irContext, result);
@@ -784,25 +774,19 @@ namespace Microsoft.PowerFx.Functions
         {
             decimal arg0 = arg0dv.Value;
             decimal arg1 = arg1dv.Value;
-            decimal q;
-
+            
             // Both decimal zero and negative zero will satisfy this test
             if (arg1 == 0m)
             {
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            // r = a – N × floor(a/b)
-            try
-            { 
-                q = decimal.Floor(arg0 / arg1);
-            }
-            catch (OverflowException)
-            {
-                return CommonErrors.OverflowError(irContext);
-            }
+            decimal result = arg0 % arg1;
 
-            decimal result = arg0 - (arg1 * q);
+            if (Math.Sign(result) * Math.Sign(arg1) == -1)
+            {
+                result = result + arg1;
+            }
 
             return new DecimalValue(irContext, result);
         }
