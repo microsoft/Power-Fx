@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
 
             var symbols = new SymbolTable { DebugName = "ST1 " };
             symbols.EnableMutationFunctions();
-            var slot = symbols.AddVariable("MyTable", tableType);
+            var slot = symbols.AddVariable("MyTable", tableType, mutable: true);
 
             var engine = new RecalcEngine(new PowerFxConfig());
             var checkResult = engine.Check("Patch(MyTable, { Currency: 1.2 }, { Currency: 1.5 })", new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = true }, symbolTable: symbols);
@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
 
             var symbols = new SymbolTable { DebugName = "ST1 " };
             symbols.EnableMutationFunctions();
-            var slot = symbols.AddVariable("MyTable", tableType);
+            var slot = symbols.AddVariable("MyTable", tableType, mutable: true);
 
             var engine = new RecalcEngine(new PowerFxConfig());
             var checkResult = engine.Check("Patch(MyTable, { Decimal: 1.2 }, { Decimal: 1.5 })", new ParserOptions() { AllowsSideEffects = true }, symbolTable: symbols);
@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
 
         [InlineData("With({t1:Table({a:stringVar})},Patch(t1,First(t1),{a:integerVar}))")]
         [InlineData("With({t1:Table({a:5})},Patch(t1,First(t1),{a:datetimeVar}))")]
-        public void RecordToRecordAggregateCoercionTest(string expr)
+        public void DoNotUpdateScopeDefinedVariables(string expr)
         {
             var engine = new RecalcEngine(new PowerFxConfig());
 
@@ -83,7 +83,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
             engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);
 
-            var result = engine.Eval(expr, options: new ParserOptions() { AllowsSideEffects = true });
+            var checkResult = engine.Check(expr, options: new ParserOptions { AllowsSideEffects = true });
+            Assert.False(checkResult.IsSuccess);
+        }
+
+        [Theory]
+        [InlineData("Table({a:stringVar})", "Patch(t1,First(t1),{a:integerVar})")]
+        [InlineData("Table({a:5})", "Patch(t1,First(t1),{a:datetimeVar})")]
+        public void RecordToRecordAggregateCoercionTest(string initialTableValue, string expr)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+
+            var stringVar = FormulaValue.New("lichess.org");
+            var integerVar = FormulaValue.New(1);
+            var datetimeVar = FormulaValue.New(DateTime.Now);
+
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            engine.Config.SymbolTable.AddConstant("stringVar", stringVar);
+            engine.Config.SymbolTable.AddConstant("integerVar", integerVar);
+            engine.Config.SymbolTable.AddConstant("datetimeVar", datetimeVar);
+
+            var tableResult = engine.Eval(initialTableValue);
+            engine.UpdateVariable("t1", tableResult);
+            var parserOptions = new ParserOptions { AllowsSideEffects = true };
+            var result = engine.Eval(expr, options: parserOptions);
 
             Assert.IsNotType<ErrorValue>(result);
         }

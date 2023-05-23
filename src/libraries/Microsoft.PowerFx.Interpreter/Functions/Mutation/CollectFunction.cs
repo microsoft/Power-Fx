@@ -202,6 +202,12 @@ namespace Microsoft.PowerFx.Interpreter
             return fValid;
         }
 
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
+        }
+
         // This method returns true if there are special suggestions for a particular parameter of the function.
         public override bool HasSuggestionsForParam(int argumentIndex)
         {

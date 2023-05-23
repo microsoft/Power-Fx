@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 TokenType type = MapBindKindToTokenType(firstName.Kind);
 
                 // Try to set the canHide flag if the FirstName type is Enum
-                var canHide = allowTokenHiding && CanHideLeftHandSideOfDottedName(firstName, binding);
+                var canHide = allowTokenHiding && type == TokenType.Enum && CanHideLeftHandSideOfDottedName(firstName, binding);
 
                 // If the first name can be hidden, Create and Add a token for the dot.
                 if (canHide && expression.Length > span.Lim && (TexlLexer.PunctuatorDot + TexlLexer.PunctuatorBang).IndexOf(expression.Substring(span.Lim, 1), StringComparison.Ordinal) >= 0)

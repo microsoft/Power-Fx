@@ -5255,6 +5255,10 @@
     <value>Regular expressions must be constant values.</value>
     <comment>Error Message.</comment>    
   </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>The value passed to the '{0}' function cannot be changed.</value>
+    <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
+  </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>The capture name '{0}' is hiding the predefined property that returns the full match of the regular expression. Consider renaming it if you want to use that named property to extract the full match in the specified text.</value>
     <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>

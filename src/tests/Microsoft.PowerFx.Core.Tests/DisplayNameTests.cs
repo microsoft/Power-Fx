@@ -592,6 +592,64 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(true, r1, r1).Display1", true)]
         [InlineData("If(true, Blank(), r1).Display1", true)]
 
+        // If types are different, you have no access to Display name
+        [InlineData("If(true, r1, r2).Display1", false)]
+        [InlineData("If(true, r1, r2).Display0", false)]
+        [InlineData("If(true, r1, {Display1 : 123}).Display1", false, true)] // With PFxV1 rules
+
+        // If types are different, you have access to logical name, only if the name and type are same!
+        [InlineData("If(true, r1, r2).F1", true)]
+        [InlineData("If(false, r1, r2).F1", true)]
+        [InlineData("If(true, r1, r2).F0", false, true)]
+        [InlineData("If(true, r1, r3).Display1", false)]
+        [InlineData("If(true, r1, r3).Display3", false)]
+
+        // With PFx V1 rules, can access the logical names
+        [InlineData("If(false, r1, r3).F1", false, true)]
+        [InlineData("If(true, r1, r3).F3", false, true)]
+        public void DisplayNameTest(string input, bool succeeds, bool? succeedsWithPFxV1 = null)
+        {
+            foreach (var usePFxV1Features in new[] { false, true })
+            {
+                var r1 = RecordType.Empty()
+                            .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))
+                            .Add(new NamedFormulaType("F0", FormulaType.String, "Display0")); // F0 is Not a Common type
+
+                var r2 = RecordType.Empty()
+                            .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))
+                            .Add(new NamedFormulaType("F0", FormulaType.Number, "Display0"));
+
+                var r3 = RecordType.Empty()
+                            .Add(new NamedFormulaType("F3", FormulaType.Number, "Display3"))
+                            .Add(new NamedFormulaType("F2", FormulaType.Number, "Display2"));
+
+                var parameters = RecordType.Empty()
+                    .Add("r1", r1)
+                    .Add("r2", r2)
+                    .Add("r3", r3);
+
+                var config = usePFxV1Features ? new PowerFxConfig() : new PowerFxConfig(Features.None);
+                var engine = new Engine(config);
+
+                var result = engine.Check(input, parameters);
+                var actual = result.IsSuccess;
+                if (usePFxV1Features && succeedsWithPFxV1.HasValue)
+                {
+                    succeeds = succeedsWithPFxV1.Value;
+                }
+
+                Assert.True(
+                    actual == succeeds,
+                    $"With {(usePFxV1Features ? "PFxV1" : "Legacy")} rules, actual={actual}, expected={succeeds}");
+            }
+        }
+
+        [Theory]
+        [InlineData("r1.Display1", true)]
+        [InlineData("If(true, r1).Display1", true)]
+        [InlineData("If(true, r1, r1).Display1", true)]
+        [InlineData("If(true, Blank(), r1).Display1", true)]
+
         // If types are different, you have no access to Display name.
         [InlineData("If(true, r1, r2).Display1", false)]
         [InlineData("If(true, r1, r2).Display0", false)]
@@ -601,10 +659,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("If(true, r1, r2).F1", true)]
         [InlineData("If(false, r1, r2).F1", true)]
         [InlineData("If(true, r1, r2).F0", false)]
-        public void DisplayNameTest(string input, bool succeeds)
+        public void DisplayNameTest_V1CompatDisabled(string input, bool succeeds)
         {
             var r1 = RecordType.Empty()
-                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))    
+                        .Add(new NamedFormulaType("F1", FormulaType.Number, "Display1"))
                         .Add(new NamedFormulaType("F0", FormulaType.String, "Display0")); // F0 is Not a Common type
 
             var r2 = RecordType.Empty()
@@ -614,7 +672,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 .Add("r1", r1)
                 .Add("r2", r2);
 
-            var engine = new Engine(new PowerFxConfig());
+            var engine = new Engine(new PowerFxConfig(Features.None));
 
             var result = engine.Check(input, parameters);
             var actual = result.IsSuccess;

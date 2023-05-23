@@ -118,6 +118,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              * Record r_empty => {}
              * Table t1(r1) => Type (Field1, Field2, Field3, Field4)
              * Table t2(rwr1, rwr2, rwr3)
+             * Table t_empty: *[Value:n] = []
+             * Table t_empty2: *[Value:n] = []
+             * Table t_an_bs: *[a:n,b:s] = []
+             * Table t_name: *[name:s] = []
              */
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
@@ -226,22 +230,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 recordWithRecord3
             });
 
-            var symbol = new SymbolTable();
+            var engine = new RecalcEngine(config);
+            var symbol = engine._symbolTable;
 
             symbol.EnableMutationFunctions();
 
-            symbol.AddConstant("t1", t1);
-            symbol.AddConstant("r1", r1);
-            symbol.AddConstant("r2", r2);
-            symbol.AddConstant("t2", t2);
-            symbol.AddConstant("rwr1", recordWithRecord1);
-            symbol.AddConstant("rwr2", recordWithRecord2);
-            symbol.AddConstant("rwr3", recordWithRecord3);
-            symbol.AddConstant("r_empty", rEmpty);
+            engine.UpdateVariable("t1", t1);
+            engine.UpdateVariable("r1", r1);
 
-            config.SymbolTable = symbol;
+            engine.UpdateVariable("r2", r2);
+            engine.UpdateVariable("t2", t2);
+            engine.UpdateVariable("rwr1", recordWithRecord1);
+            engine.UpdateVariable("rwr2", recordWithRecord2);
+            engine.UpdateVariable("rwr3", recordWithRecord3);
+            engine.UpdateVariable("r_empty", rEmpty);
 
-            return (new RecalcEngine(config), null);
+            var valueTableType = TableType.Empty().Add("Value", numberType);
+            var tEmpty = FormulaValue.NewTable(valueTableType.ToRecord());
+            var tEmpty2 = FormulaValue.NewTable(valueTableType.ToRecord());
+            engine.UpdateVariable("t_empty", tEmpty);
+            engine.UpdateVariable("t_empty2", tEmpty2);
+
+            var abTableType = TableType.Empty().Add("a", numberType).Add("b", FormulaType.String);
+            engine.UpdateVariable("t_an_bs", FormulaValue.NewTable(abTableType.ToRecord()));
+
+            var nameTableType = TableType.Empty().Add("name", FormulaType.String);
+            engine.UpdateVariable("t_name", FormulaValue.NewTable(nameTableType.ToRecord()));
+
+            return (engine, null);
         }
 
         // Interpret each test case independently

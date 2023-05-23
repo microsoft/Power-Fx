@@ -9,6 +9,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Interpreter
 {
+    /// <summary>
+    /// Exception thrown from hosting callbacks which will get converted into an <see cref="ExpressionError"/> and become a Power Fx error value. 
+    /// </summary>
     public class CustomFunctionErrorException : Exception
     {
         public ErrorKind ErrorKind => ExpressionError.Kind;

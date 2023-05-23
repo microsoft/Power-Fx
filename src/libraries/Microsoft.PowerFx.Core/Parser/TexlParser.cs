@@ -1766,11 +1766,17 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        public static string Format(string text)
+        /// <summary>
+        /// Formats/Pretty Print the given expression text to more a readable form.
+        /// </summary>
+        /// <param name="text">Expression text to format.</param>
+        /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, expression chaining is enabled.</param>
+        /// <returns>Formatted expression text.</returns>
+        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining)
         {
             var result = ParseScript(
                 text,
-                flags: Flags.EnableExpressionChaining);
+                flags: flags);
 
             // Can't pretty print a script with errors.
             if (result.HasError)

@@ -77,9 +77,6 @@ Table({x:1,y:2},Blank())
 >> Last(ForAll([true,false], If(ThisRecord.Value, {x:1,y:2}, Blank()))).x
 Blank()
 
->> ForAll([1], If(false, {a:1}, {b:2}))
-Table({})
-
 >> ForAll([1,2,Blank()], If(IsBlank(ThisRecord), 999, ThisRecord.Value + 1))
 Table({Value:2},{Value:3},{Value:1})
 
