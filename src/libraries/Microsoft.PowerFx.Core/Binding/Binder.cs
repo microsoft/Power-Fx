@@ -2807,6 +2807,13 @@ namespace Microsoft.PowerFx.Core.Binding
                     var nameSymbol = lookupInfo.Data as NameSymbol;
                     _txb.SetMutable(node, nameSymbol?.IsMutable ?? false);
                 }
+                else if (lookupInfo.Kind == BindKind.Data)
+                {
+                    if (lookupInfo.Data is IExternalCdsDataSource or IExternalTabularDataSource)
+                    {
+                        _txb.SetMutable(node, true);
+                    }
+                }
 
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaField);
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaFullRecord);
@@ -4547,9 +4554,19 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Propagate mutability if supported by the function
-                if (func.PropagatesMutability && node.Args.Count > 0 && _txb.IsMutable(node.Args.ChildNodes[0]))
+                var firstChildNode = node.Args.ChildNodes[0];
+                if (func.PropagatesMutability && node.Args.Count > 0 && _txb.IsMutable(firstChildNode))
                 {
-                    _txb.SetMutable(node, true);
+                    // Propagate mutability if it is *not* a connected data source
+                    var mutable = true;
+                    if (firstChildNode is FirstNameNode first &&
+                        _nameResolver?.Lookup(first.Ident.Name, out var lookupInfo) == true &&
+                        lookupInfo.Kind == BindKind.Data)
+                    {
+                        mutable = false;
+                    }
+
+                    _txb.SetMutable(node, mutable);
                 }
 
                 // Invalid datasources always result in error
