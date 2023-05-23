@@ -638,7 +638,7 @@ namespace Microsoft.PowerFx.Functions
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));
         }        
 
-        private static async ValueTask<FormulaValue> Refresh(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        private static FormulaValue Refresh(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             if (args[0] is IRefreshable r)
             {
