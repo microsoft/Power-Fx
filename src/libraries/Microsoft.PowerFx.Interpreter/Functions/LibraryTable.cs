@@ -3,13 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
@@ -639,6 +636,17 @@ namespace Microsoft.PowerFx.Functions
             });
 
             return new InMemoryTableValue(irContext, pairs.Select(pair => pair.row));
+        }        
+
+        private static FormulaValue Refresh(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            if (args[0] is IRefreshable r)
+            {
+                r.Refresh();
+                return FormulaValue.New(true);
+            }
+
+            return CommonErrors.CustomError(irContext, "Only managed connections can be refreshed.");
         }
 
         private static async Task<DValue<RecordValue>> LazyFilterRowAsync(

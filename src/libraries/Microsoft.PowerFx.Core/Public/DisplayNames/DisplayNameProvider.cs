@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core
 {
+    [ThreadSafeImmutable]
     public abstract class DisplayNameProvider
     {
         public abstract bool TryGetLogicalName(DName displayName, out DName logicalName);

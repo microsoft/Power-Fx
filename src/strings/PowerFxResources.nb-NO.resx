@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Delegering av denne operasjonen på tabell {0} støttes ikke.</value>
+    <value>Denne operasjonen på tabellen {0} fungerer kanskje ikke hvis den har mer enn {1} rader.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Kan ikke delegere {0}: inneholder en virkemåtefunksjon {1}.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Avgjør om den angitte teksten har et samsvar med det angitte tekstformatet.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teksten som skal sammenlignes med formatet.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formatet som teksten skal kontrolleres mot. Det kan være en verdi for opplistingen TextFormat eller et regulært uttrykk.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Dette bestemmer hvilken del av teksten vi vil ha samsvar med. Det kan være en verdi i MatchOptions-opplistingen.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>omfang</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Søker i vedlagt tekst etter det angitte regulære uttrykket og returnerer første treff fra det.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Søker i vedlagt tekst etter det angitte regulære uttrykket og returnerer alle treff fra det.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Teksten som skal søkes mot det vanlige uttrykket.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>RegEx som som teksten skal kontrolleres mot. Det kan inneholde opptak (verdier mellom parenteser) som returneres hvis det oppstår et vellykket samsvar.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Dette bestemmer hvilken del av teksten vi vil ha samsvar med. Det kan være en verdi i MatchOptions-opplistingen.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Teksten som skal søkes mot det vanlige uttrykket.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>RegEx som som teksten skal kontrolleres mot. Det kan inneholde opptak (verdier mellom parenteser) som returneres hvis det oppstår et vellykket samsvar.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Dette bestemmer hvilken del av teksten vi vil ha samsvar med. Det kan være en verdi i MatchOptions-opplistingen.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulært_expression</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>alternativer</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulære uttrykk må være konstante verdier.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer fullstendig samsvar for RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å trekke ut fullstendig samsvar i den angitte teksten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer gruppesamsvaret i RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å trekke ut alle delsamsvar i den angitte teksten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer plasseringssamsvaret i RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å hente ut plasseringen for fullstendig samsvar i den angitte teksten.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

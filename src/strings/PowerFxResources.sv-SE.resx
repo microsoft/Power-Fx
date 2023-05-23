@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Det går inte att delegera den här åtgärden i tabellen {0}.</value>
+    <value>Den här åtgärden i tabellen "{0}" kanske inte fungerar om den har fler än {1} rader.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Det går inte att delegera {0}: innehåller en beteendefunktion {1}.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Fastställer om den tillhandahållna texten har en matchning för det tillhandahållna textformatet.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Texten att jämföra mot formatet.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräknaren eller ett reguljärt uttryck.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>omfattning</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Söker i den tillhandahållna texten efter det angivna reguljära uttrycket och returnerar den första matchningen.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Söker i den tillhandahållna texten efter det angivna reguljära uttrycket och returnerar alla matchningar.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Texten att jämföra mot det reguljära uttrycket.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Det reguljära uttrycket att kontrollera texten mot. Det kan innehålla insamlingar (värden inom parenteser) som returneras vid en lyckad matchning.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Texten att jämföra mot det reguljära uttrycket.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Det reguljära uttrycket att kontrollera texten mot. Det kan innehålla insamlingar (värden inom parenteser) som returneras vid en lyckad matchning.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguljärt_uttryck</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>alternativ</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Reguljära uttryck måste vara konstanta värden.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar den fullständiga matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera den fullständiga matchningen i den angivna texten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar gruppmatchningarna i det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera alla underordnade matchningar i den angivna texten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar platsen för matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera positionen för den fullständiga matchningen i den angivna texten.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Šīs darbības deleģēšana tabulai '{0}' netiek atbalstīta.</value>
+    <value>Šī darbība tabulā “{0}” var nedarboties, ja tās rindu skaits pārsniedz {1}.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Nevar deleģēt {0}: satur uzvedības funkciju '{1}'.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Nosaka, vai norādītais teksts atbilst norādītajam teksta formātam.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teksts, kas jāsalīdzina ar formātu.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formāts, salīdzinājumā ar kuru jāpārbauda teksts. Tā var būt uzskaitījuma TextFormat vērtība vai regulāra izteiksme.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Šādi tiek noteikts, kurai teksta daļai vēlamies noteikt atbilstību. Tā var būt uzskaitījuma MatchOptions vērtība.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>teksts</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formāts</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>apjoms</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Meklē sniegto tekstu norādītajai regulārajai izteiksmei, atgriežot pirmo atbilstību.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Meklē sniegto tekstu norādītajai regulārajai izteiksmei, atgriežot visas atbilstības.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Regulārā izteiksmē meklējamais teksts.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Parasta izteiksme, pret kuru jāpārbauda teksts. Tajā var būt tvērumi (iekavās ietvertas vērtības), kas tiks atgriezti sekmīgas atbilstības gadījumā.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Šādi tiek noteikts, kurai teksta daļai vēlamies noteikt atbilstību. Tā var būt uzskaitījuma MatchOptions vērtība.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Regulārā izteiksmē meklējamais teksts.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Parasta izteiksme, pret kuru jāpārbauda teksts. Tajā var būt tvērumi (iekavās ietvertas vērtības), kas tiks atgriezti sekmīgas atbilstības gadījumā.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Šādi tiek noteikts, kurai teksta daļai vēlamies noteikt atbilstību. Tā var būt uzskaitījuma MatchOptions vērtība.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>teksts</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulāra_izteiksme</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opcijas</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulārajām izteiksmēm jābūt konstantām vērtībām.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež pilnu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu pilnīgai norādītā teksta atbilstības izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež grupu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu visu norādītā teksta pakārtoto atbilstību izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež atbilstības atrašanās vietu parastajā izteiksmē. Lai šo rekvizītu izmantotu pilnīgas norādītā teksta atbilstības atrašanās vietas izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

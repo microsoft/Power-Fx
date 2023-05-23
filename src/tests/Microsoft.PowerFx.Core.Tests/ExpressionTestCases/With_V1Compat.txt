@@ -1,0 +1,5 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+// since If uses the union (preference to first type) on PFxV1 rules, If(false, {x:1}, {z:2}) => {x:Blank(),z:2}
+>> With({y:1}, If(false, {x:1}, {z:2}))
+{x:Blank(),z:2}

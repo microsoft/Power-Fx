@@ -1,0 +1,16 @@
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,PowerFxV1CompatibilityRules
+
+>> Clear([1,2,3])
+Errors: Error 6-13: The value passed to the 'Clear' function cannot be changed.
+
+>> Clear(Error({Kind:ErrorKind.Custom}))
+Errors: Error 6-36: The value passed to the 'Clear' function cannot be changed.
+
+>> Clear(1)
+Errors: Error 6-7: Invalid argument type (Decimal). Expecting a Table value instead.|Error 6-7: The value passed to the 'Clear' function cannot be changed.|Error 0-8: The function 'Clear' has some invalid arguments.
+
+>> Clear(1/0)
+Errors: Error 7-8: Invalid argument type (Decimal). Expecting a Table value instead.|Error 7-8: The value passed to the 'Clear' function cannot be changed.|Error 0-10: The function 'Clear' has some invalid arguments.
+
+>> IsError(Clear(1))
+Errors: Error 14-15: Invalid argument type (Decimal). Expecting a Table value instead.|Error 14-15: The value passed to the 'Clear' function cannot be changed.|Error 8-16: The function 'Clear' has some invalid arguments.

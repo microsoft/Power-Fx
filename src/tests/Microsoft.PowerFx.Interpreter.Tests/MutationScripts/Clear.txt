@@ -7,8 +7,11 @@ true
 >> t1
 Table()
 
->> With({x:[1,2,3]},Clear(x))
+>> Set(t2, [1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> Clear(t2)
 true
 
->> With({x:[1,2,3]},Clear(x);x)
+>> t2
 Table()

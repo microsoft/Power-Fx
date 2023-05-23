@@ -1,0 +1,5 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+// since If uses the interaction of types, If(false, {x:1}, {z:2}) => {} hence the below is {}
+>> With({y:1}, If(false, {x:1}, {z:2}))
+{}

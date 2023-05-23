@@ -1,0 +1,16 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+// With Power Fx V rules, If uses the union (preference to first type) of the possible result
+// arguments, so If(false, {x:1}, {z:2}) => {x:Blank(),z:2}
+
+>> If(1>0, {a:1}, {b:2})
+{a:1,b:Blank()}
+
+>> If(1<0, {a:1}, {b:2})
+{a:Blank(),b:2}
+
+>> If(false, {x:1, y:1}, {x:2, z:2})
+{x:2,y:Blank(),z:2}
+
+>> If(true, {x:1, y:1}, {x:2, z:2})
+{x:1,y:1,z:Blank()}
