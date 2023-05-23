@@ -1257,6 +1257,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: RandBetween)
             },
             {
+                BuiltinFunctionsCore.Refresh,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Refresh.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Refresh)
+            },
+            {
                 BuiltinFunctionsCore.Replace,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Replace.Name,
