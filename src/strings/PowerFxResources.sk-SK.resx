@@ -5032,6 +5032,25 @@
     <value>možnosti</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Refreshes the specified data source.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Expected a record or table value.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Neplatný regulárny výraz.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulárne výrazy musia byť konštantné hodnoty.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Hodnotu odovzdanú funkcii {0} nemožno zmeniť.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia úplnú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie úplnej zhody v zadanom texte.</value>
@@ -5053,7 +5076,7 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Odstráni všetko formátovanie a vráti hodnotu vo formáte obyčajného textu.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -5061,6 +5084,6 @@
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Text, z ktorého sa majú odstrániť značky jazykov HTML a XML.</value>
   </data>
 </root>

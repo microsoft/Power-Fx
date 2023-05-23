@@ -5032,6 +5032,25 @@
     <value>ตัวเลือก</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Refreshes the specified data source.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Expected a record or table value.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>นิพจน์ปกติไม่ถูกต้อง</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>นิพจน์ปกติจะต้องเป็นค่าคงที่</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน '{0}' ไม่สามารถเปลี่ยนแปลงได้</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่ที่ตรงกันทั้งหมดของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>นำการจัดรูปแบบทั้งหมดออกและส่งกลับเป็นข้อความแบบธรรมดา</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>ข้อความ</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>ข้อความที่จะลบแท็ก HTML และ XML</value>
   </data>
 </root>
