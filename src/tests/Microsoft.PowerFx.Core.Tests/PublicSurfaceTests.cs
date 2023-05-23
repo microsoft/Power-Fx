@@ -167,6 +167,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.UIString",
 
                 // TBD ...
+                "Microsoft.PowerFx.BasicUserInfo",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
                 "Microsoft.PowerFx.Core.Entities.IRefreshable",
@@ -177,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.ICheckable",
                 "Microsoft.PowerFx.IUserInfo",
                 "Microsoft.PowerFx.SymbolTableExtensions",
-                "Microsoft.PowerFx.UserInfo"
+                "Microsoft.PowerFx.UserInfo",
             };
 
             var sb = new StringBuilder();
