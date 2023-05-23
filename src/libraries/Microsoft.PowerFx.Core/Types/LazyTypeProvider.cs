@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Core.Types
     /// Wrapper class, provides access to derived TryGetFieldType, as well as identity of lazy types via AggregateType.
     /// Also provides faciility to fully expand a level of the type when needed by operations such as Union/AddColumns/...
     /// </summary>
+    [ThreadSafeImmutable]
     internal sealed class LazyTypeProvider
     {
         private readonly ConcurrentDictionary<DName, DType> _expandedFields = new ();
