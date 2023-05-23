@@ -4554,9 +4554,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // Propagate mutability if supported by the function
-                var firstChildNode = node.Args.ChildNodes[0];
-                if (func.PropagatesMutability && node.Args.Count > 0 && _txb.IsMutable(firstChildNode))
+                if (func.PropagatesMutability && node.Args.Count > 0 && _txb.IsMutable(node.Args.ChildNodes[0]))
                 {
+                    var firstChildNode = node.Args.ChildNodes[0];
+
                     // Propagate mutability if it is *not* a connected data source
                     var mutable = true;
                     if (firstChildNode is FirstNameNode first &&
