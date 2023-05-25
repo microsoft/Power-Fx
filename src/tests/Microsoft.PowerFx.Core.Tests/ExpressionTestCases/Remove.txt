@@ -11,61 +11,53 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 >> Collect(t1, r2);
   Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Remove(t1, {Field2:"earth"});
-  t1
-Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
-
->> Collect(t1, r2);
-  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Remove(t1, {Field2:"earth"}, "All");
-  t1
-Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
-
->> Collect(t1, r2);
-  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Remove(t1, {Field4:false});
   t1
-Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Error({Kind:ErrorKind.NotFound})
 
 >> Collect(t1, r2);
   Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Remove(t1, {Field4:false}, "All");
   t1
-Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+Error({Kind:ErrorKind.NotFound})
 
 >> Collect(t1, r2);
   Collect(t1, {Field1:1/0,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Collect(t1, {Field1:1/0,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Remove(t1, {Field4:false}, "All");
+  Remove(t1, {Field1:1/0,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:true}, "All");
   t1
-Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
+Error({Kind:ErrorKind.NotFound})
 
 >> Collect(t1, {Field1:1/0,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Collect(t1, {Field1:1/0,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Collect(t1, {Field1:1/0,Field2:"moon",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true});
-  Remove(t1, {Field2:"earth"}, "All");
+  Remove(t1, {Field2:"earth"}, {Field2:"moon"}, "All");
   t1
-Table({Field1:Error({Kind:ErrorKind.Div0}),Field2:"moon",Field3:DateTime(2030,2,1,0,0,0,0),Field4:true})
+Error(Table({Kind:ErrorKind.NotFound},{Kind:ErrorKind.NotFound}))
 
 >> Collect(t1, r2);
   Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
   Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Remove(t1, {DisplayNameField2:"earth"});
+  Remove(t1, {DisplayNameField1:3,DisplayNameField2:"earth",DisplayNameField3:DateTime(2022,2,1,0,0,0,0),DisplayNameField4:false});
   t1
-Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false},{Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 
 >> Collect(t1, r2);
   Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Collect(t1, {Field1:4,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-  Remove(t1, {DisplayNameField2:"earth"}, "All");
+  Collect(t1, {Field1:3,Field2:"earth",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+  Remove(t1, {DisplayNameField1:3,DisplayNameField2:"earth",DisplayNameField3:DateTime(2022,2,1,0,0,0,0),DisplayNameField4:false}, "All");
   t1
-Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Table({Field1:1,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true},{Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 
->> Remove(t2, {Field1:1}); t2
+>> Remove(t2, {Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}); t2
 Table({Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false},{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}},Field3:true})
+
+>> Remove(t2, {Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231}},Field3:false}); t2
+Errors: Error 11-98: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-98: Missing column. Your formula is missing a column 'DisplayNameField2_3.DisplayNameField2_3_2' with a type of 'Text'.|Error 0-99: The function 'Remove' has some invalid arguments.
+
+>> Remove(t2, {Field1:2,Field2:{Field2_1:221,Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false}); t2
+Errors: Error 11-103: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-103: Missing column. Your formula is missing a column 'DisplayNameField2_2' with a type of 'Text'.|Error 0-104: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field2:{Field2_1:321, Field2_2:"Moon"}}); t2
 Errors: Error 11-51: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-51: Missing column. Your formula is missing a column 'DisplayNameField2_3' with a type of 'Record'.|Error 0-52: The function 'Remove' has some invalid arguments.
@@ -74,40 +66,25 @@ Errors: Error 11-51: Invalid argument type. Expecting a Record value, but of a d
 Errors: Error 11-48: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-48: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-49: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}}}); t2
-Table({Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false},{Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false})
+Error({Kind:ErrorKind.NotFound})
 
 >> Remove(t2, {Field1:5})
-false
+Error({Kind:ErrorKind.NotFound})
 
 >> Remove(t2, {Field2:{Field2_1:555,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}}});
-false
+Error({Kind:ErrorKind.NotFound})
 
 >> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:555,Field2_3_2:"common"}}});
-false
+Error({Kind:ErrorKind.NotFound})
 
->> Remove(t2, {Field1:1}, "All")
-true
-
->> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}}}, "All")
+>> Remove(t2, {Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}, "All")
 true
 
 >> Remove(t2, {Field2:{Field2_3:{Field2_3_2:"common"}}}, "All")
 Errors: Error 11-52: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-52: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-60: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field1:5}, "All")
-false
-
->> Remove(t2, {Field2:{Field2_1:555,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}}}, "All")
-false
-
->> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:5555,Field2_3_2:"common"}}}, "All")
-false
-
->> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"non exist"}}}, "All")
-false
-
->> Remove(t2, {Field1:1});t2
-Table({Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false},{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}},Field3:true})
+Error({Kind:ErrorKind.NotFound})
 
 >> Remove(t2, {Field2:{Field2_1:321}});t2
 Errors: Error 11-34: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-34: Missing column. Your formula is missing a column 'DisplayNameField2_2' with a type of 'Text'.|Error 0-35: The function 'Remove' has some invalid arguments.
@@ -116,7 +93,7 @@ Errors: Error 11-34: Invalid argument type. Expecting a Record value, but of a d
 Errors: Error 11-48: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-48: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-49: The function 'Remove' has some invalid arguments.
 
 >> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:5555,Field2_3_2:"common"}}}, "All");t2
-Table({Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false},{Field1:2,Field2:{Field2_1:221,Field2_2:"2_2",Field2_3:{Field2_3_1:2231,Field2_3_2:"common"}},Field3:false},{Field1:3,Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:3231,Field2_3_2:"common"}},Field3:true})
+Error({Kind:ErrorKind.NotFound})
 
 // Wrong arguments
 >> Remove(t1, r1,"Al");
