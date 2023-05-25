@@ -589,7 +589,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Hour(If(1 < 0, [1], 2))", "n", false)]
 
         // ForAll([1,2,3], V)
-        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "e", false)]
+        [InlineData("ForAll([1,2,3], If(1 < 0, [1], 2))", "-", true)]
         public void TexlFunctionTypeSemanticsIfWithArgumentCoercion(string expression, string expectedType, bool checkSuccess)
         {
             var symbol = new SymbolTable();

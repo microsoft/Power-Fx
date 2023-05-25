@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -146,6 +147,8 @@ namespace Microsoft.PowerFx.Types
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
             var ret = false;
+            var deleteList = new List<T>();
+            var errors = new List<ExpressionError>();
 
             if (_sourceList == null)
             {
@@ -154,7 +157,7 @@ namespace Microsoft.PowerFx.Types
 
             foreach (RecordValue recordToRemove in recordsToRemove)
             {
-                var deleteList = new List<T>();
+                var found = false;
 
                 foreach (var item in _enumerator)
                 {
@@ -164,6 +167,8 @@ namespace Microsoft.PowerFx.Types
 
                     if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
                     {
+                        found = true;
+
                         deleteList.Add(item);
 
                         if (!all)
@@ -173,11 +178,21 @@ namespace Microsoft.PowerFx.Types
                     }
                 }
 
-                foreach (var delete in deleteList)
+                if (!found)
                 {
-                    _sourceList.Remove(delete);
-                    ret = true;
+                    errors.Add(CommonErrors.RecordNotFound());
                 }
+            }
+
+            foreach (var delete in deleteList)
+            {
+                _sourceList.Remove(delete);
+                ret = true;
+            }
+
+            if (errors.Count > 0) 
+            {
+                return DValue<BooleanValue>.Of(NewError(errors, FormulaType.Boolean));
             }
 
             return DValue<BooleanValue>.Of(New(ret));
@@ -194,13 +209,8 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                return DValue<RecordValue>.Of(FormulaValue.NewBlank(IRContext.ResultType));
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
             }
-        }
-
-        protected virtual RecordValue Find(RecordValue baseRecord)
-        {
-            return FindAsync(baseRecord, CancellationToken.None).Result;
         }
 
         /// <summary>
@@ -243,6 +253,11 @@ namespace Microsoft.PowerFx.Types
         protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
         {
             var ret = true;
+
+            if (baseRecord.Fields.Count() != currentRecord.Fields.Count())
+            {
+                return false;
+            }
 
             await foreach (var baseRecordField in baseRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
