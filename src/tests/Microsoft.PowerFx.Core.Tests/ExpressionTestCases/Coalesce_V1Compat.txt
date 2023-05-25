@@ -1,0 +1,16 @@
+#SETUP: PowerFxV1CompatibilityRules
+
+>> Coalesce( {a:1,b:2}, {b:3,c:4} )
+{a:1,b:2,c:Blank()}
+
+>> Coalesce( If(1<0,{a:1,b:2}), {b:3,c:4} )
+{a:Blank(),b:3,c:4}
+
+>> Coalesce( {a:1,b:2}, {b:"3",c:"4"} )
+{a:1,b:2,c:Blank()}
+
+>> Coalesce( If(1<0,{a:1,b:2}), {b:"3",c:"4"} )
+{a:Blank(),b:3,c:"4"}
+
+>> Coalesce( If(1<0,{a:1,b:2}), If(1<0,{b:3,c:4}), {c:5,d:6} )
+{a:Blank(),b:Blank(),c:5,d:6}
