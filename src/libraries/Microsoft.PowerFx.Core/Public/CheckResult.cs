@@ -193,6 +193,10 @@ namespace Microsoft.PowerFx
                         return SetExpectedReturnValue(NumberValue.AllowedListConvertToNumber.ToArray());
                     case DecimalType:
                         return SetExpectedReturnValue(DecimalValue.AllowedListConvertToDecimal.ToArray());
+                    case DateTimeType:
+                        return SetExpectedReturnValue(DateTimeValue.AllowedListConvertToDateTime.ToArray());
+                    case BooleanType:
+                        return SetExpectedReturnValue(BooleanValue.AllowedListConvertToBoolean.ToArray());
                     default:
                         throw new NotImplementedException($"Setting ExpectedReturnType to {type.GetType().FullName} is not implemented");
                 }
