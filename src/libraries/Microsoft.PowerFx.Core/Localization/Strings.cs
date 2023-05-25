@@ -518,6 +518,9 @@ namespace Microsoft.PowerFx.Core.Localization
         public static StringGetter MatchArg2 = (b) => StringResources.Get("MatchArg2", b);
         public static StringGetter MatchArg3 = (b) => StringResources.Get("MatchArg3", b);
 
+        public static StringGetter AboutRefresh = (b) => StringResources.Get("AboutRefresh", b);
+        public static StringGetter RefreshArg1 = (b) => StringResources.Get("RefreshArg1", b);
+
         // Previously, errors were listed here in the form of a StringGetter, which would be evaluated to fetch
         // an error message to pass to the BaseError class constructor. We are switching to passing the message key itself
         // to the BaseError class, and the BaseError itself is responsible for fetching the resource. (This allows the
@@ -629,6 +632,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
         public static ErrorResourceKey ErrInvalidFunction = new ErrorResourceKey("ErrInvalidFunction");
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
+        public static ErrorResourceKey ErrDataSourceCannotBeRefreshed = new ErrorResourceKey("ErrDataSourceCannotBeRefreshed");
+        public static ErrorResourceKey ErrNeedAgg = new ErrorResourceKey("ErrNeedAgg");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");

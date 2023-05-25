@@ -5228,6 +5228,25 @@
     <value>options</value>
     <comment>function_parameter - Third argument to the Match function. An optional parameter of flags used to determine the extent with which the regular expression is matched to the text.</comment>
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Refreshes the specified data source.</value>
+    <comment>Description of 'Refresh' function.</comment>
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    <comment>function_parameter - Parameter for the Refresh function, the name of a data source that needs to be refreshed locally. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Expected a record or table value.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    <comment>Error message on non-service data sources passed to Refresh.</comment>
+  </data>  
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression.</value>
     <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
