@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Delegowanie tej operacji w tabeli „{0}” nie jest obsługiwane.</value>
+    <value>Ta operacja może nie działać w tabeli „{0}”, jeśli liczba wierszy w tabeli będzie przekraczać {1}.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Nie można wydelegować operacji {0}: zawiera funkcję zachowania „{1}”.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Ustala, czy podany tekst ma dopasowanie w postaci podanego formatu tekstu.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Tekst, który będzie porównywany z formatem.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Format, pod kątem którego będzie sprawdzany tekst. Może to być wartość wyliczenia TextFormat lub wyrażenie regularne.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Określa, którą część tekstu chcemy dopasować. Może to być wartość wyliczenia MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>zakres</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Przeszukuje podany tekst pod kątem określonego wyrażenia regularnego i zwraca pierwsze znalezione w nim dopasowanie.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Przeszukuje podany tekst pod kątem określonego wyrażenia regularnego i zwraca wszystkie znalezione w nim dopasowania.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Tekst, który będzie przeszukiwany z uwzględnieniem wyrażenia regularnego.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Wyrażenie regularne, względem którego zostanie sprawdzony tekst. Może zawierać przechwytywania (wartości w nawiasach), które zostaną zwrócone w przypadku pomyślnego dopasowania.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Określa, którą część tekstu chcemy dopasować. Może to być wartość wyliczenia MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Tekst, który będzie przeszukiwany z uwzględnieniem wyrażenia regularnego.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Wyrażenie regularne, względem którego zostanie sprawdzony tekst. Może zawierać przechwytywania (wartości w nawiasach), które zostaną zwrócone w przypadku pomyślnego dopasowania.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Określa, którą część tekstu chcemy dopasować. Może to być wartość wyliczenia MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>wyrażenie_regularne</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opcje</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Nieprawidłowe wyrażenie regularne.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Wyrażenia regularne muszą być wartościami stałymi.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca pełne dopasowanie wyrażenia regularnego. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania pełnego dopasowania w wybranym tekście.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca dopasowania grupowe w wyrażeniu regularnym. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania wszystkich dopasowań podrzędnych w wybranym tekście.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca lokalizację dopasowania wyrażenia regularnego. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania położenia pełnego dopasowania w wybranym tekście.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

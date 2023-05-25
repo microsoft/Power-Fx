@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
+    [NotThreadSafe]
     internal class DefinedTypeSymbolTable : TypeSymbolTable, IGlobalSymbolNameResolver
     {
         private readonly BidirectionalDictionary<string, FormulaType> _definedTypes = new ();

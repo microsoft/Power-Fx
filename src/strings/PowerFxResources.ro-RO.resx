@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Delegarea acestei operațiuni pe tabelul „{0}” nu are suport.</value>
+    <value>Această operațiune pe tabel pe „{0}” este posibil să nu funcționeze dacă are mai mult de {1} rânduri.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Nu se poate delega {0}: conține o funcție de comportament „{1}”.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determină dacă în textul furnizat există o potrivire cu formatul de text furnizat.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Textul de comparat în raport cu formatul.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formatul în raport cu care se verifică textul. Poate fi o valoare a enumerării TextFormat sau o expresie regulată.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>extensie</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Caută expresia regulată specificată în textul furnizat, returnând prima potrivire din acesta.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Caută expresia regulată specificată în textul furnizat, returnând toate potrivirile din acesta.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Textul de comparat în raport cu expresia regulată.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Expresia regulată cu care se compară textul. Aceasta poate conține capturi (valorile dintre paranteze) care vor fi returnate în cazul unei potriviri efectuate cu succes.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Textul de comparat în raport cu expresia regulată.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Expresia regulată cu care se compară textul. Aceasta poate conține capturi (valorile dintre paranteze) care vor fi returnate în cazul unei potriviri efectuate cu succes.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>expresie_regulată</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opțiuni</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Expresie regulată nevalidă.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Expresiile regulate trebuie să fie valori constante.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează potrivirea perfectă a expresiei regulate. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage potrivirea completă din textul specificat.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează potrivirile de grup din expresia regulată. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage toate subpotrivirile din textul specificat.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează locația potrivirii expresiei regulate. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage poziția potrivirii complete din textul specificat.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

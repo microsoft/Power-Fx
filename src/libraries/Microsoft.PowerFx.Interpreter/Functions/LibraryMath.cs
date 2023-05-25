@@ -760,20 +760,14 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            // r = a – N × floor(a/b)
-            double q = Math.Floor(arg0 / arg1);
-            if (IsInvalidDouble(q))
-            {
-                return CommonErrors.OverflowError(irContext);
-            }
+            double result = arg0 % arg1;
 
-            double result = arg0 - (arg1 * ((long)q));
-
-            // We validate the reminder is in a valid range.
-            // This is mainly to support very large numbers (like 1E+308) where the calculation could be incorrect
-            if (result < -Math.Abs(arg1) || result > Math.Abs(arg1))
+            // % result has the same sign with dividend.
+            // Using the following fomular to have the sign of mod result is the same as divisor as in Excel and PA Mod.
+            // If result has different sign with divisor, plus result with divisor to flip the sign to be the same with divisor.
+            if (Math.Sign(result) * Math.Sign(arg1) == -1)
             {
-                return CommonErrors.OverflowError(irContext);
+                result = result + arg1;
             }
 
             return new NumberValue(irContext, result);
@@ -783,25 +777,22 @@ namespace Microsoft.PowerFx.Functions
         {
             decimal arg0 = arg0dv.Value;
             decimal arg1 = arg1dv.Value;
-            decimal q;
-
+            
             // Both decimal zero and negative zero will satisfy this test
             if (arg1 == 0m)
             {
                 return CommonErrors.DivByZeroError(irContext);
             }
 
-            // r = a – N × floor(a/b)
-            try
-            {
-                q = decimal.Floor(arg0 / arg1);
-            }
-            catch (OverflowException)
-            {
-                return CommonErrors.OverflowError(irContext);
-            }
+            decimal result = arg0 % arg1;
 
-            decimal result = arg0 - (arg1 * q);
+            // % result has the same sign with dividend.
+            // Using the following fomular to have the sign of mod result is the same as divisor as in Excel and PA Mod.
+            // If result has different sign with divisor, plus result with divisor to flip the sign to be the same with divisor.
+            if (Math.Sign(result) * Math.Sign(arg1) == -1)
+            {
+                result = result + arg1;
+            }
 
             return new DecimalValue(irContext, result);
         }

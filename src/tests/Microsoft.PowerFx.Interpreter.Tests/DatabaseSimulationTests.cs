@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(0);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 20000);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();

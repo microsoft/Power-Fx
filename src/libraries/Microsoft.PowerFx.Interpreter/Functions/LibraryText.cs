@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -21,11 +23,13 @@ namespace Microsoft.PowerFx.Functions
     internal static class LibraryFlags
     {
         public static readonly RegexOptions RegExFlags = RegexOptions.Compiled | RegexOptions.CultureInvariant;
+        public static readonly RegexOptions RegExFlags_IgnoreCase = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase;
     }
 
     internal static partial class Library
     {
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
+        private static readonly RegexOptions RegExFlags_IgnoreCase = LibraryFlags.RegExFlags_IgnoreCase;
 
         private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
         private static readonly Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegExFlags);
@@ -41,6 +45,14 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
+        private static readonly Regex _tdTagRegex = new Regex("<\\s*(td)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*(br|li)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*(div|p|tr)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _commentTagRegex = new Regex("<!--[\\s\\S]*?--\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _headerTagRegex = new Regex("<\\s*(header)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(header)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _scriptTagRegex = new Regex("<\\s*(script)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(script)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _styleTagRegex = new Regex("<\\s*(style)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(style)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _htmlTagsRegex = new Regex("<[^\\>]*\\>", RegExFlags_IgnoreCase);
 
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
@@ -1073,6 +1085,36 @@ namespace Microsoft.PowerFx.Functions
             var optionSet = args[0];
             var logicalName = optionSet.Option;
             return new StringValue(irContext, logicalName);
+        }
+
+        public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
+        {
+            string text = args[0].Value.Trim();
+
+            // Replace header/script/style tags with empty text.
+            text = _headerTagRegex.Replace(text, string.Empty);
+            text = _scriptTagRegex.Replace(text, string.Empty);
+            text = _styleTagRegex.Replace(text, string.Empty);
+
+            // Remove all comments.
+            text = _commentTagRegex.Replace(text, string.Empty);
+
+            // Insert empty string in place of <td>
+            text = _tdTagRegex.Replace(text, string.Empty);
+
+            //Replace <br> or <li> with line break
+            text = _lineBreakTagRegex.Replace(text, Environment.NewLine);
+
+            // Insert double line breaks in place of <div>, <p> and <tr> tags.
+            text = _doubleLineBreakTagRegex.Replace(text, Environment.NewLine + Environment.NewLine);
+
+            // Replace all other tags with empty text.
+            text = _htmlTagsRegex.Replace(text, string.Empty);
+
+            //Decode html specific characters
+            text = WebUtility.HtmlDecode(text);
+
+            return new StringValue(irContext, text.Trim());
         }
 
         private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)

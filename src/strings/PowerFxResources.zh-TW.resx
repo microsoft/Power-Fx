@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>不支援對資料表 '{0}' 委派此作業。</value>
+    <value>資料表 '{0}' 如果超過 {1} 列，則此作業可能無法運作。</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>決定提供的文字是否與提供的格式相符。</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>要與格式進行比對的文字。</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>要據以檢查文字的格式。可以是 TextFormat 列舉值或規則運算式。</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>這會決定我們想要比對文字的哪個部分。可能是 MatchOptions 列舉的值。</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>文字</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>格式</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>延伸區</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>在提供的文字中搜尋指定的規則運算式，並傳回第一個相符的結果。</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>在提供的文字中搜尋指定的規則運算式，並傳回所有相符的結果。</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>要搜尋規則運算式的文字。</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>用於核對文字的規則運算式。其中可包含會在比對成功時傳回的擷取 (括號之間的值)。</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>這會決定我們想要比對文字的哪個部分。可能是 MatchOptions 列舉的值。</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>要搜尋規則運算式的文字。</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>用於核對文字的規則運算式。其中可包含會在比對成功時傳回的擷取 (括號之間的值)。</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>這會決定我們想要比對文字的哪個部分。可能是 MatchOptions 列舉的值。</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>文字</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>規則運算式</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>選項</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>無效的規則運算式。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>規則運算式必須是常數值。</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式完全相符項目的預先定義屬性。如果您要使用該具名屬性擷取指定文字中的完全相符項目，建議將它重新命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式中群組相符項目的預先定義屬性。如果您要使用該具名屬性擷取指定文字中的所有子相符項目，建議將它重新命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>擷取名稱 '{0}' 已隱藏傳回規則運算式相符項目之位置的預先定義屬性。如果您要使用該具名屬性擷取指定文字中完全相符項目的位置，建議將它重新命名。</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

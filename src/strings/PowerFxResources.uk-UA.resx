@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Делегування цієї операції в таблиці "{0}" не підтримується.</value>
+    <value>Ця операція з таблицею "{0}" може не працювати, якщо вона містить більше такої кількості рядків: {1}.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,106 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Не вдалося делегувати {0}: містить поведінкову функцію "{1}".</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Визначає, чи вказаний текст відповідає вказаному текстовому формату.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Текст, який потрібно оцінити стосовно певного формату.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Формат, стосовно якого потрібно оцінювати текст. Це може бути значення переліку TextFormat чи регулярний вираз.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Визначає, для якої частини тексту потрібно знайти збіг; це може бути значення переліку MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>обсяг</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Шукає в наданому тексті вказаний регулярний вираз і повертає перший збіг.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Шукає в наданому тексті вказаний регулярний вираз і повертає всі збіги.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Текст, у якому потрібно шукати регулярний вираз.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Регулярний вираз, за яким потрібно перевірити текст; може містити групи захоплення (значення в дужках), які повертатимуться для успішно знайдених збігів</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Визначає, для якої частини тексту потрібно знайти збіг; це може бути значення переліку MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Текст, у якому потрібно шукати регулярний вираз.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Регулярний вираз, за яким потрібно перевірити текст; може містити групи захоплення (значення в дужках), які повертатимуться для успішно знайдених збігів</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Визначає, для якої частини тексту потрібно знайти збіг; це може бути значення переліку MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>регулярний_вираз</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>параметри</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Неприпустимий регулярний вираз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Регулярні вирази мають бути константами.</value>
+        
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає повний збіг із регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту повний збіг.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає групові збіги в регулярному виразі. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту всі вкладені збіги.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає розташування збігу з регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту розташування повного збігу.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
   </data>
 </root>

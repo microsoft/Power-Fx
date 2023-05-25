@@ -82,6 +82,7 @@ namespace Microsoft.PowerFx.Core.Binding
         private readonly BitArray _isContextual;
         private readonly BitArray _isConstant;
         private readonly BitArray _isSelfContainedConstant;
+        private readonly BitArray _isMutable;
 
         // Whether a node supports its rowscoped param exempted from delegation check. e.g. The 3rd argument in AddColumns function
         private readonly BitArray _supportsRowScopedParamDelegationExempted;
@@ -298,6 +299,7 @@ namespace Microsoft.PowerFx.Core.Binding
             _isAppScopedVariable = new BitArray(idLim);
             _isContextual = new BitArray(idLim);
             _isConstant = new BitArray(idLim);
+            _isMutable = new BitArray(idLim);
             _isSelfContainedConstant = new BitArray(idLim);
             _lambdaScopingMap = new ScopeUseSet[idLim];
             _isDelegatable = new BitArray(idLim);
@@ -473,6 +475,15 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.Assert(isConstant || !_isConstant.Get(node.Id));
 
             _isConstant.Set(node.Id, isConstant);
+        }
+
+        private void SetMutable(TexlNode node, bool isMutable)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _typeMap.Length);
+            Contracts.Assert(isMutable || !_isMutable.Get(node.Id));
+
+            _isMutable.Set(node.Id, isMutable);
         }
 
         private void SetSelfContainedConstant(TexlNode node, bool isConstant)
@@ -1228,6 +1239,14 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.AssertIndex(node.Id, _isConstant.Length);
 
             return _isConstant.Get(node.Id);
+        }
+
+        public bool IsMutable(TexlNode node)
+        {
+            Contracts.AssertValue(node);
+            Contracts.AssertIndex(node.Id, _isMutable.Length);
+
+            return _isMutable.Get(node.Id);
         }
 
         public bool IsSelfContainedConstant(TexlNode node)
@@ -2783,6 +2802,19 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
+                {
+                    var nameSymbol = lookupInfo.Data as NameSymbol;
+                    _txb.SetMutable(node, nameSymbol?.IsMutable ?? false);
+                }
+                else if (lookupInfo.Kind == BindKind.Data)
+                {
+                    if (lookupInfo.Data is IExternalCdsDataSource or IExternalTabularDataSource)
+                    {
+                        _txb.SetMutable(node, true);
+                    }
+                }
+
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaField);
                 Contracts.Assert(lookupInfo.Kind != BindKind.LambdaFullRecord);
                 Contracts.Assert(lookupInfo.Kind != BindKind.Unknown);
@@ -3560,6 +3592,9 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSideEffects(node, _txb.HasSideEffects(node.Left));
                 _txb.SetStateful(node, _txb.IsStateful(node.Left));
                 _txb.SetContextual(node, _txb.IsContextual(node.Left));
+
+                // An `a.b` expression will be mutable if `a` is mutable
+                _txb.SetMutable(node, _txb.IsMutable(node.Left));
 
                 _txb.SetConstant(node, isConstant);
                 _txb.SetSelfContainedConstant(node, leftType.IsEnum || (leftType.IsAggregate && _txb.IsSelfContainedConstant(node.Left)));
@@ -4518,6 +4553,23 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                // Propagate mutability if supported by the function
+                if (func.PropagatesMutability && node.Args.Count > 0 && _txb.IsMutable(node.Args.ChildNodes[0]))
+                {
+                    var firstChildNode = node.Args.ChildNodes[0];
+
+                    // Propagate mutability if it is *not* a connected data source
+                    var mutable = true;
+                    if (firstChildNode is FirstNameNode first &&
+                        _nameResolver?.Lookup(first.Ident.Name, out var lookupInfo) == true &&
+                        lookupInfo.Kind == BindKind.Data)
+                    {
+                        mutable = false;
+                    }
+
+                    _txb.SetMutable(node, mutable);
+                }
+
                 // Invalid datasources always result in error
                 if (func.IsBehaviorOnly && !_txb.BindingConfig.AllowsSideEffects)
                 {
@@ -5240,7 +5292,13 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     if (usePFxV1CompatRules)
                     {
-                        if (DType.TryUnionWithCoerce(exprType, childType, usePowerFxV1CompatibilityRules: true, out var returnType, out var needCoercion))
+                        if (DType.TryUnionWithCoerce(
+                            exprType, 
+                            childType, 
+                            usePowerFxV1CompatibilityRules: true, 
+                            coerceToLeftTypeOnly: true, 
+                            out var returnType, 
+                            out var needCoercion))
                         {
                             exprType = returnType;
                             if (needCoercion)
