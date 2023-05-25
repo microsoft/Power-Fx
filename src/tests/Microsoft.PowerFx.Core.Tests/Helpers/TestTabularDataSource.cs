@@ -206,6 +206,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => null;
 
+        public bool IsRefreshable => throw new NotImplementedException();
+
         IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
 
         public bool CanIncludeExpand(IExpandInfo expandToAdd)
