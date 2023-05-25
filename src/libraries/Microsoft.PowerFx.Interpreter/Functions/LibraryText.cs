@@ -714,7 +714,7 @@ namespace Microsoft.PowerFx.Functions
                     var val = res.Value;
                     if (!(val is StringValue str && str.Value == string.Empty))
                     {
-                        return res.ToFormulaValue();
+                        return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
                     }
                 }
 
