@@ -5032,6 +5032,25 @@
     <value>选项</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Refreshes the specified data source.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Expected a record or table value.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>正则表达式无效。</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>正则表达式必须是常数值。</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>无法更改传递给 '{0}' 函数的值。</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>捕获名称“{0}”将隐藏要返回正则表达式完整匹配的预定义属性。如果要使用该命名属性来提取指定文本中的完整匹配项，请对其重命名。</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>删除所有格式并返回纯文本值。</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>文本</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>要移除其 HTML 和 XML 标记的文本。</value>
   </data>
 </root>

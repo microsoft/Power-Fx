@@ -5032,6 +5032,25 @@
     <value>opções</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Refreshes the specified data source.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Expected a record or table value.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Expressão regular inválida.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>As expressões regulares têm de ser valores constantes.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Não é possível alterar o valor transmitido para a função "{0}".</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>O nome de captura "{0}" está a ocultar a propriedade predefinida que devolve a correspondência completa da expressão regular. Considere mudar o nome se pretender utilizar essa propriedade com nome para extrair a correspondência completa no texto especificado.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Remove toda a formatação e devolve um valor de texto simples.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>texto</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>O texto cujas tags de HTML e XML devem ser removidas.</value>
   </data>
 </root>

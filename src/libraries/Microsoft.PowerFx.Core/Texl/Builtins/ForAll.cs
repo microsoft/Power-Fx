@@ -46,7 +46,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            nodeToCoercedTypeMap = null;
+            var fArgsValid = CheckType(context, args[0], argTypes[0], ParamTypes[0], errors, ref nodeToCoercedTypeMap);
 
             if (argTypes[1].IsRecord)
             {
@@ -55,6 +56,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (argTypes[1].IsPrimitive || argTypes[1].IsTable || argTypes[1].IsUntypedObject)
             {
                 returnType = DType.CreateTable(new TypedName(argTypes[1], ColumnName_Value));
+            }
+            else if (argTypes[1].IsVoid)
+            {
+                returnType = argTypes[1];
             }
             else
             {
@@ -104,7 +109,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
 
-            var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            nodeToCoercedTypeMap = null;
+            var fArgsValid = CheckType(context, args[0], argTypes[0], ParamTypes[0], errors, ref nodeToCoercedTypeMap);
 
             if (argTypes[1].IsRecord)
             {
@@ -113,6 +119,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             else if (argTypes[1].IsPrimitive || argTypes[1].IsTable || argTypes[1].IsUntypedObject)
             {
                 returnType = DType.CreateTable(new TypedName(argTypes[1], ColumnName_Value));
+            }
+            else if (argTypes[1].IsVoid)
+            {
+                returnType = argTypes[1];
             }
             else
             {

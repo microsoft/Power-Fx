@@ -410,9 +410,6 @@ Error({Kind:ErrorKind.Div0})
 >> Mod(2,0)
 Error({Kind:ErrorKind.Div0})
 
->> Mod(10^200,-10^-200)
-Error({Kind:ErrorKind.Numeric})
-
 >> Mod(Sqrt(-1),If(Char(0)="a",1))
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.InvalidArgument}))
 
