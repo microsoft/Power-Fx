@@ -64,18 +64,18 @@ namespace Microsoft.PowerFx.Core.Errors
             Contracts.AssertValue(sb);
 
             // $$$ can't use current culture
-            sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.FormatSpan_Min_Lim(), Tok.Span.Min, Tok.Span.Lim);
+            sb.AppendFormat(CultureInfo.InvariantCulture, TexlStrings.FormatSpan_Min_Lim(), Tok.Span.Min, Tok.Span.Lim);
 
             if (Node != null)
             {
-                sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.InfoNode_Node(), Node.ToString());
+                sb.AppendFormat(CultureInfo.InvariantCulture, TexlStrings.InfoNode_Node(), Node.ToString());
             }
             else
             {
-                sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.InfoTok_Tok(), Tok.ToString());
+                sb.AppendFormat(CultureInfo.InvariantCulture, TexlStrings.InfoTok_Tok(), Tok.ToString());
             }
 
-            sb.AppendFormat(CultureInfo.CurrentCulture, TexlStrings.FormatErrorSeparator());
+            sb.AppendFormat(CultureInfo.InvariantCulture, TexlStrings.FormatErrorSeparator());
             base.FormatCore(sb);
         }
     }

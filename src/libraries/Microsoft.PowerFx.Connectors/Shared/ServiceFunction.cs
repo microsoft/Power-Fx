@@ -127,7 +127,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                 string sep = "";
 
                 // $$$ can't use current culture
-                string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+                string listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
                 foreach (var option in optionalParamInfo)
                 {
                     optionFormat.Append(sep);

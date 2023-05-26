@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Syntax
         public override string ToString()
         {
             // $$$ can't use current culture
-            return Value.ToString("R", CultureInfo.CurrentCulture);
+            return Value.ToString("R", CultureInfo.InvariantCulture);
         }
 
         /// <inheritdoc />

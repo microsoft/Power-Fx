@@ -1452,7 +1452,7 @@ namespace Microsoft.PowerFx.Core.Functions
                     // $$$ can't use current culture
                     Label = Name + (signature == null ?
                         "()" :
-                        ("(" + string.Join(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),
+                        ("(" + string.Join(TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),
                     Parameters = signature?.Select(getter =>
                     {
                         TryGetParamDescription(getter(locale), out var description);

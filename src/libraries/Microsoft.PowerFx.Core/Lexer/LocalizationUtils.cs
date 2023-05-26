@@ -21,11 +21,11 @@ namespace Microsoft.PowerFx.Syntax
         // references from TS code come via AuthoringCore.d.ts and that needs to be kept current with this file
 
         // $$$ can't use current culture                
-        public static string CurrentLocaleDecimalSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorDecimalSeparator;
+        public static string CurrentLocaleDecimalSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorDecimalSeparator;
 
-        public static string CurrentLocaleListSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator;
+        public static string CurrentLocaleListSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator;
 
-        public static string CurrentLocaleChainingOperator => TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator;
+        public static string CurrentLocaleChainingOperator => TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorChainingSeparator;
 
         public static string CurrentLocalePositiveSymbol => TexlLexer.PunctuatorAdd;
 
