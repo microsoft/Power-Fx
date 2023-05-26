@@ -192,32 +192,42 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         {
             Contracts.AssertValue(tokens);
 
-            var nodes = binding.GetStringInterpolations();
+            var nodes = binding.GetStringInterpolations().OrderBy(node => node.GetCompleteSpan().Min);
+
             Contracts.AssertValue(nodes);
 
+            TexlNode currStringInterpNode = null;
+            Span currentNodeSpan = null;
             foreach (var node in nodes)
             {
                 // As of now, we generate transient nodes for strinterpstart node that do not appear in source
                 TrackCompilerGeneratedNodes(compilerGeneratedNodes, node, binding);
-                foreach (var token in node.SourceList.Tokens)
+
+                var nodeSpan = node.GetCompleteSpan();
+                if (currStringInterpNode == null || currentNodeSpan.Lim <= nodeSpan.Min)
                 {
-                    var span = token.Span;
-                    switch (token.Kind)
+                    currentNodeSpan = nodeSpan;
+                    currStringInterpNode = node;
+                    foreach (var token in currStringInterpNode.SourceList.Tokens)
                     {
-                        case TokKind.StrInterpStart:
-                            tokens.Add(new TokenTextSpan(TokenizerConstants.StringInterpolationStart, span.Min, span.Lim, TokenType.StrInterpStart, false));
-                            break;
-                        case TokKind.StrInterpEnd:
-                            tokens.Add(new TokenTextSpan(TokenizerConstants.StringInterpolationEnd, span.Min, span.Lim, TokenType.StrInterpEnd, false));
-                            break;
-                        case TokKind.IslandStart:
-                            tokens.Add(new TokenTextSpan(TokenizerConstants.IslandStart, span.Min, span.Lim, TokenType.IslandStart, false));
-                            break;
-                        case TokKind.IslandEnd:
-                            tokens.Add(new TokenTextSpan(TokenizerConstants.IslandEnd, span.Min, span.Lim, TokenType.IslandEnd, false));
-                            break;
-                        default:
-                            break;
+                        var span = token.Span;
+                        switch (token.Kind)
+                        {
+                            case TokKind.StrInterpStart:
+                                tokens.Add(new TokenTextSpan(TokenizerConstants.StringInterpolationStart, span.Min, span.Lim, TokenType.StrInterpStart, false));
+                                break;
+                            case TokKind.StrInterpEnd:
+                                tokens.Add(new TokenTextSpan(TokenizerConstants.StringInterpolationEnd, span.Min, span.Lim, TokenType.StrInterpEnd, false));
+                                break;
+                            case TokKind.IslandStart:
+                                tokens.Add(new TokenTextSpan(TokenizerConstants.IslandStart, span.Min, span.Lim, TokenType.IslandStart, false));
+                                break;
+                            case TokKind.IslandEnd:
+                                tokens.Add(new TokenTextSpan(TokenizerConstants.IslandEnd, span.Min, span.Lim, TokenType.IslandEnd, false));
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
