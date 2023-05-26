@@ -111,7 +111,6 @@ namespace Microsoft.PowerFx
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
 
-            // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.InvariantCulture;
         }
 
