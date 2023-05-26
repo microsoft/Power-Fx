@@ -19,8 +19,7 @@ namespace Microsoft.PowerFx.Syntax
         // currentLocaleChainingOperator (utility.js, testhooks.js)
 
         // references from TS code come via AuthoringCore.d.ts and that needs to be kept current with this file
-
-        // $$$ can't use current culture                
+        
         public static string CurrentLocaleDecimalSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorDecimalSeparator;
 
         public static string CurrentLocaleListSeparator => TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator;

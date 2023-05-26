@@ -20,7 +20,6 @@ namespace Microsoft.PowerFx
     {
         internal static FormattingInfo CreateFormattingInfo() => new FormattingInfo()
         {
-            // $$$ can't use current culture
             CultureInfo = CultureInfo.InvariantCulture,
             CancellationToken = CancellationToken.None,
             TimeZoneInfo = TimeZoneInfo.Local

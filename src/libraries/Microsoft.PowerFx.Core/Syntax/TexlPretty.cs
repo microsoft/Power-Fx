@@ -68,7 +68,6 @@ namespace Microsoft.PowerFx.Syntax
 
             var nlt = node.Value;
             
-            // $$$ can't use current culture
             return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.NumValue.ToString("R", CultureInfo.InvariantCulture));
         }
 
@@ -78,7 +77,6 @@ namespace Microsoft.PowerFx.Syntax
 
             var nlt = node.Value;
             
-            // $$$ can't use current culture
             return LazyList<string>.Of(nlt != null ? nlt.ToString() : node.DecValue.ToString("G29", CultureInfo.InvariantCulture));
         }
 
@@ -251,7 +249,6 @@ namespace Microsoft.PowerFx.Syntax
             switch (node.Op)
             {
                 case VariadicOp.Chain:
-                    // $$$ can't use current culture
                     var op = SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorChainingSeparator);
                     var count = node.Count;
                     var result = LazyList<string>.Empty;
@@ -262,7 +259,6 @@ namespace Microsoft.PowerFx.Syntax
                             .With(node.Children[i].Accept(this, Precedence.None));
                         if (i != count - 1)
                         {
-                            // $$$ can't use current culture
                             result = result.With(SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorChainingSeparator));
                         }
                     }
@@ -331,7 +327,6 @@ namespace Microsoft.PowerFx.Syntax
         {
             Contracts.AssertValue(node);
 
-            // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
@@ -351,7 +346,6 @@ namespace Microsoft.PowerFx.Syntax
         {
             Contracts.AssertValue(node);
 
-            // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
@@ -384,7 +378,6 @@ namespace Microsoft.PowerFx.Syntax
         {
             Contracts.AssertValue(node);
 
-            // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)

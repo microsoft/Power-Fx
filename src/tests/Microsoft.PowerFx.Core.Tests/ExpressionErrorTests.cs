@@ -187,8 +187,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Null gets normalized to empty.
             var internalErrors = (IEnumerable<IDocumentError>)null;
 
-            // $$$ can't use current culture
-            var errors = ExpressionError.New(internalErrors, CultureInfo.CurrentCulture);
+            var errors = ExpressionError.New(internalErrors, CultureInfo.InvariantCulture);
 
             Assert.Empty(errors);
 

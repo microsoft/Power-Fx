@@ -63,7 +63,6 @@ namespace Microsoft.PowerFx.Core.Errors
         {
             Contracts.AssertValue(sb);
 
-            // $$$ can't use current culture
             sb.AppendFormat(CultureInfo.InvariantCulture, TexlStrings.FormatSpan_Min_Lim(), Tok.Span.Min, Tok.Span.Lim);
 
             if (Node != null)

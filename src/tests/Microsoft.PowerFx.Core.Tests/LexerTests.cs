@@ -389,7 +389,7 @@ namespace Microsoft.PowerFx.Core.Tests
         public void TestUnsupportedDecimalSeparatorCausesFallback()
         {
             // Simulate an override of the decimal separator to something that AXL does not support.
-            // $$$ can't use current culture
+            // CurrentCulture here makes no difference since NumberDecimalSeparator will be replaced by InvariantCulture.
             var oldCulture = CultureInfo.CurrentCulture;
             var newCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
             newCulture.NumberFormat.NumberDecimalSeparator = "+";
@@ -411,7 +411,6 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(TokKind.DecLit, tokens[0].Kind);
             Assert.Equal(123456.78m, tokens[0].As<DecLitToken>().Value);
             
-            // $$$ can't use current culture
             CultureInfo.CurrentCulture = oldCulture;
         }
 

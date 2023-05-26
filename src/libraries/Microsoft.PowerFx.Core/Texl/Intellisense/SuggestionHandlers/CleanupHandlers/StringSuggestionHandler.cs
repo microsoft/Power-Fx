@@ -59,7 +59,6 @@ namespace Microsoft.PowerFx.Intellisense
                     {
                         var curChar = script.Substring(i, 1);
 
-                        // $$$ can't use current culture
                         if (curChar != TexlLexer.PunctuatorParenClose && curChar != TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator)
                         {
                             found = false;

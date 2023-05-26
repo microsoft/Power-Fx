@@ -1449,7 +1449,6 @@ namespace Microsoft.PowerFx.Core.Functions
                 Detail = Description,
                 Signatures = GetSignatures().Select(signature => new FunctionSignature()
                 {
-                    // $$$ can't use current culture
                     Label = Name + (signature == null ?
                         "()" :
                         ("(" + string.Join(TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ", signature.Select(getter => getter(null))) + ")")),

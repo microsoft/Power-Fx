@@ -311,7 +311,6 @@ namespace Microsoft.PowerFx.Tests
 
             var runtimeConfig = new RuntimeConfig();
 
-            // $$$ can't use current culture
             runtimeConfig.SetCulture(CultureInfo.InvariantCulture);
             runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
             isSucceeded = inputValue.TryCoerceTo(runtimeConfig, out StringValue resultString);

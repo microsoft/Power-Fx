@@ -33,7 +33,6 @@ namespace Microsoft.PowerFx
         {
             _parent = parent;
 
-            // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.InvariantCulture;
         }
 
