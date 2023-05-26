@@ -169,7 +169,7 @@ namespace Microsoft.PowerFx.Intellisense
                 var argumentSeparator = string.Empty;
 
                 // $$$ can't use current culture
-                var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+                var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
                 var funcDisplayString = new StringBuilder(Text);
                 funcDisplayString.Append('(');
                 foreach (var arg in signature)

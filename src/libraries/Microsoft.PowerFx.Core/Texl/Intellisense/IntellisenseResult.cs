@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx.Intellisense
                         var highlightedFuncParamDescription = string.Empty;
 
                         // $$$ can't use current culture
-                        var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+                        var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
                         var funcDisplayString = new StringBuilder(func.Name);
                         funcDisplayString.Append('(');
 

@@ -269,7 +269,7 @@ namespace Microsoft.PowerFx.Core.Logging
                         if (i != count - 1)
                         {
                             // $$$ can't use current culture
-                            result = result.With(SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorChainingSeparator));
+                            result = result.With(SpacedOper(TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorChainingSeparator));
                         }
                     }
 
@@ -335,7 +335,7 @@ namespace Microsoft.PowerFx.Core.Logging
             Contracts.AssertValue(node);
 
             // $$$ can't use current culture
-            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
             {
@@ -355,7 +355,7 @@ namespace Microsoft.PowerFx.Core.Logging
             Contracts.AssertValue(node);
 
             // $$$ can't use current culture
-            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
             {
@@ -388,7 +388,7 @@ namespace Microsoft.PowerFx.Core.Logging
             Contracts.AssertValue(node);
 
             // $$$ can't use current culture
-            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
+            var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.InvariantCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
             for (var i = 0; i < node.Children.Length; ++i)
             {
