@@ -9,6 +9,9 @@
 >> Abs(2)
 2
 
+>> Abs(2147483648) // testing a number larger than the interger range
+2147483648
+
 // Negative Integer Parameters
 
 >> Abs(-0)
@@ -16,6 +19,9 @@
 
 >> Abs(-2)
 2
+
+>> Abs(-2147483648) // testing a number smaller than the interger range
+2147483648
 
 // ******** DECIMAL PARAMETERS ********
 >> Abs(2.2)
