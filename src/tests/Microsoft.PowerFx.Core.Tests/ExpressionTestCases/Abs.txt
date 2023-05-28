@@ -9,6 +9,9 @@
 >> Abs(2)
 2
 
+>> Abs(2147483647)
+2147483647
+
 // Negative Integer Parameters
 
 >> Abs(-0)
@@ -16,6 +19,9 @@
 
 >> Abs(-2)
 2
+
+>> Abs(-2147483647)
+2147483647
 
 // ******** DECIMAL PARAMETERS ********
 >> Abs(2.2)
