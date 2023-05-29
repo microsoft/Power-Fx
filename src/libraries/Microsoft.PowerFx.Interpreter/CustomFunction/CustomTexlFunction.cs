@@ -18,15 +18,23 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Internal adapter for adding custom functions. 
     /// </summary>
+    [ThreadSafeImmutable]
     internal class CustomTexlFunction : TexlFunction
     {
-        public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+        public readonly Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
-        internal BigInteger LamdaParamMask;
+        internal readonly BigInteger LamdaParamMask;
 
         public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
             : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {
+        }
+
+        public CustomTexlFunction(string name, FormulaType returnType, Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> impl, BigInteger lamdaParamMask, params FormulaType[] paramTypes)
+            : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+        {
+            _impl = impl;
+            LamdaParamMask = lamdaParamMask;
         }
 
         public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)

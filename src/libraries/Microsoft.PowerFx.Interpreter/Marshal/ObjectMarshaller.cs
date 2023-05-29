@@ -16,6 +16,7 @@ namespace Microsoft.PowerFx
     /// Marshal a specific type of object to a record. 
     /// </summary>
     [DebuggerDisplay("ObjMarshal({Type})")]
+    [ThreadSafeImmutable]
     public class ObjectMarshaller : ITypeMarshaller
     {
         /// <summary>
@@ -28,7 +29,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public delegate (FormulaType fieldType, FieldValueMarshaller fieldValueMarshaller) FieldTypeAndValueMarshallerGetter();
 
-        private readonly Dictionary<string, FieldTypeAndValueMarshallerGetter> _fieldGetters; 
+        private readonly IReadOnlyDictionary<string, FieldTypeAndValueMarshallerGetter> _fieldGetters; 
 
         /// <inheritdoc/>
         FormulaType ITypeMarshaller.Type => Type;

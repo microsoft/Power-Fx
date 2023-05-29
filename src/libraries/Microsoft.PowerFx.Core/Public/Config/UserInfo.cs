@@ -19,6 +19,7 @@ namespace Microsoft.PowerFx
     /// - Some information may require a network call to fetch, so we use task and virtual. Different properties may require different fetches, so let host override each property (rather than a single virtual).
     /// Callbacks can throw a CustomFunctionErrorException to specify a runtime error. 
     /// </summary>
+    [ThreadSafeImmutable]
     public class UserInfo
     {
         /// <summary>

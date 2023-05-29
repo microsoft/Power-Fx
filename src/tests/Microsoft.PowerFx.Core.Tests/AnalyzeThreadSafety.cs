@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -19,6 +20,30 @@ namespace Microsoft.PowerFx.Core.Tests
     /// </summary>
     public class AnalyzeThreadSafety
     {
+        // For other custom types, mark with [ThreadSafeImmutable] attribute.
+        private static readonly HashSet<Type> _knownImmutableTypes = new HashSet<Type>
+        {
+            // Primitives
+            typeof(object),
+            typeof(string),
+            typeof(System.Type),
+            typeof(Random),
+            typeof(DateTime),
+            typeof(System.Text.RegularExpressions.Regex),
+            typeof(System.Numerics.BigInteger),
+            typeof(NumberFormatInfo),
+
+            // Generics        
+            typeof(IReadOnlyDictionary<,>),
+            typeof(IReadOnlyCollection<>),
+            typeof(IReadOnlyList<>),
+            typeof(Nullable<>),
+            typeof(IEnumerable<>),
+            typeof(KeyValuePair<,>),
+            typeof(ImmutableDictionary<,>),
+            typeof(ImmutableList<>)            
+        };
+
         // Return true if safe, false on error. 
         public static bool VerifyThreadSafeImmutable(Type t)
         {
@@ -209,28 +234,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 .Any(x => x == typeof(IsVolatile));
             return isVolatile;
         }
-
-        // For other custom types, mark with [ThreadSafeImmutable] attribute.
-        private static readonly HashSet<Type> _knownImmutableTypes = new HashSet<Type>
-        {
-            // Primitives
-            typeof(object),
-            typeof(string),
-            typeof(System.Type),
-            typeof(Random),
-            typeof(DateTime),
-            typeof(System.Text.RegularExpressions.Regex),
-            typeof(System.Numerics.BigInteger),
-            typeof(NumberFormatInfo),
-
-            // Generics        
-            typeof(IReadOnlyDictionary<,>),
-            typeof(IReadOnlyCollection<>),
-            typeof(IReadOnlyList<>),
-            typeof(Nullable<>),
-            typeof(IEnumerable<>),
-            typeof(KeyValuePair<,>)
-        };
 
         // If the instance is readonly, is the type itself immutable ?
         internal static bool IsTypeImmutable(Type t)

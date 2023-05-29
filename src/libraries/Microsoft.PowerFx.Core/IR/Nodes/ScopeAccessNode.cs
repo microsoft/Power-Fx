@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core.IR.Nodes
         /// A ScopeSymbol here represents access to the whole scope record,
         /// A ScopeAccessSymbol here represents access to a single field from the scope.
         /// </summary>
-        public IScopeSymbol Value;
+        public readonly IScopeSymbol Value;
 
         public ScopeAccessNode(IRContext irContext, IScopeSymbol symbol)
             : base(irContext)

@@ -10,9 +10,10 @@ using Microsoft.PowerFx.Syntax;
 namespace Microsoft.PowerFx.Core.Functions.Delegation
 {
     // This lightweight wrapper around DelegationCababilityConstants is used to enforce valid values for capabilities.
+    [ThreadSafeImmutable]
     internal struct DelegationCapability
     {
-        private BigInteger _capabilities;
+        private readonly BigInteger _capabilities;
         private static readonly Lazy<Dictionary<BinaryOp, DelegationCapability>> _binaryOpToDelegationCapabilityMap =
             new Lazy<Dictionary<BinaryOp, DelegationCapability>>(
                 () => new Dictionary<BinaryOp, DelegationCapability>

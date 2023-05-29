@@ -1631,13 +1631,13 @@ namespace Microsoft.PowerFx.Syntax
                     startingPosition--;
                 }
 
-                var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
+                bool isOpenBlock = false;
                 if (_sb.ToString().Trim().StartsWith("/*", StringComparison.Ordinal) && !_sb.ToString().Trim().EndsWith("*/", StringComparison.Ordinal))
                 {
-                    commentToken.IsOpenBlock = true;
+                    isOpenBlock = true;
                 }
-
-                return commentToken;
+                
+                return new CommentToken(_sb.ToString(), GetTextSpan(), isOpenBlock);
             }
 
             // Returns specialized token for unexpected character errors.

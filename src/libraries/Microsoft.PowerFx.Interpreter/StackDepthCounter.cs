@@ -6,6 +6,7 @@ namespace Microsoft.PowerFx.Interpreter
     /// <summary>
     /// This keeps track of how many calls deep we are in a function.
     /// </summary>
+    [ThreadSafeImmutable]
     internal struct StackDepthCounter
     {
         private readonly int _remaining;
