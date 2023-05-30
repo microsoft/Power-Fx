@@ -9,6 +9,9 @@
 >> Abs(2)
 2
 
+>> Abs(2147483649) // testing a number larger than the interger range 
+2147483649
+
 >> Abs(9007199254740991) // testing a number larger than the float range (-9007199254740991 to 9007199254740991, (+/- 2^53 - 1))
 9007199254740991
 
@@ -19,6 +22,9 @@
 
 >> Abs(-2)
 2
+
+>> Abs(-2147483649) // testing a number smaller than the interger range 
+2147483649
 
 >> Abs(-9007199254740991) // testing a number smaller than the float range (-9007199254740991 to 9007199254740991, (+/- 2^53 - 1))
 9007199254740991
