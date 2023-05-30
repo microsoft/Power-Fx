@@ -9,10 +9,10 @@
 >> Abs(2)
 2
 
->> Abs(2147483649) // testing a number larger than the interger range 
+>> Abs(2147483649) // testing a large number
 2147483649
 
->> Abs(9007199254740991) // testing a number larger than the float range (-9007199254740991 to 9007199254740991, (+/- 2^53 - 1))
+>> Abs(9007199254740991) // testing a really large number  
 9007199254740991
 
 // Negative Integer Parameters
@@ -23,10 +23,10 @@
 >> Abs(-2)
 2
 
->> Abs(-2147483649) // testing a number smaller than the interger range 
+>> Abs(-2147483649) // testing a small number
 2147483649
 
->> Abs(-9007199254740991) // testing a number smaller than the float range (-9007199254740991 to 9007199254740991, (+/- 2^53 - 1))
+>> Abs(-9007199254740991) // testing a really small number
 9007199254740991
 
 // ******** DECIMAL PARAMETERS ********
