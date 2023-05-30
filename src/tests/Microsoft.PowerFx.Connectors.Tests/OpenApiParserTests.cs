@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -41,8 +43,34 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(HttpMethod.Post, function.HttpMethod);
         }
 
-        [Fact]
+        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]        
+        public void TestAllConnectors()
+        {
+            int i = 0;
+            int j = 0;
+            using StreamWriter writer = new StreamWriter(@"c:\temp\out.txt", append: false);
+            foreach (string swaggerFile in Directory.EnumerateFiles(@"C:\Data\AAPT-connectors\src",     "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })
+                                    .Union(Directory.EnumerateFiles(@"C:\Data\PowerPlatformConnectors", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })))
+            {
+                i++;
+                try
+                {
+                    OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc);                    
 
+                    writer.WriteLine($"{swaggerFile}: OK - functions: {functions.Count()}");                    
+                }
+                catch (Exception ex)
+                {
+                    writer.WriteLine($"{swaggerFile}: Exception {ex.GetType().Name} - {ex.Message}");
+                    j++;
+                }
+            }
+
+            writer.WriteLine($"Total: {i} - Exceptions: {j}");
+        }
+
+        [Fact]
         public void ACSL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
@@ -90,7 +118,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("conversationItem", function.RequiredParameters[0].ConnectorType.Fields[0].Name);
             Assert.Null(function.RequiredParameters[0].ConnectorType.Fields[0].DisplayName);
             Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[0].ConnectorType.Fields[0].Description);
-            Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);            
+            Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);
 
             // -- Parameter 2 --
             Assert.Equal("parameters", function.RequiredParameters[1].Name);
@@ -157,7 +185,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
-            Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);            
+            Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);
         }
 #pragma warning restore SA1118, SA1137
 
@@ -283,7 +311,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordValue entityValue2 = rows.Skip(1).First().Value;
             FormulaValue resolutionsValue = entityValue2.GetField("resolutions");
 
-            Assert.True(resolutionsValue is UntypedObjectValue);          
+            Assert.True(resolutionsValue is UntypedObjectValue);
             UOValueVisitor visitor1 = new UOValueVisitor();
             resolutionsValue.Visit(visitor1);
 
@@ -299,7 +327,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         internal class UOValueVisitor : IValueVisitor
-        {            
+        {
             public string Result { get; private set; }
 
             public void Visit(BlankValue value)
@@ -413,7 +441,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 {
                     if (externalType.Kind == ExternalTypeKind.Array)
                     {
-                        var rows = new List<string>();                        
+                        var rows = new List<string>();
 
                         for (var i = 0; i < untypedObject.GetArrayLength(); i++)
                         {
@@ -501,7 +529,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames);
             Assert.Equal("Advertisement", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[0]);
             Assert.Equal("Employee Referral", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[1]);
-            
+
             Assert.True(functions[1].RequiredParameters[2].ConnectorType.IsEnum); // "msdyn_company@odata.bind"
             Assert.Equal("2b629105-4a26-4607-97a5-0715059e0a55", functions[1].RequiredParameters[2].ConnectorType.EnumValues[0].ToObject());
             Assert.Equal("5cacddd3-d47f-4023-a68e-0ce3e0d401fb", functions[1].RequiredParameters[2].ConnectorType.EnumValues[1].ToObject());
