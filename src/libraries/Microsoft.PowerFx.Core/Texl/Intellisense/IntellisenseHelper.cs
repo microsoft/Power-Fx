@@ -582,7 +582,7 @@ namespace Microsoft.PowerFx.Intellisense
 
             var scopeType = ScopeTypeForArgumentSuggestions(callNode, intellisenseData);
 
-            var argSuggestions = intellisenseData.GetArgumentSuggestions(function, scopeType, argumentIndex, callNode.Args.Children, out var requiresSuggestionEscaping);
+            var argSuggestions = intellisenseData.GetArgumentSuggestions(function, scopeType, argumentIndex, callNode.Args.Children.ToArray(), out var requiresSuggestionEscaping);
 
             foreach (var suggestion in argSuggestions)
             {

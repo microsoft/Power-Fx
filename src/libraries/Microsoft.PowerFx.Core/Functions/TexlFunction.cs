@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             // Check with function if we actually need data for this param.
-            return RequiresPagedDataForParamCore(callNode.Args.Children, paramIndex, binding);
+            return RequiresPagedDataForParamCore(callNode.Args.Children.ToArray(), paramIndex, binding);
         }
 
         /// <summary>

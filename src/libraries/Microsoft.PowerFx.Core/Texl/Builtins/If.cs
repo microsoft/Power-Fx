@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            return TryGetDSNodes(binding, args, out dsNodes);
+            return TryGetDSNodes(binding, args.ToArray(), out dsNodes);
         }
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)
