@@ -40,7 +40,7 @@ namespace Microsoft.PowerFx.Syntax
             Contracts.AssertValue(node);
             Contracts.Assert(node.Children.Length > 0);
 
-            var numTokens = CollectionUtils.Size(node.OpTokens);
+            var numTokens = CollectionUtils.Size(node.OpTokens.ToArray());
 
             Contracts.Assert(node.Children.Length == numTokens + 1 || node.Children.Length == numTokens);
 
@@ -227,7 +227,7 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // Cursor is between the open and closed curly.
-            var length = CollectionUtils.Size(node.Commas);
+            var length = CollectionUtils.Size(node.Commas.ToArray());
 
             for (var i = 0; i < length; i++)
             {
@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // Cursor is between the open and closed bracket.
-            for (var i = 0; i < node.Commas.Length; i++)
+            for (var i = 0; i < node.Commas.Count; i++)
             {
                 // Cursor position is inside ith child.
                 if (_cursorPosition <= node.Commas[i].Span.Lim)

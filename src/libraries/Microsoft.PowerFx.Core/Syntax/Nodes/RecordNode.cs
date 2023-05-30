@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -17,8 +18,8 @@ namespace Microsoft.PowerFx.Syntax
     /// </summary>
     public sealed class RecordNode : VariadicBase
     {
-        internal readonly Token[] Commas;
-        internal readonly Token[] Colons;
+        internal readonly IReadOnlyList<Token> Commas;
+        internal readonly IReadOnlyList<Token> Colons;
 
         /// <summary>
         /// The record identifier names (i.e., field names).
@@ -71,7 +72,7 @@ namespace Microsoft.PowerFx.Syntax
                 newIdentifiers[x] = Ids[x].Clone(ts);
             }
 
-            return new RecordNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), newIdentifiers, children, Clone(Commas, ts), Clone(Colons, ts), CurlyClose.Clone(ts), SourceRestriction?.Clone(ref idNext, ts));
+            return new RecordNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), newIdentifiers, children, Clone(Commas.ToArray(), ts), Clone(Colons.ToArray(), ts), CurlyClose.Clone(ts), SourceRestriction?.Clone(ref idNext, ts));
         }
 
         /// <inheritdoc />

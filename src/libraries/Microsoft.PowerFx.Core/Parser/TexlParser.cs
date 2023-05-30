@@ -1046,12 +1046,12 @@ namespace Microsoft.PowerFx.Core.Parser
                 case TokKind.Error:
                     var errorToken = _curs.TokMove().As<ErrorToken>();
                     var args = errorToken.ResourceKeyFormatStringArgs;
-                    if (args == null || args.Length == 0)
+                    if (args == null || args.Count == 0)
                     {
                         return CreateError(errorToken, errorToken.DetailErrorKey ?? TexlStrings.ErrBadToken);
                     }
 
-                    return CreateError(errorToken, errorToken.DetailErrorKey ?? TexlStrings.ErrBadToken, args);
+                    return CreateError(errorToken, errorToken.DetailErrorKey ?? TexlStrings.ErrBadToken, args.ToArray());
 
                 case TokKind.Comment:
                     Contracts.Assert(false, "A stray comment was found");

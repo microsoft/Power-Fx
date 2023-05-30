@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -19,7 +20,7 @@ namespace Microsoft.PowerFx.Syntax
         public ErrorResourceKey? DetailErrorKey { get; }
 
         // Args for ErrorResourceKey("UnexpectedCharacterToken")'s format string used in UnexpectedCharacterTokenError/LexError inside Lexer.cs.
-        internal object[] ResourceKeyFormatStringArgs { get; }
+        internal IReadOnlyList<object> ResourceKeyFormatStringArgs { get; }
 
         internal ErrorToken(Span span)
             : this(span, null)

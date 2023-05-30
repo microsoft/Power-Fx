@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public VariadicOp Op { get; }
         
-        internal readonly Token[] OpTokens;
+        internal readonly IReadOnlyList<Token> OpTokens;
 
         // Assumes ownership of the 'children' and 'opTokens' array.
         internal VariadicOpNode(ref int idNext, VariadicOp op, TexlNode[] children, Token[] opTokens, SourceList sourceList)
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Syntax
                 newNodes.Add(Children[i], children[i]);
             }
 
-            return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens, ts), SourceList.Clone(ts, newNodes));
+            return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens.ToArray(), ts), SourceList.Clone(ts, newNodes));
         }
 
         /// <inheritdoc />

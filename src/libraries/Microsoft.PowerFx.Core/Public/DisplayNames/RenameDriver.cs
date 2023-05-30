@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -13,6 +14,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
+    [ThreadSafeImmutable]
     public sealed class RenameDriver
     {
         private readonly RecordType _baseParameters;
@@ -24,7 +26,7 @@ namespace Microsoft.PowerFx.Core
         private readonly CultureInfo _culture;
         private readonly bool _renameOptionSet;
 
-        private Dictionary<AggregateType, WrappedDerivedRecordType> _wrappedLazyRecordTypes;
+        private readonly ConcurrentDictionary<AggregateType, WrappedDerivedRecordType> _wrappedLazyRecordTypes;
 
         internal RenameDriver(RecordType parameters, DPath pathToRename, DName updatedName, Engine engine, ReadOnlySymbolTable resolver, IBinderGlue binderGlue, CultureInfo culture, bool renameOptionSet)
         {
@@ -32,7 +34,7 @@ namespace Microsoft.PowerFx.Core
             Contracts.CheckParam(segments.Count > 0, nameof(parameters));
 
             _baseParameters = parameters;
-            _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
+            _wrappedLazyRecordTypes = new ConcurrentDictionary<AggregateType, WrappedDerivedRecordType>();
 
             // After this point, _renameParameters should have at most one logical->display pair that can change in this conversion
             _renameParameters = renameOptionSet ? null : RenameFormulaTypeHelper(parameters, segments, updatedName) as RecordType;
@@ -57,7 +59,7 @@ namespace Microsoft.PowerFx.Core
 
             // Convert back to the invariant expression. All parameter values are already invariant at this point, so we pass _renameParameters, but stripped of it's DisplayNameProvider.
             // Reset the wrapped cache first to ensure we clear all display name providers
-            _wrappedLazyRecordTypes = new Dictionary<AggregateType, WrappedDerivedRecordType>();
+            _wrappedLazyRecordTypes.Clear();
             var strippedRenameParameters = _renameOptionSet ? _baseParameters : GetWrappedAggregateType(_renameParameters, DisabledDisplayNameProvider.Instance) as RecordType;
             return ExpressionLocalizationHelper.ConvertExpression(converted, strippedRenameParameters, BindingConfig.Default, _resolver, _binderGlue, CultureInfo.InvariantCulture, Features.None, false);
         }
@@ -151,7 +153,7 @@ namespace Microsoft.PowerFx.Core
 
             // Wrap the current type and add to cache
             var wrapped = new WrappedDerivedRecordType(backingType, displayNameProvider, this, replacedFieldName, replacedFieldType);
-            _wrappedLazyRecordTypes.Add(backingType, wrapped);
+            _wrappedLazyRecordTypes.AddOrUpdate(backingType, wrapped);
 
             return rootType is TableType ? wrapped.ToTable() : wrapped;
         }

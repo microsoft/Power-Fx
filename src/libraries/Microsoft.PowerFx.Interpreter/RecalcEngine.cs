@@ -42,8 +42,7 @@ namespace Microsoft.PowerFx
             : base(powerFxConfig)
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
-            _symbolValues = new SymbolValues(_symbolTable);
-            _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
+            _symbolValues = new SymbolValues(_symbolTable, OnSymbolValuesOnUpdate);
 
             base.EngineSymbols = _symbolTable;
 

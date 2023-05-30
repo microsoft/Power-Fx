@@ -37,6 +37,7 @@ namespace Microsoft.PowerFx
         }
 
         // SymbolTable is conceptually constant. 
+        [ThreadSafeProtectedByLock("Interlocked.Increment")]
         private readonly VersionHash _constant = VersionHash.New();
 
         internal override VersionHash VersionHash => _constant;
