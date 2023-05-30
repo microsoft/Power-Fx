@@ -9,8 +9,8 @@
 >> Abs(2)
 2
 
->> Abs(2147483648) // testing a number larger than the interger range
-2147483648
+>> Abs(9007199254740991) // testing a number larger than the float range (-9007199254740991 to 9007199254740991, (+/- 2^53 - 1))
+9007199254740991
 
 // Negative Integer Parameters
 
@@ -20,8 +20,8 @@
 >> Abs(-2)
 2
 
->> Abs(-2147483648) // testing a number smaller than the interger range
-2147483648
+>> Abs(-9007199254740991) // testing a number smaller than the float range (-9007199254740991 to 9007199254740991, (+/- 2^53 - 1))
+9007199254740991
 
 // ******** DECIMAL PARAMETERS ********
 >> Abs(2.2)
