@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Annotations;
 using Xunit;
@@ -54,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Tests
             // Multiple threads will hit guard. 
             try
             {
-                Parallel.For(0, 100, (i) => w.SingleThreadedOp());
+                Parallel.For(0, 10, (i) => w.SingleThreadedOp());
             }
             catch
             {
@@ -76,6 +77,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 using (_guard.Enter())
                 {
                     _count++; // single threaded op
+                    Thread.Sleep(1); // 1 ms
                 }
             }
         }
