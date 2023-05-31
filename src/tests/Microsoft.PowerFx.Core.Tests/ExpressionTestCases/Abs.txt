@@ -9,11 +9,11 @@
 >> Abs(2)
 2
 
->> Abs(2147483649) // testing a large number
-2147483649
+>> Abs(2147483647) // testing a large postive number (+/- 2^31) the upper limit for an integer-type variable 
+2147483647
 
->> Abs(9007199254740991) // testing a really large number  
-9007199254740991
+>> Abs(9007199254740992) // testing a really large positive number (+/- 2^53-1) the upper limit for a long-type variable
+9007199254740992
 
 // Negative Integer Parameters
 
@@ -23,11 +23,11 @@
 >> Abs(-2)
 2
 
->> Abs(-2147483649) // testing a small number
-2147483649
+>> Abs(-2147483647) // testing a large negative number (+/- 2^31) the lower limit for an integer-type variable 
+2147483647
 
->> Abs(-9007199254740991) // testing a really small number
-9007199254740991
+>> Abs(-9007199254740992) // testing a really large negative number (+/- 2^53) the lower limit for a long-type variable
+9007199254740992
 
 // ******** DECIMAL PARAMETERS ********
 >> Abs(2.2)
