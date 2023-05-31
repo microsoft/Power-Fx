@@ -18,7 +18,6 @@ namespace Microsoft.PowerFx
     /// Good when we can quickly load the names (to populate the intellisense completion list), but then load remaining symbol details on-demand. 
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
-    [NotThreadSafe]
     internal class DeferredSymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver, INameResolver
     {
         // All possible tables we could add. 
