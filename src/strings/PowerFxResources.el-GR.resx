@@ -5033,22 +5033,22 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Refreshes the specified data source.</value>
+    <value>Ανανεώνει την καθορισμένη προέλευση δεδομένων.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>connected_data_source</value>
+    <value>συνδεδεμένη_προέλευση_δεδομένων</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Expected a record or table value.</value>
+    <value>Αναμενόταν μια τιμή εγγραφής ή πίνακα.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>A connected data source to refresh.</value>
+    <value>Μια συνδεδεμένη προέλευση δεδομένων για ανανέωση.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Only managed connections can be refreshed.</value>
+    <value>Είναι δυνατή η ανανέωση μόνο διαχειριζόμενων συνδέσεων.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
