@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx
     /// Will lazily create a symbol table. 
     /// To match to an existing symbol table, call <see cref="SymbolExtensions.CreateValues(ReadOnlySymbolTable, ReadOnlySymbolValues[])"/>.
     /// </summary>
-    [ThreadSafeImmutable]
+    [NotThreadSafe]
     public class SymbolValues : ReadOnlySymbolValues
     {
         // Map of name Slots --> Values. 

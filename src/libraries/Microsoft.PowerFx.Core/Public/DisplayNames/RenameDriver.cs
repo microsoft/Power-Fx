@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
-    [ThreadSafeImmutable]
     public sealed class RenameDriver
     {
         private readonly RecordType _baseParameters;

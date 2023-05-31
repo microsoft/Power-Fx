@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Syntax
                 newNodes.Add(Children[i], children[i]);
             }
 
-            return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens.ToArray(), ts), SourceList.Clone(ts, newNodes));
+            return new VariadicOpNode(ref idNext, Op, children, Clone(OpTokens, ts), SourceList.Clone(ts, newNodes));
         }
 
         /// <inheritdoc />

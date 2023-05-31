@@ -12,6 +12,7 @@ namespace Microsoft.PowerFx
     /// A version stamp should only be compared to a previous version of the same stamp. 
     /// </summary>
     [DebuggerDisplay("Version:{_value}")]
+    [NotThreadSafe]
     internal struct VersionHash
     {
         private int _value;
