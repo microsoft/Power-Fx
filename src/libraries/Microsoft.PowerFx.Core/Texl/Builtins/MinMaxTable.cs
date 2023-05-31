@@ -16,7 +16,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Min(source:*, projection:n)
     // Max(source:*, projection:n)
     // Corresponding DAX functions: Min, MinA, MinX, Max, MaxA, MaxX
-    [ThreadSafeImmutable]
     internal sealed class MinMaxTableFunction : StatisticalTableFunction
     {
         private readonly DelegationCapability _delegationCapability;

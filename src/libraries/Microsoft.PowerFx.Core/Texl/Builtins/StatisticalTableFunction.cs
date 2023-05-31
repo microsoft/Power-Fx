@@ -18,6 +18,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     // Abstract base class for all statistical functions with similar signatures that take
     // a table as the first argument, and a value function as the second argument.
+    [ThreadSafeImmutable]
     internal abstract class StatisticalTableFunction : FunctionWithTableInput
     {
         public override bool IsSelfContained => true;
