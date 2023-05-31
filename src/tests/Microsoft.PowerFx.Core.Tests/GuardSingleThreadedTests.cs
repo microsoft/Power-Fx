@@ -29,20 +29,9 @@ namespace Microsoft.PowerFx.Core.Tests
             r.VerifyNoWriters();
         }
 
-        [Fact]
-        public void GuardTestNotReentrant()
-        {
-            var r = new GuardSingleThreaded();
-            using (r.Enter())
-            {
-                // Throws, not reentrant
-                Assert.Throws<InvalidOperationException>(() => r.Enter());
-            } // Dispose called             
-        }
-
         // Gaurd detect code that is called on multiple threads. 
         [Fact]
-        public void GuardTestFail()
+        public void SingleThreadedUsageIsOk()
         {
             var w = new Worker();
 
@@ -51,19 +40,6 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 w.SingleThreadedOp();
             }
-
-            // Multiple threads will hit guard. 
-            try
-            {
-                Parallel.For(0, 10, (i) => w.SingleThreadedOp());
-            }
-            catch
-            {
-                // ok 
-                return;
-            }
-
-            Assert.Null("Guard should have thrown exception");
         }
 
         private class Worker
@@ -76,10 +52,88 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 using (_guard.Enter())
                 {
-                    _count++; // single threaded op
+                    int x = _count;
                     Thread.Sleep(1); // 1 ms
+
+                    _count = x + 1; // single threaded op
                 }
             }
+        }
+
+        // Helper to run fp() on a 2nd thread, and assert it throws. 
+        private static void Assert2ndThreadThrows(Action fp)
+        {
+            bool exceptionThrown = false;
+
+            Thread t = new Thread(() =>
+            {
+                try
+                {
+                    fp(); // should throw
+                }
+                catch
+                {
+                    // Success - expected failure 
+                    exceptionThrown = true;
+                }
+            });
+            t.Start();
+            t.Join();
+
+            Assert.True(exceptionThrown);
+        }
+
+        [Fact]
+        public void GuardTestNotReentrant()
+        {
+            var r = new GuardSingleThreaded();
+            using (r.Enter())
+            {
+                // Throws, not reentrant
+                Assert.Throws<InvalidOperationException>(() => r.Enter());
+            } // Dispose called             
+        }
+
+        // Ensure we fail if 2nd thread tries to enter region. 
+        [Fact]
+        public void EnterOn2ndThreadFails()
+        {
+            GuardSingleThreaded guard = new GuardSingleThreaded();
+
+            var i1 = guard.Enter();
+
+            Assert2ndThreadThrows(() =>
+            {
+                var i2 = guard.Enter(); // should fail!
+            });
+        }
+
+        // Dispose on wrong thread!
+        [Fact]
+        public void DisposeOnWrongThreadFails()
+        {
+            GuardSingleThreaded guard = new GuardSingleThreaded();
+
+            var i1 = guard.Enter();
+
+            Assert2ndThreadThrows(() =>
+            {
+                // Wrong thread!
+                i1.Dispose();
+            });
+        }
+
+        // Extra dipose
+        [Fact]
+        public void ExtraDisposeFails()
+        {
+            GuardSingleThreaded guard = new GuardSingleThreaded();
+
+            var i1 = guard.Enter();
+            i1.Dispose();
+
+            // Extra dispose. 
+            Assert.Throws<InvalidOperationException>(() => i1.Dispose());
         }
     }
 }
