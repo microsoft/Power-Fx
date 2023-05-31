@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Diagnostics;
 using System.Threading;
 
@@ -15,20 +14,14 @@ namespace Microsoft.PowerFx
     [DebuggerDisplay("Version:{_value}")]
     internal struct VersionHash
     {
-        [ThreadSafeProtectedByLock("Interlocked.Increment")]
         private int _value;
-
-        [ThreadSafeProtectedByLock("Interlocked.Increment")]
-        private static int _hashStarter;
-
-        public static bool operator ==(VersionHash a, VersionHash b) => a._value == b._value;
-
-        public static bool operator !=(VersionHash a, VersionHash b) => a._value != b._value;
 
         private VersionHash(int value)
         {
             _value = value;
         }
+
+        private static int _hashStarter;
 
         public static VersionHash New()
         {
@@ -45,7 +38,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         public void Inc()
         {
-            Interlocked.Increment(ref _value);
+            _value++;
         }
 
         public VersionHash Combine(VersionHash other)
@@ -57,6 +50,10 @@ namespace Microsoft.PowerFx
         {
             return (a * -1521134295) + b;
         }
+
+        public static bool operator ==(VersionHash a, VersionHash b) => a._value == b._value;
+
+        public static bool operator !=(VersionHash a, VersionHash b) => a._value != b._value;
 
         public override bool Equals(object obj)
         {
