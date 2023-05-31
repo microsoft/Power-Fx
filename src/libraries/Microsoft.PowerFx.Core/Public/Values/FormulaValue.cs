@@ -11,7 +11,6 @@ namespace Microsoft.PowerFx.Types
     /// Represent a value in the formula expression. 
     /// </summary>
     [DebuggerDisplay("{ToObject().ToString()} ({Type})")]
-    [ThreadSafeImmutable]
     public abstract partial class FormulaValue
     {
         // We place the .New*() methods on FormulaValue for discoverability. 
