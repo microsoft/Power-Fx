@@ -5032,6 +5032,25 @@
     <value>オプション</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Refreshes the specified data source.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Expected a record or table value.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>正規表現が無効です。</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>正規表現は定数値である必要があります。</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>'{0}' 関数に渡された値は変更できません。</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>キャプチャ名 '{0}' は正規表現の完全一致を返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストから完全一致を抽出する場合は、名前の変更を検討してください。</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>すべての書式設定を削除し、プレーンテキストの値を返します。</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>テキスト</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>HTML タグと XML タグを削除するテキストです。</value>
   </data>
 </root>
