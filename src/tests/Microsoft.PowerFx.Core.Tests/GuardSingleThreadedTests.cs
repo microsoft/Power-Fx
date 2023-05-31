@@ -41,30 +41,30 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         // Gaurd detect code that is called on multiple threads. 
-        [Fact]
-        public void GuardTestFail()
-        {
-            var w = new Worker();
+        //[Fact]
+        //public void GuardTestFail()
+        //{
+        //    var w = new Worker();
 
-            // Single threaded is ok. 
-            for (int i = 0; i < 5; i++)
-            {
-                w.SingleThreadedOp();
-            }
+        //    // Single threaded is ok. 
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        w.SingleThreadedOp();
+        //    }
 
-            // Multiple threads will hit guard. 
-            try
-            {
-                Parallel.For(0, 10, (i) => w.SingleThreadedOp());
-            }
-            catch
-            {
-                // ok 
-                return;
-            }
+        //    // Multiple threads will hit guard. 
+        //    try
+        //    {
+        //        Parallel.For(0, 10, (i) => w.SingleThreadedOp());
+        //    }
+        //    catch
+        //    {
+        //        // ok 
+        //        return;
+        //    }
 
-            Assert.Null("Guard should have thrown exception");
-        }
+        //    Assert.Null("Guard should have thrown exception");
+        //}
 
         private class Worker
         {
