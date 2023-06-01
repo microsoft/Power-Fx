@@ -424,21 +424,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("Hello World!", helloWorld);
         }
 
-        [Fact]
-        public void Powerfx_Collect_Without_Serielize()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void Powerfx_Partial_Collect(bool serialize)
         {
-            var result = (BlankValue)Run_Collect_Worflow(false);
-            Assert.Equal("Blank()", result.ToString());
+            FormulaValue result = Run_Collect_Worflow(serialize);
+            if (!serialize)
+            {
+                Assert.Equal("Blank()", result.ToString());
+            }
+            else
+            {
+                Assert.Equal("Runtime type mismatch", ((ErrorValue)result).Errors[0].Message);
+            }
         }
 
-        [Fact]
-        public void Powerfx_Collect_With_Serielize()
-        {
-            var result = (ErrorValue)Run_Collect_Worflow(true);
-            Assert.Equal("Runtime type mismatch", result.Errors[0].Message);
-        }
-
-        private FormulaValue Run_Collect_Worflow(bool serielize)
+        private FormulaValue Run_Collect_Worflow(bool serialize)
         {
             // Define initial FormulaValue
             RecordType schemaType = RecordType.Empty();
@@ -462,21 +464,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             formulaValue = recalEngine.GetValue("collection");
 
             recalEngine = new RecalcEngine();
-            if (serielize)
+            if (serialize)
             {
                 // Serielizing it as SetPowerCardMemory does and stores it in memoryContext
-                string serielizedFormulaValue = formulaValue.ToExpression();
+                string serializedFormulaValue = formulaValue.ToExpression();
 
                 // Deserielizing it
                 // After serielization and deserielization, the formulaValue has type of InMemoryTableValue
-                formulaValue = RunExpr(serielizedFormulaValue, recalEngine, true);
+                formulaValue = RunExpr(serializedFormulaValue, recalEngine, true);
             }
 
             RunExpr("Collect(collection, {Col1:\"newCol1\"})", recalEngine, false, formulaValue, "collection");
             return RunExpr("Last(collection).Col2", recalEngine, true);
         }
 
-        private FormulaValue RunExpr(string expressionText, RecalcEngine engine, bool engineInit, FormulaValue formulaValue = null, string varName = "")
+        private FormulaValue RunExpr(string expressionText, RecalcEngine engine, bool setVariableValueInEngine, FormulaValue formulaValue = null, string varName = "")
         {
             // Parser options for RecalEngine
             var parserOptions = new ParserOptions()
@@ -488,9 +490,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Define symbol table
             var symbolTable = new SymbolTable();
             symbolTable.EnableMutationFunctions();
-            var symbolValues = symbolTable.CreateValues();
 
-            if (!engineInit)
+            if (!setVariableValueInEngine)
             {
                 engine.UpdateVariable(varName, formulaValue);
             }
