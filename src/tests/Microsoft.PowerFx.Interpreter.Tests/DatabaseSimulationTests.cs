@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        internal class DatabaseRecord : InMemoryRecordValue
+        internal class DatabaseRecord : InMemoryRecordValue, IMutationCopy
         {
             internal static FormulaType TestEntityType => new TestEntityType();
 
@@ -174,6 +174,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 throw new NotImplementedException("Cannot call TryGetField");
+            }
+
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryRecordValue
+            bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
             }
         }
 

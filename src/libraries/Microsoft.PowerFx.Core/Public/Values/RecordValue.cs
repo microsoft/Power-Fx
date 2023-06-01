@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// Represent a Record. Records have named fields which can be other values. 
     /// </summary>
-    public abstract class RecordValue : ValidFormulaValue
+    public abstract class RecordValue : ValidFormulaValue, IMutationCopy
     {
         /// <summary>
         /// Fields and their values directly available on this record. 
@@ -271,6 +271,12 @@ namespace Microsoft.PowerFx.Types
             }
 
             sb.Append("}");
+        }
+
+        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new InMemoryRecordValue(this.IRContext, this.Fields);
+            return true;
         }
     }
 

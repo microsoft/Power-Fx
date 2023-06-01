@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx.Types
     // More constrained table when we know that all values are indeed Records, not error/blank. 
     // Beware of wrapping/unwrapping in DValues if we already have a RecordValue -
     // that can create extra IEnumerable wrappers that break direct indexing. 
-    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>
+    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>, IMutationCopy
     {
         private readonly RecordType _recordType;
 
@@ -66,6 +66,17 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
+        }
+
+        internal RecordsOnlyTableValue(RecordsOnlyTableValue orig)
+            : this(orig.IRContext, orig.Rows.Select(record => record.Value).ToList())
+        {
+        }
+
+        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new RecordsOnlyTableValue(this);
+            return true;
         }
 
         protected override DValue<RecordValue> Marshal(RecordValue record)
