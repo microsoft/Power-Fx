@@ -206,9 +206,15 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "uuid":
                         case "mquery": // For SQL Server Power Query language
+                        case "email":
+                        case "uri":
+                        case "byte": // Base64 encoded string
+                        case "html":
                             return new ConnectorParameterType(schema, FormulaType.String);
 
+                        case "date":
                         case "date-time":
+                        case "date-no-tz":
                             // Consider this as a string for now
                             // $$$ Should be DateTime type
                             return new ConnectorParameterType(schema, FormulaType.String);
@@ -217,7 +223,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorParameterType(schema, FormulaType.String);
 
                         default:
-                            throw new NotImplementedException("Unsupported type of string");
+                            throw new NotImplementedException($"Unsupported type of string {schema.Format}");
                     }
 
                 // OpenAPI spec: Format could be float, double, or not specified.
@@ -460,10 +466,21 @@ namespace Microsoft.PowerFx.Connectors
 
                     return connectorParameterType;
                 }
+
+                if (string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (openApiMediaType.Schema == null)
+                    {
+                        // Treat as void. 
+                        return new ConnectorParameterType();
+                    }
+
+                    throw new NotImplementedException($"Unsupported schema for {ContentType_TextPlain} mediatype");
+                }
             }
 
             // Returns something, but not json. 
-            throw new InvalidOperationException($"Unsupported return type - must have {ContentType_ApplicationJson}");
+            throw new InvalidOperationException($"Unsupported return type - must have {ContentType_ApplicationJson} or {ContentType_TextPlain}");
         }
 
         // Keep these constants all lower case

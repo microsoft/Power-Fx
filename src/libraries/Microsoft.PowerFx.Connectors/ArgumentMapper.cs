@@ -229,6 +229,28 @@ namespace Microsoft.PowerFx.Connectors
             HiddenRequiredParamInfo = hiddenRequiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(hiddenRequiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
             OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
 
+            // Validate we have no name conflict between required and optional parameters
+            // In case of conflict, we rename the optional parameter and add _1, _2, etc. until we have no conflict
+            List<string> requiredParamNames = RequiredParamInfo.Select(rpi => rpi.TypedName.Name.Value).ToList();
+            foreach (ServiceFunctionParameterTemplate opi in OptionalParamInfo)
+            {
+                string paramName = opi.TypedName.Name.Value;
+
+                if (requiredParamNames.Contains(paramName))
+                {
+                    int i = 0;                    
+                    string newName;
+
+                    do 
+                    {
+                        newName = $"{paramName}_{++i}";
+                    } 
+                    while (requiredParamNames.Contains(newName));
+    
+                    opi.SetTypedName(new TypedName(opi.TypedName.Type, new DName(newName)));
+                }
+            }
+
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.
             // Hidden required parameters do not count here
@@ -445,6 +467,12 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
+                    if (apiObj.TryGetValue("builtInOperation", out IOpenApiAny _))
+                    {
+                        // We don't support builtInOperation for now
+                        return null;
+                    }
+
                     throw new NotImplementedException("Missing mandatory parameters operationId and parameters in x-ms-dynamic-values extension");
                 }
             }

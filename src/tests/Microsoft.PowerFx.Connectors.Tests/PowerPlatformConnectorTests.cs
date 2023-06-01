@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -474,6 +475,40 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.IsType<StringValue>(result);
             Assert.Equal("John Doe", (result as StringValue).Value);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_Load()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "72c42ee1b3c7403c8e73aa9c02a7fbcc",              // connectionId
+                    () => "Some JWT token",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            IReadOnlyList<FunctionInfo> fi = config.AddService("Office365Outlook", apiDoc, client);
+            Assert.Equal(107, fi.Count());
+            
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc);
+            Assert.Equal(107, functions.Count());
+
+            ConnectorFunction cf = functions.First(cf => cf.Name == "ContactPatchItemV2");
+
+            // Validate required parameter name 
+            Assert.Equal("id", cf.RequiredParameters[1].Name);
+
+            // Validate optional parameter rectified name
+            Assert.Equal("id_1", cf.OptionalParameters[0].Name);
         }
 
         [Fact]
