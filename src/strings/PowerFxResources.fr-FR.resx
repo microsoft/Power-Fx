@@ -5033,22 +5033,22 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Refreshes the specified data source.</value>
+    <value>Actualise la source de données spécifiée.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>connected_data_source</value>
+    <value>source_de_données_connectée</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Expected a record or table value.</value>
+    <value>Valeur d’enregistrement ou de table attendue.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>A connected data source to refresh.</value>
+    <value>Une source de données connectée à actualiser.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Only managed connections can be refreshed.</value>
+    <value>Seules des connexions gérées peuvent être actualisées.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
