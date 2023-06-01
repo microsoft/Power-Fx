@@ -5033,7 +5033,7 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Refreshes the specified data source.</value>
+    <value>Aktualisiert die angegebene Datenquelle</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
@@ -5041,14 +5041,14 @@
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Expected a record or table value.</value>
+    <value>Ein Datensatz- oder Tabellenwert wurde erwartet.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>A connected data source to refresh.</value>
+    <value>Eine verbundene Datenquelle zum Aktualisieren</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Only managed connections can be refreshed.</value>
+    <value>Nur verwaltete Verbindungen können aktualisiert werden.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
@@ -5060,7 +5060,7 @@
         
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
-    <value>The value passed to the '{0}' function cannot be changed.</value>
+    <value>Der Wert, der an die Funktion „{0}“ übergeben wurde, kann nicht geändert werden.</value>
     
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
