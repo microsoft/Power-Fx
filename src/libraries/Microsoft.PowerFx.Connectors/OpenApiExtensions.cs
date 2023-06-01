@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -448,7 +449,8 @@ namespace Microsoft.PowerFx.Connectors
                 var mediaType = kv3.Key;
                 var openApiMediaType = kv3.Value;
 
-                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase))
                 {
                     if (openApiMediaType.Schema == null)
                     {
@@ -461,22 +463,11 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (connectorParameterType.HiddenRecordType != null)
                     {
-                        throw new NotImplementedException("Unexpected value mediatype schema");
+                        throw new NotImplementedException($"Unexpected value mediatype schema {mediaType}");
                     }
 
                     return connectorParameterType;
-                }
-
-                if (string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (openApiMediaType.Schema == null)
-                    {
-                        // Treat as void. 
-                        return new ConnectorParameterType();
-                    }
-
-                    throw new NotImplementedException($"Unsupported schema for {ContentType_TextPlain} mediatype");
-                }
+                }               
             }
 
             // Returns something, but not json. 
