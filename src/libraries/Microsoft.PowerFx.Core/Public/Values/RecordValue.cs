@@ -272,10 +272,14 @@ namespace Microsoft.PowerFx.Types
 
             sb.Append("}");
         }
+    }
 
-        internal virtual void ShallowCopyFieldInPlace(string fieldName)
-        {
-            throw new NotImplementedException();
-        }
+    internal interface IMutationCopyField
+    {
+        /// <summary>
+        /// Makes a shallow copy of a field within a record, in place, and does not return the copy.
+        /// Earlier copies of the record will reference the original field.
+        /// </summary>
+        void ShallowCopyFieldInPlace(string fieldName);
     }
 }

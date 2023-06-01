@@ -11,7 +11,7 @@ using Microsoft.PowerFx.Core.IR;
 namespace Microsoft.PowerFx.Types
 {
     // Represent record backed by known list of values. 
-    internal class InMemoryRecordValue : RecordValue, IMutationCopy
+    internal class InMemoryRecordValue : RecordValue, IMutationCopy, IMutationCopyField
     {
         protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
         private readonly IDictionary<string, FormulaValue> _mutableFields;
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
-        internal override void ShallowCopyFieldInPlace(string fieldName)
+        void IMutationCopyField.ShallowCopyFieldInPlace(string fieldName)
         {
             if (_fields.TryGetValue(fieldName, out FormulaValue result))
             {

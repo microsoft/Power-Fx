@@ -647,7 +647,9 @@ namespace Microsoft.PowerFx
 
             if (node.IRContext.IsMutation)
             {
-                record.ShallowCopyFieldInPlace(node.Field.Value);
+                // Records that are not mutable should have been stopped by the compiler before we get here.
+                // But if we get here and the cast fails, the implementation of the record was not prepared for the mutation.
+                ((IMutationCopyField)record).ShallowCopyFieldInPlace(node.Field.Value);
             }
 
             var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);
