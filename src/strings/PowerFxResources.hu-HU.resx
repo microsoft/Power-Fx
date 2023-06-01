@@ -5032,6 +5032,25 @@
     <value>lehetőségek</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Frissíti a megadott adatforrást.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>csatlakoztatott_adatforrás</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>A rendszer egy rekord- vagy táblaértéket várt.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Csatlakoztatott adatforrás a frissítéshez.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Csak a felügyelt kapcsolatok frissíthetők.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Érvénytelen reguláris kifejezés.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>A reguláris kifejezéseknek konstans értékeknek kell lenniük.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>A függvénynek átadott '{0}' érték nem módosítható.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való teljes egyezést adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezést az elnevezett tulajdonsággal.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Eltávolítja az összes formázást, és egyszerű szöveges értéket ad vissza.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>szöveg</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>A szöveg, amelyből el szeretné távolítani a HTML-kódot és az XML-címkéket.</value>
   </data>
 </root>

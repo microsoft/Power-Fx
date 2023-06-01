@@ -89,3 +89,23 @@ Table({Value:true})
 >> ForAll([Blank()],IsBlank(ThisRecord))
 Table({Value:false})
 
+// ************ ForAll and Void expressions ****************
+
+>> ForAll([1,2], If(Value = 1, Value * 2, {Result: Value}))
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> ForAll([1,2,3] As p, Switch(p.Value, 1, {a:1}, 2, [{a:2}], 3, "Hello"))
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> ForAll(ParseJSON("[1,2]"), If(Value(ThisRecord) = 1, Value(ThisRecord) * 2, {Result: Value(ThisRecord)}))
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+>> ForAll(ParseJSON("[1,2,3]"), Switch(Value(ThisRecord), 1, {a:1}, 2, [{a:2}], 3, "Hello"))
+If(true, {test:1}, "Mismatched args (result of the expression can't be used).")
+
+// Errors are returned
+>> ForAll([1,2], If(Value = 1, Sqrt(-Value), {Result: Value}))
+Error({Kind:ErrorKind.Numeric})
+
+>> ForAll(ParseJSON("[""1"",""a""]"), If(Text(ThisRecord) = "1", Value(ThisRecord) * 2, Value(ThisRecord)))
+Error({Kind:ErrorKind.InvalidArgument})

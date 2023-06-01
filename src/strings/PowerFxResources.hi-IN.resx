@@ -5032,6 +5032,25 @@
     <value>विकल्प</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>निर्दिष्ट डेटा स्रोत ताज़ा करता है.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>कनेक्ट_कियागयाडेटा_स्रोत</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>कोई रेकॉर्ड या तालिका मान अपेक्षित था.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>रीफ़्रेश करने के लिए, एक कनेक्ट किया गया डेटा स्रोत.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>केवल प्रबंधित कनेक्शन ही ताज़ा किए जा सकते हैं.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>नियमित व्यंजक अमान्य है.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>नियमित व्यंजकों का मान अचर होना चाहिए.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>{0}' फ़ंक्शन को पारित मान बदला नहीं जा सकता.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक का पूर्ण मिलान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान को निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>सभी स्वरूपण निकालता है और एक सादा पाठ मान लौटाता है.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>पाठ</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>पाठ में उसके HTML और XML टैग हटा दिए गए हैं.</value>
   </data>
 </root>

@@ -105,6 +105,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             identifierNode = null;
 
+            if (args.Length == 0)
+            {
+                return null;
+            }
+
             FirstNameNode firstNameNode = args[0]?.AsFirstName();
             identifierNode = firstNameNode;
 

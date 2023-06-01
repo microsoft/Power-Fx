@@ -5032,6 +5032,25 @@
     <value>options</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Actualise la source de données spécifiée.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>source_de_données_connectée</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Valeur d’enregistrement ou de table attendue.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Une source de données connectée à actualiser.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Seules des connexions gérées peuvent être actualisées.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Expression régulière non valide.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Les expressions régulières doivent être des valeurs constantes.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Impossible de modifier la valeur transmise à la fonction « {0} ».</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Le nom de capture « {0} » masque la propriété prédéfinie qui retourne la correspondance complète de l’expression régulière. Envisagez de lui donner un autre nom si vous voulez que la propriété nommée puisse extraire la correspondance complète dans le texte spécifié.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Supprime toute mise en forme et retourne une valeur de texte brut.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>texte</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Texte de suppression des balises HTML et XML.</value>
   </data>
 </root>

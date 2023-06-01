@@ -5032,6 +5032,25 @@
     <value>suvandid</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Värskendab määratud andmeallikat.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>ühendatud_andmeallikas</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Eeldati kirjet või tabeliväärtust.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Värskendatav ühendatud andmeallikas.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Värskendada saab ainult hallatavaid ühendusi.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Kehtetu regulaaravaldis.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulaaravaldised peavad olema konstantsed väärtused.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Funktsioonile „{0}“ edastatud väärtust ei saa muuta.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise täieliku vaste. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täielik vaste.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Eemaldab kogu vormingu ja tagastab lihttekstväärtuse.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>tekst</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Tekst, mille HTML- ja XML-sildid eemaldatakse.</value>
   </data>
 </root>
