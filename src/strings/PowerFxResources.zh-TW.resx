@@ -5032,6 +5032,25 @@
     <value>選項</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>重新整理指定的資料來源。</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>連接的資料來源</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>應為記錄或資料表值。</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>要重新整理的連線資料來源。</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>只有受控的連線才可重新整理。</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>無效的規則運算式。</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>規則運算式必須是常數值。</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>無法變更傳遞至 '{0}' 函式的值。</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>擷取名稱 '{0}' 已隱藏傳回規則運算式完全相符項目的預先定義屬性。如果您要使用該具名屬性擷取指定文字中的完全相符項目，建議將它重新命名。</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>移除所有格式設定，並傳回純文字值。</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>文字</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>要移除其 HTML 和 XML 標籤的文字。</value>
   </data>
 </root>

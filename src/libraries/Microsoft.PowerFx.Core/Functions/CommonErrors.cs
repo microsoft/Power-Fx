@@ -173,6 +173,15 @@ namespace Microsoft.PowerFx.Functions
             });
         }
 
+        internal static ExpressionError RecordNotFound()
+        {
+            return new ExpressionError()
+            {
+                Message = "The specified record was not found.",
+                Kind = ErrorKind.NotFound
+            };
+        }
+
         internal static FormulaValue CustomError(IRContext irContext, string message)
         {
             return new ErrorValue(irContext, new ExpressionError()

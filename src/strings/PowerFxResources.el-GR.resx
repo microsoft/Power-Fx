@@ -5032,6 +5032,25 @@
     <value>επιλογές</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Ανανεώνει την καθορισμένη προέλευση δεδομένων.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>συνδεδεμένη_προέλευση_δεδομένων</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Αναμενόταν μια τιμή εγγραφής ή πίνακα.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Μια συνδεδεμένη προέλευση δεδομένων για ανανέωση.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Είναι δυνατή η ανανέωση μόνο διαχειριζόμενων συνδέσεων.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Μη έγκυρη κανονική παράσταση.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Οι κανονικές παραστάσεις πρέπει να είναι τιμές σταθεράς.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει την πλήρη αντιστοίχιση της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Καταργεί τη μορφοποίηση συνολικά και επιστρέφει μια τιμή απλού κειμένου.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>κείμενο</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Το κείμενο για κατάργηση των ετικετών HTML και XML.</value>
   </data>
 </root>
