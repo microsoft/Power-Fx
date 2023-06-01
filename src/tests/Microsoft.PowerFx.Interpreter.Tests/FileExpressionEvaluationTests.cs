@@ -126,14 +126,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("ForAllMutate.txt")]
         [InlineData("Set.txt")]
         [InlineData("DeepMutation.txt")]
+        [InlineData("Immutable.txt")]
         public void RunMutationTests(string file)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig() { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
-            var runner = new ReplRunner(engine) { NumberIsFloat = true };
+
+            var rc = new RuntimeConfig();
+            rc.SetUserInfo(UserInfoTestSetup.UserInfo);
+
+            var runner = new ReplRunner(engine, rc) { NumberIsFloat = true };
 
             var testRunner = new TestRunner(runner);
 
