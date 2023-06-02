@@ -231,6 +231,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // Validate we have no name conflict between required and optional parameters
             // In case of conflict, we rename the optional parameter and add _1, _2, etc. until we have no conflict
+            // We could imagine an API with required param Foo, and optional body params Foo and Foo_1 but this is not considered for now
             List<string> requiredParamNames = RequiredParamInfo.Select(rpi => rpi.TypedName.Name.Value).ToList();
             foreach (ServiceFunctionParameterTemplate opi in OptionalParamInfo)
             {
