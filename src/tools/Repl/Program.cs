@@ -680,26 +680,26 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                if (option.Value.ToLowerInvariant() == OptionNumberIsFloat.ToLowerInvariant())
+                if (string.Equals(option.Value, OptionNumberIsFloat, StringComparison.OrdinalIgnoreCase))
                 {
                     _numberIsFloat = value.Value;
                     return value;
                 }
 
-                if (option.Value.ToLowerInvariant() == OptionLargeCallDepth.ToLowerInvariant())
+                if (string.Equals(option.Value, OptionLargeCallDepth, StringComparison.OrdinalIgnoreCase))
                 {
                     _largeCallDepth = value.Value;
                     ResetEngine();
                     return value;
                 }
 
-                if (option.Value.ToLowerInvariant() == OptionHashCodes.ToLowerInvariant())
+                if (string.Equals(option.Value, OptionHashCodes, StringComparison.OrdinalIgnoreCase))
                 {
                     _hashCodes = value.Value;
                     return value;
                 }
 
-                if (option.Value.ToLowerInvariant() == OptionPowerFxV1.ToLowerInvariant())
+                if (string.Equals(option.Value, OptionPowerFxV1, StringComparison.OrdinalIgnoreCase))
                 {
                     foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
@@ -713,7 +713,7 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                if (option.Value.ToLowerInvariant() == OptionFeaturesNone.ToLowerInvariant())
+                if (string.Equals(option.Value, OptionFeaturesNone, StringComparison.OrdinalIgnoreCase))
                 {
                     foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                     {
