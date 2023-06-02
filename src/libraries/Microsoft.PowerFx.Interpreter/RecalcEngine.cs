@@ -106,6 +106,11 @@ namespace Microsoft.PowerFx
         {
             var x = value;
 
+            if (value is TableValue && !(value is IMutationCopy))
+            {
+                throw new InvalidOperationException($"Can't set '{name}' to a table value that cannot be copied.");
+            }
+
             if (TryGetByName(name, out var fi))
             {
                 // Set() will validate type compatibility

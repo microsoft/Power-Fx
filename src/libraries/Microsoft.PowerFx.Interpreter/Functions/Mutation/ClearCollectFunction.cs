@@ -41,6 +41,11 @@ namespace Microsoft.PowerFx.Functions
 
         public override async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                args[0] = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+
             var clearFunction = new ClearFunction();
 
             var cleared = await clearFunction.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
