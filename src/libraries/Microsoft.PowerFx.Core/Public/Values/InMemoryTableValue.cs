@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Types
 
         protected override DValue<RecordValue> MarshalInverse(RecordValue row)
         {
-            return DValue<RecordValue>.Of(row);
+            return DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(_recordType, row));
         }
     }
 
