@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Types
         /// IMutationCopy will have the opportunity to provide a copy.
         /// </summary>
         /// <returns>Shallow copy of FormulaValue.</returns>
-        public virtual FormulaValue MaybeShallowCopy()
+        public FormulaValue MaybeShallowCopy()
         {
             if (this is IMutationCopy mc)
             {
