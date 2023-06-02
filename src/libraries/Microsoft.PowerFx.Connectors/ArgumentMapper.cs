@@ -227,13 +227,15 @@ namespace Microsoft.PowerFx.Connectors
 
             RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(requiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
             HiddenRequiredParamInfo = hiddenRequiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(hiddenRequiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
-            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
+            IEnumerable<ServiceFunctionParameterTemplate> opis = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)));            
 
             // Validate we have no name conflict between required and optional parameters
             // In case of conflict, we rename the optional parameter and add _1, _2, etc. until we have no conflict
             // We could imagine an API with required param Foo, and optional body params Foo and Foo_1 but this is not considered for now
             List<string> requiredParamNames = RequiredParamInfo.Select(rpi => rpi.TypedName.Name.Value).ToList();
-            foreach (ServiceFunctionParameterTemplate opi in OptionalParamInfo)
+            List<ServiceFunctionParameterTemplate> opis2 = new List<ServiceFunctionParameterTemplate>();
+
+            foreach (ServiceFunctionParameterTemplate opi in opis)
             {
                 string paramName = opi.TypedName.Name.Value;
 
@@ -248,9 +250,16 @@ namespace Microsoft.PowerFx.Connectors
                     } 
                     while (requiredParamNames.Contains(newName));
     
-                    opi.SetTypedName(new TypedName(opi.TypedName.Type, new DName(newName)));
+                    TypedName newTypeName = new TypedName(opi.TypedName.Type, new DName(newName));
+                    opis2.Add(new ServiceFunctionParameterTemplate(opi.FormulaType, opi.ConnectorType, newTypeName, opi.Description, opi.Summary, opi.DefaultValue, opi.ConnectorDynamicValue, opi.ConnectorDynamicSchema));
+                }
+                else
+                {
+                    opis2.Add(opi);
                 }
             }
+
+            OptionalParamInfo = opis2.ToArray();
 
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.

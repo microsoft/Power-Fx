@@ -11,7 +11,7 @@ namespace Microsoft.AppMagic.Authoring
 {
     internal sealed class ServiceFunctionParameterTemplate
     {
-        private TypedName _typedName;
+        private readonly TypedName _typedName;
         private readonly string _description;
         private readonly string _summary;
         private readonly FormulaValue _defaultValue;
@@ -50,11 +50,6 @@ namespace Microsoft.AppMagic.Authoring
             _defaultValue = defaultValue;
             _dynamicValue = dynamicValue;
             _dynamicSchema = dynamicSchema;
-        }
-
-        public void SetTypedName(TypedName typedName)
-        {
-            _typedName = typedName;
         }
     }
 }
