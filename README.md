@@ -23,20 +23,17 @@
 | [<img width="350" alt="PowerFX overview video thumbnail" src="https://user-images.githubusercontent.com/70824102/194465349-0e78a62c-cebd-4d57-9f3b-df6a371127ee.png">](https://www.youtube-nocookie.com/embed/ik6k89WNjuk) | For those new to Power-Fx, this video should answer many of your questions: <br> [Power Fx: the Programming Language for Low Code and what it means for Developers](https://www.youtube-nocookie.com/embed/ik6k89WNjuk) |
 | ---- | ---- |
 
-## Build Status
-
- | Branch | Description        | Build Status | Coverage Status | Test Status |
- |--------|--------------------|--------------|-----------------|-------------|
- |Main | 0.2.* Preview Builds |[![Build Status](https://dev.azure.com/FuseLabs/SDK_v4/_apis/build/status/PowerFx/PowerFx-signed?branchName=main)](https://dev.azure.com/FuseLabs/SDK_v4/_build/latest?definitionId=1410&branchName=main) |[![Coverage Status](https://coveralls.io/repos/github/microsoft/Power-Fx/badge.svg?branch=main)](https://coveralls.io/github/microsoft/Power-Fx?branch=main) |[![Tests Status](https://fuselabs.visualstudio.com/SDK_v4/_apis/build/status/PowerFx/PowerFx-PR?branchName=main)](https://fuselabs.visualstudio.com/SDK_v4/_build/latest?definitionId=1469&branchName=main)
-
 ## Packages
 
-| Name                                  | Released Package |
-|---------------------------------------|------------------|
-| Microsoft.PowerFx.Core                | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core/)
-| Microsoft.PowerFx.Core.Tests          |                                  |
-| Microsoft.PowerFx.Interpreter         | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Interpreter?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/)
-| Microsoft.PowerFx.Transport.Attributes   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Transport.Attributes?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Transport.Attributes/)
+| Name                                     | Released Package |
+|------------------------------------------|------------------|
+| Microsoft.PowerFx.Core                   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core/) |
+| Microsoft.PowerFx.Connectors             | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Connectors?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Connectors/) |
+| Microsoft.PowerFx.Json                   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Json?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Json/) |
+| Microsoft.PowerFx.Core.Tests             | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core.Tests?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Tests/) |
+| Microsoft.PowerFx.Interpreter            | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Interpreter?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/) |
+| Microsoft.PowerFx.LanguageServerProtocol | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.LanguageServerProtocol?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.LanguageServerProtocol/) |
+| Microsoft.PowerFx.Transport.Attributes   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Transport.Attributes?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Transport.Attributes/) |
 
 ## Daily Builds
 Daily builds of the Power Fx packages are published to Azure Artifacts. 
