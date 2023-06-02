@@ -40,6 +40,63 @@ GetKeys(dict); // returns single column table of all keys in the dict
             var result = engine.Eval("XGetValue(dict, \"Key1\") & 999").ToObject();
             Assert.Equal("Value999", result);
         }
+
+        // Marshal a dictionary 
+        [Fact]
+        public void Test2()
+        {
+            var dict = new Dictionary<string, string>
+            {
+                { "Key1", "Value1" },
+                { "Key2", "Value2" }
+            };
+            var poco = new MyPoco
+            {
+                IntField = 123,
+                MyProps = dict
+            };
+
+            var config = new PowerFxConfig();
+            config.AddFunction(new XGetValueFunction());
+
+            var engine = new RecalcEngine(config);
+
+            var cache = new TypeMarshallerCache()
+                .NewPrepend(new MyDictionaryMarshaller());
+            var fxPoco = cache.Marshal(poco);
+
+            engine.UpdateVariable("poco", fxPoco);
+
+            var result = engine.Eval("XGetValue(poco.MyProps, \"Key1\") & 999").ToObject();
+            Assert.Equal("Value999", result);
+        }
+    }
+
+    public class MyDictionaryMarshaller : ITypeMarshallerProvider
+    {
+        public bool TryGetMarshaller(Type type, TypeMarshallerCache cache, out ITypeMarshaller marshaller)
+        {
+            if (type == typeof(Dictionary<string, string>))
+            {
+                marshaller = new MyMarshaller();
+                return true;
+            }
+
+            marshaller = null;
+            return false;
+        }
+
+        private class MyMarshaller : ITypeMarshaller
+        {
+            public FormulaType Type => MyDictionaryValue.ParamType;
+
+            public FormulaValue Marshal(object value)
+            {
+                var dict = (Dictionary<string, string>)value;
+
+                return new MyDictionaryValue(dict);
+            }
+        }
     }
 
     // Wraps a dictionary. 
@@ -86,9 +143,5 @@ GetKeys(dict); // returns single column table of all keys in the dict
 
         // Dynamic 
         public Dictionary<string, string> MyProps { get; set; }
-    }
-
-    internal class DictionaryFunctions
-    {
     }
 }
