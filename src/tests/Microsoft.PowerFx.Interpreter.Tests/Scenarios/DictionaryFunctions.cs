@@ -9,17 +9,13 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests.Scenarios
 {
-#if false
-NewDict(); // returns a string/string dictionary, which acts like an opaque object. 
 
-GetValue(dict, key) // value or blank. returns string
-
-Add(dict, key, value) // no return 
-
-GetKeys(dict); // returns single column table of all keys in the dict
-
-#endif
-
+    // Tests for how we can marshal a dynamic Dictionary<string,string>. 
+    // The challenge is the Fx type system does not allow dynamic keys. 
+    // But we can encapsulate that in functions. 
+    // - add custom FormulaValue to hold the dict.
+    // - add custom XGetValue(dict, fieldName) to do the lookup. Returns a string.
+    // - add custom TypeMarshaller to integreate. 
     public class DictionaryFunctionTests
     {
         [Fact]
@@ -68,7 +64,7 @@ GetKeys(dict); // returns single column table of all keys in the dict
             engine.UpdateVariable("poco", fxPoco);
 
             var result = engine.Eval("XGetValue(poco.MyProps, \"Key1\") & 999").ToObject();
-            Assert.Equal("Value999", result);
+            Assert.Equal("Value1999", result);
         }
     }
 
