@@ -33,14 +33,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void Powerfx_Partial_Collect(bool serialize)
         {
             FormulaValue result = Run_Collect_Worflow(serialize);
-            if (!serialize)
-            {
-                Assert.Equal("Blank()", result.ToString());
-            }
-            else
-            {
-                Assert.Equal("Runtime type mismatch", ((ErrorValue)result).Errors[0].Message);
-            }
+            Assert.Equal("Blank()", result.ToString());
         }
 
         private FormulaValue Run_Collect_Worflow(bool serialize)
