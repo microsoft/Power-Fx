@@ -273,6 +273,11 @@ namespace Microsoft.PowerFx.Types
             sb.Append("}");
         }
 
+        /// <summary>
+        /// It is assumed that all records can be copied to an InMemoryRecordValue during a mutation copy-on-write.
+        /// This is possible for records, which will have a finite number of fields, but not for tables
+        /// and number of rows which could be unbounded.
+        /// </summary>
         bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
         {
             copy = new InMemoryRecordValue(this.IRContext, this.Fields);
@@ -280,6 +285,14 @@ namespace Microsoft.PowerFx.Types
         }
     }
 
+    /// <summary>
+    /// Copy a single record field and shallow copy contents, used during mutation copy-on-write.
+    /// For example: Set( aa, [[1,2,3], [4,5,6]] ); Set( ab, First(aa) ); Patch( ab.Value, {Value:2}, {Value:9});
+    /// No copies are made until the mutation in Patch, and then copies are made as the first argument's 
+    /// value is traversed through EvalVisitor:
+    /// 1. ab (record) shallow copies the root record and dictionary which references fields with IMutationCopy.
+    /// 2. .Value (field) is copied with IMutationCopyField, which shallow copies the inner table with IMutationCopy.
+    /// </summary>
     internal interface IMutationCopyField
     {
         /// <summary>

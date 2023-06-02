@@ -11,7 +11,7 @@ using Microsoft.PowerFx.Core.IR;
 namespace Microsoft.PowerFx.Types
 {
     // Represent record backed by known list of values. 
-    internal class InMemoryRecordValue : RecordValue, IMutationCopy, IMutationCopyField
+    internal class InMemoryRecordValue : RecordValue, IMutationCopyField
     {
         protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
         private readonly IDictionary<string, FormulaValue> _mutableFields;
