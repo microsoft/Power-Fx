@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -37,6 +38,9 @@ namespace Microsoft.PowerFx
 
         private const string OptionHashCodes = "HashCodes";
         private static bool _hashCodes = false;
+
+        private const string OptionStackTrace = "StackTrace";
+        private static bool _stackTrace = false;
 
         private static readonly BasicUserInfo _userInfo = new BasicUserInfo
         {
@@ -77,7 +81,8 @@ namespace Microsoft.PowerFx
                 { OptionLargeCallDepth, OptionLargeCallDepth },
                 { OptionFeaturesNone, OptionFeaturesNone },
                 { OptionPowerFxV1, OptionPowerFxV1 },
-                { OptionHashCodes, OptionHashCodes }
+                { OptionHashCodes, OptionHashCodes },
+                { OptionStackTrace, OptionStackTrace }
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -303,6 +308,12 @@ namespace Microsoft.PowerFx
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);
+
+                    if (_stackTrace)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+
                     Console.ResetColor();
                     output?.WriteLine(Regex.Replace(e.InnerException.Message, "\r\n", "|") + "\n");
                 }
@@ -696,6 +707,12 @@ namespace Microsoft.PowerFx
                 if (string.Equals(option.Value, OptionHashCodes, StringComparison.OrdinalIgnoreCase))
                 {
                     _hashCodes = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionStackTrace, StringComparison.OrdinalIgnoreCase))
+                {
+                    _stackTrace = value.Value;
                     return value;
                 }
 
