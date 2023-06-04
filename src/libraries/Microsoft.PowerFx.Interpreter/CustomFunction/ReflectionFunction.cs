@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -270,9 +272,38 @@ namespace Microsoft.PowerFx
 
             formulaResult ??= FormulaValue.NewBlank(_info.RetType);
 
-            if (!formulaResult.Type._type.Accepts(_info.RetType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
+            var dataSourceType = formulaResult.Type._type;
+            var retType = _info.RetType._type;
+            
+            if (!dataSourceType.Accepts(retType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
             {
-                return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
+                bool isVaid = false;
+
+                if (retType.IsRecord)
+                {
+                    isVaid = true;
+
+                    // Check if all names in dataSourceType exist in retType
+                    foreach (var typedName in dataSourceType.GetNames(DPath.Root))
+                    {
+                        if (!retType.TryGetType(typedName.Name, out DType dsNameType))
+                        {
+                            isVaid = false;
+                            continue;
+                        }
+                    }
+
+                    // Check if dataSourceType can coerce to retType
+                    if (isVaid && !dataSourceType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true))
+                    {
+                        isVaid = false;
+                    }
+                }
+                
+                if (!isVaid)
+                {
+                    return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
+                }
             }
 
             return formulaResult;

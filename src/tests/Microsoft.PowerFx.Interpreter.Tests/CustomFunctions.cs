@@ -2,11 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
@@ -83,7 +86,7 @@ namespace Microsoft.PowerFx.Tests
             var func2 = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError2");
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func2);
-
+            
             // Test for non async invokes.
             var result = engine.Eval("CustomFunctionError(20)");
             Assert.IsType<NumberValue>(result);
@@ -230,7 +233,7 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestRecordCustomFunction : ReflectionFunction
         {
-            public TestRecordCustomFunction() 
+            public TestRecordCustomFunction()
                 : base(
                       "RecordTest",
                       RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
@@ -244,6 +247,210 @@ namespace Microsoft.PowerFx.Tests
                     .Add(new NamedFormulaType("num", FormulaType.Number));
                 var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1)));
                 return val;
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestInvalidRecordCustomFunction : ReflectionFunction
+        {
+            public TestInvalidRecordCustomFunction()
+                : base(
+                      "InvalidRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute()
+            {
+                var recordType = RecordType.Empty()
+                    .Add(new NamedFormulaType("num1", FormulaType.Number));
+                var val = FormulaValue.NewRecordFromFields(recordType, new NamedValue("num1", FormulaValue.New(1)));
+                return val;
+            }
+        }
+
+        [Fact]
+        public void CustomFunctionRecordTest()
+        {
+            CustomFunctionRecord(new TestSuccessRecordCustomFunction(), "SuccessRecordTest", "({x: 2, y: 5})", true);
+
+            CustomFunctionRecord(new TestMissingFieldRecordCustomFunction(), "MissingFieldRecordTest", "({x: 2})", true);
+
+            CustomFunctionRecord(new TestSuccessCoerceRecordCustomFunction(), "SuccessCoerceRecordTest", "({x: \"2\", y: \"5\"})", true);
+
+            CustomFunctionRecord(new TestSuccessNestedRecordCustomFunction(), "SuccessNestedRecordTest", "({x: {x : 2}})", true);
+
+            CustomFunctionRecord(new TestExtraFieldRecordCustomFunction(), "ExtraFieldRecordTest", "({x: 2, y: 5, a: 8})", false);
+
+            CustomFunctionRecord(new TestNotExistRecordCustomFunction(), "NotExistRecordTest", "({a: 8})", false);
+            
+            CustomFunctionRecord(new TestNestedRecordCustomFunction(), "NestedRecordTest", "({x: {x : \"2\"}})", false);
+        }
+
+        private void CustomFunctionRecord(ReflectionFunction reflectionFunction, string functionName, string inputRecord,  bool isSuccess)
+        {
+            var config = new PowerFxConfig();
+            config.AddFunction(reflectionFunction);
+            
+            var engine = new RecalcEngine(config);
+            var func = engine.GetFunctionsByName(functionName);
+            Assert.NotNull(func);
+
+            var check = engine.Check(functionName + inputRecord);
+
+            FormulaValue result = null; 
+            ConfiguredTaskAwaitable<FormulaValue> resultAsync;
+            string errorMsg = string.Empty;
+
+            try
+            {
+                result = engine.Eval(functionName + inputRecord);
+
+                using var cts = new CancellationTokenSource();
+                resultAsync = engine.EvalAsync(functionName + inputRecord, cts.Token).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                errorMsg = ex.ToString();
+            }
+
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);                
+                Assert.IsNotType<ErrorValue>(result);
+                Assert.IsNotType<ErrorValue>(resultAsync);
+            }
+            else
+            {
+                Assert.False(check.IsSuccess);
+                Assert.Contains("invalid arguments", errorMsg);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestSuccessRecordCustomFunction : ReflectionFunction
+        {
+            public TestSuccessRecordCustomFunction()
+                : base(
+                      "SuccessRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute(RecordValue recordValue)
+            {
+                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestMissingFieldRecordCustomFunction : ReflectionFunction
+        {
+            public TestMissingFieldRecordCustomFunction()
+                : base(
+                      "MissingFieldRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute(RecordValue recordValue)
+            {
+                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestSuccessCoerceRecordCustomFunction : ReflectionFunction
+        {
+            public TestSuccessCoerceRecordCustomFunction()
+                : base(
+                      "SuccessCoerceRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.String)).Add(new NamedFormulaType("y", FormulaType.String)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute(RecordValue recordValue)
+            {
+                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestSuccessNestedRecordCustomFunction : ReflectionFunction
+        {
+            public TestSuccessNestedRecordCustomFunction()
+                : base(
+                      "SuccessNestedRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)))),
+                      RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)))))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute(RecordValue recordValue)
+            {
+                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestExtraFieldRecordCustomFunction : ReflectionFunction
+        {
+            public TestExtraFieldRecordCustomFunction()
+                : base(
+                      "ExtraFieldRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)).Add(new NamedFormulaType("a", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute(RecordValue recordValue)
+            {
+                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestNotExistRecordCustomFunction : ReflectionFunction
+        {
+            public TestNotExistRecordCustomFunction()
+                : base(
+                      "NotExistRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
+                      RecordType.Empty().Add(new NamedFormulaType("a", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute(RecordValue recordValue)
+            {
+                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestNestedRecordCustomFunction : ReflectionFunction
+        {
+            public TestNestedRecordCustomFunction()
+                : base(
+                      "NestedRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
+                      RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.String)))))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute(RecordValue recordValue)
+            {
+                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
             }
         }
 
@@ -277,26 +484,6 @@ namespace Microsoft.PowerFx.Tests
             public NumberValue Execute(TableValue table)
             {
                 return FormulaValue.New(table.Count());
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestInvalidRecordCustomFunction : ReflectionFunction
-        {
-            public TestInvalidRecordCustomFunction()
-                : base(
-                      "InvalidRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static RecordValue Execute()
-            {
-                var recordType = RecordType.Empty()
-                    .Add(new NamedFormulaType("num1", FormulaType.Number));
-                var val = FormulaValue.NewRecordFromFields(recordType, new NamedValue("num1", FormulaValue.New(1)));
-                return val;
             }
         }
 
@@ -729,14 +916,14 @@ namespace Microsoft.PowerFx.Tests
             var cache = new TypeMarshallerCache();
             var x = cache.Marshal(obj);
             engine.UpdateVariable("x", x);
-
+            
             // Test multiple overloads
             engine.Eval("SetProperty(x.NumProp, Float(123))", options: _opts);
             Assert.Equal(123.0, obj.NumProp);
 
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
             Assert.True(obj.BoolProp);
-
+            
             // Test failure cases
             var check = engine.Check("SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
             Assert.False(check.IsSuccess);
