@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
-            return parser.ParseUDFsAndNamedFormulas(script, parserOptions.NumberIsFloat);
+            return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
 
         private ParseUDFsResult ParseUDFs(string script)
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, bool numberIsFloat)
+        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         _hasSemicolon = false;
                         ParseTrivia();
-                        _flagsMode.Push(Flags.EnableExpressionChaining);
+                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : 0);
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
                         ParseTrivia();
@@ -326,7 +326,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, numberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -334,7 +334,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         var result = ParseExpr(Precedence.None);
                         ParseTrivia();
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, numberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat));
                     }
                     else
                     {
