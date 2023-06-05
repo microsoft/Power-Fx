@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         _hasSemicolon = false;
                         ParseTrivia();
-                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : 0);
+                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
                         ParseTrivia();
