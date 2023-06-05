@@ -270,48 +270,47 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        [Fact]
-        public void CustomFunctionRecordTest()
+        [Theory]
+        [InlineData("({x: 2})", true)]
+        [InlineData("({x: 2, y: 5})", true)]
+        [InlineData("({x: \"2\", y: \"5\"})", true)]
+        [InlineData("({x: 2, y: 5, a: 8})", false)]
+        [InlineData("({a: 8})", false)]
+        [InlineData("({x: {x : 2}})", false)]
+        public void CustomFunctionRecordTest(string inputRecord, bool isSuccess)
         {
-            var oneFieldRecord = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number));
-            var record = oneFieldRecord.Add(new NamedFormulaType("y", FormulaType.Number));
-            var coerceRecord = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.String)).Add(new NamedFormulaType("y", FormulaType.String));
-            var nestedRecord = RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number))));
-            var extraFieldRecord = record.Add(new NamedFormulaType("a", FormulaType.Number));
-            var notExistRecord = RecordType.Empty().Add(new NamedFormulaType("a", FormulaType.Number));
-
-            CustomFunctionRecord(new TestRecordsCustomFunction(record, record), "RecordsTest", "({x: 2, y: 5})", true);
-            CustomFunctionRecord(new TestRecordsCustomFunction(record, oneFieldRecord), "RecordsTest", "({x: 2})", true);
-            CustomFunctionRecord(new TestRecordsCustomFunction(record, coerceRecord), "RecordsTest", "({x: \"2\", y: \"5\"})", true);            
-            CustomFunctionRecord(new TestRecordsCustomFunction(record, extraFieldRecord), "RecordsTest", "({x: 2, y: 5, a: 8})", false);
-            CustomFunctionRecord(new TestRecordsCustomFunction(record, notExistRecord), "RecordsTest", "({a: 8})", false);            
-            CustomFunctionRecord(new TestRecordsCustomFunction(nestedRecord, nestedRecord), "RecordsTest", "({x: {x : 2}})", true);           
-            CustomFunctionRecord(new TestRecordsCustomFunction(record, nestedRecord), "RecordsTest", "({x: {x : 2}})", false);
-            
-            CustomFunctionRecord(new TestNonRecordCustomFunction(), "NonRecordTest", "({x: 2})", false);
+            var record = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number));
+            CustomFunctionRecord(new TestRecordsCustomFunction(record), inputRecord, isSuccess);
         }
 
-        private void CustomFunctionRecord(ReflectionFunction reflectionFunction, string functionName, string inputRecord,  bool isSuccess)
+        [Theory]
+        [InlineData("({x: 2})", true)]
+        [InlineData("({x: 2, y: 5})", false)]
+        public void CustomFunctionNonRecordTest(string inputRecord, bool isSuccess)
+        {
+            CustomFunctionRecord(new TestNonRecordCustomFunction(), inputRecord, isSuccess);
+        }
+
+        private void CustomFunctionRecord(ReflectionFunction reflectionFunction, string inputRecord,  bool isSuccess)
         {
             var config = new PowerFxConfig();
             config.AddFunction(reflectionFunction);
             
             var engine = new RecalcEngine(config);
-            var func = engine.GetFunctionsByName(functionName);
+            var func = engine.GetFunctionsByName(reflectionFunction.FunctionName);
             Assert.NotNull(func);
 
-            var check = engine.Check(functionName + inputRecord);
+            var check = engine.Check(reflectionFunction.FunctionName + inputRecord);
 
             FormulaValue result = null; 
             ConfiguredTaskAwaitable<FormulaValue> resultAsync;
             string errorMsg = string.Empty;
+            var rc = new RuntimeConfig();
 
             try
             {
-                result = engine.Eval(functionName + inputRecord);
-
-                using var cts = new CancellationTokenSource();
-                resultAsync = engine.EvalAsync(functionName + inputRecord, cts.Token).ConfigureAwait(false);
+                result = check.GetEvaluator().Eval(rc);
+                resultAsync = check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -334,8 +333,8 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestRecordsCustomFunction : ReflectionFunction
         {
-            public TestRecordsCustomFunction(RecordType expectedType, RecordType argType)
-                : base("RecordsTest", expectedType, argType)
+            public TestRecordsCustomFunction(RecordType recordType)
+                : base("RecordsTest", recordType, recordType)
             {
             }
 
@@ -358,9 +357,9 @@ namespace Microsoft.PowerFx.Tests
             }
 
             // Must have "Execute" method. 
-            public static RecordValue Execute(RecordValue recordValue)
+            public static FormulaValue Execute(RecordValue recordValue)
             {
-                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+                return recordValue.GetField("x");
             }
         }
 

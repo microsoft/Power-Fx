@@ -68,14 +68,14 @@ namespace Microsoft.PowerFx
 
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-            // Check if all record names of args exist against return type and if its possible to coerce.
+            // Check if all record names of args exist against arg types and if its possible to coerce.
             if (isValid)
             {
                 for (var i = 0; i < args.Length; i++)
                 {
                     DType curType = argTypes[i];
 
-                    if (curType.IsRecord && !curType.CheckAggregateNames(returnType, args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules))
+                    if (curType.IsRecord && !curType.CheckAggregateNames(this.ParamTypes[i], args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules))
                     {
                         return false;
                     }
