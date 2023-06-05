@@ -368,7 +368,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_UserProfile_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -396,7 +396,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_MyProfile_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -424,7 +424,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_DirectReports_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -452,7 +452,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public async Task Office365Users_SearchUsers_V2()
         {
-            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Swagger.json");
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Users.json");
             var apiDoc = testConnector._apiDocument;
             var config = new PowerFxConfig();
 
@@ -509,6 +509,54 @@ namespace Microsoft.PowerFx.Tests
 
             // Validate optional parameter rectified name
             Assert.Equal("id_1", cf.OptionalParameters[0].Name);
+        }
+
+        [Fact]
+        public async Task Office365Outlook_GetRooms()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",           // endpoint 
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",     // environment
+                    "c112a9268f2a419bb0ced71f5e48ece9",         // connectionId
+                    () => "eyJ0eXAiOiJK....",
+                    httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddService("Office365Outlook", apiDoc, client);
+            var engine = new RecalcEngine(config);
+
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetRooms.json");
+            var result = await engine.EvalAsync(@"Office365Outlook.GetRoomsV2()", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
+
+            var record = result as RecordValue;
+            Assert.NotNull(record);
+            var table = record.GetField("value") as TableValue;
+            string expected = @"[{""address"":""room_seattle@microsoft.com"",""name"":""Seattle Room""},{""address"":""room_paris@microsoft.com"",""name"":""Paris Room""}]";
+            Assert.Equal(expected, JsonSerializer.Serialize(table.ToObject()));
+
+            string actual = testConnector._log.ToString();
+            string version = PowerPlatformConnectorClient.Version;
+            string expected2 = @$"POST https://firstrelease-001.azure-apim.net/invoke
+ authority: firstrelease-001.azure-apim.net
+ Authorization: Bearer eyJ0eXAiOiJK....
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/office365/c112a9268f2a419bb0ced71f5e48ece9/codeless/beta/me/findRooms
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            Assert.Equal(expected2, actual);
         }
 
         [Fact]
