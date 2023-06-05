@@ -219,7 +219,7 @@ namespace Microsoft.PowerFx.Connectors
                             // Consider this as a string for now
                             // Managed in PA Client in src\AppMagic\dll\AuthoringCore\Importers\DataDescription\DataDescriptionParser.cs, line 653-654 (in ParseDataType)
                             // Will need to support the different formats (Iso8601ExtendedUtc, Iso8601Datetime) and different behaviors (UserLocal, NoTimeZone)
-                            // $$$ Should be DateTime type
+                            // $$$ Should be DateTime type - https://github.com/microsoft/Power-Fx/issues/1557
                             return new ConnectorParameterType(schema, FormulaType.String);
 
                         case "binary":
