@@ -5032,6 +5032,25 @@
     <value>Optionen</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Aktualisiert die angegebene Datenquelle</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Ein Datensatz- oder Tabellenwert wurde erwartet.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Eine verbundene Datenquelle zum Aktualisieren</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Nur verwaltete Verbindungen können aktualisiert werden.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ungültiger regulärer Ausdruck.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguläre Ausdrücke müssen konstante Werte sein.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Der Wert, der an die Funktion „{0}“ übergeben wurde, kann nicht geändert werden.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die vollständige Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Entfernt alle Formatierung und gibt einen unformatierten Textwert zurück.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>Text</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Der Text, dessen HTML- und XML-Tags entfernt werden sollen.</value>
   </data>
 </root>

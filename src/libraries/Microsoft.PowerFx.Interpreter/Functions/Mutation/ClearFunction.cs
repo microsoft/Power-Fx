@@ -25,6 +25,10 @@ namespace Microsoft.PowerFx.Functions
     {
         public override bool IsSelfContained => false;
 
+        public override bool MutatesArg0 => true;
+
+        // Unlike the other mutation functions, there is no need to Lazy evaluate the first argument since there is only one arg.
+
         public ClearFunction()
             : base("Clear", TexlStrings.AboutClear, FunctionCategories.Behavior, DType.Boolean, 0, 1, 1, DType.EmptyTable)
         {

@@ -5032,6 +5032,25 @@
     <value>opcije</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Osvežava navedeni izvor podataka.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>povezani_izvor_podataka</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Očekivan je zapis ili vrednost tabele.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Povezani izvor podataka koji treba osvežiti.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Moguće je osvežiti samo kontrolisane veze.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Nevažeći regularni izraz.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regularni izrazi moraju predstavljati konstantne vrednosti.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Nije moguće promeniti vrednost „{0}“ koja je prosleđena funkciji.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Ime snimka „{0}“ skriva unapred definisano svojstvo koje je vraća potpuno podudaranje regularnog izraza. Trebalo bi da ga preimenujete ako želite da koristite to imenovano svojstvo da biste izdvojili potpuno podudaranje u navedenom tekstu.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Uklanja sva oblikovanja i daje vrednost čistog teksta.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>tekst</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Tekst iz kog treba ukloniti HTML i XML oznake.</value>
   </data>
 </root>

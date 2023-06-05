@@ -5032,6 +5032,25 @@
     <value>opties</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Hiermee wordt de opgegeven gegevensbron vernieuwd.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>verbonden_bron_gegevens</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Er wordt een record of tabelwaarde verwacht.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Een gekoppelde gegevensbron die moet worden vernieuwd.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Alleen beheerde verbindingen kunnen worden vernieuwd.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ongeldige reguliere expressie.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguliere expressies moeten constante waarden zijn.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>De waarde die is doorgegeven aan functie {0} kan niet worden gewijzigd.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de volledige overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Hiermee wordt alle opmaak verwijderd en wordt er een tekstwaarde zonder opmaak geretourneerd.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>tekst</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>De tekst waarvan de HTML- en XML-codes worden verwijderd.</value>
   </data>
 </root>

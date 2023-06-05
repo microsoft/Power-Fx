@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             runtimeConfig.Set(slot, FormulaValue.NewTable(tableType.ToRecord()));
 
             var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
-            Assert.IsNotType<ErrorValue>(evalResult);
+            Assert.IsType<ErrorValue>(evalResult);
 
             var ir = IRTranslator.Translate(checkResult.Binding).ToString();
             Assert.DoesNotContain("AggregateCoercionNode", ir);
@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             runtimeConfig.Set(slot, FormulaValue.NewTable(tableType.ToRecord()));
 
             var evalResult = checkResult.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).Result;
-            Assert.IsNotType<ErrorValue>(evalResult);
+            Assert.IsType<ErrorValue>(evalResult);
 
             var ir = IRTranslator.Translate(checkResult.Binding).ToString();
             Assert.DoesNotContain("AggregateCoercionNode", ir);

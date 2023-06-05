@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("First(tbl)")]
         [InlineData("Last(tbl)")]
         [InlineData("Index(tbl, 3)")]
+        [InlineData("MyDataSource")]
         public void TestMutableNodes(string expression)
         {
             var config = new PowerFxConfig();
@@ -57,6 +58,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 "tbl",
                 TableType.Empty().Add("Value", FormulaType.Number),
                 mutable: true);
+            var schema = DType.CreateTable(
+                new TypedName(DType.Guid, new DName("ID")),
+                new TypedName(DType.Number, new DName("Value")));
+            config.SymbolTable.AddEntity(new TestDataSource("MyDataSource", schema));
+
             var engine = new Engine(config);
             var checkResult = engine.Check(expression);
             Assert.True(checkResult.IsSuccess);
@@ -72,6 +78,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Filter(tbl, Value > 10)")]
         [InlineData("FirstN(tbl, 2)")]
         [InlineData("LastN(tbl, 2)")]
+        [InlineData("First(MyDataSource)")]
         public void TestImmutableNodes(string expression)
         {
             var config = new PowerFxConfig();
@@ -85,6 +92,11 @@ namespace Microsoft.PowerFx.Core.Tests
                 "tbl",
                 TableType.Empty().Add("Value", FormulaType.Number),
                 mutable: true);
+            var schema = DType.CreateTable(
+                new TypedName(DType.Guid, new DName("ID")),
+                new TypedName(DType.Number, new DName("Value")));
+            config.SymbolTable.AddEntity(new TestDataSource("MyDataSource", schema));
+
             var engine = new Engine(config);
             var checkResult = engine.Check(expression);
             Assert.True(checkResult.IsSuccess);

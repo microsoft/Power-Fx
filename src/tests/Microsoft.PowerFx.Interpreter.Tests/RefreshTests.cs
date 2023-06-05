@@ -57,11 +57,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("01", result.ToObject());
         }
 
-        public class TestTableValue : TableValue, IRefreshable
+        public class TestTableValue : TableValue, IRefreshable, IMutationCopy
         {
             public TestTableValue(RecordType recordType)
                 : base(recordType)
             {
+            }
+
+            bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
             }
 
             public int RefreshCount = 0;

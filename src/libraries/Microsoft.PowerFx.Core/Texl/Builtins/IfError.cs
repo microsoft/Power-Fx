@@ -221,56 +221,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Odd case: f1, f2, ..., vn
             */
 
-            var preferredTypeIndex = (count % 2) == 0 ? count - 2 : count - 1;
-            var type = argTypes[preferredTypeIndex];
-            if (type.IsError)
+            var possibleResults = new List<(TexlNode node, DType type)>();
+            var lastValueNode = (count % 2 == 0) ? count - 2 : count - 1;
+            possibleResults.Add((args[lastValueNode], argTypes[lastValueNode]));
+            for (var i = 1; i < count; i += 2)
             {
-                errors.EnsureError(args[preferredTypeIndex], TexlStrings.ErrTypeError);
+                // Possible fallback results
+                possibleResults.Add((args[i], argTypes[i]));
+            }
+
+            if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out var type))
+            {
                 fArgsValid = false;
             }
 
-            for (var i = count - 1; i >= 0; i -= 2)
-            {
-                var nodeArg = args[i];
-                var typeArg = argTypes[i];
-
-                var typeSuper = type.IsError ? typeArg : DType.Supertype(type, typeArg, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
-
-                if (!typeSuper.IsError)
-                {
-                    // If preferred type was error or null (due to Blank or Error) assign new type in hierarchy
-                    if (type.IsError || type == DType.ObjNull)
-                    {
-                        type = typeSuper;
-                    }
-                }
-                else
-                {
-                    if (typeArg.IsVoid)
-                    {
-                        type = DType.Void;
-                    }
-                    else if (typeArg.IsError)
-                    {
-                        errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                        fArgsValid = false;
-                    }
-                    else if (!type.IsError && typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
-                    }
-                    else
-                    {
-                        type = DType.Void;
-                    }
-                }
-
-                if ((count % 2) != 0 && i == count - 1)
-                {
-                    i++;
-                }
-            }
-
+            // Update the return type based on the specified invocation args.
             returnType = type;
             return fArgsValid;
         }

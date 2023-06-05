@@ -5032,6 +5032,25 @@
     <value>asetukset</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Päivittää määritetyn tietolähteen.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>yhdistetty_tietolähde</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Odotettiin tietue- tai taulukkoarvoa.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Yhdistetty päivitettävä tietolähde.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Vain hallitut yhteydet voidaan päivittää.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Virheellinen säännöllinen lauseke.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Säännönmukaisten lausekkeiden on oltava vakioarvoja.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Funktiolle {0} välitettyä arvoa ei voi muuttaa.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen koko vastaavuuden palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden poimimiseen.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Poistaa kaiken muotoilun ja palauttaa pelkkä teksti -arvon.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>teksti</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Teksti, jonka HTML- ja XML-tunnisteet poistetaan.</value>
   </data>
 </root>
