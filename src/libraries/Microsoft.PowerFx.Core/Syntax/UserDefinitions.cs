@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Syntax
         private readonly string _script;
         private readonly ParserOptions _parserOptions;
         private readonly Features _features;
-        private static readonly HashSet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
+        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
         private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, Features features = null)
         {

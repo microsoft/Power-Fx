@@ -23,23 +23,6 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Foo(x: Number): Number = Abs(x);")]
-        [InlineData("Foo(x: Number): Number{ Abs(x); };")]
-        public void TestUDFDeclaration(string script)
-        {
-            var userDefinitions = ProcessUserDefinitions(script, out var userDefinitionResult);
-            var udf = userDefinitionResult.UDFs.FirstOrDefault();
-
-            Assert.NotNull(udf);
-
-            Assert.Empty(userDefinitionResult.NamedFormulas);
-            Assert.Equal("Foo", udf.Name);
-            Assert.True(udf.ReturnType.IsPrimitive);
-            Assert.Empty(userDefinitionResult.Errors ?? Enumerable.Empty<TexlError>());
-        }
-
-        [Theory]
-
         [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
         [InlineData("IsType(x: Number): Number = Abs(x);", 0, 0, true)]
         [InlineData("AsType(x: Number): Number = Abs(x);", 0, 0, true)]
