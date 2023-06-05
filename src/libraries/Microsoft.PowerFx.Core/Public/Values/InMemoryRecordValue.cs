@@ -11,7 +11,7 @@ using Microsoft.PowerFx.Core.IR;
 namespace Microsoft.PowerFx.Types
 {
     // Represent record backed by known list of values. 
-    internal class InMemoryRecordValue : RecordValue
+    internal class InMemoryRecordValue : RecordValue, IMutationCopyField
     {
         protected readonly IReadOnlyDictionary<string, FormulaValue> _fields;
         private readonly IDictionary<string, FormulaValue> _mutableFields;
@@ -37,6 +37,19 @@ namespace Microsoft.PowerFx.Types
             if (_mutableFields.IsReadOnly)
             {
                 _mutableFields = null;
+            }
+        }
+
+        public InMemoryRecordValue(InMemoryRecordValue orig)
+            : this(orig.IRContext, new Dictionary<string, FormulaValue>(orig._mutableFields))
+        {
+        }
+
+        void IMutationCopyField.ShallowCopyFieldInPlace(string fieldName)
+        {
+            if (_fields.TryGetValue(fieldName, out FormulaValue result))
+            {
+                _mutableFields[fieldName] = result.MaybeShallowCopy();
             }
         }
 
@@ -79,7 +92,7 @@ namespace Microsoft.PowerFx.Types
 
             foreach (var kvp in allowedFields)
             {
-                fields.Add(new NamedValue(kvp.Key, kvp.Value));
+                fields.Add(new NamedValue(kvp.Key, _fields[kvp.Key]));
             }
 
             return DValue<RecordValue>.Of(NewRecordFromFields(fields));
