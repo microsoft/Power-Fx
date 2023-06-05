@@ -28,16 +28,19 @@ namespace Microsoft.PowerFx
 
         internal BigInteger LamdaParamMask;
 
-        public override bool IsSelfContained => true;
+        public override bool IsSelfContained => !_isBehavior;
 
-        public CustomTexlFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
-            : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+        private readonly bool _isBehavior;
+
+        public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, params FormulaType[] paramTypes)
+            : this(name, functionCategory, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {
         }
 
-        public CustomTexlFunction(string name, DType returnType, params DType[] paramTypes)
-            : base(DPath.Root, name, name, CustomFunctionUtility.SG("Custom func " + name), FunctionCategories.MathAndStat, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
+        public CustomTexlFunction(string name, FunctionCategories functionCategory, DType returnType, params DType[] paramTypes)
+            : base(DPath.Root, name, name, CustomFunctionUtility.SG("Custom func " + name), functionCategory, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
         {
+            _isBehavior = functionCategory == FunctionCategories.Behavior;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
@@ -66,7 +69,7 @@ namespace Microsoft.PowerFx
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             // Check if all record names of args exist against return type and if its possible to coerce.
-            if (isValid && returnType.IsRecord)
+            if (isValid)
             {
                 for (var i = 0; i < args.Length; i++)
                 {

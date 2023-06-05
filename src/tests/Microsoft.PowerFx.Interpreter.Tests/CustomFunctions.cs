@@ -273,19 +273,22 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomFunctionRecordTest()
         {
-            CustomFunctionRecord(new TestSuccessRecordCustomFunction(), "SuccessRecordTest", "({x: 2, y: 5})", true);
+            var oneFieldRecord = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number));
+            var record = oneFieldRecord.Add(new NamedFormulaType("y", FormulaType.Number));
+            var coerceRecord = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.String)).Add(new NamedFormulaType("y", FormulaType.String));
+            var nestedRecord = RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number))));
+            var extraFieldRecord = record.Add(new NamedFormulaType("a", FormulaType.Number));
+            var notExistRecord = RecordType.Empty().Add(new NamedFormulaType("a", FormulaType.Number));
 
-            CustomFunctionRecord(new TestMissingFieldRecordCustomFunction(), "MissingFieldRecordTest", "({x: 2})", true);
-
-            CustomFunctionRecord(new TestSuccessCoerceRecordCustomFunction(), "SuccessCoerceRecordTest", "({x: \"2\", y: \"5\"})", true);
-
-            CustomFunctionRecord(new TestSuccessNestedRecordCustomFunction(), "SuccessNestedRecordTest", "({x: {x : 2}})", true);
-
-            CustomFunctionRecord(new TestExtraFieldRecordCustomFunction(), "ExtraFieldRecordTest", "({x: 2, y: 5, a: 8})", false);
-
-            CustomFunctionRecord(new TestNotExistRecordCustomFunction(), "NotExistRecordTest", "({a: 8})", false);
+            CustomFunctionRecord(new TestRecordsCustomFunction(record, record), "RecordsTest", "({x: 2, y: 5})", true);
+            CustomFunctionRecord(new TestRecordsCustomFunction(record, oneFieldRecord), "RecordsTest", "({x: 2})", true);
+            CustomFunctionRecord(new TestRecordsCustomFunction(record, coerceRecord), "RecordsTest", "({x: \"2\", y: \"5\"})", true);            
+            CustomFunctionRecord(new TestRecordsCustomFunction(record, extraFieldRecord), "RecordsTest", "({x: 2, y: 5, a: 8})", false);
+            CustomFunctionRecord(new TestRecordsCustomFunction(record, notExistRecord), "RecordsTest", "({a: 8})", false);            
+            CustomFunctionRecord(new TestRecordsCustomFunction(nestedRecord, nestedRecord), "RecordsTest", "({x: {x : 2}})", true);           
+            CustomFunctionRecord(new TestRecordsCustomFunction(record, nestedRecord), "RecordsTest", "({x: {x : 2}})", false);
             
-            CustomFunctionRecord(new TestNestedRecordCustomFunction(), "NestedRecordTest", "({x: {x : \"2\"}})", false);
+            CustomFunctionRecord(new TestNonRecordCustomFunction(), "NonRecordTest", "({x: 2})", false);
         }
 
         private void CustomFunctionRecord(ReflectionFunction reflectionFunction, string functionName, string inputRecord,  bool isSuccess)
@@ -329,13 +332,10 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Must have "Function" suffix. 
-        private class TestSuccessRecordCustomFunction : ReflectionFunction
+        private class TestRecordsCustomFunction : ReflectionFunction
         {
-            public TestSuccessRecordCustomFunction()
-                : base(
-                      "SuccessRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)))
+            public TestRecordsCustomFunction(RecordType expectedType, RecordType argType)
+                : base("RecordsTest", expectedType, argType)
             {
             }
 
@@ -347,103 +347,13 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Must have "Function" suffix. 
-        private class TestMissingFieldRecordCustomFunction : ReflectionFunction
+        private class TestNonRecordCustomFunction : ReflectionFunction
         {
-            public TestMissingFieldRecordCustomFunction()
+            public TestNonRecordCustomFunction()
                 : base(
-                      "MissingFieldRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
+                      "NonRecordTest",
+                      FormulaType.Number,
                       RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)))
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static RecordValue Execute(RecordValue recordValue)
-            {
-                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestSuccessCoerceRecordCustomFunction : ReflectionFunction
-        {
-            public TestSuccessCoerceRecordCustomFunction()
-                : base(
-                      "SuccessCoerceRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.String)).Add(new NamedFormulaType("y", FormulaType.String)))
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static RecordValue Execute(RecordValue recordValue)
-            {
-                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestSuccessNestedRecordCustomFunction : ReflectionFunction
-        {
-            public TestSuccessNestedRecordCustomFunction()
-                : base(
-                      "SuccessNestedRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)))),
-                      RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)))))
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static RecordValue Execute(RecordValue recordValue)
-            {
-                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestExtraFieldRecordCustomFunction : ReflectionFunction
-        {
-            public TestExtraFieldRecordCustomFunction()
-                : base(
-                      "ExtraFieldRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)).Add(new NamedFormulaType("a", FormulaType.Number)))
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static RecordValue Execute(RecordValue recordValue)
-            {
-                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestNotExistRecordCustomFunction : ReflectionFunction
-        {
-            public TestNotExistRecordCustomFunction()
-                : base(
-                      "NotExistRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
-                      RecordType.Empty().Add(new NamedFormulaType("a", FormulaType.Number)))
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static RecordValue Execute(RecordValue recordValue)
-            {
-                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestNestedRecordCustomFunction : ReflectionFunction
-        {
-            public TestNestedRecordCustomFunction()
-                : base(
-                      "NestedRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number)),
-                      RecordType.Empty().Add(new NamedFormulaType("x", RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.String)))))
             {
             }
 

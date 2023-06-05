@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx
                 };
             }
 
-            return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
+            return new CustomTexlFunction(info.Name, FunctionCategories.UserDefined, info.RetType, info.ParamTypes)
             {
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
                 LamdaParamMask = info.LamdaParamMask,
