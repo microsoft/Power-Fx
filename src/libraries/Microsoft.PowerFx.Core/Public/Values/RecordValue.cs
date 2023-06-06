@@ -256,21 +256,26 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
 
-                var fieldName = IdentToken.MakeValidIdentifier(field.Name);
-
-                if ((TexlLexer.IsKeyword(fieldName, out _) || TexlLexer.IsReservedKeyword(fieldName)) && 
-                    !fieldName.StartsWith("'", StringComparison.Ordinal) && !fieldName.EndsWith("'", StringComparison.Ordinal))
-                {
-                    fieldName = $"'{fieldName}'";
-                }
-
-                sb.Append(fieldName);
+                sb.Append(this.ToExpressionField(field.Name));
                 sb.Append(':');
 
                 field.Value.ToExpression(sb, settings);
             }
 
             sb.Append("}");
+        }
+
+        protected string ToExpressionField(string tableFieldName)
+        {
+            var fieldName = IdentToken.MakeValidIdentifier(tableFieldName);
+
+            if ((TexlLexer.IsKeyword(fieldName, out _) || TexlLexer.IsReservedKeyword(fieldName)) &&
+                !fieldName.StartsWith("'", StringComparison.Ordinal) && !fieldName.EndsWith("'", StringComparison.Ordinal))
+            {
+                fieldName = $"'{fieldName}'";
+            }
+
+            return fieldName;
         }
 
         /// <summary>
