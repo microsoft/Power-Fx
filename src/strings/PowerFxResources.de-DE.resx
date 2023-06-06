@@ -5037,7 +5037,7 @@
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>connected_data_source</value>
+    <value>Verbindungsdatenquellen</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
