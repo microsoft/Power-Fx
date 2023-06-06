@@ -99,6 +99,12 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 // $$$ Don't use CurrentUICulture
                 locale = CultureInfo.CurrentUICulture.Name;
+
+                if (string.IsNullOrEmpty(locale))
+                {
+                    locale = "en-US";
+                }
+
                 Contracts.CheckNonEmpty(locale, "locale");
             }
 
