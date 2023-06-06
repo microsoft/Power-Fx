@@ -77,6 +77,8 @@ namespace Microsoft.PowerFx.Tests
             var r = (dynamic)result.ToObject();
             Assert.NotNull(r);
 
+            // Remove the Z from the date if the local time zone is not UTC
+            // Test servers run in UTC time zone
             if (i == 16 && TimeZoneInfo.Local != TimeZoneInfo.Utc)
             {
                 httpQuery = httpQuery.Replace("Z", string.Empty);
