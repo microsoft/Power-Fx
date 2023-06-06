@@ -167,7 +167,7 @@ namespace Microsoft.PowerFx
 
         internal string GetFunctionName()
         {
-            return _info.Name;
+            return _info?.Name;
         }
 
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
