@@ -72,6 +72,21 @@ namespace Microsoft.PowerFx.Types
                     {
                         return StringValue.New(element.GetString());
                     }
+                    else if (formulaType is DateType)
+                    {
+                        DateTime dt1 = element.GetDateTime().Date;
+                        return DateValue.New(dt1);
+                    }
+                    else if (formulaType is DateTimeType)
+                    {
+                        DateTime dt2 = element.GetDateTime(); // Kind is Local
+                        return DateTimeValue.New(dt2);
+                    }
+                    else if (formulaType is DateTimeNoTimeZoneType)
+                    {
+                        DateTime dt3 = element.GetDateTime(); // Kind is Local
+                        return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
+                    }
                     else
                     {
                         throw new NotImplementedException($"Expecting a StringType but got {formulaType._type.Kind}");
@@ -177,7 +192,9 @@ namespace Microsoft.PowerFx.Types
             TableType type;
             if (records.Count == 0)
             {
-                type = TableType.Empty();
+                // Keep expected table type when there is no record
+                // so that the returned empty table has a matching type.
+                type = tableType;
             }
             else
             {

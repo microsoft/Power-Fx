@@ -478,6 +478,38 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task Office365Users_UseDates()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
+            var apiDoc = testConnector._apiDocument;
+            var config = new PowerFxConfig();
+
+            using var httpClient = new HttpClient(testConnector);
+
+            using var client = new PowerPlatformConnectorClient(
+                    "firstrelease-001.azure-apim.net",               // endpoint
+                    "839eace6-59ab-4243-97ec-a5b8fcc104e4",          // environment
+                    "c112a9268f2a419bb0ced71f5e48ece9",              // connectionId
+                    () => "ey...",
+                    httpClient)
+            {
+                SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
+            };
+
+            config.AddService("Office365Outlook", apiDoc, client);
+            RecalcEngine engine = new RecalcEngine(config);
+            testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetEmails.json");
+            FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetEmails({ top : 5 })).DateTimeReceived", CancellationToken.None).ConfigureAwait(false);
+
+            Assert.IsType<DateTimeValue>(result);
+
+            // Convert to UTC so that we don't depend on local machine settings
+            DateTime utcTime = TimeZoneInfo.ConvertTimeToUtc((result as DateTimeValue).GetConvertedValue(null)); // null = no conversion
+
+            Assert.Equal(new DateTime(2023, 6, 6, 5, 4, 59, DateTimeKind.Utc), utcTime);
+        }
+
+        [Fact]
         public async Task Office365Outlook_Load()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Office_365_Outlook.json");
@@ -521,7 +553,7 @@ namespace Microsoft.PowerFx.Tests
             using var httpClient = new HttpClient(testConnector);
 
             using var client = new PowerPlatformConnectorClient(
-                    "firstrelease-001.azure-apim.net",           // endpoint 
+                    "firstrelease-001.azure-apim.net",          // endpoint 
                     "839eace6-59ab-4243-97ec-a5b8fcc104e4",     // environment
                     "c112a9268f2a419bb0ced71f5e48ece9",         // connectionId
                     () => "eyJ0eXAiOiJK....",

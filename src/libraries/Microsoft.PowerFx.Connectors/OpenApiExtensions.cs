@@ -214,13 +214,11 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorParameterType(schema, FormulaType.String);
 
                         case "date":
+                            return new ConnectorParameterType(schema, FormulaType.Date);
                         case "date-time":
+                            return new ConnectorParameterType(schema, FormulaType.DateTime);
                         case "date-no-tz":
-                            // Consider this as a string for now
-                            // Managed in PA Client in src\AppMagic\dll\AuthoringCore\Importers\DataDescription\DataDescriptionParser.cs, line 653-654 (in ParseDataType)
-                            // Will need to support the different formats (Iso8601ExtendedUtc, Iso8601Datetime) and different behaviors (UserLocal, NoTimeZone)
-                            // $$$ Should be DateTime type - https://github.com/microsoft/Power-Fx/issues/1557
-                            return new ConnectorParameterType(schema, FormulaType.String);
+                            return new ConnectorParameterType(schema, FormulaType.DateTimeNoTimeZone);
 
                         case "binary":
                             return new ConnectorParameterType(schema, FormulaType.String);
