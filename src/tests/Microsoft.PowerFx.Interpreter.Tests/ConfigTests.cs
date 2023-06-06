@@ -453,6 +453,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             RunOnIsolatedThread(_doNotUseCulture, MultiCulture1ThreadProc);
         }
 
+        [Fact]
+        private void MultiCultureWithCurrentUICulture()
+        {
+            // $$$ Don't use CurrentUICulture
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+            RunOnIsolatedThread(_doNotUseCulture, MultiCulture1ThreadProc);
+        }
+
         // Test Parse and errors 
         private void MultiCulture1ThreadProc(CultureInfo culture)
         {
