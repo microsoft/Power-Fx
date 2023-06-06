@@ -36,8 +36,6 @@ namespace Microsoft.PowerFx
         // If non-null, specify what type of runtime config this function can accept. 
         protected Type ConfigType { get; init; }
 
-        internal readonly string FunctionName;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
         /// Assume by defaults. Will reflect to get primitive types.
@@ -62,8 +60,6 @@ namespace Microsoft.PowerFx
             var isAsync = m.ReturnType.BaseType == typeof(Task);
 
             var configType = ConfigType ?? default;
-
-            FunctionName = name;
 
             _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
         }
@@ -167,6 +163,11 @@ namespace Microsoft.PowerFx
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
                 LamdaParamMask = info.LamdaParamMask,
             };
+        }
+
+        internal string GetFunctionName()
+        {
+            return _info.Name;
         }
 
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)

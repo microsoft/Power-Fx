@@ -297,10 +297,10 @@ namespace Microsoft.PowerFx.Tests
             config.AddFunction(reflectionFunction);
             
             var engine = new RecalcEngine(config);
-            var func = engine.GetFunctionsByName(reflectionFunction.FunctionName);
+            var func = engine.GetFunctionsByName(reflectionFunction.GetFunctionName());
             Assert.NotNull(func);
 
-            var check = engine.Check(reflectionFunction.FunctionName + inputRecord);
+            var check = engine.Check(reflectionFunction.GetFunctionName() + inputRecord);
 
             FormulaValue result = null; 
             ConfiguredTaskAwaitable<FormulaValue> resultAsync;
