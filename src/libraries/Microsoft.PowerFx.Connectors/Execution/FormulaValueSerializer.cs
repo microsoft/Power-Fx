@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
+    [ThreadSafeImmutable]
     internal abstract class FormulaValueSerializer
     {
         internal abstract string GetResult();
