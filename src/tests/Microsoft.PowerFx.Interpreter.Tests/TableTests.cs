@@ -62,11 +62,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             recalEngine = new RecalcEngine();
             if (serialize)
             {
-                // Serielizing it as SetPowerCardMemory does and stores it in memoryContext
+                // Serializing it as SetPowerCardMemory does and stores it in memoryContext
                 string serializedFormulaValue = formulaValue.ToExpression();
 
-                // Deserielizing it
-                // After serielization and deserielization, the formulaValue has type of InMemoryTableValue
+                // Deserializing it
+                // After serialization and deserialization, the formulaValue has type of InMemoryTableValue
                 formulaValue = RunExpr(serializedFormulaValue, recalEngine, true);
             }
 
