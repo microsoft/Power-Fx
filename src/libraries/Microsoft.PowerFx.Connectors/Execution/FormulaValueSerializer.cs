@@ -42,6 +42,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
 
+        protected abstract void WriteDateValue(DateTime dateValue);
+
         protected readonly bool _schemaLessBody;
 
         internal FormulaValueSerializer(bool schemaLessBody)
@@ -115,9 +117,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     // array                    
                     StartArray(propertyName);
 
-                    foreach (var item in (fv as TableValue).Rows)
+                    foreach (DValue<RecordValue> item in (fv as TableValue).Rows)
                     {
-                        var rva = item.Value;
+                        RecordValue rva = item.Value;
 
                         if (rva.Fields.Count() != 1)
                         {
@@ -200,10 +202,24 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteStringValue(stringValue.Value);
                     }
-                    else if (fv is PrimitiveValue<DateTime> dt)
+                    else if (fv is DateTimeValue dtv)
+                    {                        
+                        if (propertySchema.Format == "date-time")
+                        { 
+                            WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Local));
+                        }
+                        else if (propertySchema.Format == "date-no-tz")
+                        {
+                            WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                        }
+                        else
+                        {
+                            throw new NotImplementedException($"Unknown {propertySchema.Format} format");
+                        }
+                    }
+                    else if (fv is DateValue dv)
                     {
-                        // DateTimeValue and DateValue
-                        WriteDateTimeValue(dt.Value);
+                        WriteDateValue(dv.GetConvertedValue(null));
                     }
                     else
                     {
@@ -244,11 +260,25 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 WriteBooleanValue(booleanValue.Value);
             }
-            else if (value is PrimitiveValue<DateTime> dt)
-            {
-                // DateTimeValue and DateValue
-                WriteDateTimeValue(dt.Value);
+            else if (value is DateTimeValue dtv)
+            {                
+                if (dtv.Type._type.Kind == DKind.DateTime)
+                {
+                    WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Local));
+                }
+                else if (dtv.Type._type.Kind == DKind.DateTimeNoTimeZone)
+                {
+                    WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                }
+                else
+                {
+                    throw new NotImplementedException($"Unknown {dtv.Type._type.Kind} kind");
+                }
             }
+            else if (value is DateValue dv)
+            {
+                WriteDateValue(((PrimitiveValue<DateTime>)dv).Value);
+            }            
             else
             {
                 throw new NotImplementedException($"Not supported type {value.GetType().FullName} for value");

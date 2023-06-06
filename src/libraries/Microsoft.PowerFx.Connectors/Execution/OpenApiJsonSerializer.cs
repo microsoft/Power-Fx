@@ -60,8 +60,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
-            // ISO 8601
-            _writer.WriteStringValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));
+            // ISO 8601            
+            _writer.WriteStringValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));            
+        }
+
+        protected override void WriteDateValue(DateTime dateValue)
+        {
+            _writer.WriteStringValue(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).AsSpan(0, 10));
         }
 
         protected override void WriteStringValue(string stringValue)
