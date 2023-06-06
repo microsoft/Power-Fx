@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbolTable = new SymbolTable();
             symbolTable.EnableMutationFunctions();
 
-            if (setVariableValueInEngine)
+            if (setVariableValueInEngine)      
             {
                 engine.UpdateVariable(varName, formulaValue);
             }

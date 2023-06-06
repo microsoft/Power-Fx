@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx.Tests
             var x = cache.Marshal(array);
 
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", x);
+            engine._symbolValues.Add("x", x);
 
             var result1 = engine.Eval("Last(x).Field1");
             Assert.Equal(21.0, ((NumberValue)result1).Value);
@@ -650,7 +650,7 @@ namespace Microsoft.PowerFx.Tests
             var x = cache.Marshal(array);
 
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", x);
+            engine._symbolValues.Add("x", x);
 
             var result1 = engine.Eval("Last(x).Value");
             Assert.Equal(30.0, ((NumberValue)result1).Value);
@@ -851,7 +851,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(1, values[1]._counter2); // only fetch on requested index. 
 
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", fxTable);
+            engine._symbolValues.Add("x", fxTable);
 
             var result2 = engine.Eval("Index(x, 2).Field1").ToObject();
             Assert.Equal(10, values[0]._counter); // unchanged.

@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // Run cases in MutationScripts
         // Normal tests have each line as an independent test case. 
-        // Whereas these are fed into a repl and each file maintains state. 
+        // Whereas these are fed into a repl and each file maintains state.
         [Theory]
         [InlineData("Simple1.txt")]
         [InlineData("Collect.txt")]
@@ -124,14 +124,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Clear.txt")]
         [InlineData("ClearCollect.txt")]
         [InlineData("ForAllMutate.txt")]
+        [InlineData("Set.txt")]
+        [InlineData("DeepMutation.txt")]
+        [InlineData("User.txt")]
         public void RunMutationTests(string file)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig() { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
-            var runner = new ReplRunner(engine) { NumberIsFloat = true };
+
+            var rc = new RuntimeConfig();
+            rc.SetUserInfo(UserInfoTestSetup.UserInfo);
+
+            var runner = new ReplRunner(engine, rc) { NumberIsFloat = true };
 
             var testRunner = new TestRunner(runner);
 
