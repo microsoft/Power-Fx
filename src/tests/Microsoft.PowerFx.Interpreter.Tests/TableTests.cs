@@ -39,9 +39,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         private FormulaValue Run_Collect_Worflow(bool serialize)
         {
             // Define initial FormulaValue
-            RecordType schemaType = RecordType.Empty();
-            schemaType = schemaType.Add("Col1", FormulaType.String);
-            schemaType = schemaType.Add("Col2", FormulaType.String);
+            RecordType schemaType = RecordType.Empty()
+                                              .Add("Col1", FormulaType.String)
+                                              .Add("Col2", FormulaType.String);
             var list = new List<RecordValue>();
             var fields = new List<NamedValue>
             {
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             FormulaValue formulaValue = FormulaValue.NewTable(schemaType, list);
 
             var recalEngine = new RecalcEngine();
-            var result = (StringValue)RunExpr("Last(collection).Col2", recalEngine, false, formulaValue, "collection");
+            var result = (StringValue)RunExpr("Last(collection).Col2", recalEngine, true, formulaValue, "collection");
             Assert.Equal("Col2", result.Value);
 
             // Getting the FormulaValue that is used to update variable for the next expression
@@ -67,11 +67,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // Deserializing it
                 // After serialization and deserialization, the formulaValue has type of InMemoryTableValue
-                formulaValue = RunExpr(serializedFormulaValue, recalEngine, true);
+                formulaValue = RunExpr(serializedFormulaValue, recalEngine, false);
             }
 
-            RunExpr("Collect(collection, {Col1:\"newCol1\"})", recalEngine, false, formulaValue, "collection");
-            return RunExpr("Last(collection).Col2", recalEngine, true);
+            RunExpr("Collect(collection, {Col1:\"newCol1\"})", recalEngine, true, formulaValue, "collection");
+            return RunExpr("Last(collection).Col2", recalEngine, false);
         }
 
         private FormulaValue RunExpr(string expressionText, RecalcEngine engine, bool setVariableValueInEngine, FormulaValue formulaValue = null, string varName = "")
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbolTable = new SymbolTable();
             symbolTable.EnableMutationFunctions();
 
-            if (!setVariableValueInEngine)
+            if (setVariableValueInEngine)
             {
                 engine.UpdateVariable(varName, formulaValue);
             }
