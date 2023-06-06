@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Types
             {
                 // Keep expected table type when there is no record
                 // so that the returned empty table has a matching type.
-                type = tableType;
+                type = tableType ?? TableType.Empty();
             }
             else
             {
