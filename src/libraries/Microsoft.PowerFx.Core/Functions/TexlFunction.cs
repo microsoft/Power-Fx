@@ -135,6 +135,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Returns true if the function is disabled for Commmanding
         public virtual bool DisableForCommanding => false;
 
+        // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
+        public virtual bool MutatesArg0 => false;
+
         // Returns true if the function should be suppressed in Intellisense for component.
         public virtual bool SuppressIntellisenseForComponent => DisableForComponent;
 
@@ -210,6 +213,30 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool RequireAllParamColumns => false;
 
         /// <summary>
+        /// Indicates whether the function will propagate the mutability of its first argument.
+        /// For example, if x is a mutable reference (i.e., a variable), then First(x) will still
+        /// be mutable (since First is one function which propagates mutability).
+        /// </summary>
+        public virtual bool PropagatesMutability => false;
+
+        /// <summary>
+        /// Adds an error to the container if the given argument is immutable.
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <param name="arg"></param>
+        /// <param name="errors"></param>
+        protected void ValidateArgumentIsMutable(TexlBinding binding, TexlNode arg, IErrorContainer errors)
+        {
+            if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsMutable(arg))
+            {
+                errors.EnsureError(
+                    arg,
+                    new ErrorResourceKey("ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue"),
+                    this.Name);
+            }
+        }
+
+        /// <summary>
         /// Indicates whether the function sets a value.
         /// </summary>
         public virtual bool ModifiesValues => false;
@@ -265,7 +292,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
                 return _signatureConstraint;
             }
-            protected set => _signatureConstraint = value;
+            protected init => _signatureConstraint = value;
         }
 
         /// <summary>
@@ -500,7 +527,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 var type = argTypes[i];
-                if (type.IsError || 
+                if (type.IsError ||
                     type.IsVoid)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrBadType);
@@ -1406,7 +1433,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DelegationValidationStrategy(this);
         }
 
-#endregion
+        #endregion
 
         internal TransportSchemas.FunctionInfo Info(string locale)
         {

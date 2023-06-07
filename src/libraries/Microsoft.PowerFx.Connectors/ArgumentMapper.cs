@@ -227,7 +227,40 @@ namespace Microsoft.PowerFx.Connectors
 
             RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(requiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
             HiddenRequiredParamInfo = hiddenRequiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(hiddenRequiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
-            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
+            IEnumerable<ServiceFunctionParameterTemplate> opis = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)));
+
+            // Validate we have no name conflict between required and optional parameters
+            // In case of conflict, we rename the optional parameter and add _1, _2, etc. until we have no conflict
+            // We could imagine an API with required param Foo, and optional body params Foo and Foo_1 but this is not considered for now
+            // Implemented in PA Client in src\Cloud\DocumentServer.Core\Document\Importers\ServiceConfig\RestFunctionDefinitionBuilder.cs at line 1176 - CreateUniqueImpliedParameterName
+            List<string> requiredParamNames = RequiredParamInfo.Select(rpi => rpi.TypedName.Name.Value).ToList();
+            List<ServiceFunctionParameterTemplate> opis2 = new List<ServiceFunctionParameterTemplate>();
+
+            foreach (ServiceFunctionParameterTemplate opi in opis)
+            {
+                string paramName = opi.TypedName.Name.Value;
+
+                if (requiredParamNames.Contains(paramName))
+                {
+                    int i = 0;                    
+                    string newName;
+
+                    do 
+                    {
+                        newName = $"{paramName}_{++i}";
+                    } 
+                    while (requiredParamNames.Contains(newName));
+    
+                    TypedName newTypeName = new TypedName(opi.TypedName.Type, new DName(newName));
+                    opis2.Add(new ServiceFunctionParameterTemplate(opi.FormulaType, opi.ConnectorType, newTypeName, opi.Description, opi.Summary, opi.DefaultValue, opi.ConnectorDynamicValue, opi.ConnectorDynamicSchema));
+                }
+                else
+                {
+                    opis2.Add(opi);
+                }
+            }
+
+            OptionalParamInfo = opis2.ToArray();
 
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.
@@ -445,6 +478,12 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
+                    if (apiObj.TryGetValue("builtInOperation", out IOpenApiAny _))
+                    {
+                        // We don't support builtInOperation for now
+                        return null;
+                    }
+
                     throw new NotImplementedException("Missing mandatory parameters operationId and parameters in x-ms-dynamic-values extension");
                 }
             }

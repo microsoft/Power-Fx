@@ -78,20 +78,16 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             // These asserts verify that the parameter containers have the correct length.
             Contracts.Assert(paramTypes.Length == arityMax);
-            Contracts.Assert(optionalParamInfo.Length != 0 || (
-                (arityMin == arityMax) &&
-                (paramTypes.Length == requiredParamInfo.Length)));
-            Contracts.Assert(optionalParamInfo.Length == 0 || (
-                (arityMax == arityMin + 1) &&
-                (paramTypes.Length == requiredParamInfo.Length + 1)));
-            Contracts.Assert(arityMin <= arityMax && arityMax <= arityMin + 1,
-                "We only support up to one additional options argument");
+            Contracts.Assert(optionalParamInfo.Length != 0 || ((arityMin == arityMax) && (paramTypes.Length == requiredParamInfo.Length)));
+            Contracts.Assert(optionalParamInfo.Length == 0 || ((arityMax == arityMin + 1) && (paramTypes.Length == requiredParamInfo.Length + 1)));
+            Contracts.Assert(arityMin <= arityMax && arityMax <= arityMin + 1, "We only support up to one additional options argument");
 
             if (parentService != null)
                 _parentService = new WeakReference<IService>(parentService, trackResurrection: false);
 
             _optionalParamInfo = new Dictionary<string, TypedName>(optionalParamInfo.Length);
-            _parameterDescriptionMap = new Dictionary<string, string>(requiredParamInfo.Length);
+            _parameterDescriptionMap = new Dictionary<string, string>(optionalParamInfo.Length + requiredParamInfo.Length);
+
             foreach (var optionalParam in optionalParamInfo)
             {
                 _optionalParamInfo.Add(optionalParam.TypedName.Name, optionalParam.TypedName);

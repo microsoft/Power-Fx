@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Tests
 
             var robinTable = cache.Marshal(table);
 
-            engine.UpdateVariable("robintable", robinTable);
+            engine._symbolValues.Add("robintable", robinTable);
 
             // with number is float
 
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Tests
 
             var robinTable = cache.Marshal(table);
 
-            engine.UpdateVariable("robintable", robinTable);
+            engine._symbolValues.Add("robintable", robinTable);
 
             var opts = new ParserOptions() { NumberIsFloat = true };
 
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(3, table.Rows.Count);
 
-            var result5 = engine.Eval("Remove(robintable, {Names:\"name2\"});robintable", options: opt);
+            var result5 = engine.Eval("Remove(robintable, {Scores:20, Names:\"name2\"});robintable", options: opt);
             Assert.Equal("Table({Names:\"name1\",Scores:10},{Names:\"name3\",Scores:30})", ((DataTableValue)result5).Dump());
 
             // Is table object affected?
@@ -165,9 +165,9 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("Table({Names:\"new-name\",Scores:10},{Names:\"name3\",Scores:30},{Names:\"name100\",Scores:10})", ((DataTableValue)result7).Dump());
 
             var result8 = engine.Eval("Remove(robintable, {Scores:10}, \"All\");robintable", options: opt);
-            Assert.Equal("Table({Names:\"name3\",Scores:30})", ((DataTableValue)result8).Dump());
+            Assert.IsType<ErrorValue>(result8);
 
-            Assert.Equal(1, table.Rows.Count);
+            Assert.Equal(3, table.Rows.Count);
         }
 
         [Fact]
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Tests
 
             var robinList = cache.Marshal(list);
 
-            engine.UpdateVariable("robinList", robinList);
+            engine._symbolValues.Add("robinList", robinList);
 
             var result1 = engine.Eval("Value(Index(robinList, 1).Value)");
             var result2 = engine.Eval("Text(Index(robinList, 2).Value)");

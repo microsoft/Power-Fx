@@ -33,7 +33,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Collect(t, r1);Collect(t, {})", 2)]
         public async Task AppendCountTest(string script, int expected)
         {
-            var symbol = new SymbolTable();
+            var engine = new RecalcEngine();
+            var symbol = engine.Config.SymbolTable;
+
             var listT = new List<RecordValue>();
 
             symbol.EnableMutationFunctions();
@@ -44,13 +46,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var t = FormulaValue.NewTable(r1.Type, listT);
 
-            symbol.AddConstant("t", t);
+            engine.UpdateVariable("t", t);
             symbol.AddConstant("r1", r1);
 
-            var engine = new RecalcEngine();
-            var resultCount = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
+            var result = await engine.EvalAsync(script, CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
+            var resultCount = await engine.EvalAsync("t", CancellationToken.None, options: _opts, symbolTable: symbol).ConfigureAwait(false);
 
-            Assert.Equal(expected, listT.Count);
+            Assert.Equal(expected, ((TableValue)resultCount).Count());
         }
     }
 }

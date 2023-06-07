@@ -5032,6 +5032,25 @@
     <value>aukerak</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Zehaztutako datu-iturburua freskatzen du.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>konektatutako_datu_iturburua</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Erregistro- edo taula-balio bat espero zen.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Freskatu behar den konektatutako datu-iturburua.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Kudeatutako konexioak soilik freska daitezke.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Espresio erregularrak ez du balio.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Espresio erregularrek aldaketarik gabeko balioak izan behar dute.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Ezin da aldatu "{0}" funtzioari pasatako balioa.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>"{0}" kaptura-izena espresio erregularraren bat-etortze osoa itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoa ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Formatua kendu eta testu-balio arrunta itzultzen du.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>testua</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Testuari HTML eta XML etiketak kentzea.</value>
   </data>
 </root>

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
@@ -22,8 +23,11 @@ namespace Microsoft.PowerFx
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
+    [NotThreadSafe]
     public class SymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
+        private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
+
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
@@ -84,6 +88,8 @@ namespace Microsoft.PowerFx
         /// <param name="displayName"></param>
         public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             Inc();
             DName displayDName = default;
             DName varDName = ValidateName(name);
@@ -139,6 +145,8 @@ namespace Microsoft.PowerFx
         /// <param name="data"></param>
         public void AddConstant(string name, FormulaValue data)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             var type = data.Type;
 
             Inc();
@@ -169,6 +177,8 @@ namespace Microsoft.PowerFx
         /// <param name="name">display or logical name for the variable or entity to be removed. Logical name of constant to be removed.</param>
         public void RemoveVariable(string name)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             Inc();
 
             // Also remove from display name provider
@@ -208,6 +218,7 @@ namespace Microsoft.PowerFx
         /// <param name="name"></param>
         public void RemoveFunction(string name)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
             _functions.RemoveAll(name);
@@ -215,6 +226,7 @@ namespace Microsoft.PowerFx
 
         internal void RemoveFunction(TexlFunction function)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
             _functions.RemoveAll(function);
@@ -222,6 +234,7 @@ namespace Microsoft.PowerFx
 
         internal void AddFunctions(TexlFunctionSet functions)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
             if (functions._count == 0)
@@ -237,6 +250,7 @@ namespace Microsoft.PowerFx
 
         internal void AddFunction(TexlFunction function)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
             _functions.Add(function);
 
@@ -300,6 +314,7 @@ namespace Microsoft.PowerFx
         /// It can throw CustomFunctionErrorException, that fx will convert to an error.</param>
         public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, Task<FormulaValue>> getValue)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             var hostDName = ValidateName(name);
 
             // Attempt to update display name provider before symbol table,

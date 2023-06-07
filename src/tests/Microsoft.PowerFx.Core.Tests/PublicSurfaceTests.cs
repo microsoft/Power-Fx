@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 // Core namespace. 
                 "Microsoft.PowerFx.CheckResult",
+                "Microsoft.PowerFx.Core.Parser.ParseFormulasResult",
                 "Microsoft.PowerFx.Engine",
                 "Microsoft.PowerFx.ErrorKind",
                 "Microsoft.PowerFx.ErrorSeverity",
@@ -39,15 +40,14 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.NameCollisionException",
                 "Microsoft.PowerFx.OptionSet",
                 "Microsoft.PowerFx.ParseResult",
-                "Microsoft.PowerFx.Core.Parser.ParseFormulasResult",
-                "Microsoft.PowerFx.ParserOptions",
+                "Microsoft.PowerFx.ParserOptions",                
 
                 // Config & Symbols
+                "Microsoft.PowerFx.FormulaValueSerializerSettings",
+                "Microsoft.PowerFx.ISymbolSlot",
                 "Microsoft.PowerFx.PowerFxConfig",
                 "Microsoft.PowerFx.ReadOnlySymbolTable",
                 "Microsoft.PowerFx.SymbolTable",
-                "Microsoft.PowerFx.FormulaValueSerializerSettings",
-                "Microsoft.PowerFx.ISymbolSlot",
 
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
@@ -90,9 +90,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.VariadicOpNode",
                               
                 // Visitors
-                "Microsoft.PowerFx.Syntax.TexlVisitor",
-                "Microsoft.PowerFx.Syntax.TexlFunctionalVisitor`2",
                 "Microsoft.PowerFx.Syntax.IdentityTexlVisitor",
+                "Microsoft.PowerFx.Syntax.TexlFunctionalVisitor`2",
+                "Microsoft.PowerFx.Syntax.TexlVisitor",
 
                 // Power Fx Type system and Values. 
                 "Microsoft.PowerFx.Types.AggregateType",
@@ -111,6 +111,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.DateValue",
                 "Microsoft.PowerFx.Types.DecimalType",
                 "Microsoft.PowerFx.Types.DecimalValue",
+                "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.DValue`1",
                 "Microsoft.PowerFx.Types.ErrorValue",
                 "Microsoft.PowerFx.Types.ExternalType",
@@ -140,7 +141,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.TimeType",
                 "Microsoft.PowerFx.Types.TimeValue",
                 "Microsoft.PowerFx.Types.UnknownType",
-                "Microsoft.PowerFx.Types.DeferredType",
                 "Microsoft.PowerFx.Types.UnsupportedType",
                 "Microsoft.PowerFx.Types.UntypedObjectType",
                 "Microsoft.PowerFx.Types.UntypedObjectValue",
@@ -150,6 +150,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 
                 // Intellisense classes. Used primarily by the Language Service Provider.
                 // Most evaluators should never need these. 
+                "Microsoft.PowerFx.Intellisense.CodeFixHandler",
+                "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
                 "Microsoft.PowerFx.Intellisense.ConnectorSuggestion",
                 "Microsoft.PowerFx.Intellisense.ConnectorSuggestions",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
@@ -163,19 +165,18 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SuggestionKind",                
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
-                "Microsoft.PowerFx.Intellisense.CodeFixHandler",
-                "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
 
                 // TBD ...
+                "Microsoft.PowerFx.BasicUserInfo",
                 "Microsoft.PowerFx.Core.DisplayNameProvider",
                 "Microsoft.PowerFx.Core.DisplayNameUtility",
+                "Microsoft.PowerFx.Core.Entities.IRefreshable",
                 "Microsoft.PowerFx.Core.Localization.ErrorResourceKey",
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",                
-                "Microsoft.PowerFx.UserInfo",
-                "Microsoft.PowerFx.BasicUserInfo"
+                "Microsoft.PowerFx.UserInfo"                
             };
 
             var sb = new StringBuilder();
