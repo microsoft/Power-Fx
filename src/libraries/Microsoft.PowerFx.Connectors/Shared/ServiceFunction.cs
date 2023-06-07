@@ -322,9 +322,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
         {            
-            cts.ThrowIfCancellationRequested();
-            // $$$
-            return await dynamicApi.ServiceFunction.InvokeAsync(null, arguments).ConfigureAwait(false);
+            cts.ThrowIfCancellationRequested();            
+            return await dynamicApi.ServiceFunction.InvokeAsync(new EvalVisitor(new RuntimeConfig(), cts), arguments).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.

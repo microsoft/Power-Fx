@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -325,13 +326,13 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("2022-06-21T14:36:59.9353993-08:00")]
         public void JsonSerializer_Date(string dateString)
         {
-            var date = DateTime.Parse(dateString);
-            var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
-            {
-                ["A"] = (SchemaDateTime, FormulaValue.New(date))
-            });
+            DateTime date = DateTime.Parse(dateString);
+            RuntimeConfig rtConfig = new RuntimeConfig();
+            rtConfig.SetTimeZone(TimeZoneInfo.Local);
+            EvalVisitor context = new EvalVisitor(rtConfig, CancellationToken.None);
+            string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, context);
 
-            var obj = JsonSerializer.Deserialize<DateTimeType>(str);
+            DateTimeType obj = JsonSerializer.Deserialize<DateTimeType>(str);
             Assert.Equal(date, obj.A);
         }
 

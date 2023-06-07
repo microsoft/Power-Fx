@@ -7,6 +7,8 @@ using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Types;
+using Microsoft.PowerFx.Interpreter;
+using System.Threading;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -46,14 +48,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal static TableValue GetTable(RecordValue recordValue) => FormulaValue.NewTable(recordValue.Type, recordValue);
 
-        internal static string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters) => Serialize<OpenApiJsonSerializer>(parameters, false);
+        internal static string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IRuntimeContext context = null) => Serialize<OpenApiJsonSerializer>(parameters, false, context ?? new EvalVisitor(new RuntimeConfig(), CancellationToken.None));
 
-        internal static string SerializeUrlEncoder(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters) => Serialize<OpenApiFormUrlEncoder>(parameters, false);
+        internal static string SerializeUrlEncoder(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IRuntimeContext context = null) => Serialize<OpenApiFormUrlEncoder>(parameters, false, context ?? new EvalVisitor(new RuntimeConfig(), CancellationToken.None));
 
-        internal static string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody)
+        internal static string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, IRuntimeContext context = null)
             where T : FormulaValueSerializer
         {
-            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { schemaLessBody });
+            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { context, schemaLessBody });
             jsonSerializer.StartSerialization(null);
 
             if (parameters != null)
