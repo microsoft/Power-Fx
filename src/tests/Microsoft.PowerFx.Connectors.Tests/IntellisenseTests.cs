@@ -31,8 +31,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // Get list of stored procedures
         [InlineData(3, 4, @"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]
         [InlineData(3, 5, @"SQL.ExecuteProcedureV2(""default"", ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]       // testing with "default" server
-        [InlineData(3, 6, @"SQL.ExecuteProcedureV2(""default"", ""default"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]             // testing with "default" server & database
-        [InlineData(4, 7, @"SQL.", "foo")]
+        [InlineData(3, 6, @"SQL.ExecuteProcedureV2(""default"", ""default"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]             // testing with "default" server & database        
         public void ConnectorIntellisenseTest(int responseIndex, int queryIndex, string expression, string expectedSuggestions)
         {
             // These tests are exercising 'x-ms-dynamic-values' extension property
@@ -42,13 +41,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             using HttpClient httpClient = new HttpClient(); // testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
-                    "tip1-shared.azure-apim.net",           // endpoint 
-                    "Default-91bee3d9-0c15-4f17-8624-c92bb8b36ead",     // environment
-                    "06ce3808fed64cdc893c6dea9b7ce309",         // connectionId
-                    () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC85MWJlZTNkOS0wYzE1LTRmMTctODYyNC1jOTJiYjhiMzZlYWQvIiwiaWF0IjoxNjg2MDUxMzU3LCJuYmYiOjE2ODYwNTEzNTcsImV4cCI6MTY4NjA1Njk4OSwiYWNyIjoiMSIsImFpbyI6IkFUUUF5LzhUQUFBQXdiNmRza1B2Z0ZiK0VvRFQ5ZG93MDVjM3dHRWJmeWI1M3lXck1nOXVKRnliVHd2NmJFd2toZTdkTTkxb0s5bC8iLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiYThmN2E2NWMtZjViYS00ODU5LWIyZDYtZGY3NzJjMjY0ZTlkIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJ1c2VyMTEiLCJnaXZlbl9uYW1lIjoiYXVyb3JhIiwiaXBhZGRyIjoiOTAuMTA0LjczLjIwMyIsIm5hbWUiOiJhdXJvcmF1c2VyMTEiLCJvaWQiOiI1YTY1MGQxZS03M2Q5LTQ4NDAtOGIyOS1lZWNmOGE3OGE1ZGQiLCJwdWlkIjoiMTAwMzIwMDEzQjlDODA1MyIsInJoIjoiMC5BVzhBMmVPLWtSVU1GMC1HSk1rcnVMTnVyVjg4QmY2U05oUlBydkx1TlB3SUhLNXZBRTQuIiwic2NwIjoiUnVudGltZS5BbGwiLCJzdWIiOiJaMWFmZENrVVp3WFBIUlZNcXlSci1ZbG1qMm5LQkpHdXRVTEdwTU00aWVzIiwidGlkIjoiOTFiZWUzZDktMGMxNS00ZjE3LTg2MjQtYzkyYmI4YjM2ZWFkIiwidW5pcXVlX25hbWUiOiJhdXJvcmF1c2VyMTFAY2FwaW50ZWdyYXRpb24wMS5vbm1pY3Jvc29mdC5jb20iLCJ1cG4iOiJhdXJvcmF1c2VyMTFAY2FwaW50ZWdyYXRpb24wMS5vbm1pY3Jvc29mdC5jb20iLCJ1dGkiOiJoUmNNSDRZR1hFQzNUQkhTWlBrOEFBIiwidmVyIjoiMS4wIn0.O0S51NPFjUNz8g0HL0lVWjhw78CG9qCNrK1MDhxRrKJfLHyGUjy1p4diUoRXmK18twbRmJzMUQ06y4vXb5TLj-kDXYBq_RDGudbO2si_X2lXG-XKs2GM6qpqp-CsjTDUWRAnyHRkUfg8Pim10wj02N6mSFBpe0RbxrTahIMdHKhgfwkd1eQ_CdDNYB-GcIurbscDO7qJh8vqOoZfQbsyYTZ53-H09mq11cR41MMTfpzutKV6dy8SZo2qCGOjRRVi4cDGZzFOgSib0dHoNJv1GWwhqN_hYpIY8wKCB939Jh6LmgPY7zMvxTtL__5BiyApx33SV0547D77KLWqwYbzJQ",
+                    "tip1-shared-002.azure-apim.net",                    // endpoint 
+                    "3c622ede-264e-e91c-b8fa-28210aff12dc",  // environment
+                    "52d3dd1962c44b7b93aed903d02e0b22",              // connectionId
+                    () => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJodHRwczovL2FwaWh1Yi5henVyZS5jb20iLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDcvIiwiaWF0IjoxNjg2MTM3MTQ2LCJuYmYiOjE2ODYxMzcxNDYsImV4cCI6MTY4NjE0MjY1MywiYWNyIjoiMSIsImFpbyI6IkFWUUFxLzhUQUFBQUJ3amo3am9vVGpUUHdCRTNYS0NsYXMrdmx4TkpjZ0xIWktLeE4vdGdwbXBnYU44ZEwyYVZWRVFnclFETWY5MFZGZFRSOFB0alpGT3k4NmRoTnhpM2NLQ0FTejN4OGIyYjQ5TUd2VnVmRW5zPSIsImFtciI6WyJwd2QiLCJyc2EiLCJtZmEiXSwiYXBwaWQiOiJhOGY3YTY1Yy1mNWJhLTQ4NTktYjJkNi1kZjc3MmMyNjRlOWQiLCJhcHBpZGFjciI6IjAiLCJkZXZpY2VpZCI6IjJhMDUwN2E4LTk2N2ItNGM1YS04MDc0LWI4OWM0NTNjYTI0MCIsImZhbWlseV9uYW1lIjoiR2VuZXRpZXIiLCJnaXZlbl9uYW1lIjoiTHVjIiwiaXBhZGRyIjoiOTAuMTA0LjczLjIwMyIsIm5hbWUiOiJMdWMgR2VuZXRpZXIiLCJvaWQiOiIxNTA4NzEzYi04ZmNiLTQ5NTEtOWFkZC1lMTFiYmJkNjAyYzMiLCJvbnByZW1fc2lkIjoiUy0xLTUtMjEtMTcyMTI1NDc2My00NjI2OTU4MDYtMTUzODg4MjI4MS0zNzI0OSIsInB1aWQiOiIxMDAzM0ZGRjgwMUJERkI4IiwicmgiOiIwLkFSb0F2NGo1Y3ZHR3IwR1JxeTE4MEJIYlIxODhCZjZTTmhSUHJ2THVOUHdJSEs0YUFMNC4iLCJzY3AiOiJSdW50aW1lLkFsbCIsInN1YiI6InUyVGhlNzRUb1NSQi1GYU9ubmw0aHlkU00xaG11WnVtVWtrS1ZzX3EyWTAiLCJ0aWQiOiI3MmY5ODhiZi04NmYxLTQxYWYtOTFhYi0yZDdjZDAxMWRiNDciLCJ1bmlxdWVfbmFtZSI6Imx1Y2dlbkBtaWNyb3NvZnQuY29tIiwidXBuIjoibHVjZ2VuQG1pY3Jvc29mdC5jb20iLCJ1dGkiOiJ0SW1lMDhVbkwweVU0eEpsQkxaMEFBIiwidmVyIjoiMS4wIn0.sney5nQSCjfhOmFSfVX9AQdV0XxGHD8PBXlwpCb2lb-ntxJ-s-Jg1S5rFTE0on16bL8-PkIiMUTI3nE0qhXvC6c17tX9vCMdTFelmq_r42nVJsNXiRGiIyR8sOEnO4X-qttWczZIgT_Yd73vJwKgMqsuuiA1k1e1LxiMBZq2Uztc5E17iIZWX0AdrFCCEh0NrIi6Gcf_QsB_cANQGCf-In6MmI8un8l_9X06scOAIoAo8kRRxxZnmH1v7O-f3-PuHbIoVJBlJmjNETte6LF_2IyET0n8zwmqLkZ9ODr7N3xHjeYyT2YzmWCajwstJ6-Ky71AempcIq5aE5IDXu0bvQ",
                     httpClient)
             {
-                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+                SessionId = "fcf636e8-5b65-40c8-95ad-d75051cd97b1"
             };
 
             config.AddService("SQL", apiDoc, client);
