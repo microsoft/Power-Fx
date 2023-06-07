@@ -375,7 +375,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
-            var formatString = textFormatArgs.EnUSFormatString;
+            var formatString = textFormatArgs.FormatArg;
             result = null;
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));

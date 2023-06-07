@@ -25,11 +25,6 @@ namespace Microsoft.PowerFx.Core.Utils
         internal string FormatArg { get; set; }
 
         /// <summary>
-        /// FormatArg of format string in En-US culture.
-        /// </summary>
-        internal string EnUSFormatString { get; set; }
-
-        /// <summary>
         /// True/False if format string has DateTime format or not.
         /// </summary>
         internal bool HasDateTimeFmt { get; set; }
@@ -104,6 +99,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 return false;
             }
 
+            // Use en-Us format string if a culture is defined in format string.
             if (formatCulture != null)
             {
                 var enUSformatString = textFormatArgs.FormatArg;
@@ -130,7 +126,7 @@ namespace Microsoft.PowerFx.Core.Utils
                     enUSformatString = enUSformatString.Replace(numberGroupSeperator, ",");
                 }
 
-                textFormatArgs.EnUSFormatString = enUSformatString;
+                textFormatArgs.FormatArg = enUSformatString;
             }
 
             return true;
