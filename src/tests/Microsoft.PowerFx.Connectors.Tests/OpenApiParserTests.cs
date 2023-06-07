@@ -184,7 +184,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             {
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
-
+            
             FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
             client.Dispose();
@@ -267,7 +267,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            // We can call the function with a RuntimeConfig parameters (unused here) that can contain TimeZoneInformation or other runtime settings
+            FormulaValue httpResult = await function.InvokeAync(new RuntimeConfig(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);

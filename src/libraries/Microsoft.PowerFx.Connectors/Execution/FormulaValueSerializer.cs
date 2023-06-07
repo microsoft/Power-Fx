@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -45,10 +46,14 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected abstract void WriteDateValue(DateTime dateValue);
 
         protected readonly bool _schemaLessBody;
+        protected readonly IRuntimeContext _context;
 
-        internal FormulaValueSerializer(bool schemaLessBody)
+        internal FormulaValueSerializer(IRuntimeContext context, bool schemaLessBody)
         {
             _schemaLessBody = schemaLessBody;
+            _context = context;
+
+            _context.CancellationToken.ThrowIfCancellationRequested();
         }
 
         internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
@@ -206,7 +211,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {                        
                         if (propertySchema.Format == "date-time")
                         { 
-                            WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Local));
+                            WriteDateTimeValue(dtv.GetConvertedValue(_context.TimeZoneInfo));
                         }
                         else if (propertySchema.Format == "date-no-tz")
                         {

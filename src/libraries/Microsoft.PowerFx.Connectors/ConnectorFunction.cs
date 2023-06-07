@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -227,7 +228,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false)
         {            
-            IAsyncTexlFunction invoker = null;
+            IAsyncTexlFunction2 invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
             DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
             Namespace = func_ns;
@@ -251,12 +252,21 @@ namespace Microsoft.PowerFx.Connectors
             return serviceFunction;
         }
 
-        public async Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> InvokeAync(IRuntimeContext context, HttpClient httpClient, FormulaValue[] values)
         {
-            ServiceFunction svcFunction = GetServiceFunction(null, httpClient);
-            FormulaValue[] v = values;
+            ServiceFunction svcFunction = GetServiceFunction(null, httpClient);            
 
-            return await svcFunction.InvokeAsync(v, cancellationToken).ConfigureAwait(false);
+            return await svcFunction.InvokeAsync(context, values).ConfigureAwait(false);
+        }
+
+        public Task<FormulaValue> InvokeAync(RuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        {
+            return InvokeAync(new EvalVisitor(config ?? new RuntimeConfig(), cancellationToken), httpClient, values);
+        }
+
+        public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        {
+            return InvokeAync(new EvalVisitor(new RuntimeConfig(), cancellationToken), httpClient, values);
         }
     }
 

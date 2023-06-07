@@ -23,13 +23,13 @@ namespace Microsoft.PowerFx
     // This used ValueTask for async, https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/ 
     // Perf comparison of Task vs. ValueTask: https://ladeak.wordpress.com/2019/03/09/valuetask-vs-task 
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
-    internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
+    internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>, IRuntimeContext
     {
         private readonly ReadOnlySymbolValues _symbolValues;
 
         private readonly CancellationToken _cancellationToken;
 
-        internal CancellationToken CancellationToken => _cancellationToken;
+        public CancellationToken CancellationToken => _cancellationToken;
 
         private readonly IServiceProvider _services;
 
@@ -257,6 +257,10 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
             }
+            else if (func is IAsyncTexlFunction2 asyncFunc2)
+            {
+                result = await asyncFunc2.InvokeAsync(this, args).ConfigureAwait(false);
+            }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
@@ -278,14 +282,7 @@ namespace Microsoft.PowerFx
                     catch (CustomFunctionErrorException ex)
                     {
                         var irContext = node.IRContext;
-                        result = new ErrorValue(
-                            irContext,
-                            new ExpressionError()
-                            {
-                                Message = ex.Message,
-                                Span = irContext.SourceContext,
-                                Kind = ex.ErrorKind
-                            });
+                        result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
                     }
 
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))

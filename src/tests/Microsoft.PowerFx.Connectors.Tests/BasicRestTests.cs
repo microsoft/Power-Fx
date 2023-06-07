@@ -62,16 +62,17 @@ namespace Microsoft.PowerFx.Tests
             string funcName = new Regex(@"Test.([^(]+)").Match(fxQuery).Groups[1].Value;
             Assert.Equal("*[date:d, index:w, summary:s, temperatureC:w, temperatureF:w]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
             config.AddService("Test", testConnector._apiDocument, httpClient);
             
-            var engine = new RecalcEngine(config);
-
+            var engine = new RecalcEngine(config);            
+            
             var checkResult = engine.Check(fxQuery, options: _optionsPost);
             Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost).ConfigureAwait(false);
+            var rConfig = new RuntimeConfig();            
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
