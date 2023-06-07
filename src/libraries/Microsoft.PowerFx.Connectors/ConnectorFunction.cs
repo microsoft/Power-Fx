@@ -11,8 +11,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
@@ -259,7 +257,7 @@ namespace Microsoft.PowerFx.Connectors
             return await svcFunction.InvokeAsync(context, values).ConfigureAwait(false);
         }
 
-        public Task<FormulaValue> InvokeAync(RuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAync(IRuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             return InvokeAync(new EvalVisitor(config ?? new RuntimeConfig(), cancellationToken), httpClient, values);
         }
