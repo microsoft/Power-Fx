@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx
                 {
                     DType curType = argTypes[i];
 
-                    if (curType.IsRecord && !curType.CheckAggregateNames(this.ParamTypes[i], args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules))
+                    if ((curType.IsRecord || curType.IsTable) && !curType.CheckAggregateNames(this.ParamTypes[i], args[i], errors, SupportCoercionForArg(i), context.Features.PowerFxV1CompatibilityRules))
                     {
                         return false;
                     }

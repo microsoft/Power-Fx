@@ -271,27 +271,22 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
-        [InlineData("({x: 2})", true)]
-        [InlineData("({x: 2, y: 5})", true)]
-        [InlineData("({x: \"2\", y: \"5\"})", true)]
-        [InlineData("({x: 2, y: 5, a: 8})", false)]
-        [InlineData("({a: 8})", false)]
-        [InlineData("({x: {x : 2}})", false)]
+        [InlineData("{x: 2}", true)]
+        [InlineData("{x: 2, y: 5}", true)]
+        [InlineData("{x: \"2\", y: \"5\"}", true)]
+        [InlineData("{x: 2, y: 5, a: 8}", false)]
+        [InlineData("{a: 8}", false)]
+        [InlineData("{x: {x : 2}}", false)]
         public void CustomFunctionRecordTest(string inputRecord, bool isSuccess)
         {
-            var record = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number));
-            CustomFunctionRecord(new TestRecordsCustomFunction(record), inputRecord, isSuccess);
+            var recordType = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number));
+            var tableType = recordType.ToTable();
+            
+            CustomFunctionRecord(new TestRecordsCustomFunction(recordType), "(" + inputRecord + ")", isSuccess);
+            CustomFunctionRecord(new TestTableCustomFunction(tableType), "([" + inputRecord + "])", isSuccess);
         }
 
-        [Theory]
-        [InlineData("({x: 2})", true)]
-        [InlineData("({x: 2, y: 5})", false)]
-        public void CustomFunctionNonRecordTest(string inputRecord, bool isSuccess)
-        {
-            CustomFunctionRecord(new TestNonRecordCustomFunction(), inputRecord, isSuccess);
-        }
-
-        private void CustomFunctionRecord(ReflectionFunction reflectionFunction, string inputRecord,  bool isSuccess)
+        private void CustomFunctionRecord(ReflectionFunction reflectionFunction, string inputRecord, bool isSuccess)
         {
             var config = new PowerFxConfig();
             config.AddFunction(reflectionFunction);
@@ -341,25 +336,22 @@ namespace Microsoft.PowerFx.Tests
             // Must have "Execute" method. 
             public static RecordValue Execute(RecordValue recordValue)
             {
-                return FormulaValue.NewRecordFromFields(recordValue.Type, recordValue.Fields);
+                return recordValue;
             }
         }
 
         // Must have "Function" suffix. 
-        private class TestNonRecordCustomFunction : ReflectionFunction
+        private class TestTableCustomFunction : ReflectionFunction
         {
-            public TestNonRecordCustomFunction()
-                : base(
-                      "NonRecordTest",
-                      FormulaType.Number,
-                      RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)))
+            public TestTableCustomFunction(TableType tableType)
+                : base("RecordsTest", tableType, tableType)
             {
             }
 
             // Must have "Execute" method. 
-            public static FormulaValue Execute(RecordValue recordValue)
+            public static TableValue Execute(TableValue tableValue)
             {
-                return recordValue.GetField("x");
+                return tableValue;
             }
         }
 

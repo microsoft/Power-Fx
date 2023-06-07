@@ -277,37 +277,41 @@ namespace Microsoft.PowerFx
 
             formulaResult ??= FormulaValue.NewBlank(_info.RetType);
 
-            var dataSourceType = formulaResult.Type._type;
-            var retType = _info.RetType._type;
-            
-            if (!dataSourceType.Accepts(retType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
+            return GetFormulaResult(formulaResult, _info.RetType._type);
+        }
+
+        private static FormulaValue GetFormulaResult(FormulaValue formulaResult, DType retType)
+        {
+            var formulaResultType = formulaResult.Type._type;
+
+            if (!formulaResultType.Accepts(retType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
             {
-                bool isVaid = false;
+                bool isValid = false;
 
-                if (retType.IsRecord)
+                if (retType.IsRecord || retType.IsTable)
                 {
-                    isVaid = true;
+                    isValid = true;
 
-                    // Check if all names in dataSourceType exist in retType
-                    foreach (var typedName in dataSourceType.GetNames(DPath.Root))
+                    // Check if all names in formulaResultType exist in retType
+                    foreach (var typedName in formulaResultType.GetNames(DPath.Root))
                     {
                         if (!retType.TryGetType(typedName.Name, out DType dsNameType))
                         {
-                            isVaid = false;
+                            isValid = false;
                             continue;
                         }
                     }
 
-                    // Check if dataSourceType can coerce to retType
-                    if (isVaid && !dataSourceType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true))
+                    // Check if formulaResultType can coerce to retType
+                    if (isValid && !formulaResultType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true))
                     {
-                        isVaid = false;
+                        isValid = false;
                     }
                 }
-                
-                if (!isVaid)
+
+                if (!isValid)
                 {
-                    return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
+                    return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", retType, formulaResultType));
                 }
             }
 
