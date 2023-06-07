@@ -17,22 +17,22 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// Culture name of the format string.
         /// </summary>
-        internal string FormatCultureName { get; set; }
+        public string FormatCultureName { get; set; }
 
         /// <summary>
         /// numeric/date time format string.
         /// </summary>
-        internal string FormatArg { get; set; }
+        public string FormatArg { get; set; }
 
         /// <summary>
         /// True/False if format string has DateTime format or not.
         /// </summary>
-        internal bool HasDateTimeFmt { get; set; }
+        public bool HasDateTimeFmt { get; set; }
 
         /// <summary>
         /// True/False if format string has numeric format or not.
         /// </summary>
-        internal bool HasNumericFmt { get; set; }
+        public bool HasNumericFmt { get; set; }
     }
 
     internal sealed class TextFormatUtils
