@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out textFormatArgs))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, out textFormatArgs))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
@@ -375,33 +375,10 @@ namespace Microsoft.PowerFx.Functions
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
-            CultureInfo formatCulture = culture;
-            var formatString = textFormatArgs.FormatArg;
+            var formatString = textFormatArgs.EnUSFormatString;
             result = null;
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
-
-            if (!string.IsNullOrEmpty(textFormatArgs.FormatCultureName) && !TryGetCulture(textFormatArgs.FormatCultureName, out formatCulture))
-            {
-                return false;
-            }
-
-            if (!string.IsNullOrEmpty(formatString) && textFormatArgs.HasNumericFmt)
-            {
-                // Get en-US numeric format string.
-                // \uFEFF is the zero width no-break space codepoint. This will be used to swap with number group seperator character.
-                string numberGroupSeperator = "\uFEFF";
-                var numberCultureFormat = formatCulture.NumberFormat;
-
-                formatString = formatString.Replace(numberCultureFormat.NumberGroupSeparator, numberGroupSeperator);
-                if (string.IsNullOrWhiteSpace(numberCultureFormat.NumberGroupSeparator))
-                {
-                    formatString = formatString.Replace(" ", numberGroupSeperator).Replace("\u202F", numberGroupSeperator);
-                }
-
-                formatString = formatString.Replace(numberCultureFormat.NumberDecimalSeparator, ".");
-                formatString = formatString.Replace(numberGroupSeperator, ",");
-            }
 
             switch (value)
             {

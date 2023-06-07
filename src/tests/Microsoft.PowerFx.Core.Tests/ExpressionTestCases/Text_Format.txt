@@ -686,10 +686,82 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234.5678, "# ##0,00", "fr-FR")
 "1 234,57"
 
+>> Text(1234.5678, "[$-  fr-FR  ]    # ##0,00   ", "vi-VI")
+"1.234,57"
+
+>> Text(1234.5678, "[$-fr-FR  ]    # ##0,00   ", "vi-VI")
+"1.234,57"
+
+>> Text(1234.5678, "[$-  fr-FR]    # ##0,00", "vi-VI")
+"1.234,57"
+
+>> Text(1234.5678, "[$-fr-FR]    # ##0,00", "vi-VI")
+"1.234,57"
+
+>> Text(1234.5678, "[$-fr-FR]    # ##0,00    ", "vi-VI")
+"1.234,57"
+
+>> Text(1234.5678, "[$-fr-FR][# ##0,00]", "vi-VI")
+"[1.234,57]"
+
+>> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
+"$-fr-FR] 1 234,57"
+
+>> Text(1234.5678, "$-fr-FR][ # ##0,00", "vi-VI")
+"$-fr-FR][ 1 234,57"
+
+>> Text(1234.5678, "-fr-FR # ##0,00", "vi-VI")
+"-fr-FR 1 234,57"
+
+>> Text(1234.5678, "fr-FR # ##0,00", "vi-VI")
+"fr-FR 1 234,57"
+
+>> Text(1234.5678, "$[-fr-FR] # ##0,00", "vi-VI")
+"$[-fr-FR] 1 234,57"
+
+>> Text(1234.5678, "$-[fr-FR] # ##0,00", "vi-VI")
+"$-[fr-FR] 1 234,57"
+
+>> Text(1234.5678, "[$-fr-FR][$-fr-FR# ##0,00]", "vi-VI")
+"[$-fr-FR1.234,57]"
+
+>> Text(1234.5678, "]$-fr-FR[ # ##0,00", "vi-VI")
+"]$-fr-FR[ 1 234,57"
+
+>> Text(1234.5678, "{$-fr-FR} # ##0,00", "vi-VI")
+"{$-fr-FR} 1 234,57"
+
+>> Text(1234.5678, "[$ # ##0,00", "vi-VI")
+"[$ 1 234,57"
+
+>> Text(1234.5678, "[$] # ##0,00", "vi-VI")
+"[$] 1 234,57"
+
+>> Text(1234.5678, "][-$ # ##0,00", "vi-VI")
+"][-$ 1 234,57"
+
 // If have wrong format string, throw error
 >> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
 Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
 
+>> Text(1234.5678, "mnk  [$-fr-FR] # ##0,00"   , "vi-VI")
+Errors: Error 0-54: The function 'Text' has some invalid arguments.|Warning 16-41: Incorrect format specifier for 'Text'.
+
 // If does not have valid language code, throw error
 >> Text(1234.5678, "[$-a]0,0", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr - FR]# ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR #] ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR # ##0,00]", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR,en-US] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR # ##]0,00", "vi-VI")
 Error({Kind:ErrorKind.InvalidArgument})

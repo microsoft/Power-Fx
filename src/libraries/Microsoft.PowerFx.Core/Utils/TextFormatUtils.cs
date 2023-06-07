@@ -9,14 +9,34 @@ using System.Xml;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
+    /// <summary>
+    /// Definition for format string object ([$-FormatCultureName]FormatArg).
+    /// </summary>
     internal class TextFormatArgs
     {
+        /// <summary>
+        /// Culture name of the format string.
+        /// </summary>
         internal string FormatCultureName { get; set; }
 
+        /// <summary>
+        /// numeric/date time format string.
+        /// </summary>
         internal string FormatArg { get; set; }
 
+        /// <summary>
+        /// FormatArg of format string in En-US culture.
+        /// </summary>
+        internal string EnUSFormatString { get; set; }
+
+        /// <summary>
+        /// True/False if format string has DateTime format or not.
+        /// </summary>
         internal bool HasDateTimeFmt { get; set; }
 
+        /// <summary>
+        /// True/False if format string has numeric format or not.
+        /// </summary>
         internal bool HasNumericFmt { get; set; }
     }
 
@@ -24,7 +44,14 @@ namespace Microsoft.PowerFx.Core.Utils
     {
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
 
-        public static bool IsValidFormatArg(string formatString, out TextFormatArgs textFormatArgs)
+        /// <summary>
+        /// Validate if format string is valid or not and return format string object.
+        /// </summary>
+        /// <param name="formatString">Raw input format string.</param>
+        /// <param name="formatCulture">Current format culture.</param>
+        /// <param name="textFormatArgs">Return format string object.</param>
+        /// <returns>True/False based on whether format string is valid or not.</returns> 
+        public static bool IsValidFormatArg(string formatString, CultureInfo formatCulture, out TextFormatArgs textFormatArgs)
         {
             // Verify statically that the format string doesn't contain BOTH numeric and date/time
             // format specifiers. If it does, that's an error according to Excel and our spec.
@@ -44,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 endIdx = formatString.IndexOf(']', 3);
                 if (endIdx > 0)
                 {
-                    textFormatArgs.FormatCultureName = formatString.Substring(3, endIdx - 3);
+                    textFormatArgs.FormatCultureName = formatString.Substring(3, endIdx - 3).Trim();
                     textFormatArgs.FormatArg = formatString.Substring(endIdx + 1);
 
                     if (string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
@@ -77,10 +104,45 @@ namespace Microsoft.PowerFx.Core.Utils
                 return false;
             }
 
+            if (formatCulture != null)
+            {
+                var enUSformatString = textFormatArgs.FormatArg;
+
+                if (!string.IsNullOrEmpty(textFormatArgs.FormatCultureName) && !TryGetCulture(textFormatArgs.FormatCultureName, out formatCulture))
+                {
+                    return false;
+                }
+
+                if (!string.IsNullOrEmpty(enUSformatString) && textFormatArgs.HasNumericFmt)
+                {
+                    // Get en-US numeric format string.
+                    // \uFEFF is the zero width no-break space codepoint. This will be used to swap with number group seperator character.
+                    const string numberGroupSeperator = "\uFEFF";
+                    var numberCultureFormat = formatCulture.NumberFormat;
+
+                    enUSformatString = enUSformatString.Replace(numberCultureFormat.NumberGroupSeparator, numberGroupSeperator);
+                    if (string.IsNullOrWhiteSpace(numberCultureFormat.NumberGroupSeparator))
+                    {
+                        enUSformatString = enUSformatString.Replace(" ", numberGroupSeperator).Replace("\u202F", numberGroupSeperator);
+                    }
+
+                    enUSformatString = enUSformatString.Replace(numberCultureFormat.NumberDecimalSeparator, ".");
+                    enUSformatString = enUSformatString.Replace(numberGroupSeperator, ",");
+                }
+
+                textFormatArgs.EnUSFormatString = enUSformatString;
+            }
+
             return true;
         }
 
-        public static bool IsValidCompiledTimeFormatArg(string formatArg)
+        /// <summary>
+        /// Legacy validate if format string is valid or not and return format string object.
+        /// This is justed called in pre-V1 scenarios by Text function's CheckTypes().
+        /// </summary>
+        /// <param name="formatArg">Raw input format string.</param>
+        /// <returns>True/False based on whether format string is valid or not.</returns> 
+        public static bool IsLegacyValidCompiledTimeFormatArg(string formatArg)
         {
             // Verify statically that the format string doesn't contain BOTH numeric and date/time
             // format specifiers. If it does, that's an error according to Excel and our spec.
@@ -106,6 +168,22 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             if (hasDateTimeFmt && hasNumericFmt)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool TryGetCulture(string name, out CultureInfo value)
+        {
+            value = null;
+
+            try
+            {
+                value = new CultureInfo(name);
+            }
+            catch (CultureNotFoundException)
             {
                 return false;
             }

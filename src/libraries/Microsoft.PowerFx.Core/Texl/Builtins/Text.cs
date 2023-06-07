@@ -165,12 +165,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         HasNumericFmt = false
                     };
 
-                    if (!TextFormatUtils.IsValidFormatArg(formatArg, out textFormatArgs))
+                    if (!TextFormatUtils.IsValidFormatArg(formatArg, null, out textFormatArgs))
                     {
                         isValid = false;
                     }
                 }
-                else if (!TextFormatUtils.IsValidCompiledTimeFormatArg(formatArg))
+                else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
                 {
                     isValid = false;
                 }
