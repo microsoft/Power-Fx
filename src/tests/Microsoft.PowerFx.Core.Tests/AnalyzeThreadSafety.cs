@@ -196,8 +196,13 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 foreach (Type type in assembly.GetTypes())
                 {
+                    if (type.Name.StartsWith("<", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue; // exclude compiler generated closures. 
+                    }
+
                     // includes base types 
-                    var attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>();
+                    var attr = type.GetInterfaces().Select(x => x.GetCustomAttributes().OfType<ThreadSafeImmutableAttribute>());
                     if (attr == null)
                     {
                         continue;
@@ -207,8 +212,8 @@ namespace Microsoft.PowerFx.Core.Tests
                     var attrNotSafe = type.GetCustomAttribute<NotThreadSafeAttribute>(inherit: false);
                     if (attrNotSafe != null)
                     {
-                        attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
-                        if (attr != null)
+                        var attribute = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
+                        if (attribute != null)
                         {
                             Assert.True(false); // Class can't have both safe & unsafe together. 
                         }
