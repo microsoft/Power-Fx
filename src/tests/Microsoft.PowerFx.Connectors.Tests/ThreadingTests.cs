@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         // $$$ Supersedes ImmutabilityTests.
         // This is more aggressive (includes private fields), but they don't all pass. So assert is disabled.
         // Run this test under a debugger, and failure list is written to Debugger output window.
-        // Per https://github.com/microsoft/Power-Fx/issues/1519, enable assert here. 
+        // Per https://github.com/microsoft/Power-Fx/issues/1561, enable assert here. 
         [Fact]
         public void CheckImmutableTypeInConnector()
         {
