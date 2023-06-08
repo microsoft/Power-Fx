@@ -5032,6 +5032,25 @@
     <value>indstillinger</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Opdaterer den angivne datakilde.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>tilsluttet_datakilde</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Forventede en post- eller tabelværdi.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>En forbundet datakilde, der skal opdateres.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Kun administrerede forbindelser kan opdateres.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ugyldigt regulært udtryk.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulære udtryk skal være konstante værdier.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Den værdi, der blev sendt til "{0}" funktionen, kan ikke ændres.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Opsamlingsnavnet '{0}' skjuler den foruddefinerede egenskab, der returnerer det fulde match til det regulære udtryk. Du kan overveje at omdøbe det, hvis du vil bruge den navngivne egenskab til at udtrække det fulde match i den angivne tekst.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Fjerner al formatering og returnerer en ren tekstværdi.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>tekst</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Teksten skal have sine HTML- og XML-koder fjernet.</value>
   </data>
 </root>

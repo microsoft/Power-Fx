@@ -5032,6 +5032,25 @@
     <value>tùy_chọn</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Làm mới nguồn dữ liệu được chỉ định.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>nguồn_dữ_liệu_được_kết_nối</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Đã dự kiến một bản ghi hoặc giá trị bảng.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Một nguồn dữ liệu đã kết nối để làm mới.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Chỉ có thể làm mới các kết nối được quản lý.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Biểu thức chính quy không hợp lệ.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Biểu thức chính quy phải là các giá trị không đổi.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Không thể thay đổi giá trị được truyền đến hàm "{0}".</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về kết quả khớp đầy đủ của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Loại bỏ mọi định dạng và trả về giá trị văn bản thuần.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>văn_bản</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Văn bản cần xóa thẻ HTML và XML.</value>
   </data>
 </root>

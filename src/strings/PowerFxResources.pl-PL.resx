@@ -5032,6 +5032,25 @@
     <value>opcje</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Odświeża określone źródło danych.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>połączone_źródło_danych</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Oczekiwany jest rekord lub wartość tabeli.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Połączone źródło danych do odświeżenia.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Odświeżać można tylko zarządzane połączenia.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Nieprawidłowe wyrażenie regularne.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Wyrażenia regularne muszą być wartościami stałymi.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Nie można zmienić wartości przekazanej do funkcji „{0}”.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca pełne dopasowanie wyrażenia regularnego. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania pełnego dopasowania w wybranym tekście.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Usuwa całe formatowanie i zwraca wartość w formie zwykłego tekstu.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>tekst</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Tekst, z którego mają zostać usunięte tagi HTML i XML.</value>
   </data>
 </root>

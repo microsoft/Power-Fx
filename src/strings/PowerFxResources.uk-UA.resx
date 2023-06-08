@@ -4951,7 +4951,7 @@
     
   </data>
   <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле основного ключа "{1}".</value>
+    <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле первинного ключа "{1}".</value>
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
@@ -5032,6 +5032,25 @@
     <value>параметри</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Оновлює вказане джерело даних.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>підключене_джерело_даних</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Очікувався запис або значення таблиці.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Підключене джерело даних, яке потрібно оновити.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Можна оновити тільки керовані підключення.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Неприпустимий регулярний вираз.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регулярні вирази мають бути константами.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Значення, передане функції "{0}" не можна змінити.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає повний збіг із регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту повний збіг.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Ця функція видаляє все форматування та повертає значення у вигляді звичайного тексту.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>текст</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Текст, для якого потрібно видалити теги HTML і XML.</value>
   </data>
 </root>

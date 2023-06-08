@@ -9,9 +9,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
 {
     public class PositionRangeHelperTests
     {
-        private readonly string _expression = @"If(Len(PhoneNumber.Input) < 10,
-Notify(PhoneWarningText),
-Collect(PhoneNumner, {PhoneNumber: PhoneNumber.Input});";
+        private readonly string _expression = "If(Len(PhoneNumber.Input) < 10,\r\nNotify(PhoneWarningText),\r\nCollect(PhoneNumner, {PhoneNumber: PhoneNumber.Input});";
 
         private readonly string _eol = "\r\n";
 

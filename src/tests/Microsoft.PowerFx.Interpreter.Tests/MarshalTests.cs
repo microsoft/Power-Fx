@@ -631,7 +631,7 @@ namespace Microsoft.PowerFx.Tests
             var x = cache.Marshal(array);
 
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", x);
+            engine._symbolValues.Add("x", x);
 
             var result1 = engine.Eval("Last(x).Field1");
             Assert.Equal(21.0, ((NumberValue)result1).Value);
@@ -650,7 +650,7 @@ namespace Microsoft.PowerFx.Tests
             var x = cache.Marshal(array);
 
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", x);
+            engine._symbolValues.Add("x", x);
 
             var result1 = engine.Eval("Last(x).Value");
             Assert.Equal(30.0, ((NumberValue)result1).Value);
@@ -851,7 +851,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(1, values[1]._counter2); // only fetch on requested index. 
 
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", fxTable);
+            engine._symbolValues.Add("x", fxTable);
 
             var result2 = engine.Eval("Index(x, 2).Field1").ToObject();
             Assert.Equal(10, values[0]._counter); // unchanged.
@@ -926,6 +926,36 @@ namespace Microsoft.PowerFx.Tests
             marshaller._result = null;
             var result2 = cache.Marshal(obj);
             Assert.Equal(333.0, result2.ToObject());
+        }
+
+        public class MyType2
+        {
+            public string Field1 { get; set; }
+        }
+
+        // Stress test that sharing RecordType from GetMarshaller are thread safe. 
+        [Fact]
+        public void MarshalStress()
+        {
+            var engine = new Engine();
+
+            for (int i = 0; i < 100; i++)
+            {
+                var cache = new TypeMarshallerCache();
+                RecordType recordType = (RecordType)cache.GetMarshaller(typeof(MyType2)).Type;
+
+                Parallel.For(
+                    0,
+                    3,
+                    (j) =>
+                    {
+                        var symbolTable = new SymbolTable();
+                        symbolTable.AddVariable("record", recordType);
+
+                        var check = engine.Check("record.Field1", symbolTable: symbolTable);
+                        Assert.True(check.IsSuccess);
+                    });
+            }
         }
     }
 }

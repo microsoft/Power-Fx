@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -222,6 +223,48 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 Check(engine, formatedExpression);
             }
+        }
+
+        // Immutable arguments
+        [Theory]
+        [InlineData("Patch([1,2,3], {Value:1}, {Value:9})")]
+        [InlineData("With({x:[1,2,3]},Patch(x, {Value:1}, {Value:9}))")]
+        [InlineData("Patch(namedFormula, {Value:1}, {Value:9})")]
+
+        [InlineData("Collect([1,2,3], {Value:9})")]
+        [InlineData("With({x:[1,2,3]},Collect(x, {Value:9}))")]
+        [InlineData("Collect(namedFormula, {Value:9})")]
+
+        [InlineData("Remove([1, 2, 3], {Value:1})")]
+        [InlineData("With({x:[1,2,3]}, Remove(x, {Value:1}))")]
+        [InlineData("Remove(namedFormula, {Value:1})")]
+
+        [InlineData("Clear([1, 2, 3])")]
+        [InlineData("With({x:[1,2,3]}, Clear(x))")]
+        [InlineData("Clear(namedFormula)")]
+        public void MutationCheckFailImmutableNodesTests(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            engine.Config.SymbolTable.AddVariable("namedFormula", new TableType(TestUtils.DT("*[Value:n]")), mutable: false);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            var check = engine.Check(expression, options: _opts);
+            Assert.False(check.IsSuccess);
+        }
+
+        // Taking an immutable tables, storing it into a variable, makes it mutable
+        [Theory]
+        [InlineData("Set(varTable, [\"a\", \"b\", \"c\"]); Patch(varTable, {Value:\"a\"}, {Value:\"z\"})")]
+        [InlineData("Set(varTable, [\"a\", \"b\", \"c\"]); Collect(varTable, {Value:\"z\"})")]
+        [InlineData("Set(varRecord, {x:[\"a\", \"b\", \"c\"]}); Patch(varRecord.x, {Value:\"a\"}, {Value:\"z\"})")]
+        [InlineData("Set(varRecord, {x:[\"a\", \"b\", \"c\"]}); Collect(varRecord.x, {Value:\"z\"})")]
+        public void MutationCheckForWellDefinedVariables(string expression)
+        {
+            var engine = new Engine(new PowerFxConfig());
+            engine.Config.SymbolTable.AddVariable("varTable", new TableType(TestUtils.DT("*[Value:s]")), mutable: true);
+            engine.Config.SymbolTable.AddVariable("varRecord", new KnownRecordType(TestUtils.DT("![x:*[Value:s]]")), mutable: true);
+            engine.Config.SymbolTable.EnableMutationFunctions();
+            var check = engine.Check(expression, options: _opts);
+            Assert.True(check.IsSuccess);
         }
 
         protected void Check(Engine engine, string expression)

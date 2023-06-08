@@ -36,7 +36,7 @@ Table({Field1:2,Field2:"moon",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
 Errors: Error 14-31: The specified column 'Field5' does not exist.|Error 0-32: The function 'Patch' has some invalid arguments.
 
 // This test would fail in PA.
->> Patch(Table(r1, r2), r1, {Field2:"Venus"})
+>> Patch(t1, r1, {Field2:"Venus"})
 {Field1:1,Field2:"Venus",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
 
 >> Patch(t1, First(t1), {Field2:"Venus"}).Field2
@@ -60,29 +60,10 @@ Blank()
    t1
 Table({Field1:10,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 
->> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
-   Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)})
-{Field1:2,Field2:"deimos",Field3:DateTime(2030,2,1,0,0,0,0),Field4:false}
-
->> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
-   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
-   Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55})
-{Field1:55,Field2:"pandora",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false}
-
->> Collect(t1, r2);
-   Patch(t1, {Field4:true}, {Field2:"phobos"});
-   First(t1).DisplayNameField2
-"phobos"
-
 >> Patch(t1, 0, 0)
 Errors: Error 10-11: Invalid argument type (Decimal). Expecting a Record value instead.|Error 13-14: Invalid argument type (Decimal). Expecting a Record value instead.|Error 10-11: Cannot use a non-record value in this context.|Error 13-14: Cannot use a non-record value in this context.|Error 0-15: The function 'Patch' has some invalid arguments.
 
 // Display names
->> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});
-   t1
-Table({Field1:1,Field2:"mars",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
-
 >> Patch(t1, First(t1), {DisplayNameField2:"Saturn"});
    First(t1)
 {Field1:1,Field2:"Saturn",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true}
@@ -110,21 +91,6 @@ Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 >> Patch(t1, First(t1), {DisplayNameField5:"Pandora"});
    First(t1)
 Errors: Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.|Error 0-51: The function 'Patch' has some invalid arguments.
-
->> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});
-   First(t1).Field2
-"mars"
-
-
-// Base record not found
->> Patch(t1, {Field1:55}, {DisplayNameField2:"mars"})
-Blank()
-
->> Patch(t1, {DisplayNameField1:55}, {DisplayNameField2:"mars"})
-Blank()
-
->> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
-Blank()
 
 >> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
 {Field1:1,Field2:"earth",Field3:DateTime(2022,11,14,19,22,6,0),Field4:true}
@@ -154,15 +120,45 @@ Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 0-51: The fun
 >> Patch(Foo, Bar, {DisplayNameField2:"jupter"})
 Errors: Error 6-9: Name isn't valid. 'Foo' isn't recognized.|Error 11-14: Name isn't valid. 'Bar' isn't recognized.|Error 0-45: The function 'Patch' has some invalid arguments.
 
->> Patch([1,2], {Value:1},  {Value:11})
-{Value:11}
-
->> With({t1:Table({a:1, b:"a"}, {a:2, b:Blank()})}, Patch(t1, Last(t1), {a:3, b:"c"}); t1)
+>> Set(t_an_bs, [{a:1, b:"a"}, {a:2, b:Blank()}]); Patch(t_an_bs, Last(t_an_bs), {a:3, b:"c"}); t_an_bs
 Table({a:1,b:"a"},{a:3,b:"c"})
 
->> With({t1:Table({a:1,b:If(false,"")},{a:Blank(),b:"1"})}, Patch(t1, Last(t1), {b:"2"}); t1)
+>> Set(t_an_bs, [{a:1,b:If(false,"")}, {a:Blank(),b:"1"}]); Patch(t_an_bs, Last(t_an_bs), {b:"2"}); t_an_bs
 Table({a:1,b:Blank()},{a:Blank(),b:"2"})
 
->> With({t1:Table({a:1,b:If(false,"")},{a:Blank(),b:"2"})}, Patch(t1, Last(t1), {a:2}); t1)
+>> Set(t_an_bs, Table({a:1,b:If(false,"")},{a:Blank(),b:"2"})); Patch(t_an_bs, Last(t_an_bs), {a:2}); t_an_bs
 Table({a:1,b:Blank()},{a:2,b:"2"})
 
+
+// Base record not found. If the record in its entirety is not matched then it should produce an error. 
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field2:"deimos"},{Field3:DateTime(2030,2,1,0,0,0,0)})
+Error({Kind:ErrorKind.NotFound})
+
+>> Collect(t1,{Field1:3,Field2:"phobos",Field3:DateTime(2024,2,1,0,0,0,0),Field4:false});
+   Collect(t1,{Field1:2,Field2:"deimos",Field3:DateTime(2025,2,1,0,0,0,0),Field4:false});
+   Patch(t1,{Field3:DateTime(2025,2,1,0,0,0,0)},{Field2:"pandora", Field1:55})
+Error({Kind:ErrorKind.NotFound})
+
+>> Collect(t1, r2);
+   Patch(t1, {Field4:true}, {Field2:"phobos"});
+   First(t1).DisplayNameField2
+Error({Kind:ErrorKind.NotFound})
+
+>> Patch(t1, {Field1:1}, {DisplayNameField2:"mars"});
+   First(t1).Field2
+Error({Kind:ErrorKind.NotFound})
+
+>> Patch(t1, {Field1:55}, {DisplayNameField2:"mars"})
+Error({Kind:ErrorKind.NotFound})
+
+>> Patch(t1, {DisplayNameField1:55}, {DisplayNameField2:"mars"})
+Error({Kind:ErrorKind.NotFound})
+
+>> Patch(t1, {DisplayNameField1:1/0}, {DisplayNameField2:"mars"})
+Error({Kind:ErrorKind.NotFound})
+
+>> Patch(t1, {DisplayNameField2:"earth"}, {Field2:"mars"});
+   t1
+Error({Kind:ErrorKind.NotFound})

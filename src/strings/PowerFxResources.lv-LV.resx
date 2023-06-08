@@ -5032,6 +5032,25 @@
     <value>opcijas</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Atsvaidzina norādīto datu avotu.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>pievienotais_datu_avots</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Paredzēta ieraksta vai tabulas vērtība.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Atsvaidzināmais savienotais datu avots.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Atsvaidzināt var tikai pārvaldītos savienojumus.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Nederīga regulārā izteiksme.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulārajām izteiksmēm jābūt konstantām vērtībām.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Funkcijai “{0}” nodoto vērtību nevar mainīt.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež pilnu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu pilnīgai norādītā teksta atbilstības izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
@@ -5053,14 +5076,14 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Noņem visu formatējumu un atgriež vienkārša teksta vērtību.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>teksts</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Teksts, no kā jānoņem tā HTML un XML atzīmes.</value>
   </data>
 </root>

@@ -5032,6 +5032,25 @@
     <value>možnosti</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Aktualizuje zadaný zdroj dat.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>připojený_zdroj_dat</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Očekával se záznam nebo hodnota tabulky.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Připojený zdroj dat, který se má aktualizovat.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Aktualizovat lze jen spravovaná připojení.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Neplatný regulární výraz.</value>
     
@@ -5039,6 +5058,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulární výrazy musí být konstantní hodnoty.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Hodnotu předanou funkci '{0}' nelze změnit.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Název zachycení {0} skrývá předdefinovanou vlastnost, která vrací úplnou shodu daného regulárního výrazu. Pokud chcete danou pojmenovanou vlastnost použít k extrakci úplné shody v zadaném textu, zvažte možnost ji přejmenovat.</value>
@@ -5053,7 +5076,7 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Odebere veškeré formátování a vrátí hodnotu jako prostý text.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -5061,6 +5084,6 @@
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Text, jehož značky HTML a XML mají být odstraněny.</value>
   </data>
 </root>

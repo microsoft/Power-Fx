@@ -43,8 +43,9 @@ namespace Microsoft.PowerFx
 
         // Must be thread safe!!!        
         // We can have multiple threads reading; which means they may be populating the cache. 
-        private readonly object _lock = new object();        
+        private readonly object _lock = new object();
 
+        [ThreadSafeProtectedByLock(nameof(_lock))]
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         // Override lookup.

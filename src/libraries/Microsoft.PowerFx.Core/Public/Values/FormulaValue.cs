@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -41,6 +42,22 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void Visit(IValueVisitor visitor);
 
+        /// <summary>
+        /// Before mutation operations, call MaybeShallowCopy() to make a copy of the value.
+        /// For most values this is a no-op and will not make a copy. Only types which implement
+        /// IMutationCopy will have the opportunity to provide a copy.
+        /// </summary>
+        /// <returns>Shallow copy of FormulaValue.</returns>
+        public FormulaValue MaybeShallowCopy()
+        {
+            if (this is IMutationCopy mc)
+            {
+                return mc.TryShallowCopy(out FormulaValue copy) ? copy : this;
+            }
+
+            return this;
+        }
+
         public abstract void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings);
 
         /// <summary>
@@ -58,5 +75,19 @@ namespace Microsoft.PowerFx.Types
 
             return sb.ToString();
         }
+    }
+
+    /// <summary>
+    /// Indicates that a FormulaValue should be copied before being mutated, for Copy on Write semantics.
+    /// </summary>
+    internal interface IMutationCopy
+    {
+        /// <summary>
+        /// Returns a shallow copy of a FormulaValue. For potentially deep data structures such as a Table or Record,
+        /// this includes the head object and any first level collections for rows or fields respectively.
+        /// It stops there, for example even the records within the rows of a Table are not copied.
+        /// </summary>
+        /// <returns>Shallow copy.</returns>
+        bool TryShallowCopy(out FormulaValue shallowCopy);
     }
 }

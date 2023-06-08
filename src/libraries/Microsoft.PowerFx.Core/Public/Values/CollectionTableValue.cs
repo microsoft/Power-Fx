@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -22,9 +24,10 @@ namespace Microsoft.PowerFx.Types
         private readonly IEnumerable<T> _enumerator; // required. supports enumeration;
 
         // Additional capabilities. 
-        private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index. 
-        private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count;
-        private readonly ICollection<T> _sourceList; // maybe null. supports mutation;
+        private readonly IReadOnlyList<T> _sourceIndex; // maybe null. supports index 
+        private readonly IList<T> _sourceMutableIndex; // maybe null. supports index and mutation
+        private readonly IReadOnlyCollection<T> _sourceCount; // maybe null. supports count
+        private readonly ICollection<T> _sourceList; // maybe null. supports mutation
 
         public CollectionTableValue(RecordType recordType, IEnumerable<T> source)
           : this(IRContext.NotInSource(recordType.ToTable()), source)
@@ -37,14 +40,25 @@ namespace Microsoft.PowerFx.Types
         {
             _enumerator = source ?? throw new ArgumentNullException(nameof(source));
 
-            _sourceIndex = source as IReadOnlyList<T>;
-            _sourceCount = source as IReadOnlyCollection<T>;
-            _sourceList = source as ICollection<T>;
+            _sourceIndex = _enumerator as IReadOnlyList<T>;
+            _sourceMutableIndex = _enumerator as IList<T>;
+            _sourceCount = _enumerator as IReadOnlyCollection<T>;
+            _sourceList = _enumerator as ICollection<T>;
 
             if (_sourceList != null && _sourceList.IsReadOnly)
             {
                 _sourceList = null;
             }
+
+            if (_sourceMutableIndex != null && _sourceMutableIndex.IsReadOnly)
+            {
+                _sourceMutableIndex = null;
+            }
+        }
+
+        internal CollectionTableValue(CollectionTableValue<T> orig)
+         : this(orig.IRContext, orig._enumerator.ToList())
+        {
         }
 
         public RecordType RecordType { get; }
@@ -133,6 +147,8 @@ namespace Microsoft.PowerFx.Types
         public override async Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
         {
             var ret = false;
+            var deleteList = new List<T>();
+            var errors = new List<ExpressionError>();
 
             if (_sourceList == null)
             {
@@ -141,7 +157,7 @@ namespace Microsoft.PowerFx.Types
 
             foreach (RecordValue recordToRemove in recordsToRemove)
             {
-                var deleteList = new List<T>();
+                var found = false;
 
                 foreach (var item in _enumerator)
                 {
@@ -151,6 +167,8 @@ namespace Microsoft.PowerFx.Types
 
                     if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
                     {
+                        found = true;
+
                         deleteList.Add(item);
 
                         if (!all)
@@ -160,11 +178,21 @@ namespace Microsoft.PowerFx.Types
                     }
                 }
 
-                foreach (var delete in deleteList)
+                if (!found)
                 {
-                    _sourceList.Remove(delete);
-                    ret = true;
+                    errors.Add(CommonErrors.RecordNotFound());
                 }
+            }
+
+            foreach (var delete in deleteList)
+            {
+                _sourceList.Remove(delete);
+                ret = true;
+            }
+
+            if (errors.Count > 0) 
+            {
+                return DValue<BooleanValue>.Of(NewError(errors, FormulaType.Boolean));
             }
 
             return DValue<BooleanValue>.Of(New(ret));
@@ -172,7 +200,7 @@ namespace Microsoft.PowerFx.Types
 
         protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
-            var actual = await FindAsync(baseRecord, cancellationToken).ConfigureAwait(false);
+            var actual = await FindAsync(baseRecord, cancellationToken, mutationCopy: true).ConfigureAwait(false);
 
             if (actual != null)
             {
@@ -181,13 +209,8 @@ namespace Microsoft.PowerFx.Types
             }
             else
             {
-                return DValue<RecordValue>.Of(FormulaValue.NewBlank(IRContext.ResultType));
+                return DValue<RecordValue>.Of(FormulaValue.NewError(CommonErrors.RecordNotFound()));
             }
-        }
-
-        protected virtual RecordValue Find(RecordValue baseRecord)
-        {
-            return FindAsync(baseRecord, CancellationToken.None).Result;
         }
 
         /// <summary>
@@ -195,15 +218,32 @@ namespace Microsoft.PowerFx.Types
         /// </summary>
         /// <param name="baseRecord">RecordValue argument.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
+        /// <param name="mutationCopy">Should we make a copy of the found record, ahead of mutation.</param>/// 
         /// <returns>A record instance within the current table. This record can then be updated.</returns>
         /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
-        protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken)
+        protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
         {
-            foreach (var current in Rows)
+            if (this is IMutationCopy && mutationCopy)
             {
-                if (await MatchesAsync(current.Value, baseRecord, cancellationToken).ConfigureAwait(false))
+                for (var index = 0; index < _sourceList.Count; index++)
                 {
-                    return current.Value;
+                    var record = Marshal(_sourceIndex[index]).Value;
+                    if (await MatchesAsync(record, baseRecord, cancellationToken).ConfigureAwait(false))
+                    {
+                        var copyRecord = (RecordValue)record.MaybeShallowCopy();
+                        _sourceMutableIndex[index] = MarshalInverse(copyRecord);
+                        return copyRecord;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var current in Rows)
+                {
+                    if (await MatchesAsync(current.Value, baseRecord, cancellationToken).ConfigureAwait(false))
+                    {
+                        return current.Value;
+                    }
                 }
             }
 
@@ -213,6 +253,11 @@ namespace Microsoft.PowerFx.Types
         protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
         {
             var ret = true;
+
+            if (baseRecord.Fields.Count() != currentRecord.Fields.Count())
+            {
+                return false;
+            }
 
             await foreach (var baseRecordField in baseRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
