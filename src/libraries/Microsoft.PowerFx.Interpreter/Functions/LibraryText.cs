@@ -173,7 +173,7 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
-                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
@@ -248,7 +248,7 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
-                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 2 && args[2] is StringValue languageCode)
             {
-                if (!TryGetCulture(languageCode.Value, out culture))
+                if (!TextFormatUtils.TryGetCulture(languageCode.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
                 }

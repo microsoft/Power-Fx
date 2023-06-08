@@ -171,7 +171,13 @@ namespace Microsoft.PowerFx.Core.Utils
             return true;
         }
 
-        private static bool TryGetCulture(string name, out CultureInfo value)
+        /// <summary>
+        /// Try to get culture info from culture name.
+        /// </summary>
+        /// <param name="name">Culture name.</param>
+        /// <param name="value">Return culture info.</param>
+        /// <returns>True/False based on whether it can get culture info by culture name or not.</returns> 
+        public static bool TryGetCulture(string name, out CultureInfo value)
         {
             value = null;
 
