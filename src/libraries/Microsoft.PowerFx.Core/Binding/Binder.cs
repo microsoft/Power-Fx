@@ -3415,7 +3415,11 @@ namespace Microsoft.PowerFx.Core.Binding
                             // If visiting an expando type property of control type variable, we cannot calculate the type here because
                             // The LHS associated ControlInfo is App/Component.
                             // e.g. Set(controlVariable1, DropDown1), Label1.Text = controlVariable1.Selected.Value.
-                            leftType = (DType)controlInfo.GetControlDType(calculateAugmentedExpandoType: true, isDataLimited: false);
+                            if (!_nameResolver.LookupExpandedControlType(controlInfo, out leftType))
+                            {
+                                SetDottedNameError(node, TexlStrings.ErrInvalidName, property.InvariantName);
+                                return;
+                            }
                         }
 
                         if (!leftType.ToRecord().TryGetType(property.InvariantName, out typeRhs))
