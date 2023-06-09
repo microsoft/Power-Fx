@@ -67,9 +67,9 @@ namespace Microsoft.PowerFx.Core.Binding
         bool LookupParent(out NameLookupInfo lookupInfo);
 
         /// <summary>
-        /// In Canvas specifically, this is used to retrieve the full, derived, type
-        /// of a control object where the output schema may be dependent on a control inputs and heirarchy. 
-        /// All Non-Canvas hosts should not implement this method.
+        /// In Power Apps specifically, this is used to retrieve the full, derived, type
+        /// of a control object where the output schema may be dependent on a control inputs and hierarchy. 
+        /// All Non-Power Apps hosts should not implement this method.
         /// </summary>
         /// <param name="control">The control to get the full type of.</param>
         /// <param name="controlType">output: the expanded control type.</param>
