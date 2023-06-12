@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             // Use en-Us format string if a culture is defined in format string.
-            if (formatCulture != null)
+            if (formatCulture != null && !string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
             {
                 var enUSformatString = textFormatArgs.FormatArg;
 
