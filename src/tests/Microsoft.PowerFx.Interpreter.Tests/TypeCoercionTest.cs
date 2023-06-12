@@ -116,6 +116,8 @@ namespace Microsoft.PowerFx.Tests
         {
             Assert.True(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.String));
             Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Number));
+            Assert.True(FormulaType.Decimal.CanPotentiallyCoerceTo(FormulaType.Decimal));
+            Assert.True(FormulaType.Guid.CanPotentiallyCoerceTo(FormulaType.Guid));
 
             Assert.False(FormulaType.Color.CanPotentiallyCoerceTo(FormulaType.String));
             Assert.False(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.Hyperlink));
@@ -132,8 +134,18 @@ namespace Microsoft.PowerFx.Tests
                 .Add(new NamedFormulaType("a", FormulaType.Number))
                 .Add(new NamedFormulaType("b", FormulaType.Hyperlink));
 
+            RecordType extraFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType("a", FormulaType.String))
+                .Add(new NamedFormulaType("b", FormulaType.String))
+                .Add(new NamedFormulaType("c", FormulaType.String));
+
+            RecordType missingFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType("b", FormulaType.String));
+
             Assert.True(inputType.CanPotentiallyCoerceTo(targetType));
             Assert.False(inputType.CanPotentiallyCoerceTo(notExpectedTargetType));
+            Assert.False(inputType.CanPotentiallyCoerceTo(extraFieldTargetType));
+            Assert.False(inputType.CanPotentiallyCoerceTo(missingFieldTargetType));
         }
 
         [Theory]
@@ -156,6 +168,14 @@ namespace Microsoft.PowerFx.Tests
                 .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
                 .Add(new NamedFormulaType(fieldName2, expectedFieldType2));
 
+            RecordType extraFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
+                .Add(new NamedFormulaType(fieldName2, expectedFieldType2))
+                .Add(new NamedFormulaType("ExtraField", FormulaType.String));
+
+            RecordType missingFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType(fieldName1, expectedFieldType1));
+
             bool isSucceeded = inputRecord.TryCoerceToRecord(targetType, out RecordValue result);
             if (expectedSucceeded)
             {
@@ -168,6 +188,14 @@ namespace Microsoft.PowerFx.Tests
                 Assert.False(isSucceeded);
                 Assert.Null(result);
             }
+
+            bool isSucceededExtraField = inputRecord.TryCoerceToRecord(extraFieldTargetType, out RecordValue extraFieldResult);
+            Assert.False(isSucceededExtraField);
+            Assert.Null(extraFieldResult);
+
+            bool isSucceededMissingField = inputRecord.TryCoerceToRecord(missingFieldTargetType, out RecordValue missingFieldResult);
+            Assert.False(isSucceededMissingField);
+            Assert.Null(missingFieldResult);
         }
 
         [Fact]

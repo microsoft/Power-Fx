@@ -238,6 +238,12 @@ namespace Microsoft.PowerFx
         public static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, out RecordValue result)
         {
             result = null;
+
+            if (!CheckRecordTargetMatching(value.Type, targetType))
+            {
+                return false;
+            }
+
             int n = value.Fields.Count();
             var recordResult = new NamedValue[n];
 
@@ -309,6 +315,11 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from source type to record target type.</returns> 
         public static bool CanPotentiallyCoerceToRecordType(this RecordType source, RecordType target)
         {
+            if (!CheckRecordTargetMatching(source, target))
+            {
+                return false;
+            }
+
             foreach (var field in source.GetFieldTypes())
             {
                 if (!target.TryGetFieldType(field.Name, out FormulaType targetFieldType))
@@ -344,6 +355,11 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
         public static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
         {
+            if (source == target)
+            {
+                return true;
+            }
+
             if (source == FormulaType.Boolean)
             {
                 return BooleanValue.AllowedListConvertToBoolean.Contains(target);
@@ -355,6 +371,10 @@ namespace Microsoft.PowerFx
             else if (source == FormulaType.Number)
             {
                 return NumberValue.AllowedListConvertToNumber.Contains(target);
+            }
+            else if (source == FormulaType.Decimal)
+            {
+                return DecimalValue.AllowedListConvertToDecimal.Contains(target);
             }
             else if (source == FormulaType.DateTime)
             {
@@ -403,6 +423,25 @@ namespace Microsoft.PowerFx
             }
 
             return canCoerce;
+        }
+
+        /// <summary>
+        /// Check if record target is match or mismatch with source.
+        /// </summary>
+        /// <param name="source">Source type format.</param>
+        /// <param name="target">Target type format.</param>
+        /// <returns>True/False based on whether record target is match or mismatch with source.</returns> 
+        private static bool CheckRecordTargetMatching(RecordType source, RecordType target)
+        {
+            foreach (var targetField in target.GetFieldTypes())
+            {
+                if (!source.TryGetFieldType(targetField.Name, out FormulaType sourceFieldType))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
