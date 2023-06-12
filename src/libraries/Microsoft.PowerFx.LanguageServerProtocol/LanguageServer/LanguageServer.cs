@@ -207,7 +207,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             _logger($"[PFX] HandleDidOpenNotification: paramsJson={paramsJson ?? "<null>"}");
 
-
             if (!TryParseParams(paramsJson, out DidOpenTextDocumentParams didOpenParams))
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(null, JsonRpcHelper.ErrorCode.ParseError));
@@ -232,7 +231,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Contracts.AssertValue(paramsJson);
 
             _logger($"[PFX] HandleDidChangeNotification: paramsJson={paramsJson ?? "<null>"}");
-
 
             if (!TryParseParams(paramsJson, out DidChangeTextDocumentParams didChangeParams))
             {
@@ -330,7 +328,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             _logger($"[PFX] HandleSignatureHelpRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
-
             if (id == null)
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
@@ -398,7 +395,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         private void HandleCodeActionRequest(string id, string paramsJson)
         {
             _logger($"[PFX] HandleCodeActionRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
-
 
             if (id == null)
             {
