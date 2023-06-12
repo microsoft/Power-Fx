@@ -329,6 +329,7 @@ namespace Microsoft.PowerFx.Functions
         {
             const int formatSize = 100;
             string formatString = null;
+            string configurationLanguage = Language(formatInfo.CultureInfo, irContext).Value;
             var textFormatArgs = new TextFormatArgs
             {
                 FormatCultureName = null,
@@ -360,7 +361,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, out textFormatArgs))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, configurationLanguage, out textFormatArgs))
             {
                 if (formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase) && !(textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt))
                 {

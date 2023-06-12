@@ -44,9 +44,10 @@ namespace Microsoft.PowerFx.Core.Utils
         /// </summary>
         /// <param name="formatString">Raw input format string.</param>
         /// <param name="formatCulture">Current format culture.</param>
+        /// <param name="configurationLanguage">Configuration language.</param>
         /// <param name="textFormatArgs">Return format string object.</param>
         /// <returns>True/False based on whether format string is valid or not.</returns> 
-        public static bool IsValidFormatArg(string formatString, CultureInfo formatCulture, out TextFormatArgs textFormatArgs)
+        public static bool IsValidFormatArg(string formatString, CultureInfo formatCulture, string configurationLanguage, out TextFormatArgs textFormatArgs)
         {
             // Verify statically that the format string doesn't contain BOTH numeric and date/time
             // format specifiers. If it does, that's an error according to Excel and our spec.
@@ -99,12 +100,17 @@ namespace Microsoft.PowerFx.Core.Utils
                 return false;
             }
 
+            if (string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
+            {
+                textFormatArgs.FormatCultureName = configurationLanguage;
+            }
+
             // Use en-Us format string if a culture is defined in format string.
             if (formatCulture != null && !string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
             {
                 var enUSformatString = textFormatArgs.FormatArg;
 
-                if (!string.IsNullOrEmpty(textFormatArgs.FormatCultureName) && !TryGetCulture(textFormatArgs.FormatCultureName, out formatCulture))
+                if (!TryGetCulture(textFormatArgs.FormatCultureName, out formatCulture))
                 {
                     return false;
                 }
