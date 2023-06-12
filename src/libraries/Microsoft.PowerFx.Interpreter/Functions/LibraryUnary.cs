@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: NumberToText)
+                    targetFunction: AnyNumericalToText)
             },
             {
                 UnaryOpKind.DecimalToText,
@@ -116,7 +116,18 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<DecimalValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: DecimalToText)
+                    targetFunction: AnyNumericalToText)
+            },
+            {
+                UnaryOpKind.CurrencyToText,
+                StandardErrorHandling<FormulaValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: NumberOrDecimal,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: AnyNumericalToText)
             },
             {
                 UnaryOpKind.NumberToBoolean,
@@ -620,12 +631,7 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, (double)value.Value);
         }
 
-        public static FormulaValue DecimalToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
-        {
-            return Text(runner, context, irContext, args);
-        }
-
-        public static FormulaValue NumberToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
+        public static FormulaValue AnyNumericalToText(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
             return Text(runner, context, irContext, args);
         }
@@ -830,7 +836,7 @@ namespace Microsoft.PowerFx.Functions
                 (var shortMessage, _) = ErrorUtils.GetLocalizedErrorContent(TexlStrings.ErrTextInvalidArgDateTime, formatInfo.CultureInfo, out _);
 
                 throw new CustomFunctionErrorException(shortMessage, ErrorKind.InvalidArgument);
-            }          
+            }
         }
 
         public static FormulaValue DateToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
@@ -954,18 +960,18 @@ namespace Microsoft.PowerFx.Functions
         {
             var optionSet = args[0];
             if (optionSet.ExecutionValue is string evalValue)
-            {                
+            {
                 return new StringValue(IRContext.NotInSource(FormulaType.String), evalValue);
             }
 
             return new StringValue(irContext, optionSet.DisplayName);
         }
-        
+
         public static FormulaValue OptionSetValueToNumber(IRContext irContext, OptionSetValue[] args)
         {
             var optionSet = args[0];
             if (optionSet.ExecutionValue is double evalValue)
-            {                
+            {
                 return new NumberValue(IRContext.NotInSource(FormulaType.Number), evalValue);
             }
 
@@ -989,7 +995,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var optionSet = args[0];
             if (optionSet.ExecutionValue is bool evalValue)
-            {                
+            {
                 return new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), evalValue);
             }
 
@@ -1029,6 +1035,6 @@ namespace Microsoft.PowerFx.Functions
 
             return args[0];
         }
-#endregion
+        #endregion
     }
 }
