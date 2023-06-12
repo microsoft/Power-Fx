@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             Contracts.AssertValue(jsonRpcPayload);
 
-            _logger($"[PFX] OnDataReceived Received: {jsonRpcPayload}");
+            _logger($"[PFX] OnDataReceived Received: {jsonRpcPayload ?? "<null>"}");
 
             string id = null;
             try
