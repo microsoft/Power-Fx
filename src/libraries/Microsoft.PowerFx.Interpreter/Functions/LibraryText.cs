@@ -396,6 +396,11 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
+
+                        if (formatString == "#,##0.00")
+                        {
+                            result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture) + $" [{culture.Name}]");
+                        }
                     }
 
                     break;
