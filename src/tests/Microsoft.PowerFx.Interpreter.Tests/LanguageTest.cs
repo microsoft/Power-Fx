@@ -7,6 +7,7 @@ using System.Threading;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
@@ -61,6 +62,31 @@ namespace Microsoft.PowerFx.Tests
         {
             _defaultCulture = CultureInfo.InvariantCulture;
             ConfigTests.RunOnIsolatedThread(_defaultCulture, TestDefaultCulture);
+        }
+
+        [Theory]
+        [InlineData("1234,5678", "#.##0,00", "1.234,57", "vi-VN")]
+        [InlineData("1234,5678", "#.##0,00", "1.234,57", "pt-BR")]
+        [InlineData("1234,5678", "# ##0,00", "1 234,57", "fr-FR")]
+        public void TextWithLanguageTest(string value, string format, string expectedResult,  string cultureName)
+        {
+            var culture = new CultureInfo(cultureName);
+            double.TryParse(value, NumberStyles.Float, culture, out double numValue);
+            NumberValue numberInput = new NumberValue(IRContext.NotInSource(FormulaType.Number), numValue);
+            StringValue formatString = new StringValue(IRContext.NotInSource(FormulaType.String), format); 
+
+            var formatInfo = new FormattingInfo()
+            {
+                CultureInfo = culture,
+                CancellationToken = CancellationToken.None,
+                TimeZoneInfo = TimeZoneInfo.Utc
+            };
+
+            FormulaValue[] args = { numberInput, formatString };
+
+            var result = Text(formatInfo, IRContext.NotInSource(FormulaType.String), args);
+
+            Assert.Equal(expectedResult, (result as StringValue).Value); 
         }
 
         private void TestDefaultCulture(CultureInfo culture)
