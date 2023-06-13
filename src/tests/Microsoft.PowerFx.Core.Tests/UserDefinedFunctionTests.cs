@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, false)]
         [InlineData("Foo(x: Number): Number = /*this is a test*/ Abs(x); y = 2;", 1, 1, false)]
         [InlineData("Add(x: Number, y:Number): Number = b + b; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
-        [InlineData("Add(x: Number, y:Number): Boolean = x + y;", 1, 0, true)]
+        [InlineData("Add(x: Number, y:Number): Boolean = x + y;", 1, 0, false)]
         [InlineData("Add(x: Number, y:Number): SomeType = x + y;", 0, 0, true)]
         [InlineData("Add(x: SomeType, y:Number): Number = x + y;", 0, 0, true)]
         [InlineData("Add(x: Number, y:Number): Number = x + y", 0, 0, true)]
