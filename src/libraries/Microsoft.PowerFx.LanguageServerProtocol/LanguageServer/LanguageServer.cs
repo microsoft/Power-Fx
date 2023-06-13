@@ -296,12 +296,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             _logger($"[PFX] HandleCompletionRequest: calling Suggest...");
             var result = scope.Suggest(expression, cursorPosition);
 
-            if (result.Exception != null)
-            {
-                Exception ex = result.Exception;
-                _logger($"[PFX] HandleCompletionRequest: Suggest Exception: {ex.GetType().FullName} - {ex.Message} - {ex.StackTrace}");
-            }
-
             _logger($"[PFX] HandleCompletionRequest: Suggest results: Count:{result.Suggestions.Count()}, Suggestions:{string.Join(", ", result.Suggestions.Select(s => $@"[{s.Kind}]: '{s.DisplayText.Text}'"))}");
 
             var items = new List<CompletionItem>();

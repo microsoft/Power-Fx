@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -11,7 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
@@ -20,8 +20,8 @@ using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
-using Newtonsoft.Json.Linq;
 using Xunit;
+using Xunit.Abstractions;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
@@ -40,10 +40,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         protected List<string> _sendToClientData;
         protected TestPowerFxScopeFactory _scopeFactory;
         protected TestLanguageServer _testServer;
+        private readonly ITestOutputHelper _output;
+        private readonly ConcurrentBag<Exception> _exList = new ConcurrentBag<Exception>();
 
-        public LanguageServerTests()
+        public LanguageServerTests(ITestOutputHelper output)
             : base()
         {
+            _output = output;
             Init();
         }
 
@@ -57,7 +60,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)));
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);           
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => _exList.Add(ex);
         }
 
         // The convention for getting the context from the documentUri is arbitrary and determined by the host. 
@@ -119,8 +123,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestLogCallbackExceptions()
         {
             var scopeFactory = new ErrorScopeFactory();
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
-
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
             var list = new List<Exception>();
 
             testServer.LogUnhandledExceptionHandler += (ex) =>
@@ -203,6 +206,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("abc", errorResponse.Id);
             Assert.Equal(MethodNotFound, errorResponse.Error.Code);
+
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -301,6 +306,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(ParseError, errorResponse.Error.Code);
+
+            Assert.Empty(_exList);
         }
 
         private static ParserOptions GetParserOptions(bool withAllowSideEffects)
@@ -342,6 +349,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }
 
             Assert.True(diagnosticsSet.Count() == 0);
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -364,6 +372,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 Severity = DiagnosticSeverity.Error
             }).ToArray();
             TestPublishDiagnostics("powerfx://app", "textDocument/didOpen", formula, expectedDiagnostics);
+
+            Assert.Empty(_exList);
         }
 
         [Fact]
@@ -417,6 +427,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             Assert.Equal(offset, diag.Range.Start.Character);
             Assert.Equal(offset, diag.Range.End.Character);
+
+            Assert.Empty(_exList);
         }
 
         private void CheckBehaviorError(string sentToClientData, bool expectBehaviorError, out Diagnostic[] diags)
@@ -559,6 +571,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
+
+            Assert.Empty(_exList);
         }
 
         private class DummyQuickFixHandler : CodeFixHandler
@@ -598,7 +612,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             editor.AddQuickFixHandler(failHandler);
 
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editor);
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
 
             var errorList = new List<Exception>();
 
@@ -666,7 +680,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 return scope;
             });
 
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             // Blank(A) is error, should change to IsBlank(A)
             var original = "Blank(A)";
@@ -714,6 +730,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
 
             Assert.Equal(updated, response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
+            Assert.Empty(exList);
         }
 
         [Fact]
@@ -728,7 +745,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 return scope;
             });
 
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+
             var documentUri = "powerfx://test?expression=Blank(A)&context={\"A\":1,\"B\":[1,2,3]}";
 
             testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -773,8 +793,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("Suggestion", codeActionResult.ActionResultContext.ActionIdentifier);
 
             _sendToClientData.Clear();
+            Assert.Empty(exList);
 
-            var testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);            
+            testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -795,8 +817,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Empty(_sendToClientData);
 
             _sendToClientData.Clear();
+            Assert.Empty(exList);
 
-            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);            
+            testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -821,8 +845,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
 
             _sendToClientData.Clear();
+            Assert.Empty(exList);
 
-            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);            
+            testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
             codeActionResult.ActionResultContext = null;
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -845,6 +871,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("testDocument1", errorResponse.Id);
             Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
+            Assert.Empty(exList);
         }
 
         [Theory]
@@ -867,6 +894,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             expression = expression.Substring(0, position) + expression[position + 1] + expression.Substring(position + 3);
 
             Assert.Equal(expected, _testServer.TestGetCharPosition(expression, position));
+            Assert.Empty(_exList);
         }
 
         [Fact]
@@ -880,6 +908,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(11, _testServer.TestGetPosition("123\n123456\n12345", 2, 0));
             Assert.Equal(13, _testServer.TestGetPosition("123\n123456\n12345", 2, 2));
             Assert.Equal(3, _testServer.TestGetPosition("123", 0, 999));
+
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -997,6 +1027,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -1115,6 +1146,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Year"]);
 
             CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out _);
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -1148,6 +1180,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.IsType(expectedType, response.Params.Type);
+
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -1178,6 +1212,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Null(response.Params.Type);
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -1212,13 +1247,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Equal(expectedTypeJson, JsonSerializer.Serialize(response.Params.Type, _jsonSerializerOptions));
+            Assert.Empty(_exList);
         }
 
         [Fact]
         public void TestInitialFixup()
         {
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -1244,6 +1282,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // no change
             _sendToClientData.Clear();
+            Assert.Empty(exList);
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
@@ -1265,6 +1304,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("123", response.Id);
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
+            Assert.Empty(exList);
         }
 
         [Fact]
@@ -1280,7 +1320,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => engine.CreateEditorScope(new ParserOptions() { Culture = locale }, GetFromUri(documentUri)));
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
+
+            List<Exception> exList = new List<Exception>();
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             _testServer.OnDataReceived(
                 JsonSerializer.Serialize(new
@@ -1303,6 +1346,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // Checking if contains text in the correct locale
             Assert.Contains("Caractères inattendus.", diags.First().Message); // the value should be localized. Resx files have this localized.
+            Assert.Empty(exList);
         }
 
         // Parse in Culture1, Errors in culture2
@@ -1324,7 +1368,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         .SetBindingInfo()
                         .SetDefaultErrorCulture(errorLocale)));
 
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             _testServer.OnDataReceived(
                 JsonSerializer.Serialize(new
@@ -1349,6 +1395,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // the value should be localized. Resx files have this localized.
             // If it's a different error message, then we may have a bug in the parser locale. 
             Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message);
+            Assert.Empty(exList);
         }
 
         // Test showing how LSP can fully customize check result. 
@@ -1356,7 +1403,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void CustomCheckResult()
         {
             _scopeFactory = new TestPowerFxScopeFactory(this.TestCreateEditorScope);
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
+
+            List<Exception> exList = new List<Exception>();
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);            
 
             _testServer.OnDataReceived(
              JsonSerializer.Serialize(new
@@ -1378,6 +1428,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
             Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
+            Assert.Empty(exList);
         }
 
         [Fact]
