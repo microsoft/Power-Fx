@@ -8,7 +8,6 @@ using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
@@ -368,6 +367,7 @@ namespace Microsoft.PowerFx.Intellisense
 
                 if (parameters.Any(p => p == null))
                 {
+                    // If some parameters are not either StrLitNode or NumLitNode, we cannot get suggestions
                     return;
                 }
 

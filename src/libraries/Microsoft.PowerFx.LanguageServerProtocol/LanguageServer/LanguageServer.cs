@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private readonly SendToClient _sendToClient;
         private readonly IPowerFxScopeFactory _scopeFactory;
-        private Action<string> _logger;
+        private readonly Action<string> _logger;
 
         public delegate void NotifyDidChange(DidChangeTextDocumentParams didChangeParams);
 
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public event OnLogUnhandledExceptionHandler LogUnhandledExceptionHandler;
 
-        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory)
+        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
             Contracts.AssertValue(sendToClient);
             Contracts.AssertValue(scopeFactory);
@@ -61,11 +61,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             _sendToClient = sendToClient;
             _scopeFactory = scopeFactory;
 
-            SetLogger();
-        }
-
-        public void SetLogger(Action<string> logger = null)
-        {
             _logger = logger ?? ((string s) => { });
         }
 
@@ -104,7 +99,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     }
 
                     var method = methodElement.GetString();
-                    var paramsJson = paramsElement.GetRawText();                    
+                    var paramsJson = paramsElement.GetRawText();
 
                     switch (method)
                     {
@@ -498,7 +493,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens);
         }
 
-        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method) 
+        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method)
             where T : SemanticTokensParams
         {
             var uri = new Uri(semanticTokensParams.TextDocument.Uri);
@@ -517,7 +512,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
             var eol = queryParams?.Get("eol");
             eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
-            
+
             var startIndex = -1;
             var endIndex = -1;
             if (isRangeSemanticTokensMethod)

@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)));
-            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);           
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
             _testServer.LogUnhandledExceptionHandler += (Exception ex) => _exList.Add(ex);
         }
 
@@ -795,7 +795,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData.Clear();
             Assert.Empty(exList);
 
-            var testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);            
+            var testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
             testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
@@ -819,7 +819,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData.Clear();
             Assert.Empty(exList);
 
-            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);            
+            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
             testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
@@ -847,7 +847,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData.Clear();
             Assert.Empty(exList);
 
-            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);            
+            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
             testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
             codeActionResult.ActionResultContext = null;
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
@@ -1406,7 +1406,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
 
             List<Exception> exList = new List<Exception>();
-            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);            
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             _testServer.OnDataReceived(
              JsonSerializer.Serialize(new
