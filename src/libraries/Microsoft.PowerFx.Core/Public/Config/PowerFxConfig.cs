@@ -22,7 +22,6 @@ namespace Microsoft.PowerFx
     {
         internal static readonly int DefaultMaxCallDepth = 20;
         internal static readonly int DefaultMaximumExpressionLength = 1000;
-        internal static readonly int DefaultMaxOperationsAllowed = 10000;
 
         /// <summary>
         /// Global symbols. Additional symbols beyond default function set. 
@@ -43,11 +42,6 @@ namespace Microsoft.PowerFx
 
         public int MaxCallDepth { get; set; }
 
-        /// <summary>
-        /// Used with recursive user-defined functions to break long running functions, a good example of this is fibonacci. 
-        /// </summary>
-        public int MaxOperationsAllowed { get; set; }
-
         public int MaximumExpressionLength { get; set; }
 
         private PowerFxConfig(EnumStoreBuilder enumStoreBuilder, Features features = null)
@@ -56,7 +50,6 @@ namespace Microsoft.PowerFx
             SymbolTable.EnumStoreBuilder = enumStoreBuilder;
             MaxCallDepth = DefaultMaxCallDepth;
             MaximumExpressionLength = DefaultMaximumExpressionLength;
-            MaxOperationsAllowed = DefaultMaxOperationsAllowed;
         }
 
         /// <summary>
