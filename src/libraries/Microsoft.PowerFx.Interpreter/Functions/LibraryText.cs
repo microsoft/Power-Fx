@@ -378,6 +378,13 @@ namespace Microsoft.PowerFx.Functions
             var formatString = textFormatArgs.FormatArg;
             result = null;
 
+            // There is a difference between Windows 10 and 11 for French locale
+            // We fix the thousand separator here to be consistent 
+            if (culture.Name == "fr-FR" && culture.NumberFormat.NumberGroupSeparator == "\uC2A0")
+            {
+                culture.NumberFormat.NumberGroupSeparator = "\uE280AF";
+            }
+
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
             switch (value)
@@ -395,12 +402,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
-
-                        if (formatString == "#,##0.00")
-                        {
-                            result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture) + $" [{culture.Name}]");
-                        }
+                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));                       
                     }
 
                     break;
