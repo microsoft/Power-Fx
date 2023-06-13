@@ -229,7 +229,8 @@ namespace Microsoft.PowerFx.Core.Tests
             typeof(IReadOnlyList<>),
             typeof(Nullable<>),
             typeof(IEnumerable<>),
-            typeof(KeyValuePair<,>)
+            typeof(KeyValuePair<,>),
+            typeof(ISet<>)
         };
 
         // If the instance is readonly, is the type itself immutable ?

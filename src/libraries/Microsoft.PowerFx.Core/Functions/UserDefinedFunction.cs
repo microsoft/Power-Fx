@@ -98,7 +98,7 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(errorContainer);
 
-            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind) || !ReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
+            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind) && !actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
             {
                 errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
             }
