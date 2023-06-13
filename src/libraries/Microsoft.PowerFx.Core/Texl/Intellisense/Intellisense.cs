@@ -41,39 +41,21 @@ namespace Microsoft.PowerFx.Intellisense
 
             IEnumerable<TexlFunction> allFunctionOverloads = null;
 
-            // TODO: Hoist scenario tracking out of language module.
-            // Guid suggestScenarioGuid = Common.Telemetry.Log.Instance.StartScenario("IntellisenseSuggest");
-
-            try
+            if (!TryInitializeIntellisenseContext(context, binding, formula, out var intellisenseData))
             {
-                if (!TryInitializeIntellisenseContext(context, binding, formula, out var intellisenseData))
-                {
-                    allFunctionOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
-                    return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allFunctionOverloads);
-                }
-
-                foreach (var handler in _suggestionHandlers)
-                {
-                    if (handler.Run(intellisenseData))
-                    {
-                        break;
-                    }
-                }
-
-                return Finalize(context, intellisenseData, formula.Loc);
-            }
-            catch (Exception ex)
-            {
-                // If there is any exception, we don't need to crash. Instead, Suggest() will simply 
-                // return an empty result set along with exception for client use.
-                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allFunctionOverloads, ex);
+                allFunctionOverloads = GetFunctionOverloads(intellisenseData.Binding.NameResolver, intellisenseData.CurFunc);
+                return new IntellisenseResult(new DefaultIntellisenseData(), new List<IntellisenseSuggestion>(), allFunctionOverloads);
             }
 
-            // TODO: Hoist scenario tracking out of language module.
-            // finally
-            // {
-            //     Common.Telemetry.Log.Instance.EndScenario(suggestScenarioGuid);
-            // }
+            foreach (var handler in _suggestionHandlers)
+            {
+                if (handler.Run(intellisenseData))
+                {
+                    break;
+                }
+            }
+
+            return Finalize(context, intellisenseData, formula.Loc);
         }
 
         public static bool TryGetExpectedTypeForBinaryOp(TexlBinding binding, TexlNode curNode, int cursorPos, out DType expectedType)
