@@ -69,8 +69,7 @@ namespace Microsoft.PowerFx
             if (_info == null)
             {
                 var t = GetType();
-                var suffix = "Function";
-                var name = t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
+                var name = GetFunctionName(t);
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
                 var returnType = GetType(m.ReturnType);
                 var paramTypes = new List<FormulaType>();
@@ -145,6 +144,12 @@ namespace Microsoft.PowerFx
             throw new NotImplementedException($"Marshal type {t.Name}");
         }
 
+        private string GetFunctionName(Type t)
+        {
+            var suffix = "Function";
+            return t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
+        }
+
         internal TexlFunction GetTexlFunction()
         {
             var info = Scan();
@@ -167,8 +172,12 @@ namespace Microsoft.PowerFx
 
         internal string GetFunctionName()
         {
-            var info = Scan();
-            return info.Name;
+            if (_info == null)
+            {
+                return GetFunctionName(GetType());
+            }
+
+            return _info.Name;
         }
 
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
