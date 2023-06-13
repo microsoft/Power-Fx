@@ -380,9 +380,9 @@ namespace Microsoft.PowerFx.Functions
 
             // There is a difference between Windows 10 and 11 for French locale
             // We fix the thousand separator here to be consistent 
-            if (culture.Name == "fr-FR" && culture.NumberFormat.NumberGroupSeparator == "\uC2A0")
+            if (culture.Name == "fr-FR" && culture.NumberFormat.NumberGroupSeparator == "\u00A0")
             {
-                culture.NumberFormat.NumberGroupSeparator = "\uE280AF";
+                culture.NumberFormat.NumberGroupSeparator = "\u202F";
             }
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
