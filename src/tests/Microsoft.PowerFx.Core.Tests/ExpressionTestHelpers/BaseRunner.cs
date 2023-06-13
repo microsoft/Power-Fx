@@ -333,7 +333,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     }
                 }                
 
-                return (TestResult.Fail, $"\r\n  Expected: {expected} [{BitConverter.ToString(Encoding.UTF8.GetBytes(expected))}] \r\n  Actual  : {actualStr} [{BitConverter.ToString(Encoding.UTF8.GetBytes(actualStr))}]");
+                return (TestResult.Fail, $"\r\n  Expected: {expected}\r\n  Actual  : {actualStr}");
             }
         }
 
