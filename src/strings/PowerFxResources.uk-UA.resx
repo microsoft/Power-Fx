@@ -4951,7 +4951,7 @@
     
   </data>
   <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле основного ключа "{1}".</value>
+    <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле первинного ключа "{1}".</value>
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">

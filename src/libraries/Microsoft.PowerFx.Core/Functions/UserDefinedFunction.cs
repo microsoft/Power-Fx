@@ -221,6 +221,11 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 return _globalNameResolver.TryLookupEnum(name, out lookupInfo);
             }
+
+            public bool LookupExpandedControlType(IExternalControl control, out DType controlType)
+            {
+                return _globalNameResolver.LookupExpandedControlType(control, out controlType);
+            }
         }
     }
 }
