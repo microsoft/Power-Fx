@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -383,6 +382,13 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             var formatString = textFormatArgs.FormatArg;
             result = null;
+
+            // There is a difference between Windows 10 and 11 for French locale
+            // We fix the thousand separator here to be consistent 
+            if (culture.Name.Equals("fr-FR", StringComparison.OrdinalIgnoreCase) && culture.NumberFormat.NumberGroupSeparator == "\u00A0")
+            {
+                culture.NumberFormat.NumberGroupSeparator = "\u202F";
+            }
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 
