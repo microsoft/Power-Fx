@@ -44,8 +44,9 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (var fieldName in Type.FieldNames)
             {
-                var formulaValue = GetField(fieldName);
-                yield return new NamedValue(fieldName, formulaValue);
+                // var formulaValue = GetField(fieldName);
+                Type.TryGetBackingDType(fieldName, out var backingDType);
+                yield return new NamedValue(fieldName, () => GetField(fieldName), backingDType);
             }
         }
 

@@ -58,6 +58,11 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
+        internal bool TryGetBackingDType(string name, out DType type)
+        {
+            return _type.TryGetType(new DName(name), out type);
+        }
+
         /// <summary>
         /// Lookup for logical name and field for input display or logical name.
         /// If there is a conflict, it prioritizes logical name.
