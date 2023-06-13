@@ -3,6 +3,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -330,9 +331,9 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         return (TestResult.Pass, null);
                     }
-                }
+                }                
 
-                return (TestResult.Fail, $"\r\n  Expected: {expected}\r\n  Actual  : {actualStr}");
+                return (TestResult.Fail, $"\r\n  Expected: {expected} [{BitConverter.ToString(Encoding.UTF8.GetBytes(expected))}] \r\n  Actual  : {actualStr} [{BitConverter.ToString(Encoding.UTF8.GetBytes(actualStr))}]");
             }
         }
 
