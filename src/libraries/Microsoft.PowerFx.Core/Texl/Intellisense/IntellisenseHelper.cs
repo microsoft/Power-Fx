@@ -357,12 +357,19 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
 
-                FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => texlNode.Kind != NodeKind.Error).Select(texlNode => texlNode switch
+                FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => NoErrorInTexlNode(texlNode))
+                                                                  .Select(texlNode => texlNode switch
                 {
                     StrLitNode strNode => FormulaValue.New(strNode.Value),
                     NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
                     _ => null as FormulaValue
                 }).ToArray();
+
+                if (parameters.Any(p => p == null))
+                {
+                    // If some parameters are not either StrLitNode or NumLitNode, we cannot get suggestions
+                    return;
+                }
 
                 // If connector function has some suggestions, let's add them here
                 ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
@@ -426,6 +433,21 @@ namespace Microsoft.PowerFx.Intellisense
                     }
                 }
             }
+        }
+
+        private static bool NoErrorInTexlNode(TexlNode texlNode)
+        {
+            if (texlNode.Kind == NodeKind.Error)
+            {
+                return false;
+            }
+
+            if (texlNode.Kind == NodeKind.Record && texlNode is RecordNode rn && rn.ChildNodes.Any(cn => cn.Kind == NodeKind.Error))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         internal static DType GetEnumType(IntellisenseData.IntellisenseData intellisenseData, TexlNode node)

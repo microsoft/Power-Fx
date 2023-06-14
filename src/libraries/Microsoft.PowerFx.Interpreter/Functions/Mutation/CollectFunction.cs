@@ -47,6 +47,15 @@ namespace Microsoft.PowerFx.Interpreter
             return argNum >= 1;
         }
 
+        public override bool MutatesArg0 => true;
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectFunction"/> class.
         /// To be consumed by ClearCollect function.
@@ -226,7 +235,19 @@ namespace Microsoft.PowerFx.Interpreter
 
         public virtual async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
-            var arg0 = args[0];
+            FormulaValue arg0;
+
+            // Need to check if the Lazy first argument has been evaluated since it may have already been
+            // evaluated in the ClearCollect case.
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                arg0 = args[0];
+            }
+
             var arg1 = args[1];
 
             // PA returns arg0.

@@ -270,5 +270,10 @@ namespace Microsoft.PowerFx.Types
                 sb.Append(")");
             }
         }
+
+        public virtual int GetRowsHashCode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

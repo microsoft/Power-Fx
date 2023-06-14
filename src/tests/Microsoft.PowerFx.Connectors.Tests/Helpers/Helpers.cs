@@ -12,14 +12,19 @@ namespace Microsoft.PowerFx.Tests
     {
         public static Stream GetStream(string name)
         {
-            var assemblyNamespace = "Microsoft.PowerFx.Connectors.Tests";
-            var fullName = assemblyNamespace + "." + name.Replace('\\', '.');
+            if (!Path.IsPathRooted(name))
+            {
+                string assemblyNamespace = "Microsoft.PowerFx.Connectors.Tests";
+                string fullName = assemblyNamespace + "." + name.Replace('\\', '.');
 
-            var assembly = typeof(BasicRestTests).Assembly;
-            var stream = assembly.GetManifestResourceStream(fullName);
+                var assembly = typeof(BasicRestTests).Assembly;
+                var stream = assembly.GetManifestResourceStream(fullName);
 
-            Assert.NotNull(stream);
-            return stream;
+                Assert.NotNull(stream);
+                return stream;
+            }
+
+            return File.OpenRead(name);
         }
 
         public static string ReadAllText(string name)

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -33,19 +34,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData("Sort(Table, date)", "https://contoso.com/api/list?$orderby=date")]
         public void TestDelegation(string expression, string uriExpected)
         {
-            var config = new PowerFxConfig(Features.PowerFxV1);
-            var engine = new RecalcEngine(config);
-            engine.UpdateVariable("myNumber", FormulaValue.New(50));
-
             TableType tableType = TableType.Empty()
                 .Add("x", FormulaType.Number)
                 .Add("datetime", FormulaType.DateTime)
                 .Add("date", FormulaType.Date)
                 .Add("name", FormulaType.String);
             TableValue table = new TestODataTableValue(tableType);
-            engine.UpdateVariable("Table", table);
 
-            var odataTable = engine.Eval(expression) as ODataQueryableTableValue;
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            var engine = new RecalcEngine(config);
+
+            var symbolValues = new SymbolValues(config.SymbolTable);
+            symbolValues.Add("Table", table);
+            symbolValues.Add("myNumber", FormulaValue.New(50));
+
+            var odataTable = engine.EvalAsync(expression, CancellationToken.None, symbolValues).Result as ODataQueryableTableValue;
             Assert.NotNull(odataTable);
             Assert.Equal(new Uri(uriExpected), odataTable.ODataParams.GetUri(_uriBase));
         }

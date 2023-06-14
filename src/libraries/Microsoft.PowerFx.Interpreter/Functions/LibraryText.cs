@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -173,7 +172,7 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
-                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
@@ -248,7 +247,7 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
-                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
@@ -329,6 +328,13 @@ namespace Microsoft.PowerFx.Functions
         {
             const int formatSize = 100;
             string formatString = null;
+            var textFormatArgs = new TextFormatArgs
+            {
+                FormatCultureName = null,
+                FormatArg = null,
+                HasDateTimeFmt = false,
+                HasNumericFmt = false
+            };
 
             if (args.Length > 1 && args[1] is StringValue fs)
             {
@@ -338,7 +344,7 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 2 && args[2] is StringValue languageCode)
             {
-                if (!TryGetCulture(languageCode.Value, out culture))
+                if (!TextFormatUtils.TryGetCulture(languageCode.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
                 }
@@ -353,28 +359,29 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out bool hasDateTimeFmt, out bool hasNumberFmt))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, out textFormatArgs))
             {
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
+            var isText = TryText(formatInfo, irContext, args[0], textFormatArgs, out StringValue result);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString, out StringValue result)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, out StringValue result)
         {
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
-            var hasDateTimeFmt = false;
-            var hasNumberFmt = false;
+            var formatString = textFormatArgs.FormatArg;
             result = null;
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
+            // There is a difference between Windows 10 and 11 for French locale
+            // We fix the thousand separator here to be consistent 
+            if (culture.Name.Equals("fr-FR", StringComparison.OrdinalIgnoreCase) && culture.NumberFormat.NumberGroupSeparator == "\u00A0")
             {
-                return false;
+                culture.NumberFormat.NumberGroupSeparator = "\u202F";
             }
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
@@ -385,7 +392,7 @@ namespace Microsoft.PowerFx.Functions
                     result = sv;
                     break;
                 case NumberValue num:
-                    if (formatString != null && hasDateTimeFmt)
+                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
@@ -400,7 +407,7 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 case DecimalValue dec:
-                    if (formatString != null && hasDateTimeFmt)
+                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var decNum = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)dec.Value);
@@ -415,7 +422,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case DateTimeValue dateTimeValue:
-                    if (formatString != null && hasNumberFmt)
+                    if (formatString != null && textFormatArgs.HasNumericFmt)
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
                         var newNumber = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateTimeValue);
@@ -428,7 +435,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case DateValue dateValue:
-                    if (formatString != null && hasNumberFmt)
+                    if (formatString != null && textFormatArgs.HasNumericFmt)
                     {
                         NumberValue newDateNumber = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue) as NumberValue;
                         result = new StringValue(irContext, newDateNumber.Value.ToString(formatString, culture));
@@ -440,7 +447,7 @@ namespace Microsoft.PowerFx.Functions
 
                     break;
                 case TimeValue timeValue:
-                    if (formatString != null && hasNumberFmt)
+                    if (formatString != null && textFormatArgs.HasNumericFmt)
                     {
                         var newNumber = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { timeValue });
                         result = new StringValue(irContext, newNumber.Value.ToString(formatString, culture));

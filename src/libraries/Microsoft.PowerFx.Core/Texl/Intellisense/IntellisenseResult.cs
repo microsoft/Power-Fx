@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// </summary>
         private readonly int _currentArgumentIndex;
 
-        internal IntellisenseResult(IIntellisenseData data, List<IntellisenseSuggestion> suggestions, IEnumerable<TexlFunction> possibleOverloads, Exception exception = null)
+        internal IntellisenseResult(IIntellisenseData data, List<IntellisenseSuggestion> suggestions, IEnumerable<TexlFunction> possibleOverloads)
         {
             Contracts.AssertValue(suggestions);
 
@@ -70,8 +70,7 @@ namespace Microsoft.PowerFx.Intellisense
             _functionOverloads = new List<IntellisenseSuggestion>();
 
             CurrentFunctionOverloadIndex = -1;
-            _currentArgumentIndex = argIndex;
-            Exception = exception;
+            _currentArgumentIndex = argIndex;            
 
             if (func == null || possibleOverloads == null)
             {
@@ -313,9 +312,7 @@ namespace Microsoft.PowerFx.Intellisense
         /// Index of the overload in 'FunctionOverloads' to be displayed in the UI.
         /// This is equal to -1 when IsFunctionScope = False.
         /// </summary>
-        public int CurrentFunctionOverloadIndex { get; protected set; }
-
-        public Exception Exception { get; protected set; }
+        public int CurrentFunctionOverloadIndex { get; protected set; }        
 
         /// <summary>
         /// Enumerates suggestions for the current position in some specified input.

@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        internal class DatabaseTable : InMemoryTableValue
+        internal class DatabaseTable : InMemoryTableValue, IMutationCopy
         {
             internal static TableType TestTableType => DatabaseRecord.TestRecordType.ToTable();
 
@@ -107,6 +107,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PatchDelay = patchDelay;
             }
 
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryTableValue
+            bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
+            }
+
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
             {
                 if (PatchDelay > 0)
@@ -118,7 +126,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        internal class DatabaseRecord : InMemoryRecordValue
+        internal class DatabaseRecord : InMemoryRecordValue, IMutationCopy
         {
             internal static FormulaType TestEntityType => new TestEntityType();
 
@@ -166,6 +174,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 throw new NotImplementedException("Cannot call TryGetField");
+            }
+
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryRecordValue
+            bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
             }
         }
 

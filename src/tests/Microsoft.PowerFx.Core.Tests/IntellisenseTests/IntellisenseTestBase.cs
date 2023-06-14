@@ -80,12 +80,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var checkResult = engine.Check(expression, new ParserOptions(culture), symTable);
             var suggestions = engine.Suggest(checkResult, cursorPosition);
-            
-            if (suggestions.Exception != null)
-            {
-                throw suggestions.Exception;
-            }
-
+                       
             return suggestions;
         }
     }
