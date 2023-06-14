@@ -67,8 +67,8 @@ namespace Microsoft.PowerFx.Tests
         [Theory]
         [InlineData("en-US", @"Text(1234.5678, ""#,##0.00"")", "1,234.57")]
         [InlineData("vi-VN", @"Text(1234.5678, ""#.##0,00"")", "1.234,57")]
-        [InlineData("fr-FR", @"Text(1234.5678, ""# ##0,00"")", "1\u202F234,57")]
-        [InlineData("fi-FI", @"Text(1234.5678, ""# ##0,00"")", "1\u00A0234,57")]
+        [InlineData("fr-FR", "Text(1234.5678, \"#\u202f##0,00\")", "1\u202F234,57")]
+        [InlineData("fi-FI", "Text(1234.5678, \"#\u00A0##0,00\")", "1\u00A0234,57")]
         public void TextWithLanguageTest(string cultureName, string exp, string expectedResult)
         {
             var culture = new CultureInfo(cultureName);
