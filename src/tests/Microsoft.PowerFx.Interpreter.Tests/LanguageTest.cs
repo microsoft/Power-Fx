@@ -65,28 +65,20 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Theory]
-        [InlineData("1234,5678", "#.##0,00", "1.234,57", "vi-VN")]
-        [InlineData("1234,5678", "#.##0,00", "1.234,57", "pt-BR")]
-        [InlineData("1234,5678", "# ##0,00", "1 234,57", "fr-FR")]
-        public void TextWithLanguageTest(string value, string format, string expectedResult,  string cultureName)
+        [InlineData("en-US", @"Text(1234.5678, ""#,##0.00"")", "1,234.57")]
+        [InlineData("vi-VN", @"Text(1234.5678, ""#.##0,00"")", "1.234,57")]
+        [InlineData("fr-FR", @"Text(1234.5678, ""# ##0,00"")", "1\u202F234,57")]
+        [InlineData("fi-FI", @"Text(1234.5678, ""# ##0,00"")", "1\u00A0234,57")]
+        public void TextWithLanguageTest(string cultureName, string exp, string expectedResult)
         {
             var culture = new CultureInfo(cultureName);
-            double.TryParse(value, NumberStyles.Float, culture, out double numValue);
-            NumberValue numberInput = new NumberValue(IRContext.NotInSource(FormulaType.Number), numValue);
-            StringValue formatString = new StringValue(IRContext.NotInSource(FormulaType.String), format); 
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(Features.None));
+            var symbols = new RuntimeConfig();
+            symbols.SetCulture(culture);
 
-            var formatInfo = new FormattingInfo()
-            {
-                CultureInfo = culture,
-                CancellationToken = CancellationToken.None,
-                TimeZoneInfo = TimeZoneInfo.Utc
-            };
+            var result = recalcEngine.EvalAsync(exp, CancellationToken.None, runtimeConfig: symbols).Result;
 
-            FormulaValue[] args = { numberInput, formatString };
-
-            var result = Text(formatInfo, IRContext.NotInSource(FormulaType.String), args);
-
-            Assert.Equal(expectedResult, (result as StringValue).Value); 
+            Assert.Equal(expectedResult, (result as StringValue).Value);
         }
 
         private void TestDefaultCulture(CultureInfo culture)

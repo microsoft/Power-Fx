@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Utils
         /// </summary>
         /// <param name="formatString">Raw input format string.</param>
         /// <param name="formatCulture">Current format culture.</param>
-        /// <param name="defaultLanguage">Default language.</param>
+        /// <param name="defaultLanguage">Default value for TextFormatArgs.FormatCultureName. This can be overwritten by using the [$-LanguageCode] syntax in the string format.</param>
         /// <param name="textFormatArgs">Return format string object.</param>
         /// <returns>True/False based on whether format string is valid or not.</returns> 
         public static bool IsValidFormatArg(string formatString, CultureInfo formatCulture, string defaultLanguage, out TextFormatArgs textFormatArgs)
