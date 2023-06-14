@@ -277,16 +277,16 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("{x: 2, y: 5, a: 8}", false)]
         [InlineData("{a: 8}", false)]
         [InlineData("{x: {x : 2}}", false)]
-        public void CustomFunctionRecordTest(string inputRecord, bool isSuccess)
+        public void CustomFunctionWithRecordTest(string inputRecord, bool isSuccess)
         {
             var recordType = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number));
             var tableType = recordType.ToTable();
-            
-            CustomFunctionRecord(new TestRecordsCustomFunction(recordType), "(" + inputRecord + ")", isSuccess);
-            CustomFunctionRecord(new TestTableCustomFunction(tableType), "([" + inputRecord + "])", isSuccess);
+
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<RecordType, RecordValue>(recordType), "(" + inputRecord + ")", isSuccess);
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<TableType, TableValue>(tableType), "([" + inputRecord + "])", isSuccess);
         }
 
-        private void CustomFunctionRecord(ReflectionFunction reflectionFunction, string inputRecord, bool isSuccess)
+        private void TestCustomFunctionWithRecordArgument(ReflectionFunction reflectionFunction, string inputRecord, bool isSuccess)
         {
             var config = new PowerFxConfig();
             config.AddFunction(reflectionFunction);
@@ -326,32 +326,19 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Must have "Function" suffix. 
-        private class TestRecordsCustomFunction : ReflectionFunction
+        private class TestAggregateIdentityCustomFunction<TType, TValue> : ReflectionFunction
+            where TType : AggregateType
+            where TValue : FormulaValue
         {
-            public TestRecordsCustomFunction(RecordType recordType)
-                : base("RecordsTest", recordType, recordType)
+            public TestAggregateIdentityCustomFunction(TType argType)
+                : base("RecordsTest", argType, argType)
             {
             }
 
             // Must have "Execute" method. 
-            public static RecordValue Execute(RecordValue recordValue)
+            public static TValue Execute(TValue value)
             {
-                return recordValue;
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestTableCustomFunction : ReflectionFunction
-        {
-            public TestTableCustomFunction(TableType tableType)
-                : base("RecordsTest", tableType, tableType)
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static TableValue Execute(TableValue tableValue)
-            {
-                return tableValue;
+                return value;
             }
         }
 
