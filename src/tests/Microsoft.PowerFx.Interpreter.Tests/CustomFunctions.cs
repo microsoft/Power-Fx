@@ -298,7 +298,7 @@ namespace Microsoft.PowerFx.Tests
             var check = engine.Check(reflectionFunction.GetFunctionName() + inputRecord);
 
             FormulaValue result = null; 
-            ConfiguredTaskAwaitable<FormulaValue> resultAsync;
+            ConfiguredTaskAwaitable<FormulaValue> resultAsync = new ConfiguredTaskAwaitable<FormulaValue>();
             string errorMsg = string.Empty;
             var rc = new RuntimeConfig();
 
