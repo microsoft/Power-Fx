@@ -44,8 +44,9 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (var fieldName in Type.FieldNames)
             {
-                var formulaValue = GetField(fieldName);
-                yield return new NamedValue(fieldName, formulaValue);
+                // below will always succeed.
+                Type.TryGetBackingDType(fieldName, out var backingDType);
+                yield return new NamedValue(fieldName, async () => GetField(fieldName), backingDType);
             }
         }
 
@@ -53,8 +54,10 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (var fieldName in Type.FieldNames)
             {
-                var formulaValue = await GetFieldAsync(fieldName, cancellationToken).ConfigureAwait(false);
-                yield return new NamedValue(fieldName, formulaValue);
+                // below will always succeed.
+                Type.TryGetBackingDType(fieldName, out var backingDType);
+                Func<Task<FormulaValue>> getFormulaValue = async () => await GetFieldAsync(fieldName, cancellationToken).ConfigureAwait(false);
+                yield return new NamedValue(fieldName, getFormulaValue, backingDType);
             }
         }
 
