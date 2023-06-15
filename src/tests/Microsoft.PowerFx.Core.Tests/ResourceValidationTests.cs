@@ -13,7 +13,7 @@ using Xunit;
 namespace Microsoft.PowerFx.Tests
 {
     public class ResourceValidationTests : PowerFxTest
-    {       
+    {
         [Fact]
         public void ResourceLoadsOnlyRequiredLocales()
         {
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Tests
             string frContent = frERContent.GetSingleValue(ErrorResource.ShortMessageTag);
 
             Assert.NotEqual(usContent, frContent);
-        }        
+        }
 
         [Fact]
         public void TestErrorResourceImport()
@@ -88,6 +88,32 @@ namespace Microsoft.PowerFx.Tests
                         "Missing parameter description. Please add the following to Resources: " + "About" + function.LocaleInvariantName + "_" + paramName);
                 }
             }
+        }
+
+        [Fact]
+        public void InvariantCultureForResourceImportTest()
+        {            
+            // $$$ Don't use CurrentUICulture
+            CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+            var enUsERContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
+            var enUsBasicContent = StringResources.Get("AboutAbs");
+
+            // $$$ Don't use CurrentUICulture
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+            var invariantContent = StringResources.GetErrorResource(TexlStrings.ErrBadToken);
+            var invariantBasicContent = StringResources.Get("AboutAbs");
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            Assert.True(assemblies.Where(x => x.FullName.Contains("Culture=neutral")).Any());
+
+            // Strings in invariantculture are the same as en-US culture
+            // Not validating content directly, since it might change
+            Assert.Equal(enUsBasicContent, invariantBasicContent);
+
+            string usContent = enUsERContent.GetSingleValue(ErrorResource.ShortMessageTag);
+            string invContent = invariantContent.GetSingleValue(ErrorResource.ShortMessageTag);
+
+            Assert.Equal(usContent, invContent);
         }
     }
 }
