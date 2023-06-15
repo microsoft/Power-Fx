@@ -305,6 +305,7 @@ namespace Microsoft.PowerFx.Tests
             try
             {
                 result = check.GetEvaluator().Eval(rc);
+
                 resultAsync = check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
             }
             catch (Exception ex)
