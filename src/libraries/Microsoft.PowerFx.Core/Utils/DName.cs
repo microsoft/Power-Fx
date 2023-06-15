@@ -161,17 +161,17 @@ namespace Microsoft.PowerFx.Core.Utils
                 return new DName(StrUnderscore);
             }
 
-            var fAllSpaces = true;
-            var fHasDisallowedWhiteSpaceCharacters = false;
+            bool fAllSpaces = true;
+            bool fHasDisallowedWhiteSpaceCharacters = false;
 
             fModified = false;
-
-            // $$$ Needs optimization
+            
             for (var i = 0; i < strName.Length; i++)
             {
-                var fIsSpace = strName[i] == ChSpace;
-                var fIsDisallowedWhiteSpace = CharacterUtils.IsTabulation(strName[i]) || CharacterUtils.IsLineTerm(strName[i]);
-                fAllSpaces = fAllSpaces && (fIsDisallowedWhiteSpace || fIsSpace);
+                char c = strName[i];
+                bool fIsDisallowedWhiteSpace = c == '\u0009' || c == '\u000B' || c == '\r' || c == '\n' || c == '\u0085' || c == '\u2028' || c == '\u2029' || c == '\u000C';
+                
+                fAllSpaces = fAllSpaces && (fIsDisallowedWhiteSpace || c == ' ');
                 fHasDisallowedWhiteSpaceCharacters |= fIsDisallowedWhiteSpace;
             }
 
