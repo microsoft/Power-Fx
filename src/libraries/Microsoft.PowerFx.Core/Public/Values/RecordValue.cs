@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (var fieldName in Type.FieldNames)
             {
-                // below will always succeed.
+                // Since fieldName is being enumerated from Type, backing type should alway be found and below will always succeed.
                 Type.TryGetBackingDType(fieldName, out var backingDType);
                 yield return new NamedValue(fieldName, async () => GetField(fieldName), backingDType);
             }

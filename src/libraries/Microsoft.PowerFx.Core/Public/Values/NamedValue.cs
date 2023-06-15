@@ -44,8 +44,8 @@ namespace Microsoft.PowerFx.Types
         public NamedValue(string name, FormulaValue value)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            _value = value ?? throw new ArgumentNullException(nameof(value));
             _backingDType = value.Type._type;
-            _value = value;
         }
 
         /// <summary>

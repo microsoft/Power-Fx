@@ -58,12 +58,12 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
-        internal bool TryGetBackingDType(string name, out DType type)
+        internal bool TryGetBackingDType(string fieldName, out DType type)
         {
             if (_type == null)
             {
                 // if the backing _type is null, maybe we have a derived type that can provide the type
-                if (TryGetFieldType(name, out var formulaType))
+                if (TryGetFieldType(fieldName, out var formulaType))
                 {
                     type = formulaType._type;
                     return true;
@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
             
-            return _type.TryGetType(new DName(name), out type);
+            return _type.TryGetType(new DName(fieldName), out type);
         }
 
         /// <summary>
