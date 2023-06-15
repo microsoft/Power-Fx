@@ -920,6 +920,7 @@ namespace Microsoft.PowerFx.Core.IR
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
 
                     case CoercionKind.DecimalToNumber:
+                    case CoercionKind.CurrencyToNumber:
                         return new CallNode(
                             IRContext.NotInSource(FormulaType.Build(toType)),
                             context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value : BuiltinFunctionsCore.Float,
@@ -1113,9 +1114,6 @@ namespace Microsoft.PowerFx.Core.IR
                         break;
                     case CoercionKind.TextToCurrency:
                         unaryOpKind = UnaryOpKind.TextToCurrency;
-                        break;
-                    case CoercionKind.CurrencyToNumber:
-                        unaryOpKind = UnaryOpKind.CurrencyToNumber;
                         break;
                     case CoercionKind.CurrencyToBoolean:
                         unaryOpKind = UnaryOpKind.CurrencyToBoolean;

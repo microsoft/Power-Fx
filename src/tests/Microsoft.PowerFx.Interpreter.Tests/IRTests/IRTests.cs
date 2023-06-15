@@ -208,19 +208,20 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
         // Testing only currency to text and currency to decimal for the time being.
         // Other coercion from currency should be added later.
         [Theory]
-        [InlineData("Concatenate(First(MyTable).Currency, \"$\")", "CurrencyToText", "1$")]
-        [InlineData("Concatenate(\"$\", First(MyTable).Currency)", "CurrencyToText", "$1")]
-        [InlineData("Concatenate(First(MyTable).Currency * 100, \"%\")", "Decimal:w(FieldAccess(First:![Currency:$]", "100%")]
-        public void CurrencyToTextCoercionTest(string expr, string nodeName, string expected)
+        [InlineData("Concatenate(First(MyTable).Currency, \"$\")", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "1$")]
+        [InlineData("Concatenate(\"$\", First(MyTable).Currency)", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "$1")]
+        [InlineData("Concatenate(First(MyTable).Currency * 100, \"%\")", "Decimal:w(FieldAccess(First:![Currency:$]", "Value:n(FieldAccess(First:![Currency:$]", "100%")]
+        [InlineData("Concatenate(Float(First(MyTable).Currency) * 100, \"%\")", "Float:n(FieldAccess(First:![Currency:$]", "Float:n(FieldAccess(First:![Currency:$]", "100%")]
+        public void CurrencyToTextCoercionTest(string expr, string ir, string ir_float, string expected)
         {
-            var config = new PowerFxConfig();
+            var opt_float = new ParserOptions() { NumberIsFloat = true };
 
             // Building table with Currency column type.
             var recordType = RecordType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
             var recordValue = FormulaValue.NewRecordFromFields(recordType, new List<NamedValue>() { new NamedValue("Currency", FormulaValue.New(1)) });
             var table = FormulaValue.NewTable(recordType, recordValue);
 
-            var engine = new RecalcEngine(config);
+            var engine = new RecalcEngine();
 
             engine.UpdateVariable("MyTable", table);
 
@@ -230,7 +231,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
             var result = check.GetEvaluator().Eval();
             Assert.IsType<StringValue>(result);
             Assert.Equal(expected, ((StringValue)result).Value);
-            Assert.Contains(nodeName, IRTranslator.Translate(check.Binding).ToString());
+            Assert.Contains(ir, IRTranslator.Translate(check.Binding).ToString());
+
+            var check_float = engine.Check(expr, options: opt_float);
+            Assert.True(check_float.IsSuccess);
+
+            var result_float = check_float.GetEvaluator().Eval();
+            Assert.IsType<StringValue>(result_float);
+            Assert.Equal(expected, ((StringValue)result_float).Value);
+            Assert.Contains(ir_float, IRTranslator.Translate(check_float.Binding).ToString());
         }
     }
 }
