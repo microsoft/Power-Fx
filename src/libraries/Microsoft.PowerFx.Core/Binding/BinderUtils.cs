@@ -599,8 +599,8 @@ namespace Microsoft.PowerFx.Core.Binding
             // type of the other variety of number, to be coerced to returnType
             var otherType = returnType == DType.Number ? DType.Decimal : DType.Number;
 
-            var resLeft = CheckTypeCore(errorContainer, node.Left, usePowerFxV1CompatibilityRules, leftType, returnType, /* coerced: */ otherType, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
-            var resRight = CheckTypeCore(errorContainer, node.Right, usePowerFxV1CompatibilityRules, rightType, returnType, /* coerced: */ otherType, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject);
+            var resLeft = CheckTypeCore(errorContainer, node.Left, usePowerFxV1CompatibilityRules, leftType, returnType, /* coerced: */ otherType, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject, DType.Currency);
+            var resRight = CheckTypeCore(errorContainer, node.Right, usePowerFxV1CompatibilityRules, rightType, returnType, /* coerced: */ otherType, DType.String, DType.Boolean, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.UntypedObject, DType.Currency);
 
             // Deferred op decimal/number or decimal/number op Deferred results in Deferred
             if (leftKind == DKind.Deferred || rightKind == DKind.Deferred)

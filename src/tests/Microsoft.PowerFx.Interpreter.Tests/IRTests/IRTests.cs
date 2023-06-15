@@ -44,32 +44,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
         }
 
         [Fact]
-        public void CurrencyToTextCoercionTest()
-        {
-            var opt = new ParserOptions() { AllowsSideEffects = true };
-            var config = new PowerFxConfig();
-
-            // Building table with Currency column type.
-            var recordType = RecordType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
-            var recordValue = FormulaValue.NewRecordFromFields(recordType, new List<NamedValue>() { new NamedValue("Currency", FormulaValue.New(1)) });
-            var table = FormulaValue.NewTable(recordType, recordValue);
-
-            config.SymbolTable.EnableMutationFunctions();
-
-            var engine = new RecalcEngine(config);
-
-            engine.UpdateVariable("MyTable", table);
-
-            var check = engine.Check("Concatenate(First(MyTable).Currency, \"$\")", options: opt);
-            Assert.True(check.IsSuccess);
-
-            var result = check.GetEvaluator().Eval();
-            Assert.IsType<StringValue>(result);
-            Assert.Equal("1$", ((StringValue)result).Value);
-            Assert.Contains("CurrencyToText", IRTranslator.Translate(check.Binding).ToString());
-        }
-
-        [Fact]
         public void ValidateNoRecordToRecordAggregateCoercionDecimal()
         {
             var tableType = TableType.Empty().Add(new NamedFormulaType(new TypedName(DType.Decimal, new DName("Decimal"))));
@@ -229,6 +203,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
 
             Assert.IsType<ErrorValue>(result);
             Assert.Contains("The value of option", ((ErrorValue)result).Errors.First().Message);
+        }
+        
+        // Testing only currency to text and currency to decimal for the time being.
+        // Other coercion from currency should be added later.
+        [Theory]
+        [InlineData("Concatenate(First(MyTable).Currency, \"$\")", "CurrencyToText", "1$")]
+        [InlineData("Concatenate(\"$\", First(MyTable).Currency)", "CurrencyToText", "$1")]
+        [InlineData("Concatenate(First(MyTable).Currency * 100, \"%\")", "Decimal:w(FieldAccess(First:![Currency:$]", "100%")]
+        public void CurrencyToTextCoercionTest(string expr, string nodeName, string expected)
+        {
+            var config = new PowerFxConfig();
+
+            // Building table with Currency column type.
+            var recordType = RecordType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
+            var recordValue = FormulaValue.NewRecordFromFields(recordType, new List<NamedValue>() { new NamedValue("Currency", FormulaValue.New(1)) });
+            var table = FormulaValue.NewTable(recordType, recordValue);
+
+            var engine = new RecalcEngine(config);
+
+            engine.UpdateVariable("MyTable", table);
+
+            var check = engine.Check(expr);
+            Assert.True(check.IsSuccess);
+
+            var result = check.GetEvaluator().Eval();
+            Assert.IsType<StringValue>(result);
+            Assert.Equal(expected, ((StringValue)result).Value);
+            Assert.Contains(nodeName, IRTranslator.Translate(check.Binding).ToString());
         }
     }
 }
