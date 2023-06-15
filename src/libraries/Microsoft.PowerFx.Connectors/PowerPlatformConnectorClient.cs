@@ -20,23 +20,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// For telemetry - assembly version stamp. 
         /// </summary>
-        public static string Version
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(_version))
-                {
-                    return _version;
-                }
-
-                // InformationVersion example: "0.2.6-preview.20230615-1002+048250dc4404bdb749f992cd0869f8821c79e3fe"
-                _version = typeof(PowerPlatformConnectorClient).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+')[0];
-
-                return _version;
-            }
-        }
-
-        private static string _version = null;
+        public static string Version => typeof(PowerPlatformConnectorClient).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+')[0];
 
         /// <summary>
         /// Session Id for telemetry.
