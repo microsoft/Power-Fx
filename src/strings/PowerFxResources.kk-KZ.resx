@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Өңделетін сандық мәндер бағаны.</value>
+    <value>Өңделетін мәтіндік мәндер бағаны.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>"Санды" логикалық мәнге түрлендіреді.</value>
@@ -1421,10 +1421,10 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>Айқын мәндер алынатын кесте.</value>
+    <value>Бөлек мәндер алынатын кесте.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Айқын әрекеттің мәндерін беретін кіріс кестедегі әр жол бойынша есептелетін өрнек.</value>
+    <value>Кіріс кестедегі әрбір жол бойынша есептелетін және бөлек операция үшін мәндерді беретін өрнек.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Көрсетілген x және y координаталарының арктангенсін қайтарады.</value>
@@ -3403,7 +3403,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген дереккөздегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
+    <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген деректер көзіндегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4939,7 +4939,7 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}" болған, түрі "{1}" болады деп күтілген.</value>
+    <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}", күтілген түрі "{1}" болды.</value>
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
@@ -4973,7 +4973,7 @@
     <value>Мәтін тексерілетін пішім. Ол TextFormat тізімінің мәні немесе тұрақты өрнек болуы мүмкін.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -5005,7 +5005,7 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
@@ -5017,7 +5017,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">
