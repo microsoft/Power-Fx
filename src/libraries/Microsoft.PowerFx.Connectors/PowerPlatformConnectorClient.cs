@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -26,19 +27,10 @@ namespace Microsoft.PowerFx.Connectors
                 if (!string.IsNullOrEmpty(_version))
                 {
                     return _version;
-                }                
+                }
 
-                try
-                {
-                    // Will return "0.2.6-preview.20230615-1002"
-                    // ProductVersion example "0.2.6-preview.20230615-1002+048250dc4404bdb749f992cd0869f8821c79e3fe"
-                    _version = FileVersionInfo.GetVersionInfo(typeof(PowerPlatformConnectorClient).Assembly.Location).ProductVersion.Split('+')[0];
-                }
-                catch (Exception)
-                {
-                    // Will return "0.2.6.0", in case we couldn't access the DLL for any reason.
-                    _version = typeof(PowerPlatformConnectorClient).Assembly.GetName().Version.ToString();
-                }
+                // InformationVersion example: "0.2.6-preview.20230615-1002+048250dc4404bdb749f992cd0869f8821c79e3fe"
+                _version = typeof(PowerPlatformConnectorClient).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+')[0];
 
                 return _version;
             }
