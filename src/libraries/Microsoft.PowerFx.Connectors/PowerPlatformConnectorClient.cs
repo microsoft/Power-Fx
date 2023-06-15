@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,32 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// For telemetry - assembly version stamp. 
         /// </summary>
-        public static string Version { get; } = typeof(PowerPlatformConnectorClient).Assembly.GetName().Version.ToString();
+        public static string Version
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_version))
+                {
+                    return _version;
+                }                
+
+                try
+                {
+                    // Will return "0.2.6-preview.20230615-1002"
+                    // ProductVersion example "0.2.6-preview.20230615-1002+048250dc4404bdb749f992cd0869f8821c79e3fe"
+                    _version = FileVersionInfo.GetVersionInfo(typeof(PowerPlatformConnectorClient).Assembly.Location).ProductVersion.Split('+')[0];
+                }
+                catch (Exception)
+                {
+                    // Will return "0.2.6.0", in case we couldn't access the DLL for any reason.
+                    _version = typeof(PowerPlatformConnectorClient).Assembly.GetName().Version.ToString();
+                }
+
+                return _version;
+            }
+        }
+
+        private static string _version = null;
 
         /// <summary>
         /// Session Id for telemetry.
