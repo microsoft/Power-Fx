@@ -366,6 +366,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void NewRecordFromFieldsTest()
         {
+            _count = 0;
             RecordValue record = FormulaValue.NewRecordFromFields(CreateFields());
 
             Assert.Equal(1, _count);
