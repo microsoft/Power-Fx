@@ -7,6 +7,7 @@ using System.Threading;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
@@ -61,6 +62,23 @@ namespace Microsoft.PowerFx.Tests
         {
             _defaultCulture = CultureInfo.InvariantCulture;
             ConfigTests.RunOnIsolatedThread(_defaultCulture, TestDefaultCulture);
+        }
+
+        [Theory]
+        [InlineData("en-US", @"Text(1234.5678, ""#,##0.00"")", "1,234.57")]
+        [InlineData("vi-VN", @"Text(1234.5678, ""#.##0,00"")", "1.234,57")]
+        [InlineData("fr-FR", "Text(1234.5678, \"#\u202f##0,00\")", "1\u202F234,57")]
+        [InlineData("fi-FI", "Text(1234.5678, \"#\u00A0##0,00\")", "1\u00A0234,57")]
+        public void TextWithLanguageTest(string cultureName, string exp, string expectedResult)
+        {
+            var culture = new CultureInfo(cultureName);
+            var recalcEngine = new RecalcEngine(new PowerFxConfig(Features.None));
+            var symbols = new RuntimeConfig();
+            symbols.SetCulture(culture);
+
+            var result = recalcEngine.EvalAsync(exp, CancellationToken.None, runtimeConfig: symbols).Result;
+
+            Assert.Equal(expectedResult, (result as StringValue).Value);
         }
 
         private void TestDefaultCulture(CultureInfo culture)

@@ -20,7 +20,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static StringValue Language(EvalVisitor runner, IRContext irContext)
         {
-            return new StringValue(irContext, string.IsNullOrEmpty(runner.CultureInfo?.Name) ? "en-US" : runner.CultureInfo.Name);
+            return new StringValue(irContext, Language(runner.CultureInfo));
+        }
+
+        public static string Language(CultureInfo culture)
+        {
+            return string.IsNullOrEmpty(culture?.Name) ? "en-US" : culture.Name;
         }
     }
 }
