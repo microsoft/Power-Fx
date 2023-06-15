@@ -4006,10 +4006,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else
                 {
-                    var args = node.Args.Children.ToArray();
+                    var args = node.Args.Children;
                     var set = ScopeUseSet.GlobalsOnly;
 
-                    for (var i = 0; i < args.Length; i++)
+                    for (var i = 0; i < args.Count; i++)
                     {
                         var argScopeUseSet = _txb.GetScopeUseSet(args[i]);
 
