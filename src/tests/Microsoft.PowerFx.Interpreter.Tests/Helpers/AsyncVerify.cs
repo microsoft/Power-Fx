@@ -8,8 +8,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
