@@ -925,7 +925,6 @@ namespace Microsoft.PowerFx.Core.IR
                             context.Binding.BindingConfig.NumberIsFloat ? BuiltinFunctionsCore.Value : BuiltinFunctionsCore.Float,
                             child);
                     case CoercionKind.NumberToDecimal:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
                     case CoercionKind.CurrencyToDecimal:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Decimal, child);
 
