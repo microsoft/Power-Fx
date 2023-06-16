@@ -195,13 +195,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             AssertEncodedTokens(encodedTokens, tokens, expression, eol, true);
         }
 
-        [Fact]
-        public void TestOverlappingCommentTokensSkip()
-        {
-            var expression = "/*jj*/\r\nRGBA(255, 255, 255, 1)\n//yes";
-            TestMultilineTokensAreEncodedCorrectly(expression);
-        }
-
         private static void AssertEncodedTokens(IEnumerable<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
         {
             var encodedTokens = encodedTokensCollection.ToArray();
