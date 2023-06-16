@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("T", "d", "UnaryOpKind.TimeToDateTime")] // new
         [InlineData("D", "T", "UnaryOpKind.DateToTime")] // new
         [InlineData("D", "d", "UnaryOpKind.DateToDateTime")] // new
-        [InlineData("n", "$", "UnaryOpKind.NumberToCurrency")] // new
+        [InlineData("n", "$", "function:Float")] // new
         [InlineData("$", "n", "function:Float")] // new
         [InlineData("$", "s", "UnaryOpKind.CurrencyToText")] // new
         [InlineData("s", "$", "UnaryOpKind.TextToCurrency")] // new
