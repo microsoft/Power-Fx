@@ -107,15 +107,6 @@ namespace Microsoft.PowerFx
                 props = new SymbolProperties();
             }
 
-            /*
-            if (props.CanMutate)
-            {
-                if (type is not TableType)
-                {
-                    throw new InvalidOperationException($"Only TableTypes are mutable");
-                }
-            }*/
-
             using var guard = _guard.Enter(); // Region is single threaded.
 
             Inc();
