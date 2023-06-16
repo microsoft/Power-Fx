@@ -366,9 +366,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void NewRecordFromFieldsTest()
         {
+            _count = 0;
             RecordValue record = FormulaValue.NewRecordFromFields(CreateFields());
 
             Assert.Equal(1, _count);
+        }
+
+        [Fact]
+        public void NamedValueTest()
+        {
+            var fields = CreateFields();
+            Assert.All(fields, field => Assert.False(field.IsExpandEntity));
+
+            var field1 = fields.First();
+            Assert.Equal("Num", field1.Name);
+            Assert.Equal(12.0, field1.Value.ToObject());
         }
 
         private IEnumerable<NamedValue> CreateFields()
