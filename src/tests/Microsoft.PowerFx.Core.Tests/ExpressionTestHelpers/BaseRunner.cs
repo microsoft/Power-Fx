@@ -211,35 +211,27 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split("|");
                         string[] actualStrArr = runResult.Errors.Select(err => err.ToString()).ToArray();
-
                         bool isValid = true;
+
+                        // Try both unaltered comparison and by replacing Decimal with Number for errors,
+                        // for tests that are run with and without NumberIsFloat set.
                         foreach (var exp in expectedStrArr)
                         {
-                            if (!actualStrArr.Contains(exp))
+                            if (!actualStrArr.Contains(exp) && !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))))
                             {
                                 isValid = false;
                                 break;
                             }
                         }
 
-                        var msg = $"Errors: " + string.Join("\r\n", actualStrArr);
-                        var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
-
-                        // Try both unaltered comparison and by replacing Decimal with Number for errors,
-                        // for tests that are run with and without NumberIsFloat set.
                         if (isValid)
-                        {
-                            // Compiler errors result in exceptions
-                            return (TestResult.Pass, null);
-                        }
-                        else if (NumberIsFloat && actualStr.Contains(Regex.Replace(expected, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2")))
                         {
                             // Compiler errors result in exceptions
                             return (TestResult.Pass, null);
                         }
                         else
                         {
-                            return (TestResult.Fail, $"Failed, but wrong error message: {msg}");
+                            return (TestResult.Fail, $"Failed, but wrong error message: {$"Errors: " + string.Join("\r\n", actualStrArr)}");
                         }
                     }
                 }
