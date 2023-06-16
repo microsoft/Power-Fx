@@ -298,24 +298,28 @@ namespace Microsoft.PowerFx
             {
                 bool isValid = false;
 
-                if (retType.IsRecord || retType.IsTable)
+                if (formulaResultType.IsRecord || formulaResultType.IsTable)
                 {
                     isValid = true;
 
-                    // Check if all names in formulaResultType exist in retType
-                    foreach (var typedName in formulaResultType.GetNames(DPath.Root))
+                    // if retType is an empty record, then don't enforce.
+                    if (retType.ChildCount != 0)
                     {
-                        if (!retType.TryGetType(typedName.Name, out DType dsNameType))
+                        // Check if all names in formulaResultType exist in retType
+                        foreach (var typedName in formulaResultType.GetNames(DPath.Root))
+                        {
+                            if (!retType.TryGetType(typedName.Name, out DType dsNameType))
+                            {
+                                isValid = false;
+                                continue;
+                            }
+                        }
+
+                        // Check if formulaResultType can coerce to retType
+                        if (isValid && !formulaResultType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true))
                         {
                             isValid = false;
-                            continue;
                         }
-                    }
-
-                    // Check if formulaResultType can coerce to retType
-                    if (isValid && !formulaResultType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true))
-                    {
-                        isValid = false;
                     }
                 }
 
