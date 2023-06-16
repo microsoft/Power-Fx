@@ -64,6 +64,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
                 $"{ns}.{nameof(TypeCoercionProvider)}",
+                "Microsoft.PowerFx.SymbolTableExtensions", // Deprecated, remove. 
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
