@@ -2,13 +2,10 @@
 // Licensed under the MIT license.
 
 using System.Globalization;
-using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Parser;
 
-namespace Microsoft.PowerFx.Core.Parser
+namespace Microsoft.PowerFx.Interpreter.Tests.Helpers
 {
-    /// <summary>
-    /// Parser Extensions.
-    /// </summary>
     internal static class ParserExtensions
     {
         internal static ParserOptions ToParserOptions(this TexlParser.Flags flags, CultureInfo culture)
@@ -17,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
             if (flags.HasFlag(TexlParser.Flags.EnableExpressionChaining))
             {
-                parserOptions.AllowsSideEffects = true; 
+                parserOptions.AllowsSideEffects = true;
             }
 
             if (flags.HasFlag(TexlParser.Flags.NumberIsFloat))
@@ -30,7 +27,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 parserOptions.DisableReservedKeywords = true;
             }
 
-            return parserOptions; 
+            return parserOptions;
         }
     }
 }

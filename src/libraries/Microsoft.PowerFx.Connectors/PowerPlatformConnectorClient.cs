@@ -2,7 +2,9 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
@@ -18,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// For telemetry - assembly version stamp. 
         /// </summary>
-        public static string Version { get; } = typeof(PowerPlatformConnectorClient).Assembly.GetName().Version.ToString();
+        public static string Version => typeof(PowerPlatformConnectorClient).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion.Split('+')[0];
 
         /// <summary>
         /// Session Id for telemetry.

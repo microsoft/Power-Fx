@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    [ThreadSafeImmutable]
     public class OpenApiHelperFunctions
     {
         private static readonly Regex NotAnXsdNCNameCharRegex = new Regex(@"[^a-zA-Z0-9_-]+", RegexOptions.Compiled);

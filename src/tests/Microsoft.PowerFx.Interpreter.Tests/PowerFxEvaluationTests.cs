@@ -10,13 +10,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Interpreter.Tests.UserInfoTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
