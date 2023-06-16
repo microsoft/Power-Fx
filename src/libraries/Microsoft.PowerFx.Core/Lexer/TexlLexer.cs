@@ -899,6 +899,7 @@ namespace Microsoft.PowerFx.Syntax
             private readonly bool _disableReservedKeywords;
 
             private int _currentTokenPos; // The start of the current token.
+            private int _lastCommentTokenPos; // The last seen comment token position.
 
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
             {
@@ -1612,8 +1613,8 @@ namespace Microsoft.PowerFx.Syntax
                     }
                 }
 
-                // Preceding,
-                while (startingPosition > 0)
+                // Preceding to check whitespace or newline characters after the last seen commment.
+                while (startingPosition > _lastCommentTokenPos)
                 {
                     var previousChar = _text[startingPosition - 1];
                     if (!char.IsWhiteSpace(previousChar))
@@ -1636,6 +1637,8 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     commentToken.IsOpenBlock = true;
                 }
+
+                _lastCommentTokenPos = commentToken.Span.Lim; // Set last seen comment token position.
 
                 return commentToken;
             }
