@@ -153,6 +153,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("/* One line \r\n Second Line */\r\n\r\n\r\n/*Third Comment First One \r\n Fourth Comment*/ \r\n //Comment one")]
         [InlineData("//Comment one \n /* Comment Two */ \n//Comment Three \n \"String One\n\";\"String One \n String Two \n\";")]
         [InlineData("/* Comment One */ \n//Comment Two \n //Comment Three \n \"String One\n\";\"String One \n String Two \n\";")]
+        [InlineData("// Comment one//Comment Two")]
+        [InlineData("// Comment one\n//Comment Two")]
+        [InlineData("// Comment one\n\n\n//Comment Two")]
+        [InlineData("// Comment one\n\r\n\r\n//Comment Two")]
+        [InlineData("// Comment one \\n\"String token\"\\n//Comment Two")]
+        [InlineData("// Comment one \\n\\n\"String token\"\\n//Comment Two\"String token two\"\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n//Comment Two\"String token two\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n/* Comment Two */\"String token two\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n/* Comment Two */\\n\"String token two\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n/* Comment Two */\"String token two\"\\n\"String token three\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("/*jj*/RGBA(255, 255, 255, 1)\n//yes")]
+        [InlineData("/*jj*/\r\nRGBA(255, 255, 255, 1)\n//yes")]
+        [InlineData("/*jj*///yes")]
+        [InlineData("/*jj*/\n//yes")]
+        [InlineData("/*jj*/\n\n//yes")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n\n\n/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n \"String token one\"/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n \"String token one\"\n/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n \"String token one\"\n\n/*kk*/")]
+        [InlineData("/*jj*/\nRGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)//yes")]
+        [InlineData("/*jj*/\nRGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*jj*/\nRGBA(\n    /*j2*/    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*jj*/RGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*jj*/RGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n\n\n\n//yes")]
         public void TestMultilineTokensAreEncodedCorrectly(string expression)
         {
             // Arrange
@@ -166,6 +193,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
 
             // Assert
             AssertEncodedTokens(encodedTokens, tokens, expression, eol, true);
+        }
+
+        [Fact]
+        public void TestOverlappingCommentTokensSkip()
+        {
+            var expression = "/*jj*/\r\nRGBA(255, 255, 255, 1)\n//yes";
+            TestMultilineTokensAreEncodedCorrectly(expression);
         }
 
         private static void AssertEncodedTokens(IEnumerable<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)
