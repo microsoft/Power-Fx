@@ -78,8 +78,7 @@ namespace Microsoft.PowerFx
             return _variables.TryGetValue(lookupName, out symbol);
         }
 
-        // $$$ too many callers...
-        // [Obsolete("Use overload with SymbolProperties")]
+        // Exists for binary backcompat.
         public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
         {
             var props = new SymbolProperties

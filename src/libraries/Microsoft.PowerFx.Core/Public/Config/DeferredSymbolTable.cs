@@ -101,8 +101,7 @@ namespace Microsoft.PowerFx
             // This is crticial that we're under lock.
             // We only want to add these once. 
             var slotIndex = _slots.Alloc();
-
-            // $$$ Take this as top-level param
+                        
             var props = new SymbolProperties
             {
                  CanMutate = true,
