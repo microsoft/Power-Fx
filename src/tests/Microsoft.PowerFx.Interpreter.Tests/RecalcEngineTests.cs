@@ -877,7 +877,7 @@ namespace Microsoft.PowerFx.Tests
             optionSet.TryGetValue(new DName("option_1"), out var option1);
 
             var symbol = new SymbolTable();
-            var option1Solt = symbol.AddVariable("Option1", FormulaType.OptionSetValue);
+            var option1Solt = symbol.AddVariable("Option1", FormulaType.OptionSetValue, null);
             var symValues = new SymbolValues(symbol);
             symValues.Set(option1Solt, option1);
 
@@ -1108,7 +1108,7 @@ namespace Microsoft.PowerFx.Tests
         public async Task ExecutingWithRemovedVarFails()
         {
             var symTable = new SymbolTable();
-            var slot = symTable.AddVariable("x", FormulaType.Number);
+            var slot = symTable.AddVariable("x", FormulaType.Number, null);
 
             var engine = new RecalcEngine();
             var result = engine.Check("x+1", symbolTable: symTable);
@@ -1122,7 +1122,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(11.0, result1.ToObject());
 
             // Adding a variable is ok. 
-            var slotY = symTable.AddVariable("y", FormulaType.Number);
+            var slotY = symTable.AddVariable("y", FormulaType.Number, null);
             result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
 
@@ -1132,7 +1132,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Even re-adding with same type still fails. 
             // (somebody could have re-added with a different type)
-            var slot2 = symTable.AddVariable("x", FormulaType.Number);
+            var slot2 = symTable.AddVariable("x", FormulaType.Number, null);
             symValues.Set(slot2, FormulaValue.New(20));
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
@@ -1191,7 +1191,7 @@ namespace Microsoft.PowerFx.Tests
                 new NamedValue("Field2", FormulaValue.New("_field2")));
 
             var globals = new SymbolTable();
-            var slot = globals.AddVariable("Task", FormulaType.String);
+            var slot = globals.AddVariable("Task", FormulaType.String, null);
             
             var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type, allowThisRecord: true);
 

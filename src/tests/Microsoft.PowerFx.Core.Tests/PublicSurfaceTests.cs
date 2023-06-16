@@ -48,6 +48,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.PowerFxConfig",
                 "Microsoft.PowerFx.ReadOnlySymbolTable",
                 "Microsoft.PowerFx.SymbolTable",
+                "Microsoft.PowerFx.SymbolProperties",
 
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
