@@ -211,11 +211,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
         [InlineData("Concatenate(First(MyTable).Currency, \"$\")", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "1$")]
         [InlineData("Concatenate(\"$\", First(MyTable).Currency)", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "CurrencyToText:s(FieldAccess(First:![Currency:$]", "$1")]
         [InlineData("Concatenate(First(MyTable).Currency * 100, \"%\")", "Decimal:w(FieldAccess(First:![Currency:$]", "Value:n(FieldAccess(First:![Currency:$]", "100%")]
-        [InlineData("Concatenate(Float(First(MyTable).Currency) * 100, \"%\")", "Float:n(FieldAccess(First:![Currency:$]", "Float:n(FieldAccess(First:![Currency:$]", "100%")]
+        [InlineData("Concatenate(Float(First(MyTable).Currency) * 100, \"%\")", "Float:n(FieldAccess(First:![Currency:$]", "Float:n(FieldAccess(First:![Currency:$]", "100%")]        
+        [InlineData("Collect(MyTable, {Currency:99});Last(MyTable).Currency & \"$\"", null, null, "99$")]
         public void CurrencyToTextCoercionTest(string expr, string ir, string ir_float, string expected)
         {
-            var opt_float = new ParserOptions() { NumberIsFloat = true };
-
             // Building table with Currency column type.
             var recordType = RecordType.Empty().Add(new NamedFormulaType(new TypedName(DType.Currency, new DName("Currency"))));
             var recordValue = FormulaValue.NewRecordFromFields(recordType, new List<NamedValue>() { new NamedValue("Currency", FormulaValue.New(1)) });
@@ -223,23 +222,32 @@ namespace Microsoft.PowerFx.Interpreter.Tests.IRTests
 
             var engine = new RecalcEngine();
 
+            engine.Config.SymbolTable.EnableMutationFunctions();
+
             engine.UpdateVariable("MyTable", table);
 
-            var check = engine.Check(expr);
-            Assert.True(check.IsSuccess);
+            foreach (var useFloat in new[] { false, true })
+            {
+                var opt = new ParserOptions() { NumberIsFloat = useFloat, AllowsSideEffects = true };
+                var check = engine.Check(expr, options: opt);
+                Assert.True(check.IsSuccess);
 
-            var result = check.GetEvaluator().Eval();
-            Assert.IsType<StringValue>(result);
-            Assert.Equal(expected, ((StringValue)result).Value);
-            Assert.Contains(ir, IRTranslator.Translate(check.Binding).ToString());
+                var translated = IRTranslator.Translate(check.Binding).ToString();
 
-            var check_float = engine.Check(expr, options: opt_float);
-            Assert.True(check_float.IsSuccess);
+                if (ir != null && !useFloat)
+                {
+                    Assert.Contains(ir, translated);
+                }
 
-            var result_float = check_float.GetEvaluator().Eval();
-            Assert.IsType<StringValue>(result_float);
-            Assert.Equal(expected, ((StringValue)result_float).Value);
-            Assert.Contains(ir_float, IRTranslator.Translate(check_float.Binding).ToString());
+                if (ir_float != null && useFloat)
+                {
+                    Assert.Contains(ir_float, translated);
+                }
+
+                var result = check.GetEvaluator().Eval();
+                Assert.IsType<StringValue>(result);
+                Assert.Equal(expected, ((StringValue)result).Value);
+            }
         }
     }
 }

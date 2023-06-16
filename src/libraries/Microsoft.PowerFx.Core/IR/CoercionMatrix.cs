@@ -62,6 +62,8 @@ namespace Microsoft.PowerFx.Core.IR
                                 return CoercionKind.BooleanToCurrency;
                             case DKind.String:
                                 return CoercionKind.TextToCurrency;
+                            case DKind.Decimal:
+                                return CoercionKind.DecimalToCurrency;
                         }
                     }
                     else

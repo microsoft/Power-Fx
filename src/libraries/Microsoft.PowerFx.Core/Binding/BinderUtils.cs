@@ -1263,8 +1263,8 @@ namespace Microsoft.PowerFx.Core.Binding
                     BinderCheckTypeResult resRightConcat;
                     if (usePowerFxV1CompatibilityRules)
                     {
-                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, true, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
-                        resRightConcat = CheckTypeCore(errorContainer, rightNode, true, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject);
+                        resLeftConcat = CheckTypeCore(errorContainer, leftNode, true, leftType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject, DType.Currency);
+                        resRightConcat = CheckTypeCore(errorContainer, rightNode, true, rightType, DType.String, /* coerced: */ DType.Guid, DType.Number, DType.Decimal, DType.Date, DType.Time, DType.DateTimeNoTimeZone, DType.DateTime, DType.Boolean, DType.OptionSetValue, DType.ViewValue, DType.UntypedObject, DType.Currency);
                     }
                     else
                     {

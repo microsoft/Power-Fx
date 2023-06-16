@@ -621,6 +621,11 @@ namespace Microsoft.PowerFx.Functions
             return (result, ConvertionStatus.Ok);
         }
 
+        public static NumberValue NumberToCurrency(IRContext irContext, NumberValue[] args)
+        {
+            return new NumberValue(irContext, (double)args[0].Value);
+        }
+
         public static NumberValue DecimalToNumber(IRContext irContext, DecimalValue[] args)
         {
             return DecimalToNumber(irContext, args[0]);

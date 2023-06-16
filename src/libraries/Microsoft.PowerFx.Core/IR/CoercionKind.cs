@@ -108,6 +108,7 @@ namespace Microsoft.PowerFx.Core.IR
         TextToCurrency,
         CurrencyToBoolean,
         BooleanToCurrency,
-        CurrencyToDecimal
+        CurrencyToDecimal,
+        DecimalToCurrency
     }
 }
