@@ -482,7 +482,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_ApplicationJson = "application/json";
         public const string ContentType_TextPlain = "text/plain";
 
-        private static readonly List<string> _knownContentTypes = new ()
+        private static readonly IReadOnlyList<string> _knownContentTypes = new string[]
         {
             ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,
