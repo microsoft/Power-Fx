@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -30,6 +31,15 @@ namespace Microsoft.PowerFx.Functions
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
+        }
+
+        public override bool MutatesArg0 => true;
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
         }
 
         public RemoveFunctionBase(DPath theNamespace, string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
@@ -156,6 +166,12 @@ namespace Microsoft.PowerFx.Functions
             return fValid;
         }
 
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
+        }
+
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
             var validArgs = CheckArgs(args, out FormulaValue faultyArg);
@@ -165,9 +181,12 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            if (args[0] is BlankValue)
+            var arg0lazy = (LambdaFormulaValue)args[0];
+            var arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+
+            if (arg0 is BlankValue)
             {
-                return args[0];
+                return arg0;
             }
 
             var argCount = args.Count();
@@ -186,7 +205,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var datasource = (TableValue)args[0];
+            var datasource = (TableValue)arg0;
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
             cancellationToken.ThrowIfCancellationRequested();

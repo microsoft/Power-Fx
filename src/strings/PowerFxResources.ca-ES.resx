@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>No s'admet la delegació d'aquesta a la taula "{0}".</value>
+    <value>És possible que aquesta operació a la taula "{0}" no funcioni si té més de {1} files.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>No es pot delegar {0}: conté una funció de comportament "{1}".</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determina si el text proporcionat coincideix amb el format de text proporcionat.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>El text que es compararà amb el format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>El format amb el qual s'ha de comprovar el text. Pot ser un valor de l'enumeració TextFormat o una expressió regular.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Determina la part de text que volem que coincideixi. Pot ser un valor de l'enumeració MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>extensió</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Cerca l'expressió regular especificada al text proporcionat i en retorna la primera coincidència.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Cerca l'expressió regular especificada al text proporcionat i en retorna totes les coincidències.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Text que se cercarà segons l'expressió regular.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Expressió regular amb la qual s'ha de comprovar el text. Pot contenir captures (valors entre parèntesi) que es retornaran si hi ha una coincidència correcta.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Determina la part de text que volem que coincideixi. Pot ser un valor de l'enumeració MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Text que se cercarà segons l'expressió regular.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Expressió regular amb la qual s'ha de comprovar el text. Pot contenir captures (valors entre parèntesi) que es retornaran si hi ha una coincidència correcta.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Determina la part de text que volem que coincideixi. Pot ser un valor de l'enumeració MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>expressió_regular</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opcions</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Actualitza la font de dades especificada.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>origen_dades_connectat</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>S'esperava un valor de registre o de taula.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Font de dades connectada que s'ha d'actualitzar.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Només es poden actualitzar les connexions administrades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>L'expressió regular no és vàlida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Les expressions regulars han de ser valors constants.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>El valor passat a la funció "{0}" no es pot canviar.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna la coincidència completa de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure la coincidència completa del text especificat.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna les coincidències de grup de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure les coincidències secundàries del text especificat.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna la ubicació de la coincidència de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure la posició de la coincidència completa del text especificat.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Suprimeix tot el format i retorna un valor de text sense format.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Text del qual se suprimiran les etiquetes HTML i XML.</value>
   </data>
 </root>

@@ -557,6 +557,11 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errorRows);
             }
 
+            if (irContext.ResultType is Types.Void)
+            {
+                return new VoidValue(irContext);
+            }
+
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 

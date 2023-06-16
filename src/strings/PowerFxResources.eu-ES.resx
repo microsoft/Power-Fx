@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Ezin da eskuordetu eragiketa "{0}" taulan.</value>
+    <value>"{0}" taulako eragiketak ez du funtzionatuko {1} errenkada baino gehiago baditu.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Ezin da eskuordetu {0}: "{1}" portaera-funtzioa dauka.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Emandako testua eta testuaren formatua bat datozen zehazten du.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Formatuarekin konparatuko den testua.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Testuarekin konparatuko den formatua. TextFormat enumerazioaren edo espresio erregular baten balioa izan daiteke.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formatua</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>hedadura</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Zehaztutako espresio erregularra bilatzen du emandako testuan eta aurkitzen duen lehen emaitza itzultzen du.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Zehaztutako espresio erregularra bilatzen du emandako testuan eta aurkitzen dituen emaitza guztiak itzultzen ditu.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Espresio erregularra kontuan hartuta bilatuko den testua.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Testua egiaztatzeko erabiliko den espresio erregularra. Bat datorren balioren bat badago itzuliko diren kapturak eduki ditzake (hau da, parentesi arteko balioak).</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Espresio erregularra kontuan hartuta bilatuko den testua.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Testua egiaztatzeko erabiliko den espresio erregularra. Bat datorren balioren bat badago itzuliko diren kapturak eduki ditzake (hau da, parentesi arteko balioak).</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>espresio_erregularra</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>aukerak</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Zehaztutako datu-iturburua freskatzen du.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>konektatutako_datu_iturburua</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Erregistro- edo taula-balio bat espero zen.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Freskatu behar den konektatutako datu-iturburua.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Kudeatutako konexioak soilik freska daitezke.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Espresio erregularrak ez du balio.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Espresio erregularrek aldaketarik gabeko balioak izan behar dute.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Ezin da aldatu "{0}" funtzioari pasatako balioa.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>"{0}" kaptura-izena espresio erregularraren bat-etortze osoa itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoa ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>"{0}" kaptura-izena espresio erregularreko taldearen bat-etortzeak itzultzen dituen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat datozen azpielementu guztiak ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>"{0}" kaptura-izena espresio erregularraren bat-etortzearen kokalekua itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoaren kokalekua ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Formatua kendu eta testu-balio arrunta itzultzen du.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Testuari HTML eta XML etiketak kentzea.</value>
   </data>
 </root>

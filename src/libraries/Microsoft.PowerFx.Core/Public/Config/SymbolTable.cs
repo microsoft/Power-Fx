@@ -4,11 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -21,8 +24,11 @@ namespace Microsoft.PowerFx
     /// This is a publicly facing class around a <see cref="INameResolver"/>.
     /// </summary>
     [DebuggerDisplay("{DebugName}")]
+    [NotThreadSafe]
     public class SymbolTable : ReadOnlySymbolTable, IGlobalSymbolNameResolver
     {
+        private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
+
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         private DisplayNameProvider _environmentSymbolDisplayNameProvider = new SingleSourceDisplayNameProvider();
@@ -72,6 +78,17 @@ namespace Microsoft.PowerFx
             return _variables.TryGetValue(lookupName, out symbol);
         }
 
+        // Exists for binary backcompat.
+        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
+        {
+            var props = new SymbolProperties
+            {
+                CanSet = mutable,
+                CanMutate = mutable
+            };
+            return AddVariable(name, type, props, displayName);
+        }
+
         /// <summary>
         /// Provide variable for binding only.
         /// Value must be provided at runtime.
@@ -79,10 +96,18 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="name"></param>
         /// <param name="type"></param>
-        /// <param name="mutable"></param>
+        /// <param name="props"></param>
         /// <param name="displayName"></param>
-        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
+        public ISymbolSlot AddVariable(string name, FormulaType type, SymbolProperties props, string displayName = null)
         {
+            if (props == null)
+            {
+                // Default.
+                props = new SymbolProperties();
+            }
+
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             Inc();
             DName displayDName = default;
             DName varDName = ValidateName(name);
@@ -103,7 +128,7 @@ namespace Microsoft.PowerFx
             }
 
             var slotIndex = _slots.Alloc();
-            var data = new NameSymbol(name, mutable)
+            var data = new NameSymbol(name, props)
             {
                 Owner = this,
                 SlotIndex = slotIndex
@@ -138,6 +163,8 @@ namespace Microsoft.PowerFx
         /// <param name="data"></param>
         public void AddConstant(string name, FormulaValue data)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             var type = data.Type;
 
             Inc();
@@ -168,6 +195,8 @@ namespace Microsoft.PowerFx
         /// <param name="name">display or logical name for the variable or entity to be removed. Logical name of constant to be removed.</param>
         public void RemoveVariable(string name)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             Inc();
 
             // Also remove from display name provider
@@ -207,6 +236,7 @@ namespace Microsoft.PowerFx
         /// <param name="name"></param>
         public void RemoveFunction(string name)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
             _functions.RemoveAll(name);
@@ -214,6 +244,7 @@ namespace Microsoft.PowerFx
 
         internal void RemoveFunction(TexlFunction function)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
             _functions.RemoveAll(function);
@@ -221,6 +252,7 @@ namespace Microsoft.PowerFx
 
         internal void AddFunctions(TexlFunctionSet functions)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
 
             if (functions._count == 0)
@@ -236,6 +268,7 @@ namespace Microsoft.PowerFx
 
         internal void AddFunction(TexlFunction function)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             Inc();
             _functions.Add(function);
 
@@ -283,6 +316,12 @@ namespace Microsoft.PowerFx
             _variables.Add(entity.EntityName, nameInfo);
         }
 
+        // Sync version for convenience. 
+        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, FormulaValue> getValue)
+        {
+            this.AddHostObject(name, type, (sp) => Task.FromResult(getValue(sp)));
+        }
+
         /// <summary>
         /// Adds a host object schema, that can be referenced in the formula.
         /// Actual object is added in Runtime config service provider.
@@ -291,8 +330,9 @@ namespace Microsoft.PowerFx
         /// <param name="type">Type of the object.</param>
         /// <param name="getValue">Call back that will retrieve object from the service provider.
         /// It can throw CustomFunctionErrorException, that fx will convert to an error.</param>
-        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, FormulaValue> getValue)
+        public void AddHostObject(string name, FormulaType type, Func<IServiceProvider, Task<FormulaValue>> getValue)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
             var hostDName = ValidateName(name);
 
             // Attempt to update display name provider before symbol table,

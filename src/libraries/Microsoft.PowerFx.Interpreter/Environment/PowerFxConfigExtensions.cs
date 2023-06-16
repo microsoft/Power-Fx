@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx
                 {
                     throw new InvalidOperationException("Cannot add RegEx functions more than once.");
                 }
-                
+
                 config.SymbolTable.AddFunction(func.Key);
                 config.AdditionalFunctions.Add(func.Key, func.Value);
             }

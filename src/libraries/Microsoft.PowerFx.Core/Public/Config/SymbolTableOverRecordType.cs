@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx
 
         // Mapping between slots and logical names on RecordType.
         // name --> Slot; used at design time to ensure same slot per field. 
+        [ThreadSafeProtectedByLock("_map")]
         private readonly Dictionary<string, NameSymbol> _map = new Dictionary<string, NameSymbol>();
 
         internal RecordType Type => _type;
@@ -36,7 +37,11 @@ namespace Microsoft.PowerFx
 
             if (_allowThisRecord)
             {
-                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, mutable: false)
+                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
+                {
+                     CanMutate = false,
+                     CanSet = false
+                })
                 {
                     Owner = this,
                     SlotIndex = int.MaxValue
@@ -173,7 +178,11 @@ namespace Microsoft.PowerFx
                     // Slot is based on map count, so whole operation needs to be under single lock. 
                     var slotIdx = _map.Count;
 
-                    data = new NameSymbol(logicalName, _mutable)
+                    data = new NameSymbol(logicalName, new SymbolProperties
+                    {
+                        CanSet = _mutable,
+                        CanMutate = false
+                    })
                     {
                         Owner = this,
                         SlotIndex = slotIdx

@@ -14,6 +14,8 @@ namespace Microsoft.PowerFx.Core.Entities
         bool IsSelectable { get; }
 
         bool IsDelegatable { get; }
+        
+        bool IsRefreshable { get; }
 
         bool RequiresAsync { get; }
 

@@ -7,10 +7,12 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.App;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -388,6 +390,11 @@ namespace Microsoft.PowerFx
             dataControlName = default;
             lookupInfo = default;
             return false;
+        }
+
+        bool INameResolver.LookupExpandedControlType(IExternalControl control, out DType controlType)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

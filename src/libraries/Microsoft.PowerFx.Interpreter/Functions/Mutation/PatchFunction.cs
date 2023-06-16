@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
@@ -50,6 +51,12 @@ namespace Microsoft.PowerFx.Functions
             var isValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
             return isValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
         protected static bool CheckArgs(FormulaValue[] args, out FormulaValue faultyArg)
@@ -117,6 +124,15 @@ namespace Microsoft.PowerFx.Functions
     internal class PatchFunction : PatchAndValidateRecordFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
+
+        public override bool MutatesArg0 => true;
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
+        }
 
         public PatchFunction()
             : base("Patch", AboutPatch, FunctionCategories.Table | FunctionCategories.Behavior, DType.EmptyRecord, 0, 3, int.MaxValue, DType.EmptyTable, DType.EmptyRecord, DType.EmptyRecord)
@@ -218,21 +234,29 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            if (args[0] is BlankValue)
+            var arg0lazy = (LambdaFormulaValue)args[0];
+            var arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            var arg1 = args[1];
+
+            if (arg0 is BlankValue)
             {
-                return args[0];
+                return arg0;
+            }
+            else if (arg0 is ErrorValue)
+            {
+                return arg0;
             }
 
-            if (args[1] is BlankValue)
+            if (arg1 is BlankValue)
             {
-                return args[1];
+                return arg1;
             }
 
             cancellationToken.ThrowIfCancellationRequested();
             var changeRecord = FieldDictToRecordValue(await CreateRecordFromArgsDictAsync(args, 2, cancellationToken).ConfigureAwait(false));
 
-            var datasource = (TableValue)args[0];
-            var baseRecord = (RecordValue)args[1];
+            var datasource = (TableValue)arg0;
+            var baseRecord = (RecordValue)arg1;
 
             cancellationToken.ThrowIfCancellationRequested();
             var ret = await datasource.PatchAsync(baseRecord, changeRecord, cancellationToken).ConfigureAwait(false);

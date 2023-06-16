@@ -8,7 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -220,7 +219,7 @@ namespace Microsoft.PowerFx.Core.Tests
                             // Compiler errors result in exceptions
                             return (TestResult.Pass, null);
                         }
-                        else if (NumberIsFloat && expected.StartsWith("Errors:") && 
+                        else if (NumberIsFloat && expected.StartsWith("Errors:") &&
                                  actualStr.Contains(Regex.Replace(expected, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2")))
                         {
                             // Compiler errors result in exceptions
@@ -312,7 +311,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     // strict compare binary decimal values after being parsed (for printing differences)
                     else if (originalResult is DecimalValue dec && decimal.Parse(expected, System.Globalization.NumberStyles.Float) == dec.Value)
                     {
-                            return (TestResult.Pass, null);
+                        return (TestResult.Pass, null);
                     }
                 }
 

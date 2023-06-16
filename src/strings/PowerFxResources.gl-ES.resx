@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Non se admite a delegación desta operación na táboa "{0}".</value>
+    <value>Pode que esta operación non funcione na táboa "{0}" se ten máis de {1} filas.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Non se pode delegar {0}: contén unha función de comportamento "{1}".</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determina se o texto fornecido coincide co formato de texto fornecido.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Texto co que se vai comparar o formato.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formato co que se debe comprobar o texto. Debe ser un valor da enumeración TextFormat ou unha expresión regular.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Determina que parte do texto queremos facer coincidir. Pode ser un valor da enumeración MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formato</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>tamaño</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Busca o texto fornecido para a expresión regular especificada e devolve a primeira coincidencia dela.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Busca o texto fornecido para a expresión regular especificada e devolve todas as coincidencias dela.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Texto co que se vai comparar a expresión regular.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Expresión regular coa que comparar o texto. Pode conter capturas (valores entre parénteses), que se devolverán se se produce unha coincidencia correcta.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Determina que parte do texto queremos facer coincidir. Pode ser un valor da enumeración MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Texto co que se vai comparar a expresión regular.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Expresión regular coa que comparar o texto. Pode conter capturas (valores entre parénteses), que se devolverán se se produce unha coincidencia correcta.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Determina que parte do texto queremos facer coincidir. Pode ser un valor da enumeración MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>expresión_regular</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opcións</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Actualiza a orixe de datos especificada.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>orixe_datos_conectada</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Esperábase un valor de rexistro ou de táboa.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Orixe de datos conectada que se vai actualizar.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Só se poden actualizar conexións xestionadas.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Expresión regular non válida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>As expresións regulares deben ser valores constantes.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Non se puido modificar o valor que se pasou para a función "{0}".</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>O nome da captura "{0}" está a ocultar a propiedade predefinida que devolve a coincidencia completa da expresión regular. Considere a posibilidade de cambiarlle o nome se quere usar esa propiedade mencionada para extraer a coincidencia completa do texto especificado.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>O nome da captura "{0}" está a ocultar a propiedade predefinida que devolve as coincidencias do grupo da expresión regular. Considere a posibilidade de cambiarlle o nome se quere usar esa propiedade mencionada para extraer todas as subcoincidencias do texto especificado.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>O nome da captura "{0}" está a ocultar a propiedade predefinida que devolve a localización da coincidencia da expresión regular. Considere a posibilidade de cambiarlle o nome se quere usar esa propiedade mencionada para extraer a posición da coincidencia completa do texto especificado.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Elimina todos os formatos e devolve un valor de texto sen formato.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>texto</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Texto do que se van eliminar as etiquetas HTML e XML.</value>
   </data>
 </root>

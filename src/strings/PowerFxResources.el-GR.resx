@@ -2324,7 +2324,7 @@
     <value>Μαθηματική και στατιστική</value>
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>Ορίσθηκε από τον χρήστη</value>
+    <value>Ορισμός από τον χρήστη</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Πληροφορίες</value>
@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Η ανάθεση αυτής της λειτουργίας στον πίνακα '{0}' δεν υποστηρίζεται.</value>
+    <value>Αυτή η λειτουργία στον πίνακα '{0}' ενδέχεται να μην λειτουργεί, εάν έχει περισσότερες από {1} γραμμές.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Προσδιορίζει αν το παρεχόμενο κείμενο διαθέτει αντιστοιχία με την παρεχόμενη μορφή κειμένου.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Το κείμενο που θα συγκριθεί με τη μορφή.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Η μορφή σε σχέση με την οποία θα ελεγχθεί το κείμενο. Μπορεί να είναι μια τιμή της απαρίθμησης TextFormat ή μια κανονική παράσταση.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Προσδιορίζει το μέρος του κειμένου που θέλουμε να αντιστοιχίσουμε. Μπορεί να είναι μια τιμή της απαρίθμησης MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>μορφή</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>έκταση</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Αναζητά την καθορισμένη κανονική παράσταση στο παρεχόμενο κείμενο και επιστρέφει την πρώτη αντιστοιχία από αυτό.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Αναζητά την καθορισμένη κανονική παράσταση στο παρεχόμενο κείμενο και επιστρέφει όλες τις αντιστοιχίες από αυτό.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Το κείμενο που θα αναζητηθεί ως προς την κανονική παράσταση.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Η κανονική παράσταση με την οποία θα ελεγχθεί το κείμενο. Μπορεί να περιέχει καταγραφές (τιμές μεταξύ παρενθέσεων) που θα επιστραφούν σε περίπτωση επιτυχημένης συμφωνίας.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Προσδιορίζει το μέρος του κειμένου που θέλουμε να αντιστοιχίσουμε. Μπορεί να είναι μια τιμή της απαρίθμησης MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Το κείμενο που θα αναζητηθεί ως προς την κανονική παράσταση.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Η κανονική παράσταση με την οποία θα ελεγχθεί το κείμενο. Μπορεί να περιέχει καταγραφές (τιμές μεταξύ παρενθέσεων) που θα επιστραφούν σε περίπτωση επιτυχημένης συμφωνίας.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Προσδιορίζει το μέρος του κειμένου που θέλουμε να αντιστοιχίσουμε. Μπορεί να είναι μια τιμή της απαρίθμησης MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>τακτική_παράσταση</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>επιλογές</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Ανανεώνει την καθορισμένη προέλευση δεδομένων.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>συνδεδεμένη_προέλευση_δεδομένων</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Αναμενόταν μια τιμή εγγραφής ή πίνακα.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Μια συνδεδεμένη προέλευση δεδομένων για ανανέωση.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Είναι δυνατή η ανανέωση μόνο διαχειριζόμενων συνδέσεων.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Μη έγκυρη κανονική παράσταση.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Οι κανονικές παραστάσεις πρέπει να είναι τιμές σταθεράς.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει την πλήρη αντιστοίχιση της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τις αντιστοιχίσεις ομάδας στην κανονική παράσταση. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή όλων των δευτερευουσών αντιστοιχίσεων στο καθορισμένο κείμενο.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τη θέση της αντιστοίχισης της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της θέσης της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Καταργεί τη μορφοποίηση συνολικά και επιστρέφει μια τιμή απλού κειμένου.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>κείμενο</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Το κείμενο για κατάργηση των ετικετών HTML και XML.</value>
   </data>
 </root>

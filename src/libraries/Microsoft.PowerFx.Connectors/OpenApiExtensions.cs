@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
@@ -206,18 +207,26 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "uuid":
                         case "mquery": // For SQL Server Power Query language
+                        case "email":
+                        case "uri":
+                        case "byte": // Base64 encoded string
+                        case "html":
                             return new ConnectorParameterType(schema, FormulaType.String);
 
+                        case "date":
                         case "date-time":
+                        case "date-no-tz":
                             // Consider this as a string for now
-                            // $$$ Should be DateTime type
+                            // Managed in PA Client in src\AppMagic\dll\AuthoringCore\Importers\DataDescription\DataDescriptionParser.cs, line 653-654 (in ParseDataType)
+                            // Will need to support the different formats (Iso8601ExtendedUtc, Iso8601Datetime) and different behaviors (UserLocal, NoTimeZone)
+                            // $$$ Should be DateTime type - https://github.com/microsoft/Power-Fx/issues/1557
                             return new ConnectorParameterType(schema, FormulaType.String);
 
                         case "binary":
                             return new ConnectorParameterType(schema, FormulaType.String);
 
                         default:
-                            throw new NotImplementedException("Unsupported type of string");
+                            throw new NotImplementedException($"Unsupported type of string {schema.Format}");
                     }
 
                 // OpenAPI spec: Format could be float, double, or not specified.
@@ -442,7 +451,8 @@ namespace Microsoft.PowerFx.Connectors
                 var mediaType = kv3.Key;
                 var openApiMediaType = kv3.Value;
 
-                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase))
                 {
                     if (openApiMediaType.Schema == null)
                     {
@@ -455,15 +465,15 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (connectorParameterType.HiddenRecordType != null)
                     {
-                        throw new NotImplementedException("Unexpected value mediatype schema");
+                        throw new NotImplementedException($"Unexpected value mediatype schema {mediaType}");
                     }
 
                     return connectorParameterType;
-                }
+                }               
             }
 
             // Returns something, but not json. 
-            throw new InvalidOperationException($"Unsupported return type - must have {ContentType_ApplicationJson}");
+            throw new InvalidOperationException($"Unsupported return type - must have {ContentType_ApplicationJson} or {ContentType_TextPlain}");
         }
 
         // Keep these constants all lower case
@@ -472,7 +482,7 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_ApplicationJson = "application/json";
         public const string ContentType_TextPlain = "text/plain";
 
-        private static readonly List<string> _knownContentTypes = new ()
+        private static readonly IReadOnlyList<string> _knownContentTypes = new string[]
         {
             ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,

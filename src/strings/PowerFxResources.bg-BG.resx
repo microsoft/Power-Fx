@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Делегирането на тази операция с таблица „{0}“ не се поддържа.</value>
+    <value>Тази операция върху таблица „{0}“ може да не работи, ако таблицата има повече от {1} реда.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Не може да се делегира {0}: съдържа функция за поведение „{1}“.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Определя дали посоченият текст съдържа съответствие с посочения формат.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Текстът, който да бъде сравнен с формата.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Форматът, спрямо който се проверява текстът. Може да е стойност на изброяването TextFormat или регулярен израз.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Определя за коя част от текста се търси съответствие. Може да е стойност на изброяването MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>обхват</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Търси посочения регулярен израз в посочения текст, като връща първото съответствие.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Търси посочения регулярен израз в посочения текст, като връща всички съответствия.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Текстът, в който да се търси регулярният израз.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Регулярният израз, спрямо който да се провери текстът. Може да съдържа заснемания (стойности между скоби), които ще се връщат в случай на успешно съвпадение.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Определя за коя част от текста се търси съответствие. Може да е стойност на изброяването MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Текстът, в който да се търси регулярният израз.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Регулярният израз, спрямо който да се провери текстът. Може да съдържа заснемания (стойности между скоби), които ще се връщат в случай на успешно съвпадение.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Определя за коя част от текста се търси съответствие. Може да е стойност на изброяването MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>регулярен_израз</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>опции</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Обновява указания източник на данни.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>свързан_източник_на_данни</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Очаква се стойност на запис или таблица.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Свързан източник на данни за обновяване.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Могат да бъдат обновени само управлявани връзки.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Невалиден регулярен израз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Регулярните изрази трябва да бъдат константни стойности.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Стойността, предадена на функцията „{0}“, не може да бъде променена.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща пълното съвпадение на регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете пълното съответствие в посочения текст.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща груповите съвпадения в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете всички подсъвпадения в посочения текст.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща местоположението на съвпадението в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете позицията на пълното съвпадение в посочения текст.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Премахва цялото форматиране и връща стойност като обикновен текст.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Текстът, от който да се премахнат HTML и XML етикетите.</value>
   </data>
 </root>

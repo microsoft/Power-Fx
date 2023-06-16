@@ -1,0 +1,16 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> IfError({a:1}, {b:2})
+{}
+
+>> IfError(If(Sqrt(-1)<0, {a:1}), {b:2})
+{}
+
+>> IfError(If(1/0<2,{x:1, y:1}), {x:2, z:2})
+{x:2}
+
+>> IfError({x:1, y:1}, {x:2, z:2})
+{x:1}
+
+>> IfError(0, {a:1,b:2}, {b:"3",c:"4"})
+{b:"3",c:"4"}

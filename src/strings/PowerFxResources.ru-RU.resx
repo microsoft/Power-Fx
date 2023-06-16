@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Делегирование этой операции в таблице '{0}' не поддерживается.</value>
+    <value>Эта операция в таблице "{0}" может не работать, если в ней больше {1} строк.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Невозможно делегировать "{0}": содержит функцию поведения "{1}".</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Определяет, есть ли в предоставленном тексте совпадение с указанным форматом текста.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Текст, сверяемый с форматом.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Формат, с которым сверяется текст. Это может быть значение перечисления TextFormat или регулярное выражение.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Определяет, какую часть текста следует сопоставлять. Это может быть значение перечисления MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>Формат</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>экстент</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Выполняет поиск указанного текста для заданного регулярного выражения, возвращая первое соответствие с ним.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Выполняет поиск указанного текста для заданного регулярного выражения, возвращая все соответствия с ним.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Текст, сверяемый с регулярным выражением при поиске.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Регулярное выражение, с помощью которого проверяется текст. Оно может содержать записи (значения в скобках), которые будут возвращены при нахождении соответствия.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Определяет, какую часть текста следует сопоставлять. Это может быть значение перечисления MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Текст, сверяемый с регулярным выражением при поиске.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Регулярное выражение, с помощью которого проверяется текст. Оно может содержать записи (значения в скобках), которые будут возвращены при нахождении соответствия.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Определяет, какую часть текста следует сопоставлять. Это может быть значение перечисления MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>регулярное_выражение</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>параметры</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Обновляет указанный источник данных.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>подключенный_источник_данных</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Ожидается запись или табличное значение.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Подключенный источник данных, подлежащий обновлению.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Обновлять можно только управляемые подключения.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Регулярные выражения должны быть константными значениями.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Значение, переданное функции "{0}", нельзя изменить.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает полное соответствие регулярного выражения. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения полного соответствия в указанном тексте.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает групповые соответствия в регулярном выражении. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения всех вложенных соответствий в указанном тексте.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает расположение соответствия регулярного выражения. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения позиции полного соответствия в указанном тексте.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Удаляет все форматирование и возвращает значение в виде обычного текста.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Текст, в котором нужно удалить теги HTML и XML.</value>
   </data>
 </root>

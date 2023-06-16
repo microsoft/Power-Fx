@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>La delega dell'operazione sulla "{0}" non è supportata.</value>
+    <value>L'operazione sulla tabella "{0}" potrebbe non funzionare se include più di {1} righe.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Impossibile delegare {0}: contiene una funzione di comportamento "{1}".</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determina se per il testo specificato viene trovata una corrispondenza del formato di testo indicato.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Testo da confrontare con il formato.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formato in base a cui verificare il testo. Può essere un valore dell'enumerazione TextFormat o un'espressione regolare.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Determina la parte del testo per cui si vuole trovare una corrispondenza. Può essere un valore dell'enumerazione MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>testo</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formato</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>estensione</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Cerca il testo fornito per l'espressione regolare specificata, restituendo la prima corrispondenza.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Cerca il testo fornito per l'espressione regolare specificata, restituendo tutte le corrispondenze.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Testo da cercare in base all'espressione regolare.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Espressione regolare in base a cui verificare il testo. Può contenere acquisizioni (valori tra parentesi) che verranno restituite in caso di corrispondenza trovata.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Determina la parte del testo per cui si vuole trovare una corrispondenza. Può essere un valore dell'enumerazione MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Testo da cercare in base all'espressione regolare.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Espressione regolare in base a cui verificare il testo. Può contenere acquisizioni (valori tra parentesi) che verranno restituite in caso di corrispondenza trovata.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Determina la parte del testo per cui si vuole trovare una corrispondenza. Può essere un valore dell'enumerazione MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>testo</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>espressione_regolare</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opzioni</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Aggiorna l'origine dati specificata.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>origine_dati_connessa</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>È previsto un valore di record o di tabella.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Origine dati connessa da aggiornare.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>È possibile aggiornare solo le connessioni gestite.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Espressione regolare non valida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Le espressioni regolari devono essere costituite da valori costanti.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Il valore passato alla funzione "{0}" non può essere modificato.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Il nome dell'acquisizione '{0}' nasconde la proprietà predefinita che restituisce la corrispondenza completa nell'espressione regolare. Provare a rinominarla se si vuole usare tale proprietà denominata per estrarre la corrispondenza completa nel testo specificato.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Il nome dell'acquisizione '{0}' nasconde la proprietà predefinita che restituisce le corrispondenze del gruppo nell'espressione regolare. Provare a rinominarla se si vuole usare tale proprietà denominata per estrarre tutte le sottocorrispondenze nel testo specificato.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Il nome dell'acquisizione '{0}' nasconde la proprietà predefinita che restituisce la posizione della corrispondenza nell'espressione regolare. Provare a rinominarla se si vuole usare tale proprietà denominata per estrarre la posizione della corrispondenza completa nel testo specificato.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Rimuove tutte le formattazioni e restituisce un valore di testo normale.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>testo</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Testo per cui rimuovere i tag HTML e XML.</value>
   </data>
 </root>

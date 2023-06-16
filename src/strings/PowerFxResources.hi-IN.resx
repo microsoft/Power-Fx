@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>टेबल '{0}' पर इस ऑपरेशन को प्रत्यायोजित करना समर्थित नहीं है.</value>
+    <value>अगर इसमें {1} से अधिक पंक्तियाँ हैं, तो तालिका '{0}' पर यह कार्रवाई काम नहीं कर सकती है.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>{0} को प्रतिनिधि नहीं कर सकते हैं: एक व्यवहार फ़ंक्‍शन '{1}' शामिल है.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>निर्धारित करता है कि प्रदत्त पाठ, प्रदत्त पाठ स्वरूप से मेल खाता है.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>स्वरूप के अनुरूप पाठ की तुलना की जानी है.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>पाठ से अनुरूपता के लिए स्वरूप की जाँच. यह TextFormat एनम या कोई नियमित व्यंजक का मान हो सकता है.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>इससे निर्धारित होता है कि हम पाठ के कौन से भाग का मिलान करना चाहते हैं. यह MatchOptions एनम का कोई मान हो सकता है.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>पाठ</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>फॉर्मेट</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>एक्सटेंट</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>निर्दिष्ट नियमित व्यंजक के लिए दिए गए पाठ को खोजता है, इसका प्रथम मिलान लौटाता है.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>निर्दिष्ट नियमित यंजक के लिए दिए गए पाठ को खोजता है, इसके सभी मिलान लौटाता है.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>पाठ को नियमिति व्यंजक के विरूद्ध खोजा जाना चाहिए.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>पाठ के मुताबिक जाँच करने के लिए नियमित व्यंजक. इसमें कैप्चर (कोष्ठक के बीच वाले मान) शामिल हो सकते हैं, जिन्हें सफल मिलान होने पर लौटा दिया जाता है.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>इससे निर्धारित होता है कि हम पाठ के कौन से भाग का मिलान करना चाहते हैं. यह MatchOptions एनम का कोई मान हो सकता है.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>पाठ को नियमिति व्यंजक के विरूद्ध खोजा जाना चाहिए.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>पाठ के मुताबिक जाँच करने के लिए नियमित व्यंजक. इसमें कैप्चर (कोष्ठक के बीच वाले मान) शामिल हो सकते हैं, जिन्हें सफल मिलान होने पर लौटा दिया जाता है.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>इससे निर्धारित होता है कि हम पाठ के कौन से भाग का मिलान करना चाहते हैं. यह MatchOptions एनम का कोई मान हो सकता है.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>पाठ</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>नियमित_व्यंजक</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>विकल्प</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>निर्दिष्ट डेटा स्रोत ताज़ा करता है.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>कनेक्ट_कियागयाडेटा_स्रोत</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>कोई रेकॉर्ड या तालिका मान अपेक्षित था.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>रीफ़्रेश करने के लिए, एक कनेक्ट किया गया डेटा स्रोत.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>केवल प्रबंधित कनेक्शन ही ताज़ा किए जा सकते हैं.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>नियमित व्यंजक अमान्य है.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>नियमित व्यंजकों का मान अचर होना चाहिए.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>{0}' फ़ंक्शन को पारित मान बदला नहीं जा सकता.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक का पूर्ण मिलान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान को निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित वह गुण को छुपा रहा है जो नियमित व्यंजक के समूह मेल लौटाता है. यदि आप निर्दिष्ट पाठ के सभी उप-मेलों को निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदलने पर विचार करें.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक के पूर्ण मिलान का स्थान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान का स्थान निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>सभी स्वरूपण निकालता है और एक सादा पाठ मान लौटाता है.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>पाठ</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>पाठ में उसके HTML और XML टैग हटा दिए गए हैं.</value>
   </data>
 </root>

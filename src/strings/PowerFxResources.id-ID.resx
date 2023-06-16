@@ -4943,7 +4943,7 @@
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Mendelegasikan operasi ini pada tabel '{0}' tidak didukung.</value>
+    <value>Operasi di tabel '{0}' ini mungkin tidak berfungsi jika memiliki lebih dari {1} baris.</value>
     
   </data>
   <data name="WrnDelagationPredicate" xml:space="preserve">
@@ -4961,5 +4961,129 @@
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
     <value>Tidak dapat mendelegasikan {0}: berisi fungsi perilaku '{1}'.</value>
     
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Menentukan apakah teks yang diberikan sesuai dengan format teks yang ada.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teks yang akan dibandingkan dengan format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Format yang digunakan untuk memeriksa teks, yang dapat berupa nilai enum TextFormat atau ekspresi biasa.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ini menentukan bagian teks mana yang ingin dicocokkan, yang dapat berupa nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>ekstensi</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Mencari teks yang diberikan untuk ekspresi reguler yang ditentukan, menampilkan kecocokan pertama yang didapat.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Mencari teks yang diberikan untuk ekspresi reguler yang ditentukan, menampilkan semua kecocokan yang didapat.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Teks yang akan dicari pada ekspresi regulernya.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Ekspresi reguler untuk memeriksa teks. Ekspresi dapat berisi tangkapan (nilai dalam tanda kurung) yang akan dihasilkan jika pencocokan berhasil.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ini menentukan bagian teks mana yang ingin dicocokkan, yang dapat berupa nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Teks yang akan dicari pada ekspresi regulernya.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Ekspresi reguler untuk memeriksa teks. Ekspresi dapat berisi tangkapan (nilai dalam tanda kurung) yang akan dihasilkan jika pencocokan berhasil.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ini menentukan bagian teks mana yang ingin dicocokkan, yang dapat berupa nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>ekspresi_reguler</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opsi</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Me-refresh sumber data yang ditentukan.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>sumber_data_terhubung</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Diharapkan nilai rekaman atau tabel.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Sumber data terhubung yang akan di-refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Hanya koneksi yang dikelola yang dapat di-refresh.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Ekspresi biasa harus berupa nilai konstanta.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Nilai yang diteruskan ke fungsi '{0}' tidak dapat diubah.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan penuh pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak kecocokan penuh pada teks yang ditentukan.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan grup dalam ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak semua sub-kecocokan pada teks yang ditentukan.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan lokasi kecocokan pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak posisi kecocokan penuh pada teks yang ditentukan.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Menghapus semua format dan menampilkan nilai teks biasa.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Teks yang akan dihapus tag HTML dan XML-nya.</value>
   </data>
 </root>

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -554,20 +555,6 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static bool TryGetCulture(string name, out CultureInfo value)
-        {
-            try
-            {
-                value = new CultureInfo(name);
-                return true;
-            }
-            catch (CultureNotFoundException)
-            {
-                value = null;
-                return false;
-            }
-        }
-
         public static bool TryDateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue value, out DateTimeValue result)
         {
             result = null;
@@ -599,7 +586,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var languageCode = args[1].Value;
 
-                if (!TryGetCulture(languageCode, out culture))
+                if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
@@ -631,7 +618,7 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length > 1)
             {
                 var languageCode = args[1].Value;
-                if (!TryGetCulture(languageCode, out culture))
+                if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }

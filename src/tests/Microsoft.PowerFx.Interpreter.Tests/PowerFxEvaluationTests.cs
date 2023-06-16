@@ -4,15 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 
@@ -118,6 +119,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
              * Record r_empty => {}
              * Table t1(r1) => Type (Field1, Field2, Field3, Field4)
              * Table t2(rwr1, rwr2, rwr3)
+             * Table t_empty: *[Value:n] = []
+             * Table t_empty2: *[Value:n] = []
+             * Table t_an_bs: *[a:n,b:s] = []
+             * Table t_name: *[name:s] = []
              */
 
             var numberType = numberIsFloat ? FormulaType.Number : FormulaType.Decimal;
@@ -226,22 +231,34 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 recordWithRecord3
             });
 
-            var symbol = new SymbolTable();
+            var engine = new RecalcEngine(config);
+            var symbol = engine._symbolTable;
 
             symbol.EnableMutationFunctions();
 
-            symbol.AddConstant("t1", t1);
-            symbol.AddConstant("r1", r1);
-            symbol.AddConstant("r2", r2);
-            symbol.AddConstant("t2", t2);
-            symbol.AddConstant("rwr1", recordWithRecord1);
-            symbol.AddConstant("rwr2", recordWithRecord2);
-            symbol.AddConstant("rwr3", recordWithRecord3);
-            symbol.AddConstant("r_empty", rEmpty);
+            engine.UpdateVariable("t1", t1);
+            engine.UpdateVariable("r1", r1);
 
-            config.SymbolTable = symbol;
+            engine.UpdateVariable("r2", r2);
+            engine.UpdateVariable("t2", t2);
+            engine.UpdateVariable("rwr1", recordWithRecord1);
+            engine.UpdateVariable("rwr2", recordWithRecord2);
+            engine.UpdateVariable("rwr3", recordWithRecord3);
+            engine.UpdateVariable("r_empty", rEmpty);
 
-            return (new RecalcEngine(config), null);
+            var valueTableType = TableType.Empty().Add("Value", numberType);
+            var tEmpty = FormulaValue.NewTable(valueTableType.ToRecord());
+            var tEmpty2 = FormulaValue.NewTable(valueTableType.ToRecord());
+            engine.UpdateVariable("t_empty", tEmpty);
+            engine.UpdateVariable("t_empty2", tEmpty2);
+
+            var abTableType = TableType.Empty().Add("a", numberType).Add("b", FormulaType.String);
+            engine.UpdateVariable("t_an_bs", FormulaValue.NewTable(abTableType.ToRecord()));
+
+            var nameTableType = TableType.Empty().Add("name", FormulaType.String);
+            engine.UpdateVariable("t_name", FormulaValue.NewTable(nameTableType.ToRecord()));
+
+            return (engine, null);
         }
 
         // Interpret each test case independently
@@ -279,6 +296,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 RecalcEngine engine;
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName, Features, NumberIsFloat);
+
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
 
@@ -383,9 +401,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             private readonly RecalcEngine _engine;
 
-            public ReplRunner(RecalcEngine engine)
+            private readonly RuntimeConfig _runtimeConfig;
+
+            public ReplRunner(RecalcEngine engine, RuntimeConfig runtimeConfig)
             {
                 _engine = engine;
+                _runtimeConfig = runtimeConfig;
             }
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
@@ -403,7 +424,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var result = check.GetEvaluator().Eval();
+                var result = check.GetEvaluator().Eval(_runtimeConfig);
                 return new RunResult(result);
             }
 
@@ -435,7 +456,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                                     {
                                         var arg1Type = check.ReturnType;
 
-                                        var varValue = check.GetEvaluator().Eval();
+                                        var varValue = check.GetEvaluator().Eval(_runtimeConfig);
                                         _engine.UpdateVariable(arg0name, varValue);
 
                                         runResult = new RunResult(varValue);
@@ -450,6 +471,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 runResult = null;
                 return false;
             }
+        }
+    }
+
+    public static class UserInfoTestSetup
+    {
+        public static BasicUserInfo UserInfo = new BasicUserInfo
+        {
+            FullName = "Susan Burk",
+            Email = "susan@contoso.com",
+            DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
+            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
+        };
+
+        public static SymbolTable GetUserInfoSymbolTable()
+        {
+            var props = new Dictionary<string, object>
+            {
+                { "FullName", UserInfo.FullName },
+                { "Email", UserInfo.Email },
+                { "DataverseUserId", UserInfo.DataverseUserId },
+                { "TeamsMemberId", UserInfo.TeamsMemberId }
+            };
+
+            var allKeys = props.Keys.ToArray();
+            SymbolTable userSymbolTable = new SymbolTable();
+
+            userSymbolTable.AddUserInfoObject(allKeys);
+
+            return userSymbolTable;
         }
     }
 }

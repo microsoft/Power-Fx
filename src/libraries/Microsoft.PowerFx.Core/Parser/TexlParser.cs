@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
-            return parser.ParseUDFsAndNamedFormulas(script, parserOptions.NumberIsFloat);
+            return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
 
         private ParseUDFsResult ParseUDFs(string script)
@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, bool numberIsFloat)
+        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         _hasSemicolon = false;
                         ParseTrivia();
-                        _flagsMode.Push(Flags.EnableExpressionChaining);
+                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
                         ParseTrivia();
@@ -326,7 +326,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, numberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -334,7 +334,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         var result = ParseExpr(Precedence.None);
                         ParseTrivia();
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, numberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat));
                     }
                     else
                     {
@@ -1766,11 +1766,17 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        public static string Format(string text)
+        /// <summary>
+        /// Formats/Pretty Print the given expression text to more a readable form.
+        /// </summary>
+        /// <param name="text">Expression text to format.</param>
+        /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, expression chaining is enabled.</param>
+        /// <returns>Formatted expression text.</returns>
+        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining)
         {
             var result = ParseScript(
                 text,
-                flags: Flags.EnableExpressionChaining);
+                flags: flags);
 
             // Can't pretty print a script with errors.
             if (result.HasError)

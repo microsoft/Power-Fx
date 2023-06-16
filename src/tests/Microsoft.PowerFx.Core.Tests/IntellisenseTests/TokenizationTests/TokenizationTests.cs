@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
@@ -15,7 +16,7 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
-namespace Microsoft.PowerFx.Core.Tests.IntellisenseTests
+namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
     public class TokenizationTests : PowerFxTest
     {
@@ -98,15 +99,58 @@ namespace Microsoft.PowerFx.Core.Tests.IntellisenseTests
                         foreach (var span in spans)
                         {
                             Assert.NotEqual(span.Min, token.StartIndex);
-                            Assert.NotEqual(span.Lim, token.EndIndex);  
+                            Assert.NotEqual(span.Lim, token.EndIndex);
                         }
-                    }  
+                    }
                 }
             });
             Assert.All(tokens, (tok) => Assert.DoesNotContain(compilerGenNodesNames, (name) => name == tok.TokenName));
             tokens = tokens.OrderBy(tok => tok.StartIndex).ToList();
             Assert.NotNull(tokens.FirstOrDefault());
             Assert.Equal(TokenType.StrInterpStart, tokens.FirstOrDefault().TokenType);
+        }
+
+        [Theory]
+        [MemberData(nameof(StringInterpolationTestCases.StringInterpTestCasesAsObjects), MemberType = typeof(StringInterpolationTestCases))]
+        internal void TestStringInterpolationTokens(TokenizationTestCase testCase)
+        {
+            // Arrange
+            var expression = testCase.Expression;
+            var checkResult = GetDefaultCheckResult(expression, assertNoErrors: false);
+
+            // Act
+            var tokens = Tokenization.Tokenize(expression, checkResult.Binding, checkResult.Parse.Comments, null);
+
+            // Assert
+            AssertTokens(testCase.ExpectedTokens, tokens);
+        }
+
+        [Theory]
+        [MemberData(nameof(NumDecLitTokenTestCases.NumDecLiteralTestCasesAsObjects), MemberType = typeof(NumDecLitTokenTestCases))]
+        internal void TestNumDecLitTokens(TokenizationTestCase testCase)
+        {
+            // Arrange
+            var expression = testCase.Expression;
+            var checkResult = GetDefaultCheckResult(expression, testCase.Options);
+
+            // Act
+            var tokens = Tokenization.Tokenize(expression, checkResult.Binding, checkResult.Parse.Comments, null);
+
+            // Assert
+            AssertTokens(testCase.ExpectedTokens, tokens);
+        }
+
+        private static void AssertTokens(IEnumerable<ITokenTextSpan> expectedTokens, IEnumerable<ITokenTextSpan> actualTokens)
+        {
+            expectedTokens = expectedTokens.OrderBy(tok => tok.StartIndex);
+            actualTokens = actualTokens.OrderBy(tok => tok.StartIndex);
+            Assert.Equal(expectedTokens.Count(), actualTokens.Count());
+            foreach (var (expectedToken, actualToken) in expectedTokens.Zip(actualTokens))
+            {
+                Assert.Equal(expectedToken.StartIndex, actualToken.StartIndex);
+                Assert.Equal(expectedToken.EndIndex, actualToken.EndIndex);
+                Assert.Equal(expectedToken.TokenType, actualToken.TokenType);
+            }
         }
 
         private static void AssertOrderOfTokens(IEnumerable<ITokenTextSpan> tokens, IComparer<ITokenTextSpan> comparer)
@@ -124,7 +168,7 @@ namespace Microsoft.PowerFx.Core.Tests.IntellisenseTests
             }
         }
 
-        private static CheckResult GetDefaultCheckResult(string expression)
+        private static CheckResult GetDefaultCheckResult(string expression, ParserOptions options = null, bool assertNoErrors = true)
         {
             var powerFxConfig = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
             var engine = new Engine(powerFxConfig);
@@ -135,8 +179,12 @@ namespace Microsoft.PowerFx.Core.Tests.IntellisenseTests
             mockSymbolTable.AddTable("foo", null, new TypedName(DType.String, DName.MakeValid("test", out _)));
             mockSymbolTable.AddRecord("ThisItem", BindKind.ThisItem, new TypedName(DType.Number, DName.MakeValid("Income", out _)), new TypedName(DType.String, DName.MakeValid("Name", out _)));
             mockSymbolTable.Add("name", new NameLookupInfo(BindKind.Alias, DType.String, DPath.Root, 0));
-            var checkResult = engine.Check(expression, new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }, mockSymbolTable);
-            Assert.False(checkResult.Errors.Any(), string.Join(Environment.NewLine, checkResult.Errors));
+            var checkResult = engine.Check(expression, options ?? new ParserOptions { AllowsSideEffects = true, NumberIsFloat = true }, mockSymbolTable);
+            if (assertNoErrors)
+            {
+                Assert.False(checkResult.Errors.Any(), string.Join(Environment.NewLine, checkResult.Errors));
+            }
+
             return checkResult;
         }
 

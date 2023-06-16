@@ -58,6 +58,26 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
+        internal bool TryGetBackingDType(string fieldName, out DType type)
+        {
+            if (_type == null)
+            {
+                // if the backing _type is null, maybe we have a derived type that can provide the type
+                if (TryGetFieldType(fieldName, out var formulaType))
+                {
+                    type = formulaType._type;
+                    return true;
+                }
+                else
+                {
+                    type = default;
+                    return false;
+                }
+            }
+            
+            return _type.TryGetType(new DName(fieldName), out type);
+        }
+
         /// <summary>
         /// Lookup for logical name and field for input display or logical name.
         /// If there is a conflict, it prioritizes logical name.

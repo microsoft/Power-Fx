@@ -4,17 +4,28 @@
 // These are all verified in Power Apps 
 // 
 
->> With({ t : Sequence(4)},  Collect(t, { Value : 99}); Concat(t, Value))
+>> Set(t, Sequence(4))
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
+>> Collect(t, { Value : 99}); Concat(t, Value)
 "123499"
 
->> With({ t : ForAll(Sequence(4), Value*10)},  Collect(t, { Value : 99}); Concat(t, Value)); 
+>> Set(t, ForAll(Sequence(4), Value*10))
+Table({Value:10},{Value:20},{Value:30},{Value:40})
+
+>> Collect(t, { Value : 99}); Concat(t, Value) // After t was changed
 "1020304099"
 
+// Initializing t2
+>> Set(t2, [1])
+Table({Value:1})
+
+>> With({t: Sequence(5)}, Set(t2, ForAll(t, Value * 2))); t2
+Table({Value:2},{Value:4},{Value:6},{Value:8},{Value:10})
 
 // Inner sequence is unchaged 
 >> With( { t : Sequence(5)}, 
-      With( {t2 : ForAll(t, Value * 2)},
-        Collect(t2, { Value : 99 }); 
-        Concat(t, Value) & "," & Concat(t2, Value)
-      )) 
+     Collect(t2, { Value : 99 }); 
+     Concat(t, Value) & "," & Concat(t2, Value)
+   )
 "12345,24681099"

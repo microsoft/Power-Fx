@@ -43,8 +43,9 @@ namespace Microsoft.PowerFx
 
         // Must be thread safe!!!        
         // We can have multiple threads reading; which means they may be populating the cache. 
-        private readonly object _lock = new object();        
+        private readonly object _lock = new object();
 
+        [ThreadSafeProtectedByLock(nameof(_lock))]
         private readonly SlotMap<NameLookupInfo?> _slots = new SlotMap<NameLookupInfo?>();
 
         // Override lookup.
@@ -100,8 +101,14 @@ namespace Microsoft.PowerFx
             // This is crticial that we're under lock.
             // We only want to add these once. 
             var slotIndex = _slots.Alloc();
+                        
+            var props = new SymbolProperties
+            {
+                 CanMutate = true,
+                 CanSet = false
+            };
 
-            var data = new NameSymbol(logical, mutable: false)
+            var data = new NameSymbol(logical, props)
             {
                 Owner = this,
                 SlotIndex = slotIndex

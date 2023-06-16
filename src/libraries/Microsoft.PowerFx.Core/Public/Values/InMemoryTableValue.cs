@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Types
     /// In-memory table. Constructed over RecordValues. 
     /// DValue means items could be error or blank. 
     /// </summary>
-    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>
+    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>, IMutationCopy
     {
         private readonly RecordType _recordType;
 
@@ -23,6 +23,18 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
+        }
+
+        // copy of rows made by constructor above with .ToList().
+        internal InMemoryTableValue(InMemoryTableValue orig)
+            : this(orig.IRContext, orig.Rows)
+        {
+        }
+
+        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new InMemoryTableValue(this);
+            return true;
         }
 
         private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
@@ -37,14 +49,14 @@ namespace Microsoft.PowerFx.Types
 
         protected override DValue<RecordValue> MarshalInverse(RecordValue row)
         {
-            return DValue<RecordValue>.Of(row);
+            return DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(_recordType, row));
         }
     }
 
     // More constrained table when we know that all values are indeed Records, not error/blank. 
     // Beware of wrapping/unwrapping in DValues if we already have a RecordValue -
     // that can create extra IEnumerable wrappers that break direct indexing. 
-    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>
+    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>, IMutationCopy
     {
         private readonly RecordType _recordType;
 
@@ -54,6 +66,17 @@ namespace Microsoft.PowerFx.Types
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
+        }
+
+        internal RecordsOnlyTableValue(RecordsOnlyTableValue orig)
+            : this(orig.IRContext, orig.Rows.Select(record => record.Value).ToList())
+        {
+        }
+
+        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new RecordsOnlyTableValue(this);
+            return true;
         }
 
         protected override DValue<RecordValue> Marshal(RecordValue record)

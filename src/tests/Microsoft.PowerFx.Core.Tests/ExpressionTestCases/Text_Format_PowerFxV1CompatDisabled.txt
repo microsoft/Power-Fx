@@ -1,0 +1,25 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> Text(123.466, "[$-en-US]$#0.0M")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1, "M#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// If have empty language code, throw error
+>> Text(1234.5678,"[$-]")
+Error({Kind:ErrorKind.BadLanguageCode})
+
+// If not closed by a ']', throw error
+>> Text(1234.5678,"[$-a")
+Error({Kind:ErrorKind.BadLanguageCode})
+
+// If not closed by a ']', throw error
+>> Text(1234.5678, "[$-en-US#,##0.00", "en-US")
+Error({Kind:ErrorKind.BadLanguageCode})
+
+>> Text(1234.5678, "[$-]fr-FR # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.BadLanguageCode})
+
+>> Text(1234.5678, "[$-fr-FR][$-en-US] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
