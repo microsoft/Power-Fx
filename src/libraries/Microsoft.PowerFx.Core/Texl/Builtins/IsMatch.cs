@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 #pragma warning disable SA1649 // File name should match first type name
 
@@ -41,19 +42,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.IsMatchArg1, TexlStrings.IsMatchArg2, TexlStrings.IsMatchArg3 };
         }
 
-        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            bool fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);            
-
-            TexlNode regExNode = args[1];
-            
-            if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !BinderUtils.TryGetConstantValue(context, regExNode, out var nodeValue))                
+            if ((argTypes[1].Kind != DKind.String && argTypes[1].Kind != DKind.OptionSetValue) || !binding.IsConstant(args[1]))
             {
-                errors.EnsureError(regExNode, TexlStrings.ErrVariableRegEx);
-                return false;
+                errors.EnsureError(args[1], TexlStrings.ErrVariableRegEx);
             }
-
-            return fValid;
         }
 
         public override bool HasSuggestionsForParam(int index)
