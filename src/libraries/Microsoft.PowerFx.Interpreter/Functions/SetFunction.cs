@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Interpreter
             if (firstName != null)
             {
                 var info = binding.GetInfo(firstName);
-                if (info.Data is NameSymbol nameSymbol && nameSymbol.IsMutable)
+                if (info.Data is NameSymbol nameSymbol && nameSymbol.Props.CanSet)
                 {
                     // We have a variable. type check
                     var arg1 = argTypes[1];
