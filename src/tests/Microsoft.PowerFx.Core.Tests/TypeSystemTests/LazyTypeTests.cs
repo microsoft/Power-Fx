@@ -311,5 +311,12 @@ namespace Microsoft.PowerFx.Core.Tests
             var recursiveType = new BindingEngineTests.LazyRecursiveRecordType();
             Assert.False(recursiveType._type.HasErrors);
         }
+
+        [Fact]
+        public void GetBackingDTypeLazyType()
+        {
+            _lazyRecord1.TryGetBackingDType("Foo", out var dType);
+            Assert.Equal(DType.Number, dType);
+        }
     }
 }
