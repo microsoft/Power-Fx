@@ -102,7 +102,14 @@ namespace Microsoft.PowerFx
             // We only want to add these once. 
             var slotIndex = _slots.Alloc();
 
-            var data = new NameSymbol(logical, mutable: false)
+            // $$$ Take this as top-level param
+            var props = new SymbolProperties
+            {
+                 CanMutate = true,
+                 CanSet = false
+            };
+
+            var data = new NameSymbol(logical, props)
             {
                 Owner = this,
                 SlotIndex = slotIndex
