@@ -1,16 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
-using System.Collections.Generic;
+extern alias PfxCore;
+
 using System.Linq;
-using System.Text;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
-using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Syntax;
-using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Syntax;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.Binding;
+using PfxCore.Microsoft.PowerFx.Core.Glue;
+using PfxCore.Microsoft.PowerFx.Core.Texl;
+using PfxCore.Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

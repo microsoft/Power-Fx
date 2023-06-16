@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
+using PfxCore.Microsoft.PowerFx;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -25,8 +26,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var checkedCount = 0;
 
             // TODO: Checking public types for now because some internal ones fail (e.g., DType)
-            foreach (var t in asm.GetTypes()
-                                 .Where(t => t.IsPublic && t.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false) != null))
+            foreach (var t in asm.GetTypes().Where(t => t.IsPublic && t.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false) != null))
             {
                 // Check properties
                 foreach (var prop in t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
@@ -38,7 +38,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     {
                         // C# "Init" keyword is semantically immutable, but appears mutable to reflection at runtime.
                         // See https://alistairevans.co.uk/2020/11/01/detecting-init-only-properties-with-reflection-in-c-9/
-                        var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(System.Runtime.CompilerServices.IsExternalInit));
+                        var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(PfxCore.System.Runtime.CompilerServices.IsExternalInit));
                         if (!isInitKeyword)
                         {
                             errors.AppendLine($"{propName} has setter");

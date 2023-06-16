@@ -1,8 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System.Collections.Generic;
 using System.Linq;
+using PfxCore.Microsoft.PowerFx;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {

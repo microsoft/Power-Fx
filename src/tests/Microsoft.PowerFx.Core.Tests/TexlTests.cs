@@ -1,30 +1,27 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
 using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App.Controls;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
-using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests.Helpers;
-using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Texl.Builtins;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Tests;
-using Microsoft.PowerFx.Types;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core;
+using PfxCore.Microsoft.PowerFx.Core.Entities;
+using PfxCore.Microsoft.PowerFx.Core.Functions.Delegation;
+using PfxCore.Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
+using PfxCore.Microsoft.PowerFx.Core.Localization;
+using PfxCore.Microsoft.PowerFx.Core.Parser;
+using PfxCore.Microsoft.PowerFx.Core.Texl;
+using PfxCore.Microsoft.PowerFx.Core.Texl.Builtins;
+using PfxCore.Microsoft.PowerFx.Core.Types;
+using PfxCore.Microsoft.PowerFx.Core.Utils;
+using PfxCore.Microsoft.PowerFx.Syntax;
+using PfxCore.Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

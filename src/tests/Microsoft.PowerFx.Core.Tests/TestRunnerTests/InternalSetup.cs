@@ -1,12 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
-using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.PowerFx.Core.Parser;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.Parser;
 
 namespace Microsoft.PowerFx.Core.Tests
 {

@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Texl.Intellisense;
+extern alias PfxCore;
+
+using PfxCore.Microsoft.PowerFx.Core.Texl.Intellisense;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {

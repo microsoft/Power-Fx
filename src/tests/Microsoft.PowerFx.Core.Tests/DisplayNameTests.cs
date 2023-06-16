@@ -1,21 +1,25 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Glue;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
-using Microsoft.PowerFx.Types;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core;
+using PfxCore.Microsoft.PowerFx.Core.Binding;
+using PfxCore.Microsoft.PowerFx.Core.Entities.QueryOptions;
+using PfxCore.Microsoft.PowerFx.Core.Glue;
+using PfxCore.Microsoft.PowerFx.Core.Parser;
+using PfxCore.Microsoft.PowerFx.Core.Types;
+using PfxCore.Microsoft.PowerFx.Core.Utils;
+using PfxCore.Microsoft.PowerFx.Intellisense;
+using PfxCore.Microsoft.PowerFx.Syntax;
+using PfxCore.Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
@@ -478,7 +482,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var binding = TexlBinding.Run(
                 new Glue2DocumentBinderGlue(),
                 null,
-                new Core.Entities.QueryOptions.DataSourceToQueryOptionsMap(),
+                new DataSourceToQueryOptionsMap(),
                 formula.ParseTree,
                 new SymbolTable(),
                 BindingConfig.Default,

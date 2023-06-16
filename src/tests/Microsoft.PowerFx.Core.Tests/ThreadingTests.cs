@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Annotations;
+using PfxCore.Microsoft.PowerFx.Core.Localization;
+using PfxCore.Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -15,13 +17,13 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void CheckFxCore()
         {
-            var asm = typeof(Microsoft.PowerFx.Syntax.TexlNode).Assembly;
+            var asm = typeof(TexlNode).Assembly;
 
             var bugsFieldType = new HashSet<Type>
             {            
                 // make these fields readonly
-                typeof(Core.Localization.TexlStrings.StringGetter),
-                typeof(Core.Localization.ErrorResourceKey),
+                typeof(TexlStrings.StringGetter),
+                typeof(ErrorResourceKey),
             };
 
             var bugNames = new HashSet<string>

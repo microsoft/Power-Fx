@@ -1,14 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Tests;
-using Microsoft.PowerFx.Types;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core;
+using PfxCore.Microsoft.PowerFx.Core.Localization;
+using PfxCore.Microsoft.PowerFx.Core.Types;
+using PfxCore.Microsoft.PowerFx.Core.Utils;
+using PfxCore.Microsoft.PowerFx.Syntax;
+using PfxCore.Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Core.Tests

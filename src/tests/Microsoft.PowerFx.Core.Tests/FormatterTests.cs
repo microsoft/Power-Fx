@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
+extern alias PfxCore;
+
 using System.Linq;
-using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Syntax;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.Logging;
+using PfxCore.Microsoft.PowerFx.Core.Parser;
+using PfxCore.Microsoft.PowerFx.Syntax;
 using Xunit;
-using static Microsoft.PowerFx.Core.Parser.TexlParser;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -28,9 +30,9 @@ namespace Microsoft.PowerFx.Tests
             "$\"#$string$#{#$decimal$#}\"")]
         public void TestStucturalPrint(string script, string expected)
         {
-            var result = ParseScript(
+            var result = TexlParser.ParseScript(
                 script,
-                flags: Flags.EnableExpressionChaining);
+                flags: TexlParser.Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, result.GetAnonymizedFormula());
             
@@ -59,9 +61,9 @@ namespace Microsoft.PowerFx.Tests
             "custom.custom2 && #$boolean$#")]
         public void TestStucturalPrintWithCustomSanitizer(string script, string expected)
         {
-            var result = ParseScript(
+            var result = TexlParser.ParseScript(
                 script,
-                flags: Flags.EnableExpressionChaining);
+                flags: TexlParser.Flags.EnableExpressionChaining);
 
             Assert.Equal(expected, StructuralPrint.Print(result.Root, nameProvider: new TestSanitizer()));
         }
@@ -74,9 +76,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("RGBA(\n    255,\n    /*r   */255,   ", true)]
         public void TestSeverityLevelsForPrettyPrint(string script, bool expected)
         {
-            var result = ParseScript(
+            var result = TexlParser.ParseScript(
                 script,
-                flags: Flags.EnableExpressionChaining);
+                flags: TexlParser.Flags.EnableExpressionChaining);
 
             // Can't pretty print a script with errors.
             var hasErrorsWithSeverityHigherThanWarning = false;
@@ -164,12 +166,12 @@ namespace Microsoft.PowerFx.Tests
         public void TestPrettyPrint(string script, string expected)
         {
             // Act & Assert
-            var result = Format(script);
+            var result = TexlParser.Format(script);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
 
             // Act & Assert: Ensure idempotence
-            result = Format(result);
+            result = TexlParser.Format(result);
             Assert.NotNull(result);
             Assert.Equal(expected, result);
         }
@@ -191,17 +193,17 @@ namespace Microsoft.PowerFx.Tests
             // Arrange
             var expression = $"Set({keyword}; true)";
             var expectedFormattedExpr = $"Set(\n    {keyword};\n    true\n)";
-            var flags = Flags.DisableReservedKeywords | Flags.EnableExpressionChaining;
+            var flags = TexlParser.Flags.DisableReservedKeywords | TexlParser.Flags.EnableExpressionChaining;
 
             // Act
-            var result = Format(expression, flags);
+            var result = TexlParser.Format(expression, flags);
 
             // Asssert
             Assert.NotNull(result);
             Assert.Equal(expectedFormattedExpr, result);
 
             // Act: Ensure idempotence
-            result = Format(result, flags);
+            result = TexlParser.Format(result, flags);
             
             // Assert: Ensure idempotence
             Assert.NotNull(result);
@@ -229,7 +231,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 outcome = i % 2 == 0 ?
                           TexlLexer.InvariantLexer.RemoveWhiteSpace(outcome) :
-                          Format(outcome, Flags.DisableReservedKeywords | Flags.EnableExpressionChaining);
+                          TexlParser.Format(outcome, TexlParser.Flags.DisableReservedKeywords | TexlParser.Flags.EnableExpressionChaining);
             }
 
             // Assert

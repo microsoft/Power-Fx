@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
-using Microsoft.PowerFx.Core.Parser;
+using PfxCore.Microsoft.PowerFx.Core.Parser;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests

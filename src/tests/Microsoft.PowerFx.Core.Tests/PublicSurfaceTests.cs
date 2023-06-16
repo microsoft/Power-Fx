@@ -1,12 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Microsoft.PowerFx.Syntax;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.Errors;
+using PfxCore.Microsoft.PowerFx.Core.Parser;
+using PfxCore.Microsoft.PowerFx.Syntax;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -16,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void PublicSurface_Tests()
         {
-            var asm = typeof(Parser.TexlParser).Assembly;
+            var asm = typeof(TexlParser).Assembly;
 
             // The goal for public namespaces is to make the SDK easy for the consumer. 
             // Namespace principles for public classes:
@@ -210,7 +215,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Syntax.Span"
             };
 
-            var asm = typeof(Parser.TexlParser).Assembly;
+            var asm = typeof(TexlParser).Assembly;
             foreach (var type in asm.GetTypes().Where(t => t.IsPublic))
             {
                 if (exceptionList.Contains(type.FullName))
@@ -229,7 +234,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void ErrorSeverityEnumsMatch()
         {
-            var values1 = Enum.GetValues(typeof(Errors.DocumentErrorSeverity));
+            var values1 = Enum.GetValues(typeof(DocumentErrorSeverity));
             var values2 = Enum.GetValues(typeof(ErrorSeverity));
 
             var len = values1.Length;
@@ -300,7 +305,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public static void TestImmutability()
         {
-            var asm = typeof(Microsoft.PowerFx.Syntax.TexlNode).Assembly;
+            var asm = typeof(TexlNode).Assembly;
             ImmutabilityTests.CheckImmutability(asm);
         }
 

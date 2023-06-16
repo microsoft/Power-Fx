@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.PowerFx.Core.Texl.Builtins;
+using PfxCore.Microsoft.PowerFx;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -32,7 +34,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 var name = prop.Name;
                 if (prop.CanWrite)
                 {
-                    var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(System.Runtime.CompilerServices.IsExternalInit));
+                    var isInitKeyword = prop.SetMethod.ReturnParameter.GetRequiredCustomModifiers().Contains(typeof(IsExternalInit));
                     if (!isInitKeyword)
                     {
                         // No mutable properties allowed. Init only ok. 

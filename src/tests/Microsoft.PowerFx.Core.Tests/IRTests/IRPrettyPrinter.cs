@@ -1,12 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Linq;
 using System.Text;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.IR.Symbols;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.IR;
+using PfxCore.Microsoft.PowerFx.Core.IR.Nodes;
+using PfxCore.Microsoft.PowerFx.Core.IR.Symbols;
 
 namespace Microsoft.PowerFx.Tests
 {

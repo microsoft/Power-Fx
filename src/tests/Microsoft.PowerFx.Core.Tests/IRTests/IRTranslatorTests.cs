@@ -1,14 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Linq;
-using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.IR.Nodes;
-using Microsoft.PowerFx.Core.Types.Enums;
-using Microsoft.PowerFx.Types;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.IR;
+using PfxCore.Microsoft.PowerFx.Core.IR.Nodes;
+using PfxCore.Microsoft.PowerFx.Core.Types.Enums;
+using PfxCore.Microsoft.PowerFx.Types;
 using Xunit;
-using CallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
+using CallNode = PfxCore.Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
 namespace Microsoft.PowerFx.Core.Tests
 {

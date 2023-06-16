@@ -1,20 +1,22 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Entities.Delegation;
-using Microsoft.PowerFx.Core.Entities.QueryOptions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.Binding.BindInfo;
+using PfxCore.Microsoft.PowerFx.Core.Entities;
+using PfxCore.Microsoft.PowerFx.Core.Entities.Delegation;
+using PfxCore.Microsoft.PowerFx.Core.Entities.QueryOptions;
+using PfxCore.Microsoft.PowerFx.Core.Functions.Delegation;
+using PfxCore.Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
+using PfxCore.Microsoft.PowerFx.Core.Types;
+using PfxCore.Microsoft.PowerFx.Core.UtilityDataStructures;
+using PfxCore.Microsoft.PowerFx.Core.Utils;
+using PfxCore.Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Tests.Helpers
 {
@@ -42,7 +44,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
         private readonly FilterOpMetadata _filterDelegationMetadata;
 
-        public TestDelegationMetadata(DelegationCapability capability = default, DType schema = default, Core.Functions.Delegation.DelegationMetadata.FilterOpMetadata filterDelegationMetadata = default)
+        public TestDelegationMetadata(DelegationCapability capability = default, DType schema = default, FilterOpMetadata filterDelegationMetadata = default)
         {
             _capability = capability;
             _schema = schema ?? EntityRecordType._type;

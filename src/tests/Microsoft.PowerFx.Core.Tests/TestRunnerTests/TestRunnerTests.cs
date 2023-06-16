@@ -1,11 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Types;
+using PfxCore.Microsoft.PowerFx;
+using PfxCore.Microsoft.PowerFx.Core.IR;
+using PfxCore.Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -174,7 +178,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal("filedisable.txt:input3", tests[0].GetUniqueId(null));
         }
 
-        private static readonly ErrorValue _errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number));
+        private static readonly ErrorValue _errorValue = new ErrorValue(IRContext.NotInSource(FormulaType.Number));
 
         private class MockRunner : BaseRunner
         {
@@ -322,7 +326,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Fact]
         public void TestRunnerErrorKindMatching()
         {
-            var errorValue = new ErrorValue(IR.IRContext.NotInSource(FormulaType.Number), new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
+            var errorValue = new ErrorValue(IRContext.NotInSource(FormulaType.Number), new ExpressionError { Kind = ErrorKind.InvalidFunctionUsage });
 
             var runner = new MockRunner
             {

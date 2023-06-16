@@ -1,15 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
-using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -92,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal static string GetDefaultTestDir(string filePath)
         {
-            var executable = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            var executable = new Uri(Assembly.GetExecutingAssembly().Location).LocalPath;
             var curDir = Path.GetFullPath(Path.GetDirectoryName(executable));
             var testDir = Path.Combine(curDir, filePath);
             return testDir;

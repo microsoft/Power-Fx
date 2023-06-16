@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+extern alias PfxCore;
+
 using System.Globalization;
 using System.IO;
-using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Intellisense.SignatureHelp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PfxCore.Microsoft.PowerFx.Intellisense.SignatureHelp;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
