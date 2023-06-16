@@ -139,3 +139,6 @@ false
 
 >> IsMatch("""Hello world""", Char(34) & "Hello",  MatchOptions.Contains)
 true
+
+>> IsMatch("Hello 123 world", $"Hello {Sqrt(1)}{Sqrt(4)}{Sqrt(9)} world")
+true
