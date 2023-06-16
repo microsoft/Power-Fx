@@ -899,7 +899,6 @@ namespace Microsoft.PowerFx.Syntax
             private readonly bool _disableReservedKeywords;
 
             private int _currentTokenPos; // The start of the current token.
-            private bool _previousHasEndLineComment = false; // True/False if the last previous commment already process end line character
 
             public LexerImpl(TexlLexer lex, string text, StringBuilder sb, Flags flags)
             {
@@ -1108,8 +1107,6 @@ namespace Microsoft.PowerFx.Syntax
                     var str = _sb.ToString();
                     if (!_lex.TryGetPunctuator(str, out var tidCur))
                     {
-                        // Reset the last previous comment end line to false when no comment is returned
-                        _previousHasEndLineComment = false;
                         break;
                     }
 
@@ -1117,6 +1114,7 @@ namespace Microsoft.PowerFx.Syntax
                     {
                         tidPunc = tidCur;
                         punctuatorLength = _sb.Length;
+
                         return LexComment(_sb.Length);
                     }
 
@@ -1124,11 +1122,6 @@ namespace Microsoft.PowerFx.Syntax
                     {
                         tidPunc = tidCur;
                         punctuatorLength = _sb.Length;
-                    }
-                    else
-                    {
-                        // Reset the last previous comment end line to false when none kind is returned
-                        _previousHasEndLineComment = false;
                     }
 
                     _sb.Append(PeekChar(_sb.Length));
@@ -1620,26 +1613,22 @@ namespace Microsoft.PowerFx.Syntax
                 }
 
                 // Preceding,
-                // Only process previous end line character if it is not proceeded in the last previous comment
-                if (!_previousHasEndLineComment)
+                while (startingPosition > 0)
                 {
-                    while (startingPosition > 0)
+                    var previousChar = _text[startingPosition - 1];
+                    if (!char.IsWhiteSpace(previousChar))
                     {
-                        var previousChar = _text[startingPosition - 1];
-                        if (!char.IsWhiteSpace(previousChar))
-                        {
-                            break;
-                        }
-
-                        if (IsNewLineCharacter(previousChar))
-                        {
-                            _sb.Insert(0, previousChar);
-                            _currentTokenPos = --startingPosition;
-                            break;
-                        }
-
-                        startingPosition--;
+                        break;
                     }
+
+                    if (IsNewLineCharacter(previousChar))
+                    {
+                        _sb.Insert(0, previousChar);
+                        _currentTokenPos = --startingPosition;
+                        break;
+                    }
+
+                    startingPosition--;
                 }
 
                 var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
@@ -1647,9 +1636,6 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     commentToken.IsOpenBlock = true;
                 }
-
-                // Set true if the current comment end with '\n' so next comment does not duplicate process it.
-                _previousHasEndLineComment = _sb.ToString().EndsWith("\n", StringComparison.Ordinal);
 
                 return commentToken;
             }
