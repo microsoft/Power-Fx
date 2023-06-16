@@ -73,11 +73,21 @@ namespace Microsoft.PowerFx
             {
                 for (var i = 0; i < args.Length; i++)
                 {
-                    DType curType = argTypes[i];
+                    DType curType = argTypes[i]; // caller
+                    DType paramType = this.ParamTypes[i]; // callsite 
 
-                    if ((curType.IsRecord || curType.IsTable) && !curType.CheckAggregateNames(this.ParamTypes[i], args[i], errors, SupportCoercionForArg(i), context.Features.PowerFxV1CompatibilityRules))
+                    if (curType.IsRecord || curType.IsTable)
                     {
-                        return false;
+                        // If param type is an empty record, then don't enforce. 
+                        if (paramType.ChildCount == 0)
+                        {
+                            continue;
+                        }
+
+                        if (!curType.CheckAggregateNames(paramType, args[i], errors, SupportCoercionForArg(i), context.Features.PowerFxV1CompatibilityRules))
+                        {
+                            return false;
+                        }
                     }
                 }
             }
