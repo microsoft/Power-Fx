@@ -240,18 +240,21 @@ namespace Microsoft.PowerFx
             result = null;
             var recordResult = new List<NamedValue>();
             
-            foreach (var sourceField in value.Fields)
+            foreach (var targetField in targetType.GetFieldTypes())
             {
-                var fieldName = sourceField.Name;
-                var fieldValue = value.GetField(fieldName);
-                if (!targetType.TryGetFieldType(fieldName, out FormulaType fieldType))
+                var fieldName = targetField.Name;
+                var fieldType = targetField.Type;
+                var fieldSourceValue = value.GetField(fieldName);
+
+                if (!value.Type.TryGetFieldType(fieldName, out FormulaType sourceFieldType))
                 {
+                    recordResult.Add(new NamedValue(fieldName, FormulaValue.NewBlank(fieldType)));
                     continue;
                 }
 
                 if (fieldType is RecordType recordType)
                 {
-                    if (!TryCoerceTo(fieldValue, fieldType, out FormulaValue fieldRecordResult))
+                    if (!TryCoerceTo(fieldSourceValue, fieldType, out FormulaValue fieldRecordResult))
                     {
                         return false;
                     }
@@ -260,20 +263,12 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    if (!TryCoerceToTargetType(fieldValue, fieldType, out FormulaValue fieldResult))
+                    if (!TryCoerceToTargetType(fieldSourceValue, fieldType, out FormulaValue fieldResult))
                     {
                         return false;
                     }
 
                     recordResult.Add(new NamedValue(fieldName, fieldResult));
-                }
-            }
-
-            foreach (var targetField in targetType.GetFieldTypes())
-            {
-                if (!value.Type.TryGetFieldType(targetField.Name, out FormulaType sourceFieldType))
-                {
-                    recordResult.Add(new NamedValue(targetField.Name, FormulaValue.NewBlank(targetField.Type)));
                 }
             }
 
