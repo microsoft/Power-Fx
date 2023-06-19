@@ -25,8 +25,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         private static readonly string _signatureHelpDirectory = RegenerateSignatureHelp ?
             _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
+                .Replace(Path.Join("bin", "Debug", "net6.0"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "net6.0"), string.Empty) :
             _baseDirectory;
 
         /// <summary>

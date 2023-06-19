@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Json.Tests
 
         private static readonly string _typeSnapshotDirectory = RegenerateSnapshots ?
             _baseDirectory
-                .Replace(Path.Join("bin", "Debug", "netcoreapp3.1"), string.Empty)
-                .Replace(Path.Join("bin", "Release", "netcoreapp3.1"), string.Empty) :
+                .Replace(Path.Join("bin", "Debug", "net6.0"), string.Empty)
+                .Replace(Path.Join("bin", "Release", "net6.0"), string.Empty) :
             _baseDirectory;
 
         private void CheckTypeSnapshot(FormulaType type, string testId, JsonSerializerOptions options)

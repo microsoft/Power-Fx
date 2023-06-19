@@ -1101,7 +1101,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             response = JsonSerializer.Deserialize<JsonRpcPublishTokensNotification>(_sendToClientData[1], _jsonSerializerOptions);
             Assert.Equal("$/publishTokens", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
-            Assert.Equal(0, Enumerable.Count(response.Params.Tokens.Where(it => it.Value != TokenResultType.Function)));
+            Assert.Empty(response.Params.Tokens.Where(it => it.Value != TokenResultType.Function));
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Abs"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Clock.AmPm"]);
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["CountRows"]);

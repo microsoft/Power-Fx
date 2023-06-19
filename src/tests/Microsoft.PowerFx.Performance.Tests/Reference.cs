@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Performance.Tests
     [MedianColumn]
     [Q3Column]
     [MaxColumn]
-    [SimpleJob(RunStrategy.Throughput, RuntimeMoniker.NetCoreApp31, launchCount: 1, warmupCount: 2)]
+    [SimpleJob(RunStrategy.Throughput, RuntimeMoniker.Net60, launchCount: 1, warmupCount: 2)]
 
     // The objective of this set of tests is to serve as a reference in order to
     // compare results between them if the server on which they are run have

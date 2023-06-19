@@ -42,7 +42,7 @@
   
   <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' != 'Debug-True' " >
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
-    <AnalysisLevel>7.0.203</AnalysisLevel>
+    <AnalysisLevel>7.0</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>

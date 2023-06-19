@@ -384,7 +384,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 _hook = (expr, setup) =>
                 {
-                    Assert.Equal(setup, handlerName);
+                    Assert.Equal(handlerName, setup);
 
                     throw new SetupHandlerNotFoundException();
                 }

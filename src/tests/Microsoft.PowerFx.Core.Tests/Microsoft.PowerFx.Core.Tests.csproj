@@ -1,16 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <!--Do not generate this package for public builds.  -->
-    <IsPackable Condition="'$(InternalBuild)' == 'true'">true</IsPackable>
-    <IsPackable Condition="'$(InternalBuild)' != 'true'">false</IsPackable>
-    <GeneratePackageOnBuild Condition="'$(InternalBuild)' == 'true'">$(GeneratePackages)</GeneratePackageOnBuild>
     <TargetFramework>net6.0</TargetFramework>
-    <Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
-    <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
-    <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
-    <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
     <Configurations>Debug;Release</Configurations>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);NU5125;NU5100</NoWarn>
   </PropertyGroup>
 
   <!-- Nuget Properties -->
@@ -19,6 +13,13 @@
     <Title>Microsoft Power Fx Compiler Tests Core</Title>
     <Description>The core test suite for all Microsoft Power Fx Compiler targets</Description>
     <Summary>The core test suite for all Microsoft Power Fx Compiler targets</Summary>
+    <Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
+    <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
+    <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
+    <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
+    <IsPackable Condition="'$(InternalBuild)' == 'true'">true</IsPackable>
+    <IsPackable Condition="'$(InternalBuild)' != 'true'">false</IsPackable>
+    <GeneratePackageOnBuild Condition="'$(InternalBuild)' == 'true'">$(GeneratePackages)</GeneratePackageOnBuild>    
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,10 +51,10 @@
   <ItemGroup>
     <None Remove="expressiontestcases\README.md" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\libraries\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj">
-      <!-- Need to use an alias due to IsExternalInit which is defined in .Net 6 -->
+      <!-- Need to use an alias due to IsExternalInit which is defined in .Net 6 and Microsoft.PowerFx.Core\Utils\IsExternalInit.cs -->
       <Aliases>PfxCore</Aliases>
     </ProjectReference>
   </ItemGroup>
