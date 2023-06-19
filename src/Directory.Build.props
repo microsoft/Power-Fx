@@ -15,7 +15,8 @@
   <PropertyGroup>
     <DebugType>Full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
+    <WarningLevel>6</WarningLevel>
   </PropertyGroup>
 
   <!-- <PropertyGroup>
@@ -32,13 +33,13 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' == 'Debug-True' " >
-    <EnableNETAnalyzers>false</EnableNETAnalyzers>    
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>  
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
   </PropertyGroup>
-
+  
   <PropertyGroup Condition=" '$(Configuration)-$(TURN_OFF_STYLECOP_DEBUG)' != 'Debug-True' " >
     <EnableNETAnalyzers>True</EnableNETAnalyzers>
     <AnalysisLevel>7.0.203</AnalysisLevel>
@@ -47,10 +48,10 @@
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <CodeAnalysisRuleSet Condition=" !($(MSBuildProjectName.EndsWith('.Tests'))) ">$(MSBuildThisFileDirectory)PowerFx.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>    
+    <CodeAnalysisRuleSet Condition=" $(MSBuildProjectName.EndsWith('.Tests')) ">$(MSBuildThisFileDirectory)PowerFx.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>

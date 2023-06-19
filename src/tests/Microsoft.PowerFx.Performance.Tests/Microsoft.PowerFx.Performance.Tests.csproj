@@ -5,8 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Configurations>Debug;Release</Configurations>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <StartupObject>Microsoft.PowerFx.Performance.Tests.Program</StartupObject>
-    <LangVersion>10.0</LangVersion>
+    <StartupObject>Microsoft.PowerFx.Performance.Tests.Program</StartupObject>    
     <AssemblyName>Microsoft.PowerFx.Performance.Tests</AssemblyName>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>

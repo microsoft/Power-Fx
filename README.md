@@ -10,13 +10,14 @@
 
 ## Summary
 
-- [Overview](#overview)
-- [Build Status](#build-status)
-- [Packages](#packages)
-- [Daily Builds](#daily-builds)
-- [Samples](#samples)
-- [Contributing](#contributing)
-- [Trademarks](#trademarks)
+- [ Microsoft Power Fx](#-microsoft-power-fx)
+  - [Summary](#summary)
+  - [Overview](#overview)
+  - [Packages](#packages)
+  - [Daily Builds](#daily-builds)
+  - [Samples](#samples)
+  - [Contributing](#contributing)
+  - [Trademarks](#trademarks)
 
 ## Overview
 
@@ -28,8 +29,8 @@
 | Name                                     | Released Package |
 |------------------------------------------|------------------|
 | Microsoft.PowerFx.Core                   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core/) |
-| Microsoft.PowerFx.Connectors             | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Connectors?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Connectors/) |
-| Microsoft.PowerFx.Json                   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Json?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Json/) |
+| Microsoft.PowerFx.Connectors             | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Connectors?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Connectors/) |
+| Microsoft.PowerFx.Json                   | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Json?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Json/) |
 | Microsoft.PowerFx.Core.Tests             | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Core.Tests?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Core.Tests/) |
 | Microsoft.PowerFx.Interpreter            | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.Interpreter?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.Interpreter/) |
 | Microsoft.PowerFx.LanguageServerProtocol | [![BotBuilder Badge](https://buildstats.info/nuget/Microsoft.PowerFx.LanguageServerProtocol?includePreReleases=true&dWidth=70)](https://www.nuget.org/packages/Microsoft.PowerFx.LanguageServerProtocol/) |

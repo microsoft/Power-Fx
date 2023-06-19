@@ -1,7 +1,6 @@
 <!-- Contains common properties that apply to projects under the Libraries folder -->
 <Project>
-  <PropertyGroup>
-    <LangVersion>10.0</LangVersion>
+  <PropertyGroup>    
     <GeneratePackageOnBuild>$(GeneratePackages)</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>

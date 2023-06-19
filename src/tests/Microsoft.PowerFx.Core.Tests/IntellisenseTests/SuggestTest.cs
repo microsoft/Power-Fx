@@ -339,24 +339,47 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         [Theory]
 
         // FirstNameNodeSuggestionHandleractualSuggestions = IntellisenseResult
-        [InlineData("Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
-        [InlineData("RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
-        [InlineData("RecordName[|", "![RecordName: ![]]")]
-        [InlineData("Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
-        [InlineData("Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
+        [InlineData(false, "Test|", "![Test1: s, Test2: n, Test3: h]", "Test1", "Test2", "Test3")]
+        [InlineData(false, "RecordName[|", "![RecordName: ![StringName: s, NumberName: n]]", "@NumberName", "@StringName")]
+        [InlineData(false, "RecordName[|", "![RecordName: ![]]")]
+        [InlineData(true,  "Test |", "![Test: s]", "-", "&", "&&", "*", "/", "^", "||", "+", "<", "<=", "<>", "=", ">", ">=", "And", "As", "exactin", "in", "Or")]
+        [InlineData(false, "Filter(Table, Table[|", "![Table: *[Column: s]]", "@Column")]
 
         // ErrorNodeSuggestionHandler
-        [InlineData("ForAll(Table,`|", "![Table: *[Column: s]]", "Column", "ThisRecord")]
-        public void TestSuggestWithContext(string expression, string context, params string[] expectedSuggestions)
+        [InlineData(false, "ForAll(Table,`|", "![Table: *[Column: s]]", "Column", "ThisRecord")]
+
+        // Suggestions are ordered differently if we run on .Net Core 3.1 or .Net 5.0 and above
+        // https://learn.microsoft.com/en-us/dotnet/standard/base-types/string-comparison-net-5-plus
+        // https://learn.microsoft.com/en-us/dotnet/core/extensions/globalization-icu
+        public void TestSuggestWithContext(bool nlsSensitive, string expression, string context, params string[] expectedSuggestions)
         {
             Assert.NotNull(context);
 
             var config = Default;
             var actualSuggestions = SuggestStrings(expression, config, contextTypeString: context);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            if (!nlsSensitive)
+            {
+                Assert.Equal(expectedSuggestions, actualSuggestions);
+            }
+            else
+            {
+                // if .Net framework influences the ordering of the suggestions, we need to sort them before comparing
+                // the change comes with .Net 5.0 - NLS vs ICU - https://learn.microsoft.com/en-us/dotnet/core/extensions/globalization-icu
+                Assert.Equal(expectedSuggestions.OrderBy(s => s, StringComparer.InvariantCulture), actualSuggestions.OrderBy(s => s, StringComparer.InvariantCulture));
+            }
 
             actualSuggestions = SuggestStrings(expression, config, contextTypeString: context);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+
+            if (!nlsSensitive)
+            {
+                Assert.Equal(expectedSuggestions, actualSuggestions);
+            }
+            else
+            {
+                // if .Net framework influences the ordering of the suggestions, we need to sort them before comparing
+                Assert.Equal(expectedSuggestions.OrderBy(s => s, StringComparer.InvariantCulture), actualSuggestions.OrderBy(s => s, StringComparer.InvariantCulture));
+            }
         }
 
         [Theory]

@@ -238,13 +238,19 @@ Blank()
 >> Text(TimeValue("15:06"))
 "3:06 PM"
 
+// Result will depend on .Net version
 >> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
+.Net5: "17:02:03"
 "5:02:03 CH"
 
+// Result will depend on .Net version
 >> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
+.Net5: "Thứ Hai, 27 tháng 2, 2023"
 "27 Tháng Hai 2023"
 
+// Result will depend on .Net version
 >> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
+.Net5: "Thứ Hai, 27 tháng 2, 2023 00:00:00"
 "27 Tháng Hai 2023 12:00:00 SA"
 
 >> Text(Boolean("True"), "", "vi-Vn")

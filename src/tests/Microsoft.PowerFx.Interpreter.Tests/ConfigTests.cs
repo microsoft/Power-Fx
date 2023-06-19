@@ -277,7 +277,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("2,0", CancellationToken.None, options: us_ParserOptions, runtimeConfig: us_Symbols).ConfigureAwait(false)).ConfigureAwait(false);
             Assert.Equal(2.0m, engine.EvalAsync("2,0", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fr_Symbols).Result.ToObject());
 
-            Assert.Equal("2/01", engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
+            // For fa-IR, the decimal separator is a dot is a '/' when using .Net Core 3.1 and a comma (\u066B) when using .Net 5.0+
+            string expected = Environment.Version.ToString().StartsWith("3.1") ? "2/01" : "2٫01";
+            Assert.Equal(expected, engine.EvalAsync("Text(2,01)", CancellationToken.None, options: fr_ParserOptions, runtimeConfig: fa_Symbols).Result.ToObject());
         }
 
         // Verify that a single IR tree can be re-executed across multiple cultures.

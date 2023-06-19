@@ -267,7 +267,7 @@ namespace Microsoft.PowerFx.Core.Tests
             fileSetup = string.Join(",", fileSetupDict.Select(i => (i.Value ? string.Empty : "disable:") + i.Key));
 
             List<string> duplicateTests = new List<string>();
-
+            
             while (true)
             {
                 i++;
@@ -282,6 +282,19 @@ namespace Microsoft.PowerFx.Core.Tests
                     continue;
                 }
 
+                // .Net5: indicates expected output expression for .Net 5 and above
+                if (line.StartsWith(".Net5:"))
+                {
+                    string line5 = line.Substring(7).Trim();
+
+                    if (!string.IsNullOrEmpty(line5) && !Environment.Version.ToString().StartsWith("3.1"))
+                    {
+                        test.Expected = line5;
+                    }
+
+                    continue;
+                }
+
                 if (line.StartsWith(">>"))
                 {
                     if (test != null)
@@ -289,7 +302,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw ParseError(i, $"parse error- multiple test inputs in a row. Previous input is: {test.Input}");
                     }
 
-                    line = line.Substring(2).Trim();
+                    line = line.Substring(2).Trim();            
                     test = new TestCase
                     {
                         Input = line,
@@ -317,7 +330,11 @@ namespace Microsoft.PowerFx.Core.Tests
                         throw ParseError(i, $"Multiline comments aren't supported in output");
                     }
 
-                    test.Expected = line.Trim();                    
+                    // If '.Net5:' has been used, Expected's value won't be null
+                    if (test.Expected == null)
+                    {
+                        test.Expected = line.Trim();
+                    }
 
                     var key = test.GetUniqueId(fileOveride);
                     if (_keyToTests.TryGetValue(key, out var existingTest))

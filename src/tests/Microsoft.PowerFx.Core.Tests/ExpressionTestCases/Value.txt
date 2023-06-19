@@ -820,11 +820,21 @@ Error({Kind:ErrorKind.InvalidArgument})
 123.456
 
 //Excel allows only single parameter
+>> Value("€1 234,56","fr-FR")
+1234.56
+
+// With "fr" locale and .Net 5+, we get an error while "fr-FR" works fine.
 >> Value("€1 234,56","fr")
+.Net5: Error({Kind:ErrorKind.InvalidArgument})
 1234.56
 
 //Excel allows only single parameter
+>> Value("€1.234,56","de-DE")
+1234.56
+
+// With "de" locale and .Net 5+, we get an error while "de-DE" works fine.
 >> Value("€1.234,56","de")
+.Net5: Error({Kind:ErrorKind.InvalidArgument})
 1234.56
 
 // ******** DATE PARAMETERS ********
