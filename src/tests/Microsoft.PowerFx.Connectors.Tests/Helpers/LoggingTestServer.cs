@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Tests
                     }
                 }
 
-                var content = await httpContent.ReadAsStringAsync().ConfigureAwait(false);
+                var content = await httpContent.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(content))
                 {
                     _log.AppendLine($" [body] {content}");
