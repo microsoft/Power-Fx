@@ -483,7 +483,7 @@
     <value>Der Textwert, der in einen Zahlenwert konvertiert werden soll.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Zu verwendender Sprachcode für die Konvertierung des Werts.</value>
+    <value>Zu verwendender Sprachcode für die Konvertierung des Werts</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} kann nicht delegiert werden: ID-Ausdruck verweist auf ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4963,7 +4963,7 @@
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
-    <value>Legt fest, ob der angegebene Text dem angegebenen Textformat entspricht.</value>
+    <value>Ermittelt, ob der angegebene Text dem angegebenen Textformat entspricht.</value>
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">

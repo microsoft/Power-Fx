@@ -778,7 +778,7 @@
     <value>ข้อความที่จะนำไปแทนที่</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>คอลัมน์ของข้อความที่จะดำเนินการ</value>
+    <value>คอลัมน์ของค่าข้อความที่จะดำเนินการ</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>สร้างข้อผิดพลาดด้วยค่าแบบกำหนดเอง</value>
@@ -857,7 +857,7 @@
     <value>ระบุเหตุการณ์ของข้อความที่จะแทนที่</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>คอลัมน์ของข้อความที่จะดำเนินการ</value>
+    <value>คอลัมน์ของค่าข้อความที่จะดำเนินการ</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>เรียงลำดับ 'source' ตามผลลัพธ์ของ 'expression' ที่ประเมินไว้สำหรับแต่ละแถว และสามารถเลือกกำหนด 'order’ การเรียงลำดับได้</value>
@@ -4939,7 +4939,7 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>การแปลงชนิดล้มเหลวเนื่องจากค่าที่ระบุเป็นชนิด '{0}' แต่คาดหวังว่าจะเป็นชนิด '{1}'</value>
+    <value>การแปลงชนิดล้มเหลวเนื่องจากค่าที่ระบุเป็นชนิด '{0}' แต่ที่คาดไว้คือชนิด '{1}'</value>
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: รหัสนิพจน์อ้างอิงถึง ThisRecord</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4970,10 +4970,10 @@
     <value>ข้อความที่จะเปรียบเทียบกับรูปแบบ</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
-    <value>รูปแบบที่จะตรวจสอบข้อความ โดยอาจเป็นค่า Enum TextFormat หรือนิพจน์ปกติ</value>
+    <value>รูปแบบที่จะตรวจสอบข้อความ โดยอาจเป็นค่า enum TextFormat หรือนิพจน์ปกติ</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการ โดยอาจเป็นค่าของ Enum MatchOptions</value>
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการจับคู่ โดยอาจเป็นค่าของ enum MatchOptions</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -4989,15 +4989,15 @@
     
   </data>
   <data name="AboutMatch" xml:space="preserve">
-    <value>ค้นหาข้อความที่ให้มาโดยใช้นิพจน์ปกติที่ระบุ และคืนค่าเป็นผลลัพธ์แรกที่ตรงกัน</value>
+    <value>ค้นหาข้อความที่ให้มาสำหรับนิพจน์ปกติที่ระบุ และส่งกลับผลลัพธ์แรกที่ตรงกัน</value>
     
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
-    <value>ค้นหาข้อความที่ให้มาโดยใช้นิพจน์ปกติที่ระบุ และคืนค่าเป็นผลลัพธ์ที่ตรงกันทั้งหมด</value>
+    <value>ค้นหาข้อความที่ให้มาสำหรับนิพจน์ปกติที่ระบุ และส่งกลับผลลัพธ์ที่ตรงกันทั้งหมด</value>
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
-    <value>ข้อความที่จะค้นหาโดยใช้นิพจน์ปกติ</value>
+    <value>ข้อความที่จะค้นหาตามนิพจน์ปกติ</value>
     
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
@@ -5005,11 +5005,11 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการ โดยอาจเป็นค่าของ Enum MatchOptions</value>
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการจับคู่ โดยอาจเป็นค่าของ enum MatchOptions</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
-    <value>ข้อความที่จะค้นหาโดยใช้นิพจน์ปกติ</value>
+    <value>ข้อความที่จะค้นหาตามนิพจน์ปกติ</value>
     
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
@@ -5017,7 +5017,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการ โดยอาจเป็นค่าของ Enum MatchOptions</value>
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการจับคู่ โดยอาจเป็นค่าของ enum MatchOptions</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">

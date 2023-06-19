@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Töödeldav tekstväärtuste veerg.</value>
+    <value>Töödeldavate tekstväärtuste veerg.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Teisendab „arvu“ loogiliseks väärtuseks.</value>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Üksust {0} ei saa delegeerida: ID avaldis viitab üksusele ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
