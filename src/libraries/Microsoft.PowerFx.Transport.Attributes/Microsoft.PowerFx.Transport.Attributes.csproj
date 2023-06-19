@@ -11,10 +11,6 @@
     <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis" Version="4.6.0" />
-  </ItemGroup>
-
   <!-- Nuget Properties -->
   <PropertyGroup>
     <PackageId>Microsoft.PowerFx.Transport.Attributes</PackageId>
