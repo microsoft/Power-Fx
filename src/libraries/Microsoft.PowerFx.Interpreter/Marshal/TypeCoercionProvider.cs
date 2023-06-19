@@ -238,35 +238,37 @@ namespace Microsoft.PowerFx
         public static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, out RecordValue result)
         {
             result = null;
-            int n = value.Fields.Count();
-            var recordResult = new NamedValue[n];
-
-            for (int i = 0; i < n; i++)
+            var recordResult = new List<NamedValue>();
+            
+            foreach (var targetField in targetType.GetFieldTypes())
             {
-                var fieldName = value.Fields.ElementAt(i).Name;
-                var fieldValue = value.GetField(fieldName);
-                if (!targetType.TryGetFieldType(fieldName, out FormulaType fieldType))
+                var fieldName = targetField.Name;
+                var fieldType = targetField.Type;
+                var fieldSourceValue = value.GetField(fieldName);
+
+                if (!value.Type.TryGetFieldType(fieldName, out FormulaType sourceFieldType))
                 {
-                    return false;
+                    recordResult.Add(new NamedValue(fieldName, FormulaValue.NewBlank(fieldType)));
+                    continue;
                 }
 
                 if (fieldType is RecordType recordType)
                 {
-                    if (!TryCoerceTo(fieldValue, fieldType, out FormulaValue fieldRecordResult))
+                    if (!TryCoerceTo(fieldSourceValue, fieldType, out FormulaValue fieldRecordResult))
                     {
                         return false;
                     }
 
-                    recordResult[i] = new NamedValue(fieldName, fieldRecordResult);
+                    recordResult.Add(new NamedValue(fieldName, fieldRecordResult));
                 }
                 else
                 {
-                    if (!TryCoerceToTargetType(fieldValue, fieldType, out FormulaValue fieldResult))
+                    if (!TryCoerceToTargetType(fieldSourceValue, fieldType, out FormulaValue fieldResult))
                     {
                         return false;
                     }
 
-                    recordResult[i] = new NamedValue(fieldName, fieldResult);
+                    recordResult.Add(new NamedValue(fieldName, fieldResult));
                 }
             }
 
@@ -311,12 +313,7 @@ namespace Microsoft.PowerFx
         {
             foreach (var field in source.GetFieldTypes())
             {
-                if (!target.TryGetFieldType(field.Name, out FormulaType targetFieldType))
-                {
-                    return false;
-                }
-
-                if (!CanPotentiallyCoerceTo(field.Type, targetFieldType))
+                if (target.TryGetFieldType(field.Name, out FormulaType targetFieldType) && !CanPotentiallyCoerceTo(field.Type, targetFieldType))
                 {
                     return false;
                 }
@@ -344,6 +341,11 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
         public static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
         {
+            if (source == target)
+            {
+                return true;
+            }
+
             if (source == FormulaType.Boolean)
             {
                 return BooleanValue.AllowedListConvertToBoolean.Contains(target);
@@ -355,6 +357,10 @@ namespace Microsoft.PowerFx
             else if (source == FormulaType.Number)
             {
                 return NumberValue.AllowedListConvertToNumber.Contains(target);
+            }
+            else if (source == FormulaType.Decimal)
+            {
+                return DecimalValue.AllowedListConvertToDecimal.Contains(target);
             }
             else if (source == FormulaType.DateTime)
             {
