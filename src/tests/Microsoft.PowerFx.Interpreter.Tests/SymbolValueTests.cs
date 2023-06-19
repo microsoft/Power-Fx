@@ -761,6 +761,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("78", result.ToObject());
         }
 
+        [Theory]
+        [InlineData(true, true)]
+        [InlineData(true, false)]
+        [InlineData(false, true)]
+        [InlineData(false, false)]
+        public void MutationTests(bool canMutate, bool canSet)
+        {
+            var recordType = RecordType.Empty().Add("Field1", FormulaType.Number);
+            var tableType = recordType.ToTable();
+
+            var symbols = new SymbolTable();
+            symbols.AddVariable("var", tableType, new SymbolProperties
+            {
+                 CanMutate = canMutate,
+                 CanSet = canSet
+            });
+
+            var config = new PowerFxConfig();
+            config.SymbolTable.EnableMutationFunctions();
+            var engine = new RecalcEngine(config);
+
+            var opts = new ParserOptions 
+            { 
+                AllowsSideEffects = true, 
+                NumberIsFloat = true // Number won't corce to Decimal. 
+            };
+
+            var checkSet = engine.Check("Set(var, Table({ Field1 : 123}))", opts, symbols);
+            var checkMutate = engine.Check("Collect(var, { Field1 : 123})", opts, symbols);
+
+            Assert.Equal(canSet, checkSet.IsSuccess);
+            Assert.Equal(canMutate, checkMutate.IsSuccess);
+        }
+
         // Get a convenient string representation of a SymbolValue
         private static string Get(ReadOnlySymbolValues values)
         {
