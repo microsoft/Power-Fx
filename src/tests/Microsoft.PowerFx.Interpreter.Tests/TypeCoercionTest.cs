@@ -188,12 +188,13 @@ namespace Microsoft.PowerFx.Tests
                 Assert.True(isSucceededExtraField);
                 Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, extraFieldResult.GetField(fieldName1).ToObject());
                 Assert.Equal(FormulaValue.New(bool.Parse(field2)).Value, result.GetField(fieldName2).ToObject());
-                Assert.Equal(FormulaType.Blank, extraFieldResult.GetField(extraFieldName).Type);
+                Assert.Equal(FormulaType.String, extraFieldResult.GetField(extraFieldName).Type);
+                Assert.Equal(3, extraFieldResult.Fields.Count());
 
                 bool isSucceededMissingField = inputRecord.TryCoerceToRecord(missingFieldTargetType, out RecordValue missingFieldResult);
                 Assert.True(isSucceededMissingField);
                 Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, missingFieldResult.GetField(fieldName1).ToObject());
-                Assert.Equal(FormulaType.Blank, missingFieldResult.GetField(fieldName2).Type);
+                Assert.Single(missingFieldResult.Fields);
             }
             else
             {

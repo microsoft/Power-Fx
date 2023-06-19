@@ -246,7 +246,6 @@ namespace Microsoft.PowerFx
                 var fieldValue = value.GetField(fieldName);
                 if (!targetType.TryGetFieldType(fieldName, out FormulaType fieldType))
                 {
-                    recordResult.Add(new NamedValue(fieldName, new BlankValue(IRContext.NotInSource(FormulaType.Blank))));
                     continue;
                 }
 
@@ -274,7 +273,7 @@ namespace Microsoft.PowerFx
             {
                 if (!value.Type.TryGetFieldType(targetField.Name, out FormulaType sourceFieldType))
                 {
-                    recordResult.Add(new NamedValue(targetField.Name, new BlankValue(IRContext.NotInSource(FormulaType.Blank))));
+                    recordResult.Add(new NamedValue(targetField.Name, FormulaValue.NewBlank(targetField.Type)));
                 }
             }
 
