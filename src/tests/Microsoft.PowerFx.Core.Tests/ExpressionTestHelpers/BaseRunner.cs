@@ -212,25 +212,29 @@ namespace Microsoft.PowerFx.Core.Tests
                     var expectedCompilerError = expected.StartsWith("Errors: Error") || expected.StartsWith("Errors: Warning"); // $$$ Match error message. 
                     if (expectedCompilerError)
                     {
-                        var msg = $"Errors: " + string.Join("\r\n", runResult.Errors.Select(err => err.ToString()).ToArray());
-                        var actualStr = msg.Replace("\r\n", "|").Replace("\n", "|");
+                        string[] expectedStrArr = expected.Replace("Errors: ", string.Empty).Split("|");
+                        string[] actualStrArr = runResult.Errors.Select(err => err.ToString()).ToArray();
+                        bool isValid = true;
 
                         // Try both unaltered comparison and by replacing Decimal with Number for errors,
                         // for tests that are run with and without NumberIsFloat set.
-                        if (actualStr.Contains(expected))
+                        foreach (var exp in expectedStrArr)
                         {
-                            // Compiler errors result in exceptions
-                            return (TestResult.Pass, null);
+                            if (!actualStrArr.Contains(exp) && !(NumberIsFloat && actualStrArr.Contains(Regex.Replace(exp, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2"))))
+                            {
+                                isValid = false;
+                                break;
+                            }
                         }
-                        else if (NumberIsFloat && expected.StartsWith("Errors:") &&
-                                 actualStr.Contains(Regex.Replace(expected, "(?<!Number,)(\\s|'|\\()Decimal(\\s|'|,|\\.|\\))", "$1Number$2")))
+
+                        if (isValid)
                         {
                             // Compiler errors result in exceptions
                             return (TestResult.Pass, null);
                         }
                         else
                         {
-                            return (TestResult.Fail, $"Failed, but wrong error message: {msg}");
+                            return (TestResult.Fail, $"Failed, but wrong error message: {$"Errors: " + string.Join("\r\n", actualStrArr)}");
                         }
                     }
                 }

@@ -2805,7 +2805,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
                 {
                     var nameSymbol = lookupInfo.Data as NameSymbol;
-                    _txb.SetMutable(node, nameSymbol?.IsMutable ?? false);
+                    _txb.SetMutable(node, nameSymbol?.Props.CanMutate ?? false);
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
                 {

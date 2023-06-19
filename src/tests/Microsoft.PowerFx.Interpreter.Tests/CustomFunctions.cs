@@ -279,10 +279,14 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("{x: {x : 2}}", false)]
         public void CustomFunctionWithRecordTest(string inputRecord, bool isSuccess)
         {
+            var emptyRecordType = RecordType.Empty();
             var recordType = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number));
+            var emptyTableType = emptyRecordType.ToTable();
             var tableType = recordType.ToTable();
 
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<RecordType, RecordValue>(emptyRecordType), "(" + inputRecord + ")", true);
             TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<RecordType, RecordValue>(recordType), "(" + inputRecord + ")", isSuccess);
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<TableType, TableValue>(emptyTableType), "([" + inputRecord + "])", true);
             TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<TableType, TableValue>(tableType), "([" + inputRecord + "])", isSuccess);
         }
 
@@ -297,15 +301,16 @@ namespace Microsoft.PowerFx.Tests
 
             var check = engine.Check(reflectionFunction.GetFunctionName() + inputRecord);
 
-            FormulaValue result = null; 
+            FormulaValue result = null;
+            FormulaValue resultEngineEval = null;
             ConfiguredTaskAwaitable<FormulaValue> resultAsync = new ConfiguredTaskAwaitable<FormulaValue>();
             string errorMsg = string.Empty;
             var rc = new RuntimeConfig();
 
             try
             {
-                result = check.GetEvaluator().Eval(rc);
-
+                resultEngineEval = engine.Eval(reflectionFunction.GetFunctionName() + inputRecord); // Test the GetFormulaResult in ReflectionFunction.
+                result = check.GetEvaluator().Eval(rc); // Test the CheckTypes in CustomTexlFunction.
                 resultAsync = check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -316,6 +321,7 @@ namespace Microsoft.PowerFx.Tests
             if (isSuccess)
             {
                 Assert.True(check.IsSuccess);                
+                Assert.IsNotType<ErrorValue>(resultEngineEval);
                 Assert.IsNotType<ErrorValue>(result);
                 Assert.IsNotType<ErrorValue>(resultAsync);
             }
