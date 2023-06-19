@@ -5151,7 +5151,7 @@
     <comment>Warning message.</comment>
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Id expression refers to ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     <comment>Warning message.</comment>
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

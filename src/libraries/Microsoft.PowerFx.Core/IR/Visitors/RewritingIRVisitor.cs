@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Core.IR
         /// </summary>
         /// <param name="ret"></param>
         /// <returns></returns>
-        protected abstract IntermediateNode Materialize(TResult ret);
+        public abstract IntermediateNode Materialize(TResult ret);
 
         /// <summary>
         /// Called to wrap a node as the return type.

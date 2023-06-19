@@ -11,6 +11,7 @@ using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -77,6 +78,17 @@ namespace Microsoft.PowerFx
             return _variables.TryGetValue(lookupName, out symbol);
         }
 
+        // Exists for binary backcompat.
+        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
+        {
+            var props = new SymbolProperties
+            {
+                CanSet = mutable,
+                CanMutate = mutable
+            };
+            return AddVariable(name, type, props, displayName);
+        }
+
         /// <summary>
         /// Provide variable for binding only.
         /// Value must be provided at runtime.
@@ -84,10 +96,16 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="name"></param>
         /// <param name="type"></param>
-        /// <param name="mutable"></param>
+        /// <param name="props"></param>
         /// <param name="displayName"></param>
-        public ISymbolSlot AddVariable(string name, FormulaType type, bool mutable = false, string displayName = null)
+        public ISymbolSlot AddVariable(string name, FormulaType type, SymbolProperties props, string displayName = null)
         {
+            if (props == null)
+            {
+                // Default.
+                props = new SymbolProperties();
+            }
+
             using var guard = _guard.Enter(); // Region is single threaded.
 
             Inc();
@@ -110,7 +128,7 @@ namespace Microsoft.PowerFx
             }
 
             var slotIndex = _slots.Alloc();
-            var data = new NameSymbol(name, mutable)
+            var data = new NameSymbol(name, props)
             {
                 Owner = this,
                 SlotIndex = slotIndex
