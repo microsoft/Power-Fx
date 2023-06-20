@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} сенім білдіру мүмкін емес: идентификатор өрнегі ThasRecord білдіреді.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -5033,7 +5033,7 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Көрсетілген дереккөзді жаңартады.</value>
+    <value>Көрсетілген деректер көзін жаңартады.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
@@ -5045,7 +5045,7 @@
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>Жаңартылатын қосылған дереккөз.</value>
+    <value>Жаңартылатын қосылған деректер көзі.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Тек басқарылатын қосылымдарды жаңартуға болады.</value>

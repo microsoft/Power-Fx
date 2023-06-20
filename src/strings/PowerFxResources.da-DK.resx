@@ -4939,7 +4939,7 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>Typekonverteringen mislykkedes, fordi den angivne værdi var af typen "{0}". Typen "{1}" forventes.</value>
+    <value>Typekonverteringen mislykkedes, fordi den angivne værdi var af typen "{0}", der forventes typen "{1}".</value>
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Kan ikke uddelegere {0}: Id-udtryk refererer til ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

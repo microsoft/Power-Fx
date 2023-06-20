@@ -1421,10 +1421,10 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>固有の値を抽出する元となるテーブルです。</value>
+    <value>固有の値を抽出する元となるテーブル。</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>入力テーブルの各行を評価し、DISTINCT 操作の対象となる値を提供する式です。</value>
+    <value>入力テーブルの各行を評価し、DISTINCT 操作の対象となる値を提供する式。</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>指定した X 座標と Y 座標のアークタンジェント (ラジアン単位) を返します。</value>
@@ -4190,7 +4190,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -4204,7 +4204,7 @@
     <value>予期しない文字を削除するか、置き換えてください。</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -4219,7 +4219,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4234,7 +4234,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4249,7 +4249,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4264,7 +4264,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4346,7 +4346,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4361,7 +4361,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4428,7 +4428,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4443,7 +4443,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4501,7 +4501,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4529,7 +4529,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4583,7 +4583,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} を委任できません: ID 式が ThisRecord を参照しています。</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

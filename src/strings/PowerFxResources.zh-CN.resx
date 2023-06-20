@@ -1424,7 +1424,7 @@
     <value>将从中提取非重复值的表。</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>对输入表中为 Distinct 运算提供值的每一行计算的表达式。</value>
+    <value>对输入表中的每行进行计算并为 Distinct 运算提供值的表达式。</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>返回指定 x 和 y 坐标的反正切(以弧度为单位)。</value>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>无法委托 {0}: ID 表达式引用 ThisRecord。</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
