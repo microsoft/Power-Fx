@@ -468,7 +468,7 @@ namespace Microsoft.PowerFx.Core.Binding
             _isContextual.Set(node.Id, isContextual);
         }
 
-        internal void SetConstant(TexlNode node, bool isConstant)
+        private void SetConstant(TexlNode node, bool isConstant)
         {
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _typeMap.Length);
