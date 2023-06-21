@@ -468,7 +468,7 @@ namespace Microsoft.PowerFx.Core.Binding
             _isContextual.Set(node.Id, isContextual);
         }
 
-        private void SetConstant(TexlNode node, bool isConstant)
+        internal void SetConstant(TexlNode node, bool isConstant)
         {
             Contracts.AssertValue(node);
             Contracts.AssertIndex(node.Id, _typeMap.Length);
@@ -2757,6 +2757,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Look up a global variable with this name.
                 NameLookupInfo lookupInfo = default;
+                var isConstant = lookupInfo.Kind == BindKind.Enum;
                 if (_txb.AffectsScopeVariableName)
                 {
                     if (haveNameResolver && _nameResolver.CurrentEntity != null)
@@ -2806,6 +2807,10 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     var nameSymbol = lookupInfo.Data as NameSymbol;
                     _txb.SetMutable(node, nameSymbol?.Props.CanMutate ?? false);
+                    if (lookupInfo.Data is IExternalNamedFormula formula)
+                    {
+                        isConstant = formula.IsConstant;
+                    }
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
                 {
@@ -2906,7 +2911,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, lookupType);
 
                 // If this is a reference to an Enum, it is constant.
-                _txb.SetConstant(node, lookupInfo.Kind == BindKind.Enum);
+                _txb.SetConstant(node, isConstant);
                 _txb.SetSelfContainedConstant(node, lookupInfo.Kind == BindKind.Enum);
 
                 // Create a name info with an appropriate binding, defaulting to global binding in error cases.
