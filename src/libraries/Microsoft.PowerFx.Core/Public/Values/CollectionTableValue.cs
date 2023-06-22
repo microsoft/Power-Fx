@@ -153,27 +153,49 @@ namespace Microsoft.PowerFx.Types
             if (_sourceList == null)
             {
                 return await base.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
-            }
+            }           
 
             foreach (RecordValue recordToRemove in recordsToRemove)
             {
                 var found = false;
 
-                foreach (var item in _enumerator)
+                if (recordToRemove.TryGetPrimaryKey(out string basePrimaryKey))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    var dRecord = Marshal(item);
-
-                    if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
+                    for (var index = 0; index < _sourceList.Count; index++)
                     {
-                        found = true;
+                        cancellationToken.ThrowIfCancellationRequested();
+                        RecordValue record = Marshal(_sourceIndex[index]).Value;
 
-                        deleteList.Add(item);
-
-                        if (!all)
+                        if (record.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
                         {
-                            break;
+                            found = true;
+                            deleteList.Add(_sourceIndex[index]);
+
+                            if (!all)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (T item in _enumerator)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        DValue<RecordValue> dRecord = Marshal(item);
+
+                        if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
+                        {
+                            found = true;
+
+                            deleteList.Add(item);
+
+                            if (!all)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
@@ -223,14 +245,34 @@ namespace Microsoft.PowerFx.Types
         /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
         protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
         {
-            if (this is IMutationCopy && mutationCopy)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (baseRecord.TryGetPrimaryKey(out string basePrimaryKey))
             {
                 for (var index = 0; index < _sourceList.Count; index++)
                 {
-                    var record = Marshal(_sourceIndex[index]).Value;
+                    cancellationToken.ThrowIfCancellationRequested();
+                    RecordValue record = Marshal(_sourceIndex[index]).Value;
+
+                    if (record.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
+                    {
+                        return record;
+                    }
+                }
+
+                return null;
+            }
+
+            if (this is IMutationCopy && mutationCopy)
+            {
+                for (int index = 0; index < _sourceList.Count; index++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    RecordValue record = Marshal(_sourceIndex[index]).Value;
+
                     if (await MatchesAsync(record, baseRecord, cancellationToken).ConfigureAwait(false))
                     {
-                        var copyRecord = (RecordValue)record.MaybeShallowCopy();
+                        RecordValue copyRecord = (RecordValue)record.MaybeShallowCopy();
                         _sourceMutableIndex[index] = MarshalInverse(copyRecord);
                         return copyRecord;
                     }
@@ -269,8 +311,7 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (currentFieldValue is BlankValue)
                 {
-                    ret = false;
-                    break;
+                    return false;
                 }
                 else if (currentFieldValue.Type._type.IsPrimitive && baseRecordField.Value.Type._type.IsPrimitive)
                 {
@@ -279,13 +320,22 @@ namespace Microsoft.PowerFx.Types
 
                     if (!compare1.Equals(compare2))
                     {
-                        ret = false;
-                        break;
+                        return false;
                     }
                 }
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
                     ret = await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false);
+                }
+                else if (baseRecordField.Value is TableValue baseTableValue && currentFieldValue is TableValue currentTableValue)
+                {
+                    // Let's not scan throw entire table, but just check if the row count is the same.
+                    ret = baseTableValue.Count() == currentTableValue.Count();
+
+                    if (!ret)
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
