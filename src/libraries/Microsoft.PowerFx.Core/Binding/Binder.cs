@@ -3361,6 +3361,15 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
+                    bool isComponentDataProperty = template.IsComponent &&
+                        (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                        !property.IsScopedProperty && !property.IsScopeVariable && property.PropertyCategory == PropertyRuleCategory.Data;
+                    if (isComponentDataProperty)
+                    {
+                        SetDottedNameError(node, TexlStrings.ErrInvalidPropertyReference);
+                        return;
+                    }
+
                     // We block the property access usage for datasource of the command component.
                     if (template.IsCommandComponent &&
                         _txb._glue.IsPrimaryCommandComponentProperty(property))
