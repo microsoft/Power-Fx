@@ -778,7 +778,7 @@
     <value>Um valor de texto de substituição.</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>Uma coluna de valores de textos a processar.</value>
+    <value>Uma coluna de valores de texto a processar.</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Produz um erro com valores personalizados.</value>
@@ -857,7 +857,7 @@
     <value>Especifica que ocorrência de determinado texto substituir.</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>Uma coluna de valores de textos a processar.</value>
+    <value>Uma coluna de valores de texto a processar.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Ordena a "origem" com base nos resultados da "expressão" avaliada para cada linha, especificando uma ordem "ordem" opcionalmente.</value>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Não é possível delegar {0}: a expressão de ID referencia ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

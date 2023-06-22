@@ -1424,7 +1424,7 @@
     <value>Table dont des valeurs distinctes seront extraites.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Expression évaluée sur chaque ligne de la table d’entrée, et qui fournit des valeurs pour l’opération Distinct.</value>
+    <value>Expression évaluée sur chaque ligne de la table d’entrée, qui fournit des valeurs pour l’opération Distinct.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Retourne l’arctangente (en radians) des coordonnées x et y spécifiées.</value>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Impossible de déléguer {0} : l’expression ID fait référence à ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

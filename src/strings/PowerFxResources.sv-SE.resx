@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Det går inte att delegera {0}: ID-uttrycket refererar till ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4963,7 +4963,7 @@
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
-    <value>Fastställer om den tillhandahållna texten har en matchning för det tillhandahållna textformatet.</value>
+    <value>Fastställer om den angivna texten har en matchning för det angivna textformatet.</value>
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">

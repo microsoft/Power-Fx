@@ -483,7 +483,7 @@
     <value>Valor de texto a ser convertido em valor numérico.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Código de idioma para usar ao converter o valor.</value>
+    <value>Código de idioma a ser usado ao converter o valor.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -778,7 +778,7 @@
     <value>Valor de texto de substituição.</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>Coluna de valores de texto a ser processados.</value>
+    <value>Uma coluna de valores de texto a serem processados.</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Produz um erro com valores personalizados.</value>
@@ -857,7 +857,7 @@
     <value>Especifica a ocorrência do texto fornecido a ser substituída.</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>Coluna de valores de texto a ser processados.</value>
+    <value>Uma coluna de valores de texto a serem processados.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Classifica 'source' (origem) com base nos resultados da 'expression' (expressão) avaliada para cada linha, com a opção de especificar uma 'order' (ordem) de classificação.</value>
@@ -4939,7 +4939,7 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>A conversão de tipo falhou porque o valor especificado era do tipo "{0}" e o tipo esperado era "{1}".</value>
+    <value>A conversão de tipo falhou porque o valor especificado era do tipo "{0}", e o tipo esperado era "{1}".</value>
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Não é possível delegar {0}: a expressão da ID faz referência a ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4970,10 +4970,10 @@
     <value>O texto a ser comparado com o formato.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
-    <value>O formato com o qual o texto deve ser conferido. Pode ser um valor da enumeração TextFormat ou uma expressão regular.</value>
+    <value>O formato a ser comparado com o texto. Ele pode ser um valor da enumeração TextFormat ou uma expressão regular.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Isso determina qual a parte do texto que queremos corresponder. Pode ser um valor da enumeração MatchOptions.</value>
+    <value>Determina qual a parte do texto queremos corresponder. Pode ser um valor de enumeração MatchOptions.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -4993,7 +4993,7 @@
     
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
-    <value>Pesquisa o texto fornecido para a expressão regular especificada, retornando todas as correspondências dela.</value>
+    <value>Pesquisa no texto fornecido a expressão regular especificada, retornando todas as correspondências dela.</value>
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
@@ -5005,7 +5005,7 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Isso determina qual a parte do texto que queremos corresponder. Pode ser um valor da enumeração MatchOptions.</value>
+    <value>Determina qual a parte do texto queremos corresponder. Pode ser um valor de enumeração MatchOptions.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
@@ -5017,7 +5017,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Isso determina qual a parte do texto que queremos corresponder. Pode ser um valor da enumeração MatchOptions.</value>
+    <value>Determina qual a parte do texto queremos corresponder. Pode ser um valor de enumeração MatchOptions.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">
