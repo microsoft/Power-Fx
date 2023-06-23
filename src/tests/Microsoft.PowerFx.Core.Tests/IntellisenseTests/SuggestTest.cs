@@ -407,7 +407,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 { new DName("logical2"), new DName("display2") }
             });
 
-            var symTable = new DeferredSymbolTable(map, (disp, logical) =>
+            var symTable = ReadOnlySymbolTable.NewFromDeferred(map, (disp, logical) =>
             {
                 return FormulaType.Number;
             });
