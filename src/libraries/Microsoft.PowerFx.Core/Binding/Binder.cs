@@ -3365,11 +3365,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     bool isReferencedPropertyDataProperty = !property.IsScopedProperty && !property.IsScopeVariable && property.PropertyCategory == PropertyRuleCategory.Data;
                     bool isFunctionPropertyReferencingDataProperty = template.IsComponent &&
                         (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
-                        isBindingPropertyFunctionPropertyOrParameter &&
-                        isReferencedPropertyDataProperty;
+                        isBindingPropertyFunctionPropertyOrParameter;
                     if (isFunctionPropertyReferencingDataProperty)
                     {
-                        SetDottedNameError(node, TexlStrings.ErrUnSupportedComponentFunctionPropertyReferenceDataPropertyAccess);
+                        SetDottedNameError(node, TexlStrings.ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess);
                         return;
                     }
 
