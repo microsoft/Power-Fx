@@ -158,43 +158,21 @@ namespace Microsoft.PowerFx.Types
             {
                 var found = false;
 
-                if (recordToRemove.TryGetPrimaryKey(out string basePrimaryKey))
+                foreach (T item in _enumerator)
                 {
-                    foreach (T item in _enumerator)
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    DValue<RecordValue> dRecord = Marshal(item);
+
+                    if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        RecordValue record = Marshal(item).Value;
+                        found = true;
 
-                        if (record.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
+                        deleteList.Add(item);
+
+                        if (!all)
                         {
-                            found = true;
-                            deleteList.Add(item);
-
-                            if (!all)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (T item in _enumerator)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        DValue<RecordValue> dRecord = Marshal(item);
-
-                        if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
-                        {
-                            found = true;
-
-                            deleteList.Add(item);
-
-                            if (!all)
-                            {
-                                break;
-                            }
+                            break;
                         }
                     }
                 }
@@ -246,22 +224,6 @@ namespace Microsoft.PowerFx.Types
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (baseRecord.TryGetPrimaryKey(out string basePrimaryKey))
-            {
-                foreach (T item in _enumerator)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    RecordValue record = Marshal(item).Value;
-
-                    if (record.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
-                    {
-                        return record;
-                    }
-                }
-
-                return null;
-            }
-
             if (this is IMutationCopy && mutationCopy)
             {
                 for (int index = 0; index < _sourceList.Count; index++)
@@ -294,6 +256,11 @@ namespace Microsoft.PowerFx.Types
         protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
         {
             var ret = true;
+
+            if (baseRecord.TryGetPrimaryKey(out string basePrimaryKey) && currentRecord.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
+            {
+                return true;
+            }
 
             if (baseRecord.Fields.Count() != currentRecord.Fields.Count())
             {

@@ -286,7 +286,7 @@ namespace Microsoft.PowerFx.Types
         /// This is possible for records, which will have a finite number of fields, but not for tables
         /// and number of rows which could be unbounded.
         /// </summary>
-        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        public virtual bool TryShallowCopy(out FormulaValue copy)
         {
             copy = new InMemoryRecordValue(this.IRContext, this.Fields);
             return true;

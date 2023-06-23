@@ -80,7 +80,7 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// Indicates that a FormulaValue should be copied before being mutated, for Copy on Write semantics.
     /// </summary>
-    internal interface IMutationCopy
+    public interface IMutationCopy
     {
         /// <summary>
         /// Returns a shallow copy of a FormulaValue. For potentially deep data structures such as a Table or Record,
