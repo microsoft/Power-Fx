@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
 
@@ -153,7 +152,7 @@ namespace Microsoft.PowerFx.Types
             if (_sourceList == null)
             {
                 return await base.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
-            }           
+            }
 
             foreach (RecordValue recordToRemove in recordsToRemove)
             {
@@ -161,15 +160,15 @@ namespace Microsoft.PowerFx.Types
 
                 if (recordToRemove.TryGetPrimaryKey(out string basePrimaryKey))
                 {
-                    for (var index = 0; index < _sourceList.Count; index++)
+                    foreach (T item in _enumerator)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        RecordValue record = Marshal(_sourceIndex[index]).Value;
+                        RecordValue record = Marshal(item).Value;
 
                         if (record.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
                         {
                             found = true;
-                            deleteList.Add(_sourceIndex[index]);
+                            deleteList.Add(item);
 
                             if (!all)
                             {
@@ -212,7 +211,7 @@ namespace Microsoft.PowerFx.Types
                 ret = true;
             }
 
-            if (errors.Count > 0) 
+            if (errors.Count > 0)
             {
                 return DValue<BooleanValue>.Of(NewError(errors, FormulaType.Boolean));
             }
@@ -249,10 +248,10 @@ namespace Microsoft.PowerFx.Types
 
             if (baseRecord.TryGetPrimaryKey(out string basePrimaryKey))
             {
-                for (var index = 0; index < _sourceList.Count; index++)
+                foreach (T item in _enumerator)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    RecordValue record = Marshal(_sourceIndex[index]).Value;
+                    RecordValue record = Marshal(item).Value;
 
                     if (record.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
                     {
@@ -326,16 +325,6 @@ namespace Microsoft.PowerFx.Types
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
                     ret = await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false);
-                }
-                else if (baseRecordField.Value is TableValue baseTableValue && currentFieldValue is TableValue currentTableValue)
-                {
-                    // Let's not scan throw entire table, but just check if the row count is the same.
-                    ret = baseTableValue.Count() == currentTableValue.Count();
-
-                    if (!ret)
-                    {
-                        return false;
-                    }
                 }
                 else
                 {

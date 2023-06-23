@@ -20,8 +20,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void PatchFirst()
         {
             string expr = @"Patch(t, First(t), { Name: ""John""})";
-            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult) = CheckExpression(expr);
-            (SymbolValues values, TestDatabaseTableValue database) = GetData(config);
+            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
+            (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
 
             FormulaValue result = checkResult.GetEvaluator().Eval(values);
             Assert.False(result is ErrorValue);
@@ -39,8 +39,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // The key difference here with previous test is that the record we want to delete will have a RecordValue type
             // As a result, TryGetPrimaryKey will fail and all fields will be compared to each rows of the DB
             string expr = @"Patch(t, {Id: 2, Name: ""Mike"", Val: ""Val2""}, { Name: ""John""})";
-            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult) = CheckExpression(expr);
-            (SymbolValues values, TestDatabaseTableValue database) = GetData(config);
+            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
+            (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
 
             FormulaValue result = checkResult.GetEvaluator().Eval(values);
             Assert.False(result is ErrorValue);
@@ -56,8 +56,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void RemoveFirst()
         {
             string expr = @"Remove(t, First(t))";
-            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult) = CheckExpression(expr);
-            (SymbolValues values, TestDatabaseTableValue database) = GetData(config);
+            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
+            (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
 
             FormulaValue result = checkResult.GetEvaluator().Eval(values);
             Assert.False(result is ErrorValue);
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("Mike", records[0].Name);
         }
 
-        private (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult) CheckExpression(string expr)
+        private (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) CheckExpression(string expr)
         {
             PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
             RecalcEngine engine = new RecalcEngine(config);
@@ -76,27 +76,27 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.SymbolTable.EnableMutationFunctions();
 
             RecordType recordType = TestDatabaseRecordValue.CustomRecordType;
-            config.SymbolTable.AddVariable("t", recordType.ToTable(), new SymbolProperties() { CanSet = true, CanMutate = true });
+            ISymbolSlot dbSlot = config.SymbolTable.AddVariable("t", recordType.ToTable(), new SymbolProperties() { CanSet = true, CanMutate = true });
             ReadOnlySymbolTable symbols = ReadOnlySymbolTable.NewFromRecord(recordType, allowThisRecord: true, allowMutable: true);
 
             CheckResult checkResult = engine.Check(expr, options: new ParserOptions(CultureInfo.InvariantCulture, true), symbolTable: symbols);
             Assert.True(checkResult.IsSuccess, $"CheckResult failed: {string.Join(", ", checkResult.Errors.Select(er => er.Message))}");
 
-            return (config, engine, checkResult);
+            return (config, engine, checkResult, dbSlot);
         }
 
-        private (SymbolValues values, TestDatabaseTableValue database) GetData(PowerFxConfig config)
+        private (SymbolValues values, TestDatabaseTableValue database) GetData(PowerFxConfig config, ISymbolSlot dbSlot)
         {
             TestDatabaseRecordValue[] records = new TestDatabaseRecordValue[]
             {
                 new TestDatabaseRecordValue(1, "Luc", "Val1"),
                 new TestDatabaseRecordValue(2, "Mike", "Val2")
             };
+
             TestDatabaseTableValue database = new TestDatabaseTableValue(TestDatabaseRecordValue.CustomRecordType, new List<DValue<RecordValue>>(records.Select(r => DValue<RecordValue>.Of(r))));
 
             SymbolValues values = new SymbolValues(config.SymbolTable);
-            values.SymbolTable.TryLookupSlot("t", out ISymbolSlot slot);
-            values.Set(slot, database);
+            values.Set(dbSlot, database);
 
             return (values, database);
         }
@@ -207,6 +207,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return item;
         }
 
-        internal TestDatabaseRecordValue[] Records => (typeof(CollectionTableValue<DValue<RecordValue>>).GetField("_sourceList", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this) as IEnumerable<DValue<RecordValue>>).Select(drv => drv.Value as TestDatabaseRecordValue).ToArray();
+        internal TestDatabaseRecordValue[] Records => (typeof(CollectionTableValue<DValue<RecordValue>>).GetField("_enumerator", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this) as IEnumerable<DValue<RecordValue>>).Select(drv => drv.Value as TestDatabaseRecordValue).ToArray();
     }
 }
