@@ -529,6 +529,7 @@ namespace Microsoft.PowerFx.Core.Localization
         // Any new additions here should be of type ErrorResourceKey and contain the value of the resource key.
         public static ErrorResourceKey ErrUnSupportedComponentBehaviorInvocation = new ErrorResourceKey("ErrUnSupportedComponentBehaviorInvocation");
         public static ErrorResourceKey ErrUnSupportedComponentDataPropertyAccess = new ErrorResourceKey("ErrUnSupportedComponentDataPropertyAccess");
+        public static ErrorResourceKey ErrUnSupportedComponentFunctionPropertyReferenceDataPropertyAccess = new ErrorResourceKey("ErrUnSupportedComponentFunctionPropertyReferenceDataPropertyAccess");
         public static ErrorResourceKey ErrOperandExpected = new ErrorResourceKey("ErrOperandExpected");
         public static ErrorResourceKey ErrBadToken = new ErrorResourceKey("ErrBadToken");
         public static ErrorResourceKey UnexpectedCharacterToken = new ErrorResourceKey("UnexpectedCharacterToken");
