@@ -3363,6 +3363,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                     bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
                         (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                        _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
                         ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
                     if (isBindingPropertyFunctionPropertyOrParameter)
                     {
