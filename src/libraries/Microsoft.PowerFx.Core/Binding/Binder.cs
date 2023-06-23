@@ -3361,6 +3361,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
+                    // Binding function property and its parameters should not allow DottedNameNode
                     bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
                         (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
                         _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
