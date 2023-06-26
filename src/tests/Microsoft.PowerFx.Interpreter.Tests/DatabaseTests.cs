@@ -6,7 +6,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -28,32 +26,58 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
 
             FormulaValue result = checkResult.GetEvaluator().Eval(values);
-            Assert.False(result is ErrorValue);
+            Validate(result, database);
 
             ConcurrentDictionary<int, TestDatabaseRecordValue> records = database.DbContent;
             Assert.Equal(17, records.Count);
             Assert.Equal("John", records[0].Name);
-            Assert.Equal(1, records[0].TryGetPrimaryKey_Called);
-            Assert.Equal(0, records[1].TryGetPrimaryKey_Called);
+        }
+
+        [Fact]
+        public void PatchFirstInMemory()
+        {
+            string expr = @"Set(x, FirstN(t, 5)); Patch(x, First(t), { Name: ""John""}); First(x).Name";
+            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
+            (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
+
+            FormulaValue result = checkResult.GetEvaluator().Eval(values);
+            Validate(result, database);
+
+            ConcurrentDictionary<int, TestDatabaseRecordValue> records = database.DbContent;
+            Assert.Equal(17, records.Count);
+            Assert.Equal("Stanley", records[0].Name); // DB is unchanged
+            Assert.Equal("John", ((StringValue)result).Value); // InMemory table is updated as expected
         }
 
         [Fact]
         public void PatchById()
         {
-            // The key difference here with previous test is that the record we want to delete will have a RecordValue type
-            // As a result, TryGetPrimaryKey will fail and all fields will be compared to each rows of the DB
-            string expr = @"Patch(t, {Id: 2, Name: ""Mike"", Val: ""Val2""}, { Name: ""John""})";
+            string expr = @"Patch(t, {Id: 2}, { Name: ""John""})";
             (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
             (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
 
             FormulaValue result = checkResult.GetEvaluator().Eval(values);
-            Assert.False(result is ErrorValue);
+            Validate(result, database);
 
             ConcurrentDictionary<int, TestDatabaseRecordValue> records = database.DbContent;
             Assert.Equal(17, records.Count);
-            Assert.Equal("John", records[1].Name);
-            Assert.Equal(0, records[0].TryGetPrimaryKey_Called);
-            Assert.Equal(0, records[1].TryGetPrimaryKey_Called);
+            Assert.Equal("John", records[2].Name);
+        }
+
+        [Fact]
+        public void PatchByIdInMemory()
+        {
+            string expr = @"Set(x, FirstN(t, 5)); Patch(x, {Id: 2}, { Name: ""John""}); First(Filter(x, Id=2)).Name";
+            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
+            (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
+
+            FormulaValue result = checkResult.GetEvaluator().Eval(values);
+            Validate(result, database);
+
+            ConcurrentDictionary<int, TestDatabaseRecordValue> records = database.DbContent;
+            Assert.Equal(17, records.Count);
+            Assert.Equal("Barber", records[2].Name); // DB is unchanged
+            Assert.Equal("John", ((StringValue)result).Value); // InMemory table is updated as expected
         }
 
         [Fact]
@@ -64,11 +88,30 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
 
             FormulaValue result = checkResult.GetEvaluator().Eval(values);
-            Assert.False(result is ErrorValue);
+            Validate(result, database);
 
             ConcurrentDictionary<int, TestDatabaseRecordValue> records = database.DbContent;
-            Assert.Single(records);
-            Assert.Equal("Mike", records[0].Name);
+            Assert.Equal(16, records.Count);
+        }
+
+        [Fact]
+        public void RemoveFirstInMemory()
+        {
+            string expr = @"Set(x, FirstN(t, 5)); Remove(x, First(t)); CountRows(x)";
+            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
+            (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
+
+            FormulaValue result = checkResult.GetEvaluator().Eval(values);
+            Validate(result, database);
+
+            ConcurrentDictionary<int, TestDatabaseRecordValue> records = database.DbContent;
+            Assert.Equal(17, records.Count);
+            Assert.Equal(4, ((DecimalValue)result).Value); // InMemory table is updated as expected
+        }
+
+        private void Validate(FormulaValue result, TestDatabaseTableValue database)
+        {
+            Assert.False(result is ErrorValue, (result as ErrorValue).GetMessage());            
         }
 
         private (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) CheckExpression(string expr)
@@ -78,6 +121,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             config.EnableSetFunction();
             config.SymbolTable.EnableMutationFunctions();
+            engine.UpdateVariable("x", FormulaValue.NewTable(TestDatabaseRecordValue.CustomRecordType));
 
             RecordType recordType = TestDatabaseRecordValue.CustomRecordType;
             ISymbolSlot dbSlot = config.SymbolTable.AddVariable("t", recordType.ToTable(), new SymbolProperties() { CanSet = true, CanMutate = true });
@@ -112,7 +156,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 new TestDatabaseRecordValue(16, "Shah", "Val16")
             };
 
-            TestDatabaseTableValue database = new TestDatabaseTableValue(records);  // new List<DValue<RecordValue>>(records.Select(r => DValue<RecordValue>.Of(r))));
+            TestDatabaseTableValue database = new TestDatabaseTableValue(records);
 
             SymbolValues values = new SymbolValues(config.SymbolTable);
             values.Set(dbSlot, database);
@@ -121,7 +165,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    internal class TestDatabaseRecordValue : RecordValue
+    internal class TestDatabaseRecordValue : RecordValue, IHasPrimaryKeyName
     {
         public static readonly RecordType CustomRecordType = RecordType.Empty().Add("Id", FormulaType.Number).Add("Name", FormulaType.String).Add("Val", FormulaType.String);
 
@@ -131,7 +175,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         public int TryGetPrimaryKey_Called = 0;
         public int Fields_Called = 0;
-        
+
         public TestDatabaseRecordValue(RecordType type)
             : base(type)
         {
@@ -157,25 +201,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             get
             {
                 Fields_Called++;
-                yield return new NamedValue("id", FormulaValue.New(Id));
-                yield return new NamedValue("name", FormulaValue.New(Name));
-                yield return new NamedValue("val", FormulaValue.New(Val));
+                yield return new NamedValue("Id", FormulaValue.New(Id));                
+                yield return new NamedValue("Name", FormulaValue.New(Name));
+                yield return new NamedValue("Val", FormulaValue.New(Val));
             }
         }
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            if (fieldName.Equals("id", StringComparison.OrdinalIgnoreCase))
+            if (fieldName.Equals("Id", StringComparison.OrdinalIgnoreCase))
             {
                 result = FormulaValue.New(Id);
                 return true;
             }
-            else if (fieldName.Equals("name", StringComparison.OrdinalIgnoreCase))
+            else if (fieldName.Equals("Name", StringComparison.OrdinalIgnoreCase))
             {
                 result = FormulaValue.New(Name);
                 return true;
             }
-            else if (fieldName.Equals("val", StringComparison.OrdinalIgnoreCase))
+            else if (fieldName.Equals("Val", StringComparison.OrdinalIgnoreCase))
             {
                 result = FormulaValue.New(Val);
                 return true;
@@ -196,21 +240,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             foreach (NamedValue field in changeRecord.Fields)
             {
-                if (field.Name.Equals("id", StringComparison.OrdinalIgnoreCase))
+                if (field.Name.Equals("Id", StringComparison.OrdinalIgnoreCase))
                 {
                     throw new InvalidOperationException("Cannot change the Id");
                 }
-                else if (field.Name.Equals("name", StringComparison.OrdinalIgnoreCase))
+                else if (field.Name.Equals("Name", StringComparison.OrdinalIgnoreCase))
                 {
                     Name = field.Value.ToObject().ToString();
                 }
-                else if (field.Name.Equals("val", StringComparison.OrdinalIgnoreCase))
+                else if (field.Name.Equals("Val", StringComparison.OrdinalIgnoreCase))
                 {
                     Val = field.Value.ToObject().ToString();
                 }
             }
 
             return Task.FromResult(DValue<RecordValue>.Of(this));
+        }
+
+        public string GetPrimaryKeyName()
+        {
+            return "Id";
         }
     }
 
@@ -250,7 +299,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public int CastRecord_Called = 0;
         public int ClearAsync_Called = 0;
         public int PatchCoreAsync_Called = 0;
-        public int RemoveAsync_Called = 0;        
+        public int RemoveAsync_Called = 0;
         public int Refresh_Called = 0;
 
         public override int Count()
@@ -266,7 +315,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Rows_Called++;
                 return _rows.Values.Select(v => DValue<RecordValue>.Of(v));
             }
-        }        
+        }
 
         public override Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
         {
@@ -278,7 +327,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new ArgumentException($"Record isn't TestDatabaseRecordValue", nameof(record));
             }
 
-            _rows.AddOrUpdate(dtrv.Id, dtrv, (i, dtrv2) => throw new ArgumentException($"Two elements with same ID {i}"));
+            AddToDB(dtrv);
             return Task.FromResult(DValue<RecordValue>.Of(dtrv));
         }
 
@@ -300,7 +349,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             ClearAsync_Called++;
             cancellationToken.ThrowIfCancellationRequested();
 
-            _rows.Clear();
+            ClearDB();
             return Task.FromResult(DValue<BooleanValue>.Of(FormulaValue.New(true)));
         }
 
@@ -309,31 +358,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             PatchCoreAsync_Called++;
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (!baseRecord.TryGetPrimaryKey(out string id))
+            // We know the primary key name is "Id" and can use it here
+            FormulaValue idValue = await baseRecord.GetFieldAsync("Id", cancellationToken).ConfigureAwait(false);
+
+            if (idValue is not NumberValue idNumValue)
             {
-                throw new ArgumentException("Base record doesn't have a primary key", nameof(baseRecord));
+                throw new ArgumentException($"Record doesn't have a number Id", nameof(baseRecord));
             }
 
-            if (!TryGetFromDB(id, out TestDatabaseRecordValue dbRecord))
+            if (!TryGetFromDB((int)idNumValue.Value, out TestDatabaseRecordValue dbRecord))
             {
-                throw new ArgumentException($"Record with ID {id} doesn't exist", nameof(baseRecord));
+                throw new ArgumentException($"Record with ID {idNumValue.Value} doesn't exist", nameof(baseRecord));
             }
 
             DValue<RecordValue> ret = await dbRecord.UpdateFieldsAsync(changeRecord, cancellationToken).ConfigureAwait(false);
             Refresh();
 
             return ret;
-        }
-
-        private bool TryGetFromDB(string id, out TestDatabaseRecordValue record)
-        {
-            if (int.TryParse(id, out int idInt))
-            {
-                return _rows.TryGetValue(idInt, out record);
-            }
-
-            record = null;
-            return false;
         }
 
         public override Task<DValue<BooleanValue>> RemoveAsync(IEnumerable<FormulaValue> recordsToRemove, bool all, CancellationToken cancellationToken)
@@ -356,7 +397,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 if (int.TryParse(id, out int idInt))
                 {
-                    _ = _rows.TryRemove(idInt, out _);
+                    _ = TryRemoveFromDB(idInt);
                 }
                 else
                 {
@@ -366,6 +407,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Refresh();
             return Task.FromResult(DValue<BooleanValue>.Of(BooleanValue.New(true)));
+        }
+
+        private void AddToDB(TestDatabaseRecordValue tdrv)
+        {
+            _ = _rows.AddOrUpdate(tdrv.Id, tdrv, (i, tdrv2) => throw new ArgumentException($"Two elements with same ID {i}"));
+        }
+
+        private bool TryGetFromDB(int id, out TestDatabaseRecordValue record)
+        {
+            return _rows.TryGetValue(id, out record);
+        }
+
+        private void ClearDB()
+        {
+            _rows.Clear();
+        }
+
+        private bool TryRemoveFromDB(int id)
+        {
+            return _rows.TryRemove(id, out _);
         }
 
         public override void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings)
@@ -389,30 +450,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    //internal class TestDatabaseTableValue : CollectionTableValue<DValue<RecordValue>>
-    //{
-    //    public TestDatabaseTableValue(CollectionTableValue<DValue<RecordValue>> orig)
-    //        : base(orig)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    public TestDatabaseTableValue(RecordType recordType, IEnumerable<DValue<RecordValue>> source)
-    //        : base(recordType, source)
-    //    {
-    //    }
-
-    //    public TestDatabaseTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> source)
-    //        : base(irContext, source)
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-
-    //    protected override DValue<RecordValue> Marshal(DValue<RecordValue> item)
-    //    {
-    //        return item;
-    //    }
-
-    //    internal TestDatabaseRecordValue[] Records => (typeof(CollectionTableValue<DValue<RecordValue>>).GetField("_enumerator", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(this) as IEnumerable<DValue<RecordValue>>).Select(drv => drv.Value as TestDatabaseRecordValue).ToArray();
-    //}
+    public static class ErrorValueExtensions
+    {
+        public static string GetMessage(this ErrorValue ev) => ev == null ? "No Error" : string.Join("\r\n", ev.Errors.Select((er, i) => $"ERROR #{i}: {er.Message}"));
+    }
 }

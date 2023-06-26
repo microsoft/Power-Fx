@@ -90,4 +90,9 @@ namespace Microsoft.PowerFx.Types
         /// <returns>Shallow copy.</returns>
         bool TryShallowCopy(out FormulaValue shallowCopy);
     }
+
+    public interface IHasPrimaryKeyName
+    {
+        string GetPrimaryKeyName();
+    }
 }

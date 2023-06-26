@@ -257,9 +257,29 @@ namespace Microsoft.PowerFx.Types
         {
             var ret = true;
 
-            if (baseRecord.TryGetPrimaryKey(out string basePrimaryKey) && currentRecord.TryGetPrimaryKey(out string recordPrimaryKeyValue) && basePrimaryKey == recordPrimaryKeyValue)
+            if (currentRecord.TryGetPrimaryKey(out string currentRecordPrimaryKeyValue))
             {
-                return true;
+                if (currentRecord is not IHasPrimaryKeyName hpk)
+                {
+                    // TryGetPrimaryKey tries to retrieve the primary key value, while IHasPrimaryKey allows the retrieval of the primary key name
+                    // We shouldn't reach this point as IHasPrimaryKey should be implemented on RecordValue, it's just in case, for completeness.
+                    if (baseRecord.TryGetPrimaryKey(out string baseRecordPrimaryKey) && baseRecordPrimaryKey == currentRecordPrimaryKeyValue)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    string pKey = hpk.GetPrimaryKeyName();
+                    FormulaValue pKeyValue = await baseRecord.GetFieldAsync(pKey, cancellationToken).ConfigureAwait(false);
+
+                    if (pKeyValue?.ToObject()?.ToString() == currentRecordPrimaryKeyValue)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             if (baseRecord.Fields.Count() != currentRecord.Fields.Count())

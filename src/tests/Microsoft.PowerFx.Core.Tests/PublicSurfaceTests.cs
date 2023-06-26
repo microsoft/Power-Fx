@@ -123,6 +123,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Types.GuidType",
                 "Microsoft.PowerFx.Types.GuidValue",
                 "Microsoft.PowerFx.Types.HyperlinkType",
+                "Microsoft.PowerFx.Types.IHasPrimaryKeyName",
                 "Microsoft.PowerFx.Types.IMutationCopy",
                 "Microsoft.PowerFx.Types.ITypeVisitor",
                 "Microsoft.PowerFx.Types.IUntypedObject",
