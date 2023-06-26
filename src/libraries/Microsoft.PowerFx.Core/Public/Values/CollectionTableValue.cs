@@ -254,9 +254,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
-        {
-            var ret = true;
-
+        {            
             if (currentRecord.TryGetPrimaryKey(out string currentRecordPrimaryKeyValue))
             {
                 if (currentRecord is not IHasPrimaryKeyName hpk)
@@ -311,7 +309,10 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
-                    ret = await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false);
+                    if (!await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false))
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -319,7 +320,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            return ret;
+            return true;
         }
     }
 }
