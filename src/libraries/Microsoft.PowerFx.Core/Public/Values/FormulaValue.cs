@@ -91,8 +91,15 @@ namespace Microsoft.PowerFx.Types
         bool TryShallowCopy(out FormulaValue shallowCopy);
     }
 
+    /// <summary>
+    /// Indicates that a RecordValue has a primary key name which can be used to identify a row uniquely.
+    /// </summary>
     public interface IHasPrimaryKeyName
     {
+        /// <summary>
+        /// Returns the name of the primary key.
+        /// </summary>
+        /// <returns>Primary key name./returns>
         string GetPrimaryKeyName();
     }
 }
