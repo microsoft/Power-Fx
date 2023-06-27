@@ -36,6 +36,8 @@ namespace Microsoft.PowerFx.Types
             return true;
         }
 
+        public override bool CanShallowCopy => true;
+
         private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
         {
             return records.Select(record => record.IsValue ? DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(((TableType)irContext.ResultType).ToRecord(), record.Value)) : record);
@@ -77,6 +79,8 @@ namespace Microsoft.PowerFx.Types
             copy = new RecordsOnlyTableValue(this);
             return true;
         }
+
+        public override bool CanShallowCopy => true;
 
         protected override DValue<RecordValue> Marshal(RecordValue record)
         {

@@ -81,6 +81,22 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public void PatchByIdInMemory1()
+        {
+            string expr = @"Set(x, FirstN(t, 5)); Patch(x, {Id: ""2""}, { Name: ""John""}); First(Filter(x, Id=2)).Name";
+            (PowerFxConfig config, RecalcEngine engine, CheckResult checkResult, ISymbolSlot dbSlot) = CheckExpression(expr);
+            (SymbolValues values, TestDatabaseTableValue database) = GetData(config, dbSlot);
+
+            FormulaValue result = checkResult.GetEvaluator().Eval(values);
+            Validate(result, database);
+
+            ConcurrentDictionary<int, TestDatabaseRecordValue> records = database.DbContent;
+            Assert.Equal(17, records.Count);
+            Assert.Equal("Barber", records[2].Name); // DB is unchanged
+            Assert.Equal("John", ((StringValue)result).Value); // InMemory table is updated as expected
+        }
+
+        [Fact]
         public void RemoveFirst()
         {
             string expr = @"Remove(t, First(t))";

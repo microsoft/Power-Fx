@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns>Shallow copy of FormulaValue.</returns>
         public FormulaValue MaybeShallowCopy()
         {
-            return TryShallowCopy(out FormulaValue copy) ? copy : this;
+            return CanShallowCopy && TryShallowCopy(out FormulaValue copy) ? copy : this;
         }
 
         public virtual bool TryShallowCopy(out FormulaValue copy)
@@ -57,6 +57,8 @@ namespace Microsoft.PowerFx.Types
             copy = null;
             return false;
         }
+
+        public virtual bool CanShallowCopy => false;
 
         public abstract void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings);
 
@@ -74,6 +76,18 @@ namespace Microsoft.PowerFx.Types
             ToExpression(sb, settings);
 
             return sb.ToString();
+        }
+
+        public bool TryGetPrimitiveValue(out object val)
+        {
+            if (Type._type.IsPrimitive)
+            {
+                val = ToObject();
+                return true;
+            }
+
+            val = null;
+            return false;
         }
     }
 }

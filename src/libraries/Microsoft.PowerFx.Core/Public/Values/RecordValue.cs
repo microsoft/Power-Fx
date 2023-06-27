@@ -299,6 +299,8 @@ namespace Microsoft.PowerFx.Types
             copy = new InMemoryRecordValue(this.IRContext, this.Fields);
             return true;
         }
+
+        public override bool CanShallowCopy => true;
     }
 
     /// <summary>

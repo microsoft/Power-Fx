@@ -69,6 +69,8 @@ namespace Microsoft.PowerFx.Tests
                 return true;
             }
 
+            public override bool CanShallowCopy => true;
+
             public int RefreshCount = 0;
 
             public override IEnumerable<DValue<RecordValue>> Rows => new DValue<RecordValue>[]

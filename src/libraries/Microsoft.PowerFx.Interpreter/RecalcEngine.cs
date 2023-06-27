@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx
         {
             var x = value;
 
-            if (value is TableValue && !value.TryShallowCopy(out _))
+            if (value is TableValue && !value.CanShallowCopy)
             {
                 throw new InvalidOperationException($"Can't set '{name}' to a table value that cannot be copied.");
             }

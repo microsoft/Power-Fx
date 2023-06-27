@@ -107,6 +107,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 return false;
             }
 
+            public override bool CanShallowCopy => false;
+
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
             {
                 if (PatchDelay > 0)
@@ -175,6 +177,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 copy = null;
                 return false;
             }
+
+            public override bool CanShallowCopy => false;
         }
 
         internal class TestEntityType : FormulaType

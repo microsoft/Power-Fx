@@ -224,7 +224,7 @@ namespace Microsoft.PowerFx.Types
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (mutationCopy && this.TryShallowCopy(out _))
+            if (mutationCopy && CanShallowCopy)
             {
                 for (int index = 0; index < _sourceList.Count; index++)
                 {
@@ -253,6 +253,7 @@ namespace Microsoft.PowerFx.Types
             return null;
         }
 
+        // currentRecord is the record in the table, baseRecord is the record passed in by the user
         protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
         {            
             if (currentRecord.TryGetPrimaryKey(out string currentRecordPrimaryKeyValue))
@@ -260,7 +261,7 @@ namespace Microsoft.PowerFx.Types
                 string pKey = currentRecord.GetPrimaryKeyName();
 
                 if (string.IsNullOrEmpty(pKey))
-                {
+                {                    
                     // TryGetPrimaryKey tries to retrieve the primary key value, while GetPrimaryKeyName allows the retrieval of the primary key name
                     if (baseRecord.TryGetPrimaryKey(out string baseRecordPrimaryKey) && baseRecordPrimaryKey == currentRecordPrimaryKeyValue)
                     {
@@ -271,10 +272,10 @@ namespace Microsoft.PowerFx.Types
                 {
                     FormulaValue pKeyValue = await baseRecord.GetFieldAsync(pKey, cancellationToken).ConfigureAwait(false);
 
-                    if (pKeyValue?.ToObject()?.ToString() == currentRecordPrimaryKeyValue)
+                    if (pKeyValue.TryGetPrimitiveValue(out object baseRecordPrimaryKeyValue) && baseRecordPrimaryKeyValue.ToString() == currentRecordPrimaryKeyValue)
                     {
                         return true;
-                    }
+                    }    
                 }
 
                 return false;
