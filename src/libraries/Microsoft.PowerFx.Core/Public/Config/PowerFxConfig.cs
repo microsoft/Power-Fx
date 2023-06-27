@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx
     public sealed class PowerFxConfig
     {
         internal static readonly int DefaultMaxCallDepth = 20;
-        internal static readonly int DefaultMaximumExpressionLength = 1000;
+        internal const int DefaultMaximumExpressionLength = 1000;
 
         /// <summary>
         /// Global symbols. Additional symbols beyond default function set. 

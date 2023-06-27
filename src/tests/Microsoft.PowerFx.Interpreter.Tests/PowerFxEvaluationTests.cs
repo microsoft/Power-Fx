@@ -298,6 +298,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var iSetup = InternalSetup.Parse(setupHandlerName, Features, NumberIsFloat);
 
                 var config = new PowerFxConfig(features: iSetup.Features);
+                config.MaximumExpressionLength = 2000;
                 config.EnableParseJSONFunction();
 
                 if (string.Equals(iSetup.HandlerName, "AsyncTestSetup", StringComparison.OrdinalIgnoreCase))
@@ -329,6 +330,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // These tests are only run in en-US locale for now
                 var options = iSetup.Flags.ToParserOptions(new CultureInfo("en-US"));
+                options.MaxExpressionLength = 2000;
                 var check = engine.Check(expr, options: options, symbolTable: symbolTable);
                 if (!check.IsSuccess)
                 {

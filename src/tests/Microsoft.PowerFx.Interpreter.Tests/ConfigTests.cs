@@ -880,6 +880,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(1000, config.MaximumExpressionLength);
         }
 
+        [Theory]
+
+        // Default maximum allowed expression length is 1000.
+        [InlineData(1001, "Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);1", false)]
+        [InlineData(1000, "Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);Text(123);", true)]
+        public void DefaultParserOptionMaxExpressionLengthTest(int len, string expression, bool isSuccess)
+        {
+            var engine = new Engine();
+            var opt = new ParserOptions()
+            {
+                AllowsSideEffects = true
+            };
+
+            Assert.Equal(len, expression.Length);
+            var check = engine.Check(expression, opt);
+
+            Assert.Equal(isSuccess, check.IsSuccess);
+        }
+
         private static SymbolTable AddDataverse(string valueName, FormulaValue value)
         {
             var symbolTable = new DataverseSymbolTable
