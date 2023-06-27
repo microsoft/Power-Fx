@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -329,6 +328,7 @@ namespace Microsoft.PowerFx.Functions
         {
             const int formatSize = 100;
             string formatString = null;
+            string defaultLanguage = Language(formatInfo.CultureInfo);
             var textFormatArgs = new TextFormatArgs
             {
                 FormatCultureName = null,
@@ -360,8 +360,13 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, out textFormatArgs))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, defaultLanguage, out textFormatArgs))
             {
+                if (formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase) && !(textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, formatString);
+                }
+
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
@@ -377,6 +382,13 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             var formatString = textFormatArgs.FormatArg;
             result = null;
+
+            // There is a difference between Windows 10 and 11 for French locale
+            // We fix the thousand separator here to be consistent 
+            if (culture.Name.Equals("fr-FR", StringComparison.OrdinalIgnoreCase) && culture.NumberFormat.NumberGroupSeparator == "\u00A0")
+            {
+                culture.NumberFormat.NumberGroupSeparator = "\u202F";
+            }
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
 

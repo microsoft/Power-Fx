@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
@@ -25,7 +27,7 @@ namespace Microsoft.PowerFx
     /// </summary>
     public abstract class ReflectionFunction
     {
-        private FunctionDescr _info;
+        private readonly FunctionDescr _info;
 
         // Using this name opts into special SetProperty binding. 
         // This also gives us a symbol to track if we remove the special casing. 
@@ -67,8 +69,7 @@ namespace Microsoft.PowerFx
             if (_info == null)
             {
                 var t = GetType();
-                var suffix = "Function";
-                var name = t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
+                var name = GetFunctionName(t);
                 var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
                 var returnType = GetType(m.ReturnType);
                 var paramTypes = new List<FormulaType>();
@@ -116,7 +117,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                _info = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
+                return new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
             }
 
             return _info;
@@ -143,6 +144,12 @@ namespace Microsoft.PowerFx
             throw new NotImplementedException($"Marshal type {t.Name}");
         }
 
+        private string GetFunctionName(Type t)
+        {
+            var suffix = "Function";
+            return t.Name.Substring(0, t.Name.IndexOf(suffix, StringComparison.InvariantCulture));
+        }
+
         internal TexlFunction GetTexlFunction()
         {
             var info = Scan();
@@ -156,11 +163,21 @@ namespace Microsoft.PowerFx
                 };
             }
 
-            return new CustomTexlFunction(info.Name, info.RetType, info.ParamTypes)
+            return new CustomTexlFunction(info.Name, FunctionCategories.UserDefined, info.RetType, info.ParamTypes)
             {
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
                 LamdaParamMask = info.LamdaParamMask,
             };
+        }
+
+        internal string GetFunctionName()
+        {
+            if (_info == null)
+            {
+                return GetFunctionName(GetType());
+            }
+
+            return _info.Name;
         }
 
         public FormulaValue Invoke(IServiceProvider serviceProvider, FormulaValue[] args)
@@ -170,7 +187,7 @@ namespace Microsoft.PowerFx
 
         public async Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            Scan();
+            var info = Scan();
 
             var args2 = new List<object>();
             if (ConfigType != null)
@@ -182,7 +199,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Call to {_info.Name} is missing config type {_info.ConfigType.FullName}");
+                    throw new InvalidOperationException($"Call to {info.Name} is missing config type {info.ConfigType.FullName}");
                 }
             }
 
@@ -192,7 +209,7 @@ namespace Microsoft.PowerFx
                 object arg = args[i];
 
                 // In case, ReflectionFunction was created using the constructor which takes paramtypes as optional argument paramtypes could be null.
-                var expectedType = _info.ParamTypes.Length <= i ? default : _info.ParamTypes[i];
+                var expectedType = info.ParamTypes.Length <= i ? default : info.ParamTypes[i];
                 if (arg is ErrorValue ev)
                 {
                     if (errors == null)
@@ -230,10 +247,10 @@ namespace Microsoft.PowerFx
 
             if (errors != null)
             {
-                return ErrorValue.Combine(IRContext.NotInSource(_info.RetType), errors);
+                return ErrorValue.Combine(IRContext.NotInSource(info.RetType), errors);
             }
 
-            if (_info.IsAsync)
+            if (info.IsAsync)
             {
                 args2.Add(cancellationToken);
             }
@@ -241,19 +258,19 @@ namespace Microsoft.PowerFx
             object result = default;
             try
             {
-                result = _info.Method.Invoke(this, args2.ToArray());
+                result = info.Method.Invoke(this, args2.ToArray());
             }
             catch (TargetInvocationException e)
             {
                 if (e.InnerException is CustomFunctionErrorException customFunctionErrorException)
                 {
-                    return CommonErrors.CustomError(IRContext.NotInSource(_info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
 
                 throw e;
             }
 
-            if (_info.IsAsync)
+            if (info.IsAsync)
             {
                 var resultType = result.GetType().GenericTypeArguments[0];
                 try
@@ -262,17 +279,54 @@ namespace Microsoft.PowerFx
                 }
                 catch (CustomFunctionErrorException customFunctionErrorException)
                 {
-                    return CommonErrors.CustomError(IRContext.NotInSource(_info.RetType), customFunctionErrorException.Message);
+                    return CommonErrors.CustomError(IRContext.NotInSource(info.RetType), customFunctionErrorException.Message);
                 }
             }
 
             var formulaResult = (FormulaValue)result;
 
-            formulaResult ??= FormulaValue.NewBlank(_info.RetType);
+            formulaResult ??= FormulaValue.NewBlank(info.RetType);
 
-            if (!formulaResult.Type._type.Accepts(_info.RetType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
+            return GetFormulaResult(formulaResult, info.RetType._type);
+        }
+
+        private static FormulaValue GetFormulaResult(FormulaValue formulaResult, DType retType)
+        {
+            var formulaResultType = formulaResult.Type._type;
+
+            if (!formulaResultType.Accepts(retType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
             {
-                return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", _info.RetType._type, formulaResult.Type._type));
+                bool isValid = false;
+
+                if (formulaResultType.IsRecord || formulaResultType.IsTable)
+                {
+                    isValid = true;
+
+                    // if retType is an empty record, then don't enforce.
+                    if (retType.ChildCount != 0)
+                    {
+                        // Check if all names in formulaResultType exist in retType
+                        foreach (var typedName in formulaResultType.GetNames(DPath.Root))
+                        {
+                            if (!retType.TryGetType(typedName.Name, out DType dsNameType))
+                            {
+                                isValid = false;
+                                continue;
+                            }
+                        }
+
+                        // Check if formulaResultType can coerce to retType
+                        if (isValid && !formulaResultType.CoercesTo(retType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: true))
+                        {
+                            isValid = false;
+                        }
+                    }
+                }
+
+                if (!isValid)
+                {
+                    return CommonErrors.CustomError(formulaResult.IRContext, string.Format(CultureInfo.InvariantCulture, "Return type should have been {0}, found {1}", retType, formulaResultType));
+                }
             }
 
             return formulaResult;

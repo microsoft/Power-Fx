@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>A(z) {0} nem delegálható: az azonosítókifejezés a ThisRecord kifejezésre hivatkozik.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

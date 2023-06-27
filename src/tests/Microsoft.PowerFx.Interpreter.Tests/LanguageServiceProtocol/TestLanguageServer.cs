@@ -3,14 +3,15 @@
 
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.LanguageServerProtocol;
+using Xunit.Abstractions;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 {
     public class TestLanguageServer : LanguageServer
     {
-        public TestLanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory)
-            : base(sendToClient, scopeFactory)
-        {
+        public TestLanguageServer(ITestOutputHelper output, SendToClient sendToClient, IPowerFxScopeFactory scopeFactory)
+            : base(sendToClient, scopeFactory, (string s) => output.WriteLine(s))
+        {            
         }
 
         public int TestGetCharPosition(string expression, int position) => GetCharPosition(expression, position);

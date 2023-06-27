@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} को प्रतिनिधि नहीं कर सकते हैं: Id व्यंजक इस रिकॉर्ड को संदर्भित करता है.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

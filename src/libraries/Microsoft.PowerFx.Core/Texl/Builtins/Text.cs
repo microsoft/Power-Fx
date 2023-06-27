@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         HasNumericFmt = false
                     };
 
-                    if (!TextFormatUtils.IsValidFormatArg(formatArg, null, out textFormatArgs))
+                    if (!TextFormatUtils.IsValidFormatArg(formatArg, formatCulture: null, defaultLanguage: null, out textFormatArgs))
                     {
                         isValid = false;
                     }

@@ -2805,7 +2805,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
                 {
                     var nameSymbol = lookupInfo.Data as NameSymbol;
-                    _txb.SetMutable(node, nameSymbol?.IsMutable ?? false);
+                    _txb.SetMutable(node, nameSymbol?.Props.CanMutate ?? false);
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
                 {
@@ -3361,6 +3361,17 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
+                    // Binding function property and its parameters should not allow DottedNameNode
+                    bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
+                        (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                        _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
+                        ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
+                    if (isBindingPropertyFunctionPropertyOrParameter)
+                    {
+                        SetDottedNameError(node, TexlStrings.ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess);
+                        return;
+                    }
+
                     // We block the property access usage for datasource of the command component.
                     if (template.IsCommandComponent &&
                         _txb._glue.IsPrimaryCommandComponentProperty(property))
@@ -3415,7 +3426,11 @@ namespace Microsoft.PowerFx.Core.Binding
                             // If visiting an expando type property of control type variable, we cannot calculate the type here because
                             // The LHS associated ControlInfo is App/Component.
                             // e.g. Set(controlVariable1, DropDown1), Label1.Text = controlVariable1.Selected.Value.
-                            leftType = (DType)controlInfo.GetControlDType(calculateAugmentedExpandoType: true, isDataLimited: false);
+                            if (!_nameResolver.LookupExpandedControlType(controlInfo, out leftType))
+                            {
+                                SetDottedNameError(node, TexlStrings.ErrInvalidName, property.InvariantName);
+                                return;
+                            }
                         }
 
                         if (!leftType.ToRecord().TryGetType(property.InvariantName, out typeRhs))

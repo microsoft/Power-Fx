@@ -483,7 +483,7 @@
     <value>Tekstna vrijednost koja se pretvara u numeričku vrijednost.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Šifra jezika koja će se koristiti prilikom pretvaranja vrijednosti.</value>
+    <value>Šifra jezika koja će se upotrijebiti prilikom pretvaranja vrijednosti.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -3403,7 +3403,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Primjenjuje ažuriranja na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
+    <value>Primjenjuje ažuriranje na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} se ne može delegirati: izraz ID-ja se odnosi na ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

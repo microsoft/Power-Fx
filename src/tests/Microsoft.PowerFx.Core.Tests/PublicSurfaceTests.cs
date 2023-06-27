@@ -48,6 +48,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.PowerFxConfig",
                 "Microsoft.PowerFx.ReadOnlySymbolTable",
                 "Microsoft.PowerFx.SymbolTable",
+                "Microsoft.PowerFx.SymbolProperties",
+                "Microsoft.PowerFx.DeferredSymbolPlaceholder",
 
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
@@ -176,7 +178,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",                
-                "Microsoft.PowerFx.UserInfo"                
+                "Microsoft.PowerFx.UserInfo",
+                "Microsoft.PowerFx.IUserInfo" // Deprecated, remove. 
             };
 
             var sb = new StringBuilder();

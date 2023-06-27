@@ -1424,7 +1424,7 @@
     <value>En tabell som det trekkes ut distinkte verdier fra.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Et uttrykk som evalueres over hver rad i inndatatabellen, og som angir verdier for den distinkte operasjonen.</value>
+    <value>Et uttrykk som evalueres over hver rad i inndatatabellen, som angir verdier for den distinkte operasjonen.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Returnerer arctangens-verdien (i radianer) for de angitte x- og y-koordinatene.</value>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Kan ikke delegere {0}: ID-uttrykket henviser til ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

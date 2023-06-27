@@ -66,6 +66,15 @@ namespace Microsoft.PowerFx.Core.Binding
         // Looks up the parent control for the current context.
         bool LookupParent(out NameLookupInfo lookupInfo);
 
+        /// <summary>
+        /// In Power Apps specifically, this is used to retrieve the full, derived, type
+        /// of a control object where the output schema may be dependent on a control inputs and hierarchy. 
+        /// All Non-Power Apps hosts should not implement this method.
+        /// </summary>
+        /// <param name="control">The control to get the full type of.</param>
+        /// <param name="controlType">output: the expanded control type.</param>
+        bool LookupExpandedControlType(IExternalControl control, out DType controlType);
+
         // Looks up the current control for the current context.
         bool LookupSelf(out NameLookupInfo lookupInfo);
 

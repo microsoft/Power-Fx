@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Connectors
             {
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
-                    var valueStr = paramValue.ToObject().ToString();
+                    var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
                     switch (param.In.Value)
                     {
@@ -165,7 +165,10 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
         {
-            var text = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var text = response?.Content == null 
+                            ? string.Empty
+                            : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
             var statusCode = (int)response.StatusCode;
 
             if (statusCode < 300)

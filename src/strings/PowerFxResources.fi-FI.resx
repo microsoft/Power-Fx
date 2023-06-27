@@ -1421,7 +1421,7 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>Taulukko, josta erilaiset (distinct) arvot poimitaan.</value>
+    <value>Taulukko, josta erilaiset arvot poimitaan.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
     <value>Syötetaulukon kullekin riville arvioitava lauseke, joka antaa arvot Distinct-toiminnolle.</value>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Ei voi delegoida kohdetta {0}: Tunnuslauseke viittaa kohteeseen ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4989,11 +4989,11 @@
     
   </data>
   <data name="AboutMatch" xml:space="preserve">
-    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa sille ensimmäisen vastaavuuden.</value>
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa siitä ensimmäisen vastaavuuden.</value>
     
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
-    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa sille kaikki vastaavuudet.</value>
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa siitä kaikki vastaavuudet.</value>
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">

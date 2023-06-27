@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Stolpec besedilnih vrednosti za obdelavo</value>
+    <value>Stolpec besedilnih vrednosti za obdelavo.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Pretvori »število« v logično vrednost.</value>
@@ -3403,7 +3403,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Uporabi posodobitve v določeni vrstici in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
+    <value>Uporabi posodobitve določene vrstice in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4939,7 +4939,7 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>Vrste ni bilo mogoče pretvoriti, ker je navedena vrednost vrste »{0}«, pričakovana pa je vrsta »{1}«.</value>
+    <value>Vrste ni bilo mogoče pretvoriti, ker je imela navedena vrednost vrsto »{0}«, pričakovana pa je vrsta »{1}«.</value>
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Dodelitev za {0} ni mogoča: izraz ID-ja se nanaša na ta zapis.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
