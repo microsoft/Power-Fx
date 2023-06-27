@@ -50,6 +50,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.SymbolTable",
                 "Microsoft.PowerFx.SymbolProperties",
                 "Microsoft.PowerFx.DeferredSymbolPlaceholder",
+                "Microsoft.PowerFx.SymbolTableExtensions",
 
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
