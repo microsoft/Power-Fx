@@ -146,16 +146,39 @@ namespace Microsoft.PowerFx
         /// The set of symbols is fixed and determined by the DisplayNameProvider, 
         /// but their type info is lazily hydrated. 
         /// </summary>
+        /// <param name="map">Set of all possible symbol names. Callback will be invoked lazily to compute the type. </param>
+        /// <param name="fetchTypeInfo">Callback invoked with (logical,display) name for the symbol. Allow lazily computing the type and getting the slot for setting values.</param>
+        /// <param name="debugName">Optional debug name for this symbol table.</param>
         /// <returns></returns>
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo,
+            string debugName = null)
+        {
+            if (map == null)
+            {
+                throw new ArgumentNullException(nameof(map));
+            }
+
+            if (fetchTypeInfo == null)
+            {
+                throw new ArgumentNullException(nameof(fetchTypeInfo));
+            }
+
+            return new DeferredSymbolTable(map, fetchTypeInfo)
+            {
+                DebugName = debugName
+            };
+        }
+
         public static ReadOnlySymbolTable NewFromDeferred(
             DisplayNameProvider map,
             Func<string, string, FormulaType> fetchTypeInfo,
             string debugName = null)
         {
-            return new DeferredSymbolTable(map, fetchTypeInfo)
-            {
-                DebugName = debugName
-            };
+            Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo2 =
+                (logical, display) => new DeferredSymbolPlaceholder(fetchTypeInfo(logical, display));
+            return NewFromDeferred(map, fetchTypeInfo2, debugName);
         }
 
         public static ReadOnlySymbolTable NewFromRecord(

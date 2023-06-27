@@ -3366,6 +3366,17 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
+                    // Binding function property and its parameters should not allow DottedNameNode
+                    bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
+                        (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                        _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
+                        ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
+                    if (isBindingPropertyFunctionPropertyOrParameter)
+                    {
+                        SetDottedNameError(node, TexlStrings.ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess);
+                        return;
+                    }
+
                     // We block the property access usage for datasource of the command component.
                     if (template.IsCommandComponent &&
                         _txb._glue.IsPrimaryCommandComponentProperty(property))

@@ -256,7 +256,7 @@ namespace Microsoft.PowerFx.Core.Tests
             });
 
             int callbackCount = 0;
-            var symTable = new DeferredSymbolTable(map, (disp, logical) =>
+            var symTable = ReadOnlySymbolTable.NewFromDeferred(map, (disp, logical) =>
             {
                 callbackCount++;
                 return FormulaType.Number;

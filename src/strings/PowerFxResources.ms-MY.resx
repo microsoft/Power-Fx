@@ -483,7 +483,7 @@
     <value>Nilai teks untuk ditukar kepada nilai nombor.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Kod bahasa untuk digunakan apabila menukar kepada nilai.</value>
+    <value>Kod bahasa untuk digunakan semasa menukar nilai.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1424,7 +1424,7 @@
     <value>Jadual yang nilai berbezanya akan diekstrak.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Ungkapan dinilaikan terhadap setiap baris dalam jadual input dan yang memberikan nilai untuk operasi Berbeza.</value>
+    <value>Ungkapan dinilaikan ke atas setiap baris dalam jadual input dan yang memberikan nilai untuk operasi Berbeza.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Mengembalikan lengkuk tangen (dalam radian) koordinat_x dan koordinat_y yang ditentukan.</value>
@@ -2141,7 +2141,7 @@
     <value>Nilai tarikh atau masa daripadanya komponen saat akan diekstrak.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
-    <value>Mengembalikan hari biasa nilai tarikhmasa. Secara lalai, julat hasil adalah dari 1 (Ahad) hingga 7 (Sabtu). Anda boleh menentukan julat yang berbeza dengan nilai penyenaraian PermulaanMinggu atau kod fungsi Minggu Biasa Excel Microsoft.</value>
+    <value>Mengembalikan hari biasa nilai tarikhmasa. Secara lalai, julat hasil adalah dari 1 (Ahad) hingga 7 (Sabtu). Anda boleh menentukan julat yang berbeza dengan nilai penyenaraian PermulaanMinggu atau kod fungsi Minggu Biasa Microsoft Excel.</value>
     
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
@@ -3403,7 +3403,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Menggunakan kemas kini pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
+    <value>Menggunakan kemaskinian pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Tidak dapat menugaskan {0}: Ungkapan ID merujuk ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4967,7 +4967,7 @@
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
-    <value>Teks untuk dibandingkan mengikut format.</value>
+    <value>Teks untuk dibandingkan dengan format.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
     <value>Format untuk disemak terhadap teks. Ia mungkin merupakan nilai enum TextFormat atau ungkapan biasa.</value>
