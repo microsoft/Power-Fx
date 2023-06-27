@@ -40,7 +40,8 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorParameters",
               "Microsoft.PowerFx.Connectors.ConnectorParameterType",
-              "Microsoft.PowerFx.Connectors.ConnectorType"
+              "Microsoft.PowerFx.Connectors.ConnectorType",
+              "Microsoft.PowerFx.Connectors.PowerFxConnectorException"
             };
 
             var sb = new StringBuilder();
