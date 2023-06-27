@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
     public class InternalTesting
     {
         // This test is only meant for internal testing
-        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
+        [Fact] //Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
         public void TestAllConnectors()
         {
             int i = 0;
@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string srcFolder = @"c:\data";
 
             // Store results for analysis
-            using StreamWriter writer = new StreamWriter(outFolder, append: false);
+            using StreamWriter writer = new StreamWriter(Path.Combine(outFolder, "Analysis.txt"), append: false);
 
             foreach (string swaggerFile in Directory.EnumerateFiles(@$"{srcFolder}\AAPT-connectors\src", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })
                                     .Union(Directory.EnumerateFiles(@$"{srcFolder}\PowerPlatformConnectors", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })))
@@ -56,6 +56,19 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
 
             writer.WriteLine($"Total: {i} - Exceptions: {j}");
+        }
+
+        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
+        public void TestConnector1()
+        {
+            string swaggerFile = @"c:\data\PowerPlatformConnectors\independent-publisher-connectors\Updown\apiDefinition.swagger.json";
+            OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc);
+
+            var config = new PowerFxConfig();
+            using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token") { SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f" };
+            
+            config.AddService("Connector", doc, client);
         }
     }
 }
