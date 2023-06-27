@@ -12,7 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
@@ -20,13 +19,13 @@ namespace Microsoft.PowerFx.Types
     /// <summary>
     /// Represent a Record. Records have named fields which can be other values. 
     /// </summary>
-    public abstract class RecordValue : ValidFormulaValue, IMutationCopy
+    public abstract class RecordValue : ValidFormulaValue
     {
         /// <summary>
         /// Fields and their values directly available on this record. 
         /// The field names should match the names on <see cref="Type"/>. 
         /// </summary>
-        public virtual IEnumerable<NamedValue> Fields => GetFields();
+        public IEnumerable<NamedValue> Fields => GetFields();
 
         /// <summary>
         /// Unique key associated to each record in application.
@@ -38,6 +37,15 @@ namespace Microsoft.PowerFx.Types
         {
             key = default;
             return false;
+        }
+
+        /// <summary>
+        /// Returns the name of the primary key, null if there is no primary key.
+        /// </summary>
+        /// <returns>Primary key name. Returns null in absence.</returns>
+        public virtual string GetPrimaryKeyName()
+        {
+            return null;
         }
 
         private IEnumerable<NamedValue> GetFields()
@@ -286,7 +294,7 @@ namespace Microsoft.PowerFx.Types
         /// This is possible for records, which will have a finite number of fields, but not for tables
         /// and number of rows which could be unbounded.
         /// </summary>
-        public virtual bool TryShallowCopy(out FormulaValue copy)
+        public override bool TryShallowCopy(out FormulaValue copy)
         {
             copy = new InMemoryRecordValue(this.IRContext, this.Fields);
             return true;

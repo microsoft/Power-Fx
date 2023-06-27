@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.PowerFx.Core.IR;
@@ -50,12 +49,13 @@ namespace Microsoft.PowerFx.Types
         /// <returns>Shallow copy of FormulaValue.</returns>
         public FormulaValue MaybeShallowCopy()
         {
-            if (this is IMutationCopy mc)
-            {
-                return mc.TryShallowCopy(out FormulaValue copy) ? copy : this;
-            }
+            return TryShallowCopy(out FormulaValue copy) ? copy : this;
+        }
 
-            return this;
+        public virtual bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = null;
+            return false;
         }
 
         public abstract void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings);
@@ -75,31 +75,5 @@ namespace Microsoft.PowerFx.Types
 
             return sb.ToString();
         }
-    }
-
-    /// <summary>
-    /// Indicates that a FormulaValue should be copied before being mutated, for Copy on Write semantics.
-    /// </summary>
-    public interface IMutationCopy
-    {
-        /// <summary>
-        /// Returns a shallow copy of a FormulaValue. For potentially deep data structures such as a Table or Record,
-        /// this includes the head object and any first level collections for rows or fields respectively.
-        /// It stops there, for example even the records within the rows of a Table are not copied.
-        /// </summary>
-        /// <returns>Shallow copy.</returns>
-        bool TryShallowCopy(out FormulaValue shallowCopy);
-    }
-
-    /// <summary>
-    /// Indicates that a RecordValue has a primary key name which can be used to identify a row uniquely.
-    /// </summary>
-    public interface IHasPrimaryKeyName
-    {
-        /// <summary>
-        /// Returns the name of the primary key.
-        /// </summary>
-        /// <returns>Primary key name./returns>
-        string GetPrimaryKeyName();
     }
 }

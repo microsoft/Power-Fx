@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using Microsoft.PowerFx.Core.IR;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -13,7 +12,7 @@ namespace Microsoft.PowerFx.Types
     /// In-memory table. Constructed over RecordValues. 
     /// DValue means items could be error or blank. 
     /// </summary>
-    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>, IMutationCopy
+    internal class InMemoryTableValue : CollectionTableValue<DValue<RecordValue>>
     {
         private readonly RecordType _recordType;
 
@@ -31,7 +30,7 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        public override bool TryShallowCopy(out FormulaValue copy)
         {
             copy = new InMemoryTableValue(this);
             return true;
@@ -56,7 +55,7 @@ namespace Microsoft.PowerFx.Types
     // More constrained table when we know that all values are indeed Records, not error/blank. 
     // Beware of wrapping/unwrapping in DValues if we already have a RecordValue -
     // that can create extra IEnumerable wrappers that break direct indexing. 
-    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>, IMutationCopy
+    internal class RecordsOnlyTableValue : CollectionTableValue<RecordValue>
     {
         private readonly RecordType _recordType;
 
@@ -73,7 +72,7 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        public override bool TryShallowCopy(out FormulaValue copy)
         {
             copy = new RecordsOnlyTableValue(this);
             return true;

@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Interpreter;
@@ -12,7 +10,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx
 {
     // $$$ Can this be done via TypeMarshaller instead?
-    internal class UserInfoRecordValue : RecordValue, IMutationCopy
+    internal class UserInfoRecordValue : RecordValue
     {
         private readonly UserInfo _userInfo;
 
@@ -71,7 +69,7 @@ namespace Microsoft.PowerFx
             }
         }
 
-        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        public override bool TryShallowCopy(out FormulaValue copy)
         {
             copy = new InMemoryRecordValue(this.IRContext, this.Fields);
             return true;

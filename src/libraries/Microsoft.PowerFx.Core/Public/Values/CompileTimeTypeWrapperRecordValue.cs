@@ -1,19 +1,17 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
 {
     // Project the correct compile-time type onto the runtime value. 
     // Important for union / intersection types, such as Table() or If(). For example:
     //    First(Table({a:1},{b:2})), result is a record with both fields a and b. 
-    internal class CompileTimeTypeWrapperRecordValue : InMemoryRecordValue, IMutationCopy
+    internal class CompileTimeTypeWrapperRecordValue : InMemoryRecordValue
     {
         public static RecordValue AdjustType(RecordType expectedType, RecordValue inner)
         {
@@ -35,7 +33,7 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
-        bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+        public override bool TryShallowCopy(out FormulaValue copy)
         {
             copy = new CompileTimeTypeWrapperRecordValue(this);
             return true;

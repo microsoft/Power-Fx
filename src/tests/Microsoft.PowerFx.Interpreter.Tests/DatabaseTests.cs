@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
     }
 
-    internal class TestDatabaseRecordValue : RecordValue, IHasPrimaryKeyName
+    internal class TestDatabaseRecordValue : RecordValue
     {
         public static readonly RecordType CustomRecordType = RecordType.Empty().Add("Id", FormulaType.Number).Add("Name", FormulaType.String).Add("Val", FormulaType.String);
 
@@ -196,16 +196,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Val = val;
         }
 
-        public override IEnumerable<NamedValue> Fields
-        {
-            get
-            {
-                Fields_Called++;
-                yield return new NamedValue("Id", FormulaValue.New(Id));                
-                yield return new NamedValue("Name", FormulaValue.New(Name));
-                yield return new NamedValue("Val", FormulaValue.New(Val));
-            }
-        }
+        //public override IEnumerable<NamedValue> Fields
+        //{
+        //    get
+        //    {
+        //        Fields_Called++;
+        //        yield return new NamedValue("Id", FormulaValue.New(Id));                
+        //        yield return new NamedValue("Name", FormulaValue.New(Name));
+        //        yield return new NamedValue("Val", FormulaValue.New(Val));
+        //    }
+        //}
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return Task.FromResult(DValue<RecordValue>.Of(this));
         }
 
-        public string GetPrimaryKeyName()
+        public override string GetPrimaryKeyName()
         {
             return "Id";
         }

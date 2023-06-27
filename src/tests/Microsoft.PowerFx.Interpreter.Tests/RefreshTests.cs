@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -57,17 +56,17 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("01", result.ToObject());
         }
 
-        public sealed class TestTableValue : TableValue, IRefreshable, IMutationCopy
+        public sealed class TestTableValue : TableValue, IRefreshable
         {
             public TestTableValue(RecordType recordType)
                 : base(recordType)
             {
             }
 
-            bool IMutationCopy.TryShallowCopy(out FormulaValue copy)
+            public override bool TryShallowCopy(out FormulaValue copy)
             {
-                copy = null;
-                return false;
+                copy = this;
+                return true;
             }
 
             public int RefreshCount = 0;
