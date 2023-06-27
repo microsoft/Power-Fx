@@ -137,8 +137,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public Features Features { get; }
 
-        // PropertyName or NamedFormula Name to which current rule is being bound to. It could be null in the absence of NameResolver.
-        internal DName PropertyName { get; }
+        // Property Name or NamedFormula Name to which current rule is being bound to. It could be null in the absence of NameResolver.
+        internal DName SinkName { get; }
 
         // Property to which current rule is being bound to. It could be null in the absence of NameResolver, or if the current rule is a named formula.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
@@ -331,7 +331,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 EntityPath = resolver.CurrentEntityPath;
                 EntityName = resolver.CurrentEntity == null ? default : resolver.CurrentEntity.EntityName;
-                PropertyName = resolver.CurrentProperty;
+                SinkName = resolver.CurrentProperty;
             }
 
             resolver?.TryGetCurrentControlProperty(out _property);
