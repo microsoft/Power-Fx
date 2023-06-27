@@ -271,7 +271,6 @@ namespace Microsoft.PowerFx.Connectors
 
                     switch (schema.Format)
                     {                        
-
                         case "date":
                         case "date-time":
                         case "date-no-tz":
