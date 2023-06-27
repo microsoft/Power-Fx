@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
     public class InternalTesting
     {
         // This test is only meant for internal testing
-        [Fact] //Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
+        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
         public void TestAllConnectors()
         {
             int i = 0;
@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
         public void TestConnector1()
         {
-            string swaggerFile = @"c:\data\PowerPlatformConnectors\independent-publisher-connectors\Updown\apiDefinition.swagger.json";
+            string swaggerFile = @"c:\data\AAPT-connectors\src\Connectors\FirstParty\microsoftspatialservices\Connector\apiDefinition.swagger.json";
             OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc);
 

@@ -339,7 +339,7 @@ namespace Microsoft.PowerFx.Connectors
                             return new ConnectorParameterType(schema, FormulaType.DateTime);
 
                         default:
-                            throw new NotImplementedException("Unsupported type of integer");
+                            throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
                     }
 
                 case "array":
@@ -454,7 +454,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 default:
 
-                    throw new NotImplementedException($"{schema.Type}");
+                    throw new NotImplementedException($"Unsupported schema type {schema.Type}");
             }
         }
 
