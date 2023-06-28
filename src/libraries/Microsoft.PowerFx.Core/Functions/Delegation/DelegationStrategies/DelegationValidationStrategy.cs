@@ -382,8 +382,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
-            // binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, (ErrorResourceKey)TexlStrings.OfflineSupportWarning);
-
             // We skip aysnc or impure check for BlockScopedConstants
             // to allow for nesting of valid async nodes.
             if (!binding.IsBlockScopedConstant(node))
