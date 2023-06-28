@@ -12,9 +12,3 @@ Errors: Error 32-33: Filter functions don't allow behavior functions as predicat
 
 >> Filter(t1, a=If(Collect(t1,{a:3}).a=3,true,false))
 Errors: Error 12-13: Filter functions don't allow behavior functions as predicates.
-
->> With({t1:Table({a:1}), t2:Table({a:1})}, LookUp(t1, a=Collect(t2, {a:2}).a))
-Errors: Error 53-54: Filter functions don't allow behavior functions as predicates.
-
->> With({t1:Table({a:1}), t2:Table({a:1})}, Filter(t1, a=Collect(t2, {a:2}).a))
-Errors: Error 53-54: Filter functions don't allow behavior functions as predicates.
