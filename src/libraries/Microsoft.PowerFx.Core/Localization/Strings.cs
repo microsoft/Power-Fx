@@ -687,6 +687,5 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnDelagationOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelagationOnlyPrimaryKeyField");
         public static ErrorResourceKey WrnDelagationRefersThisRecord = new ErrorResourceKey("WrnDelagationRefersThisRecord");
         public static ErrorResourceKey WrnDelagationBehaviorFunction = new ErrorResourceKey("WrnDelagationBehaviorFunction");
-        public static ErrorResourceKey OfflineSupportWarning = new ErrorResourceKey("OfflineSupportWarning");
     }
 }
