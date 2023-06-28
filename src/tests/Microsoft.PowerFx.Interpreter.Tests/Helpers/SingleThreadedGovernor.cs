@@ -3,20 +3,10 @@
 
 using System;
 using Xunit;
+using static Microsoft.PowerFx.Governor;
 
 namespace Microsoft.PowerFx.Tests
 {
-    // Custom exception thrown by Governor object. 
-    // Host implements the Governor and can control what's thrown. 
-    // Host also calls eval and controls what's caught. 
-    internal class GovernorException : Exception
-    {
-        public GovernorException(string msg)
-            : base(msg)
-        {
-        }
-    }
-
     internal class SingleThreadedGovernor : Governor
     {
         private readonly long _memStart;

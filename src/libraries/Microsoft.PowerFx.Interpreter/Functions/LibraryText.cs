@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Governor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -929,9 +930,9 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // This is static analysis before actually executing, so just use string lengths and avoid contents. 
-        internal static int SubstituteGetResultLength(int sourceLen, int matchLen, int replacementLen, bool replaceAll)
+        internal static double SubstituteGetResultLength(int sourceLen, int matchLen, int replacementLen, bool replaceAll)
         {
-            int maxLenChars;
+            double maxLenChars;
 
             if (matchLen > sourceLen)
             {
@@ -952,7 +953,7 @@ namespace Microsoft.PowerFx.Functions
                 else
                 {
                     // Round up as conservative estimate. 
-                    maxLenChars = (int)Math.Ceiling((double)sourceLen / matchLen) * replacementLen;
+                    maxLenChars = Math.Ceiling((double)sourceLen / matchLen) * (double)replacementLen;
                 }
             }
             else
@@ -988,7 +989,13 @@ namespace Microsoft.PowerFx.Functions
             var matchLen = match.Value.Length;
             var replacementLen = replacement.Value.Length;
 
-            var maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+            var maxLen = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+
+            if (!TryGetIntFromDouble(maxLen, out int maxLenChars))
+            {
+                throw new GovernorException($"Memory overuse: Used {maxLen} characters vs. {int.MaxValue} characters allowed.");
+            }
+
             runner.Governor.CanAllocateString(maxLenChars);
 
             var result = SubstituteWorker(runner, irContext, source, match, replacement, instanceNum);
@@ -1153,6 +1160,11 @@ namespace Microsoft.PowerFx.Functions
                     return false;
             }
 
+            return TryGetIntFromDouble(inputValue, out outputValue);
+        }
+
+        internal static bool TryGetIntFromDouble(double inputValue, out int outputValue)
+        {
             if (inputValue > int.MaxValue)
             {
                 outputValue = int.MaxValue;

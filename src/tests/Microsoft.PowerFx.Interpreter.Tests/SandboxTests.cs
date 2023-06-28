@@ -14,6 +14,7 @@ using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
+using static Microsoft.PowerFx.Governor;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -82,6 +83,23 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(50, 20)]
         public async Task MemoryLimit(int nWidth, int nDepth)
         {
+            var expr = CreateMemoryExpression(nWidth, nDepth);
+            await RunExpressionWithMemoryLimit(expr, DefaultMemorySizeBytes).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaabbbbbbbaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        [InlineData("Len(With({one: \"bcabcabcabcabcaaaaaaaaaaaaaaabbbbbbbaaaacccccccccccaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        [InlineData("Len(With({one: \"aaaaaaaaaaaaaaaaaa\"}, Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(one, \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one), \"a\", one)))")]
+        public async Task SubstituteMemoryLimit(string expr)
+        {
+            long maxLength = long.MaxValue;
+            await RunExpressionWithMemoryLimit(expr, maxLength).ConfigureAwait(false);
+        }
+
+        private async Task RunExpressionWithMemoryLimit(string expression, long memorySize)
+        {
             var config = new PowerFxConfig
             {
                 MaximumExpressionLength = 2000
@@ -89,15 +107,13 @@ namespace Microsoft.PowerFx.Tests
 
             var engine = new RecalcEngine(config);
 
-            var mem = new SingleThreadedGovernor(DefaultMemorySizeBytes);
+            var mem = new SingleThreadedGovernor(memorySize);
 
             var runtimeConfig = new RuntimeConfig();
             runtimeConfig.AddService<Governor>(mem);
 
-            var expr = CreateMemoryExpression(nWidth, nDepth);
-
             // Ensure governor traps excessive memory usage. 
-            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<GovernorException>(async () => await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
 
 #if false // https://github.com/microsoft/Power-Fx/issues/971
             // Still traps without the pre-poll. 
@@ -180,10 +196,16 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(5, 5, 2, true, 5)] // 1 match, if not found, original length
         [InlineData(5, 5, 9, true, 9)] // 1 match, if found, replacement length
         [InlineData(5, 3, 6, true, 12)] // rounds up. 
-        [InlineData(5, 3, 1, true, 5)] 
+        [InlineData(5, 3, 1, true, 5)]
+        [InlineData(612220032, 1, 18, true, 11019960576)]
+        [InlineData(int.MaxValue, 1, 100, true, 214748364700)]
+        [InlineData(100, 10, int.MaxValue, true, 21474836470)]
+        [InlineData(612220032, 0, 18, true, 612220032)]
+        [InlineData(0, 1, int.MaxValue, true, 0)]
+        [InlineData(5, 3, 0, true, 5)]
         [InlineData(4, 1, 5, false, 8)] // just first,  (4-1+5)
         [InlineData(4, 5, 3, false, 4)]
-        public void TestSubstitutePrePoll(int sourceLen, int matchLen, int replacementLen, bool replaceAll, int expectedMaxLenChars)
+        public void TestSubstitutePrePoll(int sourceLen, int matchLen, int replacementLen, bool replaceAll, double expectedMaxLenChars)
         {
             var maxLenChars = Functions.Library.SubstituteGetResultLength(sourceLen, matchLen, replacementLen, replaceAll);
 
