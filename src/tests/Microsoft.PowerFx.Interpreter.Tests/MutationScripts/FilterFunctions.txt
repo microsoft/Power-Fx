@@ -1,0 +1,11 @@
+﻿>> Set(t1, Table({a:1},{a:2}))
+Table({a:1},{a:2})
+
+>> LookUp(t1, a=Collect(t1,{a:3}).a)
+Errors: Error 12-13: Filter functions don't allow behavior function as predicate.
+
+>> Filter(t1, a=Collect(t1,{a:3}).a)
+Errors: Error 12-13: Filter functions don't allow behavior function as predicate.
+
+>> Filter(t1, a=If(Collect(t1,{a:3}).a=3,true,false))
+Errors: Error 12-13: Filter functions don't allow behavior function as predicate.

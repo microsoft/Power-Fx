@@ -73,6 +73,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
 
+            base.CheckSemantics(binding, args, argTypes, errors);
+
             // Ensure that all the args starting at index 1 are booleans or view
             for (var i = 1; i < args.Length; i++)
             {

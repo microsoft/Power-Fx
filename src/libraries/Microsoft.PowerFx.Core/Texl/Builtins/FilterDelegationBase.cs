@@ -184,6 +184,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            for (int i = 1; i < args.Length; i++)
+            {
+                var node = args[i];
+
+                if (binding.HasSideEffects(node))
+                {
+                    errors.EnsureError(node, TexlStrings.ErrFilterFunctionBahaviorAsPredicate);
+                }
+            }            
+        }
+
         private bool IsNodeBooleanOptionSetorBooleanFieldorView(TexlNode dsNode, TexlBinding binding)
         {
             // Only boolean option set, boolean fields and views are allowed to delegate
