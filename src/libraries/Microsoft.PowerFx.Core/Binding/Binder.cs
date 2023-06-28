@@ -2802,7 +2802,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
-                var isConstantNamedFormula = lookupInfo.Kind == BindKind.Enum;
+                var isConstantNamedFormula = false;
                 if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
                 {
                     var nameSymbol = lookupInfo.Data as NameSymbol;
