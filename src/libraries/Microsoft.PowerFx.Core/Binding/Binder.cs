@@ -137,7 +137,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public Features Features { get; }
 
-        // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
+        // Property Name or NamedFormula Name to which current rule is being bound to. It could be null in the absence of NameResolver.
+        internal DName SinkName { get; }
+
+        // Property to which current rule is being bound to. It could be null in the absence of NameResolver, or if the current rule is a named formula.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControlProperty Property
         {
@@ -328,6 +331,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 EntityPath = resolver.CurrentEntityPath;
                 EntityName = resolver.CurrentEntity == null ? default : resolver.CurrentEntity.EntityName;
+                SinkName = resolver.CurrentProperty;
             }
 
             resolver?.TryGetCurrentControlProperty(out _property);
@@ -3369,6 +3373,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     // Binding function property and its parameters should not allow DottedNameNode
                     bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
                         (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                        !(_txb.Document?.Properties?.EnabledFeatures?.IsComponentFunctionPropertyDataflowEnabled ?? false) &&
                         _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
                         ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
                     if (isBindingPropertyFunctionPropertyOrParameter)
