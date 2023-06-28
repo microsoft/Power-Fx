@@ -1,6 +1,15 @@
 ﻿>> Set(t1, Table({a:1},{a:2}))
 Table({a:1},{a:2})
 
+>> LookUp(Collect(t1, {a:3});t1, a=3)
+{a:3}
+
+>> Filter(Collect(t1, {a:4});t1, a=4)
+Table({a:4})
+
+>> CountIf(Collect(t1, {a:5});t1, a>3)
+2
+
 >> LookUp(t1, a=Collect(t1,{a:3}).a)
 Errors: Error 12-13: Filter functions don't allow behavior functions as predicates.
 

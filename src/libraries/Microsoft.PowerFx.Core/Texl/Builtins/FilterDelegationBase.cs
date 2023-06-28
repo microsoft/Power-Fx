@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 {
                     var node = args[i];
 
-                    // If a filter function contains a side effect call as predicate, this is a compilation compilation error.
+                    // If a filter function contains a side effect call as predicate, this is a compilation error.
                     if (binding.HasSideEffects(node))
                     {
                         errors.EnsureError(node, TexlStrings.ErrFilterFunctionBahaviorAsPredicate);
