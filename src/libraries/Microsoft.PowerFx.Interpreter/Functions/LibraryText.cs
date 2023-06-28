@@ -15,7 +15,6 @@ using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Governor;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -930,38 +929,41 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // This is static analysis before actually executing, so just use string lengths and avoid contents. 
-        internal static double SubstituteGetResultLength(int sourceLen, int matchLen, int replacementLen, bool replaceAll)
+        internal static int SubstituteGetResultLength(int sourceLen, int matchLen, int replacementLen, bool replaceAll)
         {
-            double maxLenChars;
+            int maxLenChars;
 
-            if (matchLen > sourceLen)
+            if (matchLen == 0 || matchLen > sourceLen)
             {
-                // Match is too large, can't be found.
+                // Match is empty or too large, can't be found.
                 // So will not match and just return original.
                 return sourceLen;
             }
 
-            if (replaceAll)
+            try
             {
-                // Replace all instances. 
-                // Maximum possible length of Substitute, convert all the Match to Replacement. 
-                // Unicode, so 2B per character.
-                if (matchLen == 0)
+                checked
                 {
-                    maxLenChars = sourceLen;
-                }
-                else
-                {
-                    // Round up as conservative estimate. 
-                    maxLenChars = Math.Ceiling((double)sourceLen / matchLen) * (double)replacementLen;
+                    if (replaceAll)
+                    {
+                        // Replace all instances. 
+                        // Maximum possible length of Substitute, convert all the Match to Replacement. 
+                        // Unicode, so 2B per character.                        
+                        // Round up as conservative estimate. 
+                        maxLenChars = (int)Math.Ceiling((double)sourceLen / matchLen) * replacementLen;
+                    }
+                    else
+                    {
+                        // Only replace 1 instance 
+                        maxLenChars = sourceLen - matchLen + replacementLen;
+                    }
                 }
             }
-            else
+            catch (OverflowException e)
             {
-                // Only replace 1 instance 
-                maxLenChars = sourceLen - matchLen + replacementLen;
+                throw e;
             }
-
+            
             // If not match found, will still be source length 
             return Math.Max(sourceLen, maxLenChars);
         }
@@ -988,12 +990,15 @@ namespace Microsoft.PowerFx.Functions
             var sourceLen = source.Value.Length;
             var matchLen = match.Value.Length;
             var replacementLen = replacement.Value.Length;
+            var maxLenChars = sourceLen;
 
-            var maxLen = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
-
-            if (!TryGetIntFromDouble(maxLen, out int maxLenChars))
+            try
             {
-                throw new GovernorException($"Memory overuse: Used {maxLen} characters vs. {int.MaxValue} characters allowed.");
+                maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+            }
+            catch
+            {
+                return CommonErrors.OverflowError(irContext);
             }
 
             runner.Governor.CanAllocateString(maxLenChars);
@@ -1160,11 +1165,6 @@ namespace Microsoft.PowerFx.Functions
                     return false;
             }
 
-            return TryGetIntFromDouble(inputValue, out outputValue);
-        }
-
-        internal static bool TryGetIntFromDouble(double inputValue, out int outputValue)
-        {
             if (inputValue > int.MaxValue)
             {
                 outputValue = int.MaxValue;
