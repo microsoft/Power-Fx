@@ -51,16 +51,5 @@ namespace Microsoft.PowerFx
         public virtual void Poll()
         {
         }
-
-        // Custom exception thrown by Governor object. 
-        // Host implements the Governor and can control what's thrown. 
-        // Host also calls eval and controls what's caught. 
-        internal class GovernorException : Exception
-        {
-            public GovernorException(string msg)
-                : base(msg)
-            {
-            }
-        }
     }
 }
