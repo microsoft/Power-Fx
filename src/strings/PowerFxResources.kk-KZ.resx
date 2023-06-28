@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Компоненттің реттемелі деректер сипаты мен параметрлерге компоненттен немесе компонент нәтижесі сипаттарынан ғана өтуге болады.</value>
+    <value>Компонент функциясы сипатына немесе параметріне компоненттен немесе компонент нәтижесі сипаттарынан ғана өтуге болады.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Компонент функциясы сипаты немесе параметрі тек басқа функция сипаттарына білдіруі мүмкін.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Формула бағандарында {0} виртуалды кестесіне сілтеме жасау мүмкін емес.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Операнд күтілді. Формула немесе өрнек жарамды операнд күтеді. Мысалы, "2" операндын "1 +_" өрнегіне қосуға болады, сонда нәтижесі "3" болады. Немесе "Сәлем "&amp; _ " өрнегіне "бәріңізге" операндын қосуға болады, сонда нәтижесі "Сәлем бәріңізге" болады.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} беру мүмкін емес: өрнек бірнеше өрісті салыстырады.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

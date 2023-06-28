@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Proprietatea de date particularizate a componentelor cu parametri poate fi accesată numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    <value>Proprietatea sau parametrul de funcție a componentelor pot fi accesate numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Proprietatea sau parametrul de funcție a componentelor pot face referire numai la alte proprietăți ale funcției.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Nu se poate face referire la tabelul virtual {0} în coloanele de formule.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Se aștepta un operand. Formula sau expresia așteaptă un operand valid. De exemplu, puteți adăuga operandul „2” la expresia „1 +_”, astfel încât rezultatul să fie „3”. Alternativ, puteți adăuga operandul „tuturor” la expresia „"Salut "&amp; _”, astfel încât rezultatul să fie „Salut tuturor”.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Nu putem delega {0}: Expresia compară mai multe câmpuri.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

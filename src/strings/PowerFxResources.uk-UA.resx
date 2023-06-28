@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Властивість настроюваних даних компонента з параметрами доступна лише з компонента або з властивостей вихідних даних компонента.</value>
+    <value>Властивість функції або параметр компонента доступні лише з компонента або з властивостей вихідних даних компонента.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Властивість або параметр функції компонента може посилатися лише на інші властивості функції.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Не можна посилатися на віртуальну таблицю {0} в стовпцях формул.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Потрібен операнд. Формулі або виразу потрібен припустимий операнд. Наприклад, можна додати операнд "2" до виразу "1 + _", щоб отримати результат "3". Операнд "дня" можна додати до виразу "Доброго _", щоб отримати результат "Доброго дня".</value>
     
@@ -4391,7 +4407,7 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
-    <value>Стаття: "Формули поведінки для компонованих програм у PowerApps"</value>
+    <value>Стаття: "Формули поведінки для компонованих програм у Power Apps"</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Не вдалося делегувати {0}: вираз порівнює кілька полів.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

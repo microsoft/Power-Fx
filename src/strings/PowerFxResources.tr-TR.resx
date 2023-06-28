@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parametrelere sahip bileşen özel veri özelliğine yalnızca bir bileşenin içinden veya bileşen çıktı özelliklerinden erişilebilir.</value>
+    <value>Bileşen işlevi özelliği veya parametresine yalnızca bir bileşenin içinden veya bileşen çıktı özelliklerinden erişilebilir.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Bileşen işlevi özelliği veya parametresi yalnızca diğer işlev özelliklerine başvurabilir.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Formül sütunlarında {0} sanal tablosuna referansta bulunamazsınız.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>İşlenen bekleniyordu. Formül veya ifade geçerli bir işlenen bekliyor. Örneğin, sonucun '3' olması için '2' işlenenini '1 + _' ifadesine ekleyebilirsiniz. Veya sonucun "Hoş geldiniz" olması için "geldiniz" işlenenini '"Hoş "&amp; _ ' işlenenine ekleyebilirsiniz.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} öğesi atanamıyor: İfade, birden fazla alanı kıyaslıyor.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

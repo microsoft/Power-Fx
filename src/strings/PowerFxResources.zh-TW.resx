@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>只能從元件或元件輸出屬性存取包含參數的元件自訂資料屬性。</value>
+    <value>只能從元件或元件輸出屬性存取元件函式屬性或參數。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>元件函式屬性或參數只能參考其他函式屬性。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>無法在公式資料行中參考虛擬表格 {0}。</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>必須是運算元。公式或運算式必須包含有效的運算元。例如，您可以為運算式 '1 + _' 新增運算元 '2'，以得出結果 '3'。您也可以在運算式 '"Hi "&amp; _ ' 中新增 "there"，以得出結果 'Hi there'。</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>無法委派 {0}: 運算式比較了多個欄位。</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

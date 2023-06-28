@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentens anpassade dataegenskap med parametrar kan endast användas inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    <value>Component function property or parameter can only be accessed from within a component or from component output properties.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Component function property or parameter can only reference other function properties.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Det går inte att referera till den virtuella tabellen {0} i formelkolumner.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>En operand förväntades. Formeln eller uttrycket förväntar sig en giltig operand. Du kan t.ex. lägga till operanden '2' till uttrycket ' 1 +_' så att resultatet blir '3'. Du kan lägga till operanden 'där' till uttrycket '"Hej "&amp; _ ' så att resultatet blir 'Hej där'.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Det går inte att delegera {0}: Uttrycket jämför flera fält.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4970,10 +4986,10 @@
     <value>Texten att jämföra mot formatet.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
-    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräknaren eller ett reguljärt uttryck.</value>
+    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräkningen eller ett reguljärt uttryck.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -5005,7 +5021,7 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
@@ -5017,7 +5033,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">

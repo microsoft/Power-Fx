@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Les propriétés de données personnalisées des composants avec paramètres sont accessibles uniquement à partir d’un composant ou à partir des propriétés de sortie du composant.</value>
+    <value>La propriété ou le paramètre de fonction du composant sont accessibles uniquement à partir d’un composant ou à partir des propriétés de sortie du composant.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>La propriété ou le paramètre de la fonction du composant peuvent uniquement référencer d’autres propriétés de fonction.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Impossible de référencer la table virtuelle {0} dans les colonnes de formules.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Opérande attendu. La formule ou l’expression attend un opérande valide. Par exemple, vous pouvez ajouter l’opérande '2' à l’expression ' 1 +_' pour que le résultat soit '3'. Vous pouvez également ajouter l’opérande "vous" à l’expression '"Bonjour "&amp; _ ' afin que le résultat soit 'Bonjour vous'.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Impossible de déléguer {0} : expression compare plusieurs champs.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

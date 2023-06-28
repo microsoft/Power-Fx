@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Свойството на компонент за персонализирани данни с параметри може да бъде използвано само в рамките на компонент или от изходни свойства на компонент.</value>
+    <value>Параметърът или свойството на функция за компонента могат да бъдат използвани само в рамките на компонент или от изходни свойства на компонент.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Параметърът или свойството на функция за компонента могат да препращат само към други свойства на функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Не може да препраща виртуална таблица „{0}“ в колоните за формули.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Очакваше се операнд. Формулата или изразът очаква валиден операнд. Например можете да добавите операнда „2“ към израза „1 + _“, така че резултатът да е „3“. Или можете да добавите операнда „there“ към израза „"Hi "&amp; _ “, така че резултатът да е „Hi there“.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Не може да се делегира {0}: Изразът сравнява няколко полета.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Η πρόσβαση στην ιδιότητα προσαρμοσμένων δεδομένων στοιχείου με παραμέτρους είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    <value>Η πρόσβαση στην ιδιότητα ή την παράμετρο συνάρτησης στοιχείου είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Η ιδιότητα ή η παράμετρος συνάρτησης στοιχείου μπορεί να αναφέρεται μόνο σε άλλες ιδιότητες συνάρτησης.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Δεν είναι δυνατή η αναφορά εικονικού πίνακα {0} σε στήλες τύπων.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν τελεστέος. Ο τύπος ή η παράσταση αναμένει έναν έγκυρο τελεστέο. Για παράδειγμα, μπορείτε να προσθέσετε τον τελεστέο "2" στην παράσταση "1 + _" ώστε το αποτέλεσμα να είναι "3". Ή, μπορείτε να προσθέσετε τον τελεστέο "σας" στην παράσταση ""Γεια "&amp; _ " ώστε το αποτέλεσμα να είναι "Γεια σας".</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Δεν είναι δυνατή η ανάθεση του {0}: Η έκφραση συγκρίνει πολλαπλά επίπεδα.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

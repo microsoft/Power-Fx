@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Egenskapen for komponenttilpassede data med parametere kan bare nås fra en komponent eller fra egenskaper for komponentutdata.</value>
+    <value>Egenskapen eller parameteren for komponentfunksjon kan bare nås fra en komponent eller fra egenskaper for komponentutdata.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Egenskapen eller parameteren for komponentfunksjon kan bare referere andre funksjonsegenskaper.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Kan ikke henvise til virtuell tabell {0} i formelkolonner.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Forventet en operand. Formelen eller uttrykket forventer en gyldig operand. Du kan for eksempel legge til operanden «2» i uttrykket «1 +_» slik at resultatet blir «3». Eller du kan legge til operanden «du» i uttrykket «Hei &amp; _» slik at resultatet blir «Hei du».</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Kan ikke delegere {0}: Uttrykk sammenligner flere felter.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

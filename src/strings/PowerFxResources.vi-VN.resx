@@ -483,7 +483,7 @@
     <value>Giá trị văn bản cần chuyển đổi sang một giá trị số.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -571,7 +571,7 @@
     <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Số thập phân.</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Giá trị văn bản cần chuyển đổi sang giá trị Số thập phân.</value>
@@ -580,7 +580,7 @@
     <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Float.</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
     <value>Giá trị văn bản cần chuyển đổi sang giá trị Float.</value>
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Thuộc tính dữ liệu tùy chỉnh thành phần có tham số chỉ có thể truy cập được trong một thành phần hoặc từ thuộc tính đầu ra thành phần.</value>
+    <value>Bạn chỉ truy cập được vào thuộc tính hoặc tham số của hàm thành phần từ trong một thành phần hoặc từ các thuộc tính đầu ra của thành phần.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Thuộc tính hoặc tham số của hàm thành phần chỉ có thể tham chiếu các thuộc tính khác của hàm.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Không thể tham chiếu bảng ảo {0} trong cột công thức.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Dự kiến có toán hạng. Công thức hoặc biểu thức dự kiến có một toán hạng hợp lệ. Ví dụ: bạn có thể thêm toán hạng '2' vào biểu thức ' 1 +_' để kết quả trở thành '3'. Hoặc, bạn có thể thêm toán hạng "there" vào biểu thức '"Hi "&amp; _ ' để kết quả trở thành 'Hi there'.</value>
     
@@ -4594,7 +4610,7 @@
     <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_1" xml:space="preserve">
-    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_HowToFix_2" xml:space="preserve">
@@ -4621,7 +4637,7 @@
     <value>Nguồn dữ liệu này có thể không xử lý được công thức và có thể trả về một tập hợp dữ liệu không đầy đủ. Ứng dụng của bạn có thể không trả về kết quả đúng hoặc hoạt động đúng cách nếu tập hợp dữ liệu không hoàn chỉnh.</value>
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_1" xml:space="preserve">
-    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByColumn_HowToFix_2" xml:space="preserve">
@@ -4652,7 +4668,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_2" xml:space="preserve">
-    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpRhs_HowToFix_3" xml:space="preserve">
@@ -4713,7 +4729,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_1" xml:space="preserve">
-    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
+    <value>Nếu tập hợp dữ liệu của bạn vượt quá giới hạn 500 bản ghi nhưng chứa ít hơn 2.000 bản ghi, hãy thử đặt lại giới hạn.</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_OpNotSupportedByService_HowToFix_2" xml:space="preserve">
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Không thể đại diện {0}: Biểu thức so sánh nhiều trường.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

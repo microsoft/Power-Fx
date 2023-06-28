@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Sifat data tersuai komponen dengan parameter hanya boleh dicapai dari dalam bahagian dalam komponen atau daripada sifat output komponen.</value>
+    <value>Sifat atau parameter fungsi komponen hanya boleh dicapai daripada bahagian dalam komponen atau daripada sifat output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Sifat atau parameter fungsi komponen hanya boleh merujuk sifat fungsi lain.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Tidak boleh merujuk jadual maya {0} dalam lajur formula.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Operan dijangkakan. Formula atau ungkapan menjangkakan operan yang sah. Contohnya, anda boleh menambah operan '2' kepada ungkapan ' 1 +_' agar hasil ialah '3'. Atau, anda boleh menambah operan "awak" kepada ungkapan '"Hai "&amp; _ ' agar hasil ialah 'Hi awak'.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Tidak dapat mewakili {0}: Ungkapan membandingkan berbilang medan.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

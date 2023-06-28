@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Aangepaste gegevenseigenschappen voor onderdelen met parameters zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    <value>Functie-eigenschappen of parameters voor onderdelen zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Functie-eigenschappen of parameters voor onderdelen kunnen alleen naar andere functie-eigenschappen verwijzen.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Kan niet verwijzen naar virtuele tabel {0} in formulekolommen.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een operand verwacht. Voor de formule of expressie wordt een geldige operand verwacht. U kunt bijvoorbeeld de operand 2 toevoegen aan de expressie 1 +_ zodat het resultaat 3 ontstaat. U kunt ook de operand 'daar' toevoegen aan de expressie 'Hallo '&amp; _ voor het resultaat Hallo daar.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Kan {0} niet machtigen: expressie vergelijkt meerdere velden.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

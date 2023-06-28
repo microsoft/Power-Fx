@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>คุณสมบัติข้อมูลแบบกำหนดเองของคอมโพเนนต์ที่มีพารามิเตอร์สามารถเข้าถึงได้จากภายในคอมโพเนนต์หรือจากคุณสมบัติผลลัพธ์ของคอมโพเนนต์เท่านั้น</value>
+    <value>คุณสมบัติหรือพารามิเตอร์ฟังก์ชันของคอมโพเนนต์ สามารถเข้าถึงได้จากภายในคอมโพเนนต์หรือจากคุณสมบัติผลลัพธ์ของคอมโพเนนต์เท่านั้น</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>คุณสมบัติหรือพารามิเตอร์ของฟังก์ชันคอมโพเนนต์สามารถอ้างอิงได้เฉพาะคุณสมบัติฟังก์ชันอื่นๆ เท่านั้น</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>ไม่สามารถอ้างอิงตารางเสมือน {0} ในคอลัมน์สูตร</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>คาดหวังตัวถูกดำเนินการ สูตรหรือนิพจน์ต้องการตัวถูกดำเนินการที่ถูกต้อง ตัวอย่างเช่น คุณสามารถเพิ่มตัวถูกดำเนินการ '2' ไปยังนิพจน์ '1 +_' เพื่อที่จะได้ผลลัพธ์เป็น '3' หรือ คุณสามารถเพิ่มตัวถูกดำเนินการ 'ทุกคน' ไปยังนิพจน์ 'สวัสดี &amp; _' เพื่อที่จะได้ผลลัพธ์เป็น 'สวัสดีทุกคน'</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: นิพจน์เปรียบเทียบหลายฟิลด์</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

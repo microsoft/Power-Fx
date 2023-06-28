@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parameetritega komponendi kohandatud andmeatribuudile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    <value>Component function property or parameter can only be accessed from within a component or from component output properties.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Component function property or parameter can only reference other function properties.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Valemiveergudes ei saa virtuaaltabelile {0} viidata.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati operandi. Valem või väljend eeldab kehtivat operandi. Näiteks saate lisada operandi „2“ avaldisele „ 1 +_“, nii et tulemus on „3“. Või võite lisada operandi "there" avaldisele „"Hi "&amp; _ “, nii et tulemus on „Hi there“.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Ei saa delegeerida {0}: avaldis võrdleb mitut välja.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Properti data kustom komponen dengan parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    <value>Properti fungsi komponen atau parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Properti fungsi komponen atau parameter hanya dapat mereferensikan properti fungsi lainnya.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Tidak dapat mereferensikan tabel virtual {0} di kolom rumus.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Operand yang diharapkan. Rumus atau ekspresi mengharapkan operand yang valid. Misalnya, Anda dapat menambahkan operand '2' ke ekspresi ' 1 +_' sehingga hasilnya adalah '3'. Atau, Anda dapat menambahkan operand "di sana" ke ekspresi '"Hai "&amp; _ ' sehingga hasilnya adalah 'Hai di sana'.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Tidak dapat mendelegasikan {0}: Ekspresi membandingkan beberapa bidang.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

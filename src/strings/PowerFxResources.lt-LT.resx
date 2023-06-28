@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponento pasirinktinę duomenų ypatybę su parametrais galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    <value>Komponento funkcijos ypatybę arba parametrą galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponento funkcijos ypatybė arba parametras gali nurodyti tik kitas funkcijos ypatybes.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Negalima nurodyti virtualiosios lentelės {0} formulės stulpeliuose.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas operandas. Formulė arba reiškinys numato gauti tinkamą operandą. Pvz., į reiškinį 1 +_ galite įtraukti operandą 2, kad rezultatas būtų 3. Arba į išraišką Sveiki "&amp; _ galite įtraukti operandą visi, kad rezultatas būtų Sveiki visi.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Negalima deleguoti {0}: išraiška lygina kelis laukus.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

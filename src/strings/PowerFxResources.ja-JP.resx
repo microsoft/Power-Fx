@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>パラメーターを持つコンポーネント カスタム データ プロパティには、コンポーネント内またはコンポーネント出力プロパティからのみアクセスできます。</value>
+    <value>Component function property or parameter can only be accessed from within a component or from component output properties.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Component function property or parameter can only reference other function properties.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>数式列で仮想テーブル {0} を参照できません。</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>オペランドが必要です。数式または式に有効なオペランドが必要です。たとえば、式 '1 + _' にオペランド '2' を追加すると、結果は '3' になります。または、式 '"Hi "&amp; _ ' にオペランド "there" を追加すると、結果は 'Hi there' になります。</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} をデリゲートできません: 式が複数のフィールドを比較しています。</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

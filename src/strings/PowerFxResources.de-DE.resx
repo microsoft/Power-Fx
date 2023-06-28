@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Auf benutzerdefinierte Dateneigenschaft der Komponente mit Parametern kann nur innerhalb einer Komponente oder über Komponentenausgabeeigenschaften zugegriffen werden.</value>
+    <value>Component function property or parameter can only be accessed from within a component or from component output properties.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Component function property or parameter can only reference other function properties.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Es kann nicht auf die virtuelle Tabelle {0} in Formelspalten verwiesen werden.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Es wurde ein Operand erwartet. Für die Formel oder den Ausdruck wird ein gültiger Operand erwartet. Beispielsweise können Sie dem Ausdruck " 1 +_" den Operanden "2" hinzufügen, sodass das Ergebnis "3" lautet. Sie können dem Ausdruck ""Hallo "&amp; _ " den Operanden "zusammen" hinzufügen, sodass das Ergebnis "Hallo zusammen" lautet.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} kann nicht delegiert werden: Der Ausdruck vergleicht mehrere Felder.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

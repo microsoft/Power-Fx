@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Prístup k vlastnosti vlastných údajov súčasti s parametrami je možný iba zo samotnej súčasti alebo z výstupných vlastností súčastí.</value>
+    <value>Prístup k vlastnosti funkcie alebo parametru súčasti je možný iba zo súčasti alebo z výstupných vlastností súčasti.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Vlastnosť funkcie súčasti alebo parameter môže odkazovať iba na iné vlastnosti funkcie.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>V stĺpcoch vzorcov nemožno odkazovať na virtuálnu tabuľku {0}.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Očakával sa operand. Vzorec alebo výraz očakáva platný operand. Môžete napríklad pridať operand 2 do výrazu 1 +_ tak, aby výsledok bol 3. Alebo môžete do výrazu Dobrý &amp; _ pridať operand Deň, aby bol výsledok Dobrý deň.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Nie je možné delegovať {0}: Výraz porovnáva viaceré polia.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

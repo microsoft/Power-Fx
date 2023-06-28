@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Доступ к свойству пользовательских данных компонента с параметрами возможен только из компонента или из выходных свойств компонента.</value>
+    <value>Доступ к свойству или параметру функции компонента возможен только из компонента или из выходных свойств компонента.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Свойство или параметр функции компонента может ссылаться только на другие свойства функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>В столбцах формул нельзя ссылаться на виртуальную таблицу {0}.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Ожидается операнд. В формуле или выражении ожидается допустимый операнд. Например, вы можете добавить операнд "2" в выражение "1 + _", чтобы получить результат "3", или операнд "день" в выражение «"Добрый "&amp; _ », чтобы получить результат "Добрый день".</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Невозможно делегировать {0}: выражение сравнивает несколько полей.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4981,7 +4997,7 @@
     
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
-    <value>Формат</value>
+    <value>формат</value>
     
   </data>
   <data name="IsMatchArg3" xml:space="preserve">

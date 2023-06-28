@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>매개 변수가 있는 구성 요소 사용자 지정 데이터 속성은 구성 요소 또는 구성 요소 출력 속성에서만 액세스할 수 있습니다.</value>
+    <value>구성 요소 함수 속성 또는 매개 변수는 구성 요소 내부 또는 구성 요소 출력 속성에서만 액세스할 수 있습니다.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>구성 요소 함수 속성 또는 매개 변수는 다른 함수 속성만 참조할 수 있습니다.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>수식 열에서 가상 테이블 {0}을(를) 참조할 수 없습니다.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>피연산자가 필요합니다. 수식 또는 식에는 유효한 피연산자가 필요합니다. 예를 들어, 식 ' 1 +_'에 피연산자 '2'를 추가하여 결과 값이 '3'이 되게 만들 수 있습니다. 또는 식 '"Hi "&amp; _ '에 피연산자 "there"를 추가하여 'Hi there' 결과를 얻을 수 있습니다.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0}을(를) 위임할 수 없음: 식은 여러 필드를 비교합니다.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

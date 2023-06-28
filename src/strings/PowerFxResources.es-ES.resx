@@ -1745,6 +1745,10 @@
     <value>Solo se puede obtener acceso a la propiedad de datos personalizados de componentes con parámetros desde dentro de un componente o desde las propiedades de salida del componente.</value>
     
   </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>La propiedad o parámetro de la función de componente solo puede hacer referencia a otras propiedades de función.</value>
+    
+  </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Número de argumentos no válido: se recibieron {0}, se esperaban {1}.</value>
     
@@ -4170,6 +4174,18 @@
     <value>No se puede hacer referencia a la tabla virtual {0} en las columnas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Se esperaba un operando. La fórmula o expresión espera un operando válido. Por ejemplo, puede agregar el operando "2" a la expresión " 1 +_" para que el resultado sea "3". O bien, puede agregar el operando "there" a la expresión ""Hi "&amp; _ " para que el resultado sea "Hi there".</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>No se puede delegar {0}: la expresión compara varios campos.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

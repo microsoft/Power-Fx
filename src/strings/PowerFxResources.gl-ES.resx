@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>A propiedade de datos personalizados do compoñente con parámetros só é accesible desde un compoñente ou desde as propiedades de saída do compoñente.</value>
+    <value>A propiedade ou o parámetro de función do compoñente só é accesible desde un compoñente ou desde as propiedades de saída do compoñente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>A propiedade ou o parámetro de función do compoñente só pode facer referencia a outras propiedades de función.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Non se pode facer referencia á táboa virtual {0} nas columnas de fórmula.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Esperábase un operando. A fórmula ou a expresión esperaba un operando válido. Por exemplo, pode engadir o operando "2" á expresión "1 + _" para que o resultado sexa "3". Ou ben, pode engadir o operando "there" á expresión "'Hi '&amp; _" para que o resultado sexa "Hi there".</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Non pode delegar {0}: A expresión compara múltiples campos.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

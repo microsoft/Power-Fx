@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>पैरामीटर के साथ घटक कस्टम डेटा संपत्ति केवल एक घटक के भीतर से या घटक उत्पादन गुणों से पहुँचा जा सकता है.</value>
+    <value>घटक फ़ंक्शन प्रॉपर्टी या पैरामीटर को केवल घटक के भीतर से या घटक आउटपुट गुणों से ही एक्सेस किया जा सकता है.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>घटक फ़ंक्शन गुण या पैरामीटर केवल अन्य फ़ंक्शन गुणों को संदर्भित कर सकता है.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>सूत्र स्तंभों में वर्चुअल तालिका {0} संदर्भित नहीं कर सकता.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>ऑपरेंड अपेक्षित है. सूत्र या व्यंजक एक मान्य ऑपरेंड की अपेक्षा करता है. उदाहरण के लिए, आप ऑपरेंड '2' को व्यंजक '1 + _' में ऐसे जोड़ सकते हैं कि परिणाम '3' हो. या, आप व्यंजक '"Hi "&amp; _ ' में ऑपरेंड "there" ऐसे जोड़ सकते हैं कि परिणाम 'Hi there' हो.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} को प्रतिनिधि नहीं कर सकते: एक्सप्रेशन कई तरह के फ़ील्ड की तुलना करती है.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

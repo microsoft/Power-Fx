@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Do lastnosti podatkov po meri komponente s parametri je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    <value>Do lastnosti funkcije komponente ali parametra je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Component function property or parameter can only reference other function properties.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Na navidezno tabelo {0} v stolpcih s formulami se ni mogoče sklicevati.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Pričakovan je bil operand. Formula ali izraz pričakuje veljaven operand. Operand »2« lahko na primer dodate v izraz »1 + _«, da bo rezultat »3«. V izraz »"Lep pozdrav "&amp; _« pa lahko dodate operand »vsem«, da dobite rezultat »Lep pozdrav vsem«.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Ni mogoče pooblastiti – {0}: izraz primerja več polj.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

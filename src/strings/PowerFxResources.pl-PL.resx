@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Dostęp do niestandardowej właściwości danych składnika z parametrami można uzyskać tylko z poziomu składnika lub właściwości wyjściowych składnika.</value>
+    <value>Dostęp do właściwości lub parametru funkcji składnika można uzyskać tylko z poziomu składnika lub właściwości wyjściowych składnika.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Właściwość lub parametr funkcji składnika może odwoływać się tylko do innych właściwości funkcji.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Nie można odwoływać się do tabeli wirtualnej {0} w kolumnach formuł.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Oczekiwano argumentu operacji. Formuła lub wyrażenie oczekuje prawidłowego argumentu operacji. Na przykład możesz dodać argument operacji „2” do wyrażenia „1 +_”, co spowoduje, że wynikiem wyrażenia będzie „3”. Możesz też dodać argument operacji „dobry” do wyrażenia „"Dzień "&amp; _”, co spowoduje, że wynikiem wyrażenia będzie „Dzień dobry”.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Nie można wydelegować operacji {0}: wyrażenie porównuje wiele pól.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

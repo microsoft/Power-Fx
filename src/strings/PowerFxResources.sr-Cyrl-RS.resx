@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Својству прилагођених података компоненте са параметрима може се приступити само из компоненте или из излазних својстава компоненте.</value>
+    <value>Својству функције компоненте или параметрима може се приступити само из компоненте или из излазних својстава компоненте.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Својство или параметар функције компоненте могу да упућују само на друга својства функције.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4170,6 +4174,18 @@
     <value>Није могуће поставити виртуелну табелу {0} као референцу у колонама формула.</value>
     
   </data>
+  <data name="FormulaColumns_TextNumberMissingFormat" xml:space="preserve">
+    <value>Include a format in the second argument when using the Text function with numbers. The format string cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_ImplicitNumberToText" xml:space="preserve">
+    <value>Use the Text function to convert numbers to text. Include a format in the second argument, which cannot include a thousands or decimal separator in formula columns.</value>
+    
+  </data>
+  <data name="FormulaColumns_RelatedCurrency" xml:space="preserve">
+    <value>Calculations with currency columns in related tables are not currently supported in formula columns.</value>
+    
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Очекује се операнд. Формула или израз очекују важећи операнд. На пример, можете да додате операнд „2“ у израз „ 1 + _“ тако да резултат буде „3“. Или, можете да додате операнд „како си“ у израз „„Здраво, “&amp; _ “ тако да резултат буде „Здраво, како си“.</value>
     
@@ -4955,7 +4971,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Није могуће делегирати {0}: израз пореди више поља.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -5076,7 +5092,7 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Уклања сва обликовања и даје вредност чистог текста.</value>
+    <value>Уклања сво обликовање и враћа вредност чистог текста.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
