@@ -382,6 +382,8 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(binding);
             Contracts.AssertValue(metadata);
 
+            // binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, (ErrorResourceKey)TexlStrings.OfflineSupportWarning);
+
             // We skip aysnc or impure check for BlockScopedConstants
             // to allow for nesting of valid async nodes.
             if (!binding.IsBlockScopedConstant(node))
@@ -402,6 +404,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             var callInfo = binding.GetInfo(node);
             if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata))
             {
+                // Following condition is only applicable for data verse offline support.
+                if (binding.Features.IsDelegationWarningForDataverseOfflineEnabled && !OfflineValidation.IsFunctionSupportedOffline(callInfo?.Function.Name))
+                {
+                    SuggestDelegationHint(node, binding, (ErrorResourceKey)TexlStrings.SuggestRemoteExecutionHint, new object[] { callInfo?.Function.Name });
+                }
+
                 return true;
             }
 

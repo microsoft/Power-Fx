@@ -57,6 +57,11 @@ namespace Microsoft.PowerFx
         internal bool AllowImpureNodeDelegation { get; set; }
 
         /// <summary>
+        /// Delegation warning for dataverse offline.
+        /// </summary>
+        internal bool IsDelegationWarningForDataverseOfflineEnabled { get; set; }
+
+        /// <summary>
         /// Updates the FirstN/LastN functions to require a second argument, instead of
         /// defaulting to 1.
         /// </summary>
