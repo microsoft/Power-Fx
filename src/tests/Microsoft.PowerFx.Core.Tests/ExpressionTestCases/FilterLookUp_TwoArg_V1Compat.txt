@@ -5,10 +5,10 @@ Table({Value:2},{Value:3})
 
 // Allowed in Canvas today, but disallowed in Power Fx 1.0, use And instead (see next test)
 >> Filter([1,2,3], Value > 1, Value > 2)
-Errors: Error 33-34: Use the And operator to combine multiple predicates into the second argument of Filter.|Error 0-37: The function 'Filter' has some invalid arguments.
+Errors: Error 33-34: Use the And operator to combine multiple predicates into the second argument.|Error 0-37: The function 'Filter' has some invalid arguments.
 
 >> Filter([1,2,3], Value > 1, Value > 2, Value > 3)
-Errors: Error 33-34: Use the And operator to combine multiple predicates into the second argument of Filter.|Error 0-48: The function 'Filter' has some invalid arguments.
+Errors: Error 33-34: Use the And operator to combine multiple predicates into the second argument.|Error 0-48: The function 'Filter' has some invalid arguments.
 
 >> Filter([1,2,3], Value > 1 And Value > 2)
 Table({Value:3})
