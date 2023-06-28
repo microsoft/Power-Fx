@@ -127,6 +127,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Set.txt")]
         [InlineData("DeepMutation.txt")]
         [InlineData("User.txt")]
+        [InlineData("FilterFunctions.txt")]
         public void RunMutationTests(string file)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
