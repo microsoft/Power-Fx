@@ -269,8 +269,6 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             Contracts.AssertValue(metadata);
             Contracts.AssertValue(binding);
 
-            // SuggestDelegationHint(node, binding, (ErrorResourceKey)TexlStrings.OfflineSupportWarning);
-
             var binaryOpNode = node.AsBinaryOp();
             if (binaryOpNode == null)
             {
