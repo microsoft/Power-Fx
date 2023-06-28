@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Nu se poate delega {0}: expresia ID se referă la ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4963,17 +4963,17 @@
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
-    <value>Determină dacă în textul furnizat există o potrivire cu formatul de text furnizat.</value>
+    <value>Determină dacă în textul furnizat există o potrivire a formatului de text furnizat.</value>
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
-    <value>Textul de comparat în raport cu formatul.</value>
+    <value>Textul care să fie comparat în raport cu formatul.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
     <value>Formatul în raport cu care se verifică textul. Poate fi o valoare a enumerării TextFormat sau o expresie regulată.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    <value>Aceasta determină partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -4997,7 +4997,7 @@
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
-    <value>Textul de comparat în raport cu expresia regulată.</value>
+    <value>Textul care se compară cu expresia regulată.</value>
     
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
@@ -5005,11 +5005,11 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    <value>Aceasta determină partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
-    <value>Textul de comparat în raport cu expresia regulată.</value>
+    <value>Textul care se compară cu expresia regulată.</value>
     
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
@@ -5017,7 +5017,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    <value>Aceasta determină partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">

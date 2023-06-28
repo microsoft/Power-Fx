@@ -483,7 +483,7 @@
     <value>Wartość tekstowa do przekonwertowania na wartość numeryczną.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Kod języka do użycia podczas konwertowania na wartość.</value>
+    <value>Kod języka do użycia podczas konwertowania wartości.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Nie można wydelegować operacji {0}: wyrażenie identyfikatora odwołuje się do wartości ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4963,7 +4963,7 @@
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
-    <value>Ustala, czy podany tekst ma dopasowanie w postaci podanego formatu tekstu.</value>
+    <value>Określa, czy podany tekst ma odpowiednik w postaci formatu podanego tekstu.</value>
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">

@@ -483,7 +483,7 @@
     <value>Teksta vērtība, kas jāpārvērš par skaitlisku vērtību.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Valodas kods, ko izmantot, konvertējot vērtību.</value>
+    <value>Valodas kods, ko izmantot, pārvēršot vērtību.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -4684,7 +4684,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.
+    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.
       </value>
     
   </data>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Nevar deleģēt {0}: ID izteiksme attiecas uz ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4997,7 +4997,7 @@
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
-    <value>Regulārā izteiksmē meklējamais teksts.</value>
+    <value>Parastā izteiksmē meklējamais teksts.</value>
     
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
@@ -5009,7 +5009,7 @@
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
-    <value>Regulārā izteiksmē meklējamais teksts.</value>
+    <value>Parastā izteiksmē meklējamais teksts.</value>
     
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">

@@ -483,7 +483,7 @@
     <value>Текстовата стойност за преобразуване в числова стойност.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Езиковият код, който трябва да се използва при конвертиране на стойността.</value>
+    <value>Код на езика, който да се използва при преобразуването на стойността.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Не може да се делегира {0}: Изразът с ИД препраща към ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

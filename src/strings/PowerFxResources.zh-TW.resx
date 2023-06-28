@@ -483,7 +483,7 @@
     <value>要轉換為數值的文字值。</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>在轉換為值時要使用的語言代碼。</value>
+    <value>轉換值時要使用的語言代碼。</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1421,7 +1421,7 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>將擷取其 Distinct 值的資料表。</value>
+    <value>擷取其相異值的資料表。</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
     <value>對輸入資料表中的每一個資料列進行評估，並為 Distinct 作業提供值的運算式。</value>
@@ -4684,7 +4684,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重設限制。
+    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重新設定限制。
       </value>
     
   </data>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>無法委派 {0}: 識別碼運算式參考 ThisRecord。</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
@@ -4993,11 +4993,11 @@
     
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
-    <value>在提供的文字中搜尋指定的規則運算式，並傳回所有相符的結果。</value>
+    <value>在提供的文字中搜尋指定的規則運算式，並傳回所有相符的項目。</value>
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
-    <value>要搜尋規則運算式的文字。</value>
+    <value>要根據規則運算式搜尋的文字。</value>
     
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
@@ -5009,7 +5009,7 @@
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
-    <value>要搜尋規則運算式的文字。</value>
+    <value>要根據規則運算式搜尋的文字。</value>
     
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">

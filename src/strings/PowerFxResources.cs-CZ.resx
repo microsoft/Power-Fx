@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Sloupec textových hodnot, který chcete zpracovat.</value>
+    <value>Sloupec textových hodnot, které mají být zpracovány.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Převede 'číslo' na logickou hodnotu.</value>
@@ -778,7 +778,7 @@
     <value>Náhradní textová hodnota</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>Sloupec textových hodnot, které mají být zpracovány</value>
+    <value>Sloupec textových hodnot, které mají být zpracovány.</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Vytvoří chybu s vlastními hodnotami.</value>
@@ -857,7 +857,7 @@
     <value>Určuje, který výskyt zadaného textu má být nahrazen.</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>Sloupec textových hodnot, které mají být zpracovány</value>
+    <value>Sloupec textových hodnot, které mají být zpracovány.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Seřadí „zdroj“ na základě výsledků „výrazu„“, který se vyhodnocuje pro každý řádek. Volitelně může být zadáno „pořadí“ řazení.</value>
@@ -4939,7 +4939,7 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>Převod typu se nezdařil, protože daná hodnota byla typu '{0}', ale očekáván byl typ '{1}'.</value>
+    <value>Převod typu se nezdařil, protože daná hodnota byla typu „{0}“, ale očekáván byl typ „{1}“.</value>
     
   </data>
   <data name="WrnDelagationTableNotSupported" xml:space="preserve">
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Nelze delegovat {0}: výraz id odkazuje na ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

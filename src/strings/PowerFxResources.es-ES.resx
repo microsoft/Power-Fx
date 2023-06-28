@@ -483,7 +483,7 @@
     <value>Valor de texto que se va a convertir en un valor numérico.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>El código de idioma que se usará cuando se convierte el valor.</value>
+    <value>El código de idioma que se usará al convertir el valor.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Una columna de valores de texto que se procesarán.</value>
+    <value>Una columna de valores de texto que se va a procesar.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Convierte un "número" en un valor booleano.</value>
@@ -4955,7 +4955,7 @@
     
   </data>
   <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>No se puede delegar {0}: la expresión de id. hace referencia a ThisRecord.</value>
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
   <data name="WrnDelagationBehaviorFunction" xml:space="preserve">

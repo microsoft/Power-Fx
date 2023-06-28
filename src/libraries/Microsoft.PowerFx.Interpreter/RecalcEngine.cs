@@ -7,9 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
@@ -106,7 +104,7 @@ namespace Microsoft.PowerFx
         {
             var x = value;
 
-            if (value is TableValue && !(value is IMutationCopy))
+            if (value is TableValue && !value.CanShallowCopy)
             {
                 throw new InvalidOperationException($"Can't set '{name}' to a table value that cannot be copied.");
             }
