@@ -250,21 +250,21 @@ namespace Microsoft.PowerFx.Connectors
             return serviceFunction;
         }
 
-        internal async Task<FormulaValue> InvokeAync(IRuntimeContext context, HttpClient httpClient, FormulaValue[] values)
+        internal async Task<FormulaValue> InvokeAync(IRuntimeContext context, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             ServiceFunction svcFunction = GetServiceFunction(null, httpClient);            
 
-            return await svcFunction.InvokeAsync(context, values).ConfigureAwait(false);
+            return await svcFunction.InvokeAsync(context, values, cancellationToken).ConfigureAwait(false);
         }
 
         public Task<FormulaValue> InvokeAync(IRuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
-            return InvokeAync(new EvalVisitor(config ?? new RuntimeConfig(), cancellationToken), httpClient, values);
+            return InvokeAync(new EvalVisitor(config ?? new RuntimeConfig(), cancellationToken), httpClient, values, cancellationToken);
         }
 
         public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
-            return InvokeAync(new EvalVisitor(new RuntimeConfig(), cancellationToken), httpClient, values);
+            return InvokeAync(new EvalVisitor(new RuntimeConfig(), cancellationToken), httpClient, values, cancellationToken);
         }
     }
 

@@ -29,7 +29,7 @@ using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
     [System.Diagnostics.DebuggerDisplay("ServiceFunction: {LocaleSpecificName}")]
-    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction
+    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2
     {
         private readonly List<string[]> _signatures;
         private readonly string[] _orderedRequiredParams;
@@ -375,10 +375,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
         {            
             cts.ThrowIfCancellationRequested();            
-            return await dynamicApi.ServiceFunction.InvokeAsync(new EvalVisitor(new RuntimeConfig(), cts), arguments).ConfigureAwait(false);
-        {
-            cts.ThrowIfCancellationRequested();
-            return await dynamicApi.ServiceFunction.InvokeAsync(arguments, cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(new EvalVisitor(new RuntimeConfig(), cts), arguments, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -471,16 +468,16 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         // Provide as hook for execution. 
         public IAsyncTexlFunction2 _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(IRuntimeContext context, FormulaValue[] args)
+        public async Task<FormulaValue> InvokeAsync(IRuntimeContext context, FormulaValue[] args, CancellationToken cancellationToken)
         {
             if (_invoker == null)
             {
                 throw new InvalidOperationException($"Function {Name} can't be invoked.");
             }
 
-            context.CancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
-            var result = await _invoker.InvokeAsync(context, args).ConfigureAwait(false);
+            var result = await _invoker.InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)

@@ -52,9 +52,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         internal FormulaValueSerializer(IRuntimeContext context, bool schemaLessBody)
         {
             _schemaLessBody = schemaLessBody;
-            _context = context;
-
-            _context.CancellationToken.ThrowIfCancellationRequested();
+            _context = context;            
         }
 
         internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)

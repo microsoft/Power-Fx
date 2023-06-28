@@ -16,13 +16,6 @@ namespace Microsoft.PowerFx.Interpreter
         TimeZoneInfo TimeZoneInfo { get; }
 
         DateTimeKind DateTimeKind { get; }
-
-        Governor Governor { get; }
-
-        T GetService<T>();
-
-        bool TryGetService<T>(out T result);
-
-        CancellationToken CancellationToken { get; }
+       
     }
 }

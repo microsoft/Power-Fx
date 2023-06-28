@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
@@ -52,12 +53,12 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, IRuntimeContext context)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, IRuntimeContext context, CancellationToken cancellationToken)
         {
             var path = _path;
             var query = new StringBuilder();
 
-            context.CancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             // https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
             // Header names are not case sensitive.
@@ -78,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (bodyParts.Any())
             {
-                body = GetBody(_argMapper.ReferenceId, _argMapper.SchemaLessBody, bodyParts, context);
+                body = GetBody(_argMapper.ReferenceId, _argMapper.SchemaLessBody, bodyParts, context, cancellationToken);
             }
 
             foreach (var param in _argMapper.OpenApiParameters)
@@ -128,11 +129,11 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IRuntimeContext context)
+        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IRuntimeContext context, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;
 
-            context.CancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
             try
             {
@@ -193,11 +194,11 @@ namespace Microsoft.PowerFx.Connectors
                     _returnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(IRuntimeContext context, string cacheScope, FormulaValue[] args, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(IRuntimeContext context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
         {
-            context.CancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
-            using HttpRequestMessage request = BuildRequest(args, context);            
+            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);            
             var key = request.RequestUri.ToString();
 
             if (request.Method != HttpMethod.Get)
@@ -208,7 +209,7 @@ namespace Microsoft.PowerFx.Connectors
 
             return await _cache.TryGetAsync(cacheScope, key, async () =>
             {
-                var response = await _httpClient.SendAsync(request, context.CancellationToken).ConfigureAwait(false);
+                var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);            
             }).ConfigureAwait(false);            
         }
@@ -235,11 +236,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Name { get; }
 
-        public Task<FormulaValue> InvokeAsync(IRuntimeContext context, FormulaValue[] args)
+        public Task<FormulaValue> InvokeAsync(IRuntimeContext context, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            context.CancellationToken.ThrowIfCancellationRequested();
+            cancellationToken.ThrowIfCancellationRequested();
 
-            return _invoker.InvokeAsync(context, _cacheScope, args, _throwOnError);
+            return _invoker.InvokeAsync(context, _cacheScope, args, cancellationToken, _throwOnError);
         }
     }
 }
