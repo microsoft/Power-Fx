@@ -5302,4 +5302,8 @@
     <value>Filter functions don't allow behavior functions as predicates.</value>
     <comment>When a filter function (like LookUp) contains a function as predicate that will trigger a side effect.</comment>
   </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Use the And operator to combine multiple predicates into the second argument of Filter.</value>
+    <comment>Limiting the Filter funciton to just two arguments, like the LookUp function, allowing us to add a third argument later also like LookUp.</comment>
+  </data>
 </root>
