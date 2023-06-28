@@ -5299,7 +5299,7 @@
     <value>The text to have its HTML and XML tags removed.</value>
   </data>
   <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
-    <value>Filter functions don't allow behavior function as predicate.</value>
+    <value>Filter functions don't allow behavior functions as predicates.</value>
     <comment>When a filter function (like LookUp) contains a function as predicate that will trigger a side effect.</comment>
   </data>
 </root>

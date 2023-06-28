@@ -186,15 +186,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
-            for (int i = 1; i < args.Length; i++)
+            if (binding.Features.PowerFxV1CompatibilityRules)
             {
-                var node = args[i];
-
-                if (binding.HasSideEffects(node))
+                for (int i = 1; i < args.Length; i++)
                 {
-                    errors.EnsureError(node, TexlStrings.ErrFilterFunctionBahaviorAsPredicate);
+                    var node = args[i];
+
+                    // If a filter function contains a side effect call as predicate, this is a compilation compilation error.
+                    if (binding.HasSideEffects(node))
+                    {
+                        errors.EnsureError(node, TexlStrings.ErrFilterFunctionBahaviorAsPredicate);
+                    }
                 }
-            }            
+            }
         }
 
         private bool IsNodeBooleanOptionSetorBooleanFieldorView(TexlNode dsNode, TexlBinding binding)
