@@ -158,7 +158,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.ObjNull : DType.EmptyTable;
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.ObjNull : collectionType;
 
             return fValid;
         }
