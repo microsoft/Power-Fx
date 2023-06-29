@@ -209,7 +209,16 @@ namespace Microsoft.PowerFx.Functions
             var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
 
             // If the result is an error, propagate it up. else return blank.
-            var result = ret.IsError ? ret.ToFormulaValue() : FormulaValue.NewBlank();
+            FormulaValue result;
+            if (ret.IsError)
+            {
+                result = FormulaValue.NewError(ret.Error.Errors, FormulaType.Blank);
+            }
+            else
+            {
+                result = FormulaValue.NewBlank();
+            }
+
             return result;
         }
     }
