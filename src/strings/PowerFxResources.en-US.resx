@@ -5298,4 +5298,8 @@
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>The text to have its HTML and XML tags removed.</value>
   </data>
+  <data name="ErrSetVariableWithRelationshipNotAllow" xml:space="preserve">
+    <value>Can't assign variable from expandable types. For instance, a record from a datasource containing relationships.</value>
+    <comment>This will prevent traversing relationships, which can cause performance problems.</comment>
+  </data>
 </root>
