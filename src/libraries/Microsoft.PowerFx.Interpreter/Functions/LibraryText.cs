@@ -940,28 +940,21 @@ namespace Microsoft.PowerFx.Functions
                 return sourceLen;
             }
 
-            try
+            checked
             {
-                checked
+                if (replaceAll)
                 {
-                    if (replaceAll)
-                    {
-                        // Replace all instances. 
-                        // Maximum possible length of Substitute, convert all the Match to Replacement. 
-                        // Unicode, so 2B per character.                        
-                        // Round up as conservative estimate. 
-                        maxLenChars = (int)Math.Ceiling((double)sourceLen / matchLen) * replacementLen;
-                    }
-                    else
-                    {
-                        // Only replace 1 instance 
-                        maxLenChars = sourceLen - matchLen + replacementLen;
-                    }
+                    // Replace all instances. 
+                    // Maximum possible length of Substitute, convert all the Match to Replacement. 
+                    // Unicode, so 2B per character.                        
+                    // Round up as conservative estimate. 
+                    maxLenChars = (int)Math.Ceiling((double)sourceLen / matchLen) * replacementLen;
                 }
-            }
-            catch (OverflowException e)
-            {
-                throw e;
+                else
+                {
+                    // Only replace 1 instance 
+                    maxLenChars = sourceLen - matchLen + replacementLen;
+                }
             }
             
             // If not match found, will still be source length 
@@ -996,7 +989,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
             }
-            catch
+            catch (OverflowException)
             {
                 return CommonErrors.OverflowError(irContext);
             }
