@@ -13,7 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, IRuntimeContext context, CancellationToken cancellationToken)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, CancellationToken cancellationToken)
         {
             var path = _path;
             var query = new StringBuilder();
@@ -129,7 +129,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IRuntimeContext context, CancellationToken cancellationToken)
+        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, FormattingInfo context, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;
 
@@ -194,7 +194,7 @@ namespace Microsoft.PowerFx.Connectors
                     _returnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(IRuntimeContext context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -236,7 +236,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Name { get; }
 
-        public Task<FormulaValue> InvokeAsync(IRuntimeContext context, FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

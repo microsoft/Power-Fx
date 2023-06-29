@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
     // This used ValueTask for async, https://devblogs.microsoft.com/dotnet/understanding-the-whys-whats-and-whens-of-valuetask/ 
     // Perf comparison of Task vs. ValueTask: https://ladeak.wordpress.com/2019/03/09/valuetask-vs-task 
     // Use Task for public methods, but ValueTask for internal methods that we expect to be mostly sync. 
-    internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>, IRuntimeContext
+    internal class EvalVisitor : IRNodeVisitor<ValueTask<FormulaValue>, EvalVisitorContext>
     {
         private readonly ReadOnlySymbolValues _symbolValues;
 
@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is IAsyncTexlFunction2 asyncFunc2)
             {
-                result = await asyncFunc2.InvokeAsync(this, args, _cancellationToken).ConfigureAwait(false);
+                result = await asyncFunc2.InvokeAsync(CreateFormattingInfo(this), args, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {

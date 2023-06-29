@@ -20,8 +20,8 @@ using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
@@ -225,44 +225,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return fArgsValid;
         }
 
-#if canvas
-        public override bool PostVisitValidation(TexlBinding binding, CallNode callNode)
-        {
-            if (Contracts.Verify((binding.Document as Document).TryGetServiceInfo(Namespace.Name, out ServiceInfo serviceInfo)) &&
-                serviceInfo.Errors.Any(error => error.Severity >= DocumentErrorSeverity.Severe))
-            {
-                binding.ErrorContainer.EnsureError(callNode, CanvasStringResources.ErrInvalidService);
-                return true;
-            }
-            return false;
-        }
-
-        public bool TryGetDynamicType(TexlBinding binding, TexlNode[] args, out DynamicTypeInfo dynamicTypeInfo)
-        {
-            if (FeatureGates.DocumentPreviewFlags.DynamicSchema)
-            {
-                // Map the property name to the DynamicTypeInfo, first mapping from a hash of the function args
-                uint argHash = ComputeArgHash(args);
-                dynamicTypeInfo = ((Document)binding.Document).GlobalScope.DynamicTypes.Cast<DynamicTypeInfo>().FirstOrDefault(entity => entity.Control.EntityName == binding.EntityName && entity.PropertyName == binding.Property.Name && entity.ArgHash == argHash);
-                return dynamicTypeInfo != null;
-            }
-
-            dynamicTypeInfo = null;
-            return false;
-        }
-
-        public override bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
-        {
-            // Check if we have a dynamic type for a dynamic schema
-            if (IsDynamic)
-            {
-                var dynamicKind = TryGetDynamicType(binding, args, out var dynamicTypeInfo) ? dynamicTypeInfo.GetReturnValueType().Kind : DKind.ObjNull;
-                return (dynamicKind != DKind.ObjNull);
-            }
-            return false;
-        }
-#endif
-
         public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
         {
             if (argPosition >= 0 && MaxArity > 0 && _requiredParameters.Length > MaxArity - 1)
@@ -375,7 +337,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
         {            
             cts.ThrowIfCancellationRequested();            
-            return await dynamicApi.ServiceFunction.InvokeAsync(new EvalVisitor(new RuntimeConfig(), cts), arguments, cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(new FormattingInfo(), arguments, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -468,7 +430,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         // Provide as hook for execution. 
         public IAsyncTexlFunction2 _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(IRuntimeContext context, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
             if (_invoker == null)
             {

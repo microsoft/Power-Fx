@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Connectors.Tests.OpenApiHelperFunctions;
@@ -328,9 +329,8 @@ namespace Microsoft.PowerFx.Tests
         {
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
-            rtConfig.SetTimeZone(TimeZoneInfo.Local);
-            EvalVisitor context = new EvalVisitor(rtConfig, CancellationToken.None);
-            string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, context);
+            rtConfig.SetTimeZone(TimeZoneInfo.Local);            
+            string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new FormattingInfo());
 
             DateTimeType obj = JsonSerializer.Deserialize<DateTimeType>(str);
             Assert.Equal(date, obj.A);

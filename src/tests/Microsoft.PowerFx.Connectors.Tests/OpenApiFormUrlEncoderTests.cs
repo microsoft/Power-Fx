@@ -9,6 +9,7 @@ using System.Threading;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Connectors.Tests.OpenApiHelperFunctions;
@@ -334,9 +335,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
-            rtConfig.SetTimeZone(TimeZoneInfo.Local);
-            EvalVisitor context = new EvalVisitor(rtConfig, CancellationToken.None);
-            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, context);
+            rtConfig.SetTimeZone(TimeZoneInfo.Local);            
+            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new FormattingInfo());
             
             string dateStr = str.Substring(2);
             Assert.Equal(date, DateTime.Parse(HttpUtility.UrlDecode(dateStr)));            

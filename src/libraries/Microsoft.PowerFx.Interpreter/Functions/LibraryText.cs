@@ -321,11 +321,14 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            return Text(CreateFormattingInfo(runner), irContext, args);
+            runner.CancellationToken.ThrowIfCancellationRequested();
+            return Text(CreateFormattingInfo(runner), irContext, args, runner.CancellationToken);
         }
 
-        public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             const int formatSize = 100;
             string formatString = null;
             string defaultLanguage = Language(formatInfo.CultureInfo);
@@ -371,13 +374,15 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], textFormatArgs, out StringValue result);
+            var isText = TryText(formatInfo, irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, out StringValue result)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, out StringValue result, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
             var formatString = textFormatArgs.FormatArg;
@@ -403,7 +408,7 @@ namespace Microsoft.PowerFx.Functions
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
 
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
                     else
                     {
@@ -418,7 +423,7 @@ namespace Microsoft.PowerFx.Functions
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var decNum = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)dec.Value);
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), decNum);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
                     else
                     {
@@ -436,7 +441,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
@@ -448,7 +453,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
@@ -461,7 +466,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var dtValue = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
@@ -478,6 +483,8 @@ namespace Microsoft.PowerFx.Functions
 
         internal static bool TryExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, string format, string defaultFormat, DateTime dateTime, TimeZoneInfo timeZoneInfo, CultureInfo culture, CancellationToken cancellationToken, out StringValue result)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             result = null;
             if (format == null)
             {

@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
-using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Stack<string> _stack;
         private readonly Stack<int> _arrayIndex;
 
-        public OpenApiFormUrlEncoder(IRuntimeContext context, bool schemaLessBody)
+        public OpenApiFormUrlEncoder(FormattingInfo context, bool schemaLessBody)
             : base(context, schemaLessBody)
         {
             _writer = new StringBuilder(1024);    

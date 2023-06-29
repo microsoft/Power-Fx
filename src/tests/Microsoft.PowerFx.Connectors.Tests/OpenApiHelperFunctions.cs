@@ -4,10 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
-using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Tests
@@ -48,14 +47,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal static TableValue GetTable(RecordValue recordValue) => FormulaValue.NewTable(recordValue.Type, recordValue);
 
-        internal static string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IRuntimeContext context = null) => Serialize<OpenApiJsonSerializer>(parameters, false, context);
+        internal static string SerializeJson(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, FormattingInfo context = null) => Serialize<OpenApiJsonSerializer>(parameters, false, context);
 
-        internal static string SerializeUrlEncoder(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, IRuntimeContext context = null) => Serialize<OpenApiFormUrlEncoder>(parameters, false, context);
+        internal static string SerializeUrlEncoder(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, FormattingInfo context = null) => Serialize<OpenApiFormUrlEncoder>(parameters, false, context);
 
-        internal static string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, IRuntimeContext context = null)
+        internal static string Serialize<T>(Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> parameters, bool schemaLessBody, FormattingInfo context = null)
             where T : FormulaValueSerializer
         {
-            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { context ?? new EvalVisitor(new RuntimeConfig(), CancellationToken.None), schemaLessBody });
+            var jsonSerializer = (FormulaValueSerializer)Activator.CreateInstance(typeof(T), new object[] { context, schemaLessBody });
             jsonSerializer.StartSerialization(null);
 
             if (parameters != null)

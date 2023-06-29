@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Interpreter;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -47,9 +47,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected abstract void WriteDateValue(DateTime dateValue);
 
         protected readonly bool _schemaLessBody;
-        protected readonly IRuntimeContext _context;
+        protected readonly FormattingInfo _context;
 
-        internal FormulaValueSerializer(IRuntimeContext context, bool schemaLessBody)
+        internal FormulaValueSerializer(FormattingInfo context, bool schemaLessBody)
         {
             _schemaLessBody = schemaLessBody;
             _context = context;            

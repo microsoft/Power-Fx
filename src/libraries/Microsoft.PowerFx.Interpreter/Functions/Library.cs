@@ -48,8 +48,7 @@ namespace Microsoft.PowerFx.Functions
         {
             return new FormattingInfo()
             {
-                CultureInfo = runner.CultureInfo,
-                CancellationToken = runner.CancellationToken,
+                CultureInfo = runner.CultureInfo,               
                 TimeZoneInfo = runner.TimeZoneInfo
             };
         }
