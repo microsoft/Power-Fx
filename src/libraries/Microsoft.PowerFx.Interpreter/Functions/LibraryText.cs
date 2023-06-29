@@ -933,34 +933,30 @@ namespace Microsoft.PowerFx.Functions
         {
             int maxLenChars;
 
-            if (matchLen > sourceLen)
+            if (matchLen == 0 || matchLen > sourceLen)
             {
-                // Match is too large, can't be found.
+                // Match is empty or too large, can't be found.
                 // So will not match and just return original.
                 return sourceLen;
             }
 
-            if (replaceAll)
+            checked
             {
-                // Replace all instances. 
-                // Maximum possible length of Substitute, convert all the Match to Replacement. 
-                // Unicode, so 2B per character.
-                if (matchLen == 0)
+                if (replaceAll)
                 {
-                    maxLenChars = sourceLen;
-                }
-                else
-                {
+                    // Replace all instances. 
+                    // Maximum possible length of Substitute, convert all the Match to Replacement. 
+                    // Unicode, so 2B per character.                        
                     // Round up as conservative estimate. 
                     maxLenChars = (int)Math.Ceiling((double)sourceLen / matchLen) * replacementLen;
                 }
+                else
+                {
+                    // Only replace 1 instance 
+                    maxLenChars = sourceLen - matchLen + replacementLen;
+                }
             }
-            else
-            {
-                // Only replace 1 instance 
-                maxLenChars = sourceLen - matchLen + replacementLen;
-            }
-
+            
             // If not match found, will still be source length 
             return Math.Max(sourceLen, maxLenChars);
         }
@@ -987,8 +983,17 @@ namespace Microsoft.PowerFx.Functions
             var sourceLen = source.Value.Length;
             var matchLen = match.Value.Length;
             var replacementLen = replacement.Value.Length;
+            var maxLenChars = sourceLen;
 
-            var maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+            try
+            {
+                maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+            }
+            catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
             runner.Governor.CanAllocateString(maxLenChars);
 
             var result = SubstituteWorker(runner, irContext, source, match, replacement, instanceNum);
