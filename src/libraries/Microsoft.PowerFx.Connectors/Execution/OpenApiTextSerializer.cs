@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using System.Text;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -11,8 +12,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         private readonly StringBuilder _writer;
 
-        public OpenApiTextSerializer(bool schemaLessBody)
-            : base(schemaLessBody)
+        public OpenApiTextSerializer(FormattingInfo context, bool schemaLessBody)
+            : base(context, schemaLessBody)
         {
             _writer = new StringBuilder(1024);
         }
@@ -43,8 +44,13 @@ namespace Microsoft.PowerFx.Connectors.Execution
         }
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
+        {            
+            _writer.Append(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));           
+        }
+
+        protected override void WriteDateValue(DateTime dateValue)
         {
-            _writer.Append(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));
+            _writer.Append(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).Substring(0, 10));
         }
 
         protected override void WriteNullValue()

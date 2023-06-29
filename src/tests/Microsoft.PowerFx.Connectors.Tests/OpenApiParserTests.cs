@@ -10,6 +10,7 @@ using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("Conversations (CLU) (2022-05-01)", function.Summary);
             Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", function.OperationPath);
             Assert.Equal(HttpMethod.Post, function.HttpMethod);
-        }       
+        }
 
         [Fact]
         public void ACSL_Load()
@@ -267,7 +268,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            // We can call the function with a RuntimeConfig parameters (unused here) that can contain TimeZoneInformation or other runtime settings
+            FormulaValue httpResult = await function.InvokeAync(new FormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);

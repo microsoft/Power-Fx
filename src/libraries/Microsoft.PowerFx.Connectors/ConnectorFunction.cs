@@ -11,12 +11,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 
@@ -227,7 +226,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false)
         {            
-            IAsyncTexlFunction invoker = null;
+            IAsyncTexlFunction2 invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
             DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
             Namespace = func_ns;
@@ -251,12 +250,22 @@ namespace Microsoft.PowerFx.Connectors
             return serviceFunction;
         }
 
-        public async Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> InvokeAync(FormattingInfo context, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
-            ServiceFunction svcFunction = GetServiceFunction(null, httpClient);
-            FormulaValue[] v = values;
+            cancellationToken.ThrowIfCancellationRequested();
+            return await GetServiceFunction(null, httpClient).InvokeAsync(context, values, cancellationToken).ConfigureAwait(false);
+        }
 
-            return await svcFunction.InvokeAsync(v, cancellationToken).ConfigureAwait(false);
+        public Task<FormulaValue> InvokeAync(IRuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return InvokeAync(TypeCoercionProvider.CreateFormattingInfo(config), httpClient, values, cancellationToken);
+        }
+
+        public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return InvokeAync(new FormattingInfo(), httpClient, values, cancellationToken);
         }
     }
 
