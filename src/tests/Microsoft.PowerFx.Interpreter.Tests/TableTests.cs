@@ -74,6 +74,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             return RunExpr("Last(collection).Col2", recalEngine, false);
         }
 
+        [Fact]
+        public async Task PowerFx_Empty_Table_Record_Boolean_Column_Evaluates_False()
+        {
+            RecordType schemaType = RecordType.Empty().Add("BooleanColumn", FormulaType.Boolean);
+            FormulaValue formulaValue = FormulaValue.NewRecordFromFields(schemaType, new List<NamedValue>());
+            var recalEngine = new RecalcEngine();
+            var result = RunExpr("BooleanRecord.BooleanColumn", recalEngine, true, formulaValue, "BooleanRecord");
+
+            // Should return False like Canvas does
+            Assert.Equal("Blank()", result.ToString());
+
+            FormulaValue tableFormulaValue = FormulaValue.NewTable(schemaType, new List<RecordValue>());
+            recalEngine = new RecalcEngine();
+            result = RunExpr("First(BooleanTable).BooleanColumn", recalEngine, true, tableFormulaValue, "BooleanTable");
+
+            // Should return False like Canvas does
+            Assert.Equal("Blank()", result.ToString());
+        }
+
         private FormulaValue RunExpr(string expressionText, RecalcEngine engine, bool setVariableValueInEngine, FormulaValue formulaValue = null, string varName = "")
         {
             // Parser options for RecalEngine
