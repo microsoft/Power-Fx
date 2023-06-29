@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using static Microsoft.PowerFx.Connectors.Tests.OpenApiHelperFunctions;
@@ -331,13 +333,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData("2022-06-21T14:36:59.9353993-08:00")]
         public void UrlEncoderSerializer_Date(string dateString)
         {
-            var date = DateTime.Parse(dateString);
-            var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
-            {
-                ["A"] = (SchemaDateTime, FormulaValue.New(date))
-            });
+            DateTime date = DateTime.Parse(dateString);
+            RuntimeConfig rtConfig = new RuntimeConfig();
+            rtConfig.SetTimeZone(TimeZoneInfo.Local);            
+            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new FormattingInfo());
             
-            var dateStr = str.Substring(2);
+            string dateStr = str.Substring(2);
             Assert.Equal(date, DateTime.Parse(HttpUtility.UrlDecode(dateStr)));            
         }       
     }

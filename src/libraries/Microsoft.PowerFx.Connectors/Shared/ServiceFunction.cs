@@ -20,6 +20,7 @@ using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -28,7 +29,7 @@ using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
     [System.Diagnostics.DebuggerDisplay("ServiceFunction: {LocaleSpecificName}")]
-    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction
+    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2
     {
         private readonly List<string[]> _signatures;
         private readonly string[] _orderedRequiredParams;
@@ -336,7 +337,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
         {
             cts.ThrowIfCancellationRequested();
-            return await dynamicApi.ServiceFunction.InvokeAsync(arguments, cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(new FormattingInfo(), arguments, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -426,18 +427,19 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "", suppressAsync: true);
         }
 
-#if !canvas
         // Provide as hook for execution. 
-        public IAsyncTexlFunction _invoker;
+        public IAsyncTexlFunction2 _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
             if (_invoker == null)
             {
                 throw new InvalidOperationException($"Function {Name} can't be invoked.");
             }
 
-            var result = await _invoker.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await _invoker.InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
@@ -459,21 +461,5 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public class IService
         {
         }
-#endif
-
-#if canvas
-        // Finishes JS generation for dynamic schemas
-        public static bool TryPushCustomJsExpression(TexlFunction func, JsTranslator translator, CallNode node, List<Fragment> args, out Fragment fragment)
-        {
-            if (func.IsDynamic && translator.IsCapturingSchema)
-            {
-                fragment = translator.FinishXlatNonDelegatableCall(node, func, args, isDynamicSchema: true);
-                return true;
-            }
-
-            fragment = null;
-            return false;
-        }*/
-#endif
     }
 }

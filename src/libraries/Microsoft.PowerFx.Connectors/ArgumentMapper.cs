@@ -336,7 +336,15 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     foreach (NamedValue field in record.Fields)
                     {
-                        map.Add(field.Name, field.Value);
+                        if (map.ContainsKey(field.Name))
+                        {
+                            // if optional parameters are defined and a default value is already present
+                            map[field.Name] = field.Value;
+                        }
+                        else
+                        {
+                            map.Add(field.Name, field.Value);
+                        }
                     }
                 }
                 else

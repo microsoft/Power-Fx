@@ -98,16 +98,16 @@ Errors: Error 12-16: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 12-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Value(0) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Value(1) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Value(2) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> If(1<0,Value(1)) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Value(2) <= Date(1900,1,1)
 true
@@ -402,52 +402,52 @@ Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number
 // Blank
 
 >> Blank() <= Value(2)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= Value("1e100")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= "2"
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Errors: Error 11-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Blank() <= Value(0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= "1e100"
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Blank() <= true
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Errors: Error 11-15: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Blank() <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1301
+true
 
 >> Blank() <= Date(2000,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= DateTime(2000,1,1,12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= Time(12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= Decimal("2.000000000000000000000002")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= Decimal("0")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= ParseJSON("2")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= ParseJSON("1e100")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Blank() <= ParseJSON("null")
 true
 
 >> Blank() <= ParseJSON("0")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 // Date
 
@@ -470,7 +470,7 @@ Errors: Error 18-21: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 18-22: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Date(2000,1,1) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Date(1954,10,3) <= Date(1927,5,18)
 false
@@ -548,7 +548,7 @@ Errors: Error 29-33: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 28-32: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> DateTime(2000,1,1,12,0,0) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> DateTime(1927,5,18,0,0,0) <= Date(1927,5,18)
 true
@@ -619,10 +619,10 @@ false
 true
 
 >> Time(9,0,0) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> If(1<0,Time(9,0,0)) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Time(9,0,0) <= Time(9,0,0)
 true
@@ -695,13 +695,13 @@ Errors: Error 42-46: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 41-45: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Decimal("0.000000000000000000000001") <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Decimal(0) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> If(1<0,Decimal(1)) <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 // comparison done on floating point due to Date/DateTime/Time
 >> Decimal("16.0000000000000000000001") <= Date(1900,1,15)
@@ -841,16 +841,16 @@ Errors: Error 21-26: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 22-26: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> ParseJSON("16.000000000000000000000001") <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> ParseJSON("0") <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> ParseJSON("null") <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> ParseJSON("1e100") <= Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> ParseJSON("2") <= Date(1900,1,1)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -886,7 +886,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("null") <= Date(1900,1,15)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> ParseJSON("16.500000000000000000001") <= DateTime(1900,1,15,12,0,0)
 Error({Kind:ErrorKind.InvalidArgument})

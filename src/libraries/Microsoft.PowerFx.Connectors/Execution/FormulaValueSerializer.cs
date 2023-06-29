@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -43,11 +44,15 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
 
-        protected readonly bool _schemaLessBody;
+        protected abstract void WriteDateValue(DateTime dateValue);
 
-        internal FormulaValueSerializer(bool schemaLessBody)
+        protected readonly bool _schemaLessBody;
+        protected readonly FormattingInfo _context;
+
+        internal FormulaValueSerializer(FormattingInfo context, bool schemaLessBody)
         {
             _schemaLessBody = schemaLessBody;
+            _context = context;
         }
 
         internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
@@ -95,7 +100,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                                 DKind.ObjNull => "null",
                                 _ => "unknown_dkind"
                             }
-                        }, 
+                        },
                         nv.Value);
                 }
             }
@@ -116,9 +121,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     // array                    
                     StartArray(propertyName);
 
-                    foreach (var item in (fv as TableValue).Rows)
+                    foreach (DValue<RecordValue> item in (fv as TableValue).Rows)
                     {
-                        var rva = item.Value;
+                        RecordValue rva = item.Value;
 
                         if (rva.Fields.Count() != 1)
                         {
@@ -201,10 +206,24 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteStringValue(stringValue.Value);
                     }
-                    else if (fv is PrimitiveValue<DateTime> dt)
+                    else if (fv is DateTimeValue dtv)
                     {
-                        // DateTimeValue and DateValue
-                        WriteDateTimeValue(dt.Value);
+                        if (propertySchema.Format == "date-time")
+                        {
+                            WriteDateTimeValue(dtv.GetConvertedValue(_context.TimeZoneInfo));
+                        }
+                        else if (propertySchema.Format == "date-no-tz")
+                        {
+                            WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                        }
+                        else
+                        {
+                            throw new NotImplementedException($"Unknown {propertySchema.Format} format");
+                        }
+                    }
+                    else if (fv is DateValue dv)
+                    {
+                        WriteDateValue(dv.GetConvertedValue(null));
                     }
                     else
                     {
@@ -245,10 +264,24 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 WriteBooleanValue(booleanValue.Value);
             }
-            else if (value is PrimitiveValue<DateTime> dt)
+            else if (value is DateTimeValue dtv)
             {
-                // DateTimeValue and DateValue
-                WriteDateTimeValue(dt.Value);
+                if (dtv.Type._type.Kind == DKind.DateTime)
+                {
+                    WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Local));
+                }
+                else if (dtv.Type._type.Kind == DKind.DateTimeNoTimeZone)
+                {
+                    WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                }
+                else
+                {
+                    throw new NotImplementedException($"Unknown {dtv.Type._type.Kind} kind");
+                }
+            }
+            else if (value is DateValue dv)
+            {
+                WriteDateValue(((PrimitiveValue<DateTime>)dv).Value);
             }
             else
             {

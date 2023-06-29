@@ -110,6 +110,9 @@
 >> Substitute("", "", "Je") 
 ""
 
+>> Substitute("", "", "Je", 5)
+""
+
 >> Substitute(Blank(), Blank(), "Je") 
 ""
 
@@ -137,6 +140,18 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Substitute("HelloHelloHello", "", "Je")
 "HelloHelloHello"
+
+>> Substitute("HelloHelloHello", "HeHe", "BYE")
+"HelloHelloHello"
+
+>> Substitute("HelloHelloHello", "HelloHelloHelloHello", "BYE")
+"HelloHelloHello"
+
+>> Substitute("HelloHelloHello", "HelloHelloHelloHello", "BYE", 10)
+"HelloHelloHello"
+
+>> Substitute("HelloHelloHello", "HelloHelloHello", "BYE")
+"BYE"
 
 //Invalid operation: Division by zero error
 >> Substitute("HelloHelloHello", "He", "Je", 1/0)
