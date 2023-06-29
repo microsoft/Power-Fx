@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx
         /// <param name="result">Result value.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
-        public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, FormattingInfo formattingInfo, out FormulaValue result, CancellationToken cancellationToken)
+        internal static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, FormattingInfo formattingInfo, out FormulaValue result, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -253,7 +253,7 @@ namespace Microsoft.PowerFx
         /// <param name="result">Result value.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to Record type.</returns> 
-        public static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, FormattingInfo formattingInfo, out RecordValue result, CancellationToken cancellationToken)
+        internal static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, FormattingInfo formattingInfo, out RecordValue result, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -310,7 +310,7 @@ namespace Microsoft.PowerFx
         /// <param name="result">Result value.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to Table type.</returns> 
-        public static bool TryCoerceToTable(this TableValue value, TableType targetType, FormattingInfo formattingInfo, out TableValue result, CancellationToken cancellationToken)
+        internal static bool TryCoerceToTable(this TableValue value, TableType targetType, FormattingInfo formattingInfo, out TableValue result, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

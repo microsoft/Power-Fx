@@ -66,8 +66,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
-                $"{ns}.Functions.IRandomService",
-                $"{ns}.Functions.FormattingInfo"
+                $"{ns}.Functions.IRandomService"
             };
 
             var sb = new StringBuilder();

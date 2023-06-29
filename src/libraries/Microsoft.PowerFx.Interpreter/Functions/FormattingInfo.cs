@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace Microsoft.PowerFx.Functions
 {
-    public class FormattingInfo
+    internal class FormattingInfo
     {
         public CultureInfo CultureInfo { get; set; }
 
