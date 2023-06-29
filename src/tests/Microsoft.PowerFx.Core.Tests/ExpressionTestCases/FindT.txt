@@ -1,4 +1,3 @@
-#SETUP: ConsistentOneColumnTableResult
 
 >> Find(Blank(), [""], [1])
 Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18: Invalid argument type (Table). Expecting a Text value instead.|Error 20-23: Invalid argument type (Table). Expecting a Number value instead.
@@ -7,37 +6,37 @@ Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18:
 Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: Invalid argument type (Table). Expecting a Text value instead.|Error 11-15: Invalid argument type (Table). Expecting a Text value instead.
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [1])
-Blank()
+Table({Value:1})
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [2])
-Blank()
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Find(If(false, ["blank table"], Blank()), "textToBeSearchedIn", [5])
-Blank()
+Table({Value:5})
 
 >> Find("textToSearch", If(false, ["blank table"], Blank()), [1])
-Blank()
+Table({Value:Blank()})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), 1)
-Blank()
+Table({Value:1},{Value:1},{Value:Blank()})
 
 >> Find(["b"], ["abc", "cde"])
 Table({Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
-Blank()
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
-Blank()
+Table({Value:1},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], 1)
-Blank()
+Table({Value:1},{Value:1},{Value:1})
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
-Blank()
+Table({Value:1},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:3})
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
 Table({Value:1},{Value:1},{Value:19})
@@ -58,10 +57,10 @@ Table({Value:1},{Value:10},{Value:19})
 Table({Value:19},{Value:19},{Value:19},{Value:Blank()})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
-Blank()
+Table({Value:1},{Value:1},{Value:Blank()})
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"])
-Blank()
+Table({Value:1},{Value:1},{Value:1})
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
 Table({Value:1},{Value:1},{Value:19})
