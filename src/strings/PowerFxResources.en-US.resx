@@ -5306,4 +5306,10 @@
     <value>Use the And operator to combine multiple predicates into the second argument.</value>
     <comment>{Locked=And} Limiting the Filter funciton to just two arguments, like the LookUp function, allowing us to add a third argument later also like LookUp.</comment>
   </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>This table cannot be copied. Instead, create an inline table using the ForAll function and {...} notation to copy the individual columns desired.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>This record cannot be copied. Instead, create an inline record using {...} notation to copy the individual fields desired.</value>
+  </data>
 </root>
