@@ -78,13 +78,17 @@ namespace Microsoft.PowerFx.Interpreter
                         return;
                     }
 
-                    if (arg1.IsAggregate)
+                    if (arg1.AggregateHasExpandedType())
                     {
-                        var record = arg1.ToRecord();
-
-                        if (record.GetAllNames(DPath.Root).Any(name => name.Type.IsExpandEntity))
+                        if (arg1.IsTable)
                         {
-                            errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllow);
+                            errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowTable);
+                            return;
+                        }
+
+                        if (arg1.IsRecord)
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrSetVariableWithRelationshipNotAllowRecord);
                             return;
                         }
                     }

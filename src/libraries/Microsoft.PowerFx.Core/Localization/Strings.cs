@@ -637,7 +637,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrNeedAgg = new ErrorResourceKey("ErrNeedAgg");
         public static ErrorResourceKey ErrFilterFunctionBahaviorAsPredicate = new ErrorResourceKey("ErrFilterFunctionBahaviorAsPredicate");
         public static ErrorResourceKey ErrFilterFunction_OnlyTwoArgs = new ErrorResourceKey("ErrFilterFunction_OnlyTwoArgs");
-        public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllow = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllow");
+        public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowTable = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowTable");
+        public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowRecord = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowRecord");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
