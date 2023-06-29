@@ -76,7 +76,7 @@ namespace Microsoft.PowerFx.Functions
         public override bool IsSelfContained => false;
 
         public RemoveFunction()
-        : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Boolean, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
+        : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Unknown, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
         {
         }
 
@@ -106,8 +106,6 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-            //Contracts.Assert(returnType.IsTable);
 
             DType collectionType = argTypes[0];
             if (!collectionType.IsTable)
@@ -160,8 +158,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            // Remove returns the new collection, so the return schema is the same as the collection schema.
-            returnType = collectionType;
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.ObjNull : DType.EmptyRecord;
 
             return fValid;
         }
@@ -211,7 +208,9 @@ namespace Microsoft.PowerFx.Functions
             cancellationToken.ThrowIfCancellationRequested();
             var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
 
-            return ret.ToFormulaValue();
+            // If the result is an error, propagate it up. else return blank.
+            var result = ret.IsError ? ret.ToFormulaValue() : FormulaValue.NewBlank();
+            return result;
         }
     }
 }
