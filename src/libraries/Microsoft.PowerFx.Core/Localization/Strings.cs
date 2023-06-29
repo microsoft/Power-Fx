@@ -635,6 +635,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
         public static ErrorResourceKey ErrDataSourceCannotBeRefreshed = new ErrorResourceKey("ErrDataSourceCannotBeRefreshed");
         public static ErrorResourceKey ErrNeedAgg = new ErrorResourceKey("ErrNeedAgg");
+        public static ErrorResourceKey ErrFilterFunctionBahaviorAsPredicate = new ErrorResourceKey("ErrFilterFunctionBahaviorAsPredicate");
+        public static ErrorResourceKey ErrFilterFunction_OnlyTwoArgs = new ErrorResourceKey("ErrFilterFunction_OnlyTwoArgs");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
