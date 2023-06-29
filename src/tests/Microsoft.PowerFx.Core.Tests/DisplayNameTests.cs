@@ -296,6 +296,42 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
+        [Theory]
+        [InlineData("new_field + 2", "Field + 2", false)]
+        [InlineData("ThisRecord.new_field + 2", "ThisRecord.Field + 2", true)]
+        public void DisplayNamesWithSymbolsNoImplicitThisRecord(string logical, string display, bool isSuccess)
+        {
+            // Simulate symbols like dataverse. 
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"))
+              .Add(new NamedFormulaType("new_field2", FormulaType.Number, "Field2"));
+
+            var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecordWithoutImplicitThisRecord(r1);
+
+            var globalSymbols = new SymbolTable { DebugName = "Globals" };
+            var tableType = r1.ToTable();
+            globalSymbols.AddVariable("crf_table", tableType, displayName: "Table");
+
+            var allSymbols = ReadOnlySymbolTable.Compose(rowScopeSymbols, globalSymbols);
+
+            var config = new PowerFxConfig();
+            var engine = new Engine(config);
+            var check = engine.Check(display, symbolTable: allSymbols);
+
+            Assert.Equal(isSuccess, check.IsSuccess);
+
+            if (isSuccess)
+            {
+                var invariant = check.ApplyGetInvariant();
+
+                Assert.Equal(logical, invariant);
+
+                // Get display
+                var displayActual = engine.GetDisplayExpression(logical, allSymbols, check.ParserCultureInfo);
+                Assert.Equal(display, displayActual);
+            }
+        }
+
         [Fact]
         public void ConvertToDisplayNamesNoNames()
         {

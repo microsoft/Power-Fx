@@ -193,6 +193,17 @@ namespace Microsoft.PowerFx
             };
         }
 
+        public static ReadOnlySymbolTable NewFromRecordWithoutImplicitThisRecord(
+            RecordType type,
+            string debugName = null,
+            bool allowMutable = false)
+        {
+            return new SymbolTableOverRecordType(type, parent: null, mutable: allowMutable)
+            {
+                DebugName = debugName ?? "RowScopeNoImplicitThisRecord"
+            };
+        }
+
         public static ReadOnlySymbolTable Compose(params ReadOnlySymbolTable[] tables)
         {
             return new ComposedReadOnlySymbolTable(tables);
