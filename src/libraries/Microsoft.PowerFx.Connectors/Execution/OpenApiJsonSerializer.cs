@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         }
 
         protected override void WritePropertyName(string name)
-        {         
+        {
             if (!_schemaLessBody || _topPropertyWritten)
             {
                 _topPropertyWritten = true;
@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
             // ISO 8601            
-            _writer.WriteStringValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));            
+            _writer.WriteStringValue(dateTimeValue.ToString("o", CultureInfo.InvariantCulture));
         }
 
         protected override void WriteDateValue(DateTime dateValue)
@@ -148,9 +148,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 _wasDisposed = true;
             }
         }
-       
+
         public void Dispose()
-        {            
+        {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }

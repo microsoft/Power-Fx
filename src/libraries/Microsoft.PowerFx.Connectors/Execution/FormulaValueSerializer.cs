@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         internal FormulaValueSerializer(FormattingInfo context, bool schemaLessBody)
         {
             _schemaLessBody = schemaLessBody;
-            _context = context;            
+            _context = context;
         }
 
         internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                                 DKind.ObjNull => "null",
                                 _ => "unknown_dkind"
                             }
-                        }, 
+                        },
                         nv.Value);
                 }
             }
@@ -207,9 +207,9 @@ namespace Microsoft.PowerFx.Connectors.Execution
                         WriteStringValue(stringValue.Value);
                     }
                     else if (fv is DateTimeValue dtv)
-                    {                        
+                    {
                         if (propertySchema.Format == "date-time")
-                        { 
+                        {
                             WriteDateTimeValue(dtv.GetConvertedValue(_context.TimeZoneInfo));
                         }
                         else if (propertySchema.Format == "date-no-tz")
@@ -265,7 +265,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                 WriteBooleanValue(booleanValue.Value);
             }
             else if (value is DateTimeValue dtv)
-            {                
+            {
                 if (dtv.Type._type.Kind == DKind.DateTime)
                 {
                     WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Local));
@@ -282,7 +282,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             else if (value is DateValue dv)
             {
                 WriteDateValue(((PrimitiveValue<DateTime>)dv).Value);
-            }            
+            }
             else
             {
                 throw new NotImplementedException($"Not supported type {value.GetType().FullName} for value");

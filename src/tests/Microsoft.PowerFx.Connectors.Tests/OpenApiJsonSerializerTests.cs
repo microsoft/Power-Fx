@@ -15,7 +15,7 @@ using static Microsoft.PowerFx.Connectors.Tests.OpenApiHelperFunctions;
 namespace Microsoft.PowerFx.Tests
 {
     public class OpenApiJsonSerializerTests : PowerFxTest
-    {            
+    {
         [Fact]
         public void JsonSerializer_Empty()
         {
@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Tests
                 ["a"] = (SchemaInteger, null)
             }));
 
-            Assert.Equal("Expected NumberValue (integer) and got <null> value, for property a", ex.Message);           
+            Assert.Equal("Expected NumberValue (integer) and got <null> value, for property a", ex.Message);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 ["a"] = (null, null)
             }));
-            
+
             Assert.Equal("Missing schema for property a", ex.Message);
         }
 
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Tests
                 ["a"] = (SchemaInteger, FormulaValue.New(1)),
                 ["b"] = (SchemaInteger, FormulaValue.New(-2))
             });
-            
+
             Assert.Equal(@"{""a"":1,""b"":-2}", str);
         }
 
@@ -143,7 +143,7 @@ namespace Microsoft.PowerFx.Tests
             });
 
             Assert.Equal(@"{""a"":""abc""}", str);
-        }       
+        }
 
         [Fact]
         public void JsonSerializer_Bool()
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Tests
                 ["a"] = (SchemaBoolean, FormulaValue.New(true)),
                 ["b"] = (SchemaBoolean, FormulaValue.New(false))
             });
-            
+
             Assert.Equal(@"{""a"":true,""b"":false}", str);
         }
 
@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var ex = Assert.Throws<NotImplementedException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (new OpenApiSchema() { Type = "unknown" }, FormulaValue.New(1)),                
+                ["a"] = (new OpenApiSchema() { Type = "unknown" }, FormulaValue.New(1)),
             }));
 
             Assert.Equal("Not supported property type unknown for property a", ex.Message);
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Tests
 
         [Fact]
         public void JsonSerializer_Array_Integer()
-        {            
+        {
             var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayInteger, GetArray(1, 2))
@@ -251,7 +251,7 @@ namespace Microsoft.PowerFx.Tests
 
         [Fact]
         public void JsonSerializer_Array_Record_Invalid()
-        {          
+        {
             var ex = Assert.Throws<ArgumentException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaArrayObject, GetArray(GetRecord(("x", FormulaValue.New(1)))))
@@ -273,10 +273,10 @@ namespace Microsoft.PowerFx.Tests
 
         [Fact]
         public void JsonSerializer_Array_Invalid()
-        {            
+        {
             var ex = Assert.Throws<ArgumentException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))                    
+                ["a"] = (SchemaArrayInteger, GetTable(GetRecord(("a", FormulaValue.New(1)), ("b", FormulaValue.New("foo")))))
             }));
 
             Assert.Equal("Incompatible Table for supporting array, RecordValue has more than one column - propertyName a, number of fields 2", ex.Message);
@@ -286,8 +286,8 @@ namespace Microsoft.PowerFx.Tests
         public void JsonSerializer_Object()
         {
             var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
-            {                
-                ["a"] = (SchemaObject(("x", SchemaInteger), ("y", SchemaString)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))                
+            {
+                ["a"] = (SchemaObject(("x", SchemaInteger), ("y", SchemaString)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
             });
 
             Assert.Equal(@"{""a"":{""x"":1,""y"":""foo""}}", str);
@@ -299,12 +299,12 @@ namespace Microsoft.PowerFx.Tests
             var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(
-                            ("x", SchemaInteger), 
-                            ("y", SchemaString), 
-                            ("z", SchemaObject(("a", SchemaInteger)))), 
+                            ("x", SchemaInteger),
+                            ("y", SchemaString),
+                            ("z", SchemaObject(("a", SchemaInteger)))),
                          GetRecord(
-                             ("x", FormulaValue.New(1)), 
-                             ("y", FormulaValue.New("foo")), 
+                             ("x", FormulaValue.New(1)),
+                             ("y", FormulaValue.New("foo")),
                              ("z", GetRecord(("a", FormulaValue.New(-1))))))
             });
 
@@ -329,7 +329,7 @@ namespace Microsoft.PowerFx.Tests
         {
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
-            rtConfig.SetTimeZone(TimeZoneInfo.Local);            
+            rtConfig.SetTimeZone(TimeZoneInfo.Local);
             string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new FormattingInfo());
 
             DateTimeType obj = JsonSerializer.Deserialize<DateTimeType>(str);

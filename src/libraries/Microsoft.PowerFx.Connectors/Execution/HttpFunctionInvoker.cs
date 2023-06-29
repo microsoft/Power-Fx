@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             HttpContent body = null;
-            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
+            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new();
 
             Dictionary<string, FormulaValue> map = _argMapper.ConvertToNamedParameters(args);
 
@@ -166,16 +166,16 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
         {
-            var text = response?.Content == null 
+            var text = response?.Content == null
                             ? string.Empty
                             : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var statusCode = (int)response.StatusCode;
 
             if (statusCode < 300)
-            {                
-                return string.IsNullOrWhiteSpace(text) 
-                    ? FormulaValue.NewBlank(_returnType) 
+            {
+                return string.IsNullOrWhiteSpace(text)
+                    ? FormulaValue.NewBlank(_returnType)
                     : FormulaValueJSON.FromJson(text, _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
@@ -198,7 +198,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);            
+            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);
             var key = request.RequestUri.ToString();
 
             if (request.Method != HttpMethod.Get)
@@ -210,8 +210,8 @@ namespace Microsoft.PowerFx.Connectors
             return await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);            
-            }).ConfigureAwait(false);            
+                return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
     }
 

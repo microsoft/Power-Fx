@@ -335,8 +335,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
-        {            
-            cts.ThrowIfCancellationRequested();            
+        {
+            cts.ThrowIfCancellationRequested();
             return await dynamicApi.ServiceFunction.InvokeAsync(new FormattingInfo(), arguments, cts).ConfigureAwait(false);
         }
 

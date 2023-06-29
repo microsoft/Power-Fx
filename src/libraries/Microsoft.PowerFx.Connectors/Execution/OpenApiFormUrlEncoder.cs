@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
         public OpenApiFormUrlEncoder(FormattingInfo context, bool schemaLessBody)
             : base(context, schemaLessBody)
         {
-            _writer = new StringBuilder(1024);    
+            _writer = new StringBuilder(1024);
             _stack = new Stack<string>();
             _arrayIndex = new Stack<int>();
         }
@@ -68,8 +68,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         }
 
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
-        {            
-            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)));            
+        {
+            _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)));
         }
 
         protected override void WriteDateValue(DateTime dateValue)
