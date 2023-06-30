@@ -45,6 +45,7 @@ namespace Microsoft.PowerFx.Core.Errors
         /// <summary>
         /// The resource manager storing the message.
         /// </summary>
+        [TransportDisabled]
         IResourceStringManager ResourceManager { get; }
 
         /// <summary>
