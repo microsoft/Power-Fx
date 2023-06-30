@@ -70,7 +70,7 @@ Table({Value:1},{Value:2},{Value:3})
 Table({Value:1},{Value:2},{Value:3})
 
 >> Remove( cb, {Value:2} )
-true
+Blank()
 
 >> ca // again
 Table({Value:1},{Value:2},{Value:3})
@@ -79,7 +79,7 @@ Table({Value:1},{Value:2},{Value:3})
 Table({Value:1},{Value:3})
 
 >> Remove( ca, {Value:1} )
-true
+Blank()
 
 >> ca // again 2
 Table({Value:2},{Value:3})

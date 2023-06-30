@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
-                $"{ns}.{nameof(TypeCoercionProvider)}",                
+                $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
@@ -548,7 +548,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Spot check some known functions
             Assert.NotEmpty(engine2.Functions.WithName("Cos"));
-            Assert.NotEmpty(engine2.Functions.WithName("ParseJSON"));            
+            Assert.NotEmpty(engine2.Functions.WithName("ParseJSON"));
         }
 
         [Fact]
@@ -768,7 +768,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("Func(7, 11)");
 
             Assert.IsType<NumberValue>(result);
-            
+
             // Multiply function is first and a valid overload so that's the one we use as coercion is valid for this one
             Assert.Equal(77.0, (result as NumberValue).Value);
         }
@@ -784,7 +784,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("Func(7, 11)");
 
             Assert.IsType<NumberValue>(result);
-            
+
             // Substract function is first and a valid overload so that's the one we use as coercion is valid for this one
             Assert.Equal(-4.0, (result as NumberValue).Value);
         }
@@ -884,7 +884,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig() { SymbolTable = symbol };
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
-            
+
             var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(expected, result.ToObject());
         }
@@ -1182,9 +1182,9 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("[@Field2]")] // error, doesn't exist in global scope. 
         [InlineData("With({Task : true}, ThisRecord.Field2)")] // Error. ThisRecord doesn't union, it refers exclusively to With().
         public void DisambiguationTest(string expr, object expected = null)
-        {            
+        {
             var engine = new RecalcEngine();
-            
+
             // Setup Global "Task", and RowScope with "Task" field.
             var record = FormulaValue.NewRecordFromFields(
                 new NamedValue("Task", FormulaValue.New("_fieldTask")),
@@ -1192,12 +1192,12 @@ namespace Microsoft.PowerFx.Tests
 
             var globals = new SymbolTable();
             var slot = globals.AddVariable("Task", FormulaType.String, null);
-            
+
             var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type, allowThisRecord: true);
 
             // ensure rowScope is listed first since that should get higher priority 
-            var symbols = ReadOnlySymbolTable.Compose(rowScope, globals); 
-                        
+            var symbols = ReadOnlySymbolTable.Compose(rowScope, globals);
+
             // Values 
             var rowValues = ReadOnlySymbolValues.NewFromRecord(rowScope, record);
             var globalValues = globals.CreateValues();
@@ -1218,7 +1218,7 @@ namespace Microsoft.PowerFx.Tests
 
             var run = check.GetEvaluator();
             var result = run.Eval(runtimeConfig);
-            
+
             Assert.Equal(expected, result.ToObject());
         }
 
@@ -1244,10 +1244,10 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void ComparisonWithMismatchedTypes()
         {
-            foreach ((Features f, ErrorSeverity es) in new[] 
-            { 
-                (Features.PowerFxV1, ErrorSeverity.Severe), 
-                (Features.None, ErrorSeverity.Warning) 
+            foreach ((Features f, ErrorSeverity es) in new[]
+            {
+                (Features.PowerFxV1, ErrorSeverity.Severe),
+                (Features.None, ErrorSeverity.Warning)
             })
             {
                 var config = new PowerFxConfig(f);
@@ -1259,7 +1259,7 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(es, firstError.Severity);
                 Assert.Equal("Incompatible types for comparison. These types can't be compared: Decimal, Text.", firstError.Message);
             }
-        } 
+        }
 
         private class TestRandService : IRandomService
         {
@@ -1272,7 +1272,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-#region Test
+        #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
 
@@ -1288,6 +1288,6 @@ namespace Microsoft.PowerFx.Tests
 
             _updates.Append($"{name}-->{str};");
         }
-#endregion
+        #endregion
     }
 }

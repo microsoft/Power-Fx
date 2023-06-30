@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx
 
         private readonly CancellationToken _cancellationToken;
 
-        internal CancellationToken CancellationToken => _cancellationToken;
+        public CancellationToken CancellationToken => _cancellationToken;
 
         private readonly IServiceProvider _services;
 
@@ -257,6 +257,10 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
             }
+            else if (func is IAsyncTexlFunction2 asyncFunc2)
+            {
+                result = await asyncFunc2.InvokeAsync(CreateFormattingInfo(this), args, _cancellationToken).ConfigureAwait(false);
+            }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
@@ -278,14 +282,7 @@ namespace Microsoft.PowerFx
                     catch (CustomFunctionErrorException ex)
                     {
                         var irContext = node.IRContext;
-                        result = new ErrorValue(
-                            irContext,
-                            new ExpressionError()
-                            {
-                                Message = ex.Message,
-                                Span = irContext.SourceContext,
-                                Kind = ex.ErrorKind
-                            });
+                        result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
                     }
 
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
