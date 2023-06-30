@@ -1,8 +1,11 @@
-#SETUP: ConsistentOneColumnTableResult
 
-// Using an untyped blank, such as the return type from Blank(), as an argument to a single column table enabled function.
-// We are inconsistent, but don't want to break existing behavior, and this scenario is not common or useful.
+// Consider an untyped blank, such as the return type from Blank(), as an argument to a single column table enabled function.
+//
+// We favor treating these as a scalar blank, rather than a table blank.  Scalar is the simpler form and more likely
+// what the maker wanted.  This treatment is also consistent with Canvas.
+//
 // A typed Blank, such as returned from a database or If(1<0,"foo") is fine, it specifically an untyped Blank that is odd.
+//
 // In general, a function that takes a blank table argument will return a blank table.
 
 >> Concatenate("a",Blank(),"b")
@@ -23,6 +26,7 @@ Table({Value:""},{Value:""})
 >> Left("abcd",[2,3])
 Table({Value:"ab"},{Value:"abc"})
 
+// suspect, may be different on Canvas requiring an override
 >> Left(Blank(),[2,3])
 Table({Value:""},{Value:""})
 
@@ -35,6 +39,7 @@ Table({Value:""},{Value:""})
 >> Right("abc",[2,3])
 Table({Value:"bc"},{Value:"abc"})
 
+// suspect, may be different on Canvas requiring an override
 >> Right(Blank(),[2,3])
 Table({Value:""},{Value:""})
 
