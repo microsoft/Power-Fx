@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Syntax;
 using Microsoft.PowerFx.Core.Utils;
@@ -202,6 +203,24 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(scriptX, formulas.ElementAt(0).formula.Script);
             Assert.Equal(scriptY, formulas.ElementAt(1).formula.Script);
+        }
+
+        [Theory]
+        [InlineData("Type(): Number = Person({ Hi: Number });")]
+        [InlineData("Person = Type({ Hi: Number });")]
+        [InlineData("y = 1;")]
+        public void TestType(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            ParseUserDefinitionResult result = TexlParser.ParseUserDefinitionScript(script, parserOptions);
+            Assert.NotNull(result.Errors);
+            foreach (var item in result.Errors)
+            {
+                Assert.Null(item);
+            }
         }
     }
 }

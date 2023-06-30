@@ -66,6 +66,16 @@ namespace Microsoft.PowerFx.Core.Parser
         public IEnumerable<ExpressionError> ExpErrors => ExpressionError.New(Errors, CultureInfo.InvariantCulture);
     }
 
+    internal class UDT
+    {
+        internal IdentToken Ident { get; }
+
+        public UDT(IdentToken ident)
+        {
+            Ident = ident;
+        }
+    }
+
     internal class UDF
     {
         internal IdentToken Ident { get; }

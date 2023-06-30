@@ -88,14 +88,18 @@ namespace Microsoft.PowerFx.Core.Parser
             var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
             var parser = new TexlParser(formulaTokens, flags);
 
-            return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
+            return parser.ParseUserDefinitionScriptInternal(script, parserOptions);
         }
 
         private ParseUDFsResult ParseUDFs(string script)
         {
             var udfs = new List<UDF>();
 
-            // <root> ::= (<udf> ';')*
+            // <root>
+            //    ::=  (<udf> ';')*
+            //      |  (<type_decl> ';')*
+            //      ;
+
             while (_curs.TokCur.Kind != TokKind.Eof)
             {
                 ParseTrivia();
@@ -168,6 +172,9 @@ namespace Microsoft.PowerFx.Core.Parser
         private bool ParseUDF(List<UDF> udfs)
         {
             // <udf> ::= IDENT '(' <args> ')' ':' IDENT ('=' EXP | <bracs-exp>)
+            // <type_decl> ::= IDENT '=' 'Type' '(' <type_syntax> ')' 
+
+            // <type_syntax> ::= '{' ( IDENT: IDENT ) ( ',' IDENT ':' IDENT)'}'
 
             ParseTrivia();
             var ident = TokEat(TokKind.Ident);
@@ -235,10 +242,11 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
+        private ParseUserDefinitionResult ParseUserDefinitionScriptInternal(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
+            var udts = new List<UDT>();
 
             ParseTrivia();
 
@@ -266,6 +274,16 @@ namespace Microsoft.PowerFx.Core.Parser
                     if (_curs.TidCur == TokKind.Semicolon)
                     {
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    }
+
+                    if (_curs.TidCur == TokKind.Ident)
+                    {
+                        IdentToken identToken = _curs.TokCur.As<IdentToken>();
+                        
+                        if (identToken.Name.Value.ToString() == "Type")
+                        {
+                            throw new Exception("Was type");
+                        }
                     }
 
                     // Extract expression
@@ -1276,6 +1294,13 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(head);
             Contracts.AssertValueOrNull(headNode);
             Contracts.Assert(_curs.TidCur == TokKind.ParenOpen);
+
+            // Check if our invocation is infact `Type`
+
+            if (head.Name.Value.ToString() == "Type")
+            {
+                //throw new Exception("Tried to call Type function");
+            }
 
             var leftParen = _curs.TokMove();
             var leftTrivia = ParseTrivia();

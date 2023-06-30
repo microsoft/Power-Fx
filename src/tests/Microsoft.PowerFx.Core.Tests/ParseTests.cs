@@ -850,5 +850,19 @@ namespace Microsoft.PowerFx.Core.Tests
             // Parser restarted, and found 'c' correctly
             Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
         }
+
+        [Theory]
+        [InlineData("Person = Type(1.0);")]
+        public void TestTypeParse(string script)
+        {
+            var formulasResult = TexlParser.ParseFormulasScript(script);
+            if (formulasResult.HasError)
+            {
+                foreach (var item in formulasResult.Errors)
+                {
+                    Assert.Null(item);
+                }
+            }
+        }
     }
 }

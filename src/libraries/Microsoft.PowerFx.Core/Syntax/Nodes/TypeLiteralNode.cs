@@ -1,22 +1,31 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
 namespace Microsoft.PowerFx.Core.Syntax.Nodes
 {
+    // CallNode :: Type ( TypeLiteralNode )
+    // CallNode :: IsType ( TypeLiteralNode )
+    // CallNode :: AsType ( Expr, TypeLiteralNode )
+
     public sealed class TypeLiteralNode : TexlNode
     {
-        internal TypeLiteralNode(ref int idNext, IdentToken tok)
-            : base(ref idNext, tok, new SourceList(tok))
-        {   
+        internal DType Type { get; }
+
+        internal TypeLiteralNode(ref int idNext, Token firstToken, DType type, SourceList sources)
+            : base(ref idNext, firstToken, sources)
+        {
+            Type = type;
         }
 
         internal override TexlNode Clone(ref int idNext, Span ts)
         {
-            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<IdentToken>());
+            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), Type, this.SourceList.Clone(ts, new Dictionary<TexlNode, TexlNode>()));
         }
 
         /// <inheritdoc />
