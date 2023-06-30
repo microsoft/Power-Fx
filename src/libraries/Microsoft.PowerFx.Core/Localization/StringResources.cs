@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Resources;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Localization
 {
     internal static class StringResources
     {        
-        internal static readonly IResourceStringManager LocalStringResources = new PowerFxStringResources(new ThreadSafeResouceManager());
+        internal static readonly IResourceStringManager LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
 
         public static ErrorResource GetErrorResource(ErrorResourceKey resourceKey, string locale = null)
         {
@@ -54,11 +55,18 @@ namespace Microsoft.PowerFx.Core.Localization
     }
 
     [ThreadSafeImmutable]
-    internal class ThreadSafeResouceManager
+    internal class ThreadSafeResourceManager
     {
         // Get methods on this are threadsafe, as long as we never call ReleaseAll()
-        // This wrapper ensures that we don't accidentally do that
-        private readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
+        // This wrapper ensures that we don't accidentally do that        
+        private readonly ResourceManager _resourceManager;
+
+        internal string ResourceLocation => _resourceManager.BaseName;
+
+        internal ThreadSafeResourceManager(string resourceLocation, Assembly assembly)
+        {            
+            _resourceManager = new ResourceManager(resourceLocation, assembly);
+        }
 
         public string GetLocaleResource(string resourceKey, string locale)
         {
@@ -71,15 +79,23 @@ namespace Microsoft.PowerFx.Core.Localization
             return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));
         }
     }
-    
+
+    [DebuggerDisplay("{ResourceLocation}")]
     internal class PowerFxStringResources : IResourceStringManager
     {
-        private readonly ThreadSafeResouceManager _resourceManager;
+        private readonly ThreadSafeResourceManager _resourceManager;
+
+        internal string ResourceLocation => _resourceManager.ResourceLocation;
 
         [ThreadSafeProtectedByLockAttribute("_errorResources")]
-        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new Dictionary<string, Dictionary<string, ErrorResource>>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new (StringComparer.OrdinalIgnoreCase);
 
-        internal PowerFxStringResources(ThreadSafeResouceManager resourceManager)
+        internal PowerFxStringResources(string resourceLocation, Assembly assembly)
+            : this(new ThreadSafeResourceManager(resourceLocation, assembly))
+        {
+        }
+
+        internal PowerFxStringResources(ThreadSafeResourceManager resourceManager)
         {
             _resourceManager = resourceManager;
         }

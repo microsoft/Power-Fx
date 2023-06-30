@@ -478,14 +478,13 @@ namespace Microsoft.PowerFx
                     {
                         Kind = ErrorKind.Validation,
                         Severity = ErrorSeverity.Critical,
-                        Span = new Span(0, this._expression.Length),
-                        MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
+                        Span = new Span(0, this._expression.Length),                        
                         _messageArgs = new object[]
                         {
                             expectedTypesStr,
                             this.ReturnType._type.GetKindString()
                         }
-                    });
+                    }.SetMessageKey(TexlStrings.ErrTypeError_WrongType));
                 }
             }
 

@@ -52,12 +52,11 @@ namespace Microsoft.PowerFx.Types
             }
 
             var error = new ErrorValue(IRContext, new ExpressionError()
-            {
-                MessageKey = TexlStrings.InvalidCast.Key,
+            {                
                 Span = IRContext.SourceContext,
                 Kind = ErrorKind.InvalidArgument,
                 MessageArgs = new object[] { record.Type, Type.ToRecord() }
-            });
+            }.SetMessageKey(TexlStrings.InvalidCast));
 
             return DValue<RecordValue>.Of(error);
         }

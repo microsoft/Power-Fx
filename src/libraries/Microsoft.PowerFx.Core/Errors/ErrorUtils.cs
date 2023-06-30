@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Errors
             string shortMessage;
             string longMessage;
 
-            if (StringResources.TryGetErrorResource(errKey, out errorResource, locale?.Name))
+            if (errKey.ResourceManager.TryGetErrorResource(errKey, out errorResource, locale?.Name))
             {
                 shortMessage = errorResource.GetSingleValue(ErrorResource.ShortMessageTag);
                 Contracts.AssertValue(shortMessage);
@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Errors
             }
             else
             {
-                shortMessage = StringResources.Get(errKey.Key, locale?.Name);
+                shortMessage = errKey.ResourceManager.Get(errKey.Key, locale?.Name);
                 longMessage = null;
                 errorResource = null;
             }

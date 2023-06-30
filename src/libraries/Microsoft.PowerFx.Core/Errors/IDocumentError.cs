@@ -43,6 +43,11 @@ namespace Microsoft.PowerFx.Core.Errors
         string MessageKey { get; }
 
         /// <summary>
+        /// The resource manager storing the message.
+        /// </summary>
+        IResourceStringManager ResourceManager { get; }
+
+        /// <summary>
         /// Returns the key of the error message. Used for building new errors out of existing ones.
         /// </summary>
         [TransportDisabled]

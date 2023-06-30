@@ -38,7 +38,12 @@ namespace Microsoft.PowerFx.Core.Errors
         /// </summary>
         public string MessageKey { get; }
 
-        public ErrorResourceKey ErrorResourceKey => new ErrorResourceKey(MessageKey);
+        /// <summary>
+        /// Resource Manager storing the message.
+        /// </summary>
+        public IResourceStringManager ResourceManager { get; }
+
+        public ErrorResourceKey ErrorResourceKey => new ErrorResourceKey(MessageKey, ResourceManager);
 
         /// <summary>
         /// Returns the args of the error message. Used for building new errors out of existing ones, in some cases.
@@ -135,6 +140,7 @@ namespace Microsoft.PowerFx.Core.Errors
             SinkTypeErrors = sinkTypeErrors;
             MessageKey = errKey.Key;
             MessageArgs = args;
+            ResourceManager = errKey.ResourceManager;
 
             (var shortMessage, var longMessage) = ErrorUtils.GetLocalizedErrorContent(errKey, null, out var errorResource);
 
