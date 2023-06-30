@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -60,6 +61,11 @@ namespace Microsoft.PowerFx.Syntax
                 "\"",
                 CharacterUtils.ExcelEscapeString(node.Value),
                 "\"");
+        }
+
+        public override LazyList<string> Visit(TypeLiteralNode node, Precedence parentPrecedence)
+        {
+            throw new NotImplementedException();
         }
 
         public override LazyList<string> Visit(NumLitNode node, Precedence parentPrecedence)
@@ -560,6 +566,11 @@ namespace Microsoft.PowerFx.Syntax
                 "\"",
                 CharacterUtils.ExcelEscapeString(node.Value),
                 "\"");
+        }
+
+        public override LazyList<string> Visit(TypeLiteralNode node, Context context)
+        {
+            throw new NotImplementedException();
         }
 
         public override LazyList<string> Visit(NumLitNode node, Context context)

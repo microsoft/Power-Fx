@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Syntax.Nodes;
+
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
@@ -25,6 +27,11 @@ namespace Microsoft.PowerFx.Syntax
 
         /// <inheritdoc />
         public override void Visit(StrLitNode node)
+        {
+        }
+
+        /// <inheritdoc />
+        public override void Visit(TypeLiteralNode node)
         {
         }
 

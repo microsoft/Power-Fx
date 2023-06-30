@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Syntax.Nodes;
+
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
@@ -61,6 +63,8 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         /// <param name="node">The visited node.</param>
         public abstract void Visit(SelfNode node);
+
+        public abstract void Visit(TypeLiteralNode node);
 
         /// <summary>
         /// Pre-visit <see cref="StrInterpNode" /> non-leaf node.

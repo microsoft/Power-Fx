@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -102,6 +104,10 @@ namespace Microsoft.PowerFx.Core.Texl
         }
 
         public override void Visit(StrLitNode node)
+        {
+        }
+
+        public override void Visit(TypeLiteralNode node)
         {
         }
 

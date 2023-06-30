@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
@@ -85,6 +86,11 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(context);
 
                 return MaybeInjectCoercion(node, new TextLiteralNode(context.GetIRContext(node), node.Value), context);
+            }
+
+            public override IntermediateNode Visit(TypeLiteralNode node, IRTranslatorContext context)
+            {
+                throw new NotImplementedException();
             }
 
             public override IntermediateNode Visit(NumLitNode node, IRTranslatorContext context)

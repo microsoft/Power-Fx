@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -110,6 +112,11 @@ namespace Microsoft.PowerFx.Core.Binding
         {
             Contracts.AssertValue(node);
             _stringLiterals.Add(node);
+        }
+
+        public override void Visit(TypeLiteralNode node)
+        {
+            throw new NotImplementedException();
         }
 
         public override void Visit(ParentNode node)

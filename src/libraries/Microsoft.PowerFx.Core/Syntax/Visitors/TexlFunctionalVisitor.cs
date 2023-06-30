@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using Microsoft.PowerFx.Core.Syntax.Nodes;
+
 namespace Microsoft.PowerFx.Syntax
 {
     /// <summary>
@@ -161,5 +163,13 @@ namespace Microsoft.PowerFx.Syntax
         /// <param name="context">The context passed to the node.</param>
         /// <returns>The node visit result.</returns>
         public abstract TResult Visit(AsNode node, TContext context);
+
+        /// <summary>
+        /// Visit <see cref="TypeLiteralNode" /> non-leaf node.
+        /// </summary>
+        /// <param name="node">The visited node.</param>
+        /// <param name="context">The context passed to the node.</param>
+        /// <returns>The node visit result.</returns>
+        public abstract TResult Visit(TypeLiteralNode node, TContext context);
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.UtilityDataStructures;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -54,6 +55,11 @@ namespace Microsoft.PowerFx.Core.Logging
         {
             Contracts.AssertValue(node);
             return LazyList<string>.Of("#$string$#");
+        }
+
+        public override LazyList<string> Visit(TypeLiteralNode node, Precedence parentPrecedence)
+        {
+            throw new NotImplementedException();
         }
 
         public override LazyList<string> Visit(NumLitNode node, Precedence parentPrecedence)

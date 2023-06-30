@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Linq;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Syntax
@@ -300,6 +302,11 @@ namespace Microsoft.PowerFx.Syntax
         public override void Visit(StrLitNode node)
         {
             SetCurrentNodeAsResult(node);
+        }
+
+        public override void Visit(TypeLiteralNode node)
+        {
+            throw new NotImplementedException();
         }
 
         public override void Visit(NumLitNode node)
