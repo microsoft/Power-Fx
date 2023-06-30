@@ -8,8 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Localization
