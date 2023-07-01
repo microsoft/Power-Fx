@@ -26,7 +26,6 @@ Table({Value:""},{Value:""})
 >> Left("abcd",[2,3])
 Table({Value:"ab"},{Value:"abc"})
 
-// suspect, may be different on Canvas requiring an override
 >> Left(Blank(),[2,3])
 Table({Value:""},{Value:""})
 
@@ -39,7 +38,6 @@ Table({Value:""},{Value:""})
 >> Right("abc",[2,3])
 Table({Value:"bc"},{Value:"abc"})
 
-// suspect, may be different on Canvas requiring an override
 >> Right(Blank(),[2,3])
 Table({Value:""},{Value:""})
 
