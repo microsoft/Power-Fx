@@ -256,6 +256,5 @@ Table()
 >> Concatenate(Blank(), "test")
 "test"
 
-// suspect, may be different on Canvas requiring an override
 >> Concatenate(Blank(), ["test"], Filter([1], Value > 10))
 Table({Value:Error({Kind:ErrorKind.NotApplicable})})
