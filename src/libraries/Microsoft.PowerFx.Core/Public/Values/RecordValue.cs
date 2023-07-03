@@ -21,6 +21,8 @@ namespace Microsoft.PowerFx.Types
     /// </summary>
     public abstract class RecordValue : ValidFormulaValue
     {
+        public virtual bool HasError => GetFields().Any(f => f.Value is ErrorValue);
+
         /// <summary>
         /// Fields and their values directly available on this record. 
         /// The field names should match the names on <see cref="Type"/>. 

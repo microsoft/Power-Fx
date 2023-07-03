@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Entities;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -137,6 +139,25 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Assert.True(checkRecord.IsSuccess);                
                 Assert.True(checkTable.IsSuccess);
             }
+        }
+
+        [Fact]
+        public void RecordHasError()
+        {
+            var recordType = RecordType.Empty()
+                .Add("F1", FormulaType.Number);
+
+            var record = FormulaValue.NewRecordFromFields(
+                recordType, 
+                new NamedValue("F1", FormulaValue.New(1)));
+
+            Assert.False(record.HasError);
+
+            record = FormulaValue.NewRecordFromFields(
+                recordType,
+                new NamedValue("F1", CommonErrors.DivByZeroError(IRContext.NotInSource(FormulaType.Number))));
+
+            Assert.True(record.HasError);
         }
 
         internal class BooleanOptionSet : OptionSet, IExternalOptionSet
