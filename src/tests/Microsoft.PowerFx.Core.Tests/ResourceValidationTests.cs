@@ -28,6 +28,18 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void FindExtraResources()
+        {
+            string r1 = StringResources.Get("SampleResource1", CultureInfo.InvariantCulture.Name);
+            Assert.Null(r1);
+            
+            StringResources.RegisterStringManager(new PowerFxStringResources("Microsoft.PowerFx.Core.Tests.Properties.Resources", typeof(ResourceValidationTests).Assembly));
+            string r2 = StringResources.Get("SampleResource1", CultureInfo.InvariantCulture.Name);
+            Assert.NotNull(r2);
+            Assert.Equal("This is only a sample resource", r2);
+        }
+
+        [Fact]
         public void TestResourceImportUsesCurrentUICulture()
         {
             // $$$ Don't use CurrentUICulture
