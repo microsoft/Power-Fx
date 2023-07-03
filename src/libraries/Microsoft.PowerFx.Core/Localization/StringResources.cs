@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Core.Localization
         internal static readonly IResourceStringManager LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
         internal static List<IResourceStringManager> ResourceManagers = new List<IResourceStringManager>();
 
-        public static void RegisterStringManager(IResourceStringManager resourceManager)
+        internal static void RegisterStringManager(IResourceStringManager resourceManager)
         {
             ResourceManagers.Add(resourceManager ?? throw new ArgumentNullException(nameof(resourceManager)));
         }
