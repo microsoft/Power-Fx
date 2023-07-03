@@ -71,7 +71,16 @@ namespace Microsoft.PowerFx.Core.Errors
             }
             else
             {
-                shortMessage = errKey.ResourceManager.Get(errKey.Key, locale?.Name);
+                if (errKey.ResourceManager.TryGet(errKey.Key, out string resourceValue, locale?.Name))
+                {
+                    shortMessage = resourceValue;
+                }
+                else
+                {
+                    PowerFxStringResources.ThrowInternal(errKey.Key);
+                    shortMessage = null; // Just to make the compiler happy
+                }
+
                 longMessage = null;
                 errorResource = null;
             }

@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Localization
     {
         public string Key { get; }
 
-        internal IResourceStringManager ResourceManager { get; }
+        internal IExternalStringResources ResourceManager { get; }
 
         public ErrorResourceKey(string key)
         {
@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Localization
             ResourceManager = StringResources.LocalStringResources;
         }
 
-        internal ErrorResourceKey(string key, IResourceStringManager externalStringResources = null)
+        internal ErrorResourceKey(string key, IExternalStringResources externalStringResources = null)
         {
             Contracts.AssertNonEmpty(key);
 

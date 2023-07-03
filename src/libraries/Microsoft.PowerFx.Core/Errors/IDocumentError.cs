@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Errors
         /// The resource manager storing the message.
         /// </summary>
         [TransportDisabled]
-        IResourceStringManager ResourceManager { get; }
+        IExternalStringResources ResourceManager { get; }
 
         /// <summary>
         /// Returns the key of the error message. Used for building new errors out of existing ones.

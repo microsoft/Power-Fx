@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
             {
                 if (_message == null && this.MessageKey != null)
                 {
-                    (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey(this.MessageKey, this._resourceManager), _messageLocale, out _);
+                    (var shortMessage, var _) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey(this.MessageKey, this.ResourceManager), _messageLocale, out _);
 
                     var msg = ErrorUtils.FormatMessage(shortMessage, _messageLocale, _messageArgs);
 
@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx
             set => _message = value;
         }
 
-        internal IResourceStringManager _resourceManager;
+        internal IExternalStringResources ResourceManager;
 
         /// <summary>
         /// Source location for this error.
@@ -59,17 +59,17 @@ namespace Microsoft.PowerFx
 
         public ErrorSeverity Severity { get; set; } = ErrorSeverity.Severe;
 
-        public string MessageKey => _messageKey;
-
-        private string _messageKey;
-
-        public ExpressionError SetMessageKey(ErrorResourceKey key)
+        public ErrorResourceKey ResourceKey
         {
-            _resourceManager = key.ResourceManager;
-            _messageKey = key.Key;
-
-            return this;
+            get => new (MessageKey, ResourceManager);
+            set
+            {
+                MessageKey = value.Key;
+                ResourceManager = value.ResourceManager;
+            }
         }
+
+        public string MessageKey { get; set; }
 
         public object[] MessageArgs
         {
@@ -104,9 +104,8 @@ namespace Microsoft.PowerFx
                 {
                     Span = this.Span,
                     Kind = this.Kind,
-                    Severity = this.Severity,
-                    _messageKey = this.MessageKey,
-                    _resourceManager = this._resourceManager,
+                    Severity = this.Severity,                    
+                    ResourceKey = this.ResourceKey,
 
                     // New message can be localized
                     _message = null, // will be lazily computed in new locale 
@@ -140,10 +139,10 @@ namespace Microsoft.PowerFx
             {
                 _message = error.ShortMessage,
                 _messageArgs = error.MessageArgs,
-                _resourceManager = error.ResourceManager,
+                MessageKey = error.MessageKey,
+                ResourceManager = error.ResourceManager,
                 Span = error.TextSpan,
-                Severity = (ErrorSeverity)error.Severity,
-                _messageKey = error.MessageKey
+                Severity = (ErrorSeverity)error.Severity                
             };
         }    
 
@@ -153,10 +152,10 @@ namespace Microsoft.PowerFx
             {
                 _messageLocale = locale,
                 _messageArgs = error.MessageArgs,
-                _resourceManager = error.ResourceManager,
+                MessageKey = error.MessageKey,
+                ResourceManager = error.ResourceManager,
                 Span = error.TextSpan,
-                Severity = (ErrorSeverity)error.Severity,
-                _messageKey = error.MessageKey              
+                Severity = (ErrorSeverity)error.Severity                       
             };
         }
 

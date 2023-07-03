@@ -8,12 +8,10 @@ namespace Microsoft.PowerFx.Core.Localization
     /// Ideally it would be removed, but separating this is tricky, and this allows PowerFx to stand on its own. 
     /// </summary>
     [ThreadSafeImmutable]
-    internal interface IResourceStringManager
+    internal interface IExternalStringResources
     {
         bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null);
 
-        bool TryGet(string resourceKey, out string resourceValue, string locale = null);
-
-        public string Get(string resourceKey, string locale = null);
+        bool TryGet(string resourceKey, out string resourceValue, string locale = null);        
     }
 }

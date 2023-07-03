@@ -36,8 +36,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.Null(r1);
             Assert.Throws<FileNotFoundException>(() => ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey("SampleResource1"), CultureInfo.InvariantCulture, out _));
 
-            // Notice that the below line can only be called once in all tests of this class as it registers the string manager for the entire class  (static list)
-            StringResources.RegisterStringManager(new PowerFxStringResources("Microsoft.PowerFx.Core.Tests.Properties.Resources", typeof(ResourceValidationTests).Assembly));
+            // Notice that the below line can only be called once in all tests of this class as it registers the string manager for the entire class (static)
+            StringResources.ExternalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.Tests.Properties.Resources", typeof(ResourceValidationTests).Assembly);
 
             string r2 = StringResources.Get("SampleResource1", CultureInfo.InvariantCulture.Name);
             Assert.NotNull(r2);

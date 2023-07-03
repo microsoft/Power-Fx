@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Core.Errors
         /// <summary>
         /// Resource Manager storing the message.
         /// </summary>
-        public IResourceStringManager ResourceManager { get; }
+        public IExternalStringResources ResourceManager { get; }
 
         public ErrorResourceKey ErrorResourceKey => new ErrorResourceKey(MessageKey, ResourceManager);
 

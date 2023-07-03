@@ -13,14 +13,18 @@ using Microsoft.PowerFx.Core.Utils;
 namespace Microsoft.PowerFx.Core.Localization
 {
     internal static class StringResources
-    {        
-        internal static readonly IResourceStringManager LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly, true);
-        internal static List<IResourceStringManager> ResourceManagers = new List<IResourceStringManager>();
+    {
+        /// <summary>
+        ///  This field is set once on startup by Canvas' Document Server, and allows access to Canvas-specific string keys
+        ///  It is a legacy use, left over from when PowerFx was deeply embedded in Canvas, and ideally should be removed if possible.
+        /// </summary>
+        internal static IExternalStringResources ExternalStringResources { get; set; }
 
-        internal static void RegisterStringManager(IResourceStringManager resourceManager)
-        {
-            ResourceManagers.Add(resourceManager ?? throw new ArgumentNullException(nameof(resourceManager)));
-        }
+        // This is used to workaround a build-time issue when this class is loaded by reflection without all the resources initialized correctly. 
+        // If the dependency on ExternalStringResources is removed, this can be as well
+        public static bool ShouldThrowIfMissing { get; set; } = true;
+
+        internal static readonly IExternalStringResources LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly, true);        
 
         public static string Get(string resourceKey, string locale = null)
         {
@@ -36,12 +40,9 @@ namespace Microsoft.PowerFx.Core.Localization
                 return true;
             }
             
-            foreach (IResourceStringManager resourceManager in ResourceManagers)
+            if (StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGet(resourceKey, out resourceValue, locale))
             {
-                if (resourceManager.TryGet(resourceKey, out resourceValue, locale))                    
-                {
-                    return true;
-                }
+                return true;
             }            
 
             resourceValue = null;
@@ -65,9 +66,9 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static string Get(ErrorResourceKey resourceKey, string locale = null)
         {
-            return resourceKey.ResourceManager.Get(resourceKey.Key, locale);
+            return resourceKey.ResourceManager.TryGet(resourceKey.Key, out string resourceValue, locale) ? resourceValue : null;
         }
-      
+
         public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
         {
             return resourceKey.ResourceManager.TryGetErrorResource(resourceKey, out resourceValue, locale);
@@ -84,7 +85,7 @@ namespace Microsoft.PowerFx.Core.Localization
         internal string ResourceLocation => _resourceManager.BaseName;
 
         internal ThreadSafeResourceManager(string resourceLocation, Assembly assembly)
-        {            
+        {
             _resourceManager = new ResourceManager(resourceLocation, assembly);
         }
 
@@ -101,10 +102,10 @@ namespace Microsoft.PowerFx.Core.Localization
     }
 
     [DebuggerDisplay("{ResourceLocation}")]
-    internal class PowerFxStringResources : IResourceStringManager
+    internal class PowerFxStringResources : IExternalStringResources
     {
-        private readonly ThreadSafeResourceManager _resourceManager;
-        private readonly bool _useResourceManagers;
+        internal readonly ThreadSafeResourceManager _resourceManager;
+        private readonly bool _useExternalResourceManager;
 
         internal string ResourceLocation => _resourceManager.ResourceLocation;
 
@@ -114,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Localization
         internal PowerFxStringResources(string resourceLocation, Assembly assembly, bool useResourceManagers = false)
             : this(new ThreadSafeResourceManager(resourceLocation, assembly))
         {
-            _useResourceManagers = useResourceManagers;
+            _useExternalResourceManager = useResourceManagers;
         }
 
         internal PowerFxStringResources(ThreadSafeResourceManager resourceManager)
@@ -122,19 +123,24 @@ namespace Microsoft.PowerFx.Core.Localization
             _resourceManager = resourceManager;
         }
 
-        bool IResourceStringManager.TryGet(string resourceKey, out string resourceValue, string locale)
+        bool IExternalStringResources.TryGet(string resourceKey, out string resourceValue, string locale)
         {
             Contracts.CheckValue(resourceKey, nameof(resourceKey));
             Contracts.CheckValueOrNull(locale, nameof(locale));
 
             resourceValue = _resourceManager.GetLocaleResource(resourceKey, locale);
 
+            if (string.IsNullOrEmpty(resourceValue) && _useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGet(resourceKey, out resourceValue, locale))
+            {
+                return true;
+            }
+
             return resourceValue != null;
         }
 
         public string Get(string resourceKey, string locale = null)
         {
-            if (_useResourceManagers)
+            if (_useExternalResourceManager)
             {
                 string str = Get(resourceKey, locale, false);
 
@@ -143,9 +149,9 @@ namespace Microsoft.PowerFx.Core.Localization
                     return str;
                 }
 
-                foreach (IResourceStringManager resourceManager in StringResources.ResourceManagers)
+                if (StringResources.ExternalStringResources != null)
                 {
-                    str = resourceManager.Get(resourceKey, locale);
+                    str = StringResources.ExternalStringResources.TryGet(resourceKey, out string resourceValue, locale) ? resourceValue : null;
 
                     if (!string.IsNullOrEmpty(str))
                     {
@@ -164,14 +170,14 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValue(resourceKey, nameof(resourceKey));
             Contracts.CheckValueOrNull(locale, nameof(locale));
 
-            if (!((IResourceStringManager)this).TryGet(resourceKey, out var resourceValue, locale))
+            if (!((IExternalStringResources)this).TryGet(resourceKey, out var resourceValue, locale))
             {
                 // Prior to ErrorResources, error messages were fetched like other string resources.
                 // The resource associated with the key corresponds to the ShortMessage of the new
                 // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
                 // the error message manually (as opposed to going through the DocError class), we check
                 // if there is an error resource associated with this key if we did not find it normally.
-                if (((IResourceStringManager)this).TryGetErrorResource(new ErrorResourceKey(resourceKey, this), out var potentialErrorResource, locale))
+                if (((IExternalStringResources)this).TryGetErrorResource(new ErrorResourceKey(resourceKey, this), out var potentialErrorResource, locale))
                 {
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
                 }
@@ -187,13 +193,13 @@ namespace Microsoft.PowerFx.Core.Localization
             return resourceValue;
         }
 
-        private static void ThrowInternal(string resourceKey)
+        internal static void ThrowInternal(string resourceKey)
         {
             Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR resource string {0} not found", resourceKey));
             throw new System.IO.FileNotFoundException(resourceKey);
         }
 
-        bool IResourceStringManager.TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale)
+        bool IExternalStringResources.TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale)
         {
             Contracts.CheckValue(resourceKey.Key, nameof(resourceKey));
             Contracts.CheckValueOrNull(locale, nameof(locale));
