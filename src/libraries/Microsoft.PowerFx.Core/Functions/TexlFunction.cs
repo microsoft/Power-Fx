@@ -697,7 +697,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // (Used by Tests only)
         public IEnumerable<string> GetParamNames()
         {
-            return GetSignatures().SelectMany(args => args.Select(arg => arg(null))).Distinct();
+            IEnumerable<TexlStrings.StringGetter[]>  sig = GetSignatures().ToList();
+            return sig.SelectMany(args => args.Select(arg => arg(null))).Distinct().ToList();
         }
 
         // Allows a function to determine if a given type is valid for a given parameter index.

@@ -15,6 +15,38 @@ namespace Microsoft.PowerFx.Core.Localization
     internal static class StringResources
     {        
         internal static readonly IResourceStringManager LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
+        internal static List<IResourceStringManager> ResourceManagers = new List<IResourceStringManager>();
+
+        public static void RegisterStringManager(IResourceStringManager resourceManager)
+        {
+            ResourceManagers.Add(resourceManager ?? throw new ArgumentNullException(nameof(resourceManager)));
+        }
+
+        public static string Get(string resourceKey, string locale = null)
+        {
+            return TryGet(resourceKey, out string resourceValue, locale) ? resourceValue : null;
+        }
+
+        public static bool TryGet(string resourceKey, out string resourceValue, string locale = null)
+        {
+            bool success = LocalStringResources.TryGet(resourceKey, out resourceValue, locale);
+
+            if (success)
+            {
+                return true;
+            }
+            
+            foreach (IResourceStringManager resourceManager in ResourceManagers)
+            {
+                if (resourceManager.TryGet(resourceKey, out resourceValue, locale))                    
+                {
+                    return true;
+                }
+            }            
+
+            resourceValue = null;
+            return false;
+        }
 
         public static ErrorResource GetErrorResource(ErrorResourceKey resourceKey, string locale = null)
         {
@@ -35,17 +67,7 @@ namespace Microsoft.PowerFx.Core.Localization
         {
             return resourceKey.ResourceManager.Get(resourceKey.Key, locale);
         }
-
-        public static string Get(string resourceKey, string locale = null)
-        {
-            return LocalStringResources.Get(resourceKey, locale);
-        }
-
-        public static bool TryGet(string resourceKey, out string resourceValue, string locale = null)
-        {
-            return LocalStringResources.TryGet(resourceKey, out resourceValue, locale);
-        }
-
+      
         public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
         {
             return resourceKey.ResourceManager.TryGetErrorResource(resourceKey, out resourceValue, locale);
