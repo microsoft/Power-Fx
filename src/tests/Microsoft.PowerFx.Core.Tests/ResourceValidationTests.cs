@@ -3,7 +3,9 @@
 
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl;
@@ -32,12 +34,18 @@ namespace Microsoft.PowerFx.Tests
         {
             string r1 = StringResources.Get("SampleResource1", CultureInfo.InvariantCulture.Name);
             Assert.Null(r1);
-            
+            Assert.Throws<FileNotFoundException>(() => ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey("SampleResource1"), CultureInfo.InvariantCulture, out _));
+
+            // Notice that the below line can only be called once in all tests of this class as it registers the string manager for the entire class  (static list)
             StringResources.RegisterStringManager(new PowerFxStringResources("Microsoft.PowerFx.Core.Tests.Properties.Resources", typeof(ResourceValidationTests).Assembly));
+
             string r2 = StringResources.Get("SampleResource1", CultureInfo.InvariantCulture.Name);
             Assert.NotNull(r2);
             Assert.Equal("This is only a sample resource", r2);
-        }
+                        
+            (string shortMessage, string longMessage) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey("SampleResource1"), CultureInfo.InvariantCulture, out _);
+            Assert.Equal("This is only a sample resource", shortMessage);
+        }        
 
         [Fact]
         public void TestResourceImportUsesCurrentUICulture()

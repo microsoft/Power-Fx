@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Localization
 {
     internal static class StringResources
     {        
-        internal static readonly IResourceStringManager LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
+        internal static readonly IResourceStringManager LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly, true);
         internal static List<IResourceStringManager> ResourceManagers = new List<IResourceStringManager>();
 
         internal static void RegisterStringManager(IResourceStringManager resourceManager)
@@ -104,15 +104,17 @@ namespace Microsoft.PowerFx.Core.Localization
     internal class PowerFxStringResources : IResourceStringManager
     {
         private readonly ThreadSafeResourceManager _resourceManager;
+        private readonly bool _useResourceManagers;
 
         internal string ResourceLocation => _resourceManager.ResourceLocation;
 
         [ThreadSafeProtectedByLockAttribute("_errorResources")]
         private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new (StringComparer.OrdinalIgnoreCase);
 
-        internal PowerFxStringResources(string resourceLocation, Assembly assembly)
+        internal PowerFxStringResources(string resourceLocation, Assembly assembly, bool useResourceManagers = false)
             : this(new ThreadSafeResourceManager(resourceLocation, assembly))
         {
+            _useResourceManagers = useResourceManagers;
         }
 
         internal PowerFxStringResources(ThreadSafeResourceManager resourceManager)
@@ -132,6 +134,33 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public string Get(string resourceKey, string locale = null)
         {
+            if (_useResourceManagers)
+            {
+                string str = Get(resourceKey, locale, false);
+
+                if (!string.IsNullOrEmpty(str))
+                {
+                    return str;
+                }
+
+                foreach (IResourceStringManager resourceManager in StringResources.ResourceManagers)
+                {
+                    str = resourceManager.Get(resourceKey, locale);
+
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        return str;
+                    }
+                }
+
+                ThrowInternal(resourceKey);
+            }
+
+            return Get(resourceKey, locale, true);
+        }
+
+        internal string Get(string resourceKey, string locale = null, bool throwIfNotFound = true)
+        {
             Contracts.CheckValue(resourceKey, nameof(resourceKey));
             Contracts.CheckValueOrNull(locale, nameof(locale));
 
@@ -147,11 +176,21 @@ namespace Microsoft.PowerFx.Core.Localization
                     return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
                 }
 
-                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR resource string {0} not found", resourceKey));                               
-                throw new System.IO.FileNotFoundException(resourceKey);                
+                if (throwIfNotFound)
+                {
+                    ThrowInternal(resourceKey);
+                }
+
+                return null;
             }
 
             return resourceValue;
+        }
+
+        private static void ThrowInternal(string resourceKey)
+        {
+            Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR resource string {0} not found", resourceKey));
+            throw new System.IO.FileNotFoundException(resourceKey);
         }
 
         bool IResourceStringManager.TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale)

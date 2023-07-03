@@ -696,7 +696,7 @@ namespace Microsoft.PowerFx.Core.Functions
         // Exhaustive list of parameter names, in no guaranteed order.
         // (Used by Tests only)
         public IEnumerable<string> GetParamNames()
-        {            
+        {
             return GetSignatures().SelectMany(args => args.Select(arg => arg(null))).Distinct();
         }
 
