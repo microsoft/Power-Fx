@@ -32,6 +32,9 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void FindExtraResources()
         {
+            string str = StringResources.Get(TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn);
+            Assert.NotNull(str);
+
             string r1 = StringResources.Get("SampleResource1", CultureInfo.InvariantCulture.Name);
             Assert.Null(r1);
             Assert.Throws<FileNotFoundException>(() => ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey("SampleResource1"), CultureInfo.InvariantCulture, out _));
