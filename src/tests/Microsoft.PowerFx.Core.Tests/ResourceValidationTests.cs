@@ -42,9 +42,16 @@ namespace Microsoft.PowerFx.Tests
             string r2 = StringResources.Get("SampleResource1", CultureInfo.InvariantCulture.Name);
             Assert.NotNull(r2);
             Assert.Equal("This is only a sample resource", r2);
-                        
+
             (string shortMessage, string longMessage) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey("SampleResource1"), CultureInfo.InvariantCulture, out _);
-            Assert.Equal("This is only a sample resource", shortMessage);          
+            Assert.Equal("This is only a sample resource", shortMessage);
+
+            ErrorResource er = StringResources.GetErrorResource(new ErrorResourceKey("SampleResource2"));
+            Assert.NotNull(er);
+            Assert.Equal("This is sample message #2 short", er.GetSingleValue(ErrorResource.ShortMessageTag));
+            Assert.Equal("This is sample message #2 long version", er.GetSingleValue(ErrorResource.LongMessageTag));
+            Assert.Equal("This is sample message #2 how to fix", er.GetSingleValue(ErrorResource.HowToFixTag));
+            Assert.Equal("This is sample message #2 link", er.HelpLinks[0].DisplayText);            
         }
 
         [Fact]

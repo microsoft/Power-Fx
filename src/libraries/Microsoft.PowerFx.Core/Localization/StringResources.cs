@@ -242,8 +242,7 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
 
                 if (_useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
-                {
-                    localizedErrorResources.Add(resourceKey.Key, resourceValue);
+                {                    
                     return true;
                 }
             }

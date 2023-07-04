@@ -61,6 +61,51 @@ namespace Microsoft.PowerFx.Core.Tests.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is sample message #2 how to fix.
+        /// </summary>
+        internal static string ErrorResource_SampleResource2_HowToFix_1 {
+            get {
+                return ResourceManager.GetString("ErrorResource_SampleResource2_HowToFix_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is sample message #2 link.
+        /// </summary>
+        internal static string ErrorResource_SampleResource2_Link_1 {
+            get {
+                return ResourceManager.GetString("ErrorResource_SampleResource2_Link_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://go.microsoft.com/fwlink/?linkid=99999999.
+        /// </summary>
+        internal static string ErrorResource_SampleResource2_Link_1_URL {
+            get {
+                return ResourceManager.GetString("ErrorResource_SampleResource2_Link_1_URL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is sample message #2 long version.
+        /// </summary>
+        internal static string ErrorResource_SampleResource2_LongMessage {
+            get {
+                return ResourceManager.GetString("ErrorResource_SampleResource2_LongMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is sample message #2 short.
+        /// </summary>
+        internal static string ErrorResource_SampleResource2_ShortMessage {
+            get {
+                return ResourceManager.GetString("ErrorResource_SampleResource2_ShortMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is only a sample resource.
         /// </summary>
         internal static string SampleResource1 {

@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ErrorResource_SampleResource2_HowToFix_1" xml:space="preserve">
+    <value>This is sample message #2 how to fix</value>
+  </data>
+  <data name="ErrorResource_SampleResource2_Link_1" xml:space="preserve">
+    <value>This is sample message #2 link</value>
+  </data>
+  <data name="ErrorResource_SampleResource2_Link_1_URL" xml:space="preserve">
+    <value>https://go.microsoft.com/fwlink/?linkid=99999999</value>
+  </data>
+  <data name="ErrorResource_SampleResource2_LongMessage" xml:space="preserve">
+    <value>This is sample message #2 long version</value>
+  </data>
+  <data name="ErrorResource_SampleResource2_ShortMessage" xml:space="preserve">
+    <value>This is sample message #2 short</value>
+  </data>
   <data name="SampleResource1" xml:space="preserve">
     <value>This is only a sample resource</value>
   </data>
