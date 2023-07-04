@@ -44,8 +44,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("This is only a sample resource", r2);
                         
             (string shortMessage, string longMessage) = ErrorUtils.GetLocalizedErrorContent(new ErrorResourceKey("SampleResource1"), CultureInfo.InvariantCulture, out _);
-            Assert.Equal("This is only a sample resource", shortMessage);
-        }        
+            Assert.Equal("This is only a sample resource", shortMessage);          
+        }
 
         [Fact]
         public void TestResourceImportUsesCurrentUICulture()

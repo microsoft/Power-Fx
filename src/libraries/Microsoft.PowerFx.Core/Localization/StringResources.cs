@@ -55,13 +55,13 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValueOrNull(locale, nameof(locale));
 
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!resourceKey.ResourceManager.TryGetErrorResource(resourceKey, out var resourceValue, locale))
+            if (resourceKey.ResourceManager.TryGetErrorResource(resourceKey, out ErrorResource resourceValue, locale))
             {
-                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR error resource {0} not found", resourceKey));
-                throw new System.IO.FileNotFoundException(resourceKey.Key);
+                return resourceValue;
             }
 
-            return resourceValue;
+            Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR error resource {0} not found", resourceKey));
+            throw new System.IO.FileNotFoundException(resourceKey.Key);
         }
 
         public static string Get(ErrorResourceKey resourceKey, string locale = null)
@@ -236,6 +236,12 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
 
                 if (TryRebuildErrorResource(resourceKey.Key, locale, out resourceValue))
+                {
+                    localizedErrorResources.Add(resourceKey.Key, resourceValue);
+                    return true;
+                }
+
+                if (_useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
                 {
                     localizedErrorResources.Add(resourceKey.Key, resourceValue);
                     return true;
