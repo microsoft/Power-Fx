@@ -43,9 +43,7 @@ namespace Microsoft.PowerFx
 
             // If this is set directly, it will skip localization. 
             set => _message = value;
-        }
-
-        internal IExternalStringResources ResourceManager;
+        }        
 
         /// <summary>
         /// Source location for this error.
@@ -59,21 +57,15 @@ namespace Microsoft.PowerFx
 
         public ErrorSeverity Severity { get; set; } = ErrorSeverity.Severe;
 
-        public ErrorResourceKey ResourceKey
-        {
-            get => new (MessageKey, ResourceManager);
-            set
-            {
-                MessageKey = value.Key;
-                ResourceManager = value.ResourceManager;
-            }
-        }
+        public ErrorResourceKey ResourceKey { get; set; }
 
-        public string MessageKey { get; set; }
+        public string MessageKey => ResourceKey.Key;
+
+        internal IExternalStringResources ResourceManager => ResourceKey.ResourceManager;
 
         public object[] MessageArgs
         {
-            get => _messageArgs;            
+            get => _messageArgs;
             set => _messageArgs = value;
         }
 
@@ -83,7 +75,7 @@ namespace Microsoft.PowerFx
         public bool IsWarning => Severity < ErrorSeverity.Severe;
 
         // localize message lazily 
-        private string _message; 
+        private string _message;
         internal object[] _messageArgs;
         private CultureInfo _messageLocale;
 
@@ -104,7 +96,7 @@ namespace Microsoft.PowerFx
                 {
                     Span = this.Span,
                     Kind = this.Kind,
-                    Severity = this.Severity,                    
+                    Severity = this.Severity,
                     ResourceKey = this.ResourceKey,
 
                     // New message can be localized
@@ -115,9 +107,9 @@ namespace Microsoft.PowerFx
 
                 return error;
             }
-           
-            return this;            
-        }   
+
+            return this;
+        }
 
         public override string ToString()
         {
@@ -129,7 +121,7 @@ namespace Microsoft.PowerFx
             else
             {
                 return $"{prefix}: {Message}";
-            }    
+            }
         }
 
         // Build the public object from an internal error object. 
@@ -139,12 +131,11 @@ namespace Microsoft.PowerFx
             {
                 _message = error.ShortMessage,
                 _messageArgs = error.MessageArgs,
-                MessageKey = error.MessageKey,
-                ResourceManager = error.ResourceManager,
+                ResourceKey = new ErrorResourceKey(error.MessageKey, error.ResourceManager),                
                 Span = error.TextSpan,
-                Severity = (ErrorSeverity)error.Severity                
+                Severity = (ErrorSeverity)error.Severity
             };
-        }    
+        }
 
         internal static ExpressionError New(IDocumentError error, CultureInfo locale)
         {
@@ -152,10 +143,9 @@ namespace Microsoft.PowerFx
             {
                 _messageLocale = locale,
                 _messageArgs = error.MessageArgs,
-                MessageKey = error.MessageKey,
-                ResourceManager = error.ResourceManager,
+                ResourceKey = new ErrorResourceKey(error.MessageKey, error.ResourceManager),                
                 Span = error.TextSpan,
-                Severity = (ErrorSeverity)error.Severity                       
+                Severity = (ErrorSeverity)error.Severity
             };
         }
 
@@ -206,7 +196,7 @@ namespace Microsoft.PowerFx
         }
 
         public override int GetHashCode(ExpressionError error)
-        {            
+        {
             return error.ToString().GetHashCode();
         }
     }

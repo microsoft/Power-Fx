@@ -12,6 +12,6 @@ namespace Microsoft.PowerFx.Core.Localization
     {
         bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null);
 
-        bool TryGet(string resourceKey, out string resourceValue, string locale = null);        
+        bool TryGet(string resourceKey, out string resourceValue, string locale = null);
     }
 }

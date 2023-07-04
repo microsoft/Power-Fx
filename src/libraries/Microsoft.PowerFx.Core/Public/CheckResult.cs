@@ -478,7 +478,7 @@ namespace Microsoft.PowerFx
                         Kind = ErrorKind.Validation,
                         Severity = ErrorSeverity.Critical,
                         Span = new Span(0, this._expression.Length),
-                        ResourceKey = TexlStrings.ErrTypeError_WrongType,                        
+                        ResourceKey = TexlStrings.ErrTypeError_WrongType,
                         _messageArgs = new object[]
                         {
                             expectedTypesStr,

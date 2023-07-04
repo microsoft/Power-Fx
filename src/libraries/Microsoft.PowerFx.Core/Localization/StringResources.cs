@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Localization
         // If the dependency on ExternalStringResources is removed, this can be as well
         public static bool ShouldThrowIfMissing { get; set; } = true;
 
-        internal static readonly IExternalStringResources LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly, true);        
+        internal static readonly IExternalStringResources LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly, true);
 
         public static string Get(string resourceKey, string locale = null)
         {
@@ -39,11 +39,11 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 return true;
             }
-            
+
             if (StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGet(resourceKey, out resourceValue, locale))
             {
                 return true;
-            }            
+            }
 
             resourceValue = null;
             return false;
@@ -242,7 +242,7 @@ namespace Microsoft.PowerFx.Core.Localization
                 }
 
                 if (_useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
-                {                    
+                {
                     return true;
                 }
             }
