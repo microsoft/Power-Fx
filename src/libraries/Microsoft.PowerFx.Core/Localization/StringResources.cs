@@ -135,6 +135,17 @@ namespace Microsoft.PowerFx.Core.Localization
                 return true;
             }
 
+            // Prior to ErrorResources, error messages were fetched like other string resources.
+            // The resource associated with the key corresponds to the ShortMessage of the new
+            // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
+            // the error message manually (as opposed to going through the DocError class), we check
+            // if there is an error resource associated with this key if we did not find it normally.
+            if (((IExternalStringResources)this).TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale))
+            {
+                resourceValue = potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
+                return true;
+            }
+
             return resourceValue != null;
         }
 
