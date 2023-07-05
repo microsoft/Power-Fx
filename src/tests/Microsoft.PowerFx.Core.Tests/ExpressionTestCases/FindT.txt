@@ -1,9 +1,9 @@
 
 >> Find(Blank(), [""], [1])
-Errors: Error 0-24: The function 'Find' has some invalid arguments.|Error 14-18: Invalid argument type (Table). Expecting a Text value instead.|Error 20-23: Invalid argument type (Table). Expecting a Number value instead.
+Table({Value:1})
 
 >> Find([""], [""], Blank())
-Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: Invalid argument type (Table). Expecting a Text value instead.|Error 11-15: Invalid argument type (Table). Expecting a Text value instead.
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [1])
 Blank()
