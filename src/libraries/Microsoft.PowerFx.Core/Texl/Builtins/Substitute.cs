@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Arg0 should be either a string or a column of strings.
             // Its type dictates the function return type.
-            if (type0.IsTable)
+            if (type0.IsTableStrict)
             {
                 // Ensure we have a one-column table of strings
                 fValid &= CheckStringColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap, out returnType);
@@ -91,7 +91,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Arg1 should be either a string or a column of strings.
-            if (type1.IsTable)
+            if (type1.IsTableStrict)
             {
                 fValid &= CheckStringColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
             }
@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Arg2 should be either a string or a column of strings.
-            if (type2.IsTable)
+            if (type2.IsTableStrict)
             {
                 fValid &= CheckStringColumnType(context, args[2], type2, errors, ref nodeToCoercedTypeMap);
             }
@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var type3 = argTypes[3];
 
                 // Arg3 should be either a number or a column of numbers.
-                if (type3.IsTable)
+                if (type3.IsTableStrict)
                 {
                     fValid &= CheckNumericColumnType(context, args[3], type3, errors, ref nodeToCoercedTypeMap);
                 }
@@ -144,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // At least one arg has to be a table.
-            if (!(type0.IsTable || type1.IsTable || type2.IsTable) && (!hasCount || !argTypes[3].IsTable))
+            if (!(type0.IsTableStrict || type1.IsTableStrict || type2.IsTableStrict) && (!hasCount || !argTypes[3].IsTableStrict))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
