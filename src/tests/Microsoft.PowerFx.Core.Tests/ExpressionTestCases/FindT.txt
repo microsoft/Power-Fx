@@ -9,34 +9,34 @@ Errors: Error 0-25: The function 'Find' has some invalid arguments.|Error 5-9: I
 Blank()
 
 >> Find(If(false, ["blank table"], Blank()), If(false, ["blank table"], Blank()), [2])
-Table({Value:Error({Kind:ErrorKind.InvalidArgument})})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), "textToBeSearchedIn", [5])
-Table({Value:5})
+Blank()
 
 >> Find("textToSearch", If(false, ["blank table"], Blank()), [1])
-Table({Value:Blank()})
+Blank()
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), 1)
-Table({Value:1},{Value:1},{Value:Blank()})
+Blank()
 
 >> Find(["b"], ["abc", "cde"])
 Table({Value:2},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Find(["b"], ["abc", "cde"], If(false, [0], Blank()))
-Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.NotApplicable})})
+Blank()
 
 >> Find(["b"], ["abc", "cde"], Filter([0], Value <> Value))
 Table({Value:Error({Kind:ErrorKind.NotApplicable})},{Value:Error({Kind:ErrorKind.NotApplicable})})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()), [1, 2, 3])
-Table({Value:1},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], 1)
-Table({Value:1},{Value:1},{Value:1})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"], [1, 2, 3])
-Table({Value:1},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:3})
+Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn", 1)
 Table({Value:1},{Value:1},{Value:19})
@@ -57,10 +57,10 @@ Table({Value:1},{Value:10},{Value:19})
 Table({Value:19},{Value:19},{Value:19},{Value:Blank()})
 
 >> Find([Blank(), "", ","], If(false, ["blank table"], Blank()))
-Table({Value:1},{Value:1},{Value:Blank()})
+Blank()
 
 >> Find(If(false, ["blank table"], Blank()), [Blank(), "", "textToBeSearchedIn"])
-Table({Value:1},{Value:1},{Value:1})
+Blank()
 
 >> Find([Blank(), "", ","], "textToBeSearchedIn,textToBeSearchedIn")
 Table({Value:1},{Value:1},{Value:19})
@@ -269,3 +269,13 @@ Table()
    1/0
    )
 Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
+
+// ======================== UNTYPED BLANKS ======================
+>> Find(Blank(), "Hello", [2,3])
+Table({Value:2},{Value:3})
+
+>> Find("Hello", Blank(), [1,2])
+Table({Value:Blank()},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Find(["H","e"], "Hello", Blank())
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
