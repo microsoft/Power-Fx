@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
@@ -32,15 +33,13 @@ namespace Microsoft.PowerFx.Core.Localization
         }
 
         public static bool TryGet(string resourceKey, out string resourceValue, string locale = null)
-        {
-            bool success = LocalStringResources.TryGet(resourceKey, out resourceValue, locale);
-
-            if (success)
+        {            
+            if (LocalStringResources.TryGet(resourceKey, out resourceValue, locale))
             {
                 return true;
             }
 
-            if (StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGet(resourceKey, out resourceValue, locale))
+            if (ExternalStringResources != null && ExternalStringResources.TryGet(resourceKey, out resourceValue, locale))
             {
                 return true;
             }
@@ -61,7 +60,7 @@ namespace Microsoft.PowerFx.Core.Localization
             }
 
             Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR error resource {0} not found", resourceKey));
-            throw new System.IO.FileNotFoundException(resourceKey.Key);
+            throw new FileNotFoundException(resourceKey.Key);
         }
 
         public static string Get(ErrorResourceKey resourceKey, string locale = null)
