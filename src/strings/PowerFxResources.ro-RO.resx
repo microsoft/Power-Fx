@@ -4858,23 +4858,23 @@
     <value>Conversia de tip nu a reușit, deoarece valoarea dată a fost de tip „{0}”, tipul așteptat „{1}”.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Această operațiune pe tabel pe „{0}” este posibil să nu funcționeze dacă are mai mult de {1} rânduri.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Acest predicat va fi întotdeauna adevărat. Ați vrut să folosiși ThisRecord sau [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Nu se poate delega {0}: numai delegarea cu suport pentru căutare în câmpul de cheie primară „{1}”.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Nu se poate delega {0}: conține o funcție de comportament „{1}”.</value>
     
   </data>

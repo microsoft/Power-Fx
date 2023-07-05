@@ -4858,23 +4858,23 @@
     <value>Pretvorba vrste nije uspjela zato što je dana vrijednost bila vrste „{0}”, a očekivala se vrsta „{1}”.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ta operacija na tablici „{0}” možda neće raditi ako ima više od ovoliko redaka: {1}.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Ovaj će predikat uvijek biti istinit. Jeste li mislili upotrijebiti ThisRecord ili [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} se ne može delegirati: podržava samo delegiranje za pretraživanje polja primarnog ključa „{1}”.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} se ne može delegirati: sadrži funkciju ponašanja „{1}”.</value>
     
   </data>

@@ -4858,23 +4858,23 @@
     <value>类型转换失败，因为给定的值为 '{0}' 类型，但应为 '{1}' 类型。</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>如果表 '{0}' 超过 {1} 行，则此操作对该表可能不起作用。</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>此谓词将永远为 true。您是要使用 ThisRecord 还是 [@]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>无法委托 {0}: 仅支持委托查找主键字段 '{1}'。</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>无法委托 {0}: 包含行为函数 '{1}'。</value>
     
   </data>

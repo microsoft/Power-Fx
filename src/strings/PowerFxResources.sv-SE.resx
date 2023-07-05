@@ -4858,23 +4858,23 @@
     <value>Typkonverteringen misslyckades eftersom det angivna värdet var av typen "{0}", förväntad typ: "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Den här åtgärden i tabellen "{0}" kanske inte fungerar om den har fler än {1} rader.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Det här predikatet kommer alltid att vara sant. Ville du använda ThisRecord eller [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Det går inte att delegera {0}: stöder endast delegering för sökning i primärnyckelfältet {1}.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Det går inte att delegera {0}: innehåller en beteendefunktion {1}.</value>
     
   </data>

@@ -4858,23 +4858,23 @@
     <value>Tipa pārvēršana neizdevās, jo dotās vērtības tips bija “{0}”, paredzamais tips: “{1}”.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Šī darbība tabulā “{0}” var nedarboties, ja tās rindu skaits pārsniedz {1}.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Šis predikāts vienmēr būs patiess. Vai vēlējāties izmantot ThisRecord vai [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Nevar deleģēt {0}: deleģēšana tiek atbalstīta tikai primārās atslēgas lauka '{1}' uzmeklēšanai.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Nevar deleģēt {0}: satur uzvedības funkciju '{1}'.</value>
     
   </data>

@@ -4858,23 +4858,23 @@
     <value>類型轉換失敗，因為指定值的類型為 '{0}'，必須是 '{1}' 類型。</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>資料表 '{0}' 如果超過 {1} 列，則此作業可能無法運作。</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>此述詞將永遠為 true。您要使用 ThisRecord 還是 [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>無法委派 {0}: 僅支援委派對主索引鍵欄位 '{1}' 的查詢。</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
     
   </data>

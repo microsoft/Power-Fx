@@ -4858,23 +4858,23 @@
     <value>必要な種類 '{1}' に対して種類 '{0}' の値を指定したため、種類の変換が失敗しました。</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>テーブル '{0}' の行数が {1} を超える場合、この操作は機能しない可能性があります。</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>この述語は常に true になります。ThisRecord や [@ ] の使用を意図していますか?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} を委任できません: サポートしているのは主キー フィールド '{1}' に対するルックアップの委任のみです。</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} を委任できません: 動作機能 '{1}' を含みます。</value>
     
   </data>

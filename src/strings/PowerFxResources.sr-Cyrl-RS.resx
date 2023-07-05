@@ -4858,23 +4858,23 @@
     <value>Конверзија типа није успела јер је дата вредност била типа „{0}“, а очекује се тип „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ова операција на табели „{0}'“ можда неће функционисати ако има више од оволико редова: {1}.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Овај исказ ће увек бити истинит. Да ли сте желели да користите ThisRecord или [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Није могуће делегирати {0}: делегирање је подржано само за проналажење на пољу примарног кључа „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Није могуће делегирати {0}: садржи функцију понашања „{1}“.</value>
     
   </data>

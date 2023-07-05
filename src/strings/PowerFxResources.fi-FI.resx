@@ -4858,23 +4858,23 @@
     <value>Tyypin muuntaminen epäonnistui, koska annettu arvo oli tyypiltään {0}, odotettiin tyyppiä {1}.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Tämä toiminto taulukossa {0}ei ehkä toimi, jos sillä on yli {1} riviä.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Tämä predikaatti on aina tosi. Oliko sinun tarkoitus käyttää kohdetta ThisRecord tai [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Ei voi delegoida kohdetta {0}: kohde tukee vain ensisijaisen avaimen kentän {1} haun delegointia.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Ei voida delegoida kohdetta {0}: kohde sisältää käyttäytymisfunktion {1}.</value>
     
   </data>

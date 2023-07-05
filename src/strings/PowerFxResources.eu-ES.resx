@@ -4858,23 +4858,23 @@
     <value>Mota-bihurketak huts egin du, emandako balioa "{0}" motakoa zelako eta "{1}" motakoa espero zelako.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>"{0}" taulako eragiketak ez du funtzionatuko {1} errenkada baino gehiago baditu.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Predikatu hau beti izango da egiazkoa. ThisRecord edo [@ ] erabili nahi zenuen?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Ezin da eskuordetu {0}: onartu soilik gako-eremu nagusiko ("{1}") bilaketa eskuordetzea.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Ezin da eskuordetu {0}: "{1}" portaera-funtzioa dauka.</value>
     
   </data>

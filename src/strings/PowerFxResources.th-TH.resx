@@ -4858,23 +4858,23 @@
     <value>การแปลงชนิดล้มเหลวเนื่องจากค่าที่ระบุเป็นชนิด '{0}' แต่ที่คาดไว้คือชนิด '{1}'</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>การดำเนินการนี้บนตาราง '{0}' อาจไม่ทำงาน ถ้าตารางมีแถวมากกว่า {1} แถว</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>เพรดิเคตนี้จะเป็นจริงเสมอ คุณหมายถึงการใช้ ThisRecord หรือ [@ ]</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>ไม่สามารถมอบสิทธิ์ {0} ได้: รองรับเฉพาะการมอบสิทธิ์สำหรับการค้นหาในฟิลด์คีย์หลัก '{1}' เท่านั้น</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
     
   </data>

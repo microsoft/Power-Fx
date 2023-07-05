@@ -4858,23 +4858,23 @@
     <value>Fehler bei der Typkonvertierung, da der angegebene Wert vom Typ „{0}“ war. Erwarteter Typ: „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Dieser Vorgang für Tabelle „{0}“ funktioniert möglicherweise nicht, wenn sie mehr als {1} Zeilen enthält.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Dieses Prädikat trifft immer zu. Wollten Sie ThisRecord oder [@ ] verwenden?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} kann nicht delegiert werden: Nur die Delegierung für die Suche im Feld für den Primärschlüssel „{1}“ wird unterstützt.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} kann nicht delegiert werden: Enthält eine Verhaltensfunktion „{1}“.</value>
     
   </data>

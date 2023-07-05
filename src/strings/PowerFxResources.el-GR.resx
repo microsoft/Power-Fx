@@ -4858,23 +4858,23 @@
     <value>Η μετατροπή τύπου απέτυχε επειδή η δεδομένη τιμή ήταν τύπου «{0}», αναμενόμενου τύπου «{1}».</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Αυτή η λειτουργία στον πίνακα '{0}' ενδέχεται να μην λειτουργεί, εάν έχει περισσότερες από {1} γραμμές.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Αυτό το πρόθεμα θα είναι πάντα αληθές. Θέλατε να χρησιμοποιήσετε το ThisRecord ή το [@ ];</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Δεν είναι δυνατή η ανάθεση {0}: υποστηρίξτε μόνο την ανάθεση για αναζήτηση σε πεδίο πρωτεύοντος κλειδιού '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
     
   </data>

@@ -4858,23 +4858,23 @@
     <value>Tüübi teisendamine nurjus, kuna antud väärtus oli tüübiga „{0}“, eeldati tüüpi „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>See tegevus tabelis „{0}“ ei pruugi töötada, kui ridu on rohkem kui {1}.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>See predikaat on alati tõene. Kas soovisite kasutada argumenti ThisRecord või [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Üksust {0} ei saa delegeerida: ainult toe delegeerimine primaarvõtme väljal „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
     
   </data>

@@ -4858,23 +4858,23 @@
     <value>A típus átalakítása nem sikerült, mert a megadott érték „{0}” típusú, a várt érték pedig „{1}” típusú.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ez a művelet a(z) '{0}' táblán adott esetben nem működik, ha több mint {1} sorral rendelkezik.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Ez a predikátum mindig igaz lesz. A ThisRecord vagy [@ ] lehetőséget akarta használni?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>A(z) {0} nem delegálható: csak a(z) '{1}' elsődleges kulcsmezőre történő keresés delegálásának támogatása.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>A(z) {0} nem delegálható: '{1}' viselkedési függvényt tartalmaz.</value>
     
   </data>

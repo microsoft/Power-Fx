@@ -4858,23 +4858,23 @@
     <value>Не вдалося перетворити тип, оскільки надано значення типу "{0}", а очікується тип "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ця операція з таблицею "{0}" може не працювати, якщо вона містить більше такої кількості рядків: {1}.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Цей предикат завжди матиме значення "Істина". Ви хотіли використати ThisRecord або [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле первинного ключа "{1}".</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Не вдалося делегувати {0}: містить поведінкову функцію "{1}".</value>
     
   </data>

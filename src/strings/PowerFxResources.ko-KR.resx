@@ -4858,23 +4858,23 @@
     <value>지정된 값이 '{0}' 형식이었으므로 형식을 변환하지 못했습니다. 필요한 형식은 '{1}'입니다.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>'{0}' 테이블에 {1}개 이상의 행이 있는 경우 이 작업이 작동하지 않을 수 있습니다.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>이 조건자는 항상 참입니다. ThisRecord 또는 [@]을(를) 사용했습니까?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0}을(를) 위임할 수 없음: 기본 키 필드 '{1}' 조회에 대한 위임만 지원합니다.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0}을(를) 위임할 수 없음: 동작 함수 '{1}'을(를) 포함합니다.</value>
     
   </data>
