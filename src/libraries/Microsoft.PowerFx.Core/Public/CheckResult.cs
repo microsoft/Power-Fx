@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Public;
@@ -20,7 +19,7 @@ using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
-{ 
+{
     /// <summary>
     /// Holds work such as parsing, binding, error checking done on a single expression. 
     /// Different options require different work. 
@@ -67,7 +66,7 @@ namespace Microsoft.PowerFx
         /// <param name="source">Engine used to handle Apply operations.</param>
         public CheckResult(Engine source)
         {
-            this._engine = source ?? throw new ArgumentNullException(nameof(source));            
+            this._engine = source ?? throw new ArgumentNullException(nameof(source));
         }
 
         internal Engine Engine => _engine;
@@ -201,7 +200,7 @@ namespace Microsoft.PowerFx
                         throw new NotImplementedException($"Setting ExpectedReturnType to {type.GetType().FullName} is not implemented");
                 }
             }
-            
+
             return SetExpectedReturnValue(new FormulaType[] { type });
         }
 
@@ -363,7 +362,7 @@ namespace Microsoft.PowerFx
         /// Parameters are the subset of symbols that must be passed in Eval() for each evaluation. 
         /// This lets us associated the type in Check()  with the values in Eval().
         /// </summary>
-        internal ReadOnlySymbolTable Parameters 
+        internal ReadOnlySymbolTable Parameters
         {
             get
             {
@@ -469,7 +468,7 @@ namespace Microsoft.PowerFx
                 if (this.ReturnType != null && this.ReturnType != FormulaType.Blank && this._expectedReturnTypes != null && !this._expectedReturnTypes.Contains(this.ReturnType))
                 {
                     string expectedTypesStr = this._expectedReturnTypes[0]._type.GetKindString();
-                    for (int i = 1;  i < this._expectedReturnTypes.Length; i++)
+                    for (int i = 1; i < this._expectedReturnTypes.Length; i++)
                     {
                         expectedTypesStr += ", " + this._expectedReturnTypes[i]._type.GetKindString();
                     }
@@ -479,7 +478,7 @@ namespace Microsoft.PowerFx
                         Kind = ErrorKind.Validation,
                         Severity = ErrorSeverity.Critical,
                         Span = new Span(0, this._expression.Length),
-                        MessageKey = TexlStrings.ErrTypeError_WrongType.Key,
+                        ResourceKey = TexlStrings.ErrTypeError_WrongType,
                         _messageArgs = new object[]
                         {
                             expectedTypesStr,
@@ -541,7 +540,7 @@ namespace Microsoft.PowerFx
 
             return this.Errors;
         }
-                
+
         internal IRResult ApplyIR()
         {
             if (_irresult == null)
@@ -562,7 +561,7 @@ namespace Microsoft.PowerFx
                         // Stop any further processing if we have errors. 
                         this.ThrowOnErrors();
                     }
-                }                
+                }
 
                 _irresult = new IRResult
                 {
@@ -642,7 +641,7 @@ namespace Microsoft.PowerFx
             if (_expressionAnonymous == null)
             {
                 var parse = ApplyParse();
-                
+
                 _expressionAnonymous = parse.GetAnonymizedFormula();
             }
 

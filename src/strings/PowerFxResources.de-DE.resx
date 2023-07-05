@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ungültige Anzahl von Argumenten für die Funktion {0}: empfangen {1}, erwartet {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Das {0}-Argument wird für die {1}-Funktion in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Dieses Argument kann nicht als dieser Typ in Formelspalten übergeben werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Dieses Argument kann nicht als Typ {0} in Formelspalten übergeben werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Für dieses Argument wird nur ein Literalwert unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kann für diese Eingabe ohne Zeitzonenumstellung nicht ausgeführt werden, was in Formelspalten nicht unterstützt wird.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Dieser Vorgang kann nicht für Werte ausgeführt werden, die ein anderes Datums-/Uhrzeitverhalten aufweisen.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Nur die Zeichenfolgen für das kurze Datums- und Zeitformat werden in den Formelspalten unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Das {0}-Argument ist eine ungültige/nicht unterstützte Zeiteinheit für {1} datumsarithmetische Funktion.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Ortsspezifische Formatierungstoken wie „.“ und „,“ werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} wird in Formelspalten nicht unterstützt. Verwenden Sie stattdessen {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Dieser Vorgang kann nicht für Typ {0} in Formelspalten ausgeführt werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Der Ergebnistyp {0} wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Das direkte Verweisen auf einen gesamten Datensatz wird in Formelspalten nicht unterstützt. Verweisen Sie auf ein gültiges Feld im Datensatz.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Der Ergebnistyp für diese Formel muss {0} sein, der tatsächliche Ergebnistyp ist jedoch {1}. Der Ergebnistyp einer Formelspalte kann nicht geändert werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Spalten vom Typ {0} werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Spalten vom Typ {0} mit Format {1} werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Das Erstellen von Datensätzen oder Tabellen wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabellen mit einer einzelnen Spalte werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Es kann nicht auf die virtuelle Tabelle {0} in Formelspalten verwiesen werden.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Es wurde ein Operand erwartet. Für die Formel oder den Ausdruck wird ein gültiger Operand erwartet. Beispielsweise können Sie dem Ausdruck " 1 +_" den Operanden "2" hinzufügen, sodass das Ergebnis "3" lautet. Sie können dem Ausdruck ""Hallo "&amp; _ " den Operanden "zusammen" hinzufügen, sodass das Ergebnis "Hallo zusammen" lautet.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Fehler bei der Typkonvertierung, da der angegebene Wert vom Typ „{0}“ war. Erwarteter Typ: „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Dieser Vorgang für Tabelle „{0}“ funktioniert möglicherweise nicht, wenn sie mehr als {1} Zeilen enthält.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Dieses Prädikat trifft immer zu. Wollten Sie ThisRecord oder [@ ] verwenden?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} kann nicht delegiert werden: Nur die Delegierung für die Suche im Feld für den Primärschlüssel „{1}“ wird unterstützt.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} kann nicht delegiert werden: Enthält eine Verhaltensfunktion „{1}“.</value>
     
   </data>

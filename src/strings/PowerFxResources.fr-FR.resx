@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Non pris en charge dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Nombre d’arguments non valides pour la fonction {0} : {1} ont été reçus, {2} étaient attendus</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>L’argument {0} n’est pas pris en charge pour la fonction {1} dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Cet argument ne peut pas être transmis en tant que ce type dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Impossible de transmettre cet argument en tant que type {0} dans les colonnes de formules.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Seule une valeur littérale est prise en charge pour cet argument.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} ne peut pas être effectuée sur cette entrée sans conversion de fuseau horaire, qui n’est pas prise en charge dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Cette opération ne peut pas être effectuée sur des valeurs qui ont des comportements différents en matière de date et d’heure.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Seules les chaînes de format de date et d’heure courtes sont prises en charge dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>L’argument {0} est une unité de temps non valide/non prise charge pour la fonction arithmétique de date {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Les jetons de mise en forme spécifiques aux paramètres régionaux, tels que « . » et « , » ne sont pas pris en charge dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} n’est pas pris en charge dans les colonnes de formule, utilisez {1} plutôt.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Impossible d’effectuer cette opération sur le type {0} dans les colonnes de formules.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Le type de résultat {0} n’est pas pris en charge dans les colonnes de formules.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>La référence directe à un enregistrement entier n’est pas prise en charge dans les colonnes de formules. Référencez un champ valide dans l’enregistrement.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Le type de résultat de cette formule doit être {0}, mais le type de résultat réel est {1}. Le type de résultat d’une colonne de formule ne peut pas être modifié.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Les colonnes de type {0} ne sont pas prises en charge dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Les colonnes de type {0} ayant le format {1} ne sont pas prises en charge dans les colonnes de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Contraindre des enregistrements ou des tables n’est pas pris en charge dans les colonnes de formules.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Les tables à une seule colonne ne sont pas prise en charge dans les colonnes de formules.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Impossible de référencer la table virtuelle {0} dans les colonnes de formules.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Opérande attendu. La formule ou l’expression attend un opérande valide. Par exemple, vous pouvez ajouter l’opérande '2' à l’expression ' 1 +_' pour que le résultat soit '3'. Vous pouvez également ajouter l’opérande "vous" à l’expression '"Bonjour "&amp; _ ' afin que le résultat soit 'Bonjour vous'.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Échec de la conversion de type, car la valeur donnée était de type « {0} », type attendu : « {1} ».</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Cette opération sur la table « {0} » peut ne pas fonctionner si elle a plus de {1} lignes.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Ce prédicat sera toujours vrai. Voulez-vous utiliser ThisRecord ou [@] ?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Impossible de déléguer {0} : prend uniquement en charge la délégation de support pour la recherche dans les champs de clé primaire « {1} ».</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Impossible de déléguer {0} : contient une fonction de comportement « {1} ».</value>
     
   </data>
