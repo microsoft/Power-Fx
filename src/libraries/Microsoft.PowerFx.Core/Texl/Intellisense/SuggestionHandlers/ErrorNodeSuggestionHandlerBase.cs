@@ -43,7 +43,11 @@ namespace Microsoft.PowerFx.Intellisense
                     intellisenseData.AddAlternativeTopLevelSuggestionsForErrorNode();
                 }
 
-                intellisenseData.AddSuggestionsAfterTopLevelErrorNodeSuggestions();
+                if (curNode.Parent is BinaryOpNode)
+                {
+                    intellisenseData.AddSuggestionsAfterTopLevelErrorNodeSuggestions();
+                }
+
                 return true;
             }
         }

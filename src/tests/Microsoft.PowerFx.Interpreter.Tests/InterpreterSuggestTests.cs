@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core;
@@ -185,6 +186,46 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.SymbolTable.EnableMutationFunctions();
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        [Fact]
+        public void IntelllisenseUserInfoTest()
+        {
+            string expression = "Power(";
+            BasicUserInfo userInfo = new BasicUserInfo
+            {
+                FullName = "fullname",
+                Email = "me@contoso.com",
+                DataverseUserId = Guid.NewGuid(),
+                TeamsMemberId = "teamsId",
+            };
+            var props = new Dictionary<string, object>
+            {
+                { "FullName", userInfo.FullName },
+                { "Email", userInfo.Email },
+                { "DataverseUserId", userInfo.DataverseUserId },
+                { "TeamsMemberId", userInfo.TeamsMemberId }
+            };
+            var allKeys = props.Keys.ToArray();
+            SymbolTable symbol = new SymbolTable();
+            symbol.AddUserInfoObject(allKeys);
+
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1) { SymbolTable = symbol };
+            var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
+            {
+                    { "option_1", "Option1" },
+                    { "option_2", "Option2" }
+            }));
+            config.AddEntity(optionSet);
+            RecalcEngine engine = new RecalcEngine(config);
+            CheckResult checkResult = engine.Check(expression, symbolTable: null);
+
+            var rc = new RuntimeConfig();
+            rc.SetUserInfo(userInfo);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length);
+
+            Assert.NotNull(suggestions);
+            Assert.Empty(suggestions.Suggestions);
         }
     }
 }
