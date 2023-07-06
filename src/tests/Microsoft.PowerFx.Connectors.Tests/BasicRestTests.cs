@@ -83,6 +83,36 @@ namespace Microsoft.PowerFx.Tests
             AssertLog(testConnector, httpQuery);
         }
 
+        [Fact]
+        public async void ValidateOpenAI()
+        {
+            var fxQuery = @"Test.ExtensionsChatCompletionsCreate(3, ""1234"", ""123"", [{role: ""user"", content: ""content""}], {max_tokens: 20, logit_bias: { propertyNotInSchema: {primitiveValue: 5, complexValue: {innerPrimitive: 1}}}, temperature: 0.5, topP: 0.5, stream: true, stop: [""x""], dataSources: [{type: ""AzureCognitiveSearch"", parameters: {indexName: ""minhdo-index"",fieldsMapping: {urlField: ""metadata_storage_name"",filepathField: ""metadata_storage_path"",contentFields: [""content""], contentFieldsSeparator: ""ddd"" }, topNDocuments: 5,queryType: ""simple"", semanticConfiguration: ""defaultConfiguration"",inScope: true, roleInformation: ""You are an AI assistant that helps people find information.""}}]})";
+            var swaggerFile = @"Swagger\TestOpenAI.json";
+            var expectedParsedResponse = "{choices:Table({index:Decimal(0),messages:Table({content:\"test content\",end_turn:false,index:Decimal(0),role:\"tool\"},{content:\"second test content\",end_turn:true,index:Decimal(1),role:\"assistant\"})}),created:Decimal(1688073110),id:\"fbcda332-0e66-4f31-885a-625a53dd2f32\",model:\"gpt-35-turbo\",object:\"chat.completion\"}";
+            var expectedHttpQuery = "POST http://localhost:5000/openai/deployments/3/extensions/chat/completions?deploymentId=1234&api-version=123\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"messages\":[{\"role\":\"user\",\"content\":\"content\"}],\"dataSources\":[{\"type\":\"AzureCognitiveSearch\",\"parameters\":{\"fieldsMapping\":{\"contentFields\":[\"content\"],\"contentFieldsSeparator\":\"ddd\",\"filepathField\":\"metadata_storage_path\",\"urlField\":\"metadata_storage_name\"},\"inScope\":true,\"indexName\":\"minhdo-index\",\"queryType\":\"simple\",\"roleInformation\":\"You are an AI assistant that helps people find information.\",\"semanticConfiguration\":\"defaultConfiguration\",\"topNDocuments\":5}}],\"temperature\":0.5,\"stream\":true,\"stop\":[\"x\"],\"max_tokens\":20,\"logit_bias\":{\"propertyNotInSchema\":{\"complexValue\":{\"innerPrimitive\":1},\"primitiveValue\":5}}}";
+            using var testConnector = new LoggingTestServer(swaggerFile);
+            testConnector.SetResponseFromFile(@"Responses\HttpCall_2.json");
+
+            var config = new PowerFxConfig(Features.PowerFxV1);
+            using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
+            config.AddService("Test", testConnector._apiDocument, httpClient);
+
+            var engine = new RecalcEngine(config);
+
+            var checkResult = engine.Check(fxQuery, options: _optionsPost);
+            Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
+
+            var rConfig = new RuntimeConfig();
+            rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
+            Assert.NotNull(result);
+
+            var resultObject = result.ToExpression();
+            Assert.Equal(expectedParsedResponse, resultObject);
+
+            AssertLog(testConnector, expectedHttpQuery);
+        }
+
         // Allow side-effects for executing behavior functions (any POST)
         private static readonly ParserOptions _optionsPost = new ()
         {

@@ -54,7 +54,12 @@ namespace Microsoft.PowerFx.Types
                     return FormulaValue.NewBlank(formulaType);
 
                 case JsonValueKind.Number:
-                    if ((skipTypeValidation && numberIsFloat) || formulaType is NumberType)
+                    if (formulaType is DateTimeType)
+                    {
+                        // unixtime
+                        return DecimalValue.New(element.GetInt64());
+                    }
+                    else if ((skipTypeValidation && numberIsFloat) || formulaType is NumberType)
                     {
                         return NumberValue.New(element.GetDouble());
                     }

@@ -1,0 +1,25 @@
+﻿{
+  "id": "fbcda332-0e66-4f31-885a-625a53dd2f32",
+  "model": "gpt-35-turbo",
+  "created": 1688073110,
+  "object": "chat.completion",
+  "choices": [
+    {
+      "index": 0,
+      "messages": [
+        {
+          "index": 0,
+          "role": "tool",
+          "content": "test content",
+          "end_turn": false
+        },
+        {
+          "index": 1,
+          "role": "assistant",
+          "content": "second test content",
+          "end_turn": true
+        }
+      ]
+    }
+  ]
+}
