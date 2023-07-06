@@ -291,11 +291,11 @@ namespace Microsoft.PowerFx.Functions
                     maxTableSize = Math.Max(maxTableSize, tableSize);
                     minTableSize = Math.Min(minTableSize, tableSize);
                 }
-                else if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTableStrict)
+                else if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTableNonObjNull)
                 {
                     return (minTableSize, maxTableSize, new BlankValue(irContext));
                 }
-                else if (arg is ErrorValue ev && ev.IRContext.ResultType._type.IsTableStrict)
+                else if (arg is ErrorValue ev && ev.IRContext.ResultType._type.IsTableNonObjNull)
                 {
                     return (minTableSize, maxTableSize, ev);
                 }

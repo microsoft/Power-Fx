@@ -260,7 +260,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 DType otherDesiredScalarType;
 
                 // At least one of the arguments has to be a table.
-                if (type0.IsTableStrict)
+                if (type0.IsTableNonObjNull)
                 {
                     fValid &= TryGetSingleColumn(type0, args[0], errors, out var column0);
                     returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column0.Type);
@@ -281,7 +281,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     otherType = type1;
                     otherDesiredScalarType = _secondArgFloat ? DType.Number : returnScalarType;
                 }
-                else if (type1.IsTableStrict)
+                else if (type1.IsTableNonObjNull)
                 {
                     fValid &= TryGetSingleColumn(type1, args[1], errors, out var column1);
                     returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, type0);
@@ -307,7 +307,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    Contracts.Assert(returnType.IsTableStrict);
+                    Contracts.Assert(returnType.IsTableNonObjNull);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
 
@@ -317,10 +317,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 Contracts.Assert(otherType.IsValid);
                 Contracts.AssertValue(otherArg);
-                Contracts.Assert(returnType.IsTableStrict);
+                Contracts.Assert(returnType.IsTableNonObjNull);
                 Contracts.Assert(!fValid || returnType.IsColumn);
 
-                if (otherType.IsTableStrict)
+                if (otherType.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(otherType, otherArg, errors, out var otherColumn);
@@ -336,7 +336,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var type0 = argTypes[0];
 
-                if (type0.IsTableStrict)                    
+                if (type0.IsTableNonObjNull)                    
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(type0, args[0], errors, out var oneArgColumn);
@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    Contracts.Assert(returnType.IsTableStrict);
+                    Contracts.Assert(returnType.IsTableNonObjNull);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
                     fValid = false;
                 }
