@@ -50,6 +50,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(18, @"Test.GetT7(1, ""abc"", 5, { id_B: 4, name_B: ""foo"", countB: 44 })", "POST http://localhost:5000/weather/t7\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"id_A\":1,\"name_A\":\"abc\",\"count\":5,\"object_B\":{\"id_B\":4,\"name_B\":\"foo\",\"countB\":44}}")]
         [InlineData(19, @"Test.GetT8({body: Table({Value: 1}, {Value: 3})})", "POST http://localhost:5000/weather/t8\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,3]")]
         [InlineData(20, @"Test.GetT8a(Table({Value: 1}, {Value: 444}))", "POST http://localhost:5000/weather/t8a\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,444]")]
+        [InlineData(21, @"Test.PostWeatherWithComplexInput({children: [{parent: { someNumbers: [123] }, otherString: ""xyz""}], someNumbers: [1,2,3]})", "POST http://localhost:5000/weatherPost4\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"complexInput\":{\"children\":[{\"parent\":{\"someNumbers\":[123]},\"otherString\":\"xyz\"}],\"someNumbers\":[1,2,3]}}")]
         public async void ValidateHttpCalls(int i /* used for debugging */, string fxQuery, string httpQuery)
         {
             var swaggerFile = @"Swagger\TestOpenAPI.json";

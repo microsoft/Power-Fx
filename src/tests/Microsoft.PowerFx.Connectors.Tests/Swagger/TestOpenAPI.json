@@ -1559,7 +1559,6 @@
   "definitions": {
     "ComplexInput": {
       "required": [
-        "children",
         "someNumbers"
       ],
       "type": "object",
