@@ -1,4 +1,3 @@
-#SETUP: ConsistentOneColumnTableResult
 
 // *********** Single-argument functions ***********
 
@@ -252,10 +251,10 @@ Table({Value:0},{Value:0},{Value:0})
 Table()
 
 >> Concatenate(Blank(), Filter([1], Value > 10))
-Blank()
+Table()
 
 >> Concatenate(Blank(), "test")
 "test"
 
 >> Concatenate(Blank(), ["test"], Filter([1], Value > 10))
-Blank()
+Table({Value:Error({Kind:ErrorKind.NotApplicable})})

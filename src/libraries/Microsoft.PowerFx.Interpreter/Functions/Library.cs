@@ -2146,6 +2146,10 @@ namespace Microsoft.PowerFx.Functions
 
                 return new VoidValue(irContext);
             }
+            else if (result is BlankValue && result.IRContext.ResultType._type.Kind == DKind.ObjNull)
+            {
+                return new BlankValue(irContext); // Convert the untyped blank to a typed blank value
+            }
             else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
             {
                 return CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, recordValue);
