@@ -31,7 +31,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         internal static OpenApiSchema SchemaDateTime => new () { Type = "string", Format = "date-time" };
 
-        internal static OpenApiSchema SchemaObject(params (string PropertyName, OpenApiSchema Schema)[] properties) => new () { Type = "object", Properties = properties.ToDictionary(prop => prop.PropertyName, prop => prop.Schema) };
+        internal static OpenApiSchema SchemaObject(params (string PropertyName, OpenApiSchema Schema, bool Required)[] properties) => 
+            new () 
+            { 
+                Type = "object", 
+                Required = properties.Where(p => p.Required).Select(p => p.PropertyName).ToHashSet(), 
+                Properties = properties.ToDictionary(prop => prop.PropertyName, prop => prop.Schema)
+            };
 
         internal static RecordValue GetRecord(params (string Name, FormulaValue Value)[] properties) => FormulaValue.NewRecordFromFields(properties.Select(prop => new NamedValue(prop.Name, prop.Value)).ToArray());
 
