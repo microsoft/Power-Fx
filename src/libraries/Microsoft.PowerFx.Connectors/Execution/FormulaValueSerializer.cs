@@ -124,7 +124,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 case "array":
                     // array
-                    if ((fv is not TableValue tableValue))
+                    if (fv is not TableValue tableValue)
                     {
                         throw new ArgumentException($"Expected TableValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
                     }
