@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Netiek atbalstīts formulu kolonnās.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Nederīgs argumentu skaits funkcijai {0}: saņemtais {1}, paredzētais {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās arguments {0} funkcijai {1} netiek atbalstīts.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Šo argumentu formulu kolonnās nevar nodot kā šāda tipa argumentu.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Šo argumentu formulu kolonnās nevar nodot argumentu, kura tips ir kā {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Šim argumentam tiek atbalstīta tikai literāļa vērtība.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Funkciju {0} šai ievadei nevar veikt bez laika joslas pārvēršanas, kas formulu kolonnās netiek atbalstīta.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Šo operāciju nevar izpildīt vērtībām, kurām ir atšķirīgs datuma un laika scenārijs.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās tiek atbalstītas tikai īsās datuma un laika formāta virknes.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Arguments {0} ir nederīga/neatbalstīta laika vienība datuma aritmētiskajai funkcijai {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Lokalizācijas formatējuma marķieri, piemēram, "." un "," netiek atbalstīti formulas kolonnās.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} netiek atbalstīts formulas kolonnās, tā vietā izmantojiet {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās šo darbību nevar veikt tipam {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Rezultātu tips {0} netiek atbalstīts formulu kolonnās.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās netiek atbalstīta tieša atsauce uz visu ierakstu. Lūdzu, norādiet atsauci uz derīgu lauku ierakstā.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Ir paredzams, ka šīs formulas rezultāta tips būs {0}, taču faktiskais rezultāta tips ir {1}. Formulas kolonnas rezultāta tipu nevar mainīt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās netiek atbalstītas kolonnas, kuru tips ir {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās netiek atbalstītas kolonnas, kuru tips ir {0}, formāts {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās netiek atbalstīti piespiedu ieraksti vai tabulas.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās netiek atbalstītas vienas kolonnas tabulas.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās nevar atsaukties uz virtuālo tabulu {0}.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Tika paredzēts operands. Formulai vai izteiksmei tika paredzēts derīgs operands. Piemēram, varat pievienot operandu “2” izteiksmei “1 + _” un iegūt rezultātu “3”. Vai arī varat pievienot operandu “sveicināts” izteiksmei “"Esiet "&amp; _” un iegūt rezultātu “Esiet sveicināts”.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Tipa pārvēršana neizdevās, jo dotās vērtības tips bija “{0}”, paredzamais tips: “{1}”.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Šī darbība tabulā “{0}” var nedarboties, ja tās rindu skaits pārsniedz {1}.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Šis predikāts vienmēr būs patiess. Vai vēlējāties izmantot ThisRecord vai [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Nevar deleģēt {0}: deleģēšana tiek atbalstīta tikai primārās atslēgas lauka '{1}' uzmeklēšanai.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Nevar deleģēt {0}: satur uzvedības funkciju '{1}'.</value>
     
   </data>

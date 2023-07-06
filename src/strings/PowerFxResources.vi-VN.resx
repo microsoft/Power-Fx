@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Không được hỗ trợ trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Số lượng đối số không hợp lệ cho hàm {0}: đã nhận {1}, dự kiện {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Đối số {0} không được hỗ trợ cho hàm {1} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Không chuyển được đối số này dưới dạng loại này trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Không chuyển được đối số này dưới dạng loại {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Chỉ có một giá trị theo nghĩa đen được hỗ trợ cho đối số này.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} không thể thực hiện trên đầu vào này mà không có chuyển đổi múi giờ, điều này không được hỗ trợ trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Thao tác này không thể được thực hiện trên các giá trị có Hành vi ngày giờ khác nhau.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Chỉ các chuỗi định dạng ngày và giờ ngắn mới được hỗ trợ trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Đối số {0} là một đơn vị thời gian không hợp lệ/không được hỗ trợ cho hàm số học ngày {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Các mã thông báo định dạng dành riêng cho ngôn ngữ như "." và "," không được hỗ trợ trong các cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} không được hỗ trợ trong cột công thức, hãy sử dụng {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Không thực hiện được thao tác này đối với loại {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ kiểu kết quả {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ tham chiếu trực tiếp toàn bộ bản ghi trong các cột công thức. Vui lòng tham chiếu một trường hợp lệ trong bản ghi.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Loại kết quả cho công thức này dự kiến là {0}, nhưng loại kết quả thực tế là {1}. Không thể thay đổi loại kết quả của cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ cột kiểu {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ cột kiểu {0} với định dạng {1} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ ép buộc bản ghi hoặc bảng trong các cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ bảng một cột trong các cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Không thể tham chiếu bảng ảo {0} trong cột công thức.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Dự kiến có toán hạng. Công thức hoặc biểu thức dự kiến có một toán hạng hợp lệ. Ví dụ: bạn có thể thêm toán hạng '2' vào biểu thức ' 1 +_' để kết quả trở thành '3'. Hoặc, bạn có thể thêm toán hạng "there" vào biểu thức '"Hi "&amp; _ ' để kết quả trở thành 'Hi there'.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Quá trình chuyển đổi loại không thành công do giá trị đã cung cấp thuộc loại "{0}", loại dự kiến là "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Thao tác này trên bảng "{0}" có thể không hoạt động nếu bảng đó có nhiều hơn {1} hàng.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Vị từ này sẽ luôn đúng. Bạn muốn sử dụng ThisRecord hay [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Không thể ủy quyền {0}: chỉ hỗ trợ ủy quyền tra cứu trên trường khóa chính "{1}".</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Không thể ủy quyền {0}: chứa hàm hành vi "{1}".</value>
     
   </data>
