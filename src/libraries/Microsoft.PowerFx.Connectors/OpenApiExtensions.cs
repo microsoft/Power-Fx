@@ -330,10 +330,8 @@ namespace Microsoft.PowerFx.Connectors
                             return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
 
                         case "int64":
-                            return new ConnectorParameterType(schema, FormulaType.Decimal);
-
                         case "unixtime":
-                            return new ConnectorParameterType(schema, FormulaType.DateTime);
+                            return new ConnectorParameterType(schema, FormulaType.Decimal);                                                    
 
                         default:
                             throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
