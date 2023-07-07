@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
@@ -70,9 +71,15 @@ namespace Microsoft.PowerFx.Core.Parser
     {
         internal IdentToken Ident { get; }
 
-        public UDT(IdentToken ident)
+        internal TexlNode Body { get; }
+
+        internal DType Type { get; }
+
+        public UDT(IdentToken ident, TexlNode body, DType type)
         {
             Ident = ident;
+            Body = body;
+            Type = type;
         }
     }
 

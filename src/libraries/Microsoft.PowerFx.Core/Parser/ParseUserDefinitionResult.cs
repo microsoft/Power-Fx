@@ -13,14 +13,17 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal IEnumerable<NamedFormula> NamedFormulas { get; }
 
+        internal IEnumerable<UDT> UDTs { get; }
+
         internal IEnumerable<TexlError> Errors { get; }
 
         internal bool HasErrors { get; }
 
-        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<TexlError> errors)
+        public ParseUserDefinitionResult(IEnumerable<NamedFormula> namedFormulas, IEnumerable<UDF> uDFs, IEnumerable<UDT> uDTs, IEnumerable<TexlError> errors)
         {
             NamedFormulas = namedFormulas;
             UDFs = uDFs;
+            UDTs = uDTs;
 
             if (errors?.Any() ?? false)
             {

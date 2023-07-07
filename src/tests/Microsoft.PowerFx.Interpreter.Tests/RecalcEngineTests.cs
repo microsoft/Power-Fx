@@ -988,6 +988,14 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void UDFUDTTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig());
+            recalcEngine.DefineFunctions("Person = Type({Age: Number}); GetAge(person: Person): Number = person.Age;");
+            Assert.Equal(42, recalcEngine.Eval("GetAge({Age: 42})").ToObject());
+        }
+
+        [Fact]
         public void IndirectRecursionTest()
         {
             var recalcEngine = new RecalcEngine(new PowerFxConfig()

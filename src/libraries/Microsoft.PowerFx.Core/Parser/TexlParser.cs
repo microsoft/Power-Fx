@@ -8,6 +8,8 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Syntax.Nodes;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
@@ -276,13 +278,17 @@ namespace Microsoft.PowerFx.Core.Parser
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     }
 
-                    if (_curs.TidCur == TokKind.Ident)
+                    if (_curs.TidCur == TokKind.Ident && _curs.TidPeek() == TokKind.ParenOpen)
                     {
-                        IdentToken identToken = _curs.TokCur.As<IdentToken>();
-                        
+                        IdentToken identToken = _curs.TokMove().As<IdentToken>();
+
                         if (identToken.Name.Value.ToString() == "Type")
                         {
-                            throw new Exception("Was type");
+                            var result = ParseTypeLiteralInvocation(identToken, Precedence.None, out DType type);
+                            udts.Add(new UDT(identToken, result, type));
+                            _curs.TokMove();
+                            ParseTrivia();
+                            continue;
                         }
                     }
 
@@ -377,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, _errors);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, udts, _errors);
         }
 
         // Parse the script
@@ -1289,18 +1295,126 @@ namespace Microsoft.PowerFx.Core.Parser
             return ParseInvocation(head, ParseTrivia(), dotted);
         }
 
+        private TypeLiteralNode ParseTypeSegment()
+        {
+            if (_curs.TidCur == TokKind.CurlyOpen)
+            {
+                var leftBracket = _curs.TokMove();
+                var leftTrivia = ParseTrivia();
+                var sourceList = new List<ITexlSource>
+                {
+                    new TokenSource(leftBracket),
+                    leftTrivia
+                };
+
+                // TODO handle when the bracket ends, send error
+
+                TypeTree typeTree = new TypeTree();
+
+                for (; ;)
+                {
+                    if (_curs.TidCur != TokKind.Ident)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    IdentToken ident = _curs.TokMove().As<IdentToken>();
+                    sourceList.Add(new TokenSource(ident));
+                    
+                    if (_curs.TidCur != TokKind.Colon)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    var colon = _curs.TokMove();
+                    sourceList.Add(new TokenSource(colon));
+                    ParseTrivia();
+                    TypeLiteralNode typeSegement = ParseTypeSegment();
+                    sourceList.Add(new NodeSource(typeSegement));
+                    typeTree = typeTree.SetItem(ident.Name.ToString(), typeSegement.Type);
+                    ParseTrivia();
+                    if (_curs.TidCur == TokKind.Comma)
+                    {
+                        var comma = _curs.TokMove();
+                        sourceList.Add(new TokenSource(comma));
+                    }
+                    else if (_curs.TidCur == TokKind.CurlyClose)
+                    {
+                        var rightBracket = _curs.TokMove();
+                        sourceList.Add(new TokenSource(rightBracket));
+                        DType type = new DType(DKind.Record, typeTree);
+                        return new TypeLiteralNode(ref _idNext, leftBracket, type, new SourceList(sourceList));
+                    }
+                }
+
+                throw new NotImplementedException();
+            }
+            else if (_curs.TidCur == TokKind.BracketOpen)
+            {
+                throw new NotImplementedException();
+            }
+            else if (_curs.TidCur == TokKind.Ident)
+            {
+                IdentToken ident = _curs.TokMove().As<IdentToken>();
+                var type = ident.GetFormulaType(new UDT[] { })._type;
+                return new TypeLiteralNode(ref _idNext, ident, type, new SourceList(new TokenSource(ident)));
+            }
+
+            throw new NotImplementedException();
+        }
+
+        private TexlNode ParseTypeLiteralInvocation(IdentToken identToken, Precedence precMin, out DType type)
+        {
+            // Here we are gonna go look at the TexlNode CallNode thing
+            // Make sure to assert that our open paren exists just in case
+            // Move past it maybe? Consume trivia
+            // have to do some sort of error handling if the next token is another paren
+            var leftParen = _curs.TokMove();
+
+            // ignore if the paren ends without anything, come back and do that later
+
+            var leftTrivia = ParseTrivia();
+            var sourceList = new List<ITexlSource>
+            {
+                new TokenSource(leftParen),
+                leftTrivia
+            };
+            TypeLiteralNode typeLiteralNode = ParseTypeSegment();
+            type = typeLiteralNode.Type;
+            sourceList.Add(new NodeSource(typeLiteralNode));
+            if (_curs.TidCur != TokKind.ParenClose)
+            {
+                throw new NotImplementedException();
+            }
+
+            var rightParen = _curs.TokMove();
+            sourceList.Add(new TokenSource(rightParen));
+            var identifier = new Identifier(null, identToken);
+            ListNode args = new ListNode(
+                ref _idNext,
+                leftParen,
+                new[] { typeLiteralNode },
+                new Token[] { },
+                new SourceList(sourceList));
+
+            ITexlSource headNodeSource = new IdentifierSource(identifier);
+            return new CallNode(
+                ref _idNext,
+                leftParen,
+                new SourceList(
+                    headNodeSource,
+                    new NodeSource(args)),
+                identifier,
+                null,
+                args,
+                rightParen);
+        }
+
         private CallNode ParseInvocation(Identifier head, ITexlSource headTrivia, TexlNode headNode)
         {
             Contracts.AssertValue(head);
             Contracts.AssertValueOrNull(headNode);
             Contracts.Assert(_curs.TidCur == TokKind.ParenOpen);
-
-            // Check if our invocation is infact `Type`
-
-            if (head.Name.Value.ToString() == "Type")
-            {
-                //throw new Exception("Tried to call Type function");
-            }
 
             var leftParen = _curs.TokMove();
             var leftTrivia = ParseTrivia();

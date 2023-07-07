@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
                
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors);
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs, parseResult.UDTs, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             userDefinitionResult = new UserDefinitionResult(functions, errors, parseResult.NamedFormulas);
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Syntax
             return true;
         }
 
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
+        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, IEnumerable<UDT> uDTs, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
 
@@ -90,14 +90,14 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
 
-                var parametersOk = CheckParameters(udf.Args, errors);
-                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
+                var parametersOk = CheckParameters(udf.Args, uDTs, errors);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, uDTs, errors);
                 if (!parametersOk || !returnTypeOk)
                 {
                     continue;
                 }
                 
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType(uDTs)._type, udf.Body, udf.IsImperative, udf.Args, uDTs);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Syntax
             }
         }
 
-        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
+        private bool CheckParameters(ISet<UDFArg> args, IEnumerable<UDT> uDTs, List<TexlError> errors)
         {
             var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    if (arg.TypeIdent.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
+                    if (arg.TypeIdent.GetFormulaType(uDTs)._type.Kind.Equals(DType.Unknown.Kind))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
@@ -145,9 +145,9 @@ namespace Microsoft.PowerFx.Syntax
             return isParamCheckSuccessful;
         }
 
-        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
+        private bool CheckReturnType(IdentToken returnType, IEnumerable<UDT> uDTs, List<TexlError> errors)
         {
-            var returnTypeFormulaType = returnType.GetFormulaType()._type;
+            var returnTypeFormulaType = returnType.GetFormulaType(uDTs)._type;
             var isReturnTypeCheckSuccessful = true;
 
             if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind))

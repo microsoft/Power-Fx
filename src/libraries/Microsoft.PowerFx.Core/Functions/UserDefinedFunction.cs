@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Core.Functions
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
         private TexlBinding _binding;
+        private readonly IEnumerable<UDT> _userDefinedTypes;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
 
@@ -38,13 +39,14 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsSelfContained => !_isImperative;
 
-        public UserDefinedFunction(string name, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
+        public UserDefinedFunction(string name, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, IEnumerable<UDT> uDTs)
+        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType(uDTs)._type).ToArray())
         {
             this._args = args;
             this._isImperative = isImperative;
 
             this.UdfBody = body;
+            _userDefinedTypes = uDTs;
         }
 
         public bool TryGetArgIndex(string argName, out int argIndex)
@@ -82,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver, _userDefinedTypes), bindingConfig, features: features, rule: rule);
 
             CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding.ErrorContainer);
 
@@ -122,17 +124,19 @@ namespace Microsoft.PowerFx.Core.Functions
             private readonly INameResolver _globalNameResolver;
             private readonly IReadOnlyDictionary<string, UDFArg> _args;
             private readonly INameResolver _functionNameResolver;
+            private readonly IEnumerable<UDT> _userDefinedTypes;
 
-            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver)
+            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver, IEnumerable<UDT> uDTs)
             {
-                return new UserDefinitionsNameResolver(globalNameResolver, args, functionNameResolver);
+                return new UserDefinitionsNameResolver(globalNameResolver, args, uDTs, functionNameResolver);
             }
 
-            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver = null)
+            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, IEnumerable<UDT> uDTs, INameResolver functionNameResolver = null)
             {
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
                 this._functionNameResolver = functionNameResolver;
+                this._userDefinedTypes = uDTs;
             }
 
             public IExternalDocument Document => _globalNameResolver.Document;
@@ -154,7 +158,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 // lookup in the local scope i.e., function params & body and then look in global scope.
                 if (_args.TryGetValue(name, out var value))
                 {
-                    var type = value.TypeIdent.GetFormulaType()._type;
+                    var type = value.TypeIdent.GetFormulaType(_userDefinedTypes)._type;
                     nameInfo = new NameLookupInfo(BindKind.PowerFxResolvedObject, type, DPath.Root, 0, new UDFParameterInfo(type, value.ArgIndex, value.NameIdent.Name));
 
                     return true;

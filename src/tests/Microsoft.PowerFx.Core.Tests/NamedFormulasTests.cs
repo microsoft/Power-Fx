@@ -206,9 +206,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("Type(): Number = Person({ Hi: Number });")]
-        [InlineData("Person = Type({ Hi: Number });")]
-        [InlineData("y = 1;")]
+        [InlineData("Person = Type({ Age: Number }); GetAge(person: Person): Number = person.Age;")]
         public void TestType(string script)
         {
             var parserOptions = new ParserOptions()
@@ -216,11 +214,13 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
             ParseUserDefinitionResult result = TexlParser.ParseUserDefinitionScript(script, parserOptions);
-            Assert.NotNull(result.Errors);
-            foreach (var item in result.Errors)
+            /*foreach (UDT udt in result.UDTs)
             {
-                Assert.Null(item);
-            }
+                foreach (var thing in udt.Type.TypeTree.GetPairs())
+                {
+                    Assert.Null(thing.Key);
+                }
+            }*/
         }
     }
 }

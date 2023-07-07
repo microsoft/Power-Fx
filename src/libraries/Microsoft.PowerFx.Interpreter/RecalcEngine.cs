@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
@@ -184,17 +185,29 @@ namespace Microsoft.PowerFx
         public DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script, numberIsFloat: numberIsFloat);
+
+            // var result = parsedUDFS.GetFullParsed();
+
             var result = parsedUDFS.GetParsed();
+
             var errors = result.Errors?.ToList();
             var comments = new List<Syntax.CommentToken>();
 
+            var hasError = result.HasError;
+
+            /*var hasError = result.Errors == null;
+            if (!hasError)
+            {
+                hasError = result.Errors.Any();
+            }*/
+
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
-                new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script),
-                udf.ReturnType.GetFormulaType(),
+                new ParseResult(udf.Body, errors, hasError, comments, null, null, script),
+                udf.ReturnType.GetFormulaType(new UDT[] { }), //TODO Possible instead of doing this, parse such that we get our types out as well, this may be stopgap.
                 udf.IsImperative,
                 udf.NumberIsFloat,
-                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), arg.TypeIdent.GetFormulaType())).ToArray())).ToArray();
+                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), arg.TypeIdent.GetFormulaType(new UDT[] { }))).ToArray())).ToArray();
 
             return DefineFunctions(udfDefinitions);
         }
