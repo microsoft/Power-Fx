@@ -42,5 +42,10 @@ namespace Microsoft.PowerFx.Core.Syntax
         {
             return TexlParser.ParseUDFsScript(Script, Loc, NumberIsFloat);
         }
+
+        public ParseUserDefinitionResult GetFullParsed()
+        {
+            return TexlParser.ParseUserDefinitionScript(Script, new ParserOptions(Loc, true, 255));
+        }
     }
 }
