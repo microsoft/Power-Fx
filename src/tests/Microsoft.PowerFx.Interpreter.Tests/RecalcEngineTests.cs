@@ -990,9 +990,26 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void UDFUDTTest()
         {
+            var config = new PowerFxConfig();
             var recalcEngine = new RecalcEngine(new PowerFxConfig());
-            recalcEngine.DefineFunctions("Person = Type({Age: Number}); GetAge(person: Person): Number = person.Age;");
-            Assert.Equal(42, recalcEngine.Eval("GetAge({Age: 42})").ToObject());
+            var udfs = recalcEngine.DefineFunctions("Person = Type({Age: Number}); GetAge(person: Person): Number = person.Age;", false);
+            var parserOptions = new ParserOptions
+            {
+                NumberIsFloat = true
+            };
+            Assert.Equal(42.0, recalcEngine.Eval("GetAge({Age: 42})", null, parserOptions).ToObject());
+        }
+
+        [Fact]
+        public void ComplexUDTTest()
+        {
+            var recalcEngine = new RecalcEngine(new PowerFxConfig());
+            recalcEngine.DefineFunctions("Person = Type({ Age: Number, Name: String }); GetName(person: Person): String  = person.Name;", false);
+            var parserOptions = new ParserOptions
+            {
+                NumberIsFloat = true
+            };
+            Assert.Equal("Bob", recalcEngine.Eval("GetName({ Age: 42, Name: \"Bob\"})", null, parserOptions).ToObject());
         }
 
         [Fact]

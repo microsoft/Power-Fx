@@ -285,7 +285,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         if (identToken.Name.Value.ToString() == "Type")
                         {
                             var result = ParseTypeLiteralInvocation(identToken, Precedence.None, out DType type);
-                            udts.Add(new UDT(identToken, result, type));
+                            udts.Add(new UDT((IdentToken)thisIdentifier, result, type));
                             _curs.TokMove();
                             ParseTrivia();
                             continue;
@@ -1337,6 +1337,7 @@ namespace Microsoft.PowerFx.Core.Parser
                     {
                         var comma = _curs.TokMove();
                         sourceList.Add(new TokenSource(comma));
+                        ParseTrivia();
                     }
                     else if (_curs.TidCur == TokKind.CurlyClose)
                     {
