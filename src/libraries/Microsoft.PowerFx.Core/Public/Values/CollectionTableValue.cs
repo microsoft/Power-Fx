@@ -95,9 +95,10 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_sourceList == null)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+            {                
                 return await base.AppendAsync(record, cancellationToken).ConfigureAwait(false);
             }
 
@@ -149,6 +150,8 @@ namespace Microsoft.PowerFx.Types
             var deleteList = new List<T>();
             var errors = new List<ExpressionError>();
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_sourceList == null)
             {
                 return await base.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
@@ -199,6 +202,7 @@ namespace Microsoft.PowerFx.Types
 
         protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var actual = await FindAsync(baseRecord, cancellationToken, mutationCopy: true).ConfigureAwait(false);
 
             if (actual != null)
@@ -255,7 +259,8 @@ namespace Microsoft.PowerFx.Types
 
         // currentRecord is the record in the table, baseRecord is the record passed in by the user
         protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
-        {            
+        {
+            cancellationToken.ThrowIfCancellationRequested();
             if (currentRecord.TryGetPrimaryKey(out string currentRecordPrimaryKeyValue))
             {
                 string pKey = currentRecord.GetPrimaryKeyName();
@@ -286,8 +291,10 @@ namespace Microsoft.PowerFx.Types
                 return false;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             await foreach (var baseRecordField in baseRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 var currentFieldValue = await currentRecord.GetFieldAsync(baseRecordField.Value.Type, baseRecordField.Name, cancellationToken).ConfigureAwait(false);
 
                 if (currentFieldValue is BlankValue && baseRecordField.Value is BlankValue)
@@ -310,6 +317,7 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     if (!await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false))
                     {
                         return false;
