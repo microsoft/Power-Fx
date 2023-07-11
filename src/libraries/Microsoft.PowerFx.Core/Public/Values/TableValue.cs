@@ -5,15 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Types
@@ -52,10 +49,10 @@ namespace Microsoft.PowerFx.Types
             }
 
             var error = new ErrorValue(IRContext, new ExpressionError()
-            {
-                MessageKey = TexlStrings.InvalidCast.Key,
+            {                
                 Span = IRContext.SourceContext,
-                Kind = ErrorKind.InvalidArgument,
+                Kind = ErrorKind.InvalidArgument,                
+                ResourceKey = TexlStrings.InvalidCast,
                 MessageArgs = new object[] { record.Type, Type.ToRecord() }
             });
 

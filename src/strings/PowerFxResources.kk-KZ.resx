@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} функциясына арналған аргументтер саны жарамсыз: {1} алынды, {2} күтілді</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Формула бағандарындағы {1} функциясы үшін {0} аргументіне қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Бұл аргумент формула бағандарында осы түр ретінде өткізілмеуі мүмкін.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Бұл аргумент формула бағандарында {0} түрінде өткізілмеуі мүмкін.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Бұл аргумент үшін тек әріптік мәнге қолдау көрсетіледі.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Формула бағандарында қолдау көрсетілмейтін уақыт белдеуін түрлендірмей, бұл жазбада {0} орындалмайды.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Бұл операцияны күннің уақыт әрекеттері әр түрлі мәндерде орындауға болмайды.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Формула бағандарында тек қысқа күн мен уақыт пішімі жолдарына қолдау көрсетіледі.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} аргументі — {1} күн арифметикалық функциясы үшін жарамсыз/қолдау көрсетілмейтін уақыт бірлігі.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Формула бағандарында "." және "," сияқты жергілікті пішімдеу таңбалауыштары қолданылмайды.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} формула бағандарында қолданылмайды, оның орнына {1} пайдаланыңыз.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Бұл әрекет формула бағандарында {0} түрінде орындалмауы мүмкін.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>{0} нәтиже түріне формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Формула бағандарында бүкіл жазбаға тікелей сілтеме жасауға қолдау көрсетілмейді. Жазбадағы жарамды өріске сілтеме жасаңыз.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Бұл формула үшін нәтиже түрі {0} болады деп күтіледі, бірақ нақты нәтиже түрі — {1}. Формула бағанының нәтиже түрін өзгерту мүмкін емес.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} түріндегі бағандарға формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>{1} пішімді {0} түріндегі бағандарға формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Мәжбүрлі жазбаларға немесе кестелерге формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Бір бағанды кестелерге формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Формула бағандарында {0} виртуалды кестесіне сілтеме жасау мүмкін емес.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Операнд күтілді. Формула немесе өрнек жарамды операнд күтеді. Мысалы, "2" операндын "1 +_" өрнегіне қосуға болады, сонда нәтижесі "3" болады. Немесе "Сәлем "&amp; _ " өрнегіне "бәріңізге" операндын қосуға болады, сонда нәтижесі "Сәлем бәріңізге" болады.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}", күтілген түрі "{1}" болды.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>"{0}" кестесінде {1} қатардан көп болса, ондағы бұл әрекет істемеуі мүмкін.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Бұл әдіс барлық уақытта шын болады. ThishRecord немесе [@ ] пайдаланғыңыз келді ме?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} сенім білдіру мүмкін емес: тек негізгі "{1}" өрісінен іздеу үшін сенім білдіруді қолдау.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} сенім білдіру мүмкін емес: құрамында "{1}" тәртіптік функциясы бар.</value>
     
   </data>

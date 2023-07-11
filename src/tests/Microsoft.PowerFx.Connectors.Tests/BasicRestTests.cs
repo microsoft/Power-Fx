@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Tests
         // Must set the BaseAddress on an httpClient, even if we don't actually use it. 
         // All the Send() methods will enforce this. 
         private static readonly Uri _fakeBaseAddress = new ("http://localhost:5000");
-        
+
         private static void AssertLog(LoggingTestServer testConnector, string expectedLog)
         {
             var log = testConnector._log.ToString().Trim();
@@ -28,9 +28,9 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector._log.Clear();
         }
-               
+
         [Theory]
-        [InlineData(1, @"Test.GetKey(""abc"")", "GET http://localhost:5000/Keys?keyName=abc")]        
+        [InlineData(1, @"Test.GetKey(""abc"")", "GET http://localhost:5000/Keys?keyName=abc")]
         [InlineData(2, @"Test.GetWeather3b(4, 8, 10, { i : 5 })", "GET http://localhost:5000/weather3b?i=5&ir=4&kr=10\r\n jr: 8")]
         [InlineData(3, @"Test.GetWeather3b(4, 8, 10, { i : 7, j : 9, k : 11 })", "GET http://localhost:5000/weather3b?i=7&ir=4&k=11&kr=10\r\n j: 9\r\n jr: 8")]
         [InlineData(4, @"Test.GetWeatherWithHeader()", "GET http://localhost:5000/weather/header")]
@@ -44,12 +44,13 @@ namespace Microsoft.PowerFx.Tests
         [InlineData(12, @"Test.PostWeatherWithId({body: 5})", "POST http://localhost:5000/weatherPost\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] 5")]
         [InlineData(13, @"Test.PostWeatherWithInputObject({x: [1], y:2})", "POST http://localhost:5000/weatherPost2\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"x\":[1],\"y\":2}")]
         [InlineData(14, @"Test.GetT5(4, 6, {Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t5?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&d=4&Name_B=6")]
-        [InlineData(15, @"Test.GetT6({d: 11, Name_B: 12, Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t6?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&d=11&Name_B=12")]        
-        [InlineData(16, @"Test.PostWeather8({z: {x: [1, 2], y:3 }, dt: ""2022-06-16T13:26:24.900Z"", db:0, str:""str"" })", "POST http://localhost:5000/weatherPost8\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"z\":{\"x\":[1,2],\"y\":3},\"dt\":\"2022-06-16T13:26:24.900Z\",\"db\":0,\"str\":\"str\"}")]
+        [InlineData(15, @"Test.GetT6({d: 11, Name_B: 12, Id_A:1, Name_A: ""def"", Count:14, 'Object_B.Id_B': 2, 'Object_B.Name_B': ""ghi"", 'Object_B.Count': 7})", "GET http://localhost:5000/weather/t6?Id_A=1&Name_A=def&Count=14&Object_B.Id_B=2&Object_B.Name_B=ghi&d=11&Name_B=12")]
+        [InlineData(16, @"Test.PostWeather8({z: {x: [1, 2], y:3 }, dt: DateTime(2022,6,16,13,26,24,900), db:0, str:""str"" })", "POST http://localhost:5000/weatherPost8\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"z\":{\"x\":[1,2],\"y\":3},\"dt\":\"2022-06-16T13:26:24.9000000\",\"db\":0,\"str\":\"str\"}")]
         [InlineData(17, @"Test.PostWeatherWithUrlEncodedBody({x: [1, 2], y:3})", "POST http://localhost:5000/weatherPost5\r\n [content-header] Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n [body] X=1&X=2&Y=3")]
         [InlineData(18, @"Test.GetT7(1, ""abc"", 5, { id_B: 4, name_B: ""foo"", countB: 44 })", "POST http://localhost:5000/weather/t7\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"id_A\":1,\"name_A\":\"abc\",\"count\":5,\"object_B\":{\"id_B\":4,\"name_B\":\"foo\",\"countB\":44}}")]
         [InlineData(19, @"Test.GetT8({body: Table({Value: 1}, {Value: 3})})", "POST http://localhost:5000/weather/t8\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,3]")]
         [InlineData(20, @"Test.GetT8a(Table({Value: 1}, {Value: 444}))", "POST http://localhost:5000/weather/t8a\r\n [content-header] Content-Type: text/json; charset=utf-8\r\n [body] [1,444]")]
+        [InlineData(21, @"Test.PostWeatherWithComplexInput({children: [{parent: { someNumbers: [123] }, otherString: ""xyz""}], someNumbers: [1,2,3]})", "POST http://localhost:5000/weatherPost4\r\n [content-header] Content-Type: application/json; charset=utf-8\r\n [body] {\"complexInput\":{\"children\":[{\"parent\":{\"someNumbers\":[123]},\"otherString\":\"xyz\"}],\"someNumbers\":[1,2,3]}}")]
         public async void ValidateHttpCalls(int i /* used for debugging */, string fxQuery, string httpQuery)
         {
             var swaggerFile = @"Swagger\TestOpenAPI.json";
@@ -60,18 +61,20 @@ namespace Microsoft.PowerFx.Tests
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(testConnector._apiDocument).OrderBy(cf => cf.Name).ToList();
             string funcName = new Regex(@"Test.([^(]+)").Match(fxQuery).Groups[1].Value;
-            Assert.Equal("*[date:s, index:w, summary:s, temperatureC:w, temperatureF:w]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
+            Assert.Equal("*[date:d, index:w, summary:s, temperatureC:w, temperatureF:w]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
             config.AddService("Test", testConnector._apiDocument, httpClient);
-            
+
             var engine = new RecalcEngine(config);
 
             var checkResult = engine.Check(fxQuery, options: _optionsPost);
             Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost).ConfigureAwait(false);
+            var rConfig = new RuntimeConfig();
+            rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
             Assert.NotNull(result);
 
             var r = (dynamic)result.ToObject();
@@ -101,7 +104,7 @@ namespace Microsoft.PowerFx.Tests
 
             testConnector.SetResponse("55");
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);            
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await engine.EvalAsync("Test.GetKey(\"Key1\")", CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         // We can bind without calling.

@@ -184,6 +184,23 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return true;
         }
 
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            if (binding.Features.PowerFxV1CompatibilityRules)
+            {
+                for (int i = 1; i < args.Length; i++)
+                {
+                    var node = args[i];
+
+                    // If a filter function contains a side effect call as predicate, this is a compilation error.
+                    if (binding.HasSideEffects(node))
+                    {
+                        errors.EnsureError(node, TexlStrings.ErrFilterFunctionBahaviorAsPredicate);
+                    }
+                }
+            }
+        }
+
         private bool IsNodeBooleanOptionSetorBooleanFieldorView(TexlNode dsNode, TexlBinding binding)
         {
             // Only boolean option set, boolean fields and views are allowed to delegate

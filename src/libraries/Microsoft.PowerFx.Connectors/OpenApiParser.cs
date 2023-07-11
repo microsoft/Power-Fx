@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Connectors
                     FormulaType returnType = op.GetReturnType(numberIsFloat);
                     string opPath = basePath != null && basePath != "/" ? basePath + path : path;
                     ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, numberIsFloat);
-                    IAsyncTexlFunction invoker = null;
+                    IAsyncTexlFunction2 invoker = null;
 
                     if (httpClient != null)
                     {
