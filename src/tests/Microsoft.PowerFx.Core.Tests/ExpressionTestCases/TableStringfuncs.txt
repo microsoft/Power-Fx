@@ -1,5 +1,4 @@
-﻿#SETUP: ConsistentOneColumnTableResult
-
+﻿
 // Scalar + Table
 >> Concatenate("a", LastN(Table({b:"1"},{b:"2"}), 0))
 Table()
@@ -11,13 +10,13 @@ Blank()
 Error({Kind:ErrorKind.Div0})
 
 >> Concatenate(Blank(), ["hello", Mid("great", -1), "world"])
-Blank()
+Table({Value:"hello"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"world"})
 
 >> Concatenate(Blank(), Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}))
-Blank()
+Table({Value:"one"},{Value:""},{Value:"three"})
 
 >> Concatenate(Blank(), Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}))
-Blank()
+Table({Value:"one"},Error({Kind:ErrorKind.Div0}),{Value:"three"})
 
 // Table + Scalar (Reverse Arguments)
 
@@ -31,13 +30,13 @@ Blank()
 Error({Kind:ErrorKind.Div0})
 
 >> Concatenate(["hello", Mid("great", -1), "world"], Blank())
-Blank()
+Table({Value:"hello"},{Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:"world"})
 
 >> Concatenate(Table({a:"one"},If(1<0,{a:"two"}),{a:"three"}), Blank())
-Blank()
+Table({Value:"one"},{Value:""},{Value:"three"})
 
 >> Concatenate(Table({a:"one"},If(1/0<2,{a:"two"}),{a:"three"}), Blank())
-Blank()
+Table({Value:"one"},Error({Kind:ErrorKind.Div0}),{Value:"three"})
 
 // Table + Table
 

@@ -126,6 +126,18 @@ Blank()
 >> Dec2Hex(If(1<0,[1]), If(1<0,[2]))
 Blank()
 
+>> Dec2Hex([100,200], 0)
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})})
+
+>> Dec2Hex([100,200], Blank())
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})})
+
+>> Dec2Hex(0, [3, 5, 7])
+Table({Value:"000"},{Value:"00000"},{Value:"0000000"})
+
+>> Dec2Hex(Blank(), [3, 5, 7])
+Table({Value:"000"},{Value:"00000"},{Value:"0000000"})
+
 >> Dec2Hex(Filter([1,2,3], Value > 10))
 Table()
 

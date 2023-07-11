@@ -287,7 +287,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (SchemaObject(("x", SchemaInteger), ("y", SchemaString)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
+                ["a"] = (SchemaObject(("x", SchemaInteger, false), ("y", SchemaString, false)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
             });
 
             Assert.Equal(@"{""a"":{""x"":1,""y"":""foo""}}", str);
@@ -299,9 +299,9 @@ namespace Microsoft.PowerFx.Tests
             var str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(
-                            ("x", SchemaInteger),
-                            ("y", SchemaString),
-                            ("z", SchemaObject(("a", SchemaInteger)))),
+                            ("x", SchemaInteger, false),
+                            ("y", SchemaString, false),
+                            ("z", SchemaObject(("a", SchemaInteger, false)), false)),
                          GetRecord(
                              ("x", FormulaValue.New(1)),
                              ("y", FormulaValue.New("foo")),
@@ -311,15 +311,25 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(@"{""a"":{""x"":1,""y"":""foo"",""z"":{""a"":-1}}}", str);
         }
 
-        [Fact]
-        public void JsonSerializer_Object_MissingObjectProperty()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void JsonSerializer_Object_MissingObjectProperty(bool required)
         {
-            var ex = Assert.Throws<NotImplementedException>(() => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
+            Func<string> lambda = () => SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (SchemaObject(("x", SchemaInteger), ("y", SchemaString)), GetRecord(("x", FormulaValue.New(1))))
-            }));
+                ["a"] = (SchemaObject(("x", SchemaInteger, true), ("y", SchemaString, required)), GetRecord(("x", FormulaValue.New(1))))
+            });
 
-            Assert.Equal("Missing property y, object is too complex or not supported", ex.Message);
+            if (required)
+            {
+                var ex = Assert.Throws<NotImplementedException>(lambda);
+                Assert.Equal("Missing property y, object is too complex or not supported", ex.Message);
+            }
+            else
+            {
+                Assert.False(string.IsNullOrEmpty(lambda()));
+            }
         }
 
         [Theory]
