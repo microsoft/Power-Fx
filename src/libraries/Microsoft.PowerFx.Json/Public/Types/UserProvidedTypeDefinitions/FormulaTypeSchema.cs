@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Core
 
             if (Fields == null || !Fields.Any())
             {
-                return FormulaType.BindingError;
+                return Type.IsTable ? TableType.Empty() : RecordType.Empty();
             }
 
             var result = new UserDefinedRecordType(this, definedTypeSymbols);

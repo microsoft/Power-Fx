@@ -12,13 +12,18 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
-    internal class FormulaTypeJsonConverter : JsonConverter<FormulaType>
+    public class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
         private readonly DefinedTypeSymbolTable _definedTypes;
 
-        public FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
+        internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
+        }
+
+        public FormulaTypeJsonConverter()
+        {
+            _definedTypes = new DefinedTypeSymbolTable();
         }
 
         public override FormulaType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
