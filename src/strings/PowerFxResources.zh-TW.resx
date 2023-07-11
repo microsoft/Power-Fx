@@ -483,7 +483,7 @@
     <value>要轉換為數值的文字值。</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>在轉換為值時要使用的語言代碼。</value>
+    <value>轉換值時要使用的語言代碼。</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1421,7 +1421,7 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>將擷取其 Distinct 值的資料表。</value>
+    <value>擷取其相異值的資料表。</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
     <value>對輸入資料表中的每一個資料列進行評估，並為 Distinct 作業提供值的運算式。</value>
@@ -4085,91 +4085,7 @@
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
     
-  </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>公式資料行不支援。</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 函式的引數數量無效: 收到 {1} 個，預期為 {2} 個</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>公式資料行中的 {1} 函數不支援 {0} 引數。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>此引數不能在公式資料行中以此類型傳遞。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>此引數不能在公式資料行中以類型 {0} 傳遞。</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>此引數僅支援常值。</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>如果沒有時區轉換，則無法對此輸入執行 {0}，公式資料行不支援時區轉換。</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>無法對具有不同日期時間行為的值執行此作業。</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>公式資料行只支援簡短日期和時間格式字串。</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 引數對 {1} 日期算術函式而言是無效/不受支援的時間單位。</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>特定地區設定格式化權杖，例如公式欄中不支援「。」和「，」。</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>公式欄不支援 {0}，請改用 {1}。</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>無法對公式資料行中的類型 {0} 執行此作業。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>公式欄不支援結果類型 {0}。</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>公式資料行不支援直接參考整份記錄。請參考記錄中的有效欄位。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>此公式的結果類型預期為{0}，但實際結果類型{1}。無法變更公式欄的結果類型。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>公式欄不支援類型為 {0} 的資料行。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>公式欄不支援 {1} 格式的資料行 {0}。</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>公式資料行中不支援強制記錄或資料表。</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>公式資料行不支援單欄資料表。</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>無法在公式資料行中參考虛擬表格 {0}。</value>
-    
-  </data>
+  </data> 
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>必須是運算元。公式或運算式必須包含有效的運算元。例如，您可以為運算式 '1 + _' 新增運算元 '2'，以得出結果 '3'。您也可以在運算式 '"Hi "&amp; _ ' 中新增 "there"，以得出結果 'Hi there'。</value>
     
@@ -4684,7 +4600,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重設限制。
+    <value>若您的資料集超過了 500 個記錄的限制，但包含的記錄少於 2,000 個，請嘗試重新設定限制。
       </value>
     
   </data>
@@ -4942,23 +4858,23 @@
     <value>類型轉換失敗，因為指定值的類型為 '{0}'，必須是 '{1}' 類型。</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>資料表 '{0}' 如果超過 {1} 列，則此作業可能無法運作。</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>此述詞將永遠為 true。您要使用 ThisRecord 還是 [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>無法委派 {0}: 僅支援委派對主索引鍵欄位 '{1}' 的查詢。</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>無法委派 {0}: 識別碼運算式參考 ThisRecord。</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
     
   </data>
@@ -4993,11 +4909,11 @@
     
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
-    <value>在提供的文字中搜尋指定的規則運算式，並傳回所有相符的結果。</value>
+    <value>在提供的文字中搜尋指定的規則運算式，並傳回所有相符的項目。</value>
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
-    <value>要搜尋規則運算式的文字。</value>
+    <value>要根據規則運算式搜尋的文字。</value>
     
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
@@ -5009,7 +4925,7 @@
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
-    <value>要搜尋規則運算式的文字。</value>
+    <value>要根據規則運算式搜尋的文字。</value>
     
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">

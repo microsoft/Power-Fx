@@ -1742,7 +1742,11 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Component custom data property with parameters can only be accessed from within a component or from component output properties.</value>
+    <value>Component function property or parameter can only be accessed from within a component or from component output properties.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Component function property or parameter can only reference other function properties.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4134,90 +4138,6 @@
     <value>{0}</value>
     <comment>Error message. {0} will be replaced with the contents of the message. In a few specific instances, we pull error messages from a source other than this file, but we need a error key in this file to attach it to, hence why we have an error message that is only a format specifier.</comment>
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where there the full PowerApps support is not available.</comment>
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
-    <comment>Error Message. Used in formula columns for scenarios where an invalid number of arguments is supplied to a math function. The {0} will be the name of the function. The {1} will be the incorrect number of arguments received. The {2} will be the correct number of args expected. </comment>
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>The {0} argument is not supported for the {1} function in formula columns.</value>
-    <comment>Error Message. Used in formula columns for arguments that are not supported there.  The {0} will be the name of the argument that is not supported.  The {1} will be the name of the function.</comment>
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as this type in formula columns.</value>
-    <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
-    <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Only a literal value is supported for this argument.</value>
-    <comment>Error Message. Used in formula columns for arguments where the value supplied must be a literal value (for example, a number or a string), instead of a calculation.</comment>
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} cannot be performed on this input without a time zone conversion, which is not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where time zone conversion is needed to perform the operation. The {0} will be the name of the function.</comment>
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>This operation cannot be performed on values which are of different Date Time Behaviors.</value>
-    <comment>Error Message. Used in formula columns for scenarios where values of different Date Time Behaviors are used together, which is not supported</comment>
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Only the short date and time format strings are supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an unsupported unit of time to the DateAdd or DateDiff function. The {0} will be the name of the argument. The {1} will be the name of the function.</comment>
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Locale-specific formatting tokens such as "." and "," are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} is not supported in formula columns, use {1} instead.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to perform an unsupported operatiom. The {0} will be the type the operation is not supported for.</comment>
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>The result type {0} is not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to reference an entire record instead of a specific field.</comment>
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
-    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Columns of type {0} are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is not supported, such as floating point.</comment>
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Columns of type {0} with format {1} are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is of a format that not supported, such as whole number formatted as language.</comment>
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Coercing records or tables is not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula where the maker attempts record-record or table-table coercion.</comment>
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Single-column tables are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula that references a single-column table.</comment>
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula that references a virtual table.</comment>
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "&amp; _ ' so that the result is 'Hi there'.</value>
     <comment>Error Message.</comment>
@@ -5138,23 +5058,23 @@
     <value>Type conversion failed because the given value was of type '{0}', expected '{1}' type.</value>
     <comment>Error Message.</comment>
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     <comment>Warning message.</comment>
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     <comment>Warning message.</comment>
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Id expression refers to ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     <comment>Warning message.</comment>
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     <comment>Warning message.</comment>
   </data>
@@ -5281,5 +5201,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>The text to have its HTML and XML tags removed.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filter functions don't allow behavior functions as predicates.</value>
+    <comment>When a filter function (like LookUp) contains a function as predicate that will trigger a side effect.</comment>
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Use the And operator to combine multiple predicates into the second argument.</value>
+    <comment>{Locked=And} Limiting the Filter funciton to just two arguments, like the LookUp function, allowing us to add a third argument later also like LookUp.</comment>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>This table cannot be copied. Instead, create an inline table using the ForAll function and {...} notation to copy the individual columns desired.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>This record cannot be copied. Instead, create an inline record using {...} notation to copy the individual fields desired.</value>
   </data>
 </root>

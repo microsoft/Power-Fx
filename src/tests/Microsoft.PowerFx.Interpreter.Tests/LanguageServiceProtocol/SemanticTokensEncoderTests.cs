@@ -148,6 +148,38 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
         [InlineData("/* One line \r\n Second Line */\r\n\r\n\r\n/*Third Comment First One \r\n Fourth Comment*/")]
         [InlineData("\"\r\n\r\n\r\n\r\nA\r\n       \r\nS\"\r\n\r\n\r\n\r\n       /*\r\n\r\nYet another comment \r\n Yet another line*/            \r\n    \r\n\r\n//Single Line Comment\r\n\r\n\r\n//Single Line Comment")]
         [InlineData("$\"This is interplolated \r\n string and 1 + 2 = \r\n{3}\r\n\r\n \r\n{\"End\r\n of a\r\n string\"\r\n\r\n\r\n\r\n       /*\r\n\r\nYet another comment \r\n Yet another line*/            \r\n    \r\n\r\n/* One line \r\n Second Line */\r\n\r\n\r\n/*Third Comment First One \r\n Fourth Comment*/}\"")]
+        [InlineData("//Comment one \n//Comment Two \n \"String One\n\";\"String One \n String Two \n\";")]
+        [InlineData("\n//Comment one \n//Comment Two \n \"String One\n\";\"String One \n String Two \n\";")]
+        [InlineData("/* One line \r\n Second Line */\r\n\r\n\r\n/*Third Comment First One \r\n Fourth Comment*/ \r\n //Comment one")]
+        [InlineData("//Comment one \n /* Comment Two */ \n//Comment Three \n \"String One\n\";\"String One \n String Two \n\";")]
+        [InlineData("/* Comment One */ \n//Comment Two \n //Comment Three \n \"String One\n\";\"String One \n String Two \n\";")]
+        [InlineData("// Comment one//Comment Two")]
+        [InlineData("// Comment one\n//Comment Two")]
+        [InlineData("// Comment one\n\n\n//Comment Two")]
+        [InlineData("// Comment one\n\r\n\r\n//Comment Two")]
+        [InlineData("// Comment one \\n\"String token\"\\n//Comment Two")]
+        [InlineData("// Comment one \\n\\n\"String token\"\\n//Comment Two\"String token two\"\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n//Comment Two\"String token two\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n/* Comment Two */\"String token two\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n/* Comment Two */\\n\"String token two\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("// Comment one \\n\\n\\r\\n\"String token\"\\n\\n\\n/* Comment Two */\"String token two\"\\n\"String token three\"\\n\\r\\n\\r\\n//Comment Three")]
+        [InlineData("/*jj*/RGBA(255, 255, 255, 1)\n//yes")]
+        [InlineData("/*jj*/\r\nRGBA(255, 255, 255, 1)\n//yes")]
+        [InlineData("/*jj*///yes")]
+        [InlineData("/*jj*/\n//yes")]
+        [InlineData("/*jj*/\n\n//yes")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n\n\n/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n \"String token one\"/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n \"String token one\"\n/*kk*/")]
+        [InlineData("/*jj*/\n\r\n\r\n//yes\n \"String token one\"\n\n/*kk*/")]
+        [InlineData("/*jj*/\nRGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)//yes")]
+        [InlineData("/*jj*/\nRGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*jj*/\nRGBA(\n    /*j2*/    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*jj*/RGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n//yes")]
+        [InlineData("/*jj*/RGBA(\n    /*j2*/\n    255,\n    255,\n    255,\n    1\n)\n\n\n\n//yes")]
         public void TestMultilineTokensAreEncodedCorrectly(string expression)
         {
             // Arrange
@@ -161,17 +193,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
 
             // Assert
             AssertEncodedTokens(encodedTokens, tokens, expression, eol, true);
-        }
-
-        // Skipping because of a bug in TexlLexer.cs which causes the spans to first comment and second comment tokens in the expression below to overlap
-        // Enable this test after fixing it in a separate user story
-        // For some reason, Skip attribute on InlineData for the TestMultilineTokensAreEncodedCorrectly test doesn't skip the tests in Visual Studio so adding a separate test
-        // Link to issue filed for this bug: https://github.com/microsoft/Power-Fx/issues/1444
-        [Fact(Skip = "\"There's a bug in TexlLexer which causes the first two comment tokens to overlap. The end index of first comment is one more than (16) than the start of second comment (15). Fix it and then enable this test\"")]
-        public void TestOverlappingCommentTokensSkip()
-        {
-            var expression = "//Comment one \n//Comment Two \n \"String One\n\";\"String One \n String Two \n\";";
-            TestMultilineTokensAreEncodedCorrectly(expression);
         }
 
         private static void AssertEncodedTokens(IEnumerable<uint> encodedTokensCollection, IEnumerable<ITokenTextSpan> tokens, string expression, string eol, bool hasMultilineTokens = false)

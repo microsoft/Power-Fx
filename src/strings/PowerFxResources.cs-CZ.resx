@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Sloupec textových hodnot, který chcete zpracovat.</value>
+    <value>Sloupec textových hodnot, které mají být zpracovány.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Převede 'číslo' na logickou hodnotu.</value>
@@ -778,7 +778,7 @@
     <value>Náhradní textová hodnota</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>Sloupec textových hodnot, které mají být zpracovány</value>
+    <value>Sloupec textových hodnot, které mají být zpracovány.</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Vytvoří chybu s vlastními hodnotami.</value>
@@ -857,7 +857,7 @@
     <value>Určuje, který výskyt zadaného textu má být nahrazen.</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>Sloupec textových hodnot, které mají být zpracovány</value>
+    <value>Sloupec textových hodnot, které mají být zpracovány.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Seřadí „zdroj“ na základě výsledků „výrazu„“, který se vyhodnocuje pro každý řádek. Volitelně může být zadáno „pořadí“ řazení.</value>
@@ -4085,91 +4085,7 @@
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
     
-  </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Není podporováno ve sloupcích vzorce.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Neplatný počet argumentů pro funkci {0}: přijaté {1}, očekávané {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argument {0} není podporován pro funkci {1} ve sloupcích vzorce.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tento argument nelze předat jako tento typ ve sloupcích vzorce.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Tento argument nelze předat jako typ {0} ve sloupcích vzorce.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Pro tento argument je podporována pouze doslovná hodnota.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} nelze u tohoto vstupu provést bez převodu časového pásma, který není ve sloupcích vzorce podporován.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Tuto operaci nelze provést u hodnot, které mají odlišné chování data a času.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Ve sloupcích vzorce jsou podporovány pouze řetězce krátkého formátu data a času.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} je neplatná/nepodporovaná jednotka času pro aritmetickou funkci data {1}</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Tokeny formátování specifické pro národní prostředí, jako jsou "." a "," nejsou ve sloupcích vzorců podporovány.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} není ve sloupcích vzorců podporován, použijte místo toho {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Tuto operaci nelze provést u typu {0} ve sloupcích vzorců.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Typ výsledku {0} není ve sloupcích vzorců podporován.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Přímý odkaz na celý záznam není ve sloupcích vzorců podporován. Uveďte platné pole v záznamu.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Očekává se, že typ výsledku pro tento vzorec bude {0}, ale skutečný typ výsledku je {1}. Výsledný typ sloupce vzorce nelze změnit.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Sloupce typu {0} nejsou ve sloupcích vzorců podporovány.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Sloupce typu {0} s formátem {1} nejsou ve sloupcích vzorců podporovány.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Vynucení záznamů nebo tabulek není ve sloupcích vzorců podporováno.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabulky s jedním sloupcem nejsou ve sloupcích vzorců podporovány.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Nelze odkazovat na virtuální tabulku {0} ve sloupcích vzorců.</value>
-    
-  </data>
+  </data>  
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Očekával se operand. Vzorec nebo výraz očekává platný operand. Například do výrazu 1 + můžete přidat operand 2, aby výsledkem bylo 3. Nebo do výrazu "Dobrý den "&amp; _ můžete přidat operand "všem", aby výsledkem bylo Dobrý den všem.</value>
     
@@ -4939,26 +4855,26 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>Převod typu se nezdařil, protože daná hodnota byla typu '{0}', ale očekáván byl typ '{1}'.</value>
+    <value>Převod typu se nezdařil, protože daná hodnota byla typu „{0}“, ale očekáván byl typ „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Tato operace na tabulce '{0}' nemusí fungovat, pokud má více než {1} řádků.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Tento predikát bude vždy pravdivý. Chtěli jste použít ThisRecord nebo [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Nelze delegovat {0}: podporuje pouze delegování pro vyhledávání v poli primárního klíče '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Nelze delegovat {0}: výraz id odkazuje na ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Nelze delegovat {0}: obsahuje funkci chování '{1}'.</value>
     
   </data>

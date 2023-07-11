@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Érvénytelen számú argumentum a(z) {0} függvényhez: fogadott {1}, várt {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>A(z) {0} argumentum nem támogatott a(z) {1} képlet esetén a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Ez az argumentum nem adható át ilyen típusúként a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Ez az argumentum nem adható át {0} típusúként a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Ehhez az argumentumhoz csak konstansérték támogatott.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} nem végezhető el ezen a bevitelen időzóna-konverzió nélkül, amely nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Ez a művelet nem hajtható végre olyan értékeken, amelyek eltérő dátum-/időviselkedéssel rendelkeznek.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Csak a rövid dátum- és időformátumú sztringek támogatottak a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Az {0} argumentum a dátum aritmetikai {1} függvény érvénytelen/nem támogatott időegysége.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>A területibeállítás-specifikus formázási tokenek, mint például a "." és a ",", nem támogatottak a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>A(z) {0} nem támogatott a képletoszlopokban. Használja inkább a következőt: {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Ez a művelet nem hajtható végre {0} típusú képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Az eredménytípus ("{0}") nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>A képletoszlopok nem támogatják a teljes rekordra való közvetlen hivatkozást. Hivatkozzon egy érvényes mezőre a rekordban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>A képlet várt eredménytípusa {0}, de a tényleges eredménytípus {1}. A képletoszlop eredménytípusa nem módosítható.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>A(z) {0} típusú oszlopok nem használhatók képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>A(z) {0} típusú, {1} formátumú oszlopok nem használhatók képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>A rekordok vagy táblák kényszerítése nem támogatott a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Az egyoszlopos táblák nem támogatottak a képletoszlopokban.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Nem hivatkozhat virtuális táblára {0} képletoszlopokban.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>A rendszer operandust várt. A képlet vagy kifejezés egy érvényes operandust várt. Hozzáadhatja például a 2 operandust az „1 +” kifejezéshez, hogy az eredmény 3 legyen, vagy hozzáadhatja a "!" operandust az "Üdvözöljük" kifejezéshez, hogy az eredmény "Üdvözöljük!" legyen.</value>
     
@@ -4942,23 +4858,23 @@
     <value>A típus átalakítása nem sikerült, mert a megadott érték „{0}” típusú, a várt érték pedig „{1}” típusú.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Ez a művelet a(z) '{0}' táblán adott esetben nem működik, ha több mint {1} sorral rendelkezik.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Ez a predikátum mindig igaz lesz. A ThisRecord vagy [@ ] lehetőséget akarta használni?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>A(z) {0} nem delegálható: csak a(z) '{1}' elsődleges kulcsmezőre történő keresés delegálásának támogatása.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>A(z) {0} nem delegálható: az azonosítókifejezés a ThisRecord kifejezésre hivatkozik.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>A(z) {0} nem delegálható: '{1}' viselkedési függvényt tartalmaz.</value>
     
   </data>

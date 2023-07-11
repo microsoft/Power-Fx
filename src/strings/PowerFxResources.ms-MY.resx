@@ -483,7 +483,7 @@
     <value>Nilai teks untuk ditukar kepada nilai nombor.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Kod bahasa untuk digunakan apabila menukar kepada nilai.</value>
+    <value>Kod bahasa untuk digunakan semasa menukar nilai.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1424,7 +1424,7 @@
     <value>Jadual yang nilai berbezanya akan diekstrak.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Ungkapan dinilaikan terhadap setiap baris dalam jadual input dan yang memberikan nilai untuk operasi Berbeza.</value>
+    <value>Ungkapan dinilaikan ke atas setiap baris dalam jadual input dan yang memberikan nilai untuk operasi Berbeza.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Mengembalikan lengkuk tangen (dalam radian) koordinat_x dan koordinat_y yang ditentukan.</value>
@@ -2141,7 +2141,7 @@
     <value>Nilai tarikh atau masa daripadanya komponen saat akan diekstrak.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
-    <value>Mengembalikan hari biasa nilai tarikhmasa. Secara lalai, julat hasil adalah dari 1 (Ahad) hingga 7 (Sabtu). Anda boleh menentukan julat yang berbeza dengan nilai penyenaraian PermulaanMinggu atau kod fungsi Minggu Biasa Excel Microsoft.</value>
+    <value>Mengembalikan hari biasa nilai tarikhmasa. Secara lalai, julat hasil adalah dari 1 (Ahad) hingga 7 (Sabtu). Anda boleh menentukan julat yang berbeza dengan nilai penyenaraian PermulaanMinggu atau kod fungsi Minggu Biasa Microsoft Excel.</value>
     
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
@@ -3403,7 +3403,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Menggunakan kemas kini pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
+    <value>Menggunakan kemaskinian pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4084,90 +4084,6 @@
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
-  </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Bilangan argumen untuk {0} fungsi tidak sah: {1} diterima, {2} dijangka</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumen {0} tidak disokong untuk fungsi {1} dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak boleh dihantar sebagai jenis ini dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak boleh dihantar sebagai jenis {0} dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Hanya nilai literal disokong untuk argumen ini.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} tidak dapat dilakukan pada input ini tanpa penukaran zon waktu yang tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Operasi ini tidak boleh dilakukan pada nilai yang berlainan Tingkah Laku Tarikh Masa.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Hanya rentetan format tarikh dan masa pendek disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumen {0} ialah unit masa yang tidak sah/tidak disokong untuk {1} fungsi aritmetik tarikh.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Token pemformatan khusus tempatan seperti "." dan "," tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} tidak disokong dalam lajur formula, gunakan {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Operasi ini tidak boleh dilakukan pada jenis {0} dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Jenis hasil {0} tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Tindakan merujuk keseluruhan rekod secara langsung tidak disokong dalam lajur formula. Sila rujuk medan yang sah dalam rekod.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Jenis hasil untuk formula ini dijangkakan untuk menjadi {0}, tetapi jenis hasil sebenar ialah {1}. Jenis hasil lajur formula tidak boleh diubah.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Lajur jenis {0} tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Lajur jenis {0} dengan format {1} tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Rekod atau jadual paksaan tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Jadual lajur tunggal tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Tidak boleh merujuk jadual maya {0} dalam lajur formula.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4942,23 +4858,23 @@
     <value>Penukaran jenis gagal kerana nilai yang diberikan ialah jenis '{0}', jenis '{1}' dijangkakan.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Operasi ini pada jadual '{0}' mungkin tidak berfungsi jika mempunyai lebih daripada {1} baris.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Predikat ini akan sentiasa benar. Adakah anda bermaksud untuk menggunakan ThisRecord atau [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Tidak dapat menugaskan {0}: hanya menyokong penugasan untuk carian pada medan kunci utama '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Tidak dapat menugaskan {0}: Ungkapan ID merujuk ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Tidak dapat menugaskan {0}: mengandungi fungsi kelakuan '{1}'.</value>
     
   </data>
@@ -4967,7 +4883,7 @@
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
-    <value>Teks untuk dibandingkan mengikut format.</value>
+    <value>Teks untuk dibandingkan dengan format.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
     <value>Format untuk disemak terhadap teks. Ia mungkin merupakan nilai enum TextFormat atau ungkapan biasa.</value>

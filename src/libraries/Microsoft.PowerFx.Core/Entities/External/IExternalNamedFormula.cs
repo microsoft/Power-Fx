@@ -10,5 +10,7 @@ namespace Microsoft.PowerFx.Core.Entities
     internal interface IExternalNamedFormula : IExternalPageableSymbol, IExternalDelegatableSymbol
     {
         bool TryGetExternalDataSource(out IExternalDataSource dataSource);
+
+        bool IsConstant { get; }
     }
 }

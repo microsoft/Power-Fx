@@ -214,7 +214,7 @@ Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value
 {Value:Table({Value:1},{Value:2},{Value:3})}
 
 >> Remove( rb.Value, {Value:2} )
-true
+Blank()
 
 >> rb
 {Value:Table({Value:1},{Value:3})}
@@ -223,7 +223,7 @@ true
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
 >> Remove( rc.Value, {Value:4} )
-true
+Blank()
 
 >> rc
 {Value:Table({Value:5},{Value:6})}
@@ -235,10 +235,10 @@ true
 {Value:Table({Value:4},{Value:5},{Value:6})}
 
 >> Remove( rd.Value, {Value:3})
-true
+Blank()
 
 >> Remove( re.Value, {Value:4})
-true
+Blank()
 
 >> rd
 {Value:Table({Value:1},{Value:2})}

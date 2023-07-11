@@ -5,13 +5,9 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static System.TimeZoneInfo;
 
