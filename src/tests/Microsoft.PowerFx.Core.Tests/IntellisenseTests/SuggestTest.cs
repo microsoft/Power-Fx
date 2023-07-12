@@ -455,6 +455,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Empty(actualSuggestions);
         }
 
+        [Theory]
+        [InlineData("ThisRec|", "ThisRecord")]
+        [InlineData("ThisRecord.|", "field1", "field2")]
+
+        // Do not suggest field, unless explicitly ThisRecord is prepended.
+        [InlineData("field|")]
+        public void SuggestBlockImplicitThisRecord(string expression, params string[] expected)
+        {
+            var recordType = RecordType.Empty()
+                .Add("field1", FormulaType.Number)
+                .Add("field2", FormulaType.String);
+
+            var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecordWithoutImplicitThisRecord(recordType, allowMutable: true, debugName: $"RowScope");
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, null, rowScopeSymbols);
+            Assert.Equal(expected, actualSuggestions);
+        }
+
         private class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();

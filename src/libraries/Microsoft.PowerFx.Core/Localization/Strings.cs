@@ -637,6 +637,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrNeedAgg = new ErrorResourceKey("ErrNeedAgg");
         public static ErrorResourceKey ErrFilterFunctionBahaviorAsPredicate = new ErrorResourceKey("ErrFilterFunctionBahaviorAsPredicate");
         public static ErrorResourceKey ErrFilterFunction_OnlyTwoArgs = new ErrorResourceKey("ErrFilterFunction_OnlyTwoArgs");
+        public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowTable = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowTable");
+        public static ErrorResourceKey ErrSetVariableWithRelationshipNotAllowRecord = new ErrorResourceKey("ErrSetVariableWithRelationshipNotAllowRecord");
 
         public static ErrorResourceKey ErrInvalidRegEx = new ErrorResourceKey("ErrInvalidRegEx");
         public static ErrorResourceKey ErrVariableRegEx = new ErrorResourceKey("ErrVariableRegEx");
@@ -685,10 +687,10 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey InvalidCast = new ErrorResourceKey("InvalidCast");
 
-        public static ErrorResourceKey WrnDelagationTableNotSupported = new ErrorResourceKey("WrnDelagationTableNotSupported");
-        public static ErrorResourceKey WrnDelagationPredicate = new ErrorResourceKey("WrnDelagationPredicate");
-        public static ErrorResourceKey WrnDelagationOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelagationOnlyPrimaryKeyField");
-        public static ErrorResourceKey WrnDelagationRefersThisRecord = new ErrorResourceKey("WrnDelagationRefersThisRecord");
-        public static ErrorResourceKey WrnDelagationBehaviorFunction = new ErrorResourceKey("WrnDelagationBehaviorFunction");
+        public static ErrorResourceKey WrnDelegationTableNotSupported = new ErrorResourceKey("WrnDelegationTableNotSupported");
+        public static ErrorResourceKey WrnDelegationPredicate = new ErrorResourceKey("WrnDelegationPredicate");
+        public static ErrorResourceKey WrnDelegationOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelegationOnlyPrimaryKeyField");
+        public static ErrorResourceKey WrnDelegationRefersThisRecord = new ErrorResourceKey("WrnDelegationRefersThisRecord");
+        public static ErrorResourceKey WrnDelegationBehaviorFunction = new ErrorResourceKey("WrnDelegationBehaviorFunction");
     }
 }

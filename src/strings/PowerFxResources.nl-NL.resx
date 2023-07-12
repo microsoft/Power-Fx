@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ongeldig aantal argumenten voor functie {0}: {1} ontvangen {2} verwacht</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Het argument {0} wordt niet ondersteund voor de functie {1} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Dit argument kan niet worden doorgegeven als dit type in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Dit argument kan niet worden doorgegeven als type {0} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Er wordt alleen een letterlijke waarde ondersteund voor dit argument.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kan niet worden uitgevoerd op deze invoer zonder een tijdzoneconversie die niet wordt ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Deze bewerking kan niet worden uitgevoerd op waarden met een ander datum-/tijdgedrag.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Alleen tekenreeksen voor de korte datum- en tijdnotatie worden ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Het argument {0} is een ongeldige/niet-ondersteunde tijdseenheid voor de rekenkundige functie {1} van de datum.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Landspecifieke opmaaktokens, zoals '.' en ',', worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} wordt niet ondersteund in formulekolommen. Gebruik {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Deze bewerking kan niet worden uitgevoerd op type {0} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Het resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Rechtstreeks verwijzen naar een volledige record wordt niet ondersteund in formulekolommen. Verwijzing naar een geldig veld in de record.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Het resultaattype voor deze formule is waarschijnlijk {0}, maar het werkelijke resultaattype is {1}. Het resultaattype van een formulekolom kan niet worden gewijzigd.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Kolommen van het type {0} worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Kolommen van het type {0} met {1} worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Afwijken van records of tabellen wordt niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabellen met één kolom worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Kan niet verwijzen naar virtuele tabel {0} in formulekolommen.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een operand verwacht. Voor de formule of expressie wordt een geldige operand verwacht. U kunt bijvoorbeeld de operand 2 toevoegen aan de expressie 1 +_ zodat het resultaat 3 ontstaat. U kunt ook de operand 'daar' toevoegen aan de expressie 'Hallo '&amp; _ voor het resultaat Hallo daar.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Typeconversie is mislukt omdat de gegeven waarde van het type {0} was en type {1} werd verwacht.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Deze bewerking op tabel {0} werkt mogelijk niet als deze meer {1} rijen bevat.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Dit predicaat is altijd waar. Wilde u ThisRecord of [@ ] gebruiken?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Kan {0} niet machtigen: machtiging alleen ondersteund voor opzoekactie van primaire-sleutelveld {1}.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
     
   </data>

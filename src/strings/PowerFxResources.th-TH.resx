@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>จำนวนอาร์กิวเมนต์ที่ไม่ถูกต้องสำหรับฟังก์ชัน {0}: ได้รับ {1}, ที่คาดไว้ {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>อาร์กิวเมนต์ {0} ไม่ได้รับการสนับสนุนสำหรับฟังก์ชัน {1} ในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิดนี้ในคอลัมน์สูตรได้</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิด {0} ในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>อาร์กิวเมนต์นี้สนับสนุนเฉพาะค่าสัญพจน์เท่านั้น</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} ไม่สามารถดำเนินการกับข้อมูลป้อนเข้านี้โดยไม่มีการแปลงโซนเวลา ซึ่งไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>ไม่สามารถดำเนินการนี้กับค่าที่มีลักษณะการทำงานของวันที่และเวลาแตกต่างกันได้</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>คอลัมน์สูตรสนับสนุนเฉพาะสตริงรูปแบบวันที่และเวลาแบบสั้นเท่านั้น</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>อาร์กิวเมนต์ {0} เป็นหน่วยเวลาที่ไม่ถูกต้อง/ไม่ได้รับการสนับสนุนสำหรับฟังก์ชันเลขคณิตของวันที่ {1}</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>โทเค็นการจัดรูปแบบเฉพาะตำแหน่งที่ตั้ง เช่น "." และ "," ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร ให้ใช้ {1} แทน</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>ไม่สามารถดำเนินการนี้กับชนิด {0} ในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>ชนิดผลลัพธ์ {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>การอ้างอิงโดยตรงทั้งเรกคอร์ดไม่ได้รับการสนับสนุนในคอลัมน์สูตร โปรดอ้างอิงฟิลด์ที่ถูกต้องในเรกคอร์ด</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>คาดว่าชนิดผลลัพธ์สำหรับสูตรนี้จะเป็น {0} แต่ชนิดผลลัพธ์จริงเป็น {1} ชนิดผลลัพธ์ของคอลัมน์สูตรไม่สามารถเปลี่ยนแปลงได้</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>คอลัมน์ชนิด {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>คอลัมน์ชนิด {0} ที่มีรูปแบบ {1} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>การแปลงข้อมูลเรกคอร์ดหรือตารางไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>ตารางคอลัมน์เดียวไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>ไม่สามารถอ้างอิงตารางเสมือน {0} ในคอลัมน์สูตร</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>คาดหวังตัวถูกดำเนินการ สูตรหรือนิพจน์ต้องการตัวถูกดำเนินการที่ถูกต้อง ตัวอย่างเช่น คุณสามารถเพิ่มตัวถูกดำเนินการ '2' ไปยังนิพจน์ '1 +_' เพื่อที่จะได้ผลลัพธ์เป็น '3' หรือ คุณสามารถเพิ่มตัวถูกดำเนินการ 'ทุกคน' ไปยังนิพจน์ 'สวัสดี &amp; _' เพื่อที่จะได้ผลลัพธ์เป็น 'สวัสดีทุกคน'</value>
     
@@ -4942,23 +4858,23 @@
     <value>การแปลงชนิดล้มเหลวเนื่องจากค่าที่ระบุเป็นชนิด '{0}' แต่ที่คาดไว้คือชนิด '{1}'</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>การดำเนินการนี้บนตาราง '{0}' อาจไม่ทำงาน ถ้าตารางมีแถวมากกว่า {1} แถว</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>เพรดิเคตนี้จะเป็นจริงเสมอ คุณหมายถึงการใช้ ThisRecord หรือ [@ ]</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>ไม่สามารถมอบสิทธิ์ {0} ได้: รองรับเฉพาะการมอบสิทธิ์สำหรับการค้นหาในฟิลด์คีย์หลัก '{1}' เท่านั้น</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
     
   </data>

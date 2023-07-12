@@ -68,14 +68,19 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 var namedValue = fields.FirstOrDefault(nv => nv.Name.Equals(property.Key, StringComparison.OrdinalIgnoreCase));
 
-                if (namedValue == null)
+                if (namedValue == null || namedValue.Value.IsBlank())
                 {
                     if (property.Value.IsInternal())
                     {
                         continue;
                     }
 
-                    throw new NotImplementedException($"Missing property {property.Key}, object is too complex or not supported");
+                    if (schema.Required.Contains(property.Key))
+                    {
+                        throw new NotImplementedException($"Missing property {property.Key}, object is too complex or not supported");
+                    }
+
+                    continue;
                 }
 
                 WriteProperty(property.Key, property.Value, namedValue.Value);
@@ -118,13 +123,27 @@ namespace Microsoft.PowerFx.Connectors.Execution
             switch (propertySchema.Type)
             {
                 case "array":
-                    // array                    
+                    // array
+                    if (fv is not TableValue tableValue)
+                    {
+                        throw new ArgumentException($"Expected TableValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
+                    }
+
                     StartArray(propertyName);
 
-                    foreach (DValue<RecordValue> item in (fv as TableValue).Rows)
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
+                        StartArrayElement(propertyName);
                         RecordValue rva = item.Value;
 
+                        // If we have an object schema, we will try to follow it
+                        if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                        {
+                            WriteProperty(null, propertySchema.Items, rva);
+                            continue;
+                        }
+
+                        // Else, we write primitive types only
                         if (rva.Fields.Count() != 1)
                         {
                             throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
@@ -135,7 +154,6 @@ namespace Microsoft.PowerFx.Connectors.Execution
                             throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
                         }
 
-                        StartArrayElement(propertyName);
                         WriteValue(rva.Fields.First().Value);
                     }
 

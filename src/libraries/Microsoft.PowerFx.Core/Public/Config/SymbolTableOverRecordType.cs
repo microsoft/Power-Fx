@@ -56,6 +56,35 @@ namespace Microsoft.PowerFx
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SymbolTableOverRecordType"/> class.
+        /// NOTE: Use this to block implicit ThisRecord.
+        /// </summary>
+        internal SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null, bool mutable = false)
+        {
+            _type = RecordType.Empty();
+            _debugName = "per-eval";
+            _mutable = mutable;
+            _allowThisRecord = true;
+
+            var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
+            {
+                CanMutate = false,
+                CanSet = false
+            })
+            {
+                Owner = this,
+                SlotIndex = int.MaxValue
+            };
+
+            _thisRecord = new NameLookupInfo(
+                    BindKind.PowerFxResolvedObject,
+                    type._type,
+                    DPath.Root,
+                    0,
+                    data: data);
+        }
+
         // Key is the logical name. 
         // Display names are in the NameLookupInfo.DisplayName field.
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols

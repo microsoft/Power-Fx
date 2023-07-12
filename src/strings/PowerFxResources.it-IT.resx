@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Non supportato nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Numero di argomenti non valido per la funzione {0}: {1} ricevuti, {2} previsti</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>L'argomento {0} non è supportato per la funzione {1} nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Impossibile trasmettere questo argomento come questo tipo nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Impossibile trasmettere questo argomento come tipo {0} nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Per questo argomento è supportato solo un valore letterale.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Impossibile eseguire {0} su questo input senza la conversione del fuso orario, che non è supportata nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Impossibile eseguire questa operazione su valori che sono di comportamenti di data/ora diversi.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Solo le stringhe di formato di data e ora breve sono supportate nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>L'argomento {0} è un'unità di tempo non valida o non supportata per la funzione aritmetica della data {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>I token di formattazione specifici delle impostazioni locali, ad esempio "." e "," non sono supportati nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} non è supportata nelle colonne della formula, utilizza invece {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Impossibile eseguire questa operazione sul tipo {0} nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Il tipo di risultato {0} non è supportato nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Il riferimento diretto a un intero record non è supportato nelle colonne della formula. Fare riferimento a un campo valido nel record.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Il tipo di risultato per questa formula deve essere {0}, ma il tipo di risultato effettivo è {1}. Impossibile modificare il tipo di risultato di una colonna di formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Le colonne di tipo {0} non sono supportate nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Le colonne di tipo {0} con formato {1} non sono supportate nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>La forzatura di record o tabelle non è supportata nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Le tabelle a colonna singola non sono supportate nelle colonne della formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Impossibile fare riferimento alla tabella virtuale {0} nelle colonne della formula.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>È previsto un operando. La formula o l'espressione prevede un operando valido. Ad esempio, è possibile aggiungere l'operando "2" all'espressione " 1 +_" per ottenere il risultato "3". In alternativa, è possibile aggiungere l'operando "tutti" all'espressione ""Cari "&amp; _ " per ottenere "Cari tutti".</value>
     
@@ -4942,23 +4858,23 @@
     <value>Conversione tipo non riuscita perché il valore specificato era di tipo "{0}", mentre il tipo previsto è "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>L'operazione sulla tabella "{0}" potrebbe non funzionare se include più di {1} righe.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Questo predicato sarà sempre vero. Volevi utilizzare ThisRecord o [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Impossibile delegare {0}: supporta solo la delega per la ricerca nel campo chiave primaria "{1}".</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
     <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Impossibile delegare {0}: contiene una funzione di comportamento "{1}".</value>
     
   </data>
