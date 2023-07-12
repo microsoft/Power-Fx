@@ -1,0 +1,268 @@
+
+// Tests for Set/Clear/Patch/Remove with Copy-on-Write semantics
+
+// TABLE MUTATION
+
+>> Set( a, [1,2,3] )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( b, a )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Patch( a, {Value:2}, {Value:9} )
+{Value:9}
+
+>> a
+Table({Value:1},{Value:9},{Value:3})
+
+>> b
+Table({Value:1},{Value:2},{Value:3})
+
+// TABLE APPEND
+
+>> Set( aa, [1,2,3] )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( ab, aa )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Collect( ab, {Value:4} )
+{Value:4}
+
+>> aa
+Table({Value:1},{Value:2},{Value:3})
+
+>> ab
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
+>> Collect( aa, {Value:5} )
+{Value:5}
+
+>> aa // again
+Table({Value:1},{Value:2},{Value:3},{Value:5})
+
+>> ab // again
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
+// TABLE WITHIN RECORD
+
+>> Set( ba, [ [1,2,3], [4,5,6] ])
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> Set( bb, Last(ba).Value )
+Table({Value:4},{Value:5},{Value:6})
+
+>> Patch( bb, {Value:4}, {Value:8} )
+{Value:8}
+
+>> ba
+Table({Value:Table({Value:1},{Value:2},{Value:3})},{Value:Table({Value:4},{Value:5},{Value:6})})
+
+>> bb
+Table({Value:8},{Value:5},{Value:6})
+
+// TABLE REMOVE
+
+>> Set( ca, [1,2,3] )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( cb, ca )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Remove( cb, {Value:2} )
+Blank()
+
+>> ca // again
+Table({Value:1},{Value:2},{Value:3})
+
+>> cb // again
+Table({Value:1},{Value:3})
+
+>> Remove( ca, {Value:1} )
+Blank()
+
+>> ca // again 2
+Table({Value:2},{Value:3})
+
+>> cb // again 2
+Table({Value:1},{Value:3})
+
+// TABLE CLEAR
+
+>> Set( da, [1,2,3] )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( db, da )
+Table({Value:1},{Value:2},{Value:3})
+
+>> da
+Table({Value:1},{Value:2},{Value:3})
+
+>> db
+Table({Value:1},{Value:2},{Value:3})
+
+>> Clear( da )
+true
+
+>> da // again
+Table()
+
+>> db // again
+Table({Value:1},{Value:2},{Value:3})
+
+// LOTS OF COPIES
+
+>> Set( ea, [1,2,3] )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( eb, ea )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( ec, eb )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( ed, ec )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Patch( ec, {Value:3}, {Value:7} )
+{Value:7}
+
+>> ea
+Table({Value:1},{Value:2},{Value:3})
+
+>> eb
+Table({Value:1},{Value:2},{Value:3})
+
+>> ec
+Table({Value:1},{Value:2},{Value:7})
+
+>> ed
+Table({Value:1},{Value:2},{Value:3})
+
+>> Collect( eb, {Value:9} )
+{Value:9}
+
+>> ea // again
+Table({Value:1},{Value:2},{Value:3})
+
+>> eb // again
+Table({Value:1},{Value:2},{Value:3},{Value:9})
+
+>> ec // again
+Table({Value:1},{Value:2},{Value:7})
+
+>> ed // again
+Table({Value:1},{Value:2},{Value:3})
+
+>> Clear( ea )
+true
+
+>> ea // again 2
+Table()
+
+>> eb // again 2
+Table({Value:1},{Value:2},{Value:3},{Value:9})
+
+>> ec // again 2
+Table({Value:1},{Value:2},{Value:7})
+
+>> ed // again 2
+Table({Value:1},{Value:2},{Value:3})
+
+// MORE NESTED TABLES
+
+>> Set( fa, Table( { a:[1,2,3], b:[4,5,6], c:"hi", d:true}, { a:[10,20,30], b:[40,50,60], c:"bye", d:false} ) )
+Table({a:Table({Value:1},{Value:2},{Value:3}),b:Table({Value:4},{Value:5},{Value:6}),c:"hi",d:true},{a:Table({Value:10},{Value:20},{Value:30}),b:Table({Value:40},{Value:50},{Value:60}),c:"bye",d:false})
+
+>> Set( fb, fa )
+Table({a:Table({Value:1},{Value:2},{Value:3}),b:Table({Value:4},{Value:5},{Value:6}),c:"hi",d:true},{a:Table({Value:10},{Value:20},{Value:30}),b:Table({Value:40},{Value:50},{Value:60}),c:"bye",d:false})
+
+>> Set( fc, Index(fa, 2).b )
+Table({Value:40},{Value:50},{Value:60})
+
+>> Patch( fc, {Value:50}, {Value:1000} )
+{Value:1000}
+
+>> fa
+Table({a:Table({Value:1},{Value:2},{Value:3}),b:Table({Value:4},{Value:5},{Value:6}),c:"hi",d:true},{a:Table({Value:10},{Value:20},{Value:30}),b:Table({Value:40},{Value:50},{Value:60}),c:"bye",d:false})
+
+>> fb
+Table({a:Table({Value:1},{Value:2},{Value:3}),b:Table({Value:4},{Value:5},{Value:6}),c:"hi",d:true},{a:Table({Value:10},{Value:20},{Value:30}),b:Table({Value:40},{Value:50},{Value:60}),c:"bye",d:false})
+
+>> fc
+Table({Value:40},{Value:1000},{Value:60})
+
+// NESTED TABLES DEEPLY IN RECORDS
+
+>> Set( ga, { a: { b: { c: [1,2,3] }}})
+{a:{b:{c:Table({Value:1},{Value:2},{Value:3})}}}
+
+>> Set( gb, ga.a.b.c )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Patch( gb, First(gb), {Value:9} )
+{Value:9}
+
+>> ga
+{a:{b:{c:Table({Value:1},{Value:2},{Value:3})}}}
+
+>> gb
+Table({Value:9},{Value:2},{Value:3})
+
+>> Set( gc, ga.a )
+{b:{c:Table({Value:1},{Value:2},{Value:3})}}
+
+>> Set( gd, gc.b )
+{c:Table({Value:1},{Value:2},{Value:3})}
+
+>> Set( ge, gd.c )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Collect( ge, {Value:88} )
+{Value:88}
+
+>> ga // again
+{a:{b:{c:Table({Value:1},{Value:2},{Value:3})}}}
+
+>> gb // again
+Table({Value:9},{Value:2},{Value:3})
+
+>> gc // again
+{b:{c:Table({Value:1},{Value:2},{Value:3})}}
+
+>> gd // again
+{c:Table({Value:1},{Value:2},{Value:3})}
+
+>> ge // again
+Table({Value:1},{Value:2},{Value:3},{Value:88})
+
+// SET RECORD FROM ANOTHER TABLE
+
+>> Set( ha, [1,2,3] )
+Table({Value:1},{Value:2},{Value:3})
+
+>> Set( hb, Table(Index(ha,2),Last(ha),First(ha)))
+Table({Value:2},{Value:3},{Value:1})
+
+>> ha
+Table({Value:1},{Value:2},{Value:3})
+
+>> hb
+Table({Value:2},{Value:3},{Value:1})
+
+>> Patch( ha, First(ha), {Value:5})
+{Value:5}
+
+>> Patch( ha, Index(ha,2), {Value:6})
+{Value:6}
+
+>> Patch( ha, Last(ha), {Value:7})
+{Value:7}
+
+>> ha // again
+Table({Value:5},{Value:6},{Value:7})
+
+>> hb // again
+Table({Value:2},{Value:3},{Value:1})
+
+

@@ -778,7 +778,7 @@
     <value>Um valor de texto de substituição.</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>Uma coluna de valores de textos a processar.</value>
+    <value>Uma coluna de valores de texto a processar.</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>Produz um erro com valores personalizados.</value>
@@ -857,7 +857,7 @@
     <value>Especifica que ocorrência de determinado texto substituir.</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>Uma coluna de valores de textos a processar.</value>
+    <value>Uma coluna de valores de texto a processar.</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>Ordena a "origem" com base nos resultados da "expressão" avaliada para cada linha, especificando uma ordem "ordem" opcionalmente.</value>
@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Não suportado em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Número inválido de argumentos para a função {0}: recebido {1}, esperado {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>O argumento {0} não é suportado para a função {1} em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Não é possível transmitir este argumento como este tipo em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Não é possível transmitir este argumento com o tipo {0} em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Este argumento só suporta um valor literal.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Não é possível efetuar {0} nesta entrada sem uma conversão de fuso horário, que não é suportada em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Não é possível efetuar esta operação em valores que têm Comportamentos de Data/Hora diferentes.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>As colunas de fórmula só suportam cadeias no formato data e hora abreviada.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>O argumento {0} é uma unidade de tempo inválida/não suportada para a função aritmética de data {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Tokens de formatação específicos da região, como "." e ",", não são suportados em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} não é suportado em colunas de fórmula. Utilize {1} em vez disso.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Não é possível efetuar esta operação no tipo {0} em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>O tipo de resultado {0} não é suportado em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>A referenciação direta de um registo inteiro não é suportada em colunas de fórmula. Referencie um campo de valor no registo.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>É esperado que o tipo de resultado desta fórmula seja {0}, mas o tipo de resultado real é {1}. Não é possível alterar o tipo de resultado de uma coluna de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>As colunas do tipo {0} não são suportadas em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>As colunas do tipo {0} com o formato {1} não são suportadas em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Forçar registos ou tabelas não é suportado em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>As tabelas de coluna única não são suportadas em colunas de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Não é possível referenciar a tabela virtual {0} em colunas de fórmula.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Era esperado um operando. A fórmula ou expressão espera um operando válido. Por exemplo, pode adicionar o operando "2" à expressão "1 +_" para que o resultado seja "3". Em alternativa, pode adicionar o operando "dia" à expressão ""Bom "&amp; _ " para que o resultado seja "Bom dia".</value>
     
@@ -4942,23 +4858,23 @@
     <value>Falha ao converter tipo porque o valor indicado era do tipo "{0}" e era esperado o tipo "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Esta operação na tabela "{0}" tabela pode não funcionar se tiver mais de {1} linhas.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Esta predição será sempre verdadeira. Pretendia utilizar ThisRecord ou [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Não é possível delegar {0}: só existe suporte para delegação na pesquisa em campos de chave primária "{1}".</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Não é possível delegar {0}: a expressão de ID referencia ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Não é possível delegar {0}: contém uma função de comportamento "{1}".</value>
     
   </data>
@@ -5033,22 +4949,22 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Refreshes the specified data source.</value>
+    <value>Atualiza a origem de dados especificada.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>connected_data_source</value>
+    <value>origem_dados_ligada</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Expected a record or table value.</value>
+    <value>Era esperado um valor de tabela ou de registo.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>A connected data source to refresh.</value>
+    <value>Uma origem de dados ligada a atualizar.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Only managed connections can be refreshed.</value>
+    <value>Só é possível atualizar ligações geridas.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">

@@ -137,7 +137,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public Features Features { get; }
 
-        // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
+        // Property Name or NamedFormula Name to which current rule is being bound to. It could be null in the absence of NameResolver.
+        internal DName SinkName { get; }
+
+        // Property to which current rule is being bound to. It could be null in the absence of NameResolver, or if the current rule is a named formula.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControlProperty Property
         {
@@ -328,6 +331,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 EntityPath = resolver.CurrentEntityPath;
                 EntityName = resolver.CurrentEntity == null ? default : resolver.CurrentEntity.EntityName;
+                SinkName = resolver.CurrentProperty;
             }
 
             resolver?.TryGetCurrentControlProperty(out _property);
@@ -2802,10 +2806,15 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                var isConstantNamedFormula = false;
                 if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
                 {
                     var nameSymbol = lookupInfo.Data as NameSymbol;
-                    _txb.SetMutable(node, nameSymbol?.IsMutable ?? false);
+                    _txb.SetMutable(node, nameSymbol?.Props.CanMutate ?? false);
+                    if (lookupInfo.Data is IExternalNamedFormula formula)
+                    {
+                        isConstantNamedFormula = formula.IsConstant;
+                    }
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
                 {
@@ -2906,7 +2915,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, lookupType);
 
                 // If this is a reference to an Enum, it is constant.
-                _txb.SetConstant(node, lookupInfo.Kind == BindKind.Enum);
+                _txb.SetConstant(node, lookupInfo.Kind == BindKind.Enum || isConstantNamedFormula);
                 _txb.SetSelfContainedConstant(node, lookupInfo.Kind == BindKind.Enum);
 
                 // Create a name info with an appropriate binding, defaulting to global binding in error cases.
@@ -3361,6 +3370,18 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
+                    // Binding function property and its parameters should not allow DottedNameNode
+                    bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
+                        (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                        !(_txb.Document?.Properties?.EnabledFeatures?.IsComponentFunctionPropertyDataflowEnabled ?? false) &&
+                        _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
+                        ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
+                    if (isBindingPropertyFunctionPropertyOrParameter)
+                    {
+                        SetDottedNameError(node, TexlStrings.ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess);
+                        return;
+                    }
+
                     // We block the property access usage for datasource of the command component.
                     if (template.IsCommandComponent &&
                         _txb._glue.IsPrimaryCommandComponentProperty(property))
@@ -3415,7 +3436,11 @@ namespace Microsoft.PowerFx.Core.Binding
                             // If visiting an expando type property of control type variable, we cannot calculate the type here because
                             // The LHS associated ControlInfo is App/Component.
                             // e.g. Set(controlVariable1, DropDown1), Label1.Text = controlVariable1.Selected.Value.
-                            leftType = (DType)controlInfo.GetControlDType(calculateAugmentedExpandoType: true, isDataLimited: false);
+                            if (!_nameResolver.LookupExpandedControlType(controlInfo, out leftType))
+                            {
+                                SetDottedNameError(node, TexlStrings.ErrInvalidName, property.InvariantName);
+                                return;
+                            }
                         }
 
                         if (!leftType.ToRecord().TryGetType(property.InvariantName, out typeRhs))

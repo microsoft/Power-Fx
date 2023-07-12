@@ -4,15 +4,16 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Tests.Helpers;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 
@@ -295,6 +296,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 RecalcEngine engine;
                 RecordValue parameters;
                 var iSetup = InternalSetup.Parse(setupHandlerName, Features, NumberIsFloat);
+
                 var config = new PowerFxConfig(features: iSetup.Features);
                 config.EnableParseJSONFunction();
 
@@ -399,9 +401,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             private readonly RecalcEngine _engine;
 
-            public ReplRunner(RecalcEngine engine)
+            private readonly RuntimeConfig _runtimeConfig;
+
+            public ReplRunner(RecalcEngine engine, RuntimeConfig runtimeConfig)
             {
                 _engine = engine;
+                _runtimeConfig = runtimeConfig;
             }
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
@@ -419,7 +424,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return new RunResult(check);
                 }
 
-                var result = check.GetEvaluator().Eval();
+                var result = check.GetEvaluator().Eval(_runtimeConfig);
                 return new RunResult(result);
             }
 
@@ -451,7 +456,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                                     {
                                         var arg1Type = check.ReturnType;
 
-                                        var varValue = check.GetEvaluator().Eval();
+                                        var varValue = check.GetEvaluator().Eval(_runtimeConfig);
                                         _engine.UpdateVariable(arg0name, varValue);
 
                                         runResult = new RunResult(varValue);
@@ -466,6 +471,35 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 runResult = null;
                 return false;
             }
+        }
+    }
+
+    public static class UserInfoTestSetup
+    {
+        public static BasicUserInfo UserInfo = new BasicUserInfo
+        {
+            FullName = "Susan Burk",
+            Email = "susan@contoso.com",
+            DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
+            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
+        };
+
+        public static SymbolTable GetUserInfoSymbolTable()
+        {
+            var props = new Dictionary<string, object>
+            {
+                { "FullName", UserInfo.FullName },
+                { "Email", UserInfo.Email },
+                { "DataverseUserId", UserInfo.DataverseUserId },
+                { "TeamsMemberId", UserInfo.TeamsMemberId }
+            };
+
+            var allKeys = props.Keys.ToArray();
+            SymbolTable userSymbolTable = new SymbolTable();
+
+            userSymbolTable.AddUserInfoObject(allKeys);
+
+            return userSymbolTable;
         }
     }
 }

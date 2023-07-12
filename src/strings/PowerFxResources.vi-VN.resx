@@ -571,7 +571,7 @@
     <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Số thập phân.</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>Giá trị văn bản cần chuyển đổi sang giá trị Số thập phân.</value>
@@ -580,7 +580,7 @@
     <value>Chuyển đổi "văn bản" biểu thị một số sang giá trị Float.</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
+    <value>Mã ngôn ngữ để sử dụng khi chuyển đổi giá trị.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
     <value>Giá trị văn bản cần chuyển đổi sang giá trị Float.</value>
@@ -1424,7 +1424,7 @@
     <value>Bảng mà các giá trị riêng biệt sẽ được trích xuất từ đó.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Biểu thức được đánh giá qua mỗi hàng trong bảng đầu vào và cung cấp giá trị cho phép tính Distinct.</value>
+    <value>Biểu thức được đánh giá qua mỗi hàng trong bảng đầu vào và cung cấp giá trị cho phép toán Distinct.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Trả lại các giá trị arctang (theo radian) của các tọa độ x và y cụ thể.</value>
@@ -3403,7 +3403,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
+    <value>Áp dụng nội dung cập nhật cho hàng được chỉ định, đồng thời thay đổi hàng trong nguồn dữ liệu được chỉ định. Trả về hàng đã cập nhật.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4084,90 +4084,6 @@
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
-  </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Không được hỗ trợ trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Số lượng đối số không hợp lệ cho hàm {0}: đã nhận {1}, dự kiện {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Đối số {0} không được hỗ trợ cho hàm {1} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Không chuyển được đối số này dưới dạng loại này trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Không chuyển được đối số này dưới dạng loại {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Chỉ có một giá trị theo nghĩa đen được hỗ trợ cho đối số này.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} không thể thực hiện trên đầu vào này mà không có chuyển đổi múi giờ, điều này không được hỗ trợ trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Thao tác này không thể được thực hiện trên các giá trị có Hành vi ngày giờ khác nhau.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Chỉ các chuỗi định dạng ngày và giờ ngắn mới được hỗ trợ trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Đối số {0} là một đơn vị thời gian không hợp lệ/không được hỗ trợ cho hàm số học ngày {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Các mã thông báo định dạng dành riêng cho ngôn ngữ như "." và "," không được hỗ trợ trong các cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} không được hỗ trợ trong cột công thức, hãy sử dụng {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Không thực hiện được thao tác này đối với loại {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ kiểu kết quả {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ tham chiếu trực tiếp toàn bộ bản ghi trong các cột công thức. Vui lòng tham chiếu một trường hợp lệ trong bản ghi.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Loại kết quả cho công thức này dự kiến là {0}, nhưng loại kết quả thực tế là {1}. Không thể thay đổi loại kết quả của cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ cột kiểu {0} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ cột kiểu {0} với định dạng {1} trong cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ ép buộc bản ghi hoặc bảng trong các cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Không hỗ trợ bảng một cột trong các cột công thức.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Không thể tham chiếu bảng ảo {0} trong cột công thức.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4942,35 +4858,35 @@
     <value>Quá trình chuyển đổi loại không thành công do giá trị đã cung cấp thuộc loại "{0}", loại dự kiến là "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Thao tác này trên bảng "{0}" có thể không hoạt động nếu bảng đó có nhiều hơn {1} hàng.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Vị từ này sẽ luôn đúng. Bạn muốn sử dụng ThisRecord hay [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Không thể ủy quyền {0}: chỉ hỗ trợ ủy quyền tra cứu trên trường khóa chính "{1}".</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Không thể ủy quyền {0}: Biểu thức ID đề cập đến ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Không thể ủy quyền {0}: chứa hàm hành vi "{1}".</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
-    <value>Xác định xem văn bản được cung cấp có khớp với định dạng văn bản được cung cấp không.</value>
+    <value>Xác định xem văn bản được cung cấp có khớp với định dạng văn bản được cung cấp không.</value>
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
     <value>Văn bản cần so sánh với định dạng.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
-    <value>Định dạng để kiểm tra văn bản dựa theo đó. Định dạng đó có thể là một giá trị TextFormat kiểu liệt kê hoặc một biểu thức chính quy.</value>
+    <value>Định dạng để kiểm tra văn bản dựa theo đó. Định dạng này có thể là một giá trị TextFormat kiểu liệt kê hoặc một biểu thức chính quy.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
     <value>Đối số này sẽ xác định phần văn bản mà chúng tôi muốn khớp. Đây có thể là một giá trị MatchOptions kiểu liệt kê.</value>
@@ -4993,7 +4909,7 @@
     
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
-    <value>Tìm kiếm văn bản được cung cấp đối với biểu thức chính quy đã chỉ định, trả về mọi giá trị khớp từ biểu thức đó.</value>
+    <value>Tìm kiếm văn bản được cung cấp đối với biểu thức chính quy đã chỉ định, trả về mọi giá trị khớp từ biểu thức đó.</value>
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
@@ -5033,22 +4949,22 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Refreshes the specified data source.</value>
+    <value>Làm mới nguồn dữ liệu được chỉ định.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>connected_data_source</value>
+    <value>nguồn_dữ_liệu_được_kết_nối</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Expected a record or table value.</value>
+    <value>Đã dự kiến một bản ghi hoặc giá trị bảng.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>A connected data source to refresh.</value>
+    <value>Một nguồn dữ liệu đã kết nối để làm mới.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Only managed connections can be refreshed.</value>
+    <value>Chỉ có thể làm mới các kết nối được quản lý.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">

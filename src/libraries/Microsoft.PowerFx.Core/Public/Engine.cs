@@ -272,6 +272,28 @@ namespace Microsoft.PowerFx
             return bindingConfig;
         }
 
+        /// <summary>
+        /// Creates and returns binding config from the given parser options.
+        /// </summary>
+        /// <param name="options">Parser Options.</param>
+        /// <param name="ruleScope">Optional: Rule Scope. If not supplied, then rule scope from <see cref="GetRuleScope"/> would be used.</param>
+        /// <returns>Binding Config.</returns>
+        // Power Apps never set BindingConfig.UseThisRecordForRuleScope to true
+        // This virtual overload of GetDefaultBindingConfig allows us to supply custom binding config from PowerApps
+        // Default implementation is similar to how binding config is created in ComputeBinding
+        // Optional ruleScope is passed from ComputeBinding() so we don't have to call GetRuleScope twice
+        private protected virtual BindingConfig GetDefaultBindingConfig(ParserOptions options, RecordType ruleScope = null)
+        {
+            ruleScope ??= this.GetRuleScope();
+
+            // Canvas apps uses rule scope for lots of cases. 
+            // But in general, we should only use rule scope for 'ThisRecord' binding. 
+            // Anything else should be accomplished with SymbolTables.
+            bool useThisRecordForRuleScope = ruleScope != null;
+
+            return new BindingConfig(options.AllowsSideEffects, useThisRecordForRuleScope, options.NumberIsFloat);
+        }
+
         // Called by CheckResult.ApplyBinding to compute the binding. 
         internal (TexlBinding, ReadOnlySymbolTable) ComputeBinding(CheckResult result)
         {
@@ -288,13 +310,8 @@ namespace Microsoft.PowerFx
             var glue = CreateBinderGlue();
 
             var ruleScope = this.GetRuleScope();
+            var bindingConfig = GetDefaultBindingConfig(result.Parse.Options, ruleScope);
 
-            // Canvas apps uses rule scope for lots of cases. 
-            // But in general, we should only use rule scope for 'ThisRecord' binding. 
-            // Anything else should be accomplished with SymbolTables.
-            bool useThisRecordForRuleScope = ruleScope != null;
-
-            var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope, result.Parse.Options.NumberIsFloat);
             var binding = TexlBinding.Run(
                             glue, 
                             externalRuleScopeResolver, 

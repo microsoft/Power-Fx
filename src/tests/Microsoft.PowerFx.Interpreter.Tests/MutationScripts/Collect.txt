@@ -63,3 +63,9 @@ Table({Value:1},{Value:2},{Value:3})
 
 >> Collect(temp1,{Value:"run time error"}).Value
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> Set(partialT1, Table({a:1,b:1},{a:2,b:2}))
+Table({a:1,b:1},{a:2,b:2})
+
+>> Collect(partialT1, {a:3});Last(partialT1).b
+Blank()

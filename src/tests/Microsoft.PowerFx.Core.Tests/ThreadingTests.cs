@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Annotations;
 using Xunit;
 
 namespace Microsoft.PowerFx.Core.Tests
@@ -53,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "DataTypeInfo.AllowedValuesOnly",
                 "DataTypeInfo._validDataFormatsPerDKind",
 
-                "FeatureFlags._stringInterpolation",                
+                "FeatureFlags._stringInterpolation",
                 "FeatureFlags._inTests",
                 "EmptyEnumerator`1._instance",
                 "Contracts._assertFailExCtor",
@@ -63,7 +65,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "StringResources.<ExternalStringResources>k__BackingField",
                 "StringResources.<ShouldThrowIfMissing>k__BackingField",
                 "DelegationCapability.maxSingleCapabilityValue",
-                "BuiltinFunctionsCore.OtherKnownFunctions"
+                "BuiltinFunctionsCore.OtherKnownFunctions",
+                "StringResources.ResourceManagers"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);

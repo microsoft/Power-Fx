@@ -10,6 +10,7 @@ using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json;
@@ -42,7 +43,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
-
         public void ACSL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
@@ -90,7 +90,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("conversationItem", function.RequiredParameters[0].ConnectorType.Fields[0].Name);
             Assert.Null(function.RequiredParameters[0].ConnectorType.Fields[0].DisplayName);
             Assert.Equal("The abstract base for a user input formatted conversation (e.g., Text, Transcript).", function.RequiredParameters[0].ConnectorType.Fields[0].Description);
-            Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);            
+            Assert.True(function.RequiredParameters[0].ConnectorType.Fields[0].IsRequired);
 
             // -- Parameter 2 --
             Assert.Equal("parameters", function.RequiredParameters[1].Name);
@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(connectorReturnType);
             Assert.Equal((FormulaType)expectedReturnType, connectorReturnType.FormulaType);
             Assert.Equal(2, connectorReturnType.Fields.Length);
-            Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);            
+            Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);
         }
 #pragma warning restore SA1118, SA1137
 
@@ -243,6 +243,25 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task AzureOpenAiGetFunctions()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Open AI.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToArray();
+
+            Assert.Equal("ChatCompletionsCreate", functions[0].Name);
+            Assert.Equal("![choices:*[finish_reason:s, index:w, message:![content:s, role:s]], created:w, id:s, model:s, object:s, usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[0].ReturnType.ToStringWithDisplayNames());
+
+            Assert.Equal("CompletionsCreate", functions[1].Name);
+            Assert.Equal("![choices:*[finish_reason:s, index:w, logprobs:![text_offset:*[Value:w], token_logprobs:*[Value:w], tokens:*[Value:s], top_logprobs:*[]], text:s], created:w, id:s, model:s, object:s, usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[1].ReturnType.ToStringWithDisplayNames());
+            
+            Assert.Equal("ExtensionsChatCompletionsCreate", functions[2].Name);
+            Assert.Equal("![choices:*[content_filter_results:![error:![code:s, message:s], hate:![filtered:b, severity:s], self_harm:![filtered:b, severity:s], sexual:![filtered:b, severity:s], violence:![filtered:b, severity:s]], finish_reason:s, index:w, messages:*[content:s, end_turn:b, index:w, recipient:s, role:s]], created:w, id:s, model:s, object:s, prompt_filter_results:*[content_filter_results:![error:![code:s, message:s], hate:![filtered:b, severity:s], self_harm:![filtered:b, severity:s], sexual:![filtered:b, severity:s], violence:![filtered:b, severity:s]], prompt_index:w], usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[2].ReturnType.ToStringWithDisplayNames());
+        }
+
+        [Fact]
         public async Task ACSL_InvokeFunction_v21()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json");
@@ -268,7 +287,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            // We can call the function with a RuntimeConfig parameters (unused here) that can contain TimeZoneInformation or other runtime settings
+            FormulaValue httpResult = await function.InvokeAync(new FormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -283,7 +303,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             RecordValue entityValue2 = rows.Skip(1).First().Value;
             FormulaValue resolutionsValue = entityValue2.GetField("resolutions");
 
-            Assert.True(resolutionsValue is UntypedObjectValue);          
+            Assert.True(resolutionsValue is UntypedObjectValue);
             UOValueVisitor visitor1 = new UOValueVisitor();
             resolutionsValue.Visit(visitor1);
 
@@ -299,7 +319,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         internal class UOValueVisitor : IValueVisitor
-        {            
+        {
             public string Result { get; private set; }
 
             public void Visit(BlankValue value)
@@ -413,7 +433,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 {
                     if (externalType.Kind == ExternalTypeKind.Array)
                     {
-                        var rows = new List<string>();                        
+                        var rows = new List<string>();
 
                         for (var i = 0; i < untypedObject.GetArrayLength(); i++)
                         {
@@ -501,7 +521,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames);
             Assert.Equal("Advertisement", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[0]);
             Assert.Equal("Employee Referral", functions[1].OptionalParameters[2].ConnectorType.EnumDisplayNames[1]);
-            
+
             Assert.True(functions[1].RequiredParameters[2].ConnectorType.IsEnum); // "msdyn_company@odata.bind"
             Assert.Equal("2b629105-4a26-4607-97a5-0715059e0a55", functions[1].RequiredParameters[2].ConnectorType.EnumValues[0].ToObject());
             Assert.Equal("5cacddd3-d47f-4023-a68e-0ce3e0d401fb", functions[1].RequiredParameters[2].ConnectorType.EnumValues[1].ToObject());

@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -32,7 +31,6 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
@@ -134,6 +132,9 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Returns true if the function is disabled for Commmanding
         public virtual bool DisableForCommanding => false;
+
+        // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
+        public virtual bool MutatesArg0 => false;
 
         // Returns true if the function should be suppressed in Intellisense for component.
         public virtual bool SuppressIntellisenseForComponent => DisableForComponent;

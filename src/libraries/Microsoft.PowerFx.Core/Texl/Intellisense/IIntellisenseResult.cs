@@ -41,11 +41,6 @@ namespace Microsoft.PowerFx.Intellisense
         IEnumerable<IIntellisenseSuggestion> FunctionOverloads { get; }
 
         /// <summary>
-        /// Exception information in event of error.
-        /// </summary>
-        Exception Exception { get; }
-
-        /// <summary>
         /// Function signature help for this result, complies to Language Server Protocol.
         /// </summary>
         public SignatureHelp.SignatureHelp SignatureHelp { get; }

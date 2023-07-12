@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Táto možnosť nie je v stĺpcoch vzorcov podporovaná.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Neplatný počet argumentov pre {0} funkciu: prijatý počet: {1}, očakávaný počet: {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argument {0} nie je podporovaný pre funkciu {1} v stĺpcoch vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tento typ argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Typ {0} argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Pre tento argument je podporovaná iba hodnota literálu.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Funkcia {0} sa nedá vykonať použitím tejto zadanej hodnoty bez konverzie časového pásma, ktorá však nie je v stĺpcoch vzorcov podporovaná.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Túto operáciu nie je možné vykonať použitím hodnôt, ktoré iným spôsobom vyhodnocujú dátum a čas.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>V stĺpcoch vzorcov sú podporované len reťazce s krátkym formátom dátumu a času.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} je neplatná/nepodporovaná jednotka času pre aritmetickú funkciu dátumu {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Formátovacie tokeny špecifické pre miestne nastavenia, ako napríklad „.“ a „,“, nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Funkcia {0} nie je podporovaná v stĺpcoch vzorcov, použite namiesto toho funkciu {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Túto operáciu nie je možné vykonať na type {0} v stĺpcoch vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Typ výsledku {0} nie je v stĺpcoch vzorcov podporovaný.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Priame odkazovanie na celý záznam nie je v stĺpcoch vzorcov podporované. Vytvorte odkaz na platné pole v zázname.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Očakávaný typ výsledku pre tento vzorec by mal byť {0}, skutočný typ výsledku je však {1}. Typ výsledku v stĺpci vzorca nie je možné zmeniť.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Stĺpce typu {0} nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Stĺpce typu {0} vo formáte {1} nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Vynútenie záznamov alebo tabuliek nie je v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabuľky s jedným stĺpcom nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>V stĺpcoch vzorcov nemožno odkazovať na virtuálnu tabuľku {0}.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Očakával sa operand. Vzorec alebo výraz očakáva platný operand. Môžete napríklad pridať operand 2 do výrazu 1 +_ tak, aby výsledok bol 3. Alebo môžete do výrazu Dobrý &amp; _ pridať operand Deň, aby bol výsledok Dobrý deň.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Konverzia typu zlyhala, pretože zadaná hodnota bola typu {0}, no očakávaný bol typ {1}.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Táto operácia v tabuľke {0} možno nebude fungovať, ak je počet jej riadkov vyšší ako {1}.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Tento predikát bude mať vždy hodnotu true. Chceli ste použiť ThisRecord alebo [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} nie je možné delegovať: podporuje iba delegovanie pri vyhľadávaní v poli primárneho kľúča {1}.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} nie je možné delegovať: výraz ID odkazuje na ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} nie je možné delegovať: obsahuje funkciu správania {1}.</value>
     
   </data>
@@ -5033,22 +4949,22 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Refreshes the specified data source.</value>
+    <value>Obnoví zadaný zdroj údajov.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>connected_data_source</value>
+    <value>pripojený_zdroj_údajov</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Expected a record or table value.</value>
+    <value>Očakával sa záznam alebo hodnota tabuľky.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>A connected data source to refresh.</value>
+    <value>Pripojený zdroj údajov, ktorý sa má obnoviť.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Only managed connections can be refreshed.</value>
+    <value>Obnoviť možno iba spravované pripojenia.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
@@ -5056,7 +4972,7 @@
     
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
-    <value>Regulárne výrazy musia byť konštantné hodnoty.</value>
+    <value>Regulárne výrazy musia byť konštantnými hodnotami.</value>
         
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">

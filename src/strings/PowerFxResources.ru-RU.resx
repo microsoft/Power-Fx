@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Недопустимое число аргументов для функции {0}: получено {1}, ожидалось {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Аргумент {0} не поддерживается для функции {1} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Этот аргумент нельзя передавать в качестве этого типа в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Этот аргумент нельзя передавать в качестве типа {0} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Для этого аргумента поддерживается только литеральное значение.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Операцию {0} невозможно выполнить для этих входных данных без преобразования часового пояса, которое не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Эту операцию невозможно выполнить над значениями, имеющие разные поведения даты и времени.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>В столбцах формул поддерживаются только строки в коротком формате даты и времени.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Аргумент {0} представляет собой недопустимую/неподдерживаемую единицу времени для функции операций с датами {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Зависящие от локали лексемы форматирования, такие как "." и "," не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} не поддерживается в столбцах формул. Используйте {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Эту операцию нельзя выполнять над типом {0} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Тип результата {0} не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Непосредственные ссылки на всю запись не поддерживаются в столбцах формул. Ссылка должна указывать на допустимое поле в записи.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Ожидаемый тип результата для этой формулы — {0}, однако фактический тип результата — {1}. Изменить тип результата столбца формул невозможно.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Столбцы типа "{0}" не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Столбцы типа "{0}" с форматом {1} не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Приведение типов записей или таблиц не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Таблицы из одного столбца не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>В столбцах формул нельзя ссылаться на виртуальную таблицу {0}.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Ожидается операнд. В формуле или выражении ожидается допустимый операнд. Например, вы можете добавить операнд "2" в выражение "1 + _", чтобы получить результат "3", или операнд "день" в выражение «"Добрый "&amp; _ », чтобы получить результат "Добрый день".</value>
     
@@ -4942,23 +4858,23 @@
     <value>Сбой преобразования типа. Заданное значение имеет тип "{0}", тогда как ожидался тип "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>Эта операция в таблице "{0}" может не работать, если в ней больше {1} строк.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Этот предикат всегда будет иметь значение true. Вы хотите использовать ThisRecord или [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>Невозможно делегировать "{0}": поддерживается только делегирование для поиска в поле первичного ключа "{1}".</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Невозможно делегировать {0}: выражение ИД ссылается на ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>Невозможно делегировать "{0}": содержит функцию поведения "{1}".</value>
     
   </data>
@@ -5033,22 +4949,22 @@
     
   </data>
   <data name="AboutRefresh" xml:space="preserve">
-    <value>Refreshes the specified data source.</value>
+    <value>Обновляет указанный источник данных.</value>
     
   </data>
   <data name="RefreshArg1" xml:space="preserve">
-    <value>connected_data_source</value>
+    <value>подключенный_источник_данных</value>
     
   </data>
   <data name="ErrNeedAgg" xml:space="preserve">
-    <value>Expected a record or table value.</value>
+    <value>Ожидается запись или табличное значение.</value>
     
   </data>
   <data name="AboutRefresh_connected_data_source" xml:space="preserve">
-    <value>A connected data source to refresh.</value>
+    <value>Подключенный источник данных, подлежащий обновлению.</value>
   </data>
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
-    <value>Only managed connections can be refreshed.</value>
+    <value>Обновлять можно только управляемые подключения.</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">

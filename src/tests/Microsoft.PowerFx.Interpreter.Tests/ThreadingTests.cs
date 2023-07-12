@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         // Run this test under a debugger, and failure list is written to Debugger output window.
         // Per https://github.com/microsoft/Power-Fx/issues/1519, enable assert here. 
         [Fact]
-        public void CheckImmutableType()
+        public void CheckImmutableTypeInInterpreter()
         {
             // Per https://github.com/microsoft/Power-Fx/issues/1519,
             // Add ThreadSafeImmutable and get these to pass. 
@@ -44,36 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 typeof(Types.FormulaType).Assembly
             };
 
-            foreach (var assembly in assemblies)
-            {
-                foreach (Type type in assembly.GetTypes())
-                {
-                    // includes base types 
-                    var attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>();
-                    if (attr == null)
-                    {
-                        continue;
-                    }
-
-                    // Common pattern is a writeable derived type (like Dict vs. IReadOnlyDict). 
-                    var attrNotSafe = type.GetCustomAttribute<NotThreadSafeAttribute>(inherit: false);
-                    if (attrNotSafe != null)
-                    {
-                        attr = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
-                        if (attr != null)
-                        {
-                            Assert.True(false); // Class can't have both safe & unsafe together. 
-                        }
-
-                        continue;
-                    }
-
-                    bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
-
-                    // Enable this, per  https://github.com/microsoft/Power-Fx/issues/1519
-                    // Assert.True(ok);                
-                }
-            }
+            AnalyzeThreadSafety.CheckImmutableTypes(assemblies);
         }
     }
 }

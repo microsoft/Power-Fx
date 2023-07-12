@@ -33,6 +33,15 @@ namespace Microsoft.PowerFx.Functions
             return argNum >= 1;
         }
 
+        public override bool MutatesArg0 => true;
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
+        }
+
         public RemoveFunctionBase(DPath theNamespace, string name, StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
             : base(theNamespace, name, /*localeSpecificName*/string.Empty, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
@@ -67,7 +76,7 @@ namespace Microsoft.PowerFx.Functions
         public override bool IsSelfContained => false;
 
         public RemoveFunction()
-        : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Boolean, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
+        : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Unknown, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)
         {
         }
 
@@ -97,8 +106,6 @@ namespace Microsoft.PowerFx.Functions
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-
-            //Contracts.Assert(returnType.IsTable);
 
             DType collectionType = argTypes[0];
             if (!collectionType.IsTable)
@@ -151,8 +158,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            // Remove returns the new collection, so the return schema is the same as the collection schema.
-            returnType = collectionType;
+            returnType = context.Features.PowerFxV1CompatibilityRules ? DType.ObjNull : collectionType;
 
             return fValid;
         }
@@ -172,9 +178,12 @@ namespace Microsoft.PowerFx.Functions
                 return faultyArg;
             }
 
-            if (args[0] is BlankValue)
+            var arg0lazy = (LambdaFormulaValue)args[0];
+            var arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+
+            if (arg0 is BlankValue)
             {
-                return args[0];
+                return arg0;
             }
 
             var argCount = args.Count();
@@ -193,13 +202,24 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            var datasource = (TableValue)args[0];
+            var datasource = (TableValue)arg0;
             var recordsToRemove = args.Skip(1).Take(args.Length - toExclude);
 
             cancellationToken.ThrowIfCancellationRequested();
             var ret = await datasource.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
 
-            return ret.ToFormulaValue();
+            // If the result is an error, propagate it up. else return blank.
+            FormulaValue result;
+            if (ret.IsError)
+            {
+                result = FormulaValue.NewError(ret.Error.Errors, FormulaType.Blank);
+            }
+            else
+            {
+                result = FormulaValue.NewBlank();
+            }
+
+            return result;
         }
     }
 }

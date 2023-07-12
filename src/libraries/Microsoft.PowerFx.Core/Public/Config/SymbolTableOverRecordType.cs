@@ -37,7 +37,11 @@ namespace Microsoft.PowerFx
 
             if (_allowThisRecord)
             {
-                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, mutable: false)
+                var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
+                {
+                     CanMutate = false,
+                     CanSet = false
+                })
                 {
                     Owner = this,
                     SlotIndex = int.MaxValue
@@ -50,6 +54,35 @@ namespace Microsoft.PowerFx
                        0,
                        data: data);
             }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SymbolTableOverRecordType"/> class.
+        /// NOTE: Use this to block implicit ThisRecord.
+        /// </summary>
+        internal SymbolTableOverRecordType(RecordType type, ReadOnlySymbolTable parent = null, bool mutable = false)
+        {
+            _type = RecordType.Empty();
+            _debugName = "per-eval";
+            _mutable = mutable;
+            _allowThisRecord = true;
+
+            var data = new NameSymbol(TexlBinding.ThisRecordDefaultName, new SymbolProperties
+            {
+                CanMutate = false,
+                CanSet = false
+            })
+            {
+                Owner = this,
+                SlotIndex = int.MaxValue
+            };
+
+            _thisRecord = new NameLookupInfo(
+                    BindKind.PowerFxResolvedObject,
+                    type._type,
+                    DPath.Root,
+                    0,
+                    data: data);
         }
 
         // Key is the logical name. 
@@ -174,7 +207,11 @@ namespace Microsoft.PowerFx
                     // Slot is based on map count, so whole operation needs to be under single lock. 
                     var slotIdx = _map.Count;
 
-                    data = new NameSymbol(logicalName, _mutable)
+                    data = new NameSymbol(logicalName, new SymbolProperties
+                    {
+                        CanSet = _mutable,
+                        CanMutate = false
+                    })
                     {
                         Owner = this,
                         SlotIndex = slotIdx

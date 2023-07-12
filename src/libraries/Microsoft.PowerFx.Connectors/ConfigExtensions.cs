@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
+    [ThreadSafeImmutable]
     public static class ConfigExtensions
     {
         /// <summary>
