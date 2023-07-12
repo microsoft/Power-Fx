@@ -36,6 +36,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("Blank()", result.ToString());
         }
 
+        [Fact]
+        public async Task PowerFx_Empty_Table_Record_Boolean_Column_Evaluates_False()
+        {
+            RecordType schemaType = RecordType.Empty().Add("BooleanColumn", FormulaType.Boolean);
+            var fields = new List<NamedValue>
+            {
+                new NamedValue("BooleanColumn", FormulaValue.New(false))
+            }; 
+            
+            FormulaValue formulaValue = FormulaValue.NewRecordFromFields(schemaType, fields);
+            var recalEngine = new RecalcEngine();
+            var result = RunExpr("BooleanRecord.BooleanColumn", recalEngine, true, formulaValue, "BooleanRecord");
+
+            Assert.Equal(false, result.ToObject());
+
+            var list = new List<RecordValue>
+            {   
+                FormulaValue.NewRecordFromFields(schemaType, fields)
+            };
+
+            FormulaValue tableFormulaValue = FormulaValue.NewTable(schemaType, list);
+            recalEngine = new RecalcEngine();
+            result = RunExpr("First(BooleanTable).BooleanColumn", recalEngine, true, tableFormulaValue, "BooleanTable");
+            
+            Assert.Equal(false, result.ToObject());
+        }
+
         private FormulaValue Run_Collect_Worflow(bool serialize)
         {
             // Define initial FormulaValue
