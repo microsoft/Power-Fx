@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var type1 = argTypes[1];
 
             // Arg0 should be either a string or a column of strings.
-            if (type0.IsTable)
+            if (type0.IsTableNonObjNull)
             {
                 // Ensure we have a one-column table of strings.
                 fValid &= CheckStringColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Arg1 should be either a string or a column of strings.
-            if (type1.IsTable)
+            if (type1.IsTableNonObjNull)
             {
                 fValid &= CheckStringColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
             }
@@ -115,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var type2 = argTypes[2];
 
                 // Arg2 should be either a number or a column of numbers.
-                if (argTypes[2].IsTable)
+                if (argTypes[2].IsTableNonObjNull)
                 {
                     fValid &= CheckNumericColumnType(context, args[2], type2, errors, ref nodeToCoercedTypeMap);
                 }
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // At least one arg has to be a table.
-            if (!(type0.IsTable || type1.IsTable) && (!hasStartIndex || !argTypes[2].IsTable))
+            if (!(type0.IsTableNonObjNull || type1.IsTableNonObjNull) && (!hasStartIndex || !argTypes[2].IsTableNonObjNull))
             {
                 fValid = false;
             }
