@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var args = callNode.Args.Children.VerifyValue();
 
             // Validate for each predicate node.
-            for (var i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Count; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
                 {
