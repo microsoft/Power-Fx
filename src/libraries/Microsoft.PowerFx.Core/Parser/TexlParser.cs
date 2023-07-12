@@ -285,7 +285,24 @@ namespace Microsoft.PowerFx.Core.Parser
                         if (identToken.Name.Value.ToString() == "Type")
                         {
                             var result = ParseTypeLiteralInvocation(identToken, Precedence.None, out DType type);
-                            udts.Add(new UDT((IdentToken)thisIdentifier, result, type));
+                            if (result != null)
+                            {
+                                udts.Add(new UDT((IdentToken)thisIdentifier, result, type));
+                            }
+                            else
+                            {
+                                while (_curs.TidCur != TokKind.ParenClose && _curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                                {
+                                    _curs.TokMove();
+                                }
+
+                                if (_curs.TidPeek() == TokKind.Semicolon)
+                                {
+                                    _curs.TokMove();
+                                    ParseTrivia();
+                                }
+                            }
+
                             _curs.TokMove();
                             ParseTrivia();
                             continue;
@@ -1315,7 +1332,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     if (_curs.TidCur != TokKind.Ident)
                     {
-                        throw new NotImplementedException();
+                        ErrorTid(_curs.TokCur, TokKind.Ident);
+                        return null;
                     }
 
                     IdentToken ident = _curs.TokMove().As<IdentToken>();
@@ -1323,13 +1341,19 @@ namespace Microsoft.PowerFx.Core.Parser
                     
                     if (_curs.TidCur != TokKind.Colon)
                     {
-                        throw new NotImplementedException();
+                        ErrorTid(_curs.TokCur, TokKind.Colon);
+                        return null;
                     }
 
                     var colon = _curs.TokMove();
                     sourceList.Add(new TokenSource(colon));
                     ParseTrivia();
                     TypeLiteralNode typeSegement = ParseTypeSegment();
+                    if (typeSegement == null)
+                    {
+                        return null;
+                    }
+
                     sourceList.Add(new NodeSource(typeSegement));
                     typeTree = typeTree.SetItem(ident.Name.ToString(), typeSegement.Type);
                     ParseTrivia();
@@ -1361,7 +1385,8 @@ namespace Microsoft.PowerFx.Core.Parser
                 return new TypeLiteralNode(ref _idNext, ident, type, new SourceList(new TokenSource(ident)));
             }
 
-            throw new NotImplementedException();
+            ErrorTid(_curs.TokCur, TokKind.CurlyOpen);
+            return null;
         }
 
         private TexlNode ParseTypeLiteralInvocation(IdentToken identToken, Precedence precMin, out DType type)
@@ -1381,11 +1406,18 @@ namespace Microsoft.PowerFx.Core.Parser
                 leftTrivia
             };
             TypeLiteralNode typeLiteralNode = ParseTypeSegment();
+            if (typeLiteralNode == null)
+            {
+                type = DType.Error;
+                return null;
+            }
+
             type = typeLiteralNode.Type;
             sourceList.Add(new NodeSource(typeLiteralNode));
             if (_curs.TidCur != TokKind.ParenClose)
             {
-                throw new NotImplementedException();
+                ErrorTid(_curs.TokCur, TokKind.ParenClose);
+                return null;
             }
 
             var rightParen = _curs.TokMove();

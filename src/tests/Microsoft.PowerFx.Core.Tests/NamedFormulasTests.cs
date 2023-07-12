@@ -214,13 +214,29 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
             ParseUserDefinitionResult result = TexlParser.ParseUserDefinitionScript(script, parserOptions);
-            /*foreach (UDT udt in result.UDTs)
+        }
+
+        [Theory]
+        [InlineData("CustomType = Type()    Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type(;    Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type);    Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type();   Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type({);  Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type(});  Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type({}); Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type({ Name });       Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type({ Name: });      Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type({ A: Number, );  Person = Type({ Age: Number });")]
+        [InlineData("CustomType = Type({ A: Number, }); Person = Type({ Age: Number });")]
+        public void TestInvalidType(string script)
+        {
+            var parserOptions = new ParserOptions()
             {
-                foreach (var thing in udt.Type.TypeTree.GetPairs())
-                {
-                    Assert.Null(thing.Key);
-                }
-            }*/
+                AllowsSideEffects = false
+            };
+            ParseUserDefinitionResult result = TexlParser.ParseUserDefinitionScript(script, parserOptions);
+            Assert.True(result.Errors.Any());
+            Assert.Equal("Person", result.UDTs.First().Ident.ToString());
         }
     }
 }
