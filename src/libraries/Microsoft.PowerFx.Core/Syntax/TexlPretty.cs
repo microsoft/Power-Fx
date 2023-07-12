@@ -334,11 +334,11 @@ namespace Microsoft.PowerFx.Syntax
             // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (var i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Count; ++i)
             {
                 result = result
                     .With(node.Children[i].Accept(this, Precedence.None));
-                if (i != node.Children.Length - 1)
+                if (i != node.Children.Count - 1)
                 {
                     result = result.With(listSep);
                 }
@@ -354,14 +354,14 @@ namespace Microsoft.PowerFx.Syntax
             // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (var i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Count; ++i)
             {
                 result = result
                     .With(
                         node.Ids[i].Token.ToString(),
                         TexlLexer.PunctuatorColon)
                     .With(node.Children[i].Accept(this, Precedence.SingleExpr));
-                if (i != node.Children.Length - 1)
+                if (i != node.Children.Count - 1)
                 {
                     result = result.With(listSep);
                 }
@@ -387,10 +387,10 @@ namespace Microsoft.PowerFx.Syntax
             // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (var i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Count; ++i)
             {
                 result = result.With(node.Children[i].Accept(this, Precedence.SingleExpr));
-                if (i != node.Children.Length - 1)
+                if (i != node.Children.Count - 1)
                 {
                     result = result.With(listSep);
                 }
