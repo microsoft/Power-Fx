@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>A propriedade de dados personalizados do componente com parâmetros só pode ser acessada em um componente ou em propriedades de saída do componente.</value>
+    <value>A propriedade ou o parâmetro de função de componente só pode ser acessada de um componente ou de propriedades de saída do componente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>A propriedade ou o parâmetro da função de componente só pode fazer referência a outras propriedades da função.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Esta operação na tabela "{0}" poderá não funcionar se tiver mais de {1} linhas.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Este predicado será sempre verdadeiro. Você quis usar ThisRecord ou [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Não é possível delegar {0}: somente a delegação de suporte para a pesquisa no campo de chave primária "{1}".</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Não é possível delegar {0}: contém uma função de comportamento "{1}".</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>O texto que deve ter suas marcas HTML e XML removidas.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>As funções de filtro não permitem funções de comportamento como predicados.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Use o operador And para combinar vários predicados no segundo argumento.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Não é possível copiar esta tabela. Em vez disso, crie uma tabela em linha usando a função ForAll e a notação {...} para copiar as colunas individuais desejadas.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Este registro não pode ser copiado. Em vez disso, crie um registro em linha usando a notação {...} para copiar os campos individuais desejados.</value>
   </data>
 </root>
