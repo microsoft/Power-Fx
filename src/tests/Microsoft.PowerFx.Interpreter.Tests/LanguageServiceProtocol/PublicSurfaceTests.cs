@@ -78,6 +78,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextEdit",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.VersionedTextDocumentIdentifier",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.BaseParams",
             };
 
             var sb = new StringBuilder();

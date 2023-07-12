@@ -3,19 +3,14 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    public class TextDocumentItem
+    public class TextDocumentItem : TextDocumentIdentifier
     {
         public TextDocumentItem()
+            : base()
         {
-            Uri = string.Empty;
             LanguageId = string.Empty;
-            Text = string.Empty;
+            Text = null;
         }
-
-        /// <summary>
-        /// The text document's URI.
-        /// </summary>
-        public string Uri { get; set; }
 
         /// <summary>
         /// The text document's language identifier.

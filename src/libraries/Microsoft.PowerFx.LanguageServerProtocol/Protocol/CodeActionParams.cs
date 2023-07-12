@@ -6,7 +6,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// <summary>
     /// Code action request parameters.
     /// </summary>
-    public class CodeActionParams
+    public class CodeActionParams : BaseParams
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeActionParams"/> class.
@@ -16,11 +16,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         {
             Context = new CodeActionContext();
         }
-
-        /// <summary>
-        /// Gets or sets text document object.
-        /// </summary>
-        public TextDocumentIdentifier TextDocument { get; set; }
 
         /// <summary>
         /// Gets or sets current editor value range object.
