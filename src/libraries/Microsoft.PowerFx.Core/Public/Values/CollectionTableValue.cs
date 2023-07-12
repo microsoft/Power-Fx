@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Functions;
 
@@ -96,9 +95,10 @@ namespace Microsoft.PowerFx.Types
 
         public override async Task<DValue<RecordValue>> AppendAsync(RecordValue record, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_sourceList == null)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+            {                
                 return await base.AppendAsync(record, cancellationToken).ConfigureAwait(false);
             }
 
@@ -150,6 +150,8 @@ namespace Microsoft.PowerFx.Types
             var deleteList = new List<T>();
             var errors = new List<ExpressionError>();
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (_sourceList == null)
             {
                 return await base.RemoveAsync(recordsToRemove, all, cancellationToken).ConfigureAwait(false);
@@ -159,11 +161,11 @@ namespace Microsoft.PowerFx.Types
             {
                 var found = false;
 
-                foreach (var item in _enumerator)
+                foreach (T item in _enumerator)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    var dRecord = Marshal(item);
+                    DValue<RecordValue> dRecord = Marshal(item);
 
                     if (await MatchesAsync(dRecord.Value, recordToRemove, cancellationToken).ConfigureAwait(false))
                     {
@@ -190,7 +192,7 @@ namespace Microsoft.PowerFx.Types
                 ret = true;
             }
 
-            if (errors.Count > 0) 
+            if (errors.Count > 0)
             {
                 return DValue<BooleanValue>.Of(NewError(errors, FormulaType.Boolean));
             }
@@ -200,6 +202,7 @@ namespace Microsoft.PowerFx.Types
 
         protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var actual = await FindAsync(baseRecord, cancellationToken, mutationCopy: true).ConfigureAwait(false);
 
             if (actual != null)
@@ -223,14 +226,18 @@ namespace Microsoft.PowerFx.Types
         /// <remarks>A derived class may override if there's a more efficient way to find the match than by linear scan.</remarks>
         protected virtual async Task<RecordValue> FindAsync(RecordValue baseRecord, CancellationToken cancellationToken, bool mutationCopy = false)
         {
-            if (this is IMutationCopy && mutationCopy)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (mutationCopy && CanShallowCopy)
             {
-                for (var index = 0; index < _sourceList.Count; index++)
+                for (int index = 0; index < _sourceList.Count; index++)
                 {
-                    var record = Marshal(_sourceIndex[index]).Value;
+                    cancellationToken.ThrowIfCancellationRequested();
+                    RecordValue record = Marshal(_sourceIndex[index]).Value;
+
                     if (await MatchesAsync(record, baseRecord, cancellationToken).ConfigureAwait(false))
                     {
-                        var copyRecord = (RecordValue)record.MaybeShallowCopy();
+                        RecordValue copyRecord = (RecordValue)record.MaybeShallowCopy();
                         _sourceMutableIndex[index] = MarshalInverse(copyRecord);
                         return copyRecord;
                     }
@@ -250,17 +257,44 @@ namespace Microsoft.PowerFx.Types
             return null;
         }
 
+        // currentRecord is the record in the table, baseRecord is the record passed in by the user
         protected static async Task<bool> MatchesAsync(RecordValue currentRecord, RecordValue baseRecord, CancellationToken cancellationToken)
         {
-            var ret = true;
+            cancellationToken.ThrowIfCancellationRequested();
+            if (currentRecord.TryGetPrimaryKey(out string currentRecordPrimaryKeyValue))
+            {
+                string pKey = currentRecord.GetPrimaryKeyName();
+
+                if (string.IsNullOrEmpty(pKey))
+                {                    
+                    // TryGetPrimaryKey tries to retrieve the primary key value, while GetPrimaryKeyName allows the retrieval of the primary key name
+                    if (baseRecord.TryGetPrimaryKey(out string baseRecordPrimaryKey) && baseRecordPrimaryKey == currentRecordPrimaryKeyValue)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    FormulaValue pKeyValue = await baseRecord.GetFieldAsync(pKey, cancellationToken).ConfigureAwait(false);
+
+                    if (pKeyValue.TryGetPrimitiveValue(out object baseRecordPrimaryKeyValue) && baseRecordPrimaryKeyValue.ToString() == currentRecordPrimaryKeyValue)
+                    {
+                        return true;
+                    }    
+                }
+
+                return false;
+            }
 
             if (baseRecord.Fields.Count() != currentRecord.Fields.Count())
             {
                 return false;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
             await foreach (var baseRecordField in baseRecord.GetFieldsAsync(cancellationToken).ConfigureAwait(false))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 var currentFieldValue = await currentRecord.GetFieldAsync(baseRecordField.Value.Type, baseRecordField.Name, cancellationToken).ConfigureAwait(false);
 
                 if (currentFieldValue is BlankValue && baseRecordField.Value is BlankValue)
@@ -269,8 +303,7 @@ namespace Microsoft.PowerFx.Types
                 }
                 else if (currentFieldValue is BlankValue)
                 {
-                    ret = false;
-                    break;
+                    return false;
                 }
                 else if (currentFieldValue.Type._type.IsPrimitive && baseRecordField.Value.Type._type.IsPrimitive)
                 {
@@ -279,13 +312,16 @@ namespace Microsoft.PowerFx.Types
 
                     if (!compare1.Equals(compare2))
                     {
-                        ret = false;
-                        break;
+                        return false;
                     }
                 }
                 else if (baseRecordField.Value is RecordValue baseRecordValue && currentFieldValue is RecordValue currentRecordValue)
                 {
-                    ret = await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (!await MatchesAsync(currentRecordValue, baseRecordValue, cancellationToken).ConfigureAwait(false))
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
@@ -293,7 +329,7 @@ namespace Microsoft.PowerFx.Types
                 }
             }
 
-            return ret;
+            return true;
         }
     }
 }

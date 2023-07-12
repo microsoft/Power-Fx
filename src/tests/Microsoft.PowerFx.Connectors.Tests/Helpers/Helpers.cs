@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.IO;
+using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Xunit;
@@ -41,7 +42,13 @@ namespace Microsoft.PowerFx.Tests
         {
             using (var stream = GetStream(name))
             {
-                var doc = new OpenApiStreamReader().Read(stream, out var diag);
+                var doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
+
+                if ((doc == null || doc.Paths == null || doc.Paths.Count == 0) && diag != null && diag.Errors.Count > 0)
+                { 
+                    throw new InvalidDataException($"Unable to parse Swagger file: {string.Join(", ", diag.Errors.Select(err => err.Message))}");
+                }
+
                 return doc;
             }
         }

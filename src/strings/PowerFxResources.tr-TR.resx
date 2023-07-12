@@ -4086,90 +4086,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Formül sütunlarında desteklenmez.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} işleviyle ilgili geçersiz bağımsız değişken sayısı: {1} alındı, {2} bekleniyordu</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>{0} bağımsız değişkeni, formül sütunlarında {1} işlevi için desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Bu bağımsız değişken, formül sütunlarında bu tür olarak geçirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Bu bağımsız değişken, formül sütunlarında tür {0} olarak geçirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Bu bağımsız değişken için yalnızca bir değişmez değer desteklenir.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0}, formül sütunlarında desteklenmeyen bir saat dilimi dönüşümü olmadan bu girişte gerçekleştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Bu işlem, farklı Tarih Saat Davranışlarında bulunan değerlerde gerçekleştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında yalnızca kısa tarih ve saat biçimi dizeleri desteklenmektedir.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{1} tarih aritmetik işlevi için {0} bağımsız değişkeni geçersiz/desteklenmeyen bir zaman birimidir.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında "." ve "," gibi yerel ayara özel biçimlendirme belirteçleri desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0}, formül sütunlarında desteklenmiyor, bunun yerine {1} kullanın.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Bu işlem, formül sütunlarında {0} türü üzerinde gerçekleştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Sonuç türü {0}, formül sütunlarında desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında tüm bir kayda referansta bulunma desteklenmez. Lütfen kayıtta geçerli bir alana referansta bulunun.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Bu formül için sonuç türünün {0} olması bekleniyordu ancak gerçek sonuç türü {1}. Formül sütununun sonuç türü değiştirilemez.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>{1} biçimindeki {0} türündeki sütunlar, formül sütunlarında desteklenmiyor.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında kayıt veya tabloların zorlanması desteklenmez.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında tek sütunlu tablolar desteklenmez.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Formül sütunlarında {0} sanal tablosuna referansta bulunamazsınız.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>İşlenen bekleniyordu. Formül veya ifade geçerli bir işlenen bekliyor. Örneğin, sonucun '3' olması için '2' işlenenini '1 + _' ifadesine ekleyebilirsiniz. Veya sonucun "Hoş geldiniz" olması için "geldiniz" işlenenini '"Hoş "&amp; _ ' işlenenine ekleyebilirsiniz.</value>
     
@@ -4942,23 +4858,23 @@
     <value>Verilen değer '{0}' türünde olduğu için tür dönüşümü başarısız oldu; '{1}' türü bekleniyor.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
     <value>'{0}' tablosu üzerindeki bu işlem, {1} üzeri sayıda satıra sahipse çalışmayabilir.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
+  <data name="WrnDelegationPredicate" xml:space="preserve">
     <value>Bu koşul her zaman doğru olacak. ThisRecord öğesini mi yoksa [@ ] öğesini mi kullanmak istiyorsunuz?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
     <value>{0} atanamıyor: yalnızca '{1}' birincil anahtar alanında arama için atamayı destekliyor.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} atanamıyor: Kimlik ifadesi ThisRecord öğesine başvuruyor.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
     <value>{0} atanamıyor: '{1}' davranış işlevini içeriyor.</value>
     
   </data>

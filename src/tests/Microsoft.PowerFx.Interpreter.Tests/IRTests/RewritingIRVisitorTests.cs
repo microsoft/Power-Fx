@@ -179,7 +179,7 @@ namespace Microsoft.PowerFx.Tests
 
             private class NopVisitor : RewritingIRVisitor<IntermediateNode, object>
             {                
-                protected override IntermediateNode Materialize(IntermediateNode ret)
+                public override IntermediateNode Materialize(IntermediateNode ret)
                 {
                     return ret;
                 }
@@ -218,7 +218,7 @@ namespace Microsoft.PowerFx.Tests
                 _errors = errors;
             }
 
-            protected override IntermediateNode Materialize(IntermediateNode ret)
+            public override IntermediateNode Materialize(IntermediateNode ret)
             {
                 return ret;
             }

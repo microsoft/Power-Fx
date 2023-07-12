@@ -77,8 +77,6 @@ Error({Kind:ErrorKind.NotFound})
 >> Remove(t2, {Field2:{Field2_1:321,Field2_2:"2_2",Field2_3:{Field2_3_1:555,Field2_3_2:"common"}}});
 Error({Kind:ErrorKind.NotFound})
 
->> Remove(t2, {Field1:1,Field2:{Field2_1:121,Field2_2:"2_2",Field2_3:{Field2_3_1:1231,Field2_3_2:"common"}},Field3:false}, "All")
-true
 
 >> Remove(t2, {Field2:{Field2_3:{Field2_3_2:"common"}}}, "All")
 Errors: Error 11-52: Invalid argument type. Expecting a Record value, but of a different schema.|Error 11-52: Missing column. Your formula is missing a column 'DisplayNameField2_1' with a type of 'Decimal'.|Error 0-60: The function 'Remove' has some invalid arguments.
@@ -134,3 +132,10 @@ Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 12-22: The s
    
 >> Remove(Foo, Bar)
 Errors: Error 7-10: Name isn't valid. 'Foo' isn't recognized.|Error 12-15: Name isn't valid. 'Bar' isn't recognized.|Error 0-16: The function 'Remove' has some invalid arguments.
+
+>> Remove(t1, {Field1:2,Field2:"not in the table",Field3:DateTime(2022,2,1,0,0,0,0),Field4:false})
+Error({Kind:ErrorKind.NotFound})
+
+// Remove propagates error.
+>> Remove(t1, If(1/0<2, {Field1:2}))
+Error({Kind:ErrorKind.Div0})

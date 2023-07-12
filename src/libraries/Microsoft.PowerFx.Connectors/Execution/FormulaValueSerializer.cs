@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors.Execution
@@ -43,11 +44,15 @@ namespace Microsoft.PowerFx.Connectors.Execution
 
         protected abstract void WriteDateTimeValue(DateTime dateTimeValue);
 
-        protected readonly bool _schemaLessBody;
+        protected abstract void WriteDateValue(DateTime dateValue);
 
-        internal FormulaValueSerializer(bool schemaLessBody)
+        protected readonly bool _schemaLessBody;
+        protected readonly FormattingInfo _context;
+
+        internal FormulaValueSerializer(FormattingInfo context, bool schemaLessBody)
         {
             _schemaLessBody = schemaLessBody;
+            _context = context;
         }
 
         internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
@@ -63,14 +68,19 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 var namedValue = fields.FirstOrDefault(nv => nv.Name.Equals(property.Key, StringComparison.OrdinalIgnoreCase));
 
-                if (namedValue == null)
+                if (namedValue == null || namedValue.Value.IsBlank())
                 {
                     if (property.Value.IsInternal())
                     {
                         continue;
                     }
 
-                    throw new NotImplementedException($"Missing property {property.Key}, object is too complex or not supported");
+                    if (schema.Required.Contains(property.Key))
+                    {
+                        throw new NotImplementedException($"Missing property {property.Key}, object is too complex or not supported");
+                    }
+
+                    continue;
                 }
 
                 WriteProperty(property.Key, property.Value, namedValue.Value);
@@ -95,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                                 DKind.ObjNull => "null",
                                 _ => "unknown_dkind"
                             }
-                        }, 
+                        },
                         nv.Value);
                 }
             }
@@ -113,13 +123,27 @@ namespace Microsoft.PowerFx.Connectors.Execution
             switch (propertySchema.Type)
             {
                 case "array":
-                    // array                    
+                    // array
+                    if (fv is not TableValue tableValue)
+                    {
+                        throw new ArgumentException($"Expected TableValue and got {fv?.GetType()?.Name ?? "<null>"} value, for property {propertyName}");
+                    }
+
                     StartArray(propertyName);
 
-                    foreach (var item in (fv as TableValue).Rows)
+                    foreach (DValue<RecordValue> item in tableValue.Rows)
                     {
-                        var rva = item.Value;
+                        StartArrayElement(propertyName);
+                        RecordValue rva = item.Value;
 
+                        // If we have an object schema, we will try to follow it
+                        if (propertySchema.Items?.Type == "object" || propertySchema.Items?.Type == "array")
+                        {
+                            WriteProperty(null, propertySchema.Items, rva);
+                            continue;
+                        }
+
+                        // Else, we write primitive types only
                         if (rva.Fields.Count() != 1)
                         {
                             throw new ArgumentException($"Incompatible Table for supporting array, RecordValue has more than one column - propertyName {propertyName}, number of fields {rva.Fields.Count()}");
@@ -130,7 +154,6 @@ namespace Microsoft.PowerFx.Connectors.Execution
                             throw new ArgumentException($"Incompatible Table for supporting array, RecordValue doesn't have 'Value' column - propertyName {propertyName}");
                         }
 
-                        StartArrayElement(propertyName);
                         WriteValue(rva.Fields.First().Value);
                     }
 
@@ -201,10 +224,24 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         WriteStringValue(stringValue.Value);
                     }
-                    else if (fv is PrimitiveValue<DateTime> dt)
+                    else if (fv is DateTimeValue dtv)
                     {
-                        // DateTimeValue and DateValue
-                        WriteDateTimeValue(dt.Value);
+                        if (propertySchema.Format == "date-time")
+                        {
+                            WriteDateTimeValue(dtv.GetConvertedValue(_context.TimeZoneInfo));
+                        }
+                        else if (propertySchema.Format == "date-no-tz")
+                        {
+                            WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                        }
+                        else
+                        {
+                            throw new NotImplementedException($"Unknown {propertySchema.Format} format");
+                        }
+                    }
+                    else if (fv is DateValue dv)
+                    {
+                        WriteDateValue(dv.GetConvertedValue(null));
                     }
                     else
                     {
@@ -245,10 +282,24 @@ namespace Microsoft.PowerFx.Connectors.Execution
             {
                 WriteBooleanValue(booleanValue.Value);
             }
-            else if (value is PrimitiveValue<DateTime> dt)
+            else if (value is DateTimeValue dtv)
             {
-                // DateTimeValue and DateValue
-                WriteDateTimeValue(dt.Value);
+                if (dtv.Type._type.Kind == DKind.DateTime)
+                {
+                    WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Local));
+                }
+                else if (dtv.Type._type.Kind == DKind.DateTimeNoTimeZone)
+                {
+                    WriteDateTimeValue(dtv.GetConvertedValue(TimeZoneInfo.Utc));
+                }
+                else
+                {
+                    throw new NotImplementedException($"Unknown {dtv.Type._type.Kind} kind");
+                }
+            }
+            else if (value is DateValue dv)
+            {
+                WriteDateValue(((PrimitiveValue<DateTime>)dv).Value);
             }
             else
             {

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
@@ -63,31 +64,10 @@ namespace Microsoft.PowerFx.Connectors
 
             if (IsEnum)
             {
-                if (schema.Type == "string" || (string.IsNullOrEmpty(schema.Type) && schema.Enum.First() is OpenApiString))
-                {
-                    EnumValues = schema.Enum.Cast<OpenApiString>().Select(oas => new StringValue(IRContext.NotInSource(FormulaType.String), oas.Value)).ToArray();
-                }
-                else if (schema.Type == "integer" || (string.IsNullOrEmpty(schema.Type) && schema.Enum.First() is OpenApiInteger))
-                {
-                    EnumValues = schema.Enum.Cast<OpenApiInteger>().Select<OpenApiInteger, FormulaValue>(oai => formulaType == FormulaType.Decimal ? new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), oai.Value) : new NumberValue(IRContext.NotInSource(FormulaType.Number), oai.Value)).ToArray();
-                }
-                else if (schema.Type == "boolean" || (string.IsNullOrEmpty(schema.Type) && schema.Enum.First() is OpenApiBoolean))
-                {
-                    EnumValues = schema.Enum.Cast<OpenApiBoolean>().Select(oab => new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), oab.Value)).ToArray();
-                }
-                else
-                {
-                    throw new NotSupportedException($"Enum type {schema.Type} is not supported");
-                }
-
-                if (schema.Extensions != null && schema.Extensions.TryGetValue("x-ms-enum-display-name", out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa)
-                {
-                    EnumDisplayNames = oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray();
-                }
-                else
-                {
-                    EnumDisplayNames = Array.Empty<string>();
-                }
+                EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
+                EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue("x-ms-enum-display-name", out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
+                                    ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
+                                    : Array.Empty<string>();                
             }
             else
             {

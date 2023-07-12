@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
+using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -16,10 +17,10 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private readonly Stack<string> _stack;
         private readonly Stack<int> _arrayIndex;
 
-        public OpenApiFormUrlEncoder(bool schemaLessBody)
-            : base(schemaLessBody)
+        public OpenApiFormUrlEncoder(FormattingInfo context, bool schemaLessBody)
+            : base(context, schemaLessBody)
         {
-            _writer = new StringBuilder(1024);    
+            _writer = new StringBuilder(1024);
             _stack = new Stack<string>();
             _arrayIndex = new Stack<int>();
         }
@@ -69,6 +70,11 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected override void WriteDateTimeValue(DateTime dateTimeValue)
         {
             _writer.Append(HttpUtility.UrlEncode(dateTimeValue.ToString("o", CultureInfo.InvariantCulture)));
+        }
+
+        protected override void WriteDateValue(DateTime dateValue)
+        {
+            _writer.Append(HttpUtility.UrlEncode(dateValue.Date.ToString("o", CultureInfo.InvariantCulture).Substring(0, 10)));
         }
 
         protected override void WriteNullValue()
