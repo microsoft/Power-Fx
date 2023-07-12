@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentens anpassade dataegenskap med parametrar kan endast användas inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    <value>Egenskap eller parameter för komponentfunktion kan endast nås inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Egenskap eller parameter för komponentfunktion kan endast referera till andra funktionsegenskaper.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Den här åtgärden i tabellen "{0}" kanske inte fungerar om den har fler än {1} rader.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Det här predikatet kommer alltid att vara sant. Ville du använda ThisRecord eller [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Det går inte att delegera {0}: stöder endast delegering för sökning i primärnyckelfältet {1}.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Det går inte att delegera {0}: innehåller en beteendefunktion {1}.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4886,10 +4890,10 @@
     <value>Texten att jämföra mot formatet.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
-    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräknaren eller ett reguljärt uttryck.</value>
+    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräkningen eller ett reguljärt uttryck.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -4921,7 +4925,7 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
@@ -4933,7 +4937,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Texten för att ta bort HTML- och XML-taggar.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunktioner tillåter inte beteendefunktioner som predikat.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Använd operatorn And för att kombinera flera predikat i det andra argumentet.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Det går inte att kopiera den här tabellen. Skapa i stället en infogad tabell med ForAll-funktionen och {...}-format för att kopiera de enskilda kolumner som du vill använda.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Det går inte att kopiera den här posten. Skapa i stället en infogad post med {...}-format för att kopiera de enskilda fält som du vill använda.</value>
   </data>
 </root>
