@@ -37,18 +37,39 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
-        public async Task PowerFx_Empty_Table_Record_Boolean_Column_Evaluates_False()
+        public async void TestEmptyFieldOfRecordTable()
         {
-            RecordType schemaType = RecordType.Empty().Add("BooleanColumn", FormulaType.Boolean);
-            FormulaValue formulaValue = FormulaValue.NewRecordFromFields(schemaType, new List<NamedValue>());
-            var recalEngine = new RecalcEngine();
-            var result = RunExpr("BooleanRecord.BooleanColumn", recalEngine, true, formulaValue, "BooleanRecord");
+            string recordName = "BooleanRecord";
+            string tableName = "BooleanTable";
+            string columnName = "BooleanColumn";
+            
+            // Test empty field of record
+            RecordType schemaType = RecordType.Empty().Add(columnName, FormulaType.Boolean);
+            var emptyField = new List<NamedValue>();
+            FormulaValue recordFormulaValue = FormulaValue.NewRecordFromFields(schemaType, emptyField);
+
+            var engine = new RecalcEngine();
+            var rc = new RuntimeConfig();
+            
+            engine.UpdateVariable(recordName, recordFormulaValue);
+
+            var check = engine.Check(recordName + "." + columnName);
+            Assert.True(check.IsSuccess);
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
 
             Assert.Null(result.ToObject());
 
-            FormulaValue tableFormulaValue = FormulaValue.NewTable(schemaType, new List<RecordValue>());
-            result = RunExpr("First(BooleanTable).BooleanColumn", recalEngine, true, tableFormulaValue, "BooleanTable");
+            // Test empty record of table
+            var emptyRecord = new List<RecordValue>();
+            FormulaValue tableFormulaValue = FormulaValue.NewTable(schemaType, emptyRecord);
+            engine.UpdateVariable(tableName, tableFormulaValue);
 
+            check = engine.Check("First(" + tableName + ")." + columnName);
+            Assert.True(check.IsSuccess);
+
+            result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            
             Assert.Null(result.ToObject());
         }
 
