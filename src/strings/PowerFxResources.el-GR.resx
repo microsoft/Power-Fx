@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Η πρόσβαση στην ιδιότητα προσαρμοσμένων δεδομένων στοιχείου με παραμέτρους είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    <value>Η πρόσβαση στην ιδιότητα ή την παράμετρο συνάρτησης στοιχείου είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Η ιδιότητα ή η παράμετρος συνάρτησης στοιχείου μπορεί να αναφέρεται μόνο σε άλλες ιδιότητες συνάρτησης.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Αυτή η λειτουργία στον πίνακα '{0}' ενδέχεται να μην λειτουργεί, εάν έχει περισσότερες από {1} γραμμές.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Αυτό το πρόθεμα θα είναι πάντα αληθές. Θέλατε να χρησιμοποιήσετε το ThisRecord ή το [@ ];</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Δεν είναι δυνατή η ανάθεση {0}: υποστηρίξτε μόνο την ανάθεση για αναζήτηση σε πεδίο πρωτεύοντος κλειδιού '{1}'.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Το κείμενο για κατάργηση των ετικετών HTML και XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Οι λειτουργίες φίλτρου δεν επιτρέπουν λειτουργίες συμπεριφοράς ως προκαταρκτικά.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Χρησιμοποιήστε τον τελεστή And για τον συνδυασμό πολλών προκαταρκτικών στο δεύτερο όρισμα.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Δεν είναι δυνατή η αντιγραφή αυτού του πίνακα. Αντιθέτως, δημιουργήστε έναν ενσωματωμένο πίνακα χρησιμοποιώντας τη συνάρτηση ForAll και {...} σημειώσεις για την αντιγραφή των επιμέρους στηλών που επιθυμείτε.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Δεν είναι δυνατή η αντιγραφή αυτής της καρτέλας. Αντιθέτως, δημιουργήστε μια ενσωματωμένη καρτέλα χρησιμοποιώντας {...} σημειώσεις για την αντιγραφή των επιμέρους πεδίων που επιθυμείτε.</value>
   </data>
 </root>

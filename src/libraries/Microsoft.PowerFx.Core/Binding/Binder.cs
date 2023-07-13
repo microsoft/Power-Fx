@@ -699,7 +699,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (node.Kind == NodeKind.Call)
             {
-                if (node.AsCall().Args.Children.Length == 0)
+                if (node.AsCall().Args.Children.Count == 0)
                 {
                     tabularDataQueryOptionsMap = null;
                     return false;
@@ -1985,7 +1985,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             var scopeFunction = callInfo.Function;
 
-                            Contracts.Assert(callInfo.Node.Args.Children.Length > 0);
+                            Contracts.Assert(callInfo.Node.Args.Children.Count > 0);
                             var firstArg = callInfo.Node.Args.Children[0];
 
                             // Determine if we arrived as the first (scope) argument of the function call
@@ -3922,7 +3922,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty)
@@ -4034,7 +4034,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var args = node.Args.Children;
                     var set = ScopeUseSet.GlobalsOnly;
 
-                    for (var i = 0; i < args.Length; i++)
+                    for (var i = 0; i < args.Count; i++)
                     {
                         var argScopeUseSet = _txb.GetScopeUseSet(args[i]);
 
@@ -4353,7 +4353,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // The zeroth arg should not be a lambda. Instead it defines the context type for the lambdas.
                 Contracts.Assert(!maybeFunc.IsLambdaParam(0));
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argTypes = new DType[args.Length];
 
                 // We need to know which variables are volatile in case the first argument is or contains a
@@ -4616,7 +4616,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Give warning if returning dynamic metadata without a known dynamic type
                 else if (func.IsDynamic && _nameResolver.Document.Properties.EnabledFeatures.IsDynamicSchemaEnabled)
                 {
-                    if (!func.CheckForDynamicReturnType(_txb, node.Args.Children))
+                    if (!func.CheckForDynamicReturnType(_txb, node.Args.Children.ToArray()))
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDynamicMetadata);
                     }
@@ -4740,7 +4740,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Make a binder-aware call to Concatenate
                 _txb.GenerateCallNode(node);
 
-                var args = node.Children;
+                var args = node.Children.ToArray();
                 var argTypes = new DType[args.Length];
 
                 // Process arguments
@@ -4802,7 +4802,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private bool TryGetAffectScopeVariableFunc(CallNode node, out TexlFunction func)
@@ -4826,7 +4826,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(func.SupportsMetadataTypeArg);
                 Contracts.Assert(!func.HasLambdas);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argCount = args.Length;
 
                 var returnType = func.ReturnType;
@@ -4897,7 +4897,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertIndexInclusive(argCountVisited, node.Args.Count);
                 Contracts.AssertValueOrNull(scopeNew);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argCount = args.Length;
 
                 var info = _txb.GetInfo(node);
@@ -5112,11 +5112,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(overloads.Length > 1);
                 Contracts.AssertAllValues(overloads);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, node.Args.Children, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, args, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
@@ -5167,7 +5167,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 AssertValid();
                 Contracts.AssertValue(node);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private bool IsRecordScopeFieldName(DName name, out Scope scope)
@@ -5289,7 +5289,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, nodeType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
 
@@ -5366,7 +5366,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
         }

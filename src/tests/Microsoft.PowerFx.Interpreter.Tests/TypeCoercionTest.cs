@@ -118,9 +118,13 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Number));
             Assert.True(FormulaType.Decimal.CanPotentiallyCoerceTo(FormulaType.Decimal));
             Assert.True(FormulaType.Guid.CanPotentiallyCoerceTo(FormulaType.Guid));
+            Assert.True(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.DateTime));
+            Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.String));
 
             Assert.False(FormulaType.Color.CanPotentiallyCoerceTo(FormulaType.String));
             Assert.False(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.Hyperlink));
+            Assert.False(FormulaType.String.CanPotentiallyCoerceTo(FormulaType.Color));
+            Assert.False(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Boolean));
 
             RecordType inputType = RecordType.Empty()
                 .Add(new NamedFormulaType("a", FormulaType.String))

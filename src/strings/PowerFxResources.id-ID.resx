@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Properti data kustom komponen dengan parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    <value>Properti fungsi komponen atau parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Properti fungsi komponen atau parameter hanya dapat mereferensikan properti fungsi lainnya.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Operasi di tabel '{0}' ini mungkin tidak berfungsi jika memiliki lebih dari {1} baris.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Predikat ini akan selalu benar. Apakah Anda bermaksud menggunakan ThisRecord atau [@]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Tidak dapat mendelegasikan {0}: hanya mendukung delegasi untuk pencarian di bidang kunci primer '{1}'.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Tidak dapat mendelegasikan {0}: berisi fungsi perilaku '{1}'.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teks yang akan dihapus tag HTML dan XML-nya.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Fungsi filter tidak mengizinkan fungsi perilaku sebagai predikat.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gunakan operator And untuk menggabungkan beberapa predikat ke dalam argumen kedua.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tabel ini tidak dapat disalin. Sebagai gantinya, buat tabel sebaris menggunakan fungsi ForAll dan notasi {...} untuk menyalin kolom terpisah yang diinginkan.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Rekaman ini tidak dapat disalin. Sebagai gantinya, buat rekaman sebaris menggunakan notasi {...} untuk menyalin bidang terpisah yang diinginkan.</value>
   </data>
 </root>

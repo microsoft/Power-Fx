@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Az összetevő paraméterekkel rendelkező egyéni adatokra vonatkozó tulajdonság csak egy összetevőn belülről vagy az összetevő kimeneti tulajdonságaiból férhető hozzá.</value>
+    <value>Az összetevő függvény tulajdonsága vagy paramétere csak egy összetevőn belülről vagy az összetevő kimeneti tulajdonságaiból férhető hozzá.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Az összetevő függvény tulajdonsága vagy paramétere csak más függvénytulajdonságokra hivatkozhat.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Ez a művelet a(z) '{0}' táblán adott esetben nem működik, ha több mint {1} sorral rendelkezik.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Ez a predikátum mindig igaz lesz. A ThisRecord vagy [@ ] lehetőséget akarta használni?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>A(z) {0} nem delegálható: csak a(z) '{1}' elsődleges kulcsmezőre történő keresés delegálásának támogatása.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>A(z) {0} nem delegálható: '{1}' viselkedési függvényt tartalmaz.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4886,10 +4890,10 @@
     <value>A szöveg, melyet össze kell hasonlítani a formátummal.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
-    <value>A formátum, amely alapján ellenőrizni kell a szöveget. Ez a TextFormat enumerálás egy értéke vagy egy reguláris kifejezés lehet.</value>
+    <value>A formátum, amely alapján ellenőrizni kell a szöveget. Ez a TextFormat felsorolás értéke vagy egy reguláris kifejezés lehet.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions enumerálás értéke is lehet.</value>
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions felsorolás értéke is lehet.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -4921,7 +4925,7 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions enumerálás értéke is lehet.</value>
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions felsorolás értéke is lehet.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
@@ -4933,7 +4937,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions enumerálás értéke is lehet.</value>
+    <value>Ez határozza meg, hogy az egyezést a szöveg mely részében kell keresni. Ez a MatchOptions felsorolás értéke is lehet.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>A szöveg, amelyből el szeretné távolítani a HTML-kódot és az XML-címkéket.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>A szűrőfüggvények nem engedélyezik a viselkedési függvényeket predikátumként.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Használja az And operátor több predikátum összevonására a második argumentumban.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Ez a rekord nem másolható. Ehelyett hozzon létre egy beágyazott rekordot a ForAll függvény és a(z) {...} jegyzet segítségével a kívánt egyéni oszlopok másolására.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Ez a rekord nem másolható. Ehelyett hozzon létre egy beágyazott rekordot a(z) {...} jegyzet segítségével a kívánt egyéni mezők másolására.</value>
   </data>
 </root>

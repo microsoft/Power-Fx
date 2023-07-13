@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>คุณสมบัติข้อมูลแบบกำหนดเองของคอมโพเนนต์ที่มีพารามิเตอร์สามารถเข้าถึงได้จากภายในคอมโพเนนต์หรือจากคุณสมบัติผลลัพธ์ของคอมโพเนนต์เท่านั้น</value>
+    <value>คุณสมบัติหรือพารามิเตอร์ฟังก์ชันของคอมโพเนนต์ สามารถเข้าถึงได้จากภายในคอมโพเนนต์หรือจากคุณสมบัติผลลัพธ์ของคอมโพเนนต์เท่านั้น</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>คุณสมบัติหรือพารามิเตอร์ของฟังก์ชันคอมโพเนนต์สามารถอ้างอิงได้เฉพาะคุณสมบัติฟังก์ชันอื่นๆ เท่านั้น</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>การดำเนินการนี้บนตาราง '{0}' อาจไม่ทำงาน ถ้าตารางมีแถวมากกว่า {1} แถว</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>เพรดิเคตนี้จะเป็นจริงเสมอ คุณหมายถึงการใช้ ThisRecord หรือ [@ ]</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: รองรับเฉพาะการมอบสิทธิ์สำหรับการค้นหาในฟิลด์คีย์หลัก '{1}' เท่านั้น</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>ข้อความที่จะลบแท็ก HTML และ XML</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>ฟังก์ชันตัวกรองไม่อนุญาตให้ใช้ฟังก์ชันพฤติกรรมเป็นเพรดิเคต</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>ใช้ตัวดำเนินการ And เพื่อรวมเพรดิเคตหลายตัวเป็นอาร์กิวเมนต์ที่สอง</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>ไม่สามารถคัดลอกตารางนี้ได้ ให้สร้างตารางแบบอินไลน์โดยใช้ฟังก์ชัน ForAll และสัญกรณ์ {...} เพื่อคัดลอกแต่ละคอลัมน์ที่ต้องการแทน</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>ไม่สามารถคัดลอกเรกคอร์ดนี้ได้ ให้สร้างเรกคอร์ดแบบอินไลน์โดยใช้สัญกรณ์ {...} เพื่อคัดลอกแต่ละฟิลด์ที่ต้องการแทน</value>
   </data>
 </root>

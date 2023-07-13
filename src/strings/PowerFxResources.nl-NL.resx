@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Aangepaste gegevenseigenschappen voor onderdelen met parameters zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    <value>Functie-eigenschappen of parameters voor onderdelen zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Functie-eigenschappen of parameters voor onderdelen kunnen alleen naar andere functie-eigenschappen verwijzen.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Deze bewerking op tabel {0} werkt mogelijk niet als deze meer {1} rijen bevat.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Dit predicaat is altijd waar. Wilde u ThisRecord of [@ ] gebruiken?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Kan {0} niet machtigen: machtiging alleen ondersteund voor opzoekactie van primaire-sleutelveld {1}.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>De tekst waarvan de HTML- en XML-codes worden verwijderd.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfuncties staan geen gedragsfuncties toe als predicaten.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gebruik de And-operator om meerdere predicaten in het tweede argument te combineren.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Deze tabel kan niet worden gekopieerd. Maak in plaats daarvan een inlinetabel met de functie ForAll en notatie {...} om de gewenste individuele kolommen te kopiëren.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Deze record kan niet worden gekopieerd. Maak in plaats daarvan een inlinerecord met notatie {...} om de gewenste afzonderlijke velden te kopiëren.</value>
   </data>
 </root>

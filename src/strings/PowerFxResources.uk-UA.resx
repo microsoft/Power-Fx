@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Властивість настроюваних даних компонента з параметрами доступна лише з компонента або з властивостей вихідних даних компонента.</value>
+    <value>Властивість функції або параметр компонента доступні лише з компонента або з властивостей вихідних даних компонента.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Властивість або параметр функції компонента може посилатися лише на інші властивості функції.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4307,7 +4311,7 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
-    <value>Стаття: "Формули поведінки для компонованих програм у PowerApps"</value>
+    <value>Стаття: "Формули поведінки для компонованих програм у Power Apps"</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Ця операція з таблицею "{0}" може не працювати, якщо вона містить більше такої кількості рядків: {1}.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Цей предикат завжди матиме значення "Істина". Ви хотіли використати ThisRecord або [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Не вдалося делегувати {0}: делегування підтримується лише для підстановки в поле первинного ключа "{1}".</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Не вдалося делегувати {0}: містить поведінкову функцію "{1}".</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текст, для якого потрібно видалити теги HTML і XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функції фільтра не дають змоги використовувати функції поведінки як предикати.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Використовуйте оператор And для об’єднання кількох предикатів у другий аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Цю таблицю не можна скопіювати. Натомість створіть вбудовану таблицю за допомогою функції ForAll і нотації "{...}", щоб скопіювати окремі потрібні стовпці.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Цей запис не можна скопіювати. Натомість створіть вбудований запис за допомогою нотації "{...}", щоб скопіювати окремі потрібні поля.</value>
   </data>
 </root>

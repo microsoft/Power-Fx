@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Prístup k vlastnosti vlastných údajov súčasti s parametrami je možný iba zo samotnej súčasti alebo z výstupných vlastností súčastí.</value>
+    <value>Prístup k vlastnosti funkcie alebo parametru súčasti je možný iba zo súčasti alebo z výstupných vlastností súčasti.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Vlastnosť funkcie súčasti alebo parameter môže odkazovať iba na iné vlastnosti funkcie.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Táto operácia v tabuľke {0} možno nebude fungovať, ak je počet jej riadkov vyšší ako {1}.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Tento predikát bude mať vždy hodnotu true. Chceli ste použiť ThisRecord alebo [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>{0} nie je možné delegovať: podporuje iba delegovanie pri vyhľadávaní v poli primárneho kľúča {1}.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>{0} nie je možné delegovať: obsahuje funkciu správania {1}.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Text, z ktorého sa majú odstrániť značky jazykov HTML a XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcie filtra nepovoľujú funkcie správania ako predikáty.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Pomocou operátora And môžete skombinovať viaceré predikáty do druhého argumentu.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Túto tabuľku nie je možné kopírovať. Namiesto toho vytvorte vnorenú tabuľku pomocou funkcie ForAll a zápisu {...} a skopírujte jednotlivé požadované stĺpce.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Tento záznam nie je možné kopírovať. Namiesto toho vytvorte vnorený záznam pomocou zápisu {...} a skopírujte jednotlivé požadované polia.</value>
   </data>
 </root>

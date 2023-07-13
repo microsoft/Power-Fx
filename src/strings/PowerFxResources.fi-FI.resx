@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentin mukautetut tieto-ominaisuudet ja parametrit ovat käytettävissä vain komponentin sisällä tai komponentin tulosominaisuuksien kautta.</value>
+    <value>Komponenttifunktio-ominaisuutta tai parametria voi käyttää vain komponentin sisältä tai komponentin tulostusominaisuuksista.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponenttitoiminnon ominaisuus tai parametri voi viitata vain muihin funktion ominaisuuksiin.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Tämä toiminto taulukossa {0}ei ehkä toimi, jos sillä on yli {1} riviä.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Tämä predikaatti on aina tosi. Oliko sinun tarkoitus käyttää kohdetta ThisRecord tai [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Ei voi delegoida kohdetta {0}: kohde tukee vain ensisijaisen avaimen kentän {1} haun delegointia.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Ei voida delegoida kohdetta {0}: kohde sisältää käyttäytymisfunktion {1}.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teksti, jonka HTML- ja XML-tunnisteet poistetaan.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Suodatustoiminnot eivät salli käyttäytymisfunktioita predikaatteina.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Voit yhdistää useita predikaatteja toiseen argumenttiin And-operaattorin avulla.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä ForAll-funktiota ja {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset sarakkeet.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset kentät.</value>
   </data>
 </root>
