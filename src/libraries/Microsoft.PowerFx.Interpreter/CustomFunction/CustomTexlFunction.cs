@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx
         }
 
         public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> impl, BigInteger lamdaParamMask, params FormulaType[] paramTypes)
-            : this(name, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+            : this(name, functionCategory, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {
             _impl = impl;
             LamdaParamMask = lamdaParamMask;
