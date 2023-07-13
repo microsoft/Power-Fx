@@ -1638,9 +1638,10 @@ namespace Microsoft.PowerFx.Syntax
                     isOpenBlock = true;
                 }
                 
+                var commentToken = new CommentToken(_sb.ToString(), GetTextSpan(), isOpenBlock);
                 _lastCommentTokenPos = commentToken.Span.Lim; // Set last seen comment token position.
-              
-                return new CommentToken(_sb.ToString(), GetTextSpan(), isOpenBlock);
+
+                return commentToken;
             }
 
             // Returns specialized token for unexpected character errors.
