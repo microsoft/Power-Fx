@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// The list of functions not supported offline.
         /// </summary>
-        private static readonly string[] _notSupportedFunctions = new string[]
+        private static readonly IReadOnlyList<string> _notSupportedFunctions = new string[]
         {
             "SaveData",
             "LoadData",
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core.Utils
         /// <summary>
         /// The list of Ops not supported offline.
         /// </summary>
-        private static readonly string[] _notSupportedOps = new string[]
+        private static readonly IReadOnlyList<string> _notSupportedOps = new string[]
         {
             "In",
         };
