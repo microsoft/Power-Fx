@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "BuiltinFunctionsCore.OtherKnownFunctions",
                 "StringResources.ResourceManagers",
                 "OfflineValidation._notSupportedOps",
-                "OfflineValidation._notSupportedOps"
+                "OfflineValidation._notSupportedFunctions"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
