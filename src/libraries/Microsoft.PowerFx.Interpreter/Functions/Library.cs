@@ -46,11 +46,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
         {
-            return new FormattingInfo()
-            {
-                CultureInfo = runner.CultureInfo,
-                TimeZoneInfo = runner.TimeZoneInfo
-            };
+            return new FormattingInfo(runner.CultureInfo, runner.TimeZoneInfo);
         }
 
         static Library()

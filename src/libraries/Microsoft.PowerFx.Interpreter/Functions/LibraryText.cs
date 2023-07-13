@@ -176,11 +176,9 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryFloat(formatInfo, irContext, args[0], out NumberValue result);
+            bool isValue = TryFloat(new FormattingInfo(culture, formatInfo.TimeZoneInfo), irContext, args[0], out NumberValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -251,11 +249,9 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryDecimal(formatInfo, irContext, args[0], out DecimalValue result);
+            bool isValue = TryDecimal(new FormattingInfo(culture, formatInfo.TimeZoneInfo), irContext, args[0], out DecimalValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -352,8 +348,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
             // We limit the format string size
@@ -363,7 +357,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, defaultLanguage, out textFormatArgs))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, culture, defaultLanguage, out textFormatArgs))
             {
                 if (formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase) && !(textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt))
                 {
@@ -374,7 +368,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
+            var isText = TryText(new FormattingInfo(culture, formatInfo.TimeZoneInfo), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }

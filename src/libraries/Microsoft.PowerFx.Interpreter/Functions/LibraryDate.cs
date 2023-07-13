@@ -590,8 +590,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
             if (args[0].Value == string.Empty)
@@ -599,7 +597,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            if (TryDateTimeParse(formatInfo, irContext, args[0], out var result))
+            if (TryDateTimeParse(new FormattingInfo(culture, formatInfo.TimeZoneInfo), irContext, args[0], out var result))
             {
                 return result;
             }

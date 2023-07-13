@@ -19,18 +19,9 @@ namespace Microsoft.PowerFx
     /// </summary>
     public static class TypeCoercionProvider
     {
-        internal static FormattingInfo CreateFormattingInfo() => new FormattingInfo()
-        {
-            // $$$ can't use current culture
-            CultureInfo = CultureInfo.CurrentCulture,            
-            TimeZoneInfo = TimeZoneInfo.Local
-        };
+        internal static FormattingInfo CreateFormattingInfo() => new FormattingInfo();
 
-        internal static FormattingInfo CreateFormattingInfo(IRuntimeConfig runtimeConfig) => new FormattingInfo()
-        {
-            CultureInfo = runtimeConfig.ServiceProvider.GetService<CultureInfo>(),            
-            TimeZoneInfo = runtimeConfig.ServiceProvider.GetService<TimeZoneInfo>()
-        };
+        internal static FormattingInfo CreateFormattingInfo(IRuntimeConfig runtimeConfig) => new FormattingInfo(runtimeConfig.ServiceProvider.GetService<CultureInfo>(), runtimeConfig.ServiceProvider.GetService<TimeZoneInfo>());
 
         /// <summary>
         /// Can convert value to source format to target or not.

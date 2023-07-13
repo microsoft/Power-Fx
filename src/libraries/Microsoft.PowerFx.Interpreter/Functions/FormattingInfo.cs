@@ -6,10 +6,23 @@ using System.Globalization;
 
 namespace Microsoft.PowerFx.Functions
 {
+    [ThreadSafeImmutable]
     internal class FormattingInfo
     {
-        public CultureInfo CultureInfo { get; set; }
+        public readonly CultureInfo CultureInfo;
+        public readonly TimeZoneInfo TimeZoneInfo;
 
-        public TimeZoneInfo TimeZoneInfo { get; set; }
+        public FormattingInfo()
+        {
+            // $$$ can't use current culture
+            CultureInfo = CultureInfo.CurrentCulture;
+            TimeZoneInfo = TimeZoneInfo.Local;
+        }
+
+        public FormattingInfo(CultureInfo cultureInfo, TimeZoneInfo timeZoneInfo)            
+        {
+            CultureInfo = cultureInfo;
+            TimeZoneInfo = timeZoneInfo;
+        }
     }
 }
