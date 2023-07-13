@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Syntax
         private readonly string _script;
         private readonly ParserOptions _parserOptions;
         private readonly Features _features;
+        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
         private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, Features features = null)
         {
@@ -83,7 +84,7 @@ namespace Microsoft.PowerFx.Syntax
             foreach (var udf in uDFs)
             {
                 var udfName = udf.Ident.Name;
-                if (texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName))
+                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName) || BuiltinFunctionsCore.OtherKnownFunctions.Contains(udfName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
                     continue;

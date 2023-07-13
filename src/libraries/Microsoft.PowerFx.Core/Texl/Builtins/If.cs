@@ -57,6 +57,115 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return index >= 1;
         }
 
+        internal static bool TryDetermineReturnTypePowerFxV1CompatRules(
+            List<(TexlNode node, DType type)> possibleResults,
+            IErrorContainer errors, 
+            ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
+            out DType returnType)
+        {
+            returnType = null;
+            var type = possibleResults[0].type;
+            var fArgsValid = true;
+
+            foreach (var (argNode, argType) in possibleResults)
+            {
+                if (argType.IsVoid)
+                {
+                    type = DType.Void;
+                }
+                else if (argType.IsError)
+                {
+                    errors.EnsureError(argNode, TexlStrings.ErrTypeError);
+                    fArgsValid = false;
+                }
+                else if (type.Kind == DKind.ObjNull)
+                {
+                    // Anything goes with null
+                    type = argType;
+                }
+                else if (argType.Kind == DKind.ObjNull)
+                {
+                    // ObjNull can be accepted by the current type
+                }
+                else if (DType.TryUnionWithCoerce(
+                         type,
+                         argType,
+                         usePowerFxV1CompatibilityRules: true,
+                         coerceToLeftTypeOnly: true,
+                         out var unionType,
+                         out var coercionNeeded))
+                {
+                    type = unionType;
+                    if (coercionNeeded)
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, argNode, type);
+                    }
+                }
+                else
+                {
+                    // If types are incompatible, result is Void
+                    type = DType.Void;
+                }
+            }
+
+            returnType = type;
+            return fArgsValid;
+        }
+
+        internal static bool TryDetermineReturnTypePowerFxV1CompatRulesDisabled(
+            List<(TexlNode node, DType type)> possibleResults,
+            IErrorContainer errors,
+            ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap,
+            out DType returnType)
+        {
+            returnType = null;
+            var type = DType.Unknown;
+            var fArgsValid = true;
+
+            foreach (var (nodeArg, typeArg) in possibleResults)
+            {
+                var typeSuper = DType.Supertype(
+                    type,
+                    typeArg,
+                    useLegacyDateTimeAccepts: false,
+                    usePowerFxV1CompatibilityRules: false);
+
+                if (!typeSuper.IsError)
+                {
+                    type = typeSuper;
+                }
+                else if (typeArg.IsVoid)
+                {
+                    type = DType.Void;
+                }
+                else if (typeArg.IsError)
+                {
+                    errors.EnsureError(nodeArg, TexlStrings.ErrTypeError);
+                    fArgsValid = false;
+                }
+                else if (!type.IsError)
+                {
+                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                    {
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
+                    }
+                    else
+                    {
+                        // If the types are incompatible, the result type is void.
+                        type = DType.Void;
+                    }
+                }
+                else if (typeArg.Kind != DKind.Unknown)
+                {
+                    type = typeArg;
+                    fArgsValid = false;
+                }
+            }
+
+            returnType = type;
+            return fArgsValid;
+        }
+
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(context);
@@ -84,93 +193,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var type = context.Features.PowerFxV1CompatibilityRules ? argTypes[1] : ReturnType;
 
-            // For pre-PowerFxV1, compute the result type by joining the types of all non-predicate args.
-            // For PowerFxV1 compat rules, validate that all non-predicate args can be coerced to the first one
+            var possibleResults = new List<(TexlNode node, DType type)>();
             for (var i = 1; i < count;)
             {
-                var nodeArg = args[i];
-                var typeArg = argTypes[i];
-
-                if (context.Features.PowerFxV1CompatibilityRules)
-                {
-                    if (typeArg.IsVoid)
-                    {
-                        type = DType.Void;
-                    }
-                    else if (typeArg.IsError)
-                    {
-                        errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                        fArgsValid = false;
-                    }
-                    else if (type.Kind == DKind.ObjNull)
-                    {
-                        // Anything goes with null
-                        type = typeArg;
-                    }
-                    else if (typeArg.Kind == DKind.ObjNull)
-                    {
-                        // ObjNull can be accepted by the current type
-                    }
-                    else if (DType.TryUnionWithCoerce(
-                             type,
-                             typeArg,
-                             usePowerFxV1CompatibilityRules: true,
-                             coerceToLeftTypeOnly: true,
-                             out var unionType,
-                             out var coercionNeeded))
-                    {
-                        type = unionType;
-                        if (coercionNeeded)
-                        {
-                            CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
-                        }
-                    }
-                    else
-                    {
-                        // If types are incompatible, result is Void
-                        type = DType.Void;
-                    }
-                }
-                else
-                {
-                    // Legacy logic
-                    var typeSuper = DType.Supertype(
-                        type,
-                        typeArg,
-                        useLegacyDateTimeAccepts: false,
-                        usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
-
-                    if (!typeSuper.IsError)
-                    {
-                        type = typeSuper;
-                    }
-                    else if (typeArg.IsVoid)
-                    {
-                        type = DType.Void;
-                    }
-                    else if (typeArg.IsError)
-                    {
-                        errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                        fArgsValid = false;
-                    }
-                    else if (!type.IsError)
-                    {
-                        if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                        {
-                            CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
-                        }
-                        else
-                        {
-                            // If the types are incompatible, the result type is void.
-                            type = DType.Void;
-                        }
-                    }
-                    else if (typeArg.Kind != DKind.Unknown)
-                    {
-                        type = typeArg;
-                        fArgsValid = false;
-                    }
-                }
+                possibleResults.Add((args[i], argTypes[i]));
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
@@ -180,9 +206,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
+            // For pre-PowerFxV1, compute the result type by joining the types of all non-predicate args.
+            // For PowerFxV1 compat rules, validate that all non-predicate args can be coerced to the first one
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                if (!TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                {
+                    fArgsValid = false;
+                }
+            }
+            else
+            {
+                if (!TryDetermineReturnTypePowerFxV1CompatRulesDisabled(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                {
+                    fArgsValid = false;
+                }
+            }
+
             // Update the return type based on the specified invocation args.
             returnType = type;
-
             return fArgsValid;
         }
 
@@ -273,7 +315,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            return TryGetDSNodes(binding, args, out dsNodes);
+            return TryGetDSNodes(binding, args.ToArray(), out dsNodes);
         }
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)

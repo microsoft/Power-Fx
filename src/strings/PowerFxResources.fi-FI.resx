@@ -1421,7 +1421,7 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>Taulukko, josta erilaiset (distinct) arvot poimitaan.</value>
+    <value>Taulukko, josta erilaiset arvot poimitaan.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
     <value>Syötetaulukon kullekin riville arvioitava lauseke, joka antaa arvot Distinct-toiminnolle.</value>
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentin mukautetut tieto-ominaisuudet ja parametrit ovat käytettävissä vain komponentin sisällä tai komponentin tulosominaisuuksien kautta.</value>
+    <value>Komponenttifunktio-ominaisuutta tai parametria voi käyttää vain komponentin sisältä tai komponentin tulostusominaisuuksista.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponenttitoiminnon ominaisuus tai parametri voi viitata vain muihin funktion ominaisuuksiin.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet eivät tue tätä.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Virheellinen argumenttien määrä funktiolle {0}: vastaanotettu {1}, odotettu {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumenttia {0} ei tueta kaavasarakkeiden funktiolle {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tätä argumenttia ei voi siirtää annettuna tyyppinä kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Tätä argumenttia ei voi välittää tyyppinä {0} kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Tämä argumentti tukee vain literaaliarvoa.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Toimintoa {0} ei voi suorittaa tällä syötteellä ilman aikavyöhykemuunnosta, jota kaavasarakkeet eivät tue.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Tätä toimintoa ei voi suorittaa arvoille, joilla on eri päivämäärän ja ajan toimintatapa.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet tukevat vain lyhyitä päivämäärä- ja aikamuotoisia merkkijonoja.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumentti {0} on virheellinen ajan yksikkö tai sitä ei tueta {1} päivämäärän aritmetiikkafunktiolle.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Kielikohtaiset muotoilutunnukset, kuten "." ja ",", eivät ole tuettuja kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} ei tueta kaavasarakkeissa. Käytä sen sijaan {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Tätä toimintoa ei voi suorittaa tyypille {0} kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Tulostyyppiä {0} ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet eivät tue koko tietueeseen viittaamista suoraan. Viittaa kelvolliseen tietueen kenttään.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Tämän kaavan tuloksen tyypin odotetaan olevan {0}, mutta tuloksen todellinen tyyppi on {1}. Kaavasarakkeen tulostyyppiä ei voi muuttaa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Sarakkeita, joiden tyyppi on {0}, ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Tyypin {0} sarakkeet, joiden muoto on {1}, ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Kaavasarakkeet eivät tue tietueiden tai taulukoiden coercing-tietueita.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Yksisarakkeista taulukoita ei tueta kaavasarakkeissa.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Virtuaalitaulukkoon {0} ei voi viitata kaavasarakkeissa.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Odotettiin operandia. Kaava tai lauseke odottaa kelvollista operandia. Voit esimerkiksi lisätä operandin 2 lausekkeeseen 1 +_ niin, että tulos on 3. Voit myös lisätä operandin there lausekkeeseen "Hi "&amp; _ niin, että tuloksena on Hi there.</value>
     
@@ -4942,24 +4862,24 @@
     <value>Tyypin muuntaminen epäonnistui, koska annettu arvo oli tyypiltään {0}, odotettiin tyyppiä {1}.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Tämä toiminto taulukossa {0}ei ehkä toimi, jos sillä on yli {1} riviä.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Tämä predikaatti on aina tosi. Oliko sinun tarkoitus käyttää kohdetta ThisRecord tai [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Ei voi delegoida kohdetta {0}: kohde tukee vain ensisijaisen avaimen kentän {1} haun delegointia.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Ei voi delegoida kohdetta {0}: Tunnuslauseke viittaa kohteeseen ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Ei voida delegoida kohdetta {0}: kohde sisältää käyttäytymisfunktion {1}.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4989,11 +4909,11 @@
     
   </data>
   <data name="AboutMatch" xml:space="preserve">
-    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa sille ensimmäisen vastaavuuden.</value>
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa siitä ensimmäisen vastaavuuden.</value>
     
   </data>
   <data name="AboutMatchAll" xml:space="preserve">
-    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa sille kaikki vastaavuudet.</value>
+    <value>Hakee määritettyä säännönmukaista lauseketta annetusta testistä ja palauttaa siitä kaikki vastaavuudet.</value>
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>asetukset</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Päivittää määritetyn tietolähteen.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>yhdistetty_tietolähde</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Odotettiin tietue- tai taulukkoarvoa.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Yhdistetty päivitettävä tietolähde.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Vain hallitut yhteydet voidaan päivittää.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Virheellinen säännöllinen lauseke.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Säännönmukaisten lausekkeiden on oltava vakioarvoja.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Funktiolle {0} välitettyä arvoa ei voi muuttaa.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen koko vastaavuuden palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden poimimiseen.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Poistaa kaiken muotoilun ja palauttaa pelkkä teksti -arvon.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>teksti</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Teksti, jonka HTML- ja XML-tunnisteet poistetaan.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Suodatustoiminnot eivät salli käyttäytymisfunktioita predikaatteina.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Voit yhdistää useita predikaatteja toiseen argumenttiin And-operaattorin avulla.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä ForAll-funktiota ja {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset sarakkeet.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset kentät.</value>
   </data>
 </root>

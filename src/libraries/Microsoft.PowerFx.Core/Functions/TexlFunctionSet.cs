@@ -4,12 +4,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.Annotations;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Functions
 {
     internal class TexlFunctionSet
     {
+        private readonly GuardSingleThreaded _guard = new GuardSingleThreaded();
+
         // Dictionary key: function.Name
         private Dictionary<string, List<TexlFunction>> _functions;
 
@@ -122,6 +125,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TexlFunction Add(TexlFunction function)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             if (function == null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -185,6 +190,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal TexlFunctionSet Add(TexlFunctionSet functionSet)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             if (functionSet == null)
             {
                 throw new ArgumentNullException(nameof(functionSet));
@@ -281,6 +288,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(string name)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             if (_functions.TryGetValue(name, out List<TexlFunction> removed))
             {
                 _count -= removed.Count();
@@ -316,6 +325,8 @@ namespace Microsoft.PowerFx.Core.Functions
 
         internal void RemoveAll(TexlFunction function)
         {
+            using var guard = _guard.Enter(); // Region is single threaded.
+
             if (_functions.TryGetValue(function.Name, out List<TexlFunction> funcs))
             {
                 _count--;

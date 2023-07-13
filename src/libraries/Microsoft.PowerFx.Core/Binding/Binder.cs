@@ -137,7 +137,10 @@ namespace Microsoft.PowerFx.Core.Binding
 
         public Features Features { get; }
 
-        // Property to which current rule is being bound to. It could be null in the absence of NameResolver.
+        // Property Name or NamedFormula Name to which current rule is being bound to. It could be null in the absence of NameResolver.
+        internal DName SinkName { get; }
+
+        // Property to which current rule is being bound to. It could be null in the absence of NameResolver, or if the current rule is a named formula.
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0025:Use expression body for properties", Justification = "n/a")]
         public IExternalControlProperty Property
         {
@@ -328,6 +331,7 @@ namespace Microsoft.PowerFx.Core.Binding
             {
                 EntityPath = resolver.CurrentEntityPath;
                 EntityName = resolver.CurrentEntity == null ? default : resolver.CurrentEntity.EntityName;
+                SinkName = resolver.CurrentProperty;
             }
 
             resolver?.TryGetCurrentControlProperty(out _property);
@@ -695,7 +699,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (node.Kind == NodeKind.Call)
             {
-                if (node.AsCall().Args.Children.Length == 0)
+                if (node.AsCall().Args.Children.Count == 0)
                 {
                     tabularDataQueryOptionsMap = null;
                     return false;
@@ -1981,7 +1985,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             var scopeFunction = callInfo.Function;
 
-                            Contracts.Assert(callInfo.Node.Args.Children.Length > 0);
+                            Contracts.Assert(callInfo.Node.Args.Children.Count > 0);
                             var firstArg = callInfo.Node.Args.Children[0];
 
                             // Determine if we arrived as the first (scope) argument of the function call
@@ -2802,10 +2806,15 @@ namespace Microsoft.PowerFx.Core.Binding
                     return;
                 }
 
+                var isConstantNamedFormula = false;
                 if (lookupInfo.Kind == BindKind.PowerFxResolvedObject)
                 {
                     var nameSymbol = lookupInfo.Data as NameSymbol;
-                    _txb.SetMutable(node, nameSymbol?.IsMutable ?? false);
+                    _txb.SetMutable(node, nameSymbol?.Props.CanMutate ?? false);
+                    if (lookupInfo.Data is IExternalNamedFormula formula)
+                    {
+                        isConstantNamedFormula = formula.IsConstant;
+                    }
                 }
                 else if (lookupInfo.Kind == BindKind.Data)
                 {
@@ -2906,7 +2915,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetType(node, lookupType);
 
                 // If this is a reference to an Enum, it is constant.
-                _txb.SetConstant(node, lookupInfo.Kind == BindKind.Enum);
+                _txb.SetConstant(node, lookupInfo.Kind == BindKind.Enum || isConstantNamedFormula);
                 _txb.SetSelfContainedConstant(node, lookupInfo.Kind == BindKind.Enum);
 
                 // Create a name info with an appropriate binding, defaulting to global binding in error cases.
@@ -3361,6 +3370,18 @@ namespace Microsoft.PowerFx.Core.Binding
                         return;
                     }
 
+                    // Binding function property and its parameters should not allow DottedNameNode
+                    bool isBindingPropertyFunctionPropertyOrParameter = template.IsComponent &&
+                        (_txb.Document?.Properties?.EnabledFeatures?.IsEnhancedComponentFunctionPropertyEnabled ?? false) &&
+                        !(_txb.Document?.Properties?.EnabledFeatures?.IsComponentFunctionPropertyDataflowEnabled ?? false) &&
+                        _txb.Property?.PropertyCategory == PropertyRuleCategory.Data &&
+                        ((_txb.Property?.IsScopeVariable ?? false) || (_txb.Property?.IsScopedProperty ?? false));
+                    if (isBindingPropertyFunctionPropertyOrParameter)
+                    {
+                        SetDottedNameError(node, TexlStrings.ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess);
+                        return;
+                    }
+
                     // We block the property access usage for datasource of the command component.
                     if (template.IsCommandComponent &&
                         _txb._glue.IsPrimaryCommandComponentProperty(property))
@@ -3415,7 +3436,11 @@ namespace Microsoft.PowerFx.Core.Binding
                             // If visiting an expando type property of control type variable, we cannot calculate the type here because
                             // The LHS associated ControlInfo is App/Component.
                             // e.g. Set(controlVariable1, DropDown1), Label1.Text = controlVariable1.Selected.Value.
-                            leftType = (DType)controlInfo.GetControlDType(calculateAugmentedExpandoType: true, isDataLimited: false);
+                            if (!_nameResolver.LookupExpandedControlType(controlInfo, out leftType))
+                            {
+                                SetDottedNameError(node, TexlStrings.ErrInvalidName, property.InvariantName);
+                                return;
+                            }
                         }
 
                         if (!leftType.ToRecord().TryGetType(property.InvariantName, out typeRhs))
@@ -3897,7 +3922,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty)
@@ -4009,7 +4034,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var args = node.Args.Children;
                     var set = ScopeUseSet.GlobalsOnly;
 
-                    for (var i = 0; i < args.Length; i++)
+                    for (var i = 0; i < args.Count; i++)
                     {
                         var argScopeUseSet = _txb.GetScopeUseSet(args[i]);
 
@@ -4328,7 +4353,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // The zeroth arg should not be a lambda. Instead it defines the context type for the lambdas.
                 Contracts.Assert(!maybeFunc.IsLambdaParam(0));
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argTypes = new DType[args.Length];
 
                 // We need to know which variables are volatile in case the first argument is or contains a
@@ -4591,7 +4616,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Give warning if returning dynamic metadata without a known dynamic type
                 else if (func.IsDynamic && _nameResolver.Document.Properties.EnabledFeatures.IsDynamicSchemaEnabled)
                 {
-                    if (!func.CheckForDynamicReturnType(_txb, node.Args.Children))
+                    if (!func.CheckForDynamicReturnType(_txb, node.Args.Children.ToArray()))
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDynamicMetadata);
                     }
@@ -4715,7 +4740,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Make a binder-aware call to Concatenate
                 _txb.GenerateCallNode(node);
 
-                var args = node.Children;
+                var args = node.Children.ToArray();
                 var argTypes = new DType[args.Length];
 
                 // Process arguments
@@ -4777,7 +4802,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private bool TryGetAffectScopeVariableFunc(CallNode node, out TexlFunction func)
@@ -4801,7 +4826,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(func.SupportsMetadataTypeArg);
                 Contracts.Assert(!func.HasLambdas);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argCount = args.Length;
 
                 var returnType = func.ReturnType;
@@ -4872,7 +4897,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertIndexInclusive(argCountVisited, node.Args.Count);
                 Contracts.AssertValueOrNull(scopeNew);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argCount = args.Length;
 
                 var info = _txb.GetInfo(node);
@@ -5087,11 +5112,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(overloads.Length > 1);
                 Contracts.AssertAllValues(overloads);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, node.Args.Children, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, args, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
@@ -5142,7 +5167,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 AssertValid();
                 Contracts.AssertValue(node);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private bool IsRecordScopeFieldName(DName name, out Scope scope)
@@ -5264,7 +5289,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, nodeType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
 
@@ -5341,7 +5366,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
         }

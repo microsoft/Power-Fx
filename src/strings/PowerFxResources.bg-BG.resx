@@ -483,7 +483,7 @@
     <value>Текстовата стойност за преобразуване в числова стойност.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Езиковият код, който трябва да се използва при конвертиране на стойността.</value>
+    <value>Код на езика, който да се използва при преобразуването на стойността.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Свойството на компонент за персонализирани данни с параметри може да бъде използвано само в рамките на компонент или от изходни свойства на компонент.</value>
+    <value>Параметърът или свойството на функция за компонента могат да бъдат използвани само в рамките на компонент или от изходни свойства на компонент.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Параметърът или свойството на функция за компонента могат да препращат само към други свойства на функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Не се поддържа в колоните за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Невалиден брой аргументи за функцията „{0}“: получени {1}, очаквани {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Аргументът {0} не се поддържа за функцията {1} в колоните за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Този аргумент не може да бъде предаден като този тип в колоните за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Този аргумент не може да бъде предаден като тип „{0}“ в колоните с формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>За този аргумент се поддържа само стойност на литерал.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} не може да се извърши при тези входни данни без преобразуване на часовата зона, което не се поддържа в колоните за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Тази операция не може да се изпълни върху стойности, които са с различни поведения за дата и час.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Само низовете за кратки формати за дата и час се поддържат в колоните за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Аргументът „{0}“ е невалидна/неподдържана единица време за аритметичната функция за дата „{1}“.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Във формулите за колони не се поддържат маркери за форматиране, специфични за дадена езиково-географска променлива, като „.“ и „,“.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} не се поддържа във формули за колони, вместо това използвайте {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Тази операция не може да се извърши на тип {0} в колони за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Типът резултат {0} не се поддържа за колони за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Директното препращане към цял запис не се поддържа в колони с формули. Моля, направете препратка към валидно поле в записа.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Очаква се типът на резултата за тази формула да е {0}, но действителният тип на резултата е {1}. Типът на резултата от формула за колони не може да бъде променен.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Колони от тип {0} не се поддържат за колони за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Колони от тип {0} с формат {1} не се поддържат за колони за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Налагането на записи или таблици не се поддържа в колони с формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Таблиците с една колона не се поддържат в колоните за формули.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Не може да препраща виртуална таблица „{0}“ в колоните за формули.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Очакваше се операнд. Формулата или изразът очаква валиден операнд. Например можете да добавите операнда „2“ към израза „1 + _“, така че резултатът да е „3“. Или можете да добавите операнда „there“ към израза „"Hi "&amp; _ “, така че резултатът да е „Hi there“.</value>
     
@@ -4942,24 +4862,24 @@
     <value>Преобразуването на типа е неуспешно, тъй като дадената стойност е от тип „{0}“, а се очаква тип „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Тази операция върху таблица „{0}“ може да не работи, ако таблицата има повече от {1} реда.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Този предикат винаги ще бъде верен. Може би искахте да използвате ThisRecord или [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Не може да се делегира {0}: поддържа се само делегиране за търсене по полето за първичен ключ „{1}“.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Не може да се делегира {0}: Изразът с ИД препраща към ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Не може да се делегира {0}: съдържа функция за поведение „{1}“.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>опции</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Обновява указания източник на данни.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>свързан_източник_на_данни</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Очаква се стойност на запис или таблица.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Свързан източник на данни за обновяване.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Могат да бъдат обновени само управлявани връзки.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Невалиден регулярен израз.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регулярните изрази трябва да бъдат константни стойности.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Стойността, предадена на функцията „{0}“, не може да бъде променена.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща пълното съвпадение на регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете пълното съответствие в посочения текст.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Премахва цялото форматиране и връща стойност като обикновен текст.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>текст</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Текстът, от който да се премахнат HTML и XML етикетите.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функциите за филтриране не допускат функции за поведението като предикати.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Използвайте оператора And, за да комбинирате няколко предиката във втория аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Тази таблица не може да бъде копирана. Вместо това създайте вградена таблица чрез функцията ForAll и нотацията {...}, за да копирате желаните отделни колони.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Този запис не може да бъде копиран. Вместо това създайте вграден запис чрез нотацията {...}, за да копирате желаните отделни полета.</value>
   </data>
 </root>

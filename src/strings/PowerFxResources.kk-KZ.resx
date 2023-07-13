@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Өңделетін сандық мәндер бағаны.</value>
+    <value>Өңделетін мәтіндік мәндер бағаны.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>"Санды" логикалық мәнге түрлендіреді.</value>
@@ -1421,10 +1421,10 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>Айқын мәндер алынатын кесте.</value>
+    <value>Бөлек мәндер алынатын кесте.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Айқын әрекеттің мәндерін беретін кіріс кестедегі әр жол бойынша есептелетін өрнек.</value>
+    <value>Кіріс кестедегі әрбір жол бойынша есептелетін және бөлек операция үшін мәндерді беретін өрнек.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Көрсетілген x және y координаталарының арктангенсін қайтарады.</value>
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Компоненттің реттемелі деректер сипаты мен параметрлерге компоненттен немесе компонент нәтижесі сипаттарынан ғана өтуге болады.</value>
+    <value>Компонент функциясы сипатына немесе параметріне компоненттен немесе компонент нәтижесі сипаттарынан ғана өтуге болады.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Компонент функциясы сипаты немесе параметрі тек басқа функция сипаттарына білдіруі мүмкін.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -3403,7 +3407,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген дереккөздегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
+    <value>Жаңартуларды көрсетілген жолға қолданады және көрсетілген деректер көзіндегі жолды өзгертеді. Жаңартылған жолды қайтарады.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4084,90 +4088,6 @@
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
-  </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} функциясына арналған аргументтер саны жарамсыз: {1} алынды, {2} күтілді</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Формула бағандарындағы {1} функциясы үшін {0} аргументіне қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Бұл аргумент формула бағандарында осы түр ретінде өткізілмеуі мүмкін.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Бұл аргумент формула бағандарында {0} түрінде өткізілмеуі мүмкін.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Бұл аргумент үшін тек әріптік мәнге қолдау көрсетіледі.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Формула бағандарында қолдау көрсетілмейтін уақыт белдеуін түрлендірмей, бұл жазбада {0} орындалмайды.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Бұл операцияны күннің уақыт әрекеттері әр түрлі мәндерде орындауға болмайды.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Формула бағандарында тек қысқа күн мен уақыт пішімі жолдарына қолдау көрсетіледі.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} аргументі — {1} күн арифметикалық функциясы үшін жарамсыз/қолдау көрсетілмейтін уақыт бірлігі.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Формула бағандарында "." және "," сияқты жергілікті пішімдеу таңбалауыштары қолданылмайды.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} формула бағандарында қолданылмайды, оның орнына {1} пайдаланыңыз.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Бұл әрекет формула бағандарында {0} түрінде орындалмауы мүмкін.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>{0} нәтиже түріне формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Формула бағандарында бүкіл жазбаға тікелей сілтеме жасауға қолдау көрсетілмейді. Жазбадағы жарамды өріске сілтеме жасаңыз.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Бұл формула үшін нәтиже түрі {0} болады деп күтіледі, бірақ нақты нәтиже түрі — {1}. Формула бағанының нәтиже түрін өзгерту мүмкін емес.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} түріндегі бағандарға формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>{1} пішімді {0} түріндегі бағандарға формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Мәжбүрлі жазбаларға немесе кестелерге формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Бір бағанды кестелерге формула бағандарында қолдау көрсетілмейді.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Формула бағандарында {0} виртуалды кестесіне сілтеме жасау мүмкін емес.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4939,27 +4859,27 @@
     
   </data>
   <data name="InvalidCast" xml:space="preserve">
-    <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}" болған, түрі "{1}" болады деп күтілген.</value>
+    <value>Түрі түрлендірілмеді, өйткені берілген мәннің түрі "{0}", күтілген түрі "{1}" болды.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>"{0}" кестесінде {1} қатардан көп болса, ондағы бұл әрекет істемеуі мүмкін.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Бұл әдіс барлық уақытта шын болады. ThishRecord немесе [@ ] пайдаланғыңыз келді ме?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>{0} сенім білдіру мүмкін емес: тек негізгі "{1}" өрісінен іздеу үшін сенім білдіруді қолдау.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} сенім білдіру мүмкін емес: идентификатор өрнегі ThasRecord білдіреді.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>{0} сенім білдіру мүмкін емес: құрамында "{1}" тәртіптік функциясы бар.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4973,7 +4893,7 @@
     <value>Мәтін тексерілетін пішім. Ол TextFormat тізімінің мәні немесе тұрақты өрнек болуы мүмкін.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -5005,7 +4925,7 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
@@ -5017,7 +4937,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Мәтіннің қай бөлігін сәйкестендіргіміз келетінін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
+    <value>Мәтіннің қай бөлігін сәйкестендіру керектігін анықтайды. Ол MatchOptions тізімінің мәні болуы мүмкін.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>параметрлер</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Көрсетілген деректер көзін жаңартады.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>қосылған_дереккөз</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Жазба немесе кесте мәні күтілген.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Жаңартылатын қосылған деректер көзі.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Тек басқарылатын қосылымдарды жаңартуға болады.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Жарамсыз тұрақты өрнек.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Тұрақты өрнектердің мәндері тұрақты болуы керек.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>"{0}" функциясына өткен мән өзгертілмеуі керек.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>"{0}" алу атауы регуляр өрнектің толық сәйкестігін қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестікті шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Барлық пішімдеуді жояды және қарапайым мәтіндік мәнді қайтарады.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>мәтін</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>HTML және XML тегтері бар мәтін жойылды.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Сүзгі функциялары логикалық өрнектер ретінде тәртіп функцияларына мүмкіндік бермейді.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Бірнеше логикалық өрнекті екінші аргументке біріктіру үшін And амалын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Бұл кестені көшіру мүмкін емес. Оның орнына қажетті жеке бағандарды көшіру үшін ForAll функциясы мен {...} жазбасы арқылы кірістірілген жазба жасаңыз.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Бұл жазбаны көшіру мүмкін емес. Оның орнына қажетті жеке өрістерді көшіру үшін {...} жазбасы арқылы кірістірілген жазба жасаңыз.</value>
   </data>
 </root>

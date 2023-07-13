@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -29,6 +27,19 @@ namespace Microsoft.PowerFx.Types
             : base(IRContext.NotInSource(type), inner.Fields)
         {
         }
+
+        public CompileTimeTypeWrapperRecordValue(CompileTimeTypeWrapperRecordValue orig)
+            : base(orig)
+        {
+        }
+
+        public override bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new CompileTimeTypeWrapperRecordValue(this);
+            return true;
+        }
+
+        public override bool CanShallowCopy => true;
 
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {

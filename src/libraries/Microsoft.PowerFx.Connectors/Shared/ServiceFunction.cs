@@ -4,11 +4,6 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-#if canvas
-using Microsoft.AppMagic.Authoring.Publish;
-using Microsoft.AppMagic.DocumentServer.Common;
-#endif
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,12 +13,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx;
+using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -32,11 +29,7 @@ using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
     [System.Diagnostics.DebuggerDisplay("ServiceFunction: {LocaleSpecificName}")]
-    // [RequiresErrorContext]
-    internal sealed class ServiceFunction : BuiltinFunction
-#if !canvas
-        , IAsyncTexlFunction
-#endif
+    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2
     {
         private readonly List<string[]> _signatures;
         private readonly string[] _orderedRequiredParams;
@@ -53,7 +46,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly WeakReference<IService> _parentService;
         private readonly string _actionName;
         private readonly bool _numberIsFloat;
-        internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;        
+        internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
         public Dictionary<string, TypedName> OptionalParamInfo => _optionalParamInfo;
@@ -78,28 +71,36 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             // These asserts verify that the parameter containers have the correct length.
             Contracts.Assert(paramTypes.Length == arityMax);
-            Contracts.Assert(optionalParamInfo.Length != 0 || (
-                (arityMin == arityMax) &&
-                (paramTypes.Length == requiredParamInfo.Length)));
-            Contracts.Assert(optionalParamInfo.Length == 0 || (
-                (arityMax == arityMin + 1) &&
-                (paramTypes.Length == requiredParamInfo.Length + 1)));
-            Contracts.Assert(arityMin <= arityMax && arityMax <= arityMin + 1,
-                "We only support up to one additional options argument");
+            Contracts.Assert(optionalParamInfo.Length != 0 || ((arityMin == arityMax) && (paramTypes.Length == requiredParamInfo.Length)));
+            Contracts.Assert(optionalParamInfo.Length == 0 || ((arityMax == arityMin + 1) && (paramTypes.Length == requiredParamInfo.Length + 1)));
+            Contracts.Assert(arityMin <= arityMax && arityMax <= arityMin + 1, "We only support up to one additional options argument");
 
             if (parentService != null)
                 _parentService = new WeakReference<IService>(parentService, trackResurrection: false);
 
             _optionalParamInfo = new Dictionary<string, TypedName>(optionalParamInfo.Length);
-            _parameterDescriptionMap = new Dictionary<string, string>(requiredParamInfo.Length);
+            _parameterDescriptionMap = new Dictionary<string, string>(optionalParamInfo.Length + requiredParamInfo.Length);
+
             foreach (var optionalParam in optionalParamInfo)
             {
+                if (_optionalParamInfo.ContainsKey(optionalParam.TypedName.Name))
+                {
+                    throw new PowerFxConnectorException($"Conflict between optional parameters: twice the same parameter at different locations: {optionalParam.TypedName.Name}");
+                }
+
                 _optionalParamInfo.Add(optionalParam.TypedName.Name, optionalParam.TypedName);
                 _parameterDescriptionMap.Add(optionalParam.TypedName.Name.Value, optionalParam.Description);
             }
 
             foreach (var requiredParam in requiredParamInfo)
+            {
+                if (_parameterDescriptionMap.ContainsKey(requiredParam.TypedName.Name.Value))
+                {
+                    throw new PowerFxConnectorException($"Conflict between required parameters: twice the same parameter at different locations: {requiredParam.TypedName.Name.Value}");
+                }
+
                 _parameterDescriptionMap.Add(requiredParam.TypedName.Name.Value, requiredParam.Description);
+            }
 
             _signatures = new List<string[]>();
             _parameterOptions = parameterOptions;
@@ -156,10 +157,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public override bool IsAutoRefreshable { get { return _isAutoRefreshable; } }
 
-#if canvas
-        public override bool IsDynamic { get { return _isDynamic && FeatureGates.DocumentPreviewFlags.DynamicSchema; } }
-#endif
-
         public bool IsCacheEnabled { get { return _isCacheEnabled; } }
 
         public int CacheTimeoutMs { get { return _cacheTimeoutMs; } }
@@ -214,21 +211,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             }
         }
 
-#if canvas
-        public DynamicTypeInfo CreateDynamicTypeMapping(TexlBinding binding, TexlNode[] args)
-        {
-            Contracts.AssertValue(binding);
-            Contracts.AssertValue(binding.EntityScope);
-
-            if (Contracts.Verify(binding.EntityScope.TryGetEntity(new DName(binding.EntityName), out ControlInfo controlInfo)))
-            {
-                var dynamicTypeInfo = new DynamicTypeInfo((EntityScope)binding.Document.GlobalScope, Guid.NewGuid().ToString(), ComputeArgHash(args), controlInfo, binding.Property.Name, Name, ParentService.ServiceNamespace, null);
-                dynamicTypeInfo.RegisterWithDocument();
-                return dynamicTypeInfo;
-            }
-            return null;
-        }
-#endif
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
@@ -240,57 +222,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             bool fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
-#if canvas
-            // Check if we have a dynamic type for a dynamic schema
-            if (IsDynamic && binding.Document.Properties.EnabledFeatures.IsDynamicSchemaEnabled)
-            {
-                DType dynamicType = TryGetDynamicType(binding, args, out var dynamicTypeInfo) ? dynamicTypeInfo.GetReturnValueType() : new DType(DKind.ObjNull);
-                if (dynamicType.Kind != DKind.ObjNull)
-                {
-                    returnType = dynamicType;
-                }
-            }
-#endif
             return fArgsValid;
         }
-
-#if canvas
-        public override bool PostVisitValidation(TexlBinding binding, CallNode callNode)
-        {
-            if (Contracts.Verify((binding.Document as Document).TryGetServiceInfo(Namespace.Name, out ServiceInfo serviceInfo)) &&
-                serviceInfo.Errors.Any(error => error.Severity >= DocumentErrorSeverity.Severe))
-            {
-                binding.ErrorContainer.EnsureError(callNode, CanvasStringResources.ErrInvalidService);
-                return true;
-            }
-            return false;
-        }
-
-        public bool TryGetDynamicType(TexlBinding binding, TexlNode[] args, out DynamicTypeInfo dynamicTypeInfo)
-        {
-            if (FeatureGates.DocumentPreviewFlags.DynamicSchema)
-            {
-                // Map the property name to the DynamicTypeInfo, first mapping from a hash of the function args
-                uint argHash = ComputeArgHash(args);
-                dynamicTypeInfo = ((Document)binding.Document).GlobalScope.DynamicTypes.Cast<DynamicTypeInfo>().FirstOrDefault(entity => entity.Control.EntityName == binding.EntityName && entity.PropertyName == binding.Property.Name && entity.ArgHash == argHash);
-                return dynamicTypeInfo != null;
-            }
-
-            dynamicTypeInfo = null;
-            return false;
-        }
-
-        public override bool CheckForDynamicReturnType(TexlBinding binding, TexlNode[] args)
-        {
-            // Check if we have a dynamic type for a dynamic schema
-            if (IsDynamic)
-            {
-                var dynamicKind = TryGetDynamicType(binding, args, out var dynamicTypeInfo) ? dynamicTypeInfo.GetReturnValueType().Kind : DKind.ObjNull;
-                return (dynamicKind != DKind.ObjNull);
-            }
-            return false;
-        }
-#endif
 
         public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
         {
@@ -318,7 +251,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                             {
                                 foreach (DValue<RecordValue> row in tv.Rows)
                                 {
-                                    FormulaValue suggestion = row.Value.GetField(cdv.ValuePath);                                    
+                                    FormulaValue suggestion = row.Value.GetField(cdv.ValuePath);
                                     string displayName = (row.Value.GetField(cdv.ValueTitle) as StringValue)?.Value;
 
                                     suggestions.Add(new ConnectorSuggestion(suggestion, displayName));
@@ -333,10 +266,10 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                         {
                             throw new NotImplementedException($"ValuePath is null");
                         }
-                    }                    
+                    }
 
                     return new ConnectorSuggestions(suggestions);
-                }                
+                }
 
                 ConnectorDynamicSchema cds = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicSchema;
 
@@ -358,7 +291,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                     foreach (NamedValue nv in ((RecordValue)result).Fields)
                     {
                         suggestions.Add(new ConnectorSuggestion(nv.Value, nv.Name));
-                    }                    
+                    }
 
                     return new ConnectorSuggestions(suggestions);
                 }
@@ -368,7 +301,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             }
 
             return null;
-        }        
+        }
 
         private FormulaValue[] GetArguments(ConnectionDynamicApi dynamicApi, CallNode callNode)
         {
@@ -402,9 +335,9 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
-        {            
+        {
             cts.ThrowIfCancellationRequested();
-            return await dynamicApi.ServiceFunction.InvokeAsync(arguments, cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(new FormattingInfo(), arguments, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -494,18 +427,19 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return GetUniqueTexlRuntimeName(suffix: "", suppressAsync: true);
         }
 
-#if !canvas
         // Provide as hook for execution. 
-        public IAsyncTexlFunction _invoker;
+        public IAsyncTexlFunction2 _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            if (_invoker == null) 
-            { 
-                throw new InvalidOperationException($"Function {Name} can't be invoked."); 
+            if (_invoker == null)
+            {
+                throw new InvalidOperationException($"Function {Name} can't be invoked.");
             }
 
-            var result = await _invoker.InvokeAsync(args, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await _invoker.InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
@@ -527,21 +461,5 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public class IService
         {
         }
-#endif
-
-#if canvas
-        // Finishes JS generation for dynamic schemas
-        public static bool TryPushCustomJsExpression(TexlFunction func, JsTranslator translator, CallNode node, List<Fragment> args, out Fragment fragment)
-        {
-            if (func.IsDynamic && translator.IsCapturingSchema)
-            {
-                fragment = translator.FinishXlatNonDelegatableCall(node, func, args, isDynamicSchema: true);
-                return true;
-            }
-
-            fragment = null;
-            return false;
-        }*/
-#endif
     }
 }

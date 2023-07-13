@@ -115,53 +115,32 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Compute the result type by joining the types of all non-predicate args.
             Contracts.Assert(type == DType.Unknown);
+
+            var possibleResults = new List<(TexlNode node, DType type)>();
             for (var i = 2; i < count;)
             {
-                var nodeArg = args[i];
-                var typeArg = argTypes[i];
-
-                var typeSuper = DType.Supertype(
-                    type,
-                    typeArg,
-                    useLegacyDateTimeAccepts: false,
-                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
-
-                if (!typeSuper.IsError)
-                {
-                    type = typeSuper;
-                }
-                else if (typeArg.IsVoid)
-                {
-                    type = DType.Void;
-                }
-                else if (typeArg.IsError)
-                {
-                    errors.EnsureError(args[i], TexlStrings.ErrTypeError);
-                    fArgsValid = false;
-                }
-                else if (!type.IsError)
-                {
-                    if (typeArg.CoercesTo(type, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, nodeArg, type);
-                    }
-                    else
-                    {
-                        // If the types are incompatible, the result type is void.
-                        type = DType.Void;
-                    }
-                }
-                else if (typeArg.Kind != DKind.Unknown)
-                {
-                    type = typeArg;
-                    fArgsValid = false;
-                }
+                possibleResults.Add((args[i], argTypes[i]));
 
                 // If there are an odd number of args, the last arg also participates.
                 i += 2;
                 if (i == count)
                 {
                     i--;
+                }
+            }
+
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                {
+                    fArgsValid = false;
+                }
+            }
+            else
+            {
+                if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRulesDisabled(possibleResults, errors, ref nodeToCoercedTypeMap, out type))
+                {
+                    fArgsValid = false;
                 }
             }
 
@@ -211,7 +190,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            return TryGetDSNodes(binding, args, out dsNodes);
+            return TryGetDSNodes(binding, args.ToArray(), out dsNodes);
         }
 
         public override bool SupportsPaging(CallNode callNode, TexlBinding binding)

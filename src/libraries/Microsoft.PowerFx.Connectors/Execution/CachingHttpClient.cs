@@ -15,6 +15,7 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Interface for caching GET requests. 
     /// </summary>
+    [ThreadSafeImmutable]
     public interface ICachingHttpClient
     {
         // Clear all cache entries for the given namespace. 

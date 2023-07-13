@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            Contracts.Assert(args.Length == MinArity);
+            Contracts.Assert(args.Count == MinArity);
 
             if (binding.IsRowScope(args[1]))
             {

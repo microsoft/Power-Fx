@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Properti data kustom komponen dengan parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    <value>Properti fungsi komponen atau parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Properti fungsi komponen atau parameter hanya dapat mereferensikan properti fungsi lainnya.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Tidak didukung di kolom formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Jumlah argumen tidak valid untuk fungsi {0}: diterima {1}, diharapkan {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumen {0} tidak didukung untuk fungsi {1} di kolom formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak dapat diteruskan sebagai tipe ini di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak dapat diteruskan sebagai tipe {0} di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Hanya nilai harfiah yang didukung untuk argumen ini.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} tidak dapat dijalankan pada input ini tanpa konversi zona waktu, yang tidak didukung di kolom formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Operasi ini tidak dapat dijalankan pada nilai yang merupakan Perilaku Waktu Tanggal yang berbeda.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Hanya string format tanggal dan waktu pendek yang didukung di kolom formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumen {0} adalah satuan waktu yang tidak valid/tidak didukung untuk fungsi aritmetika tanggal {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Token pemformatan khusus lokal seperti "." dan "," tidak didukung di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} tidak didukung di kolom rumus, gunakan {1} sebagai gantinya.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Operasi ini tidak dapat dilakukan pada tipe {0} di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Jenis hasil {0} tidak didukung di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Mereferensikan seluruh rekaman secara langsung tidak didukung di kolom rumus. Referensikan bidang yang valid di rekaman.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Jenis hasil yang diharapkan untuk rumus ini adalah {0}, tetapi jenis hasil aktual adalah {1}. Jenis hasil kolom rumus tidak dapat diubah.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Kolom jenis {0} tidak didukung di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Kolom jenis {0} dengan format {1} tidak didukung di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Rekaman atau tabel yang memaksa tidak didukung di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabel satu kolom tidak didukung di kolom rumus.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Tidak dapat mereferensikan tabel virtual {0} di kolom rumus.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Operand yang diharapkan. Rumus atau ekspresi mengharapkan operand yang valid. Misalnya, Anda dapat menambahkan operand '2' ke ekspresi ' 1 +_' sehingga hasilnya adalah '3'. Atau, Anda dapat menambahkan operand "di sana" ke ekspresi '"Hai "&amp; _ ' sehingga hasilnya adalah 'Hai di sana'.</value>
     
@@ -4942,24 +4862,24 @@
     <value>Konversi jenis gagal karena nilai yang diberikan adalah jenis '{0}', yang diharapkan adalah jenis '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Operasi di tabel '{0}' ini mungkin tidak berfungsi jika memiliki lebih dari {1} baris.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Predikat ini akan selalu benar. Apakah Anda bermaksud menggunakan ThisRecord atau [@]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Tidak dapat mendelegasikan {0}: hanya mendukung delegasi untuk pencarian di bidang kunci primer '{1}'.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Tidak dapat mendelegasikan {0}: Ekspresi ID mengacu pada ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Tidak dapat mendelegasikan {0}: berisi fungsi perilaku '{1}'.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>opsi</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Me-refresh sumber data yang ditentukan.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>sumber_data_terhubung</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Diharapkan nilai rekaman atau tabel.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Sumber data terhubung yang akan di-refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Hanya koneksi yang dikelola yang dapat di-refresh.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ekspresi reguler tidak valid.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Ekspresi biasa harus berupa nilai konstanta.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Nilai yang diteruskan ke fungsi '{0}' tidak dapat diubah.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Nama tangkapan '{0}' menyembunyikan properti standar yang menghasilkan kecocokan penuh pada ekspresi reguler. Pertimbangkan untuk mengganti namanya jika Anda ingin menggunakan properti bernama tersebut untuk mengekstrak kecocokan penuh pada teks yang ditentukan.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Menghapus semua format dan menampilkan nilai teks biasa.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>teks</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Teks yang akan dihapus tag HTML dan XML-nya.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Fungsi filter tidak mengizinkan fungsi perilaku sebagai predikat.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gunakan operator And untuk menggabungkan beberapa predikat ke dalam argumen kedua.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tabel ini tidak dapat disalin. Sebagai gantinya, buat tabel sebaris menggunakan fungsi ForAll dan notasi {...} untuk menyalin kolom terpisah yang diinginkan.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Rekaman ini tidak dapat disalin. Sebagai gantinya, buat rekaman sebaris menggunakan notasi {...} untuk menyalin bidang terpisah yang diinginkan.</value>
   </data>
 </root>

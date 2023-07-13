@@ -12,6 +12,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    [ThreadSafeImmutable]
     internal class ODataVisitor : IRNodeVisitor<string, ODataVisitorContext>
     {
         internal static readonly ODataVisitor I = new ODataVisitor();

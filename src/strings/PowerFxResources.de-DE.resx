@@ -483,7 +483,7 @@
     <value>Der Textwert, der in einen Zahlenwert konvertiert werden soll.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Zu verwendender Sprachcode für die Konvertierung des Werts.</value>
+    <value>Zu verwendender Sprachcode für die Konvertierung des Werts</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Auf benutzerdefinierte Dateneigenschaft der Komponente mit Parametern kann nur innerhalb einer Komponente oder über Komponentenausgabeeigenschaften zugegriffen werden.</value>
+    <value>Auf Komponentenfunktionseigenschaften oder -parameter kann nur innerhalb einer Komponente oder über Komponentenausgabeeigenschaften zugegriffen werden.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponentenfunktionseigenschaften oder -parameter können nur auf andere Funktionseigenschaften verweisen.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ungültige Anzahl von Argumenten für die Funktion {0}: empfangen {1}, erwartet {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Das {0}-Argument wird für die {1}-Funktion in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Dieses Argument kann nicht als dieser Typ in Formelspalten übergeben werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Dieses Argument kann nicht als Typ {0} in Formelspalten übergeben werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Für dieses Argument wird nur ein Literalwert unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kann für diese Eingabe ohne Zeitzonenumstellung nicht ausgeführt werden, was in Formelspalten nicht unterstützt wird.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Dieser Vorgang kann nicht für Werte ausgeführt werden, die ein anderes Datums-/Uhrzeitverhalten aufweisen.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Nur die Zeichenfolgen für das kurze Datums- und Zeitformat werden in den Formelspalten unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Das {0}-Argument ist eine ungültige/nicht unterstützte Zeiteinheit für {1} datumsarithmetische Funktion.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Ortsspezifische Formatierungstoken wie „.“ und „,“ werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} wird in Formelspalten nicht unterstützt. Verwenden Sie stattdessen {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Dieser Vorgang kann nicht für Typ {0} in Formelspalten ausgeführt werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Der Ergebnistyp {0} wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Das direkte Verweisen auf einen gesamten Datensatz wird in Formelspalten nicht unterstützt. Verweisen Sie auf ein gültiges Feld im Datensatz.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Der Ergebnistyp für diese Formel muss {0} sein, der tatsächliche Ergebnistyp ist jedoch {1}. Der Ergebnistyp einer Formelspalte kann nicht geändert werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Spalten vom Typ {0} werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Spalten vom Typ {0} mit Format {1} werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Das Erstellen von Datensätzen oder Tabellen wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabellen mit einer einzelnen Spalte werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Es kann nicht auf die virtuelle Tabelle {0} in Formelspalten verwiesen werden.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Es wurde ein Operand erwartet. Für die Formel oder den Ausdruck wird ein gültiger Operand erwartet. Beispielsweise können Sie dem Ausdruck " 1 +_" den Operanden "2" hinzufügen, sodass das Ergebnis "3" lautet. Sie können dem Ausdruck ""Hallo "&amp; _ " den Operanden "zusammen" hinzufügen, sodass das Ergebnis "Hallo zusammen" lautet.</value>
     
@@ -4942,28 +4862,28 @@
     <value>Fehler bei der Typkonvertierung, da der angegebene Wert vom Typ „{0}“ war. Erwarteter Typ: „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Dieser Vorgang für Tabelle „{0}“ funktioniert möglicherweise nicht, wenn sie mehr als {1} Zeilen enthält.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Dieses Prädikat trifft immer zu. Wollten Sie ThisRecord oder [@ ] verwenden?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>{0} kann nicht delegiert werden: Nur die Delegierung für die Suche im Feld für den Primärschlüssel „{1}“ wird unterstützt.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} kann nicht delegiert werden: ID-Ausdruck verweist auf ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>{0} kann nicht delegiert werden: Enthält eine Verhaltensfunktion „{1}“.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
-    <value>Legt fest, ob der angegebene Text dem angegebenen Textformat entspricht.</value>
+    <value>Ermittelt, ob der angegebene Text dem angegebenen Textformat entspricht.</value>
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>Optionen</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Aktualisiert die angegebene Datenquelle</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>Verbindungsdatenquellen</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Ein Datensatz- oder Tabellenwert wurde erwartet.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Eine verbundene Datenquelle zum Aktualisieren</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Nur verwaltete Verbindungen können aktualisiert werden.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ungültiger regulärer Ausdruck.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguläre Ausdrücke müssen konstante Werte sein.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Der Wert, der an die Funktion „{0}“ übergeben wurde, kann nicht geändert werden.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die vollständige Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Entfernt alle Formatierung und gibt einen unformatierten Textwert zurück.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>Text</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Der Text, dessen HTML- und XML-Tags entfernt werden sollen.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunktionen erlauben keine Verhaltensfunktionen als Prädikate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Verwenden Sie den And-Operator, um mehrere Prädikate im zweiten Argument zu kombinieren.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Diese Tabelle kann nicht kopiert werden. Erstellen Sie stattdessen mithilfe der ForAll-Funktion und der Notation {...} eine Inlinetabelle, um die einzelnen gewünschten Spalten zu kopieren.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Dieser Datensatz kann nicht kopiert werden. Erstellen Sie stattdessen einen Inline-Datensatz mithilfe der Notation {...}, um die einzelnen gewünschten Felder zu kopieren.</value>
   </data>
 </root>

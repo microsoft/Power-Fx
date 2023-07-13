@@ -116,9 +116,15 @@ namespace Microsoft.PowerFx.Tests
         {
             Assert.True(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.String));
             Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Number));
+            Assert.True(FormulaType.Decimal.CanPotentiallyCoerceTo(FormulaType.Decimal));
+            Assert.True(FormulaType.Guid.CanPotentiallyCoerceTo(FormulaType.Guid));
+            Assert.True(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.DateTime));
+            Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.String));
 
             Assert.False(FormulaType.Color.CanPotentiallyCoerceTo(FormulaType.String));
             Assert.False(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.Hyperlink));
+            Assert.False(FormulaType.String.CanPotentiallyCoerceTo(FormulaType.Color));
+            Assert.False(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Boolean));
 
             RecordType inputType = RecordType.Empty()
                 .Add(new NamedFormulaType("a", FormulaType.String))
@@ -132,7 +138,17 @@ namespace Microsoft.PowerFx.Tests
                 .Add(new NamedFormulaType("a", FormulaType.Number))
                 .Add(new NamedFormulaType("b", FormulaType.Hyperlink));
 
+            RecordType extraFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType("a", FormulaType.String))
+                .Add(new NamedFormulaType("b", FormulaType.String))
+                .Add(new NamedFormulaType("c", FormulaType.String));
+
+            RecordType missingFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType("b", FormulaType.String));
+
             Assert.True(inputType.CanPotentiallyCoerceTo(targetType));
+            Assert.True(inputType.CanPotentiallyCoerceTo(extraFieldTargetType));
+            Assert.True(inputType.CanPotentiallyCoerceTo(missingFieldTargetType));
             Assert.False(inputType.CanPotentiallyCoerceTo(notExpectedTargetType));
         }
 
@@ -145,6 +161,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var fieldName1 = "a";
             var fieldName2 = "b";
+            var extraFieldName = "c";
             var expectedFieldType1 = FormulaType.Number;
             var expectedFieldType2 = FormulaType.Boolean;
 
@@ -156,12 +173,32 @@ namespace Microsoft.PowerFx.Tests
                 .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
                 .Add(new NamedFormulaType(fieldName2, expectedFieldType2));
 
+            RecordType extraFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType(fieldName1, expectedFieldType1))
+                .Add(new NamedFormulaType(fieldName2, expectedFieldType2))
+                .Add(new NamedFormulaType(extraFieldName, FormulaType.String));
+
+            RecordType missingFieldTargetType = RecordType.Empty()
+                .Add(new NamedFormulaType(fieldName1, expectedFieldType1));
+
             bool isSucceeded = inputRecord.TryCoerceToRecord(targetType, out RecordValue result);
             if (expectedSucceeded)
             {
                 Assert.True(isSucceeded);
                 Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, result.GetField(fieldName1).ToObject());
                 Assert.Equal(FormulaValue.New(bool.Parse(field2)).Value, result.GetField(fieldName2).ToObject());
+
+                bool isSucceededExtraField = inputRecord.TryCoerceToRecord(extraFieldTargetType, out RecordValue extraFieldResult);
+                Assert.True(isSucceededExtraField);
+                Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, extraFieldResult.GetField(fieldName1).ToObject());
+                Assert.Equal(FormulaValue.New(bool.Parse(field2)).Value, result.GetField(fieldName2).ToObject());
+                Assert.Equal(FormulaType.String, extraFieldResult.GetField(extraFieldName).Type);
+                Assert.Equal(3, extraFieldResult.Fields.Count());
+
+                bool isSucceededMissingField = inputRecord.TryCoerceToRecord(missingFieldTargetType, out RecordValue missingFieldResult);
+                Assert.True(isSucceededMissingField);
+                Assert.Equal(FormulaValue.New(double.Parse(field1)).Value, missingFieldResult.GetField(fieldName1).ToObject());
+                Assert.Single(missingFieldResult.Fields);
             }
             else
             {

@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var retval = false;
 
-            for (var i = 1; i < args.Length; i += 2)
+            for (var i = 1; i < args.Count; i += 2)
             {
                 var columnType = binding.GetType(args[i]);
                 var columnNode = args[i].AsStrLit();

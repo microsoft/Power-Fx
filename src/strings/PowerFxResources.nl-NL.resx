@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Aangepaste gegevenseigenschappen voor onderdelen met parameters zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    <value>Functie-eigenschappen of parameters voor onderdelen zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Functie-eigenschappen of parameters voor onderdelen kunnen alleen naar andere functie-eigenschappen verwijzen.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ongeldig aantal argumenten voor functie {0}: {1} ontvangen {2} verwacht</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Het argument {0} wordt niet ondersteund voor de functie {1} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Dit argument kan niet worden doorgegeven als dit type in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Dit argument kan niet worden doorgegeven als type {0} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Er wordt alleen een letterlijke waarde ondersteund voor dit argument.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kan niet worden uitgevoerd op deze invoer zonder een tijdzoneconversie die niet wordt ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Deze bewerking kan niet worden uitgevoerd op waarden met een ander datum-/tijdgedrag.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Alleen tekenreeksen voor de korte datum- en tijdnotatie worden ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Het argument {0} is een ongeldige/niet-ondersteunde tijdseenheid voor de rekenkundige functie {1} van de datum.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Landspecifieke opmaaktokens, zoals '.' en ',', worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} wordt niet ondersteund in formulekolommen. Gebruik {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Deze bewerking kan niet worden uitgevoerd op type {0} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Het resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Rechtstreeks verwijzen naar een volledige record wordt niet ondersteund in formulekolommen. Verwijzing naar een geldig veld in de record.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Het resultaattype voor deze formule is waarschijnlijk {0}, maar het werkelijke resultaattype is {1}. Het resultaattype van een formulekolom kan niet worden gewijzigd.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Kolommen van het type {0} worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Kolommen van het type {0} met {1} worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Afwijken van records of tabellen wordt niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabellen met één kolom worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Kan niet verwijzen naar virtuele tabel {0} in formulekolommen.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een operand verwacht. Voor de formule of expressie wordt een geldige operand verwacht. U kunt bijvoorbeeld de operand 2 toevoegen aan de expressie 1 +_ zodat het resultaat 3 ontstaat. U kunt ook de operand 'daar' toevoegen aan de expressie 'Hallo '&amp; _ voor het resultaat Hallo daar.</value>
     
@@ -4942,24 +4862,24 @@
     <value>Typeconversie is mislukt omdat de gegeven waarde van het type {0} was en type {1} werd verwacht.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Deze bewerking op tabel {0} werkt mogelijk niet als deze meer {1} rijen bevat.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Dit predicaat is altijd waar. Wilde u ThisRecord of [@ ] gebruiken?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Kan {0} niet machtigen: machtiging alleen ondersteund voor opzoekactie van primaire-sleutelveld {1}.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Kan {0} niet machtigen: de id-expressie verwijst naar ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>opties</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Hiermee wordt de opgegeven gegevensbron vernieuwd.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>verbonden_bron_gegevens</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Er wordt een record of tabelwaarde verwacht.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Een gekoppelde gegevensbron die moet worden vernieuwd.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Alleen beheerde verbindingen kunnen worden vernieuwd.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Ongeldige reguliere expressie.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguliere expressies moeten constante waarden zijn.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>De waarde die is doorgegeven aan functie {0} kan niet worden gewijzigd.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de volledige overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Hiermee wordt alle opmaak verwijderd en wordt er een tekstwaarde zonder opmaak geretourneerd.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>tekst</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>De tekst waarvan de HTML- en XML-codes worden verwijderd.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfuncties staan geen gedragsfuncties toe als predicaten.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gebruik de And-operator om meerdere predicaten in het tweede argument te combineren.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Deze tabel kan niet worden gekopieerd. Maak in plaats daarvan een inlinetabel met de functie ForAll en notatie {...} om de gewenste individuele kolommen te kopiëren.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Deze record kan niet worden gekopieerd. Maak in plaats daarvan een inlinerecord met notatie {...} om de gewenste afzonderlijke velden te kopiëren.</value>
   </data>
 </root>

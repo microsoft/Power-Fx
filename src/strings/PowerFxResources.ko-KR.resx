@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>매개 변수가 있는 구성 요소 사용자 지정 데이터 속성은 구성 요소 또는 구성 요소 출력 속성에서만 액세스할 수 있습니다.</value>
+    <value>구성 요소 함수 속성 또는 매개 변수는 구성 요소 내부 또는 구성 요소 출력 속성에서만 액세스할 수 있습니다.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>구성 요소 함수 속성 또는 매개 변수는 다른 함수 속성만 참조할 수 있습니다.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>수식 열에는 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 함수에 대한 잘못된 인수 수: {1} 수신, 예상 {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>{0} 인수는 수식 열의 {1} 함수에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>이 인수는 수식 열에서 이 형식으로 전달할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>이 인수는 수식 열에서 {0} 형식으로 전달할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>이 인수에는 리터럴 값만 지원됩니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>표준 시간대 변환 없이 이 입력에 {0}을(를) 수행할 수 없으며, 이는 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>이 작업은 날짜/시간 동작이 다른 값에 대해 수행할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>수식 열에는 짧은 날짜 및 시간 형식 문자열만 지원됩니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 인수는 {1} 날짜 연산 함수에 대해 유효하지 않거나 지원되지 않는 시간 단위입니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>"." 및 "," 등의 로캘별 서식 토큰은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0}은(는) 수식 열에 지원되지 않습니다. 대신 {1}을(를) 사용하세요.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>이 작업은 수식 열의 {0} 유형에 대해 수행할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>{0} 결과 유형은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>전체 레코드를 직접 참조하는 것은 수식 열에서 지원되지 않습니다. 레코드에서 유효한 필드를 참조하세요.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>이 수식에 기대되는 결과 유형은 {0}이지만, 실제 결과 유형은 {1}입니다. 수식 열의 결과 유형을 변경할 수 없습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} 유형의 열은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>형식이 {1}인 {0} 유형의 열은 수식 열에 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>수식 열에서는 레코드 또는 테이블 강제 변환이 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>단일 열 테이블은 수식 열에서 지원되지 않습니다.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>수식 열에서 가상 테이블 {0}을(를) 참조할 수 없습니다.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>피연산자가 필요합니다. 수식 또는 식에는 유효한 피연산자가 필요합니다. 예를 들어, 식 ' 1 +_'에 피연산자 '2'를 추가하여 결과 값이 '3'이 되게 만들 수 있습니다. 또는 식 '"Hi "&amp; _ '에 피연산자 "there"를 추가하여 'Hi there' 결과를 얻을 수 있습니다.</value>
     
@@ -4942,24 +4862,24 @@
     <value>지정된 값이 '{0}' 형식이었으므로 형식을 변환하지 못했습니다. 필요한 형식은 '{1}'입니다.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>'{0}' 테이블에 {1}개 이상의 행이 있는 경우 이 작업이 작동하지 않을 수 있습니다.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>이 조건자는 항상 참입니다. ThisRecord 또는 [@]을(를) 사용했습니까?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>{0}을(를) 위임할 수 없음: 기본 키 필드 '{1}' 조회에 대한 위임만 지원합니다.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0}을(를) 위임할 수 없음: ID 표현식이 ThisRecord를 참조합니다.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>{0}을(를) 위임할 수 없음: 동작 함수 '{1}'을(를) 포함합니다.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>옵션</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>지정된 데이터 원본을 새로 고칩니다.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>서비스_데이터_원본</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>레코드나 테이블 값이 필요합니다.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>새로 고칠 연결된 데이터 원본입니다.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>관리되는 연결만 새로 고칠 수 있습니다.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>정규식이 잘못되었습니다.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>정규식은 상수 값이어야 합니다.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>'{0}' 함수에 전달된 값은 변경할 수 없습니다.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>캡처 이름 '{0}'이(가) 정규식의 전체 일치를 반환하는 미리 정의된 속성을 숨깁니다. 이 명명된 속성을 사용하여 지정된 텍스트에서 전체 일치를 추출하려면 이름을 변경하는 것이 좋습니다.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>모든 서식 지정을 제거하고 일반 텍스트 값을 반환합니다.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>텍스트</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>HTML 및 XML 태그를 제거할 텍스트입니다.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>필터 함수는 동작 함수를 조건자로 허용하지 않습니다.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>And 연산자를 사용하여 여러 조건자를 두 번째 인수로 결합합니다.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>이 테이블은 복사할 수 없습니다. 대신 ForAll 함수와 {...} 표기법으로 인라인 테이블을 생성하여 원하는 개별 열을 복사하세요.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>이 레코드는 복사할 수 없습니다. 대신 {...} 표기법으로 인라인 레코드를 생성하여 원하는 개별 필드를 복사하세요.</value>
   </data>
 </root>

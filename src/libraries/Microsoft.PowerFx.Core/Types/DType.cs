@@ -578,6 +578,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull || Kind == DKind.LazyTable;
 
+        public bool IsTableNonObjNull => Kind == DKind.Table || Kind == DKind.LazyTable;
+
         public bool IsEnum => Kind == DKind.Enum || Kind == DKind.ObjNull;
 
         public bool IsColumn => IsTable && ChildCount == 1;

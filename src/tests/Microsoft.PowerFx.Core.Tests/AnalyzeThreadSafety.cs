@@ -40,6 +40,7 @@ namespace Microsoft.PowerFx.Core.Tests
             typeof(Nullable<>),
             typeof(IEnumerable<>),
             typeof(KeyValuePair<,>),
+            typeof(ISet<>),
             typeof(ImmutableDictionary<,>),
             typeof(ImmutableList<>)            
         };
@@ -211,6 +212,50 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Batch up errors so we can see all at once. 
             Assert.Empty(errors);
+        }
+
+        // $$$ Supersedes ImmutabilityTests.
+        // This is more aggressive (includes private fields), but they don't all pass. So assert is disabled.
+        public static void CheckImmutableTypes(Assembly[] assemblies, bool enableAssert = false)
+        {
+            foreach (var assembly in assemblies)
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    if (type.Name.StartsWith("<", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue; // exclude compiler generated closures. 
+                    }
+
+                    // includes base types 
+                    var attr = type.GetInterfaces().Select(x => x.GetCustomAttributes().OfType<ThreadSafeImmutableAttribute>());
+                    if (attr == null)
+                    {
+                        continue;
+                    }
+
+                    // Common pattern is a writeable derived type (like Dict vs. IReadOnlyDict). 
+                    var attrNotSafe = type.GetCustomAttribute<NotThreadSafeAttribute>(inherit: false);
+                    if (attrNotSafe != null)
+                    {
+                        var attribute = type.GetCustomAttribute<ThreadSafeImmutableAttribute>(inherit: false);
+                        if (attribute != null)
+                        {
+                            Assert.True(false); // Class can't have both safe & unsafe together. 
+                        }
+
+                        continue;
+                    }
+
+                    bool ok = AnalyzeThreadSafety.VerifyThreadSafeImmutable(type);
+
+                    // Enable this, per  https://github.com/microsoft/Power-Fx/issues/1519
+                    if (enableAssert)
+                    {
+                        Assert.True(ok);
+                    }
+                }
+            }
         }
 
         private static bool IsTypeConcurrent(Type type)

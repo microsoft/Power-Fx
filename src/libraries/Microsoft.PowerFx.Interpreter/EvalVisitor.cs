@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx
 
         private readonly CancellationToken _cancellationToken;
 
-        internal CancellationToken CancellationToken => _cancellationToken;
+        public CancellationToken CancellationToken => _cancellationToken;
 
         private readonly IServiceProvider _services;
 
@@ -257,6 +257,10 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
             }
+            else if (func is IAsyncTexlFunction2 asyncFunc2)
+            {
+                result = await asyncFunc2.InvokeAsync(CreateFormattingInfo(this), args, _cancellationToken).ConfigureAwait(false);
+            }
             else if (func is UserDefinedTexlFunction udtf)
             {
                 // $$$ Should add _runtimeConfig
@@ -278,14 +282,7 @@ namespace Microsoft.PowerFx
                     catch (CustomFunctionErrorException ex)
                     {
                         var irContext = node.IRContext;
-                        result = new ErrorValue(
-                            irContext,
-                            new ExpressionError()
-                            {
-                                Message = ex.Message,
-                                Span = irContext.SourceContext,
-                                Kind = ex.ErrorKind
-                            });
+                        result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
                     }
 
                     if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
@@ -644,6 +641,14 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
+
+            if (node.IRContext.IsMutation)
+            {
+                // Records that are not mutable should have been stopped by the compiler before we get here.
+                // But if we get here and the cast fails, the implementation of the record was not prepared for the mutation.
+                ((IMutationCopyField)record).ShallowCopyFieldInPlace(node.Field.Value);
+            }
+
             var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);
 
             return val;
@@ -696,7 +701,7 @@ namespace Microsoft.PowerFx
             switch (node.Value)
             {
                 case NameSymbol name:
-                    return GetVariableOrFail(node, name);
+                    return GetVariableOrFail(node, name, node.IRContext.IsMutation);
                 case FormulaValue fi:
                     return fi;
                 case IExternalOptionSet optionSet:
@@ -722,13 +727,19 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
+        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot, bool isMutation = false)
         {
             if (_symbolValues != null)
             {
                 var value = _symbolValues.Get(slot);
                 if (value != null)
                 {
+                    if (isMutation)
+                    {
+                        value = value.MaybeShallowCopy();
+                        _symbolValues.Set(slot, value);
+                    }
+
                     return value;
                 }
             }

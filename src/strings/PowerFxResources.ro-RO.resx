@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Proprietatea de date particularizate a componentelor cu parametri poate fi accesată numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    <value>Proprietatea sau parametrul de funcție a componentelor pot fi accesate numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Proprietatea sau parametrul de funcție a componentelor pot face referire numai la alte proprietăți ale funcției.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Nu este acceptat în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Număr nevalid de argumente pentru funcția {0}: {1} primit, așteptat {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumentul {0} nu este acceptat pentru funcția {1} din coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Acest argument nu poate fi transmis cu acest tip în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Acest argument nu poate fi transmis cu tipul „{0}” în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Doar o valoare literală se acceptă pentru acest argument.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} nu poate opera pe această intrare fără o conversie de fus orar fără de care funcția nu este acceptată în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Această operațiune nu se poate efectua pe valori care prezintă comportamente de dată/oră diferite.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Numai șirurile scurte de format dată și oră sunt acceptate în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumentul {0} este o unitate de timp nevalidă/neacceptată pentru funcția aritmetică de dată {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Tokenurile de formatare specifice setărilor regionale, cum ar fi „.” și „,” nu sunt acceptate în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} nu este acceptată în coloanele de formule, utilizați în schimb {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Această operațiune nu poate fi efectuată pe tipul {0} în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Tipul de rezultat {0} nu este acceptat în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Referirea directă a unei întregi înregistrări nu este acceptată în coloanele de formule. Faceți referire la un câmp valid din înregistrare.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Tipul de rezultat al acestei formule trebuie să fie {0}, dar rezultatul actual este de tip {1}. Tipul de rezultat al unei coloane de formule nu poate fi modificat.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Coloanele de tip {0} nu sunt acceptate în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Coloanele de tip {0} având formatul {1} nu sunt acceptate în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Constrângerea înregistrărilor sau a tabelelor nu este acceptată în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabelele cu o singură coloană nu sunt acceptate în coloanele de formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Nu se poate face referire la tabelul virtual {0} în coloanele de formule.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Se aștepta un operand. Formula sau expresia așteaptă un operand valid. De exemplu, puteți adăuga operandul „2” la expresia „1 +_”, astfel încât rezultatul să fie „3”. Alternativ, puteți adăuga operandul „tuturor” la expresia „"Salut "&amp; _”, astfel încât rezultatul să fie „Salut tuturor”.</value>
     
@@ -4942,38 +4862,38 @@
     <value>Conversia de tip nu a reușit, deoarece valoarea dată a fost de tip „{0}”, tipul așteptat „{1}”.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Această operațiune pe tabel pe „{0}” este posibil să nu funcționeze dacă are mai mult de {1} rânduri.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Acest predicat va fi întotdeauna adevărat. Ați vrut să folosiși ThisRecord sau [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Nu se poate delega {0}: numai delegarea cu suport pentru căutare în câmpul de cheie primară „{1}”.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Nu se poate delega {0}: expresia ID se referă la ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Nu se poate delega {0}: conține o funcție de comportament „{1}”.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
-    <value>Determină dacă în textul furnizat există o potrivire cu formatul de text furnizat.</value>
+    <value>Determină dacă în textul furnizat există o potrivire a formatului de text furnizat.</value>
     
   </data>
   <data name="AboutIsMatch_text" xml:space="preserve">
-    <value>Textul de comparat în raport cu formatul.</value>
+    <value>Textul care să fie comparat în raport cu formatul.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
     <value>Formatul în raport cu care se verifică textul. Poate fi o valoare a enumerării TextFormat sau o expresie regulată.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    <value>Aceasta determină partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -4997,7 +4917,7 @@
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
-    <value>Textul de comparat în raport cu expresia regulată.</value>
+    <value>Textul care se compară cu expresia regulată.</value>
     
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
@@ -5005,11 +4925,11 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    <value>Aceasta determină partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
-    <value>Textul de comparat în raport cu expresia regulată.</value>
+    <value>Textul care se compară cu expresia regulată.</value>
     
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
@@ -5017,7 +4937,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Aceasta stabilește partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
+    <value>Aceasta determină partea de text cu care dorim să realizăm corelarea. Poate fi o valoare din enumerarea MatchOptions.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>opțiuni</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Reîmprospătează sursa de date specificată.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>sursă_date_conectată</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Se aștepta o valoare înregistrare sau tabel.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>O sursă de date conectată de reîmprospătat.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Doar conexiunile gestionate pot fi reîmprospătate.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Expresie regulată nevalidă.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Expresiile regulate trebuie să fie valori constante.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Valoarea transmisă funcției „{0}” nu se poate modifica.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează potrivirea perfectă a expresiei regulate. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage potrivirea completă din textul specificat.</value>
@@ -5053,7 +4996,7 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Elimină întreaga formatare și returnează o valoare text simplu.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -5061,6 +5004,20 @@
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Textul pentru care se elimină etichetele HTML și XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funcțiile de filtrare nu permit funcții comportamentale ca predicate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilizați operatorul And pentru a combina mai multe predicate în cel de-al doilea argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Acest tabel nu se poate copia. Creați în schimb un tabel în linie utilizând funcția ForAll și notația {...} pentru a copia coloanele individuale de care aveți nevoie.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Această înregistrare nu se poate copia. Creați în schimb o înregistrare în linie utilizând notația {...} pentru a copia câmpurile individuale de care aveți nevoie.</value>
   </data>
 </root>

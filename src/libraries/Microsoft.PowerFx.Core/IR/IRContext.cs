@@ -16,15 +16,20 @@ namespace Microsoft.PowerFx.Core.IR
 
         public FormulaType ResultType { get; }
 
-        internal IRContext(Span sourceContext, FormulaType resultType)
+        // We are in a mutation context, for example the first argument to Patch
+        // Where needed, copies of the argument may need to be made for copy-on-write semantics
+        public bool IsMutation { get; }
+
+        internal IRContext(Span sourceContext, FormulaType resultType, bool isMutation = false)
         {
             SourceContext = sourceContext;
             ResultType = resultType;
+            IsMutation = isMutation;
         }
 
-        public static IRContext NotInSource(FormulaType resultType)
+        public static IRContext NotInSource(FormulaType resultType, bool isMutation = false)
         {
-            return new IRContext(null, resultType);
+            return new IRContext(null, resultType, isMutation);
         }
     }
 }

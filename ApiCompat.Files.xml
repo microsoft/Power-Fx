@@ -14,6 +14,10 @@
   <Assembly>
     <Name>Microsoft.PowerFx.Connectors</Name>
     <Location>src\libraries\Microsoft.PowerFx.Connectors\bin\$BuildConfiguration\netstandard2.0</Location>
+  </Assembly>
+  <Assembly>
+    <Name>Microsoft.PowerFx.Json</Name>
+    <Location>src\libraries\Microsoft.PowerFx.Json\bin\$BuildConfiguration\netstandard2.0</Location>
   </Assembly>  
   <Assembly>
     <Name>Microsoft.PowerFx.Transport.Attributes</Name>

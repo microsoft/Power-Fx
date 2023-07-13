@@ -58,6 +58,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var fArgsValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
 
+            // Only a small percentage of makers use the multi-argument version of Filter in Canvas.
+            // The C# interpreter never supported it.  Blocking this and pushing makers to the more readable
+            // use of "And" to tie multiple predicates together, consistent with LookUp, and freeing up the 
+            // third argument to perform an efficient projection as is also done for LookUp.
+            if (args.Length > 2 && context.Features.PowerFxV1CompatibilityRules)
+            {
+                errors.EnsureError(DocumentErrorSeverity.Severe, args[2], TexlStrings.ErrFilterFunction_OnlyTwoArgs);
+                fArgsValid = false;
+            }
+
             // The first Texl function arg determines the cursor type, the scope type for the lambda params, and the return type.
             fArgsValid &= ScopeInfo.CheckInput(context.Features, args[0], argTypes[0], errors, out var typeScope);
 
@@ -72,6 +82,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var viewCount = 0;
 
             var dataSourceVisitor = new ViewFilterDataSourceVisitor(binding);
+
+            base.CheckSemantics(binding, args, argTypes, errors);
 
             // Ensure that all the args starting at index 1 are booleans or view
             for (var i = 1; i < args.Length; i++)
@@ -163,7 +175,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var args = callNode.Args.Children.VerifyValue();
 
             // Validate for each predicate node.
-            for (var i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Count; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
                 {

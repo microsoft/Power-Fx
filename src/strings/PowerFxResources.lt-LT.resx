@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponento pasirinktinę duomenų ypatybę su parametrais galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    <value>Komponento funkcijos ypatybę arba parametrą galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponento funkcijos ypatybė arba parametras gali nurodyti tik kitas funkcijos ypatybes.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose nepalaikoma.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Netinkamas funkcijos {0} argumentų skaičius: gautas – {1}, numatytas – {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose funkcijos {1} argumentas {0} nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Šio argumento negalima perduoti formulės stulpeliuose kaip šio tipo.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Šio argumento negalima perduoti formulės stulpeliuose kaip tipo {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Šiame argumente palaikoma tik literalo reikšmė.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} negalima atlikti su šia įvestimi be laiko juostos konvertavimo, kuris formulės stulpeliuose nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Šios operacijos negalima atlikti su reikšmėmis, kurių datos ir laiko veikimo būdai yra kitokie.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose palaikomos tik trumpo datos ir laiko formato eilutės.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumentas {0} yra netinkamas / nepalaikomas datos aritmetinės funkcijos {1} laiko vienetas.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose lokalėms būdingi formatavimo atpažinimo ženklai (pvz., „.“ ir „,“) nepalaikomi.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Funkcija {0} formulės stulpeliuose nepalaikoma, vietoj jos naudokite {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Šios operacijos negalima atlikti formulės stulpelių tipe {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>{0} tipo rezultatas formulės stulpeliuose nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose nepalaikoma tiesioginė nuoroda į visą įrašą. Nurodykite tinkamą įrašo lauką.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Tikimasi, kad šios formulės rezultato tipas bus {0}, tačiau faktinis rezultato tipas yra {1}. Formulės stulpelio rezultatų tipo pakeisti negalima.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} tipo stulpeliai formulės stulpeliuose nepalaikomi.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>{0} tipo stulpeliai, kurių formatas {1}, formulės stulpeliuose nepalaikomi.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Įrašų arba lentelių vertimas formulės stulpeliuose nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Vieno stulpelio lentelės formulės stulpeliuose nepalaikomos.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Negalima nurodyti virtualiosios lentelės {0} formulės stulpeliuose.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas operandas. Formulė arba reiškinys numato gauti tinkamą operandą. Pvz., į reiškinį 1 +_ galite įtraukti operandą 2, kad rezultatas būtų 3. Arba į išraišką Sveiki "&amp; _ galite įtraukti operandą visi, kad rezultatas būtų Sveiki visi.</value>
     
@@ -4942,24 +4862,24 @@
     <value>Nepavyko konvertuoti tipo, nes nurodytos reikšmės tipas buvo „{0}“, o tikimasi tipo „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Ši operacija lentelėje „{0}“ gali neveikti, jei joje yra daugiau nei {1} eil.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Ši taisyklės sąlyga visada bus teisinga. Ar norėjote naudoti „ThisRecord“, ar [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Negalima perduoti {0}: palaikomas tik pirminio rakto lauko „{1}“ peržvalgos perdavimas.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Negalima perduoti {0}: ID išraiška nurodo „ThisRecord“.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Negalima perduoti {0}: yra veikimo funkcija „{1}“.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>parinktys</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Atnaujina nurodytą duomenų šaltinį.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>prijungtas_duomenų_šaltinis</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Tikimasi įrašo arba lentelės reikšmės.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Prijungtas duomenų šaltinis, kurį reikia atnaujinti.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Galima atnaujinti tik valdomus ryšius.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Netinkama paprastoji išraiška.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Paprastosios išraiškos turi būti pastovios vertės.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Reikšmės, perduotos funkcijai „{0}“, pakeisti negalima.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia visišką paprastosios išraiškos atitiktį. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visišką atitiktį nurodytame tekste.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Pašalina visą formatavimą ir pateikia paprastojo teksto reikšmę.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>tekstas</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Tekstas, kuriame reikia pašalinti HTML ir XML žymes.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtro funkcijos neleidžia veikimo funkcijų kaip taisyklių sąlygų.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Naudodami operatorių And sujunkite kelias taisyklių sąlygas antrajame argumente.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Šios lentelės negalima nukopijuoti. Vietoje to sukurkite įdėjimo lentelę naudodami funkciją ForAll ir {...} notaciją, kad galėtumėte kopijuoti atskirus norimus stulpelius.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Šio įrašo negalima nukopijuoti. Vietoje to sukurkite įdėjimo įrašą naudodami {...} notaciją, kad galėtumėte kopijuoti atskirus norimus laukus.</value>
   </data>
 </root>

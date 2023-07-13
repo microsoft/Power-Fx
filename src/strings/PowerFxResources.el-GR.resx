@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Η πρόσβαση στην ιδιότητα προσαρμοσμένων δεδομένων στοιχείου με παραμέτρους είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    <value>Η πρόσβαση στην ιδιότητα ή την παράμετρο συνάρτησης στοιχείου είναι εφικτή μόνο μέσα από ένα στοιχείο ή από τις ιδιότητες εξόδου στοιχείου.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Η ιδιότητα ή η παράμετρος συνάρτησης στοιχείου μπορεί να αναφέρεται μόνο σε άλλες ιδιότητες συνάρτησης.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -2324,7 +2328,7 @@
     <value>Μαθηματική και στατιστική</value>
   </data>
   <data name="UserDefined" xml:space="preserve">
-    <value>Ορίσθηκε από τον χρήστη</value>
+    <value>Ορισμός από τον χρήστη</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Πληροφορίες</value>
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Δεν υποστηρίζεται στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Μη έγκυρος αριθμός ορισμάτων για {0} τη συνάρτηση: ελήφθη {1}, αναμένεται {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Το όρισμα {0} δεν υποστηρίζεται για τη συνάρτηση {1} στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Αυτό το όρισμα δεν μπορεί να διαβιβαστεί καθώς αυτός ο τύπος στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Αυτό το όρισμα δεν μπορεί να μεταβιβαστεί ως τύπος {0} σε στήλες τύπων.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Υποστηρίζεται μόνο μια κυριολεκτική τιμή για αυτό το όρισμα.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} δεν μπορεί να εκτελεστεί σε αυτά τα δεδομένα εισόδου χωρίς μετατροπή ζώνης ώρας, η οποία δεν υποστηρίζεται στις στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Αυτή η λειτουργία δεν είναι δυνατό να εκτελεστεί σε τιμές που είναι διαφορετικών συμπεριφορών ημερομηνίας/ώρας.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Μόνο οι συμβολοσειρές μορφής σύντομης ημερομηνίας και ώρας υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Το {0} όρισμα είναι μια μη έγκυρη/μη υποστηριζόμενη μονάδα χρόνου για την {1} αριθμητική συνάρτηση date.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Τα διακριτικά μορφοποίησης ειδικά για τοπικές ρυθμίσεις, όπως "." και "," δεν υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} δεν υποστηρίζεται σε στήλες τύπου, χρησιμοποιήστε {1} αντ' αυτού.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Αυτή η λειτουργία δεν μπορεί να εκτελεστεί σε τύπο {0} σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Ο τύπος αποτελέσματος {0} δεν υποστηρίζεται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Η απευθείας αναφορά σε μια ολόκληρη εγγραφή δεν υποστηρίζεται στις στήλες τύπων. Παρακαλείσθε να αναφέρετε ένα έγκυρο πεδίο στην εγγραφή.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Ο τύπος αποτελέσματος για αυτόν τον τύπο αναμένεται να είναι {0}, αλλά ο πραγματικός τύπος αποτελέσματος είναι {1}. Δεν είναι δυνατή η αλλαγή του τύπου αποτελέσματος μιας στήλης τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Οι στήλες τύπου {0} δεν υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Οι στήλες τύπου {0} με μορφή {1} δεν υποστηρίζονται σε στήλες τύπου.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Ο εξαναγκασμός εγγραφών ή πινάκων δεν υποστηρίζεται σε στήλες τύπων.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Οι πίνακες μίας στήλης δεν υποστηρίζονται σε στήλες τύπων.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Δεν είναι δυνατή η αναφορά εικονικού πίνακα {0} σε στήλες τύπων.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Αναμενόταν τελεστέος. Ο τύπος ή η παράσταση αναμένει έναν έγκυρο τελεστέο. Για παράδειγμα, μπορείτε να προσθέσετε τον τελεστέο "2" στην παράσταση "1 + _" ώστε το αποτέλεσμα να είναι "3". Ή, μπορείτε να προσθέσετε τον τελεστέο "σας" στην παράσταση ""Γεια "&amp; _ " ώστε το αποτέλεσμα να είναι "Γεια σας".</value>
     
@@ -4942,24 +4862,24 @@
     <value>Η μετατροπή τύπου απέτυχε επειδή η δεδομένη τιμή ήταν τύπου «{0}», αναμενόμενου τύπου «{1}».</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Αυτή η λειτουργία στον πίνακα '{0}' ενδέχεται να μην λειτουργεί, εάν έχει περισσότερες από {1} γραμμές.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Αυτό το πρόθεμα θα είναι πάντα αληθές. Θέλατε να χρησιμοποιήσετε το ThisRecord ή το [@ ];</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Δεν είναι δυνατή η ανάθεση {0}: υποστηρίξτε μόνο την ανάθεση για αναζήτηση σε πεδίο πρωτεύοντος κλειδιού '{1}'.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Δεν είναι δυνατή η ανάθεση {0}: Η παράσταση αναγνωριστικού αναφέρεται στο ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5032,6 +4952,25 @@
     <value>επιλογές</value>
     
   </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Ανανεώνει την καθορισμένη προέλευση δεδομένων.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>συνδεδεμένη_προέλευση_δεδομένων</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Αναμενόταν μια τιμή εγγραφής ή πίνακα.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Μια συνδεδεμένη προέλευση δεδομένων για ανανέωση.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Είναι δυνατή η ανανέωση μόνο διαχειριζόμενων συνδέσεων.</value>
+    
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Μη έγκυρη κανονική παράσταση.</value>
     
@@ -5039,6 +4978,10 @@
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Οι κανονικές παραστάσεις πρέπει να είναι τιμές σταθεράς.</value>
         
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
+    
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
     <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει την πλήρη αντιστοίχιση της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
@@ -5053,14 +4996,28 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Removes all formatting and returns a plain text value.</value>
+    <value>Καταργεί τη μορφοποίηση συνολικά και επιστρέφει μια τιμή απλού κειμένου.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
-    <value>text</value>
+    <value>κείμενο</value>
     
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
-    <value>The text to have its HTML and XML tags removed.</value>
+    <value>Το κείμενο για κατάργηση των ετικετών HTML και XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Οι λειτουργίες φίλτρου δεν επιτρέπουν λειτουργίες συμπεριφοράς ως προκαταρκτικά.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Χρησιμοποιήστε τον τελεστή And για τον συνδυασμό πολλών προκαταρκτικών στο δεύτερο όρισμα.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Δεν είναι δυνατή η αντιγραφή αυτού του πίνακα. Αντιθέτως, δημιουργήστε έναν ενσωματωμένο πίνακα χρησιμοποιώντας τη συνάρτηση ForAll και {...} σημειώσεις για την αντιγραφή των επιμέρους στηλών που επιθυμείτε.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Δεν είναι δυνατή η αντιγραφή αυτής της καρτέλας. Αντιθέτως, δημιουργήστε μια ενσωματωμένη καρτέλα χρησιμοποιώντας {...} σημειώσεις για την αντιγραφή των επιμέρους πεδίων που επιθυμείτε.</value>
   </data>
 </root>
