@@ -41,6 +41,25 @@ namespace Microsoft.PowerFx.Types
 
         public abstract void Visit(IValueVisitor visitor);
 
+        /// <summary>
+        /// Before mutation operations, call MaybeShallowCopy() to make a copy of the value.
+        /// For most values this is a no-op and will not make a copy. Only types which implement
+        /// IMutationCopy will have the opportunity to provide a copy.
+        /// </summary>
+        /// <returns>Shallow copy of FormulaValue.</returns>
+        public FormulaValue MaybeShallowCopy()
+        {
+            return CanShallowCopy && TryShallowCopy(out FormulaValue copy) ? copy : this;
+        }
+
+        public virtual bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = null;
+            return false;
+        }
+
+        public virtual bool CanShallowCopy => false;
+
         public abstract void ToExpression(StringBuilder sb, FormulaValueSerializerSettings settings);
 
         /// <summary>
@@ -57,6 +76,18 @@ namespace Microsoft.PowerFx.Types
             ToExpression(sb, settings);
 
             return sb.ToString();
+        }
+
+        public bool TryGetPrimitiveValue(out object val)
+        {
+            if (Type._type.IsPrimitive)
+            {
+                val = ToObject();
+                return true;
+            }
+
+            val = null;
+            return false;
         }
     }
 }

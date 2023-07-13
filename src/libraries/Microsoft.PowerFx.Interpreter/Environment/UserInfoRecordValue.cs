@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Globalization;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Interpreter;
@@ -70,5 +68,13 @@ namespace Microsoft.PowerFx
                 return (true, FormulaValue.NewError(ex.ExpressionError, fieldType));
             }
         }
+
+        public override bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new InMemoryRecordValue(this.IRContext, this.Fields);
+            return true;
+        }
+
+        public override bool CanShallowCopy => true;
     }
 }

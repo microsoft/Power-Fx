@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Tests
 
             var robinTable = cache.Marshal(table);
 
-            engine.UpdateVariable("robintable", robinTable);
+            engine._symbolValues.Add("robintable", robinTable);
 
             // with number is float
 
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Tests
 
             var robinTable = cache.Marshal(table);
 
-            engine.UpdateVariable("robintable", robinTable);
+            engine._symbolValues.Add("robintable", robinTable);
 
             var opts = new ParserOptions() { NumberIsFloat = true };
 
@@ -201,7 +201,7 @@ namespace Microsoft.PowerFx.Tests
 
             var robinList = cache.Marshal(list);
 
-            engine.UpdateVariable("robinList", robinList);
+            engine._symbolValues.Add("robinList", robinList);
 
             var result1 = engine.Eval("Value(Index(robinList, 1).Value)");
             var result2 = engine.Eval("Text(Index(robinList, 2).Value)");

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -114,7 +115,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var args = callNode.Args.Children.VerifyValue();
 
-            if (args.Length == 0)
+            if (args.Count == 0)
             {
                 return false;
             }
@@ -130,7 +131,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
 
             // Validate for each predicate node.
-            for (var i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Count; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
                 {

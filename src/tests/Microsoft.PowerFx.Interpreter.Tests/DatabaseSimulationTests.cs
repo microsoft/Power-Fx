@@ -3,20 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Entities.Delegation;
-using Microsoft.PowerFx.Core.Entities.QueryOptions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -107,6 +99,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 PatchDelay = patchDelay;
             }
 
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryTableValue
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
+            }
+
+            public override bool CanShallowCopy => false;
+
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
             {
                 if (PatchDelay > 0)
@@ -167,6 +169,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 throw new NotImplementedException("Cannot call TryGetField");
             }
+
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryRecordValue
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
+            }
+
+            public override bool CanShallowCopy => false;
         }
 
         internal class TestEntityType : FormulaType

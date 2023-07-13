@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Töödeldav tekstväärtuste veerg.</value>
+    <value>Töödeldavate tekstväärtuste veerg.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Teisendab „arvu“ loogiliseks väärtuseks.</value>
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parameetritega komponendi kohandatud andmeatribuudile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    <value>Komponendi funktsiooniatribuudile või -parameetrile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponendi funktsiooniatribuut või -parameeter saab viidata ainult teistele funktsiooniatribuutidele.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Ei toetata valemiveergudes.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Funktsioonil {0} on sobimatu arv argumente: saadi {1}, eeldati {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumenti {0} ei toetata valemiveergude funktsioonis {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Seda argumenti ei saa valemiveergudes selle tüübina edastada.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Seda argumenti ei saa valemiveergudesse edastada tüübina {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Selle argumendi puhul toetatakse ainult sõnasõnalist väärtust.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Toimingut {0} ei saa sellel sisendil teha ilma ajavööndi teisenduseta, mida valemiveergudes ei toetata.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Seda toimingut ei saa teha erinevate kuupäeva ja kellaaja käitumisega väärtustel.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Valemiveergudes toetatakse ainult lühikese vorminguga kuupäeva- ja kellaaja stringe.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} on kuupäeva aritmeetilise funktsiooni {1} sobimatu/toetuseta ajaühik.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Lokaadipõhiseid vormingutõendeid (nt "." ja ",") valemiveergudes ei toetata.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Üksust {0} ei toetata valemiveergudes, kasutage selle asemel üksust {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Seda toimingut ei saa valemiveergudes teha tüübiga {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Tulemitüüp {0} pole valemiveergudes toetatud.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Valemiveergudes ei toetata kogu kirje otsest viitamist. Viidake kirjes kehtivale väljale.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Selle valemi tulemi tüüp peab olema {0}, kuid tegelik tulemi tüüp on {1}. Valemiveeru tulemi tüüpi ei saa muuta.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Veerud, mille tüüp on {0}, pole valemiveergudes toetatud.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Veerud, mille tüüp on {0} ja vorming {1}, pole valemiveergudes toetatud.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Kirjete või tabelite koondamist ei toetata valemiveergudes.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Üheveerulisi tabeleid ei toetata valemiveergudes.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Valemiveergudes ei saa virtuaaltabelile {0} viidata.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati operandi. Valem või väljend eeldab kehtivat operandi. Näiteks saate lisada operandi „2“ avaldisele „ 1 +_“, nii et tulemus on „3“. Või võite lisada operandi "there" avaldisele „"Hi "&amp; _ “, nii et tulemus on „Hi there“.</value>
     
@@ -4942,24 +4862,24 @@
     <value>Tüübi teisendamine nurjus, kuna antud väärtus oli tüübiga „{0}“, eeldati tüüpi „{1}“.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>See tegevus tabelis „{0}“ ei pruugi töötada, kui ridu on rohkem kui {1}.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>See predikaat on alati tõene. Kas soovisite kasutada argumenti ThisRecord või [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Üksust {0} ei saa delegeerida: ainult toe delegeerimine primaarvõtme väljal „{1}“.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Üksust {0} ei saa delegeerida: ID avaldis viitab üksusele ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5085,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekst, mille HTML- ja XML-sildid eemaldatakse.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtri funktsioonid ei luba predikaatidena käitumisfunktsioone.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Kasutage mitme predikaadi teiseks argumendiks ühendamiseks tehtemärki And.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Seda tabelit ei saa kopeerida. Selle asemel looge tekstisisene tabel, kasutades soovitud üksikute väljade kopeerimiseks funktsiooni ForAll ja märget {...}.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Seda kirjet ei saa kopeerida. Selle asemel looge tekstisisene kirje, kasutades soovitud üksikute väljade kopeerimiseks märget {...}.</value>
   </data>
 </root>

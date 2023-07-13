@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -74,11 +77,16 @@ namespace Microsoft.PowerFx.Connectors
                         if (item is OpenApiObject obj)
                         {
                             // has keys, "value", and "displayName"
-                            if (obj.TryGetValue("value", out var value2))
+                            if (obj.TryGetValue("value", out IOpenApiAny value2))
                             {
                                 if (value2 is OpenApiString str)
                                 {
                                     list.Add(str.Value);
+                                    continue;
+                                }
+                                else if (value2 is OpenApiInteger i)
+                                {
+                                    list.Add(i.Value.ToString(CultureInfo.InvariantCulture));
                                     continue;
                                 }
                             }
@@ -105,9 +113,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public static bool TryGetDefaultValue(this OpenApiSchema schema, FormulaType formulaType, out FormulaValue defaultValue, bool numberIsFloat = false)
         {
-            var x = schema.Default;
+            IOpenApiAny openApiDefaultValue = schema.Default;
 
-            if (x == null)
+            if (openApiDefaultValue == null)
             {
                 if (formulaType is RecordType rt && schema.Properties != null)
                 {
@@ -136,37 +144,97 @@ namespace Microsoft.PowerFx.Connectors
                 defaultValue = null;
                 return false;
             }
+            
+            return TryGetOpenApiValue(openApiDefaultValue, out defaultValue, numberIsFloat);
+        }
 
-            if (x is OpenApiString str)
+        internal static bool TryGetOpenApiValue(IOpenApiAny openApiAny, out FormulaValue formulaValue, bool numberIsFloat = false)
+        {
+            if (openApiAny is OpenApiString str)
             {
-                defaultValue = FormulaValue.New(str.Value); // StringValue
-                return true;
+                formulaValue = FormulaValue.New(str.Value);
+            }
+            else if (openApiAny is OpenApiInteger intVal)
+            {
+                formulaValue = numberIsFloat ? FormulaValue.New(intVal.Value) : FormulaValue.New((decimal)intVal.Value);
+            }
+            else if (openApiAny is OpenApiDouble dbl)
+            {
+                formulaValue = numberIsFloat ? FormulaValue.New(dbl.Value) : FormulaValue.New((decimal)dbl.Value);
+            }
+            else if (openApiAny is OpenApiLong lng)
+            {
+                formulaValue = numberIsFloat ? FormulaValue.New(lng.Value) : FormulaValue.New((decimal)lng.Value);
+            }
+            else if (openApiAny is OpenApiBoolean b)
+            {
+                formulaValue = FormulaValue.New(b.Value);
+            }
+            else if (openApiAny is OpenApiFloat flt)
+            {
+                formulaValue = numberIsFloat ? FormulaValue.New(flt.Value) : FormulaValue.New((decimal)flt.Value);
+            }
+            else if (openApiAny is OpenApiByte by)
+            {
+                // OpenApi library uses Convert.FromBase64String
+                formulaValue = FormulaValue.New(Convert.ToBase64String(by.Value));
+            }
+            else if (openApiAny is OpenApiDateTime dt)
+            {
+                // A string like "2022-11-18" is interpreted as a DateTimeOffset
+                // https://github.com/microsoft/OpenAPI.NET/issues/533
+                throw new PowerFxConnectorException($"Unsupported OpenApiDateTime {dt.Value}");
+            }
+            else if (openApiAny is OpenApiPassword pw)
+            {
+                formulaValue = FormulaValue.New(pw.Value);
+            }
+            else if (openApiAny is OpenApiNull)
+            {
+                formulaValue = FormulaValue.NewBlank();
+            }
+            else if (openApiAny is OpenApiArray arr)
+            {                
+                List<FormulaValue> lst = new List<FormulaValue>();
+
+                foreach (IOpenApiAny element in arr)
+                {
+                    bool ba = TryGetOpenApiValue(element, out FormulaValue fv, numberIsFloat);
+                    if (!ba)
+                    {
+                        formulaValue = null;
+                        return false;
+                    }
+
+                    lst.Add(fv);
+                }
+
+                RecordType recordType = RecordType.Empty().Add(TableValue.ValueName, FormulaType.String);
+                IRContext irContext = IRContext.NotInSource(recordType);
+                IEnumerable<InMemoryRecordValue> recordValues = lst.Select(item => new InMemoryRecordValue(irContext, new NamedValue[] { new NamedValue(TableValue.ValueName, item) }));
+
+                formulaValue = FormulaValue.NewTable(recordType, recordValues);
+            }
+            else if (openApiAny is OpenApiObject o)
+            {
+                Dictionary<string, FormulaValue> dvParams = new ();
+
+                foreach (KeyValuePair<string, IOpenApiAny> kvp in o)
+                {                    
+                    if (TryGetOpenApiValue(kvp.Value, out FormulaValue fv, numberIsFloat))
+                    {
+                        dvParams[kvp.Key] = fv;
+                    }
+                }
+
+                formulaValue = FormulaValue.NewRecordFromFields(dvParams.Select(dvp => new NamedValue(dvp.Key, dvp.Value)));
+            }
+            else
+            { 
+                throw new NotImplementedException($"Unknown default value type {openApiAny.GetType().FullName}");
             }
 
-            if (x is OpenApiInteger intVal)
-            {
-                defaultValue = numberIsFloat
-                    ? FormulaValue.New(intVal.Value) // NumberValue
-                    : FormulaValue.New((decimal)intVal.Value); // DecimalValue
-
-                return true;
-            }
-
-            if (x is OpenApiDouble dbl)
-            {
-                defaultValue = numberIsFloat
-                    ? FormulaValue.New(dbl.Value) // NumberValue
-                    : FormulaValue.New((decimal)dbl.Value); // DecimalValue
-                return true;
-            }
-
-            if (x is OpenApiBoolean b)
-            {
-                defaultValue = FormulaValue.New(b.Value); // BooleanValue
-                return true;
-            }
-
-            throw new NotImplementedException($"Unknown default value type {x.GetType().FullName}");
+            return true;
         }
 
         public static bool HasDefaultValue(this OpenApiParameter param)
@@ -202,22 +270,30 @@ namespace Microsoft.PowerFx.Connectors
                     // Anyhow, we'll have schema.Enum content in ConnertorType
 
                     switch (schema.Format)
-                    {
-                        case null:
-                        case "uuid":
-                        case "mquery": // For SQL Server Power Query language
-                            return new ConnectorParameterType(schema, FormulaType.String);
-
+                    {                        
+                        case "date":
+                            return new ConnectorParameterType(schema, FormulaType.Date);
                         case "date-time":
-                            // Consider this as a string for now
-                            // $$$ Should be DateTime type
-                            return new ConnectorParameterType(schema, FormulaType.String);
+                            return new ConnectorParameterType(schema, FormulaType.DateTime);
+                        case "date-no-tz":
+                            return new ConnectorParameterType(schema, FormulaType.DateTimeNoTimeZone);
 
                         case "binary":
                             return new ConnectorParameterType(schema, FormulaType.String);
 
+                        case "enum":                            
+                            if (schema.Enum.All(e => e is OpenApiString))
+                            {                                
+                                OptionSet os = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
+                                return new ConnectorParameterType(schema, os.FormulaType);                            
+                            }
+                            else
+                            {
+                                throw new NotImplementedException($"Unsupported enum type {schema.Enum.GetType().Name}");
+                            }
+
                         default:
-                            throw new NotImplementedException("Unsupported type of string");
+                            return new ConnectorParameterType(schema, FormulaType.String);
                     }
 
                 // OpenAPI spec: Format could be float, double, or not specified.
@@ -228,15 +304,18 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         case "float":
                         case "double":
-                            return numberIsFloat
-                                ? new ConnectorParameterType(schema, FormulaType.Number)
-                                : new ConnectorParameterType(schema, FormulaType.Decimal);
+                        case "integer":
+                        case "byte":
+                        case "number":
+                        case "int32":
+                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
 
                         case null:
+                        case "decimal":
                             return new ConnectorParameterType(schema, FormulaType.Decimal);
 
                         default:
-                            throw new NotImplementedException("Unsupported type of number");
+                            throw new NotImplementedException($"Unsupported type of number: {schema.Format}");
                     }
 
                 // Always a boolean (Format not used)                
@@ -248,15 +327,14 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         case null:
                         case "int32":
-                            return numberIsFloat
-                                ? new ConnectorParameterType(schema, FormulaType.Number)
-                                : new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
 
                         case "int64":
-                            return new ConnectorParameterType(schema, FormulaType.Decimal);
+                        case "unixtime":
+                            return new ConnectorParameterType(schema, FormulaType.Decimal);                                                    
 
                         default:
-                            throw new NotImplementedException("Unsupported type of integer");
+                            throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
                     }
 
                 case "array":
@@ -278,16 +356,17 @@ namespace Microsoft.PowerFx.Connectors
                     chain.Push(innerA);
                     ConnectorParameterType cpt = schema.Items.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
                     cpt.SetProperties("Array", true);
-                    chain.Pop();
-
-                    if (cpt.HiddenRecordType != null)
-                    {
-                        throw new NotImplementedException("Unexpected value for array items");
-                    }
+                    chain.Pop();                    
 
                     if (cpt.Type is RecordType r)
                     {
                         return new ConnectorParameterType(schema, r.ToTable(), cpt.ConnectorType);
+                    }
+                    else if (cpt.Type is TableType t)
+                    {                        
+                        // Array of array 
+                        TableType tt = new TableType(TableType.Empty().Add(TableValue.ValueName, t)._type);
+                        return new ConnectorParameterType(schema, tt, cpt.ConnectorType);
                     }
                     else if (cpt.Type is not AggregateType)
                     {
@@ -370,15 +449,13 @@ namespace Microsoft.PowerFx.Connectors
 
                 default:
 
-                    throw new NotImplementedException($"{schema.Type}");
+                    throw new NotImplementedException($"Unsupported schema type {schema.Type}");
             }
         }
 
         private static string GetUniqueIdentifier(this OpenApiSchema schema)
         {
-            return schema.Reference != null
-                ? "R:" + schema.Reference.Id
-                : "T:" + schema.Type;
+            return schema.Reference != null ? "R:" + schema.Reference.Id : "T:" + schema.Type;
         }
 
         public static HttpMethod ToHttpMethod(this OperationType key)
@@ -439,10 +516,12 @@ namespace Microsoft.PowerFx.Connectors
             // Headers are case insensitive.
             foreach (var kv3 in response.Content)
             {
-                var mediaType = kv3.Key;
-                var openApiMediaType = kv3.Value;
+                string mediaType = kv3.Key.Split(';')[0];
+                OpenApiMediaType openApiMediaType = kv3.Value;
 
-                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(mediaType, ContentType_Any, StringComparison.OrdinalIgnoreCase))
                 {
                     if (openApiMediaType.Schema == null)
                     {
@@ -453,17 +532,12 @@ namespace Microsoft.PowerFx.Connectors
                     ConnectorParameterType connectorParameterType = openApiMediaType.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
                     connectorParameterType.SetProperties("response", true);
 
-                    if (connectorParameterType.HiddenRecordType != null)
-                    {
-                        throw new NotImplementedException("Unexpected value mediatype schema");
-                    }
-
                     return connectorParameterType;
-                }
+                }               
             }
 
             // Returns something, but not json. 
-            throw new InvalidOperationException($"Unsupported return type - must have {ContentType_ApplicationJson}");
+            throw new InvalidOperationException($"Unsupported return type - found {string.Join(", ", response.Content.Select(kv4 => kv4.Key))}");
         }
 
         // Keep these constants all lower case
@@ -471,8 +545,9 @@ namespace Microsoft.PowerFx.Connectors
         public const string ContentType_XWwwFormUrlEncoded = "application/x-www-form-urlencoded";
         public const string ContentType_ApplicationJson = "application/json";
         public const string ContentType_TextPlain = "text/plain";
+        public const string ContentType_Any = "*/*";
 
-        private static readonly List<string> _knownContentTypes = new ()
+        private static readonly IReadOnlyList<string> _knownContentTypes = new string[]
         {
             ContentType_ApplicationJson,
             ContentType_XWwwFormUrlEncoded,

@@ -155,33 +155,29 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg))
             {
-                // Verify statically that the format string doesn't contain BOTH numeric and date/time
-                // format specifiers. If it does, that's an error according to Excel and our spec.
-
-                // But firstly skip any locale-prefix
-                if (formatArg.StartsWith("[$-", StringComparison.Ordinal))
+                if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
                 {
-                    var end = formatArg.IndexOf(']', 3);
-                    if (end > 0)
+                    var textFormatArgs = new TextFormatArgs
                     {
-                        formatArg = formatArg.Substring(end + 1);
+                        FormatCultureName = null,
+                        FormatArg = null,
+                        HasDateTimeFmt = false,
+                        HasNumericFmt = false
+                    };
+
+                    if (!TextFormatUtils.IsValidFormatArg(formatArg, formatCulture: null, defaultLanguage: null, out textFormatArgs))
+                    {
+                        isValid = false;
                     }
                 }
-
-                var hasDateTimeFmt = formatArg.IndexOfAny(new char[] { 'm', 'd', 'y', 'h', 'H', 's', 'a', 'A', 'p', 'P' }) >= 0;
-                var hasNumericFmt = formatArg.IndexOfAny(new char[] { '0', '#' }) >= 0;
-                if (hasDateTimeFmt && hasNumericFmt)
+                else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
                 {
-                    // Check if the date time format contains '0's after the seconds specifier, which
-                    // is used for fractional seconds - in which case it is valid
-                    var formatWithoutZeroSubseconds = Regex.Replace(formatArg, @"[sS]\.?(0+)", m => m.Groups[1].Success ? string.Empty : m.Groups[1].Value);
-                    hasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
+                    isValid = false;
                 }
 
-                if (hasDateTimeFmt && hasNumericFmt)
+                if (!isValid)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
-                    isValid = false;
                 }
             }
 

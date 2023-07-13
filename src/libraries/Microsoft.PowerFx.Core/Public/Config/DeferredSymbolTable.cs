@@ -13,6 +13,29 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx
 {
     /// <summary>
+    /// Used with a <see cref="DeferredSymbolTable"/>. This is returned to lazily provide the type for  (logical,displayName). 
+    /// </summary>
+    public class DeferredSymbolPlaceholder
+    {
+        public DeferredSymbolPlaceholder(FormulaType type, Action<ISymbolSlot> onSlotAvailable = null)
+        {
+            this.Type = type;
+            this.OnSlotAvailable = onSlotAvailable;
+        }
+
+        /// <summary>
+        /// The type of the symbol, lazily computed. 
+        /// </summary>
+        public FormulaType Type { get; }
+
+        /// <summary>
+        /// Optional callback - called after we create the slot. 
+        /// This can be used to initialize corresponding values. 
+        /// </summary>
+        public Action<ISymbolSlot> OnSlotAvailable { get; }
+    }
+
+    /// <summary>
     /// Provides symbol table with deferred semantics. 
     /// This is semantically readonly - there is a fixes set of known symbols, just the type information is populated lazily.
     /// Good when we can quickly load the names (to populate the intellisense completion list), but then load remaining symbol details on-demand. 
@@ -26,11 +49,11 @@ namespace Microsoft.PowerFx
         // (Logical,Display) --> return type. 
         // Call back to host to a) lazily get the type, b) notify the host this has been loaded. 
         // Assume it can be invoked multiple times; host must protect
-        private readonly Func<string, string, FormulaType> _fetchTypeInfo;
+        private readonly Func<string, string, DeferredSymbolPlaceholder> _fetchTypeInfo;
 
         // Full universe of possible symbols
         // All other symbols are missing. 
-        public DeferredSymbolTable(DisplayNameProvider map, Func<string, string, FormulaType> fetchTypeInfo)
+        public DeferredSymbolTable(DisplayNameProvider map, Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo)
         {
             _displayNameLookup = map ?? throw new ArgumentNullException(nameof(map));
             _fetchTypeInfo = fetchTypeInfo ?? throw new ArgumentNullException(nameof(fetchTypeInfo));
@@ -64,12 +87,16 @@ namespace Microsoft.PowerFx
 
                 // Callback to host - do not hold lock while invoking this. 
                 // Host may do arbitrary operations, including network calls to fetch metadata.
-                var type = _fetchTypeInfo(logical.Value, display.Value);
+                var placeholder = _fetchTypeInfo(logical.Value, display.Value);
+                var type = placeholder.Type;
 
                 lock (_lock)
                 {
                     nameInfo = AddUnderLock(logical, display, type);
                 }
+
+                ISymbolSlot slot = (NameSymbol)nameInfo.Data;
+                placeholder.OnSlotAvailable?.Invoke(slot);
 
                 return true;
             }
@@ -98,11 +125,17 @@ namespace Microsoft.PowerFx
                 return nameInfo;
             }
             
-            // This is crticial that we're under lock.
+            // This is critical that we're under lock.
             // We only want to add these once. 
             var slotIndex = _slots.Alloc();
+                        
+            var props = new SymbolProperties
+            {
+                 CanMutate = true,
+                 CanSet = false
+            };
 
-            var data = new NameSymbol(logical, mutable: false)
+            var data = new NameSymbol(logical, props)
             {
                 Owner = this,
                 SlotIndex = slotIndex

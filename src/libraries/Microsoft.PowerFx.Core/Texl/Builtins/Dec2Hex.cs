@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
+            Contracts.Assert(returnType.IsTableNonObjNull);
             Contracts.Assert(!fValid || returnType.IsColumn);
             if (argTypes.Length == 1)
             {
@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var arg1 = args[0];
                 var arg2 = args[0];
 
-                if (!type0.IsTable && !type1.IsTable)
+                if (!type0.IsTableNonObjNull && !type1.IsTableNonObjNull)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrTypeError);
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg2, TexlStrings.ErrTypeError);
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var otherType = DType.Invalid;
                 TexlNode otherArg = null;
 
-                if (type0.IsTable)
+                if (type0.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     otherArg = args[1];
                     otherType = type1;
                 }
-                else if (type1.IsTable)
+                else if (type1.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
@@ -121,7 +121,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 Contracts.Assert(otherType.IsValid);
                 Contracts.AssertValue(otherArg);
 
-                if (otherType.IsTable)
+                if (otherType.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(context, otherArg, otherType, errors, ref nodeToCoercedTypeMap);

@@ -113,9 +113,13 @@ namespace Microsoft.PowerFx.Tests
             }
 
             var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse++], HttpStatusCode.OK) : _nextResponse;
-            response.RequestMessage = request;
+            if (response != null)
+            {
+                response.RequestMessage = request;
+            }
+
             _nextResponse = null;
-            return response;
+            return response ?? new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
     }
 }

@@ -214,6 +214,41 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Fact]
+        public void TestRowScopeNoImplicitThisRecord()
+        {
+            var record = FormulaValue.NewRecordFromFields(
+                new NamedValue("a", FormulaValue.New(10)),
+                new NamedValue("b", FormulaValue.New(20)));
+
+            var symbolTable = ReadOnlySymbolTable.NewFromRecordWithoutImplicitThisRecord(record.Type);
+            var s2 = (SymbolTableOverRecordType)symbolTable;
+
+            bool found;
+            found = symbolTable.TryLookupSlot("a", out var slot1);
+            Assert.False(found);
+            Assert.Null(slot1);
+
+            // check ThisRecord
+            found = symbolTable.TryLookupSlot("ThisRecord", out var slotThisRecord);
+
+            Assert.True(found);
+            Assert.Same(symbolTable, slotThisRecord.Owner);
+            Assert.True(s2.IsThisRecord(slotThisRecord));
+
+            var value = s2.GetValue(slotThisRecord, record);
+            Assert.Same(record, value);
+
+            // Can't set ThisRecord, it's readonly
+            var values = new RowScopeSymbolValues(s2, record);
+            Assert.Throws<InterpreterConfigException>(() => values.Set(slotThisRecord, record));
+
+            // check missing 
+            found = symbolTable.TryLookupSlot("missing", out var slot3);
+            Assert.False(found);
+            Assert.Null(slot3);
+        }
+
+        [Fact]
         public void TestRowScopeNoParent()
         {
             var record = FormulaValue.NewRecordFromFields(
@@ -759,6 +794,40 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var run = check.GetEvaluator();
             var result = run.Eval(new RuntimeConfig(values));
             Assert.Equal("78", result.ToObject());
+        }
+
+        [Theory]
+        [InlineData(true, true)]
+        [InlineData(true, false)]
+        [InlineData(false, true)]
+        [InlineData(false, false)]
+        public void MutationTests(bool canMutate, bool canSet)
+        {
+            var recordType = RecordType.Empty().Add("Field1", FormulaType.Number);
+            var tableType = recordType.ToTable();
+
+            var symbols = new SymbolTable();
+            symbols.AddVariable("var", tableType, new SymbolProperties
+            {
+                 CanMutate = canMutate,
+                 CanSet = canSet
+            });
+
+            var config = new PowerFxConfig();
+            config.SymbolTable.EnableMutationFunctions();
+            var engine = new RecalcEngine(config);
+
+            var opts = new ParserOptions 
+            { 
+                AllowsSideEffects = true, 
+                NumberIsFloat = true // Number won't corce to Decimal. 
+            };
+
+            var checkSet = engine.Check("Set(var, Table({ Field1 : 123}))", opts, symbols);
+            var checkMutate = engine.Check("Collect(var, { Field1 : 123})", opts, symbols);
+
+            Assert.Equal(canSet, checkSet.IsSuccess);
+            Assert.Equal(canMutate, checkMutate.IsSuccess);
         }
 
         // Get a convenient string representation of a SymbolValue

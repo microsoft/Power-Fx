@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Доступ к свойству пользовательских данных компонента с параметрами возможен только из компонента или из выходных свойств компонента.</value>
+    <value>Доступ к свойству или параметру функции компонента возможен только из компонента или из выходных свойств компонента.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Свойство или параметр функции компонента может ссылаться только на другие свойства функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Недопустимое число аргументов для функции {0}: получено {1}, ожидалось {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Аргумент {0} не поддерживается для функции {1} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Этот аргумент нельзя передавать в качестве этого типа в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Этот аргумент нельзя передавать в качестве типа {0} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Для этого аргумента поддерживается только литеральное значение.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Операцию {0} невозможно выполнить для этих входных данных без преобразования часового пояса, которое не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Эту операцию невозможно выполнить над значениями, имеющие разные поведения даты и времени.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>В столбцах формул поддерживаются только строки в коротком формате даты и времени.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Аргумент {0} представляет собой недопустимую/неподдерживаемую единицу времени для функции операций с датами {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Зависящие от локали лексемы форматирования, такие как "." и "," не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} не поддерживается в столбцах формул. Используйте {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Эту операцию нельзя выполнять над типом {0} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Тип результата {0} не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Непосредственные ссылки на всю запись не поддерживаются в столбцах формул. Ссылка должна указывать на допустимое поле в записи.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Ожидаемый тип результата для этой формулы — {0}, однако фактический тип результата — {1}. Изменить тип результата столбца формул невозможно.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Столбцы типа "{0}" не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Столбцы типа "{0}" с форматом {1} не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Приведение типов записей или таблиц не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Таблицы из одного столбца не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>В столбцах формул нельзя ссылаться на виртуальную таблицу {0}.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Ожидается операнд. В формуле или выражении ожидается допустимый операнд. Например, вы можете добавить операнд "2" в выражение "1 + _", чтобы получить результат "3", или операнд "день" в выражение «"Добрый "&amp; _ », чтобы получить результат "Добрый день".</value>
     
@@ -4942,24 +4862,24 @@
     <value>Сбой преобразования типа. Заданное значение имеет тип "{0}", тогда как ожидался тип "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Эта операция в таблице "{0}" может не работать, если в ней больше {1} строк.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Этот предикат всегда будет иметь значение true. Вы хотите использовать ThisRecord или [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Невозможно делегировать "{0}": поддерживается только делегирование для поиска в поле первичного ключа "{1}".</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>Невозможно делегировать {0}: выражение ИД ссылается на ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>Невозможно делегировать "{0}": содержит функцию поведения "{1}".</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4981,7 +4901,7 @@
     
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
-    <value>Формат</value>
+    <value>формат</value>
     
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
@@ -5085,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текст, в котором нужно удалить теги HTML и XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функции фильтра не позволяют выполнять функции поведения в виде предикатов.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Используйте оператор "And" для объединения нескольких предикатов во второй аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Не удается скопировать эту таблицу. Вместо этого создайте встроенную таблицу с помощью функции ForAll и нотацию {...} для копирования нужных столбцов.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Эту запись невозможно скопировать. Вместо этого создайте встроенную запись с помощью нотации {...} для копирования нужных полей.</value>
   </data>
 </root>

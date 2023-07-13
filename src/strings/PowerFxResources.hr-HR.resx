@@ -483,7 +483,7 @@
     <value>Tekstna vrijednost koja se pretvara u numeričku vrijednost.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Šifra jezika koja će se koristiti prilikom pretvaranja vrijednosti.</value>
+    <value>Šifra jezika koja će se upotrijebiti prilikom pretvaranja vrijednosti.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Svojstvu prilagođenih podataka komponente s parametrima može se pristupiti samo unutar komponente ili iz svojstva izlaznih podataka komponente.</value>
+    <value>Svojstvu ili parametru funkcije komponente može se pristupiti samo unutar komponente ili iz svojstava izlaznih podataka komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Svojstvo ili parametar funkcije komponente može upućivati samo na druga svojstva funkcije.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -3403,7 +3407,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Primjenjuje ažuriranja na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
+    <value>Primjenjuje ažuriranje na navedeni redak i mijenja redak u navedenom izvoru podataka. Vraća ažurirani redak.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4084,90 +4088,6 @@
   </data>
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
-    
-  </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Nije podržano u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Broj argumenata za funkciju {0} nije valjan: primljeno {1}, očekivano {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argument {0} nije podržan za funkciju {1} u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Ovaj argument nije moguće proslijediti kao ovu vrstu u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Ovaj argument nije moguće proslijediti kao vrstu {0} u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Za ovaj argument podržana je samo doslovna vrijednost.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Funkcija {0} se ne može izvršiti za taj unos bez pretvorbe vremenske zone, jer to nije podržano u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Ovu operaciju nije moguće izvesti na vrijednostima koje su različitih ponašanja datuma i vremena.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>U stupcima formule podržani su samo nizovi koji se odnose na kratki zapis formata datuma i vremena.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} je vremenska jedinica koja nije valjana / nije podržana za aritmetičku funkciju datuma {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Tokeni oblikovanja specifični za regionalnu shemu, kao što su „.” i „,” nisu podržani u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Funkcija {0} nije podržana u stupcima formula, umjesto toga upotrijebite {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Ova se operacija ne može izvršiti na vrsti {0} u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Vrsta rezultata {0} nije podržana u stupcima formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Izravno upućivanje na cijeli zapis nije podržano u stupcima formule. Uputite na valjano polje u zapisu.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Očekuje se da će vrsta rezultata za ovu formulu biti {0}, ali je stvarna vrsta rezultata {1}. Vrsta rezultata stupca formule ne može se promijeniti.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Stupci vrste {0} nisu podržani u stupcima formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Stupci vrste {0} formata {1} nisu podržani u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Prisila zapisa ili tablica nije podržana u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tablice s jednim stupcem nisu podržane u stupcima formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Ne može se izraditi referenca na virtualnu tablicu {0} u stupcima formule.</value>
     
   </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
@@ -4942,24 +4862,24 @@
     <value>Pretvorba vrste nije uspjela zato što je dana vrijednost bila vrste „{0}”, a očekivala se vrsta „{1}”.</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>Ta operacija na tablici „{0}” možda neće raditi ako ima više od ovoliko redaka: {1}.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Ovaj će predikat uvijek biti istinit. Jeste li mislili upotrijebiti ThisRecord ili [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>{0} se ne može delegirati: podržava samo delegiranje za pretraživanje polja primarnog ključa „{1}”.</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} se ne može delegirati: izraz ID-ja se odnosi na ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>{0} se ne može delegirati: sadrži funkciju ponašanja „{1}”.</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5085,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekst iz kojeg treba ukloniti HTML i XML oznake.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcije filtra ne dozvoljavaju funkcije ponašanja kao predikate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Pomoću operatora And kombinirajte više predikata u drugi argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Ta se tablica ne može kopirati. Umjesto toga izradite umetnutu tablicu pomoću funkcije ForAll i oznake {...} da biste kopirali željene pojedinačne stupce.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Taj se zapis ne može kopirati. Umjesto toga izradite umetnuti zapis pomoću oznake {...} da biste kopirali željena pojedinačna polja.</value>
   </data>
 </root>

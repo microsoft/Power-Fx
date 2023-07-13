@@ -81,6 +81,11 @@ namespace Microsoft.PowerFx.Connectors
             {
                 bool hiddenRequired = false;
 
+                if (param == null)
+                {
+                    throw new PowerFxConnectorException("OpenApiParameters cannot be null, this swagger file is probably containing errors");
+                }
+
                 if (param.IsInternal())
                 {
                     if (param.Required && param.Schema.Default != null)
@@ -99,7 +104,7 @@ namespace Microsoft.PowerFx.Connectors
                 ConnectorParameterType cpt = param.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
                 cpt.SetProperties(param.Name, param.Required);
 
-                ConnectorDynamicValue connectorDynamicValue = GetDynamicValue(param);
+                ConnectorDynamicValue connectorDynamicValue = GetDynamicValue(param, numberIsFloat);
                 string summary = GetSummary(param);
                 bool explicitInput = GetExplicitInput(param);
 
@@ -154,7 +159,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (!string.IsNullOrEmpty(contentType) && mediaType != null)
                     {
                         OpenApiSchema schema = mediaType.Schema;
-                        ConnectorDynamicSchema connectorDynamicSchema = GetDynamicSchema(schema);
+                        ConnectorDynamicSchema connectorDynamicSchema = GetDynamicSchema(schema, numberIsFloat);
 
                         ContentType = contentType;
                         ReferenceId = schema?.Reference?.Id;
@@ -227,7 +232,40 @@ namespace Microsoft.PowerFx.Connectors
 
             RequiredParamInfo = requiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(requiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
             HiddenRequiredParamInfo = hiddenRequiredParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(hiddenRequiredBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
-            OptionalParamInfo = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat))).ToArray();
+            IEnumerable<ServiceFunctionParameterTemplate> opis = optionalParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)).Union(optionalBodyParams.ConvertAll(x => Convert(x, numberIsFloat: numberIsFloat)));
+
+            // Validate we have no name conflict between required and optional parameters
+            // In case of conflict, we rename the optional parameter and add _1, _2, etc. until we have no conflict
+            // We could imagine an API with required param Foo, and optional body params Foo and Foo_1 but this is not considered for now
+            // Implemented in PA Client in src\Cloud\DocumentServer.Core\Document\Importers\ServiceConfig\RestFunctionDefinitionBuilder.cs at line 1176 - CreateUniqueImpliedParameterName
+            List<string> requiredParamNames = RequiredParamInfo.Select(rpi => rpi.TypedName.Name.Value).ToList();
+            List<ServiceFunctionParameterTemplate> opis2 = new List<ServiceFunctionParameterTemplate>();
+
+            foreach (ServiceFunctionParameterTemplate opi in opis)
+            {
+                string paramName = opi.TypedName.Name.Value;
+
+                if (requiredParamNames.Contains(paramName))
+                {
+                    int i = 0;                    
+                    string newName;
+
+                    do 
+                    {
+                        newName = $"{paramName}_{++i}";
+                    } 
+                    while (requiredParamNames.Contains(newName));
+    
+                    TypedName newTypeName = new TypedName(opi.TypedName.Type, new DName(newName));
+                    opis2.Add(new ServiceFunctionParameterTemplate(opi.FormulaType, opi.ConnectorType, newTypeName, opi.Description, opi.Summary, opi.DefaultValue, opi.ConnectorDynamicValue, opi.ConnectorDynamicSchema));
+                }
+                else
+                {
+                    opis2.Add(opi);
+                }
+            }
+
+            OptionalParamInfo = opis2.ToArray();
 
             // Required params are first N params in the final list. 
             // Optional params are fields on a single record argument at the end.
@@ -298,7 +336,15 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     foreach (NamedValue field in record.Fields)
                     {
-                        map.Add(field.Name, field.Value);
+                        if (map.ContainsKey(field.Name))
+                        {
+                            // if optional parameters are defined and a default value is already present
+                            map[field.Name] = field.Value;
+                        }
+                        else
+                        {
+                            map.Add(field.Name, field.Value);
+                        }
                     }
                 }
                 else
@@ -374,7 +420,7 @@ namespace Microsoft.PowerFx.Connectors
             return param.Extensions != null && param.Extensions.TryGetValue("x-ms-explicit-input", out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool ? apiBool.Value : false;            
         }
 
-        private static ConnectorDynamicValue GetDynamicValue(IOpenApiExtensible param)
+        private static ConnectorDynamicValue GetDynamicValue(IOpenApiExtensible param, bool numberIsFloat)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
             if (param.Extensions != null && param.Extensions.TryGetValue("x-ms-dynamic-values", out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
@@ -390,39 +436,11 @@ namespace Microsoft.PowerFx.Connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
                     if (apiObj.TryGetValue("parameters", out IOpenApiAny op_prms) && op_prms is OpenApiObject opPrms)
-                    {
-                        Dictionary<string, string> dvParams = new ();
-
-                        foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
-                        {
-                            // dynamic parameter
-                            if (prm.Value is OpenApiObject prmStr)
-                            {
-                                if (prmStr.Count != 1)
-                                {
-                                    throw new NotImplementedException($"Not expecting more than one parameter string per parameter");
-                                }
-
-                                if (prmStr.First().Value is OpenApiString prmStr2)
-                                {
-                                    dvParams.Add(prm.Key, prmStr2.Value);
-                                }
-                                else
-                                {
-                                    throw new NotImplementedException($"Unsupported OpenApi inner type {prmStr.First().Value.GetType().FullName}");
-                                }
-                            }
-                            else
-                            {
-                                // We do not support static parameters for now
-                                throw new NotImplementedException($"Unsupported static param with OpenApi type {prm.Value.GetType().FullName}");
-                            }
-                        }
-
+                    {                        
                         ConnectorDynamicValue cdv = new ()
                         {
                             OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
-                            ParameterMap = dvParams
+                            ParameterMap = GetOpenApiObject(opPrms, numberIsFloat)
                         };
 
                         if (apiObj.TryGetValue("value-title", out IOpenApiAny op_valtitle) && op_valtitle is OpenApiString opValTitle)
@@ -445,6 +463,12 @@ namespace Microsoft.PowerFx.Connectors
                 }
                 else
                 {
+                    if (apiObj.TryGetValue("builtInOperation", out IOpenApiAny _))
+                    {
+                        // We don't support builtInOperation for now
+                        return null;
+                    }
+
                     throw new NotImplementedException("Missing mandatory parameters operationId and parameters in x-ms-dynamic-values extension");
                 }
             }
@@ -452,7 +476,24 @@ namespace Microsoft.PowerFx.Connectors
             return null;
         }
 
-        private static ConnectorDynamicSchema GetDynamicSchema(IOpenApiExtensible param)
+        private static Dictionary<string, string> GetOpenApiObject(OpenApiObject opPrms, bool numberIsFloat)
+        {
+            Dictionary<string, string> dvParams = new ();
+
+            foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
+            {                
+                if (!OpenApiExtensions.TryGetOpenApiValue(prm.Value, out FormulaValue fv, numberIsFloat))
+                {
+                    throw new NotImplementedException($"Unsupported param with OpenApi type {prm.Value.GetType().FullName}, key = {prm.Key}");
+                }
+
+                dvParams.Add(prm.Key, System.Text.Json.JsonSerializer.Serialize(fv.ToObject()));
+            }
+
+            return dvParams;
+        }
+
+        private static ConnectorDynamicSchema GetDynamicSchema(IOpenApiExtensible param, bool numberIsFloat)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values
             if (param.Extensions != null && param.Extensions.TryGetValue("x-ms-dynamic-schema", out IOpenApiExtension ext) && ext is OpenApiObject apiObj)
@@ -461,39 +502,11 @@ namespace Microsoft.PowerFx.Connectors
                 if (apiObj.TryGetValue("operationId", out IOpenApiAny op_id) && op_id is OpenApiString opId)
                 {
                     if (apiObj.TryGetValue("parameters", out IOpenApiAny op_prms) && op_prms is OpenApiObject opPrms)
-                    {
-                        Dictionary<string, string> dvParams = new ();
-
-                        foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
-                        {
-                            // dynamic parameter
-                            if (prm.Value is OpenApiObject prmStr)
-                            {
-                                if (prmStr.Count != 1)
-                                {
-                                    throw new NotImplementedException($"Not expecting more than one parameter string per parameter");
-                                }
-
-                                if (prmStr.First().Value is OpenApiString prmStr2)
-                                {
-                                    dvParams.Add(prm.Key, prmStr2.Value);
-                                }
-                                else
-                                {
-                                    throw new NotImplementedException($"Unsupported OpenApi inner type {prmStr.First().Value.GetType().FullName}");
-                                }
-                            }
-                            else
-                            {
-                                // We do not support static parameters for now
-                                throw new NotImplementedException($"Unsupported static param with OpenApi type {prm.Value.GetType().FullName}");
-                            }
-                        }
-
+                    {                       
                         ConnectorDynamicSchema cds = new ()
                         {
                             OperationId = OpenApiHelperFunctions.NormalizeOperationId(opId.Value),
-                            ParameterMap = dvParams
+                            ParameterMap = GetOpenApiObject(opPrms, numberIsFloat)
                         };
 
                         if (apiObj.TryGetValue("value-path", out IOpenApiAny op_valpath) && op_valpath is OpenApiString opValPath)

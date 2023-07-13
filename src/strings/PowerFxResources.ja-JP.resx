@@ -1421,10 +1421,10 @@
     
   </data>
   <data name="AboutDistinct_source" xml:space="preserve">
-    <value>固有の値を抽出する元となるテーブルです。</value>
+    <value>固有の値を抽出する元となるテーブル。</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>入力テーブルの各行を評価し、DISTINCT 操作の対象となる値を提供する式です。</value>
+    <value>入力テーブルの各行を評価し、DISTINCT 操作の対象となる値を提供する式。</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>指定した X 座標と Y 座標のアークタンジェント (ラジアン単位) を返します。</value>
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>パラメーターを持つコンポーネント カスタム データ プロパティには、コンポーネント内またはコンポーネント出力プロパティからのみアクセスできます。</value>
+    <value>コンポーネントの関数プロパティまたはパラメーターには、コンポーネント内またはコンポーネント出力プロパティからのみアクセスできます。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>コンポーネントの関数プロパティまたはパラメーターは、他の関数プロパティのみを参照できます。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>計算式列では使用できません。</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 関数の引数の数が無効です: 受取済み {1}、必要 {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>計算式列に含まれる関数 {1} で引数 {0} を使用することはできません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>計算式列で、この引数をこの型で渡すことはできません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>数式列では、この引数を {0} 型として渡せません。</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>この引数ではリテラル値のみを使用できます。</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>この入力でタイム ゾーンを変換せずに {0} を実行することは、計算式列でサポートされていないため、可能ではありません。</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>この操作を、日時の動作が同じでない値に対して実行することはできません。</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>計算式列では、短い文字列形式の日時のみを使用できます。</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 引数の時間の単位は、{1} 日付計算関数で無効またはサポートされていません。</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>計算式列はロケール固有の書式トークン ("." や "," など) をサポートしていません。</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>計算式列は {0} をサポートしていません。代わりに {1} を使用します。</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>数式列では、この操作を {0} 型で実行できません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>結果の種類 {0} は、計算式列に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>数式列はレコード全体の直接参照に対応していません。レコードが含む有効なフィールドを参照してください。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>この計算式の結果タイプは {0} であるはずですが、実際の結果タイプは {1} です。計算式列の結果タイプは変更できません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>型が {0} である列は、計算式列に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>型が {0}、形式が {1} である列は、計算式列に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>数式列はレコードやテーブルの強制変換に対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>数式列は単一列テーブルに対応していません。</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>数式列で仮想テーブル {0} を参照できません。</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>オペランドが必要です。数式または式に有効なオペランドが必要です。たとえば、式 '1 + _' にオペランド '2' を追加すると、結果は '3' になります。または、式 '"Hi "&amp; _ ' にオペランド "there" を追加すると、結果は 'Hi there' になります。</value>
     
@@ -4190,7 +4110,7 @@
     
   </data>
   <data name="ErrorResource_ErrBadToken_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_ShortMessage" xml:space="preserve">
@@ -4204,7 +4124,7 @@
     <value>予期しない文字を削除するか、置き換えてください。</value>
   </data>
   <data name="ErrorResource_UnexpectedCharacterToken_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_ShortMessage" xml:space="preserve">
@@ -4219,7 +4139,7 @@
     
   </data>
   <data name="ErrorResource_ErrMissingEndOfBlockComment_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_ShortMessage" xml:space="preserve">
@@ -4234,7 +4154,7 @@
     
   </data>
   <data name="ErrorResource_ErrExpectedFound_Ex_Fnd_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidName_ShortMessage" xml:space="preserve">
@@ -4249,7 +4169,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidName_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_ShortMessage" xml:space="preserve">
@@ -4264,7 +4184,7 @@
     
   </data>
   <data name="ErrorResource_ErrInvalidIdentifier_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrInvalidPropertyReference_ShortMessage" xml:space="preserve">
@@ -4346,7 +4266,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_ShortMessage" xml:space="preserve">
@@ -4361,7 +4281,7 @@
     
   </data>
   <data name="ErrorResource_ErrBooleanExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrColonExpected_ShortMessage" xml:space="preserve">
@@ -4428,7 +4348,7 @@
     
   </data>
   <data name="ErrorResource_ErrStringExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_ShortMessage" xml:space="preserve">
@@ -4443,7 +4363,7 @@
     
   </data>
   <data name="ErrorResource_ErrNumberOrStringExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrClosingBracketExpected_ShortMessage" xml:space="preserve">
@@ -4501,7 +4421,7 @@
     
   </data>
   <data name="ErrorResource_ErrServiceFunctionUnknownOptionalParam_Name_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrColumnTypeMismatch_ColName_ExpectedType_ActualType_ShortMessage" xml:space="preserve">
@@ -4529,7 +4449,7 @@
     
   </data>
   <data name="ErrorResource_ErrColumnMissing_ColName_ExpectedType_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_ErrRecordDoesNotAcceptThisType_ShortMessage" xml:space="preserve">
@@ -4583,7 +4503,7 @@
     
   </data>
   <data name="ErrorResource_ErrDateExpected_Link_1" xml:space="preserve">
-    <value>記事: Power Apps 向けの数式のリファレンス</value>
+    <value>記事: Power Apps の数式のリファレンス</value>
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_ShortMessage" xml:space="preserve">
@@ -4942,24 +4862,24 @@
     <value>必要な種類 '{1}' に対して種類 '{0}' の値を指定したため、種類の変換が失敗しました。</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>テーブル '{0}' の行数が {1} を超える場合、この操作は機能しない可能性があります。</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>この述語は常に true になります。ThisRecord や [@ ] の使用を意図していますか?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>{0} を委任できません: サポートしているのは主キー フィールド '{1}' に対するルックアップの委任のみです。</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>{0} を委任できません: ID 式が ThisRecord を参照しています。</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>{0} を委任できません: 動作機能 '{1}' を含みます。</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5085,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>HTML タグと XML タグを削除するテキストです。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>フィルター関数が予測を行う関数として動作することはできません。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>複数の予測を第 2 引数に結合するには、And 演算子を使用します。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>このレコードはコピーできません。ForAll 関数および {...} の表記を使用してインライン テーブルを作成し、必要な列を個別にコピーしてください。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>このレコードはコピーできません。{...} の表記を使用してインライン レコードを作成し、必要なフィールドを個別にコピーしてください。</value>
   </data>
 </root>

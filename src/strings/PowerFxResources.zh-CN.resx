@@ -1424,7 +1424,7 @@
     <value>将从中提取非重复值的表。</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>对输入表中为 Distinct 运算提供值的每一行计算的表达式。</value>
+    <value>对输入表中的每行进行计算并为 Distinct 运算提供值的表达式。</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>返回指定 x 和 y 坐标的反正切(以弧度为单位)。</value>
@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>只能从组件内或从组件输出属性访问包含参数的组件自定义数据属性。</value>
+    <value>只能从组件内或从组件输出属性访问组件功能属性或参数。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>组件函数属性或参数只能引用其他函数属性。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>在公式列中不受支持。</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 函数的参数数目无效: 收到 {1} 个，应为 {2} 个</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>公式列中的 {1} 函数不支持 {0} 参数。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>此参数不能作为公式列中的此类型进行传递。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>此参数不能作为公式列中的类型 {0} 进行传递。</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>此参数仅支持文字值。</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>如果没有时区转换，则无法对此输入执行 {0}，而公式列不支持时区转换。</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>无法对具有不同日期时间行为的值执行此操作。</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>公式列仅支持短日期和时间格式字符串。</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 参数是 {1} 日期算术函数的无效/不受支持的时间单位。</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>公式列中不支持特定于区域设置的格式标记，例如 "." 和 ","。</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>公式列中不支持 {0}，请改用 {1}。</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>无法对公式列中的类型 {0} 执行此操作。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>公式列中不支持结果类型 {0}。</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>公式列中不支持直接引用整个记录。请引用记录中的有效字段。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>此公式的结果类型预计为 {0}，但实际结果类型为 {1}。无法更改公式列的结果类型。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>公式列不支持类型为 {0} 的列。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>公式列不支持类型为 {0} 且格式为 {1} 的列。</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>公式列中不支持强制记录或表格。</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>公式列中不支持单列表。</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>公式列中无法引用虚拟表 {0}。</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>预期接收一个操作数。公式或表达式预期接收一个有效操作数。例如，可将操作数 "2" 添加到表达式 "1 + _"，得到结果 "3"。或可将操作数“好”添加到表达式“您 _”，得到结果“您好”。</value>
     
@@ -4942,24 +4862,24 @@
     <value>类型转换失败，因为给定的值为 '{0}' 类型，但应为 '{1}' 类型。</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>如果表 '{0}' 超过 {1} 行，则此操作对该表可能不起作用。</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>此谓词将永远为 true。您是要使用 ThisRecord 还是 [@]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>无法委托 {0}: 仅支持委托查找主键字段 '{1}'。</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>无法委托 {0}: ID 表达式引用 ThisRecord。</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>无法委托 {0}: 包含行为函数 '{1}'。</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5085,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>要移除其 HTML 和 XML 标记的文本。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>筛选器函数不允许将行为函数作为谓词。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>使用 And 运算符将多个谓词组合到第二个参数中。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>无法复制此表。请改为使用 ForAll 函数和 {...} 表示法创建内联表来复制所需的各个列。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>无法复制此记录。请改为使用 {...} 表示法创建内联记录来复制所需的各个字段。</value>
   </data>
 </root>

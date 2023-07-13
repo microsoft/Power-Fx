@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Només es pot accedir a la propietat de dades personalitzada del component amb paràmetres des d'un component o des de les propietats de sortida del component.</value>
+    <value>Només es pot accedir a la propietat o al paràmetre de la funció del component des d'un component o des de les propietats de sortida del component.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>La propietat o el paràmetre de la funció del component només poden fer referència a altres propietats de la funció.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4086,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>No s'admet a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Nombre d'arguments no vàlid per a la funció {0}: s'ha rebut {1}; s'esperava {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>L'argument {0} no és admès per a la funció {1} a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Aquest argument no es pot passar com a aquest tipus a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Aquest argument no es pot passar com a tipus {0} a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Només s'admet un valor literal per a aquest argument.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} no es pot realitzar en aquesta entrada sense una conversió de fus horari, que no està admesa a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Aquesta operació no es pot dur a terme en valors de comportaments de data i hora diferents.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Només s'admeten les cadenes de format curt de data i hora a les columnes de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>L'argument {0} és una unitat de temps no vàlida o no admesa per a la funció aritmètica de data {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Els testimonis de format específics de la configuració regional, com ara "." i "," no s'admeten a les columnes de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>La funció {0} no està admesa a les columnes de fórmula, utilitzeu la funció {1} en el seu lloc.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Aquesta operació no es pot dur a terme al tipus {0} de les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>El tipus de resultat {0} no s'admet a les columnes de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>A les columnes de fórmules no s'admet fer referència directament a tot un registre. Feu referència a un camp vàlid del registre.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>S'espera que el tipus de resultat d'aquesta fórmula sigui {0}, però el tipus de resultat real és {1}. El tipus de resultat d'una columna de fórmula no es pot canviar.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Les columnes del tipus {0} no s'admeten a les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Les columnes del tipus {0} amb format {1} no s'admeten a les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Les columnes de fórmules no admeten la coerció de registres o taules.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Les taules d'una sola columna no s'admeten a les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>No es pot fer referència a la taula virtual {0} en les columnes de fórmules.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>S'espera un operand. La fórmula o l'expressió espera un operand vàlid. Per exemple, podeu afegir l'operand "2" a l'expressió "1 + _" per tal que el resultat sigui "3". També podeu afegir l'operand "com esteu?" a l'expressió ""Hola, "&amp; _ " per tal que el resultat sigui "Hola, com esteu?".</value>
     
@@ -4942,24 +4862,24 @@
     <value>S'ha produït un error en convertir el tipus perquè el valor proporcionat era del tipus "{0}" però s'esperava el tipus "{1}".</value>
     
   </data>
-  <data name="WrnDelagationTableNotSupported" xml:space="preserve">
-    <value>És possible que aquesta operació a la taula "{0}" no funcioni si té més de {1} files.</value>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
-  <data name="WrnDelagationPredicate" xml:space="preserve">
-    <value>Aquest predicat sempre serà true. Volíeu utilitzar ThisRecord o [@ ]?</value>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
-  <data name="WrnDelagationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>No es pot delegar {0}: només s'admet la delegació per a la cerca al camp de clau principal "{1}".</value>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
-  <data name="WrnDelagationRefersThisRecord" xml:space="preserve">
-    <value>No es pot delegar {0}: l'expressió de l'ID fa referència a ThisRecord.</value>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
     
   </data>
-  <data name="WrnDelagationBehaviorFunction" xml:space="preserve">
-    <value>No es pot delegar {0}: conté una funció de comportament "{1}".</value>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5085,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Text del qual se suprimiran les etiquetes HTML i XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Les funcions de filtre no permeten funcions de comportament com a predicats.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilitzeu l'operador And per combinar diversos predicats al segon argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Aquesta taula no es pot copiar. Com a alternativa, creeu una taula en línia amb la funció ForAll i la notació {...} per copiar les columnes individuals desitjades.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Aquest registre no es pot copiar. Com a alternativa, creeu un registre en línia amb la notació {...} per copiar els camps individuals desitjades.</value>
   </data>
 </root>

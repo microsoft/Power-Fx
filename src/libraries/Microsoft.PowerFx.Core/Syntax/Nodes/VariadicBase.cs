@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public IReadOnlyList<TexlNode> ChildNodes => Children;
 
-        internal readonly TexlNode[] Children;
+        internal readonly IReadOnlyList<TexlNode> Children;
 
         // Takes ownership of the array.
         private protected VariadicBase(ref int idNext, Token primaryToken, SourceList sourceList, TexlNode[] children)
@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Syntax
 
         internal TexlNode[] CloneChildren(ref int idNext, Span ts)
         {
-            var clones = new TexlNode[Children.Length];
+            var clones = new TexlNode[Children.Count];
             for (var x = 0; x < clones.Length; x++)
             {
                 clones[x] = Children[x].Clone(ref idNext, ts);
@@ -94,7 +94,7 @@ namespace Microsoft.PowerFx.Syntax
             return newToks;
         }
 
-        public int Count => Children.Length;
+        public int Count => Children.Count;
 
         public void AcceptChildren(TexlVisitor visitor)
         {

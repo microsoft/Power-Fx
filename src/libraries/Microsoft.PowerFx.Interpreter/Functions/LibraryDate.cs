@@ -5,12 +5,9 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Interpreter;
-using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using static System.TimeZoneInfo;
 
@@ -537,7 +534,9 @@ namespace Microsoft.PowerFx.Functions
 
             if (DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var result))
             {
-                if (result.Year == 1)
+                // Use epoch only for input that has time only.
+                // If value has time only, result has date of 1/1/0001 and dateTimeNS has current date of this year.
+                if (result.Date == DateTime.MinValue.Date && DateTime.TryParse(str, runner.CultureInfo, DateTimeStyles.None, out var dateTimeNS) && dateTimeNS.Date != DateTime.MinValue.Date)
                 {
                     result = _epoch.Add(result.TimeOfDay);
                 }
@@ -554,28 +553,16 @@ namespace Microsoft.PowerFx.Functions
             }
         }
 
-        private static bool TryGetCulture(string name, out CultureInfo value)
-        {
-            try
-            {
-                value = new CultureInfo(name);
-                return true;
-            }
-            catch (CultureNotFoundException)
-            {
-                value = null;
-                return false;
-            }
-        }
-
         public static bool TryDateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue value, out DateTimeValue result)
         {
             result = null;
 
             if (DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.AdjustToUniversal | DateTimeStyles.NoCurrentDateDefault, out var dateTime))
             {
-                if (dateTime.Year == 1)
-                {
+                // Use epoch only for input that has time only.
+                // If value has time only, dateTime has date of 1/1/0001 and dateTimeNS has current date of this year.
+                if (dateTime.Date == DateTime.MinValue.Date && DateTime.TryParse(value.Value, formatInfo.CultureInfo, DateTimeStyles.None, out var dateTimeNS) && dateTimeNS.Date != DateTime.MinValue.Date) 
+                {                    
                     dateTime = _epoch.Add(dateTime.TimeOfDay);
                 }
 
@@ -599,7 +586,7 @@ namespace Microsoft.PowerFx.Functions
             {
                 var languageCode = args[1].Value;
 
-                if (!TryGetCulture(languageCode, out culture))
+                if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
@@ -631,7 +618,7 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length > 1)
             {
                 var languageCode = args[1].Value;
-                if (!TryGetCulture(languageCode, out culture))
+                if (!TextFormatUtils.TryGetCulture(languageCode, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
