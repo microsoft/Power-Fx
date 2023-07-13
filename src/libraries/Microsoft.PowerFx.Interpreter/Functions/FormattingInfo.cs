@@ -12,13 +12,6 @@ namespace Microsoft.PowerFx.Functions
         public readonly CultureInfo CultureInfo;
         public readonly TimeZoneInfo TimeZoneInfo;
 
-        public FormattingInfo()
-        {
-            // $$$ can't use current culture
-            CultureInfo = CultureInfo.CurrentCulture;
-            TimeZoneInfo = TimeZoneInfo.Local;
-        }
-
         public FormattingInfo(CultureInfo cultureInfo, TimeZoneInfo timeZoneInfo)            
         {
             CultureInfo = cultureInfo;

@@ -575,7 +575,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return DateTimeParse(CreateFormattingInfo(runner), irContext, args);
+            return DateTimeParse(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args);
         }
 
         public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args)

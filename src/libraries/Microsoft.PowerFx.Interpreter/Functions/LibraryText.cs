@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Value(CreateFormattingInfo(runner), irContext, args);
+            return Value(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Float(CreateFormattingInfo(runner), irContext, args);
+            return Float(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Decimal(CreateFormattingInfo(runner), irContext, args);
+            return Decimal(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             runner.CancellationToken.ThrowIfCancellationRequested();
-            return Text(CreateFormattingInfo(runner), irContext, args, runner.CancellationToken);
+            return Text(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args, runner.CancellationToken);
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)

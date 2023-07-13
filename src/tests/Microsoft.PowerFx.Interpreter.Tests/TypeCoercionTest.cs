@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Tests
 
         // From dateTime to other types
         [Theory]
-        [InlineData("2/5/2023", null, "44962", "44962", "2/5/2023 12:00 AM", "2/5/2023 12:00 AM")]
+        [InlineData("2/5/2023", null, "44962", "44962", "2/5/2023 12:00 AM", "02/05/2023 00:00")]
         public void TryCoerceFromDateTimeTest(string value, string exprBool, string exprNumber, string exprDecimal, string exprStr, string exprDateTime)
         {
             TryCoerceToTargetTypes(FormulaValue.New(DateTime.Parse(value)), exprBool, exprNumber, exprDecimal, exprStr, exprDateTime);

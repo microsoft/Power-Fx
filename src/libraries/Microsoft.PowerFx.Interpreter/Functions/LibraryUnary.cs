@@ -643,7 +643,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return DateToDecimal(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateToDecimal(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args[0]);
         }
 
         public static DecimalValue DateToDecimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
@@ -654,7 +654,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static DecimalValue DateTimeToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
         {
-            return DateTimeToDecimal(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateTimeToDecimal(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args[0]);
         }
 
         public static DecimalValue DateTimeToDecimal(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
@@ -764,7 +764,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return DateToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateToNumber(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args[0]);
         }
 
         public static NumberValue DateToNumber(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
@@ -775,7 +775,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static NumberValue DateTimeToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
         {
-            return DateTimeToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateTimeToNumber(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args[0]);
         }
 
         public static NumberValue DateTimeToNumber(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
@@ -800,12 +800,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
-            return NumberToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+            return NumberToDateTime(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args[0]);
         }
 
         public static DateTimeValue DecimalToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
         {
-            return DecimalToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+            return DecimalToDateTime(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args[0]);
         }
 
         public static DateTimeValue DecimalToDateTime(FormattingInfo formatInfo, IRContext irContext, DecimalValue value)
@@ -936,7 +936,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
-            return TimeToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+            return TimeToDateTime(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args[0]);
         }
 
         public static DateTimeValue TimeToDateTime(FormattingInfo formatInfo, IRContext irContext, TimeValue value)
