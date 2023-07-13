@@ -66,7 +66,9 @@ namespace Microsoft.PowerFx.Core.Tests
                 "StringResources.<ShouldThrowIfMissing>k__BackingField",
                 "DelegationCapability.maxSingleCapabilityValue",
                 "BuiltinFunctionsCore.OtherKnownFunctions",
-                "StringResources.ResourceManagers"
+                "StringResources.ResourceManagers",
+                "OfflineValidation._notSupportedOps",
+                "OfflineValidation._notSupportedOps"
             };
 
             AnalyzeThreadSafety.CheckStatics(asm, bugsFieldType, bugNames);
