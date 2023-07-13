@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Свойството на компонент за персонализирани данни с параметри може да бъде използвано само в рамките на компонент или от изходни свойства на компонент.</value>
+    <value>Параметърът или свойството на функция за компонента могат да бъдат използвани само в рамките на компонент или от изходни свойства на компонент.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Параметърът или свойството на функция за компонента могат да препращат само към други свойства на функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Тази операция върху таблица „{0}“ може да не работи, ако таблицата има повече от {1} реда.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Този предикат винаги ще бъде верен. Може би искахте да използвате ThisRecord или [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Не може да се делегира {0}: поддържа се само делегиране за търсене по полето за първичен ключ „{1}“.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Не може да се делегира {0}: съдържа функция за поведение „{1}“.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текстът, от който да се премахнат HTML и XML етикетите.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функциите за филтриране не допускат функции за поведението като предикати.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Използвайте оператора And, за да комбинирате няколко предиката във втория аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Тази таблица не може да бъде копирана. Вместо това създайте вградена таблица чрез функцията ForAll и нотацията {...}, за да копирате желаните отделни колони.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Този запис не може да бъде копиран. Вместо това създайте вграден запис чрез нотацията {...}, за да копирате желаните отделни полета.</value>
   </data>
 </root>

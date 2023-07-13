@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parameetritega komponendi kohandatud andmeatribuudile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    <value>Komponendi funktsiooniatribuudile või -parameetrile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponendi funktsiooniatribuut või -parameeter saab viidata ainult teistele funktsiooniatribuutidele.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>See tegevus tabelis „{0}“ ei pruugi töötada, kui ridu on rohkem kui {1}.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>See predikaat on alati tõene. Kas soovisite kasutada argumenti ThisRecord või [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Üksust {0} ei saa delegeerida: ainult toe delegeerimine primaarvõtme väljal „{1}“.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekst, mille HTML- ja XML-sildid eemaldatakse.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtri funktsioonid ei luba predikaatidena käitumisfunktsioone.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Kasutage mitme predikaadi teiseks argumendiks ühendamiseks tehtemärki And.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Seda tabelit ei saa kopeerida. Selle asemel looge tekstisisene tabel, kasutades soovitud üksikute väljade kopeerimiseks funktsiooni ForAll ja märget {...}.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Seda kirjet ei saa kopeerida. Selle asemel looge tekstisisene kirje, kasutades soovitud üksikute väljade kopeerimiseks märget {...}.</value>
   </data>
 </root>

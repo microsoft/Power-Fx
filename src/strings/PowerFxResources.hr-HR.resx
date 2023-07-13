@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Svojstvu prilagođenih podataka komponente s parametrima može se pristupiti samo unutar komponente ili iz svojstva izlaznih podataka komponente.</value>
+    <value>Svojstvu ili parametru funkcije komponente može se pristupiti samo unutar komponente ili iz svojstava izlaznih podataka komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Svojstvo ili parametar funkcije komponente može upućivati samo na druga svojstva funkcije.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Ta operacija na tablici „{0}” možda neće raditi ako ima više od ovoliko redaka: {1}.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Ovaj će predikat uvijek biti istinit. Jeste li mislili upotrijebiti ThisRecord ili [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>{0} se ne može delegirati: podržava samo delegiranje za pretraživanje polja primarnog ključa „{1}”.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>{0} se ne može delegirati: sadrži funkciju ponašanja „{1}”.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekst iz kojeg treba ukloniti HTML i XML oznake.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcije filtra ne dozvoljavaju funkcije ponašanja kao predikate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Pomoću operatora And kombinirajte više predikata u drugi argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Ta se tablica ne može kopirati. Umjesto toga izradite umetnutu tablicu pomoću funkcije ForAll i oznake {...} da biste kopirali željene pojedinačne stupce.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Taj se zapis ne može kopirati. Umjesto toga izradite umetnuti zapis pomoću oznake {...} da biste kopirali željena pojedinačna polja.</value>
   </data>
 </root>

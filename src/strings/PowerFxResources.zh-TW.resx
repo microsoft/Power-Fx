@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>只能從元件或元件輸出屬性存取包含參數的元件自訂資料屬性。</value>
+    <value>只能從元件或元件輸出屬性存取元件函式屬性或參數。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>元件函式屬性或參數只能參考其他函式屬性。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4085,7 +4089,7 @@
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
     
-  </data> 
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>必須是運算元。公式或運算式必須包含有效的運算元。例如，您可以為運算式 '1 + _' 新增運算元 '2'，以得出結果 '3'。您也可以在運算式 '"Hi "&amp; _ ' 中新增 "there"，以得出結果 'Hi there'。</value>
     
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>資料表 '{0}' 如果超過 {1} 列，則此作業可能無法運作。</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>此述詞將永遠為 true。您要使用 ThisRecord 還是 [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>無法委派 {0}: 僅支援委派對主索引鍵欄位 '{1}' 的查詢。</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>要移除其 HTML 和 XML 標籤的文字。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>篩選函式不允許以行為函式為述詞。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>使用 And 運算子，將多個述詞組合為第二個引數。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>無法複製此資料表。請改用 ForAll 函式和 {...} 標記法來建立內嵌資料表，以複製需要的個別資料行。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>無法複製此記錄。請改用 {...} 標記法來建立內嵌記錄，以複製需要的個別欄位。</value>
   </data>
 </root>
