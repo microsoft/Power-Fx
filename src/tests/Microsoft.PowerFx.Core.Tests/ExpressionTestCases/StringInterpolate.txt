@@ -19,7 +19,7 @@
 "This string {{ has }} curly braces"
 
 >> $""
-""
+Error
 
 >> $"{}"
 Errors: Error 3-4: Empty expressions cannot appear inside an interpolated string.
