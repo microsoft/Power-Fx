@@ -81,7 +81,7 @@ Table({Value:Error({Kind:ErrorKind.Numeric})})
 Blank()
 
 >> Sum(Blank(),1)
-Blank()
+1
 
 >> Sum([4,5],Blank())
 Blank()
@@ -93,7 +93,7 @@ Blank()
 Blank()
 
 >> Average(Blank(),1)
-Blank()
+1
 
 // one argument, single column table functions, will treat Blank() as a scalar
 >> Sin(Blank())
