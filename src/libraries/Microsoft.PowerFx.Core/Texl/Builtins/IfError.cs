@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var ancestor = call;
             while (ancestor.Head.Name == Name)
             {
-                if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
+                if (ancestor.Parent == null && ancestor.Args.Children.Count > 0)
                 {
                     return true;
                 }
@@ -283,7 +283,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
 
                     // Only the last chain segment is consequential.
-                    var numSegments = chainNode.Children.Length;
+                    var numSegments = chainNode.Children.Count;
                     if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
                     {
                         return true;

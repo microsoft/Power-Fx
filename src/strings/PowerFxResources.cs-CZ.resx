@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Vlastnost vlastních dat komponenty s parametry je přístupná pouze z komponenty nebo z výstupních vlastností komponenty.</value>
+    <value>Vlastnost nebo parametr funkce komponenty je přístupná pouze z komponenty nebo z výstupních vlastností komponenty.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Vlastnost nebo parametr funkce komponenty může odkazovat pouze na jiné vlastnosti funkce.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4085,7 +4089,7 @@
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
     
-  </data>  
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Očekával se operand. Vzorec nebo výraz očekává platný operand. Například do výrazu 1 + můžete přidat operand 2, aby výsledkem bylo 3. Nebo do výrazu "Dobrý den "&amp; _ můžete přidat operand "všem", aby výsledkem bylo Dobrý den všem.</value>
     
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Tato operace na tabulce '{0}' nemusí fungovat, pokud má více než {1} řádků.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Tento predikát bude vždy pravdivý. Chtěli jste použít ThisRecord nebo [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Nelze delegovat {0}: podporuje pouze delegování pro vyhledávání v poli primárního klíče '{1}'.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Nelze delegovat {0}: obsahuje funkci chování '{1}'.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -4913,7 +4917,7 @@
     
   </data>
   <data name="AboutMatch_text" xml:space="preserve">
-    <value>Text, který se má prohledat podle regulárního výrazu</value>
+    <value>Text, který se má prohledat podle regulárního výrazu.</value>
     
   </data>
   <data name="AboutMatch_regular_expression" xml:space="preserve">
@@ -4925,7 +4929,7 @@
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
-    <value>Text, který se má prohledat podle regulárního výrazu</value>
+    <value>Text, který se má prohledat podle regulárního výrazu.</value>
     
   </data>
   <data name="AboutMatchAll_regular_expression" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Text, jehož značky HTML a XML mají být odstraněny.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkce filtru nepovolují funkce chování jako predikáty.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Pomocí operátoru And můžete zkombinovat více predikátů do druhého argumentu.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tuto tabulku nelze kopírovat. Místo toho vytvořte vloženou tabulku pomocí funkce ForAll a zápisu {...} pro zkopírování jednotlivých požadovaných sloupců.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Tento záznam nelze kopírovat. Místo toho vytvořte vložený záznam pomocí zápisu {...} a zkopírujte jednotlivá požadovaná pole.</value>
   </data>
 </root>

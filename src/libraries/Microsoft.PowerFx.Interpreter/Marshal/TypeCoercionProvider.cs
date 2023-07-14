@@ -375,25 +375,25 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            if (source == FormulaType.Boolean)
+            if (target == FormulaType.Boolean)
             {
-                return BooleanValue.AllowedListConvertToBoolean.Contains(target);
+                return BooleanValue.AllowedListConvertToBoolean.Contains(source);
             }
-            else if (source == FormulaType.String)
+            else if (target == FormulaType.String)
             {
-                return StringValue.AllowedListConvertToString.Contains(target);
+                return StringValue.AllowedListConvertToString.Contains(source);
             }
-            else if (source == FormulaType.Number)
+            else if (target == FormulaType.Number)
             {
-                return NumberValue.AllowedListConvertToNumber.Contains(target);
+                return NumberValue.AllowedListConvertToNumber.Contains(source);
             }
-            else if (source == FormulaType.Decimal)
+            else if (target == FormulaType.Decimal)
             {
-                return DecimalValue.AllowedListConvertToDecimal.Contains(target);
+                return DecimalValue.AllowedListConvertToDecimal.Contains(source);
             }
-            else if (source == FormulaType.DateTime)
+            else if (target == FormulaType.DateTime)
             {
-                return DateTimeValue.AllowedListConvertToDateTime.Contains(target);
+                return DateTimeValue.AllowedListConvertToDateTime.Contains(source);
             }
 
             return false;

@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Egenskapen for komponenttilpassede data med parametere kan bare nås fra en komponent eller fra egenskaper for komponentutdata.</value>
+    <value>Egenskapen eller parameteren for komponentfunksjon kan bare nås fra en komponent eller fra egenskaper for komponentutdata.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Egenskapen eller parameteren for komponentfunksjon kan bare referere andre funksjonsegenskaper.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Denne operasjonen på tabellen {0} fungerer kanskje ikke hvis den har mer enn {1} rader.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Dette predikatet vil alltid være sant. Mente du å bruke ThisRecord eller [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Kan ikke delegere {0}: støtter bare delegering for oppslag i primærnøkkelfelt {1}.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Kan ikke delegere {0}: inneholder en virkemåtefunksjon {1}.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teksten som HTML- og XML-merker skal fjernes for.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunksjoner tillater ikke virkemåtefunksjoner som predikater.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Bruk And-operatoren til å slå sammen flere predikater til det andre argumentet.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Denne tabellen kan ikke kopieres. Opprett i stedet en innebygd tabell ved hjelp av ForAll-funksjonen og {...}-notasjonen for å kopiere de ønskede enkeltkolonnene.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Denne oppføringen kan ikke kopieres. Opprett i stedet en innebygd oppføring med {...}-notasjon for å kopiere de ønskede enkeltfeltene.</value>
   </data>
 </root>
