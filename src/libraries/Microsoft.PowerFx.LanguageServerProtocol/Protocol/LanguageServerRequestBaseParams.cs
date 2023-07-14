@@ -6,7 +6,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// <summary>
     /// Base class to represent the request params.
     /// </summary>
-    public class BaseParams
+    public class LanguageServerRequestBaseParams
     {
         /// <summary>
         /// The text document.

@@ -6,7 +6,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// <summary>
     /// Code action request parameters.
     /// </summary>
-    public class CodeActionParams : BaseParams
+    public class CodeActionParams : LanguageServerRequestBaseParams
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeActionParams"/> class.

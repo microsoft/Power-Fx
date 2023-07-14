@@ -689,7 +689,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// <param name="requestParams">Request params.</param>
         /// <param name="queryParams">Query Params.</param>
         /// <returns>Expression.</returns>
-        private static string GetExpression(BaseParams requestParams, NameValueCollection queryParams)
+        private static string GetExpression(LanguageServerRequestBaseParams requestParams, NameValueCollection queryParams)
         {
             return requestParams?.TextDocument?.Text ?? queryParams.Get("expression");
         }

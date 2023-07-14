@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    public class TextDocumentPositionParams : BaseParams
+    public class TextDocumentPositionParams : LanguageServerRequestBaseParams
     {
         public TextDocumentPositionParams()
         {

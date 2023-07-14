@@ -3,7 +3,7 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    internal class SemanticTokensParams : BaseParams
+    internal class SemanticTokensParams : LanguageServerRequestBaseParams
     {
     }
 }
