@@ -59,6 +59,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.DidChangeTextDocumentParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.DidOpenTextDocumentParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.InitialFixupParams",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.LanguageServerRequestBaseParams",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.ParameterInformation",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.Position",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.PublishDiagnosticsParams",
@@ -78,7 +79,6 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextEdit",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.VersionedTextDocumentIdentifier",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit",
-                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.BaseParams",
             };
 
             var sb = new StringBuilder();
