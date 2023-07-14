@@ -1260,10 +1260,11 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        [Fact]
-        public void OnFaultyAdaptiveCard_ThrowsAggregateException()
+        [Theory]
+        [InlineData(TestAdaptiveCards.FailingOne)]
+        [InlineData(TestAdaptiveCards.FailingTwo)]
+        public void OnSomeAdaptiveCards_ThrowsAggregateException(string expressionText)
         {
-            var expressionText = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  actions: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
             var engine = new RecalcEngine(new PowerFxConfig());
             var checkResult = engine.Check(expressionText, new ParserOptions() { Culture = CultureInfo.InvariantCulture });
             var evaluator = checkResult.GetEvaluator();
@@ -1275,6 +1276,25 @@ namespace Microsoft.PowerFx.Tests
 
             var visitor = new MinimalVisitor();
             Assert.Throws<AggregateException>(() => formula.Visit(visitor));
+        }
+
+        [Theory]
+        [InlineData(TestAdaptiveCards.PassingOne)]
+        [InlineData(TestAdaptiveCards.PassingTwo)]
+        public void OnSomeAdaptiveCards_Succeeds(string expressionText)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var checkResult = engine.Check(expressionText, new ParserOptions() { Culture = CultureInfo.InvariantCulture });
+            var evaluator = checkResult.GetEvaluator();
+            FormulaValue formula = null;
+            using (var cts = new CancellationTokenSource(100000))
+            {
+                formula = evaluator.EvalAsync(cts.Token).Result;
+            }
+
+            var visitor = new MinimalVisitor();
+            formula.Visit(visitor);
+            Assert.False(string.IsNullOrEmpty(visitor.LastResult));
         }
 
         private class TestRandService : IRandomService
@@ -1305,7 +1325,16 @@ namespace Microsoft.PowerFx.Tests
             _updates.Append($"{name}-->{str};");
         }
 
-        #endregion Test
+        private static class TestAdaptiveCards
+        {
+            // These two have only a slight difference and they should both pass
+            public const string FailingOne = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  actions: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+            public const string PassingOne = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+
+            // Same here, they should both pass
+            public const string FailingTwo = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.ToggleVisibility\",\r\n                      id: \"refsShowHide\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                    {\r\n                      type: \"Column\",\r\n                      width: \"1\",\r\n                      verticalContentAlignment: \"Center\"\r\n                    }\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\",\r\n                      title: \"Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+            public const string PassingTwo = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.ToggleVisibility\",\r\n                      id: \"refsShowHide\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                    {\r\n                      type: \"Column\",\r\n                      width: \"1\",\r\n                      verticalContentAlignment: \"Center\"\r\n                    }\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\",\r\n                      title: \"Submit\",\r\n                      id: \"test\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+        }
 
         private class MinimalVisitor : IValueVisitor
         {
@@ -1405,5 +1434,7 @@ namespace Microsoft.PowerFx.Tests
                 throw new NotImplementedException();
             }
         }
+
+        #endregion Test
     }
 }
