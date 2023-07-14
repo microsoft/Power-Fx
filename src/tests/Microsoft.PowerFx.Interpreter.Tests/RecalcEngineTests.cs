@@ -1294,6 +1294,8 @@ namespace Microsoft.PowerFx.Tests
 
             var visitor = new MinimalVisitor();
             formula.Visit(visitor);
+
+            // Implies that the visitor was successful
             Assert.False(string.IsNullOrEmpty(visitor.LastResult));
         }
 
