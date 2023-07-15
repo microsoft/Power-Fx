@@ -4288,7 +4288,21 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Check for matching arities.
                 var carg = node.Args.Count;
-                if (carg < maybeFunc.MinArity || carg > maybeFunc.MaxArity)
+                var isFirstArgumentBlankOnStatisticalFunctionFavorScalar =
+                    _txb.Features.PowerFxV1CompatibilityRules &&
+                    carg == 2 &&
+                    node.Args.Children[0] is CallNode callNode &&
+                    callNode.Head.Name.Value == "Blank" &&
+                    callNode.Head.Namespace == DPath.Root &&
+                    numOverloads == 2 &&
+                    (
+                        maybeFunc == BuiltinFunctionsCore.MaxT ||
+                        maybeFunc == BuiltinFunctionsCore.MinT ||
+                        maybeFunc == BuiltinFunctionsCore.AverageT ||
+                        maybeFunc == BuiltinFunctionsCore.SumT ||
+                        maybeFunc == BuiltinFunctionsCore.VarPT ||
+                        maybeFunc == BuiltinFunctionsCore.StdevPT);
+                if (isFirstArgumentBlankOnStatisticalFunctionFavorScalar || carg < maybeFunc.MinArity || carg > maybeFunc.MaxArity)
                 {
                     var argCountVisited = 0;
                     if (numOverloads == 1)

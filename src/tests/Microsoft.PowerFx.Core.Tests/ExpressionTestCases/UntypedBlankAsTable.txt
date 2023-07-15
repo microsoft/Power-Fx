@@ -80,8 +80,9 @@ Table({Value:Error({Kind:ErrorKind.Numeric})})
 >> Log(If(1<0,[1]),3)
 Blank()
 
+// Favor scalar over table
 >> Sum(Blank(),1)
-Blank()
+1
 
 >> Sum([4,5],Blank())
 Blank()
@@ -92,8 +93,9 @@ Blank()
 >> Sum(If(1<0,[1,2,3]),Blank())
 Blank()
 
+// Favor scalar over table
 >> Average(Blank(),1)
-Blank()
+1
 
 // one argument, single column table functions, will treat Blank() as a scalar
 >> Sin(Blank())
