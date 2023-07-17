@@ -110,6 +110,7 @@ namespace Microsoft.PowerFx.Core.Functions
             {
                 if (features.PowerFxV1CompatibilityRules)
                 {
+                    // Untyped blank values should not be used to define the scope
                     if (!typeScope.IsTableNonObjNull)
                     {
                         errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
