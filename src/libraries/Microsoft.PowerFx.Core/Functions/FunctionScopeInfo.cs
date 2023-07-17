@@ -108,10 +108,21 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else if (_function.ParamTypes[0].IsTable)
             {
-                if (!typeScope.IsTable)
+                if (features.PowerFxV1CompatibilityRules)
                 {
-                    errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
-                    fArgsValid = false;
+                    if (!typeScope.IsTableNonObjNull)
+                    {
+                        errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
+                        fArgsValid = false;
+                    }
+                }
+                else
+                {
+                    if (!typeScope.IsTable)
+                    {
+                        errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
+                        fArgsValid = false;
+                    }
                 }
 
                 // This assumes that the lambdas operate on the individual records

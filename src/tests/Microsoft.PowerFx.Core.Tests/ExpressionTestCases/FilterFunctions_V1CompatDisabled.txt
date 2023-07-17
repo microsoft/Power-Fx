@@ -1,0 +1,5 @@
+#SETUP: TableSyntaxDoesntWrapRecords,disable:PowerFxV1CompatibilityRules
+
+// Legacy behavior: untyped blanks are allowed in the argument that defines the row scope
+>> Filter(Blank(), Blank())
+Blank()
