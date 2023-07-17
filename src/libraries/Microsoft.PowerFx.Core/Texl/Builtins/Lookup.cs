@@ -103,13 +103,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            if (args.Length > 2 && binding.IsDelegatable(args[2]))
+            if (args.Count > 2 && binding.IsDelegatable(args[2]))
             {
                 SuggestDelegationHint(args[2], binding);
                 return false;
             }
 
-            if (args.Length < 2)
+            if (args.Count < 2)
             {
                 return false;
             }

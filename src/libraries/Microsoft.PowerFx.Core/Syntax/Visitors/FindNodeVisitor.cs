@@ -38,11 +38,11 @@ namespace Microsoft.PowerFx.Syntax
         public override bool PreVisit(VariadicOpNode node)
         {
             Contracts.AssertValue(node);
-            Contracts.Assert(node.Children.Length > 0);
+            Contracts.Assert(node.Children.Count > 0);
 
             var numTokens = CollectionUtils.Size(node.OpTokens);
 
-            Contracts.Assert(node.Children.Length == numTokens + 1 || node.Children.Length == numTokens);
+            Contracts.Assert(node.Children.Count == numTokens + 1 || node.Children.Count == numTokens);
 
             for (var i = 0; i < numTokens; i++)
             {
@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // If we got here the cursor should be in the last child.
-            node.Children[node.Children.Length - 1].Accept(this);
+            node.Children[node.Children.Count - 1].Accept(this);
 
             return false;
         }
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
 
-            for (var i = 0; i < node.Children.Length; i++)
+            for (var i = 0; i < node.Children.Count; i++)
             {
                 var child = node.Children[i];
 
@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Syntax
             // If we got here we could be inside an empty island
             // i.e. $"Hello {|}"
             // Just visit the last child
-            node.Children[node.Children.Length - 1].Accept(this);
+            node.Children[node.Children.Count - 1].Accept(this);
 
             return false;
         }
@@ -176,8 +176,8 @@ namespace Microsoft.PowerFx.Syntax
         public override bool PreVisit(ListNode node)
         {
             Contracts.AssertValue(node);
-            Contracts.Assert(node.Children.Length > 0);
-            Contracts.Assert(node.Children.Length == CollectionUtils.Size(node.Delimiters) + 1);
+            Contracts.Assert(node.Children.Count > 0);
+            Contracts.Assert(node.Children.Count == CollectionUtils.Size(node.Delimiters) + 1);
 
             for (var i = 0; i < CollectionUtils.Size(node.Delimiters); i++)
             {
@@ -192,7 +192,7 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // If we got here the cursor should be in the last child.
-            node.Children[node.Children.Length - 1].Accept(this);
+            node.Children[node.Children.Count - 1].Accept(this);
             return false;
         }
 
@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx.Syntax
             if (node.CurlyClose == null || _cursorPosition <= node.CurlyClose.Span.Min)
             {
                 // Cursor is within the last child.
-                node.Children[node.Children.Length - 1].Accept(this);
+                node.Children[node.Children.Count - 1].Accept(this);
                 return false;
             }
 
@@ -278,7 +278,7 @@ namespace Microsoft.PowerFx.Syntax
             }
 
             // If we got here the cursor should be in the last child.
-            node.Children[node.Children.Length - 1].Accept(this);
+            node.Children[node.Children.Count - 1].Accept(this);
             return false;
         }
 

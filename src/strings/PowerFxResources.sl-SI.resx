@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Do lastnosti podatkov po meri komponente s parametri je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    <value>Do lastnosti funkcije komponente ali parametra je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Lastnost funkcije komponente ali parameter lahko vsebuje samo sklice na druge lastnosti funkcije.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Ta postopek morda ne bo deloval v tabeli »{0}«, če ima več kot {1} vrstic.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Ta predikat bo vedno imel vrednost »true«. Ali ste želeli uporabiti ta zapis ali [@]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Dodelitev za {0} ni mogoča: dodelitev je podprta le za iskanje v polju primarnega ključa »{1}«.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Dodelitev za {0} ni mogoča: vsebuje funkcijo vedenja »{1}«.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Besedilo, iz katerega bodo odstranjene oznake HTML in XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcije za filtriranje ne omogočajo funkcij delovanja, kot so predikati.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Uporabite operator »And« in združite več predikatov v drugi argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>This table cannot be copied. Instead, create an inline table using the ForAll function and {...} notation to copy the individual columns desired.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Zapisa ni mogoče kopirati. Ustvarite zapis v vrstici z oznako {...}, če želite kopirati želena posamezna polja.</value>
   </data>
 </root>

@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Syntax
         {
             var children = CloneChildren(ref idNext, ts);
             var newNodes = new Dictionary<TexlNode, TexlNode>();
-            for (var i = 0; i < Children.Length; ++i)
+            for (var i = 0; i < Children.Count; ++i)
             {
                 newNodes.Add(Children[i], children[i]);
             }
