@@ -8,9 +8,20 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// </summary>
     public class LanguageServerRequestBaseParams
     {
+        public LanguageServerRequestBaseParams()
+        {
+            TextDocument = new TextDocumentIdentifier();
+            Text = null;
+        }
+
         /// <summary>
         /// The text document.
         /// </summary>
-        public TextDocumentItem TextDocument { get; set; }
+        public TextDocumentIdentifier TextDocument { get; set; }
+
+        /// <summary>
+        /// Text.expression in the document.
+        /// </summary>
+        public string Text { get; set; }
     }
 }

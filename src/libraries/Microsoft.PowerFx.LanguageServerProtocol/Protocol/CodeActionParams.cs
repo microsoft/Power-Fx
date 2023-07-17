@@ -13,6 +13,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// ctor.
         /// </summary>
         public CodeActionParams()
+            : base()
         {
             Context = new CodeActionContext();
         }

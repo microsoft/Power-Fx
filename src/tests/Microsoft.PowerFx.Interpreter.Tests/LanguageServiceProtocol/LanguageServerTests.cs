@@ -457,7 +457,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 var params1 = new CompletionParams()
                 {
-                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text)) : GetTextDocument(expression: text),
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text)) : GetTextDocument(),
+                    Text = addExprToUri ? null : text,
                     Position = GetPosition(offset),
                     Context = GetCompletionContext()
                 };
@@ -465,13 +466,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 {
                     TextDocument = addExprToUri ? 
                                    GetTextDocument(GetUri("expression=Color.&context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}")) : 
-                                   GetTextDocument(GetUri("context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}"), expression: "Color."),
+                                   GetTextDocument(GetUri("context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}")),
+                    Text = addExprToUri ? null : "Color.",
                     Position = GetPosition(7),
                     Context = GetCompletionContext()
                 };
                 var params3 = new CompletionParams()
                 {
-                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression={a:{},b:{},c:{}}.")) : GetTextDocument(expression: "{a:{},b:{},c:{}}."),
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression={a:{},b:{},c:{}}.")) : GetTextDocument(),
+                    Text = addExprToUri ? null : "{a:{},b:{},c:{}}.",
                     Position = GetPosition(17),
                     Context = GetCompletionContext()
                 };
@@ -489,19 +492,22 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var params1 = new CompletionParams()
             {
-                TextDocument = GetTextDocument(GetUri("expression=" + uriText), text),
+                TextDocument = GetTextDocument(GetUri("expression=" + uriText)),
+                Text = text,
                 Position = GetPosition(offset),
                 Context = GetCompletionContext()
             };
             var params2 = new CompletionParams()
             {
-                TextDocument = GetTextDocument(GetUri("context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}&expression=1+1"), "Color."),
+                TextDocument = GetTextDocument(GetUri("context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}&expression=1+1")),
+                Text = "Color.",
                 Position = GetPosition(7),
                 Context = GetCompletionContext()
             };
             var params3 = new CompletionParams()
             {
-                TextDocument = GetTextDocument(GetUri("expression=Color."), "{a:{},b:{},c:{}}."),
+                TextDocument = GetTextDocument(GetUri("expression=Color.")),
+                Text = "{a:{},b:{},c:{}}.",
                 Position = GetPosition(17),
                 Context = GetCompletionContext()
             };
@@ -681,7 +687,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 {
                     TextDocument = addExprToUri ?
                                    GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}&expression=" + original)) :
-                                   GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}"), original),
+                                   GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}")),
+                    Text = addExprToUri ? null : original,
                     Range = SemanticTokensRelatedTestsHelper.CreateRange(0, 0, 0, 10),
                     Context = GetDefaultCodeActionContext()
                 };
@@ -691,7 +698,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             TestCodeActionWithHandlerCore(
                 new CodeActionParams
             {
-                TextDocument = GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}&expression=Max(1,2"), original),
+                TextDocument = GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}&expression=Max(1,2")),
+                Text = original,
                 Range = SemanticTokensRelatedTestsHelper.CreateRange(0, 0, 0, 10),
                 Context = GetDefaultCodeActionContext()
             }, updated);
@@ -928,13 +936,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             {
                 var signatureHelpParams1 = new SignatureHelpParams
                 {
-                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text)) : GetTextDocument(expression: text),
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text)) : GetTextDocument(),
+                    Text = addExprToUri ? null : text,
                     Position = GetPosition(offset),
                     Context = GetSignatureHelpContext("(")
                 };
                 var signatureHelpParams2 = new SignatureHelpParams
                 {
-                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text2)) : GetTextDocument(expression: text2),
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text2)) : GetTextDocument(),
+                    Text = addExprToUri ? null : text2,
                     Position = GetPosition(offset2),
                     Context = GetSignatureHelpContext(",")
                 };
@@ -947,13 +957,15 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             var signatureHelpParams1 = new SignatureHelpParams
             {
-                TextDocument = GetTextDocument(GetUri("expression=Max("), expression: "Power("),
+                TextDocument = GetTextDocument(GetUri("expression=Max(")),
+                Text = "Power(",
                 Position = GetPosition(6),
                 Context = GetSignatureHelpContext("(")
             };
             var signatureHelpParams2 = new SignatureHelpParams
             {
-                TextDocument = GetTextDocument(GetUri("expression=Max("), expression: "Behavior(); Power(2,"),
+                TextDocument = GetTextDocument(GetUri("expression=Max(")),
+                Text = "Behavior(); Power(2,",
                 Position = GetPosition(20),
                 Context = GetSignatureHelpContext(",")
             };
@@ -1463,7 +1475,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         {
             TestCorrectFullSemanticTokensAreReturned(new SemanticTokensParams
             {
-                TextDocument = GetTextDocument(expression: "Max(1, 2, 3)")
+                TextDocument = GetTextDocument(),
+                Text = "Max(1, 2, 3)"
             });
         }
 
@@ -1473,7 +1486,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var expression = "Max(1, 2, 3)";
             var semanticTokenParams = new SemanticTokensParams
             {
-                TextDocument = GetTextDocument(GetUri("expression=Color.White"), expression)
+                TextDocument = GetTextDocument(GetUri("expression=Color.White")),
+                Text = expression
             };
             TestCorrectFullSemanticTokensAreReturned(semanticTokenParams);
         }
@@ -1527,7 +1541,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var semanticTokenParams = new SemanticTokensParams
             {
-                TextDocument = GetTextDocument(GetUri(tokenTypesToSkipParam == "NotPresent" ? string.Empty : "tokenTypesToSkip=" + tokenTypesToSkipParam), expression)
+                TextDocument = GetTextDocument(GetUri(tokenTypesToSkipParam == "NotPresent" ? string.Empty : "tokenTypesToSkip=" + tokenTypesToSkipParam)),
+                Text = expression
             };
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
@@ -1574,7 +1589,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             var semanticTokenParams = new SemanticTokensRangeParams
             {
-                TextDocument = GetTextDocument(GetUri(tokenTypesToSkipParam == "NotPresent" ? string.Empty : "tokenTypesToSkip=" + tokenTypesToSkipParam), expression),
+                TextDocument = GetTextDocument(GetUri(tokenTypesToSkipParam == "NotPresent" ? string.Empty : "tokenTypesToSkip=" + tokenTypesToSkipParam)),
+                Text = expression,
                 Range = range
             };
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
@@ -1596,7 +1612,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Arrange
             var semanticTokenParams = new SemanticTokensParams
             {
-                TextDocument = new TextDocumentItem() { Uri = null }
+                TextDocument = new TextDocumentIdentifier() { Uri = null }
             };
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
@@ -1616,7 +1632,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             string expression = string.Empty;
             var semanticTokenParams = new SemanticTokensParams
             {
-                TextDocument = GetTextDocument(expression: isNotNull ? expression : null)
+                TextDocument = GetTextDocument(),
+                Text = isNotNull ? expression : null
             };
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
@@ -1635,7 +1652,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             string expression = "Sum(\n1,1\n)";
             var semanticTokenParams = new SemanticTokensParams
             {
-                TextDocument = GetTextDocument(expression: expression) 
+                TextDocument = GetTextDocument(),
+                Text = expression 
             };
             var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
 
@@ -1666,7 +1684,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var eol = "\n";
             var semanticTokenParams = new SemanticTokensRangeParams
             {
-                TextDocument = GetTextDocument(expression: expression),
+                TextDocument = GetTextDocument(),
+                Text = expression,
                 Range = SemanticTokensRelatedTestsHelper.CreateRange(startLine, endLine, startLineCol, endLineCol)
             };
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
@@ -1711,7 +1730,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             string expression = string.Empty;
             var semanticTokenParams = new SemanticTokensRangeParams
             {
-                TextDocument = GetTextDocument(expression: isNotNull ? expression : null),
+                TextDocument = GetTextDocument(),
+                Text = isNotNull ? expression : null,
                 Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
             };
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
@@ -1730,7 +1750,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Arrange
             var semanticTokenParams = new SemanticTokensRangeParams
             {
-                TextDocument = new TextDocumentItem() { Uri = null },
+                TextDocument = new TextDocumentIdentifier() { Uri = null },
                 Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
             };
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
@@ -1751,7 +1771,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var expression = "If(Len(Phone_Number) < 10,\nNotify(\"Invalid Phone\nNumber\"),Notify(\"Valid Phone No\"))";
             var semanticTokenParams = new SemanticTokensRangeParams
             {
-                TextDocument = GetTextDocument(expression: expression),
+                TextDocument = GetTextDocument(),
+                Text = expression,
                 Range = isNull ? null : SemanticTokensRelatedTestsHelper.CreateRange(expression.Length + 2, 2, 1, 2)
             };
             var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
@@ -1809,9 +1830,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         private static string GetExpression(LanguageServerRequestBaseParams requestParams)
         {
-            if (requestParams.TextDocument?.Text != null)
+            if (requestParams?.Text != null)
             {
-                return requestParams.TextDocument.Text;
+                return requestParams.Text;
             }
 
             var uri = new Uri(requestParams.TextDocument.Uri);
@@ -1841,9 +1862,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             return (payload, id);
         }
 
-        private static TextDocumentItem GetTextDocument(string uri = null, string expression = null)
+        private static TextDocumentIdentifier GetTextDocument(string uri = null)
         {
-            return new TextDocumentItem() { Uri = uri ?? GetUri(), Text = expression };
+            return new TextDocumentIdentifier() { Uri = uri ?? GetUri() };
         }
 
         [Fact]
