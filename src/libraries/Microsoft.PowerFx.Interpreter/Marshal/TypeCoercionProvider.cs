@@ -131,7 +131,7 @@ namespace Microsoft.PowerFx
         public static bool TryCoerceTo(this FormulaValue value, RuntimeConfig runtimeConfig, CancellationToken cancellationToken, out StringValue result)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return TryCoerceTo(value, FormattingInfoHelper.FromServiceProvider(runtimeConfig.ServiceProvider), out result, cancellationToken);
+            return TryCoerceTo(value, runtimeConfig.ServiceProvider.GetFormattingInfo(), out result, cancellationToken);
         }
 
         /// <summary>

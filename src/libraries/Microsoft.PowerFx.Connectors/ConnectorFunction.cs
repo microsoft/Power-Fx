@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx.Connectors
         public Task<FormulaValue> InvokeAync(IRuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return InvokeAync(FormattingInfoHelper.FromServiceProvider(config.ServiceProvider), httpClient, values, cancellationToken);
+            return InvokeAync(config.ServiceProvider.GetFormattingInfo(), httpClient, values, cancellationToken);
         }
 
         public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)

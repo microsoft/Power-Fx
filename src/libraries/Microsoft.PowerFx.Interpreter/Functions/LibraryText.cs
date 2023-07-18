@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Value(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args);
+            return Value(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Float(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args);
+            return Float(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            bool isValue = TryFloat(new FormattingInfo(culture, formatInfo.TimeZoneInfo), irContext, args[0], out NumberValue result);
+            bool isValue = TryFloat(formatInfo.With(culture), irContext, args[0], out NumberValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -226,7 +226,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Decimal(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args);
+            return Decimal(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -251,7 +251,7 @@ namespace Microsoft.PowerFx.Functions
                 }
             }
 
-            bool isValue = TryDecimal(new FormattingInfo(culture, formatInfo.TimeZoneInfo), irContext, args[0], out DecimalValue result);
+            bool isValue = TryDecimal(formatInfo.With(culture), irContext, args[0], out DecimalValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -318,7 +318,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             runner.CancellationToken.ThrowIfCancellationRequested();
-            return Text(FormattingInfoHelper.FromEvalVisitor(runner), irContext, args, runner.CancellationToken);
+            return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -368,7 +368,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(new FormattingInfo(culture, formatInfo.TimeZoneInfo), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
+            var isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
