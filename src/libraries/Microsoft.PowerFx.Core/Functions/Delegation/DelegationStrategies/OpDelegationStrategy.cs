@@ -310,6 +310,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
+            if (binding.DelegationHintProvider?.TryGetWarning(binaryOpNode, out var warning) ?? false)
+            {
+                SuggestDelegationHint(node, binding, warning, new object[] { binaryOpNode.Op.ToString() });
+            }
+
             var leftType = binding.GetType(binaryOpNode.Left);
             var rightType = binding.GetType(binaryOpNode.Right);
             if ((leftType.IsPolymorphic && rightType.IsRecord) || (leftType.IsRecord && rightType.IsPolymorphic))
