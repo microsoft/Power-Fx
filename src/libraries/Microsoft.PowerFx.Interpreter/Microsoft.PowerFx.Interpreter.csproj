@@ -13,6 +13,8 @@
     <PackageId>Microsoft.PowerFx.Interpreter</PackageId>
     <Title>Microsoft Power Fx Compiler - Interpreter Target</Title>
     <Description>The Interpreter the Power Fx compiler</Description>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
 
   <ItemGroup>

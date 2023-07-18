@@ -14,6 +14,8 @@
     <Title>Microsoft Power Fx Connector Support</Title>
     <Description>Connectors</Description>
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateNeutralResourcesLanguageAttribute>false</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
 
   <ItemGroup>
