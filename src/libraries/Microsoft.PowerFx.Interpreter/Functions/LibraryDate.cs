@@ -575,7 +575,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateTimeParse(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, StringValue[] args)
         {
-            return DateTimeParse(CreateFormattingInfo(runner), irContext, args);
+            return DateTimeParse(runner.GetFormattingInfo(), irContext, args);
         }
 
         public static FormulaValue DateTimeParse(FormattingInfo formatInfo, IRContext irContext, StringValue[] args)
@@ -590,8 +590,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
             if (args[0].Value == string.Empty)
@@ -599,7 +597,7 @@ namespace Microsoft.PowerFx.Functions
                 return new BlankValue(irContext);
             }
 
-            if (TryDateTimeParse(formatInfo, irContext, args[0], out var result))
+            if (TryDateTimeParse(formatInfo.With(culture), irContext, args[0], out var result))
             {
                 return result;
             }
