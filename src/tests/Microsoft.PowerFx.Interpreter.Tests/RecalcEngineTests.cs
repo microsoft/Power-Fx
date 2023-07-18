@@ -1272,6 +1272,166 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+        [InlineData(TestAdaptiveCards.FailingOne)]
+        [InlineData(TestAdaptiveCards.FailingTwo)]
+        public void OnSomeAdaptiveCards_ThrowsAggregateException(string expressionText)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var checkResult = engine.Check(expressionText, new ParserOptions() { Culture = CultureInfo.InvariantCulture });
+            var evaluator = checkResult.GetEvaluator();
+            FormulaValue formula = null;
+            using (var cts = new CancellationTokenSource(100000))
+            {
+                formula = evaluator.EvalAsync(cts.Token).Result;
+            }
+
+            var visitor = new MinimalVisitor();
+            formula.Visit(visitor);
+
+            // Implies that the visitor was successful
+            Assert.False(string.IsNullOrEmpty(visitor.LastResult));
+
+            // Assert.Throws<AggregateException>(() => formula.Visit(visitor));
+        }
+
+        [Theory]
+        [InlineData(TestAdaptiveCards.PassingOne)]
+        [InlineData(TestAdaptiveCards.PassingTwo)]
+        public void OnSomeAdaptiveCards_Succeeds(string expressionText)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var checkResult = engine.Check(expressionText, new ParserOptions() { Culture = CultureInfo.InvariantCulture });
+            var evaluator = checkResult.GetEvaluator();
+            FormulaValue formula = null;
+            using (var cts = new CancellationTokenSource(100000))
+            {
+                formula = evaluator.EvalAsync(cts.Token).Result;
+            }
+
+            var visitor = new MinimalVisitor();
+            formula.Visit(visitor);
+
+            // Implies that the visitor was successful
+            Assert.False(string.IsNullOrEmpty(visitor.LastResult));
+        }
+
+        private static class TestAdaptiveCards
+        {
+            // These two have only a slight difference and they should both pass
+            public const string FailingOne = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+
+            // public const string FailingOne = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  actions: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+
+            public const string PassingOne = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+
+            // Same here, they should both pass
+            public const string FailingTwo = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.ToggleVisibility\",\r\n                      id: \"refsShowHide\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                    {\r\n                      type: \"Column\",\r\n                      width: \"1\",\r\n                      verticalContentAlignment: \"Center\"\r\n                    }\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\",\r\n                      title: \"Submit\",\r\n                      id: \"test\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+            
+            // public const string FailingTwo = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.ToggleVisibility\",\r\n                      id: \"refsShowHide\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                    {\r\n                      type: \"Column\",\r\n                      width: \"1\",\r\n                      verticalContentAlignment: \"Center\"\r\n                    }\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\",\r\n                      title: \"Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+            
+            public const string PassingTwo = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.ToggleVisibility\",\r\n                      id: \"refsShowHide\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                    {\r\n                      type: \"Column\",\r\n                      width: \"1\",\r\n                      verticalContentAlignment: \"Center\"\r\n                    }\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\",\r\n                      title: \"Submit\",\r\n                      id: \"test\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+        }
+
+        private class MinimalVisitor : IValueVisitor
+        {
+            internal MinimalVisitor()
+            {
+                LastResult = string.Empty;
+            }
+
+            public string LastResult { get; private set; }
+
+            public void Visit(BlankValue value)
+            {
+                LastResult = "()";
+            }
+
+            public void Visit(StringValue value)
+            {
+                LastResult = value.Value;
+            }
+
+            public void Visit(RecordValue value)
+            {
+                var sb = new StringBuilder();
+                foreach (var item in value.Fields)
+                {
+                    item.Value.Visit(this);
+                    sb.Append($"{item.Name}, {LastResult!}");
+                }
+
+                LastResult = sb.ToString();
+            }
+
+            public void Visit(TableValue value)
+            {
+                var sb = new StringBuilder();
+                foreach (var row in value.Rows)
+                {
+                    row.ToFormulaValue().Visit(this);
+                    sb.Append($"{row.Value}, {LastResult!}");
+                }
+
+                LastResult = sb.ToString();
+            }
+
+            void IValueVisitor.Visit(NumberValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(DecimalValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(BooleanValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(ErrorValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(TimeValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(DateValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(DateTimeValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(UntypedObjectValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(OptionSetValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(ColorValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(GuidValue value)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
