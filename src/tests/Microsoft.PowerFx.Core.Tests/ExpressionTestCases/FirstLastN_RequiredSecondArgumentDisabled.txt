@@ -1,0 +1,17 @@
+#SETUP: disable:FirstLastNRequiresSecondArguments
+
+// ######### FirstN ##########
+
+>> FirstN([1, 2, 3, 4, 5])
+Table({Value:1})
+
+>> FirstN(Blank())
+Blank()
+
+// ######### LastN ##########
+
+>> LastN([1, 2, 3, 4, 5])
+Table({Value:5})
+
+>> LastN(Blank())
+Blank()
