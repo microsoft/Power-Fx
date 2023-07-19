@@ -1,0 +1,9 @@
+﻿#SETUP: DisableMemChecks,TableSyntaxDoesntWrapRecords,disable:PowerFxV1CompatibilityRules
+
+// Legacy behavior: untyped blanks are allowed in the argument that defines the row scope
+>> LookUp(Blank(), Blank())
+Blank()
+
+// Legacy behavior: untyped blanks are allowed in the argument that defines the row scope
+>> LookUp(Blank(), Blank(), "constant")
+Blank()
