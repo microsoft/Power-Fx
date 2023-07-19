@@ -340,7 +340,7 @@ namespace Microsoft.PowerFx.Tests
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
             rtConfig.SetTimeZone(TimeZoneInfo.Local);
-            string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new FormattingInfo());
+            string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, FormattingInfoHelper.CreateFormattingInfo());
 
             DateTimeType obj = JsonSerializer.Deserialize<DateTimeType>(str);
             Assert.Equal(date, obj.A);

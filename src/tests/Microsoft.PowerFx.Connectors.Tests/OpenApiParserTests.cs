@@ -288,7 +288,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             // We can call the function with a RuntimeConfig parameters (unused here) that can contain TimeZoneInformation or other runtime settings
-            FormulaValue httpResult = await function.InvokeAync(new FormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);

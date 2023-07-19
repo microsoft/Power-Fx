@@ -3,18 +3,13 @@
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    public class TextDocumentPositionParams
+    public class TextDocumentPositionParams : LanguageServerRequestBaseParams
     {
         public TextDocumentPositionParams()
+            : base()
         {
-            TextDocument = new TextDocumentIdentifier();
             Position = new Position();
         }
-
-        /// <summary>
-        /// The text document.
-        /// </summary>
-        public TextDocumentIdentifier TextDocument { get; set; }
 
         /// <summary>
         /// The position inside the text document.
