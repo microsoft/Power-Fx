@@ -108,22 +108,13 @@ namespace Microsoft.PowerFx.Core.Functions
             }
             else if (_function.ParamTypes[0].IsTable)
             {
-                if (features.PowerFxV1CompatibilityRules)
+                var isBadArgumentType = features.PowerFxV1CompatibilityRules ?
+                    !typeScope.IsTableNonObjNull : // Untyped blank values should not be used to define the scope
+                    !typeScope.IsTable;
+                if (isBadArgumentType)
                 {
-                    // Untyped blank values should not be used to define the scope
-                    if (!typeScope.IsTableNonObjNull)
-                    {
-                        errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
-                        fArgsValid = false;
-                    }
-                }
-                else
-                {
-                    if (!typeScope.IsTable)
-                    {
-                        errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
-                        fArgsValid = false;
-                    }
+                    errors.Error(callNode, TexlStrings.ErrNeedTable_Func, _function.Name);
+                    fArgsValid = false;
                 }
 
                 // This assumes that the lambdas operate on the individual records
