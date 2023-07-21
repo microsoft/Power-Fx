@@ -62,6 +62,9 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool FirstLastNRequiresSecondArguments { get; set; }
 
+        /// <summary>
+        /// Allow delegation for Min and Max tabular functions with Date and DateTime fields
+        /// </summary>
         internal bool AllowDateTimeMinMaxDelegation { get; set; }
 
         internal bool PowerFxV1CompatibilityRules { get; set; }
