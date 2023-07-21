@@ -1,0 +1,11 @@
+﻿#SETUP: disable:PowerFxV1CompatibilityRules
+
+// "In" operator for Tables
+
+// Blank() on LHS is still false and treated liked record. 
+>> Blank() in [1, Blank(), 2]
+false
+
+// Blank() on LHS is still false and treated liked record.
+>> Blank() in Table({Value:1},Blank(),{Value:2})
+true

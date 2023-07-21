@@ -1,0 +1,13 @@
+﻿#OVERRIDE: inScalar_V1CompatDisabled.txt
+
+// Bug in pre-V1, fixed in V1
+>> "a" in Blank()
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> "" in Blank()
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> Blank() in Blank()
+#skip
