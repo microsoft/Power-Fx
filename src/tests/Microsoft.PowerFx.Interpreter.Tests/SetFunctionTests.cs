@@ -36,8 +36,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(15m, r1.ToObject());          
         }
 
-        [Fact]
-        public void SetVarNumber()
+        [Theory]
+        [InlineData("Set(x, Float(15))")]
+        [InlineData("Set(x, 15)")]
+        public void SetVarNumber(string expression)
         {
             var config = new PowerFxConfig();
             config.EnableSetFunction();
@@ -48,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r1 = engine.Eval("x", null, _opts); // 12.0
             Assert.Equal(12.0, r1.ToObject());
 
-            var r2 = engine.Eval("Set(x, Float(15))", null, _opts);
+            var r2 = engine.Eval(expression, null, _opts);
 
             // Set() returns constant 'true;
             Assert.Equal(true, r2.ToObject());

@@ -816,6 +816,9 @@ namespace Microsoft.PowerFx.Tests
             engine.Eval("SetProperty(x.NumProp, Float(123))", options: _opts);
             Assert.Equal(123.0, obj.NumProp);
 
+            engine.Eval("SetProperty(x.NumProp, 123)", options: _opts);
+            Assert.Equal(123.0, obj.NumProp);
+
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
             Assert.True(obj.BoolProp);
             
