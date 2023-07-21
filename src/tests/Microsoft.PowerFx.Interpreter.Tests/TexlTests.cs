@@ -150,7 +150,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig(features);
             symbolTableActions?.Invoke(config.SymbolTable);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+#pragma warning restore CS0618 // Type or member is obsolete
 
             if (optionSets != null)
             {
@@ -174,7 +176,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var config = new PowerFxConfig(features);
             symbolTableActions?.Invoke(config.SymbolTable);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+#pragma warning restore CS0618 // Type or member is obsolete
 
             var engine = new Engine(config);
             var opts = new ParserOptions() { NumberIsFloat = numberIsFloat };
