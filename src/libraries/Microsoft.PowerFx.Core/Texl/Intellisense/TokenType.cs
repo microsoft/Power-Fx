@@ -80,6 +80,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         IslandStart,
         IslandEnd,
 
+        Type, 
+
         Lim
     }
 }
