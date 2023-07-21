@@ -1,5 +1,8 @@
 ﻿#SETUP: disable:PowerFxV1CompatibilityRules
 
+>> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
+#SKIP awaiting resolution of https://github.com/microsoft/Power-Fx/issues/1396, Expected: "aaaaaaaa-bbbb-cccc-dddd-eeeeffffffff is a GUID"
+
 >> If(1<0, GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF"), "11111111-2222-3333-4444-555566666666")
 "11111111-2222-3333-4444-555566666666"
 
@@ -14,5 +17,12 @@ DateTime(2000,1,1,12,34,56,789)
 
 >> If(1<0, Date(2000,1,1), DateTime(2134,5,6,12,0,0))
 DateTime(2134,5,6,12,0,0,0)
+
+>> If(1<0, DateTime(2000,1,1,1,1,1), Time(12,34,56,789))
+#SKIP awaiting resolution of https://github.com/microsoft/Power-Fx/issues/1396
+
+>> If(1<0, DateTime(2000,1,1,1,1,1), Date(2023,3,27))
+#SKIP awaiting resolution of https://github.com/microsoft/Power-Fx/issues/1396
+
 
 

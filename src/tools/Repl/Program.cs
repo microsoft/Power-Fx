@@ -118,6 +118,9 @@ namespace Microsoft.PowerFx
         {
             var enabled = new StringBuilder();
 
+            Console.InputEncoding = System.Text.Encoding.Unicode;
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+
             ResetEngine();
 
             var version = typeof(RecalcEngine).Assembly.GetName().Version.ToString();
@@ -777,12 +780,12 @@ namespace Microsoft.PowerFx
                 var fileName = fileNameSV.Value;
                 if (File.Exists(fileName))
                 {
-                    TextReader fileReader = new StreamReader(fileName);
+                    TextReader fileReader = new StreamReader(fileName, true);
                     TextWriter outputWriter = null;
 
                     if (outputSV != null)
                     {
-                        outputWriter = new StreamWriter(outputSV.Value);
+                        outputWriter = new StreamWriter(outputSV.Value, false, System.Text.Encoding.UTF8);
                     }
 
                     ConsoleRepl.REPL(fileReader, true, outputWriter);

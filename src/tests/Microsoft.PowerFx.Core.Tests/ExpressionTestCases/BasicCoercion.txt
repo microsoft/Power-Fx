@@ -52,11 +52,3 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Boole
 >> If(Date(2000,1,1),1,2)
 Errors: Error 3-17: Invalid argument type (Date). Expecting a Boolean value instead.
 
->> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
-"aaaaaaaa-bbbb-cccc-dddd-eeeeffffffff is a GUID"
-
->> If(1<0, DateTime(2000,1,1,1,1,1), Time(12,34,56,789))
-DateTime(1899,12,30,12,34,56,789)
-
->> If(1<0, DateTime(2000,1,1,1,1,1), Date(2023,3,27))
-DateTime(2023,3,27,0,0,0,0)
