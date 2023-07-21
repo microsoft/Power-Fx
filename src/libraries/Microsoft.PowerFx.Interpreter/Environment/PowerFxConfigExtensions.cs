@@ -44,6 +44,7 @@ namespace Microsoft.PowerFx
             symbolTable.AddFunction(new ClearCollectFunction());
         }
 
+        [Obsolete("RegEx is still in preview. Grammar may change.")]
         public static void EnableRegExFunctions(this PowerFxConfig config, TimeSpan regExTimeout = default, int regexCacheSize = -1)
         {
             RegexTypeCache regexTypeCache = new (regexCacheSize);

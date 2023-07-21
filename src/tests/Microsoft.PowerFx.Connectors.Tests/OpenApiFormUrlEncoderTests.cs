@@ -336,7 +336,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
             rtConfig.SetTimeZone(TimeZoneInfo.Local);            
-            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new FormattingInfo());
+            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, FormattingInfoHelper.CreateFormattingInfo());
             
             string dateStr = str.Substring(2);
             Assert.Equal(date, DateTime.Parse(HttpUtility.UrlDecode(dateStr)));            

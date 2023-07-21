@@ -1,0 +1,34 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+// Consider an untyped blank, such as the return type from Blank(), as an argument to a single column table enabled function.
+//
+// We favor treating these as a scalar blank, rather than a table blank.  Scalar is the simpler form and more likely
+// what the maker wanted.  This treatment is also consistent with Canvas.
+//
+// A typed Blank, such as returned from a database or If(1<0,"foo") is fine, it specifically an untyped Blank that is odd.
+//
+// In general, a function that takes a blank table argument will return a blank table.
+
+// Legacy behavior: untyped blank treated as a table
+>> Sum(Blank(),1)
+Blank()
+
+// Legacy behavior: untyped blank treated as a table
+>> Average(Blank(),1)
+Blank()
+
+// Legacy behavior: untyped blank treated as a table
+>> Min(Blank(),1)
+Blank()
+
+// Legacy behavior: untyped blank treated as a table
+>> Max(Blank(),1)
+Blank()
+
+// Legacy behavior: untyped blank treated as a table
+>> StdevP(Blank(),1)
+Blank()
+
+// Legacy behavior: untyped blank treated as a table
+>> VarP(Blank(),1)
+Blank()

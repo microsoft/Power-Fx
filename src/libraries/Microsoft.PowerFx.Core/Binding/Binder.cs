@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
@@ -266,7 +267,8 @@ namespace Microsoft.PowerFx.Core.Binding
             bool updateDisplayNames = false,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = null)
+            Features features = null,
+            DelegationHintProvider delegationHintProvider = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(bindingConfig);
@@ -327,6 +329,7 @@ namespace Microsoft.PowerFx.Core.Binding
             HasLocalScopeReferences = false;
             TransitionsFromAsyncToSync = false;
             Rule = rule;
+            DelegationHintProvider = delegationHintProvider;
             if (resolver != null)
             {
                 EntityPath = resolver.CurrentEntityPath;
@@ -347,8 +350,62 @@ namespace Microsoft.PowerFx.Core.Binding
                 numberIsFloat: bindingConfig.NumberIsFloat);
         }
 
+        /// <summary>
+        /// May be invoked during delegation visitation to provide a way to report warnings.
+        /// </summary>
+        internal readonly DelegationHintProvider DelegationHintProvider;
+
         // Binds a Texl parse tree.
         // * resolver provides the name context used to bind names to globals, resources, etc. This may be null.
+        
+        /// <summary>
+        /// Binds a Power Fx parse true.
+        /// </summary>
+        /// <param name="glue">
+        /// Encapsulated dependencies from Power Apps Client project code.  This may be null.
+        /// </param>
+        /// <param name="scopeResolver">
+        /// A special name resolver that provides scoped names to the binder.
+        /// <see cref="ScopedNameLookupInfo"/> for more information.  This may be null.
+        /// </param>
+        /// <param name="queryOptionsMap">
+        /// A means of collecting usage data from the binder.  This may be null.
+        /// </param>
+        /// <param name="node">
+        /// Node representing the root of the parse tree to be bound. This may not be null.
+        /// </param>
+        /// <param name="resolver">
+        /// Name resolver used to bind names to globals, resources, etc. This may be null.
+        /// </param>
+        /// <param name="bindingConfig">
+        /// Augments behavior in a similar way to the features argument, but for features
+        /// particular to Power Apps Client.  When possible, use Features instead. 
+        /// </param>
+        /// <param name="updateDisplayNames">
+        /// If true, the binder will update the display names of the nodes in the parse tree.
+        /// </param>
+        /// <param name="ruleScope">
+        /// The type defining a list of valid names for the rule.  This may be null.
+        /// </param>
+        /// <param name="forceUpdateDisplayNames">
+        /// If true, the binder will update the display names of the nodes in the parse tree
+        /// even if the display names are already set.
+        /// </param>
+        /// <param name="rule">
+        /// The rule that is being bound.  This may be null.  As long as a parse tree is provided,
+        /// it will be bound.
+        /// </param>
+        /// <param name="features">
+        /// A set of features that augment the behavior of the binder.
+        /// </param>
+        /// <param name="delegationHintProvider">
+        /// A pseudo visitor that will be called when delegation warning visitation occurs.
+        /// Provides a way to annotate nodes with additional errors and warnings.
+        /// See <see cref="DelegationValidationStrategy"/> for more information.
+        /// </param>
+        /// <returns>
+        /// A means of reading the data that was bound to the provided parse tree for the run.
+        /// </returns>
         public static TexlBinding Run(
             IBinderGlue glue,
             IExternalRuleScopeResolver scopeResolver,
@@ -360,14 +417,15 @@ namespace Microsoft.PowerFx.Core.Binding
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = null)
+            Features features = null,
+            DelegationHintProvider delegationHintProvider = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
 
             features ??= Features.None;
 
-            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule, features: features);
+            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule, features: features, delegationHintProvider: delegationHintProvider);
             var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features);
             vis.Run();
 

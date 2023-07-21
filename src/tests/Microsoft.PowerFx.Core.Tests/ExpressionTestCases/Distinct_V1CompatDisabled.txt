@@ -1,0 +1,9 @@
+﻿#SETUP: disable:PowerFxV1CompatibilityRules
+
+// Legacy behavior: untyped blanks are allowed in the argument that defines the row scope
+>> Distinct(Blank(), true)
+Blank()
+
+// Legacy behavior: untyped blanks are allowed in the argument that defines the row scope
+>> Distinct(Error("error"), true)
+Error({Kind:ErrorKind.Custom})

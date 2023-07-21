@@ -1,0 +1,9 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+// Untyped blanks are not allowed in the argument that defines the row scope
+>> Distinct(Blank(), true)
+Errors: Error 9-16: Invalid argument type.|Error 0-23: The function 'Distinct' has some invalid arguments.
+
+// Untyped blanks are not allowed in the argument that defines the row scope
+>> Distinct(Error("error"), true)
+Errors: Error 9-23: Invalid argument type.|Error 0-30: The function 'Distinct' has some invalid arguments.
