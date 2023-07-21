@@ -62,6 +62,8 @@ namespace Microsoft.PowerFx
         /// </summary>
         internal bool FirstLastNRequiresSecondArguments { get; set; }
 
+        internal bool AllowDateTimeMinMaxDelegation { get; set; }
+
         internal bool PowerFxV1CompatibilityRules { get; set; }
 
         internal static Features None => new Features();

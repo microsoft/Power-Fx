@@ -51,5 +51,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public const string Top = "top";
         public const string AsType = "astype";
         public const string ArrayLookup = "arraylookup";
+        public const string MinDate = "mindate";
+        public const string MaxDate = "maxdate";
     }
 }
