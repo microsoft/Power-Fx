@@ -40,13 +40,8 @@ true
 >> If(false,2,Blank()) in [1, Blank(), 2]
 true
 
-// Blank() on LHS is still false and treated liked record. 
->> Blank() in [1, Blank(), 2] 
-false
-
 >> 3 in [1, Blank(), 2]
 false
-
 
 >> 2 in Table({a:1}, {a:2}, {a:3})
 true

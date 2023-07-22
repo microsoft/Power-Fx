@@ -1,0 +1,14 @@
+﻿#SETUP: disable:PowerFxV1CompatibilityRules
+
+// In (Case insensitive), ExactIn (case sensitive)
+// Scalar, Table forms. 
+// https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/operators#in-and-exactin-operators
+
+>> "a" in Blank()
+false
+
+>> "" in Blank()
+true
+
+>> Blank() in Blank()
+true
