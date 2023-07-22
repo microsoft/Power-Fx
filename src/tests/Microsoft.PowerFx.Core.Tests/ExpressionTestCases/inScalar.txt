@@ -1,8 +1,6 @@
-﻿
-// In (Case insensitive), ExactIn (case sensitive)
+﻿// In (Case insensitive), ExactIn (case sensitive)
 // Scalar, Table forms. 
 // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/operators#in-and-exactin-operators
-
 
 >> ("a" & 1/0) in "abc"
 Error({Kind:ErrorKind.Div0}) 
