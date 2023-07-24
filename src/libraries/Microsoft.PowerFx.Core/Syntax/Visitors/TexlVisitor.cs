@@ -9,6 +9,14 @@ namespace Microsoft.PowerFx.Syntax
     public abstract class TexlVisitor
     {
         /// <summary>
+        /// Visit <see cref="TypeLiteralNode"/> leaf node.
+        /// </summary>
+        /// <param name="node">The visited node.</param>
+        public virtual void Visit(TypeLiteralNode node)
+        {
+        }
+
+        /// <summary>
         /// Visit <see cref="ErrorNode" /> leaf node.
         /// </summary>
         /// <param name="node">The visited node.</param>
