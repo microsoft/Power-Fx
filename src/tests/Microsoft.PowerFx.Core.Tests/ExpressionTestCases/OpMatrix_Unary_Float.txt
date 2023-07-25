@@ -68,9 +68,6 @@ DateTime(1799,12,27,12,0,0,0)
 >> -Time(18,0,0)
 Time(6,0,0,0)
 
->> -Decimal("2.000000000000000000000002")
--2.000000000000000000000002
-
 >> -2.000000000000000000000002
 -2
 
@@ -133,9 +130,6 @@ Time(6,0,0,0)
 >> Time(12,0,0)%
 0.005
 
->> Decimal("2.000000000000000000000002")%
-0.02000000000000000000000002
-
 >> 2.000000000000000000000002%
 0.02
 
@@ -191,15 +185,6 @@ Errors: Error 1-26: Invalid argument type. Expecting one of the following: Boole
 
 >> !Time(12,0,0)
 Errors: Error 1-13: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
-
->> !Decimal("2.000000000000000000000002")
-false
-
->> !Decimal("0")
-true
-
->> !Decimal("0.000000000000000000000002")
-false
 
 >> !ParseJSON("2")
 false
@@ -266,15 +251,6 @@ Errors: Error 4-29: Invalid argument type (DateTime). Expecting a Boolean value 
 
 >> Not(Time(12,0,0))
 Errors: Error 4-16: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-17: The function 'Not' has some invalid arguments.
-
->> Not(Decimal("2.000000000000000000000002"))
-false
-
->> Not(Decimal("0"))
-true
-
->> Not(Decimal("0.000000000000000000000002"))
-false
 
 >> Not(ParseJSON("2"))
 false

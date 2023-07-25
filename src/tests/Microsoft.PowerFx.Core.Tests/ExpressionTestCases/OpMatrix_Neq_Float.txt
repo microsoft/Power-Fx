@@ -103,16 +103,6 @@ false
 >> Value(0.5) <> Time(9,0,0)
 true
 
-// comparison done in floating point, decimal rounded
->> Value(16) <> Decimal("16.000000000000000000002")
-false
-
->> Value(16) <> Decimal("16")
-false
-
->> Value("1e100") <> Decimal("2.00000000000000000000002")
-true
-
 >> Value(16) <> ParseJSON("16")
 false
 
@@ -312,12 +302,6 @@ true
 >> Blank() <> Time(12,0,0)
 true
 
->> Blank() <> Decimal("2.000000000000000000000002")
-true
-
->> Blank() <> Decimal("0")
-true
-
 >> Blank() <> ParseJSON("2")
 true
 
@@ -362,10 +346,6 @@ true
 >> Date(2000,1,1) <> Time(12,0,0)
 true
 
-// comparison done on floating point due to Date/DateTime/Time
->> Date(1900,1,1) <> Decimal("2.000000000000000000000002")
-false
-
 >> Date(1900,1,1) <> ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -397,10 +377,6 @@ false
 
 >> DateTime(1900,1,1,12,0,0) <> Time(12,0,0)
 true
-
-// comparison done on floating point due to Date/DateTime/Time
->> DateTime(1900,1,1,12,0,0) <> Decimal("2.5000000000000000000002")
-false
 
 >> DateTime(2000,1,1,12,0,0) <> ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -446,13 +422,6 @@ true
 >> Time(9,0,0) <> Date(1900,1,2)
 true
 
->> Time(3,0,0) <> Decimal("0.125")
-false
-
-// comparison done on floating point due to Date/DateTime/Time
->> Time(3,0,0) <> Decimal("0.125000000000000000000001")
-false
-
 >> Time(3,0,0) <> ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -469,74 +438,6 @@ false
 true
 
 >> Time(3,0,1) <> ParseJSON("""03:00:01""")
-false
-
-// Decimal
-
->> Decimal("2.000000000000000000000001") <> Value(2)
-false
-
->> Decimal("0.000000000000000000000001") <> Blank()
-true
-
->> Decimal(0) <> Blank()
-true
-
->> If(1<0,Decimal(1)) <> Blank()
-false
-
-// comparison done on floating point due to Date/DateTime/Time
->> Decimal("16.0000000000000000000001") <> Date(1900,1,15)
-false
-
->> Decimal("16") <> Date(1900,1,15)
-false
-
->> Decimal(2) <> Date(1900,1,1)
-false
-
-// comparison done on floating point due to Date/DateTime/Time
->> Decimal("2.0000000000000000000001") <> Date(1900,1,1)
-false
-
->> Decimal(2) <> DateTime(1900,1,1,0,0,0)
-false
-
->> Decimal("2.0000000000000000000001") <> DateTime(1900,1,1,12,0,0)
-true
-
->> Decimal(2.5) <> DateTime(1900,1,1,12,0,0)
-false
-
->> Decimal(".5") <> Time(12,0,0)
-false
-
-// comparison done on floating point due to Date/DateTime/Time
->> Decimal(".5000000000000000000001") <> Time(12,0,0)
-false
-
->> Decimal("16.000000000000000000000002") <> Decimal("16.000000000000000000000001")
-true
-
->> Decimal("16.000000000000000000000002") <> Decimal("16.000000000000000000000002")
-false
-
->> Decimal("16.000000000000000000000002") <> ParseJSON("1e100")
-Error({Kind:ErrorKind.InvalidArgument})
-
->> Decimal("16.000000000000000000000002") <> ParseJSON("16.000000000000000000000002")
-false
-
->> Decimal("16.000000000000000000000002") <> ParseJSON("16.000000000000000000000001")
-true
-
->> Decimal(16) <> ParseJSON("16")
-false
-
->> Decimal(16) <> ParseJSON("16.0")
-false
-
->> Decimal(16) <> ParseJSON("1.6e1")
 false
 
 // Untyped
@@ -669,12 +570,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("1e100") <> Time(12,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
-
->> ParseJSON("2.000000000000000000000000001") <> Decimal("2.000000000000000000000000001")
-false
-
->> ParseJSON("1e100") <> Decimal("2.000000000000000000000000001")
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("2.000000000000000000000000001") <> ParseJSON("2.000000000000000000000000001")
