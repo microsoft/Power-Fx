@@ -243,6 +243,7 @@ namespace Microsoft.PowerFx.Connectors
             opExtensions.Remove("x-ms-dynamic-schema");
             opExtensions.Remove("x-ms-require-user-confirmation");
             opExtensions.Remove("x-ms-api-annotation");
+            opExtensions.Remove("x-ms-no-generic-test");
 
             // Not supported x-ms-pageable - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
             // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
