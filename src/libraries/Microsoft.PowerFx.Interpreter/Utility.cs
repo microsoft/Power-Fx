@@ -33,19 +33,5 @@ namespace Microsoft.PowerFx
         {
             return (T)serviceProvider.GetService(typeof(T));
         }
-
-        public static bool AggregateHasExpandedType(this DType self)
-        {
-            var ret = false;
-
-            if (self.IsAggregate)
-            {
-                var record = self.ToRecord();
-
-                ret = record.GetAllNames(DPath.Root).Any(name => name.Type.IsExpandEntity);
-            }
-
-            return ret;
-        }
     }
 }

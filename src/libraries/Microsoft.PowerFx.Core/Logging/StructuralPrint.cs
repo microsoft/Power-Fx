@@ -89,6 +89,13 @@ namespace Microsoft.PowerFx.Core.Logging
 
             if (node.Ident.AtToken == null)
             {
+                var type = _binding?.GetType(node);
+
+                if (type != null && type.AggregateHasExpandedType())
+                {
+                    return LazyList<string>.Of($"#$firstnameexp$#");
+                }
+
                 return LazyList<string>.Of("#$firstname$#");
             }
             else
