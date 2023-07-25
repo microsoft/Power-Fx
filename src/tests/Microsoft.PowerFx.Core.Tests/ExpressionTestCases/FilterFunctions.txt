@@ -49,7 +49,7 @@ Table()
 Table()
 
 // Filter blank table
->> Filter(Blank(), Blank())
+>> Filter(If(1<0,[1,2,3]), Blank())
 Blank()
 
 >> Filter(Sort([-2, -1, 0, 1, 2], 1 / Value), 1/ThisRecord.Value >= 0)
