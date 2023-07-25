@@ -57,10 +57,10 @@
 1E+100
 
 >> Float(16)^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Float("1e100")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Float(16)^Date(2000,1,1)
 Errors: Error 10-24: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -137,10 +137,10 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> "16"^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> "1e100"^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> "32"^Date(2000,1,1)
 Errors: Error 5-19: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -235,7 +235,7 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> true^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> true^Date(1927,5,18)
 Errors: Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -258,31 +258,31 @@ Errors: Error 5-17: Invalid argument type. Expecting one of the following: Numbe
 // Blank
 
 >> Blank()^Float(2)
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^Float(0)
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Blank()^Float("1e100")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^"2"
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^"1e100"
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^"0"
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Blank()^true
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^false
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Blank()^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Blank()^Date(2000,1,1)
 Errors: Error 8-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -294,16 +294,16 @@ Errors: Error 8-33: Invalid argument type. Expecting one of the following: Numbe
 Errors: Error 8-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> Blank()^Decimal("2.000000000000000000000002")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^Decimal("2.000000000000000000000002")+2.000000000000000000000002
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 2
+2
 
 >> Blank()^ParseJSON("2")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()/ParseJSON("1e100")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 // Date
 
@@ -444,7 +444,7 @@ Error({Kind:ErrorKind.Numeric})
 16
 
 >> Decimal("16.000000000000000000000001")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Decimal("16.0000000000000000000001")^Date(1900,1,7)
 Errors: Error 37-51: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -500,10 +500,10 @@ Error({Kind:ErrorKind.Numeric})
 1E+100
 
 >> ParseJSON("16.000000000000000000000001")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> ParseJSON("1e100")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> ParseJSON("16.0000000000000000000001")^Date(1900,1,7)
 Errors: Error 39-53: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.

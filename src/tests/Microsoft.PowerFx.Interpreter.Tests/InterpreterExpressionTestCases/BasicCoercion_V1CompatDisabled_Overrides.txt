@@ -1,0 +1,21 @@
+﻿#OVERRIDE: BasicCoercion_V1CompatDisabled.txt
+
+// Bug in pre-V1, fixed in V1
+>> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, DateTime(2000,1,1,1,1,1), Time(12,34,56,789))
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, DateTime(2000,1,1,1,1,1), Date(2023,3,27))
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, Time(1,2,3), Date(2000,1,1))
+#skip
+
+// Bug in pre-V1, fixed in V1
+>> If(1<0, Date(2000,1,1), Time(12,0,0))
+#skip
