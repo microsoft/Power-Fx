@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         protected override IList<DType> SupportedTypes(TexlBinding binding)
         {
             var supportedTypes = base.SupportedTypes(binding);
-            if (binding.Features.AllowDateTimeMinMaxDelegation)
+            if (binding.Document.Properties.EnabledFeatures.IsDateTimeMinMaxDelegationEnabled)
             {
                 supportedTypes.Add(DType.Date);
                 supportedTypes.Add(DType.DateTime);

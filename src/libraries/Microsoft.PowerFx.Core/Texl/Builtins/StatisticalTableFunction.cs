@@ -62,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            // always check for the default delegation capability first
+            // always check for the default (numeric) delegation capability first
             if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
             {
                 if (dataSource != null && dataSource.IsDelegatable)
@@ -76,8 +76,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var args = callNode.Args.Children.VerifyValue();
             var fieldType = binding.GetType(args[1]);
 
-            // if the feature is enabled and the type is not a number, also check for the specific sub type capability
-            if (binding.Features.AllowDateTimeMinMaxDelegation && fieldType != DType.Number && !TryGetValidDataSourceForNonNumericDelegation(callNode, binding, out var nonNumericDataSource))
+            // if a non-numeric feature is enabled and the type is not a number, also check for the specific sub type capability
+            if (binding.Document.Properties.EnabledFeatures.IsDateTimeMinMaxDelegationEnabled && fieldType != DType.Number && !TryGetValidDataSourceForNonNumericDelegation(callNode, binding, out var nonNumericDataSource))
             {
                 if (nonNumericDataSource != null && nonNumericDataSource.IsDelegatable)
                 {

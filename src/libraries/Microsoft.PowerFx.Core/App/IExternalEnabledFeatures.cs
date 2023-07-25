@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Core.App
         bool IsEnhancedComponentFunctionPropertyEnabled { get; }
 
         bool IsComponentFunctionPropertyDataflowEnabled { get; }
+
+        bool IsDateTimeMinMaxDelegationEnabled { get; }
     }
 
     internal sealed class DefaultEnabledFeatures : IExternalEnabledFeatures
@@ -41,5 +43,7 @@ namespace Microsoft.PowerFx.Core.App
         public bool IsEnhancedComponentFunctionPropertyEnabled => true;
 
         public bool IsComponentFunctionPropertyDataflowEnabled => true;
+
+        public bool IsDateTimeMinMaxDelegationEnabled => true;
     }
 }
