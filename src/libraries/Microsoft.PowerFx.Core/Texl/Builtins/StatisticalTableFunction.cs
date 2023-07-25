@@ -79,11 +79,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             // if a non-numeric feature is enabled and the type is not a number, also check for the specific sub type capability
             if (binding.Document.Properties.EnabledFeatures.IsDateTimeMinMaxDelegationEnabled && fieldType != DType.Number && !TryGetValidDataSourceForNonNumericDelegation(callNode, binding, out var nonNumericDataSource))
             {
-                if (nonNumericDataSource != null && nonNumericDataSource.IsDelegatable)
-                {
-                    SuggestDelegationHint(callNode, binding);
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelemetryInfo(binding.GetType(args[1])));
-                }
+                SuggestDelegationHint(callNode, binding);
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelemetryInfo(binding.GetType(args[1])));
 
                 return false;
             }
