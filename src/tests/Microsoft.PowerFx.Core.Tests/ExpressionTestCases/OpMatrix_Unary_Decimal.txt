@@ -57,13 +57,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 2.000000000000000000000002
 
 >> -Date(2000,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 36526
+Date(1799,12,28)
 
 >> -DateTime(2000,1,1,12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 36526.5
+DateTime(1799,12,27,12,0,0,0)
 
->> -Time(12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 0.5
+>> -Time(18,0,0)
+Time(6,0,0,0)
 
 >> -Decimal("2.000000000000000000000002")
 -2.000000000000000000000002

@@ -482,10 +482,10 @@ false
 0.020000000000000000000000002
 
 >> -Date(1900,1,1) 
-#SKIP: waiting on issue https://github.com/microsoft/Power-Fx/issues/1176
+Date(1899,12,28)
 
 >> (-Date(1900,1,1)) * 1.0000000000000000000000001 
-#SKIP: waiting on issue https://github.com/microsoft/Power-Fx/issues/1176
+-2.0000000000000000000000002
 
 >> Date(1900,1,1) * 1.0000000000000000000000001
 2.0000000000000000000000002

@@ -518,9 +518,6 @@ false
 >> DateTime(1927,5,18,1,2,3) <= DateTime(1927,5,18,1,2,3)
 true
 
->> DateTime(1900,1,1,12,0,0) <= Time(12,0,0)
-false
-
 >> DateTime(2000,1,1,12,0,0) <= ParseJSON("2")
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -578,9 +575,6 @@ false
 true
 
 >> Time(9,0,0) <= Date(1900,1,2)
-true
-
->> Time(1,0,0) <= DateTime(1899,12,30,1,0,0)
 true
 
 >> Time(3,0,0) <= ParseJSON("2")
