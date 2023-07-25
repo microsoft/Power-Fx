@@ -51,6 +51,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("important", function.Visibility);
             Assert.Equal(4, function.ArityMax);
             Assert.Equal(4, function.ArityMin);
+            Assert.True(function.IsSupported);
+            Assert.True(string.IsNullOrEmpty(function.NotSupportedReason));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 1.json");
 
