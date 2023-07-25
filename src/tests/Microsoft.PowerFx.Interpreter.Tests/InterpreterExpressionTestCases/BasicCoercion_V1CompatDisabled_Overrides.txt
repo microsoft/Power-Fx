@@ -1,4 +1,5 @@
 ﻿#OVERRIDE: BasicCoercion_V1CompatDisabled.txt
+#SETUP: disable:PowerFxV1CompatibilityRules
 
 // Bug in pre-V1, fixed in V1
 >> GUID("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFFFFF") & " is a GUID"
