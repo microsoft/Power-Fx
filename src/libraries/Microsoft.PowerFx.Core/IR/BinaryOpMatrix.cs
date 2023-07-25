@@ -464,9 +464,9 @@ namespace Microsoft.PowerFx.Core.IR
 
         private static BinaryOpKind GetInOp(TexlBinding binding, BinaryOp parsedBinaryOp, DType leftType, DType rightType)
         {
-            if (!rightType.IsAggregate)
+            var usesPFxV1CompatRules = binding.Features.PowerFxV1CompatibilityRules;
+            if (!rightType.IsAggregate || (usesPFxV1CompatRules && rightType.Kind == DKind.ObjNull))
             {
-                var usesPFxV1CompatRules = binding.Features.PowerFxV1CompatibilityRules;
                 if ((DType.String.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && (DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) || leftType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules))) ||
                     (rightType.CoercesTo(DType.String, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules) && DType.String.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usesPFxV1CompatRules)))
                 {
@@ -476,7 +476,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return BinaryOpKind.Invalid;
             }
 
-            if (!leftType.IsAggregate)
+            if (!leftType.IsAggregate || (usesPFxV1CompatRules && leftType.Kind == DKind.ObjNull))
             {
                 if (rightType.IsTable)
                 {

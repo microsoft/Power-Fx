@@ -61,7 +61,7 @@ Table({Value:1},{Value:2},{Value:3})
 >> Distinct([3,2,1,3,3,3,3], Value)
 Table({Value:3},{Value:2},{Value:1})
 
->> Distinct(Blank(), true)
+>> Distinct(If(1<0,[1,2,3]), true)
 Blank()
 
 >> Distinct([1/0], Value)
@@ -73,7 +73,7 @@ Table()
 >> Sort(Distinct([{FirstName: "Harry"}, {FirstName: "Sally"}, {FirstName: "Harry"}, {FirstName: "Alice"}, {FirstName: "Sally"}], FirstName), Value)
 Table({Value:"Alice"},{Value:"Harry"},{Value:"Sally"})
 
->> Distinct(Error("error"), true)
+>> Distinct(If(1<0,[1,2,3],Error("error")), true)
 Error({Kind:ErrorKind.Custom})
 
 >> Distinct([{A: 1}, {A: 2}, {A: 3}, Error("error")], A)
