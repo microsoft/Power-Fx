@@ -302,9 +302,6 @@ Errors: Error 8-20: Invalid argument type. Expecting one of the following: Numbe
 >> Blank()^ParseJSON("2")
 0
 
->> Blank()/ParseJSON("1e100")
-0
-
 // Date
 
 >> Date(2000,1,1)^Float(2)
@@ -444,7 +441,7 @@ Error({Kind:ErrorKind.Numeric})
 16
 
 >> Decimal("16.000000000000000000000001")^Blank()
-0
+1
 
 >> Decimal("16.0000000000000000000001")^Date(1900,1,7)
 Errors: Error 37-51: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -552,4 +549,3 @@ Error({Kind:ErrorKind.Numeric})
 
 >> ParseJSON("1e100")^ParseJSON("1")
 1E+100
-
