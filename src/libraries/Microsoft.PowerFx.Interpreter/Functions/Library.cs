@@ -1964,7 +1964,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                else if (!forceSingleColumn && arg is BlankValue bv && (bv.Type is Types.TableType || tableType.FieldNames.Count() > 1))
                 {
                     return DValue<RecordValue>.Of(bv);
                 }
@@ -2484,6 +2484,11 @@ namespace Microsoft.PowerFx.Functions
             if (irContext.ResultType is Types.Void)
             {
                 return new VoidValue(irContext);
+            }
+            
+            if (irContext.ResultType is Types.UnknownType)
+            {
+                return new BlankValue(irContext);
             }
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));

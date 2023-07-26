@@ -216,7 +216,7 @@ namespace Microsoft.PowerFx.Functions
             }
             else
             {
-                result = FormulaValue.NewBlank();
+                result = FormulaValue.NewBlank(FormulaType.Build(datasource.Type._type));
             }
 
             return result;

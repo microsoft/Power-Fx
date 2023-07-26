@@ -1,0 +1,5 @@
+﻿>> Set(list, Table({ Name: "One", ID: 1}, { Name: "Two", ID: 2}))
+Table({Name:"One",ID:1},{Name:"Two",ID:2})
+
+>> Set(list2, Table(First(list)))
+Table({Name:"One",ID:1})
