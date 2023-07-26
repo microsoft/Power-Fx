@@ -1958,21 +1958,17 @@ namespace Microsoft.PowerFx.Functions
         {
             var tableType = (TableType)irContext.ResultType;
             var recordType = tableType.ToRecord();
+            var fieldCounter = tableType.FieldNames.Count();
+
             return args.Select(arg =>
             {
                 if (!forceSingleColumn && arg is RecordValue rv)
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                else if (!forceSingleColumn && arg is BlankValue bv && (fieldCounter == 0 || fieldCounter > 1))
                 {
                     return DValue<RecordValue>.Of(bv);
-                }
-
-                // Handle the Unknown return type functions: Remove, Coelesce
-                else if (!forceSingleColumn && arg is BlankValue bv2 && !tableType.FieldNames.Any())
-                {
-                    return DValue<RecordValue>.Of(bv2);
                 }
 
                 // Handle the single-column-table case. 
