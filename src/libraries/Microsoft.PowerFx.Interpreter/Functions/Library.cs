@@ -1964,9 +1964,15 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && (bv.Type is Types.TableType || tableType.FieldNames.Count() > 1))
+                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
                 {
                     return DValue<RecordValue>.Of(bv);
+                }
+
+                // Handle the Unknown return type functions: Remove, Coelesce
+                else if (!forceSingleColumn && arg is BlankValue && !tableType.FieldNames.Any())
+                {
+                    return DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(recordType)));
                 }
 
                 // Handle the single-column-table case. 
