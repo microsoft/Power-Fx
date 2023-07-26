@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Tests
                 script,
                 flags: Flags.EnableExpressionChaining);
 
-            Assert.Equal(expected, result.GetAnonymizedFormula());
+            Assert.Equal(expected, StructuralPrint.Print(result.Root));
             
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine());
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Tests
                 script,
                 flags: Flags.EnableExpressionChaining);
 
-            Assert.Equal(beforebinding, result.GetAnonymizedFormula());
+            Assert.Equal(beforebinding, StructuralPrint.Print(result.Root));
 
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine());

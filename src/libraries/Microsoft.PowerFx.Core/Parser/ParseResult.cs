@@ -110,13 +110,5 @@ namespace Microsoft.PowerFx
             err.FormatCore(sb);            
             return $"Err#{++i} {sb}";
         }));
-
-        /// <summary>
-        /// Converts the current formula into an anonymized format suitable for logging.
-        /// </summary>
-        public string GetAnonymizedFormula()
-        {
-            return StructuralPrint.Print(Root);
-        }
     }
 }

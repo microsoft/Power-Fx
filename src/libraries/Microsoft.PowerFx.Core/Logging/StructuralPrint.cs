@@ -82,6 +82,12 @@ namespace Microsoft.PowerFx.Core.Logging
             }
 
             var info = _binding?.GetInfo(node);
+
+            if (IsExpandedType(_binding, node))
+            {
+                return LazyList<string>.Of($"#$fne$#");
+            }
+
             if (info != null && info.Kind != BindKind.Unknown)
             {
                 return LazyList<string>.Of($"#${Enum.GetName(typeof(BindKind), info.Kind)}$#");
@@ -89,13 +95,6 @@ namespace Microsoft.PowerFx.Core.Logging
 
             if (node.Ident.AtToken == null)
             {
-                var type = _binding?.GetType(node);
-
-                if (type != null && type.AggregateHasExpandedType())
-                {
-                    return LazyList<string>.Of($"#$firstnameexp$#");
-                }
-
                 return LazyList<string>.Of("#$firstname$#");
             }
             else
@@ -449,6 +448,13 @@ namespace Microsoft.PowerFx.Core.Logging
             Contracts.AssertNonEmpty(op);
 
             return " " + op + " ";
+        }
+
+        private bool IsExpandedType(TexlBinding binding, TexlNode node)
+        {
+            var type = _binding?.GetType(node);
+
+            return type != null && type.AggregateHasExpandedType();
         }
     }
 }
