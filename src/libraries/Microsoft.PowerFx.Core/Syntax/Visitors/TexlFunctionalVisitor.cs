@@ -18,7 +18,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <returns>The node visit result.</returns>
         public virtual TResult Visit(TypeLiteralNode node, TContext context)
         {
-            throw new System.Exception("Not implemented");
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
