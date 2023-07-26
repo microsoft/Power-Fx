@@ -109,3 +109,9 @@ Error({Kind:ErrorKind.Numeric})
 
 >> ForAll(ParseJSON("[""1"",""a""]"), If(Text(ThisRecord) = "1", Value(ThisRecord) * 2, Value(ThisRecord)))
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> ForAll(Table(Blank()),ThisRecord)
+Table(Blank())
+
+>> ForAll(Table(Blank()),Coalesce(ThisRecord))
+Table(Blank())

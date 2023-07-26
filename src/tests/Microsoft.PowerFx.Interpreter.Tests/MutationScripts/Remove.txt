@@ -7,5 +7,8 @@ Table({ID:1,Name:"One"})
 >> ForAll(list2, Remove(list, ThisRecord))
 Table(Blank())
 
->> ForAll(list, Coalesce(Blank()))
-Table(Blank())
+>>Set(x, [1,2,3])
+Table({Value:1},{Value:2},{Value:3})
+
+>> ForAll(x,Remove(x, ThisRecord))
+Table(Blank(),Blank(),Blank())
