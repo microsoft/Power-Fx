@@ -2491,11 +2491,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 return new VoidValue(irContext);
             }
-            
-            if (irContext.ResultType is Types.UnknownType)
-            {
-                return new BlankValue(irContext);
-            }
 
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
