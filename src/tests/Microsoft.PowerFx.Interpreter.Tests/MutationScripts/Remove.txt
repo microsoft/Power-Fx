@@ -1,5 +1,11 @@
 ﻿>> Set(list, Table({ Name: "One", ID: 1}, { Name: "Two", ID: 2}))
-Table({Name:"One",ID:1},{Name:"Two",ID:2})
+Table({ID:1,Name:"One"},{ID:2,Name:"Two"})
 
 >> Set(list2, Table(First(list)))
-Table({Name:"One",ID:1})
+Table({ID:1,Name:"One"})
+
+>> ForAll(list2, Remove(list, ThisRecord))
+Table(Blank())
+
+>> ForAll(list, Coalesce(Blank()))
+Table(Blank())

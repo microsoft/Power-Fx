@@ -1970,9 +1970,9 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 // Handle the Unknown return type functions: Remove, Coelesce
-                else if (!forceSingleColumn && arg is BlankValue && !tableType.FieldNames.Any())
+                else if (!forceSingleColumn && arg is BlankValue bv2 && !tableType.FieldNames.Any())
                 {
-                    return DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(recordType)));
+                    return DValue<RecordValue>.Of(bv2);
                 }
 
                 // Handle the single-column-table case. 
