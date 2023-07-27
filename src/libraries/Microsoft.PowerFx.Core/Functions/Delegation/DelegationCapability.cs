@@ -82,7 +82,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
                 { DelegationMetadataOperatorConstants.CdsIn, new DelegationCapability(CdsIn) },
                 { DelegationMetadataOperatorConstants.Top, new DelegationCapability(Top) },
                 { DelegationMetadataOperatorConstants.AsType, new DelegationCapability(AsType) },
-                { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup) }
+                { DelegationMetadataOperatorConstants.ArrayLookup, new DelegationCapability(ArrayLookup) },
+                { DelegationMetadataOperatorConstants.MinDate, new DelegationCapability(MinDate) },
+                { DelegationMetadataOperatorConstants.MaxDate, new DelegationCapability(MaxDate) }
             }, isThreadSafe: true);
 
         // Supported delegatable operations.
@@ -133,9 +135,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation
         public static readonly BigInteger Group = 0x80000000000;
         public static readonly BigInteger AsType = 0x100000000000;
         public static readonly BigInteger ArrayLookup = 0x200000000000;
+        public static readonly BigInteger MinDate = 0x400000000000;
+        public static readonly BigInteger MaxDate = 0x800000000000;
 
         // Please update it as max value changes.
-        private static BigInteger maxSingleCapabilityValue = ArrayLookup;
+        private static BigInteger maxSingleCapabilityValue = MaxDate;
 
         // Indicates support all functionality.
         public static BigInteger SupportsAll

@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
@@ -18,14 +20,33 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Corresponding DAX functions: Min, MinA, MinX, Max, MaxA, MaxX
     internal sealed class MinMaxTableFunction : StatisticalTableFunction
     {
-        private readonly DelegationCapability _delegationCapability;
+        private readonly DelegationCapability _numberDelegationCapability;
+        private readonly DelegationCapability _dateDelegationCapability;
 
-        public override DelegationCapability FunctionDelegationCapability => _delegationCapability;
+        public override DelegationCapability FunctionDelegationCapability => _numberDelegationCapability;
 
         public MinMaxTableFunction(bool isMin)
             : base(isMin ? "Min" : "Max", isMin ? TexlStrings.AboutMinT : TexlStrings.AboutMaxT, FunctionCategories.Table)
         {
-            _delegationCapability = isMin ? DelegationCapability.Min : DelegationCapability.Max;
+            _numberDelegationCapability = isMin ? DelegationCapability.Min : DelegationCapability.Max;
+            _dateDelegationCapability = isMin ? DelegationCapability.MinDate : DelegationCapability.MaxDate;
+        }
+
+        protected override IList<DType> SupportedTypes(TexlBinding binding)
+        {
+            var supportedTypes = base.SupportedTypes(binding);
+            if (binding.Document.Properties.EnabledFeatures.IsDateTimeMinMaxDelegationEnabled)
+            {
+                supportedTypes.Add(DType.Date);
+                supportedTypes.Add(DType.DateTime);
+            }
+
+            return supportedTypes;
+        }
+
+        protected override bool TryGetValidDataSourceForNonNumericDelegation(CallNode callNode, TexlBinding binding, out IExternalDataSource dataSource)
+        {
+            return TryGetValidDataSourceForDelegation(callNode, binding, _dateDelegationCapability, out dataSource);
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

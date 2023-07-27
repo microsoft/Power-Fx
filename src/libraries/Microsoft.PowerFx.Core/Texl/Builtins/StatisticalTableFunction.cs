@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -61,6 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
+            // always check for the default (numeric) delegation capability first
             if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out var dataSource))
             {
                 if (dataSource != null && dataSource.IsDelegatable)
@@ -72,14 +74,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
+            var fieldType = binding.GetType(args[1]);
+
+            // if a non-numeric feature is enabled and the type is not a number, also check for the specific sub type capability
+            if (binding.Document.Properties.EnabledFeatures.IsDateTimeMinMaxDelegationEnabled && fieldType != DType.Number && !TryGetValidDataSourceForNonNumericDelegation(callNode, binding, out var nonNumericDataSource))
+            {
+                SuggestDelegationHint(callNode, binding);
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelemetryInfo(binding.GetType(args[1])));
+
+                return false;
+            }
+
             if (binding.GetType(args[0]).HasExpandInfo
             || (!binding.IsFullRecordRowScopeAccess(args[1]) && args[1].Kind != NodeKind.FirstName)
             || !binding.IsRowScope(args[1])
-            || binding.GetType(args[1]) != DType.Number
+            || !SupportedTypes(binding).Contains(fieldType)
             || ExpressionContainsView(callNode, binding))
             {
                 SuggestDelegationHint(callNode, binding);
-
+ 
                 if (binding.GetType(args[1]) != DType.Number)
                 {
                     TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelemetryInfo(binding.GetType(args[1])));
@@ -99,6 +112,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var firstNameStrategy = GetFirstNameNodeDelegationStrategy().VerifyValue();
             return firstNameStrategy.IsValidFirstNameNode(args[1].AsFirstName(), binding, null);
+        }
+
+        protected virtual IList<DType> SupportedTypes(TexlBinding binding)
+        {
+            return new List<DType> { DType.Number };
+        }
+
+        protected virtual bool TryGetValidDataSourceForNonNumericDelegation(CallNode callNode, TexlBinding binding, out IExternalDataSource dataSource)
+        {
+            dataSource = default;
+            return false;
         }
 
         private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
