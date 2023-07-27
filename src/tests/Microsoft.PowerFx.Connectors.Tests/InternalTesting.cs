@@ -82,7 +82,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 int notSupportedFunctionCount = functions.Count(f => !f.IsSupported);
                 if (notSupportedFunctionCount == 0)
                 {
-                    writer.WriteLine($"{title}: OK - All {functions.Count()} functions are supported");
+                    writer.WriteLine($"{title}: OK - All {functions.Count()} functions are supported - [{string.Join(", ", functions.Select(f => f.Name))}]");
                 }
                 else
                 {
