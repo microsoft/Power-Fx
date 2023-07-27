@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
@@ -72,6 +73,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 // Won't complete - should throw cancellation task 
                 await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
             }
+        }
+
+        [Theory]
+        [InlineData("Set(x, Table)", "Set(#$PowerFxResolvedObject$#, #$fne$#)")]
+        [InlineData("With({t:Table},t)", "With({ #$fieldname$#:#$fne$# },t)")]
+        [InlineData("ForAll(Table, ThisRecord.Value)", "ForAll(#$fne$#, #$fne$#.#$righthandid$#)")]
+        public async Task TestExpandedStucturalPrint(string expr, string anonymized)
+        {
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
+            var symbols = new SymbolTable();
+
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
+            symbols.EnableMutationFunctions();
+
+            var engine = new RecalcEngine();
+            var runtimeConfig = new SymbolValues(symbols);
+
+            engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
+            runtimeConfig.Set(slot, databaseTable);
+
+            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.Equal(anonymized, check.ApplyGetLogging());
         }
 
         internal class DatabaseTable : InMemoryTableValue
