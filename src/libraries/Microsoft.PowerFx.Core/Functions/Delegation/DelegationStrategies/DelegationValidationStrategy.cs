@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 {
                     return IsValidAsyncOrImpureNode(node.Left, binding);
                 }
-
+                
                 return true;
             }
 

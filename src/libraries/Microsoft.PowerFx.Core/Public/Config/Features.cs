@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable Identifier support for describing column names.
         /// </summary>
-        internal bool SupportColumnNamesAsIdentifiers { get; set; }
+        internal bool SupportColumnNamesAsIdentifiers { get; set; }        
 
         /// <summary>
         /// Enforces strong-typing for builtin enums, rather than treating
