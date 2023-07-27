@@ -1,0 +1,551 @@
+#SETUP: disable:NumberIsFloat
+
+// ^ Exponentation
+
+// As exponentation is all floating point with no Decimal support, there is no need to have separate files with and without NumberIsFloat.
+// There is a separate _Float version without Decimal functions and Float translated to Value functions for running in PA Client
+// Once PA Client adds Decimal, we can delete the _Float version.
+
+// In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
+// and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
+// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+
+// Both NumberIsFloat and Non NumberIsFloat
+//    ^   | n  s  b  N  D  d  T  w  O  (right)  
+// =======|==================================== 
+//      n | n  n  n  n  e  e  e  n  n           
+//      s | n  n  n  n  e  e  e  n  n           
+//      b | n  n  n  n  e  e  e  n  n           
+//      N | n  n  n  n  e  e  e  n  n           
+//      D | e  e  e  e  e  e  e  e  e           
+//      d | e  e  e  e  e  e  e  e  e           
+//      T | e  e  e  e  e  e  e  e  e           
+//      w | n  n  n  n  e  e  e  n  n           
+//      O | n  n  n  n  e  e  e  n  n           
+// (left) |                                     
+
+// Float
+
+>> Float(16)^Float(2)
+256
+
+>> Float("1e100")^Float(2)
+1E+200
+
+>> Float(16)^Float(0)
+1
+
+>> Float(16)^Float(0.25)
+2
+
+>> Float(16)^"2"
+256
+
+>> Float("1e100")^"2"
+1E+200
+
+>> Float(16)^"0"
+1
+
+>> Float(16)^"0.25"
+2
+
+>> Float(16)^true
+16
+
+>> Float("1e100")^true
+1E+100
+
+>> Float(16)^Blank()
+1
+
+>> Float("1e100")^Blank()
+1
+
+>> Float(16)^Date(2000,1,1)
+Errors: Error 10-24: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Float(365265000)^DateTime(2000,1,1,12,0,0)
+Errors: Error 17-42: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Float(16)^Time(12,0,0)
+Errors: Error 10-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Float(16)^Decimal("2.00000000000000000000000002")
+256
+
+>> Float("1e100")^Decimal("2.00000000000000000000000002")
+1E+200
+
+>> Float(16)^ParseJSON("2")
+256
+
+>> Float(16)^ParseJSON("0.25")
+2
+
+>> Float(16)^ParseJSON("1e100")
+Error({Kind:ErrorKind.Numeric})
+
+>> Float("1e100")^ParseJSON("2")
+1E+200
+
+>> Float("1e100")^ParseJSON("0.25")
+1E+25
+
+>> Float("1e100")^ParseJSON("1e100")
+Error({Kind:ErrorKind.Numeric})
+
+// Text
+
+>> "16"^Float(2)
+256
+
+>> "1e100"^Float(2)
+1E+200
+
+>> "16"^Float(0)
+1
+
+>> "16"^Float(0.25)
+2
+
+>> "16"^"2"
+256
+
+>> "16"^"0"
+1
+
+>> "16"^"2.00000000000000000000000002"
+256
+
+>> "16"^"0.25"
+2
+
+>> "1e100"^"2"
+1E+200
+
+>> "16"^true
+16
+
+>> "16"^false
+1
+
+>> "1e100"^true
+1E+100
+
+>> "1e100"^false
+1
+
+>> "16"^Blank()
+1
+
+>> "1e100"^Blank()
+1
+
+>> "32"^Date(2000,1,1)
+Errors: Error 5-19: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> "32"^DateTime(2000,1,1,12,0,0)
+Errors: Error 5-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> "16"^Time(12,0,0)
+Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> "16"^Decimal("2.000000000000000000000002")
+256
+
+>> "1e100"^Decimal("2.000000000000000000000002")
+1E+200
+
+>> "16"^Decimal("0.0000000000000000000000000")
+1
+
+>> "1e100"^Decimal("0")
+1
+
+>> "16"^ParseJSON("2")
+256
+
+>> "16"^ParseJSON("0")
+1
+
+>> "16"^ParseJSON("0.25")
+2
+
+>> "1e100"^ParseJSON("1e100")
+Error({Kind:ErrorKind.Numeric})
+
+>> "1e100"^ParseJSON("2")
+1E+200
+
+>> "1e100"^ParseJSON("0.000000000000000000")
+1
+
+>> "1e100"^ParseJSON("false")
+1
+
+// Boolean
+
+>> true^Float(2)
+1
+
+>> true^Float("1e100")
+1
+
+>> true^Float(0)
+1
+
+>> true^Float(0.25)
+1
+
+>> false^Float(2)
+0
+
+>> false^Float("1e100")
+0
+
+>> false^Float(0.25)
+0
+
+>> false^Float(0)
+1
+
+>> true^"2"
+1
+
+>> false^"2"
+0
+
+>> true^"0.25"
+1
+
+>> false^"0.25"
+0
+
+>> true^"0"
+1
+
+>> false^"0"
+1
+
+>> true^"1E+100"
+1
+
+>> true^true
+1
+
+>> true^Blank()
+1
+
+>> true^Date(1927,5,18)
+Errors: Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> true^DateTime(1927,5,18,0,0,0)
+Errors: Error 5-30: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> true^Time(12,0,0)
+Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> true^Decimal("2.000000000000000000000002")
+1
+
+>> true^ParseJSON("2")
+1
+
+>> true^ParseJSON("1e100")
+1
+
+// Blank
+
+>> Blank()^Float(2)
+0
+
+>> Blank()^Float(0)
+1
+
+>> Blank()^Float("1e100")
+0
+
+>> Blank()^"2"
+0
+
+>> Blank()^"1e100"
+0
+
+>> Blank()^"0"
+1
+
+>> Blank()^true
+0
+
+>> Blank()^false
+1
+
+>> Blank()^Blank()
+1
+
+>> Blank()^Date(2000,1,1)
+Errors: Error 8-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Blank()^DateTime(2000,1,1,12,0,0)
+Errors: Error 8-33: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Blank()^Time(12,0,0)
+Errors: Error 8-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Blank()^Decimal("2.000000000000000000000002")
+0
+
+>> Blank()^Decimal("2.000000000000000000000002")+2.000000000000000000000002
+2
+
+>> Blank()^ParseJSON("2")
+0
+
+// Date
+
+>> Date(2000,1,1)^Float(2)
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(2000,1,1)^"2"
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(2000,1,1)^true
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(2000,1,1)^Blank()
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(1954,10,3)^Date(1927,5,18)
+Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(1954,10,3)^Date(1900,1,1)
+Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(1954,10,3)^DateTime(1927,5,18,0,0,0)
+Errors: Error 0-15: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(2000,1,1)^Time(12,0,0)
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(2000,1,1)^Decimal("2.000000000000000000000002")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(2000,1,1)^ParseJSON("2")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Date(2000,1,1)^ParseJSON("1e100")
+Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+// DateTime
+
+>> DateTime(2000,1,1,12,0,0)^Float(2)
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^"2"
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^true
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^Blank()
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(1954,10,3,0,0,0)^Date(1927,5,18)
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(1954,10,3,0,0,0)^Date(1900,1,1)
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(1954,10,3,0,0,0)^DateTime(1927,5,18,0,0,0)
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(1954,10,3,0,0,0)^DateTime(1900,1,1,12,0,0)
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^Time(12,0,0)
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^Decimal("2.0000000000000000000002")
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^ParseJSON("2")
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> DateTime(2000,1,1,12,0,0)^ParseJSON("1e100")
+Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+// Time
+
+>> Time(9,0,0)^Float(0.125)
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^"0.125"
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^true
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Blank()
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Time(6,0,0)
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Date(1900,1,2)
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> 1+(Time(9,0,0)^Date(1900,1,11)/1e20)
+Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Time(12,0,0)
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> 1+(Time(9,0,0)^Time(12,0,0)/1e20)
+Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Decimal("0.125")
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> 1+(Time(9,0,0)^Decimal("0.125")/1e20)
+Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^Decimal("0.125000000000000000000001")
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^ParseJSON("2")
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Time(9,0,0)^ParseJSON("1e100")
+Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+// Decimal
+
+>> Decimal("16.000000000000000000000001")^Float(2)
+256
+
+>> Decimal("16.000000000000000000000001")^Float(0)
+1
+
+>> Decimal("16.000000000000000000000001")^Float("1E100")
+Error({Kind:ErrorKind.Numeric})
+
+// rounds to 32 in floating point
+>> Decimal("32.0000000000000001")^Float("8")
+1099511627776
+
+>> Decimal("16.000000000000000000000001")^"2"
+256
+
+>> Decimal("16.000000000000000000000001")^true
+16
+
+>> Decimal("16.000000000000000000000001")^Blank()
+1
+
+>> Decimal("16.0000000000000000000001")^Date(1900,1,7)
+Errors: Error 37-51: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Decimal("16.0000000000000000000001")^DateTime(1900,1,1,12,0,0)
+Errors: Error 37-62: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Decimal("16.000000000000000000001")^Time(12,0,0)
+Errors: Error 36-48: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> Decimal("16.000000000000000000000002")^Decimal("2.000000000000000000000001")
+256
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("2")
+256
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("0")
+1
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("false")
+1
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("true")
+16
+
+>> Decimal("16.000000000000000000000002")^ParseJSON("1e100")
+Error({Kind:ErrorKind.Numeric})
+
+// Untyped
+
+>> ParseJSON("16.00000000000000000000001")^Float(2)
+256
+
+>> ParseJSON("16.00000000000000000000001")^Float(0)
+1
+
+>> ParseJSON("16.00000000000000000000001")^Float("1E100")
+Error({Kind:ErrorKind.Numeric})
+
+>> ParseJSON("1e100")^Float(2)
+1E+200
+
+>> ParseJSON("16.00000000000000000000001")^"2"
+256
+
+>> ParseJSON("1e100")^"2"
+1E+200
+
+>> ParseJSON("16.000000000000000000000001")^true
+16
+
+>> ParseJSON("1e100")^true
+1E+100
+
+>> ParseJSON("16.000000000000000000000001")^Blank()
+1
+
+>> ParseJSON("1e100")^Blank()
+1
+
+>> ParseJSON("16.0000000000000000000001")^Date(1900,1,7)
+Errors: Error 39-53: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> ParseJSON("1e100")^Date(1900,1,7)
+Errors: Error 19-33: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> ParseJSON("16.0000000000000000000001")^DateTime(1900,1,1,12,0,0)
+Errors: Error 39-64: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> ParseJSON("1e100")^DateTime(1900,1,7,12,0,0)
+Errors: Error 19-44: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> ParseJSON("16.000000000000000000001")^Time(12,0,0)
+Errors: Error 38-50: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> ParseJSON("1e100")^Time(12,0,0)
+Errors: Error 19-31: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
+
+>> ParseJSON("16.000000000000000000000002")^Decimal("2.000000000000000000000000001")
+256
+
+>> ParseJSON("16.000000000000000000000002")^Decimal("0.000000000000000000000000001")
+1
+
+>> ParseJSON("1e100")^Decimal("2.000000000000000000000000001")
+1E+200
+
+>> ParseJSON("16.000000000000000000000002")^ParseJSON("2")
+256
+
+>> ParseJSON("1e100")^ParseJSON("2")
+1E+200
+
+>> ParseJSON("16.000000000000000000000002")^ParseJSON("1e100")
+Error({Kind:ErrorKind.Numeric})
+
+>> ParseJSON("1e100")^ParseJSON("1e100")
+Error({Kind:ErrorKind.Numeric})
+
+>> ParseJSON("1e100")^ParseJSON("0.25")
+1E+25
+
+>> ParseJSON("1e100")^ParseJSON("0")
+1
+
+>> ParseJSON("1e100")^ParseJSON("1")
+1E+100

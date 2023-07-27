@@ -57,13 +57,26 @@ Error({Kind:ErrorKind.InvalidArgument})
 2.000000000000000000000002
 
 >> -Date(2000,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 36526
+Date(1799,12,28)
+
+// This shows why the previous test has the result it does
+>> [Value(Date(2000,1,1)), Value(-Date(2000,1,1)),Value(Date(1799,12,28))]
+Table({Value:36526},{Value:-36526},{Value:-36526})
 
 >> -DateTime(2000,1,1,12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 36526.5
+DateTime(1799,12,27,12,0,0,0)
 
->> -Time(12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 0.5
+// This shows why the previous test has the result it does
+>> [Value(DateTime(2000,1,1,12,0,0)), Value(-DateTime(2000,1,1,12,0,0)), Value(DateTime(1799,12,27,12,0,0,0))]
+Table({Value:36526.5},{Value:-36526.5},{Value:-36526.5})
+
+// The value of the time will be 6am on the day before the 'date 0' - but the default representation only shows the time portion
+>> -Time(18,0,0)
+Time(6,0,0,0)
+
+// This shows why the previous test has the result it does
+>> [Value(-Time(18,0,0)), Value(Time(6,0,0)-1)]
+Table({Value:-0.75},{Value:-0.75})
 
 >> -Decimal("2.000000000000000000000002")
 -2.000000000000000000000002

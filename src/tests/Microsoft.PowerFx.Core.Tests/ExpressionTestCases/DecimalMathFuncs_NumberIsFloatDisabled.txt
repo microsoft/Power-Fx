@@ -1,4 +1,4 @@
-#SETUP: disable:NumberIsFloat
+#SETUP: disable:NumberIsFloat,DecimalSupport
 
 // decimal aware aggregate functions
 
