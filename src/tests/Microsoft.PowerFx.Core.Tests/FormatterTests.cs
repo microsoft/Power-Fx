@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Tests;

@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Linq;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
