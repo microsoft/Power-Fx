@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable Identifier support for describing column names.
         /// </summary>
-        internal bool SupportColumnNamesAsIdentifiers { get; set; }        
+        internal bool SupportColumnNamesAsIdentifiers { get; set; }
 
         /// <summary>
         /// Enforces strong-typing for builtin enums, rather than treating
@@ -55,11 +55,6 @@ namespace Microsoft.PowerFx
         /// Allow delegation for impure nodes.
         /// </summary>
         internal bool AllowImpureNodeDelegation { get; set; }
-
-        /// <summary>
-        /// Delegation warning for dataverse offline.
-        /// </summary>
-        internal bool IsDelegationWarningForDataverseOfflineEnabled { get; set; }
 
         /// <summary>
         /// Updates the FirstN/LastN functions to require a second argument, instead of
