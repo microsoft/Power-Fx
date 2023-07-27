@@ -75,7 +75,7 @@ true
 false
 
 >> IsEmpty(Table({a:1/0},{a:Sqrt(-1)}))
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1204Error, expected: false
+false
 
 
 // EMPTY TABLES OF DIFFERENT DATATYPES

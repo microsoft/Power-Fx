@@ -1,5 +1,4 @@
-#SETUP: disable:PowerFxV1CompatibilityRules
-#SETUP: ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
+#SETUP: disable:PowerFxV1CompatibilityRules,ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
 
 >> Last([ {a:2}, {a:true, b:true, c:20}, {a:2, b:2, c:true} ]).c
 true
