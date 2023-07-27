@@ -77,7 +77,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Set(x, Table)", "Set(#$PowerFxResolvedObject$#, #$fne$#)")]
-        [InlineData("With({t:Table},t)", "With({ #$fieldname$#:#$fne$# },t)")]
+        [InlineData("With({t:Table},t)", "With({ #$fieldname$#:#$fne$# }, #$fne$#)")]
         [InlineData("ForAll(Table, ThisRecord.Value)", "ForAll(#$fne$#, #$fne$#.#$righthandid$#)")]
         public async Task TestExpandedStucturalPrint(string expr, string anonymized)
         {
