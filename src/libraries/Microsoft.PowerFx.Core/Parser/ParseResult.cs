@@ -110,5 +110,10 @@ namespace Microsoft.PowerFx
             err.FormatCore(sb);            
             return $"Err#{++i} {sb}";
         }));
+
+        public string GetAnonymizedFormula()
+        {
+            return StructuralPrint.Print(Root);
+        }
     }
 }

@@ -85,6 +85,7 @@ namespace Microsoft.PowerFx.Core.Logging
 
             if (IsExpandedType(_binding, node))
             {
+                // first name expanded
                 return LazyList<string>.Of($"#$fne$#");
             }
 
