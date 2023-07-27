@@ -180,6 +180,12 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             }
         }
 
+        // Used in tests
+        internal (string Namespace, string Name) GetName()
+        {
+            return (base.Namespace.Name.Value, base.Name);
+        }
+
         // Helper class so that we can return StringGetters from GetSignatures
         private class CaptureString
         {
@@ -418,13 +424,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             Contracts.AssertValue(paramName);
 
             return _parameterDefaultValues.TryGetValue(paramName, out defaultValue);
-        }
-
-        // We changed all async functions to append "Async" to the end of async function names,
-        // but to maintain the previous behavior of service functions, we suppress this in this case.
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "", suppressAsync: true);
         }
 
         // Provide as hook for execution. 

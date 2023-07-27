@@ -47,7 +47,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("ACSL", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "aCSL__ConversationAnalysisAnalyzeConversationConversation");
+            Assert.Contains(
+                functionList,
+                func =>
+                {
+                    var (functionNamespace, functionName) = func.GetName();
+                    return
+                        functionNamespace == "ACSL" &&
+                        functionName == "ConversationAnalysisAnalyzeConversationConversation";
+                });
         }
 
 #pragma warning disable SA1118, SA1137
@@ -476,7 +484,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("LQA", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "lQA__GetAnswersFromText");
+            Assert.Contains(
+                functionList,
+                func =>
+                {
+                    var (functionNamespace, functionName) = func.GetName();
+                    return
+                        functionNamespace == "LQA" &&
+                        functionName == "GetAnswersFromText";
+                });
         }
 
         [Fact]
@@ -484,7 +500,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("SQL", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "sQL__GetProcedureV2");
+            Assert.Contains(
+                functionList,
+                func =>
+                {
+                    var (functionNamespace, functionName) = func.GetName();
+                    return
+                        functionNamespace == "SQL" &&
+                        functionName == "GetProcedureV2";
+                });
         }
 
         [Fact]
