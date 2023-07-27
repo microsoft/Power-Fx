@@ -400,6 +400,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             var callInfo = binding.GetInfo(node);
+            if (binding.DelegationHintProvider?.TryGetWarning(node, callInfo?.Function, out var warning) ?? false)
+            {
+                SuggestDelegationHint(node, binding, warning, new object[] { callInfo?.Function.Name });
+            }
+
             if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata))
             {
                 // Following condition is only applicable for data verse offline support.

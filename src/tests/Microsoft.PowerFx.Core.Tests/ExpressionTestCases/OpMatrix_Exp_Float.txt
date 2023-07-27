@@ -1,4 +1,4 @@
-#SETUP: disable:NumberIsFloat
+#SETUP: NumberIsFloat
 
 // ^ Exponentation
 
@@ -26,87 +26,81 @@
 
 // Float
 
->> Float(16)^Float(2)
+>> Value(16)^Value(2)
 256
 
->> Float("1e100")^Float(2)
+>> Value("1e100")^Value(2)
 1E+200
 
->> Float(16)^Float(0)
+>> Value(16)^Value(0)
 1
 
->> Float(16)^Float(0.25)
+>> Value(16)^Value(0.25)
 2
 
->> Float(16)^"2"
+>> Value(16)^"2"
 256
 
->> Float("1e100")^"2"
+>> Value("1e100")^"2"
 1E+200
 
->> Float(16)^"0"
+>> Value(16)^"0"
 1
 
->> Float(16)^"0.25"
+>> Value(16)^"0.25"
 2
 
->> Float(16)^true
+>> Value(16)^true
 16
 
->> Float("1e100")^true
+>> Value("1e100")^true
 1E+100
 
->> Float(16)^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+>> Value(16)^Blank()
+1
 
->> Float("1e100")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+>> Value("1e100")^Blank()
+1
 
->> Float(16)^Date(2000,1,1)
+>> Value(16)^Date(2000,1,1)
 Errors: Error 10-24: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> Float(365265000)^DateTime(2000,1,1,12,0,0)
+>> Value(365265000)^DateTime(2000,1,1,12,0,0)
 Errors: Error 17-42: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> Float(16)^Time(12,0,0)
+>> Value(16)^Time(12,0,0)
 Errors: Error 10-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> Float(16)^Decimal("2.00000000000000000000000002")
+>> Value(16)^ParseJSON("2")
 256
 
->> Float("1e100")^Decimal("2.00000000000000000000000002")
-1E+200
-
->> Float(16)^ParseJSON("2")
-256
-
->> Float(16)^ParseJSON("0.25")
+>> Value(16)^ParseJSON("0.25")
 2
 
->> Float(16)^ParseJSON("1e100")
+>> Value(16)^ParseJSON("1e100")
 Error({Kind:ErrorKind.Numeric})
 
->> Float("1e100")^ParseJSON("2")
+>> Value("1e100")^ParseJSON("2")
 1E+200
 
->> Float("1e100")^ParseJSON("0.25")
+>> Value("1e100")^ParseJSON("0.25")
 1E+25
 
->> Float("1e100")^ParseJSON("1e100")
+>> Value("1e100")^ParseJSON("1e100")
 Error({Kind:ErrorKind.Numeric})
 
 // Text
 
->> "16"^Float(2)
+>> "16"^Value(2)
 256
 
->> "1e100"^Float(2)
+>> "1e100"^Value(2)
 1E+200
 
->> "16"^Float(0)
+>> "16"^Value(0)
 1
 
->> "16"^Float(0.25)
+>> "16"^Value(0.25)
 2
 
 >> "16"^"2"
@@ -137,10 +131,10 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> "16"^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> "1e100"^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> "32"^Date(2000,1,1)
 Errors: Error 5-19: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -150,18 +144,6 @@ Errors: Error 5-30: Invalid argument type. Expecting one of the following: Numbe
 
 >> "16"^Time(12,0,0)
 Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> "16"^Decimal("2.000000000000000000000002")
-256
-
->> "1e100"^Decimal("2.000000000000000000000002")
-1E+200
-
->> "16"^Decimal("0.0000000000000000000000000")
-1
-
->> "1e100"^Decimal("0")
-1
 
 >> "16"^ParseJSON("2")
 256
@@ -186,28 +168,28 @@ Error({Kind:ErrorKind.Numeric})
 
 // Boolean
 
->> true^Float(2)
+>> true^Value(2)
 1
 
->> true^Float("1e100")
+>> true^Value("1e100")
 1
 
->> true^Float(0)
+>> true^Value(0)
 1
 
->> true^Float(0.25)
+>> true^Value(0.25)
 1
 
->> false^Float(2)
+>> false^Value(2)
 0
 
->> false^Float("1e100")
+>> false^Value("1e100")
 0
 
->> false^Float(0.25)
+>> false^Value(0.25)
 0
 
->> false^Float(0)
+>> false^Value(0)
 1
 
 >> true^"2"
@@ -235,7 +217,7 @@ Error({Kind:ErrorKind.Numeric})
 1
 
 >> true^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> true^Date(1927,5,18)
 Errors: Error 5-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -246,9 +228,6 @@ Errors: Error 5-30: Invalid argument type. Expecting one of the following: Numbe
 >> true^Time(12,0,0)
 Errors: Error 5-17: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> true^Decimal("2.000000000000000000000002")
-1
-
 >> true^ParseJSON("2")
 1
 
@@ -257,32 +236,32 @@ Errors: Error 5-17: Invalid argument type. Expecting one of the following: Numbe
 
 // Blank
 
->> Blank()^Float(2)
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+>> Blank()^Value(2)
+0
 
->> Blank()^Float(0)
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+>> Blank()^Value(0)
+1
 
->> Blank()^Float("1e100")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+>> Blank()^Value("1e100")
+0
 
 >> Blank()^"2"
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^"1e100"
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^"0"
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Blank()^true
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 >> Blank()^false
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Blank()^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> Blank()^Date(2000,1,1)
 Errors: Error 8-22: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -293,21 +272,12 @@ Errors: Error 8-33: Invalid argument type. Expecting one of the following: Numbe
 >> Blank()^Time(12,0,0)
 Errors: Error 8-20: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> Blank()^Decimal("2.000000000000000000000002")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
-
->> Blank()^Decimal("2.000000000000000000000002")+2.000000000000000000000002
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 2
-
 >> Blank()^ParseJSON("2")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
-
->> Blank()/ParseJSON("1e100")
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
+0
 
 // Date
 
->> Date(2000,1,1)^Float(2)
+>> Date(2000,1,1)^Value(2)
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> Date(2000,1,1)^"2"
@@ -331,9 +301,6 @@ Errors: Error 0-15: Invalid argument type. Expecting one of the following: Numbe
 >> Date(2000,1,1)^Time(12,0,0)
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> Date(2000,1,1)^Decimal("2.000000000000000000000002")
-Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
 >> Date(2000,1,1)^ParseJSON("2")
 Errors: Error 0-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
@@ -342,7 +309,7 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Numbe
 
 // DateTime
 
->> DateTime(2000,1,1,12,0,0)^Float(2)
+>> DateTime(2000,1,1,12,0,0)^Value(2)
 Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> DateTime(2000,1,1,12,0,0)^"2"
@@ -369,9 +336,6 @@ Errors: Error 0-25: Invalid argument type. Expecting one of the following: Numbe
 >> DateTime(2000,1,1,12,0,0)^Time(12,0,0)
 Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> DateTime(2000,1,1,12,0,0)^Decimal("2.0000000000000000000002")
-Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
 >> DateTime(2000,1,1,12,0,0)^ParseJSON("2")
 Errors: Error 0-25: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
@@ -380,7 +344,7 @@ Errors: Error 0-25: Invalid argument type. Expecting one of the following: Numbe
 
 // Time
 
->> Time(9,0,0)^Float(0.125)
+>> Time(9,0,0)^Value(0.125)
 Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> Time(9,0,0)^"0.125"
@@ -407,84 +371,24 @@ Errors: Error 0-11: Invalid argument type. Expecting one of the following: Numbe
 >> 1+(Time(9,0,0)^Time(12,0,0)/1e20)
 Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
->> Time(9,0,0)^Decimal("0.125")
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> 1+(Time(9,0,0)^Decimal("0.125")/1e20)
-Errors: Error 3-14: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> Time(9,0,0)^Decimal("0.125000000000000000000001")
-Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
 >> Time(9,0,0)^ParseJSON("2")
 Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
 >> Time(9,0,0)^ParseJSON("1e100")
 Errors: Error 0-11: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
 
-// Decimal
-
->> Decimal("16.000000000000000000000001")^Float(2)
-256
-
->> Decimal("16.000000000000000000000001")^Float(0)
-1
-
->> Decimal("16.000000000000000000000001")^Float("1E100")
-Error({Kind:ErrorKind.Numeric})
-
-// rounds to 32 in floating point
->> Decimal("32.0000000000000001")^Float("8")
-1099511627776
-
->> Decimal("16.000000000000000000000001")^"2"
-256
-
->> Decimal("16.000000000000000000000001")^true
-16
-
->> Decimal("16.000000000000000000000001")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 0
-
->> Decimal("16.0000000000000000000001")^Date(1900,1,7)
-Errors: Error 37-51: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> Decimal("16.0000000000000000000001")^DateTime(1900,1,1,12,0,0)
-Errors: Error 37-62: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> Decimal("16.000000000000000000001")^Time(12,0,0)
-Errors: Error 36-48: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> Decimal("16.000000000000000000000002")^Decimal("2.000000000000000000000001")
-256
-
->> Decimal("16.000000000000000000000002")^ParseJSON("2")
-256
-
->> Decimal("16.000000000000000000000002")^ParseJSON("0")
-1
-
->> Decimal("16.000000000000000000000002")^ParseJSON("false")
-1
-
->> Decimal("16.000000000000000000000002")^ParseJSON("true")
-16
-
->> Decimal("16.000000000000000000000002")^ParseJSON("1e100")
-Error({Kind:ErrorKind.Numeric})
-
 // Untyped
 
->> ParseJSON("16.00000000000000000000001")^Float(2)
+>> ParseJSON("16.00000000000000000000001")^Value(2)
 256
 
->> ParseJSON("16.00000000000000000000001")^Float(0)
+>> ParseJSON("16.00000000000000000000001")^Value(0)
 1
 
->> ParseJSON("16.00000000000000000000001")^Float("1E100")
+>> ParseJSON("16.00000000000000000000001")^Value("1E100")
 Error({Kind:ErrorKind.Numeric})
 
->> ParseJSON("1e100")^Float(2)
+>> ParseJSON("1e100")^Value(2)
 1E+200
 
 >> ParseJSON("16.00000000000000000000001")^"2"
@@ -500,10 +404,10 @@ Error({Kind:ErrorKind.Numeric})
 1E+100
 
 >> ParseJSON("16.000000000000000000000001")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> ParseJSON("1e100")^Blank()
-#SKIP Waiting on https://github.com/microsoft/Power-Fx/issues/1297, expected: 1
+1
 
 >> ParseJSON("16.0000000000000000000001")^Date(1900,1,7)
 Errors: Error 39-53: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
@@ -522,15 +426,6 @@ Errors: Error 38-50: Invalid argument type. Expecting one of the following: Numb
 
 >> ParseJSON("1e100")^Time(12,0,0)
 Errors: Error 19-31: Invalid argument type. Expecting one of the following: Number, Decimal, Text, Boolean, UntypedObject.
-
->> ParseJSON("16.000000000000000000000002")^Decimal("2.000000000000000000000000001")
-256
-
->> ParseJSON("16.000000000000000000000002")^Decimal("0.000000000000000000000000001")
-1
-
->> ParseJSON("1e100")^Decimal("2.000000000000000000000000001")
-1E+200
 
 >> ParseJSON("16.000000000000000000000002")^ParseJSON("2")
 256
@@ -552,4 +447,3 @@ Error({Kind:ErrorKind.Numeric})
 
 >> ParseJSON("1e100")^ParseJSON("1")
 1E+100
-

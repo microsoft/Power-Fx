@@ -30,6 +30,7 @@ namespace Microsoft.PowerFx.Syntax
         DecLit,
 
         Error,
-        StrInterp
+        StrInterp,
+        TypeLiteral
     }
 }

@@ -35,6 +35,16 @@ namespace Microsoft.PowerFx.Connectors
         public string Namespace { get; private set; }
 
         /// <summary>
+        /// Defines if the function is supported or contains unsupported elements.
+        /// </summary>
+        public bool IsSupported { get; private set; }
+
+        /// <summary>
+        /// Reason for which the function isn't supported.
+        /// </summary>
+        public string NotSupportedReason { get; private set; }
+
+        /// <summary>
         /// Name as it appears in the swagger file.
         /// </summary>
         public string OriginalName => Operation.OperationId;
@@ -139,13 +149,15 @@ namespace Microsoft.PowerFx.Connectors
         private ConnectorParameter[] _optionalParameters;
         internal readonly ServiceFunction _defaultServiceFunction;
 
-        public ConnectorFunction(OpenApiOperation openApiOperation, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
             OperationPath = operationPath ?? throw new ArgumentNullException(nameof(operationPath));
             HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
             NumberIsFloat = numberIsFloat;
+            IsSupported = isSupported;
+            NotSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new ArgumentNullException(nameof(notSupportedReason)));
 
             if (httpClient != null)
             {
@@ -259,13 +271,13 @@ namespace Microsoft.PowerFx.Connectors
         public Task<FormulaValue> InvokeAync(IRuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return InvokeAync(TypeCoercionProvider.CreateFormattingInfo(config), httpClient, values, cancellationToken);
+            return InvokeAync(config.ServiceProvider.GetFormattingInfo(), httpClient, values, cancellationToken);
         }
 
         public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return InvokeAync(new FormattingInfo(), httpClient, values, cancellationToken);
+            return InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), httpClient, values, cancellationToken);
         }
     }
 

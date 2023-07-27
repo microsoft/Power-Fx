@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                         return IsOpSupportedByTable(metadata, column, binder);
                     }
                 }
-
+                
                 TrackingProvider.Instance.AddSuggestionMessage(FormatTelemetryMessage("Operator not supported by column."), column, binder);
                 SuggestDelegationHint(column, binder, TexlStrings.OpNotSupportedByColumnSuggestionMessage_OpNotSupportedByColumn, CharacterUtils.MakeSafeForFormatString(columnPath.ToString()));
             }
@@ -103,7 +103,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             if (isRHSNode && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled
                 && opDelStrategy is BinaryOpDelegationStrategy { Op: BinaryOp.In }
                 && !binding.IsRowScope(node)
-                && binding.GetType(node).IsTable
+                && binding.GetType(node).IsTable 
                 && binding.GetType(node).IsColumn
                 && (binding.Features.AllowAsyncDelegation || !binding.IsAsync(node))
                 && opDelStrategy.IsOpSupportedByTable(metadata, node, binding))
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             {
                 return true;
             }
-
+            
             switch (node.Kind)
             {
                 case NodeKind.DottedName:
@@ -310,10 +310,9 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return false;
             }
 
-            // Following condition is only applicable for data verse offline support.
-            if (binding.Features.IsDelegationWarningForDataverseOfflineEnabled && !OfflineValidation.IsOperatorSupportedOffline(binaryOpNode.Op.ToString()))
+            if (binding.DelegationHintProvider?.TryGetWarning(binaryOpNode, out var warning) ?? false)
             {
-                SuggestDelegationHint(node, binding, (ErrorResourceKey)TexlStrings.SuggestRemoteExecutionHint, new object[] { binaryOpNode.Op.ToString() });
+                SuggestDelegationHint(node, binding, warning, new object[] { binaryOpNode.Op.ToString() });
             }
 
             var leftType = binding.GetType(binaryOpNode.Left);

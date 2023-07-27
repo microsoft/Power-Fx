@@ -6,13 +6,16 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
+// Allow calling preview EnableRegExFunctions
+#pragma warning disable CS0618 // Type or member is obsolete
+
     public class RegExTests
     {
         [Fact]
         public void TestRegExNegativeTimeout()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {                
+            {
                 new PowerFxConfig().EnableRegExFunctions(TimeSpan.FromMilliseconds(-1));
             });            
         }
