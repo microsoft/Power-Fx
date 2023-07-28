@@ -796,6 +796,8 @@ namespace Microsoft.PowerFx.Tests
             public double NumProp { get; set; }
 
             public bool BoolProp { get; set; }
+
+            public decimal DecimalProp { get; set; }
         }
 
         private static readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
@@ -803,6 +805,9 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomSetPropertyFunction()
         {
+            var floatOptions = new ParserOptions { NumberIsFloat = true, AllowsSideEffects = true };
+            var decimalOptions = new ParserOptions { NumberIsFloat = false, AllowsSideEffects = true };
+
             var config = new PowerFxConfig();
             config.AddFunction(new TestCustomSetPropFunction());
             var engine = new RecalcEngine(config);
@@ -811,23 +816,44 @@ namespace Microsoft.PowerFx.Tests
             var cache = new TypeMarshallerCache();
             var x = cache.Marshal(obj);
             engine.UpdateVariable("x", x);
-            
-            // Test multiple overloads
-            engine.Eval("SetProperty(x.NumProp, Float(123))", options: _opts);
-            Assert.Equal(123.0, obj.NumProp);
 
+            var expressions = new[] { "Float(123)", "Decimal(124)", "125" };
+            CheckFloatCoercions(engine, obj, floatOptions, expressions);
+            CheckDecimalCoercions(engine, obj, decimalOptions, expressions);
+
+            // Tests multiple overloads
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
             Assert.True(obj.BoolProp);
-            
+
             // Test failure cases
             var check = engine.Check("SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
             Assert.False(check.IsSuccess);
 
-            check = engine.Check("SetProperty(x.BoolProp, Float(123))"); // arg mismatch
+            check = engine.Check("SetProperty(x.BoolProp, Float(123))", options: _opts); // arg mismatch
             Assert.False(check.IsSuccess);
 
             check = engine.Check("SetProperty(x.numMissing, Float(123))", options: _opts); // Binding Fail
             Assert.False(check.IsSuccess);
+        }
+
+        private void CheckFloatCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, string[] expressions)
+        {
+            var expectedValues = new[] { 123.0, 124.0, 125.0 };
+            for (int i = 0; i < expressions.Length; i++)
+            {
+                engine.Eval($"SetProperty(x.NumProp, {expressions[i]})", null, options);
+                Assert.Equal(expectedValues[i], obj.NumProp);
+            }
+        }
+
+        private void CheckDecimalCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, string[] expressions)
+        {
+            var expectedValues = new[] { 123.0m, 124.0m, 125.0m };
+            for (int i = 0; i < expressions.Length; i++)
+            {
+                engine.Eval($"SetProperty(x.DecimalProp, {expressions[i]})", null, options);
+                Assert.Equal(expectedValues[i], obj.DecimalProp);
+            }
         }
 
         // Must have "Function" suffix. 

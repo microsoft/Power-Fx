@@ -724,6 +724,12 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
 
+            // Valiate to see if offline usage hints are applicable.
+            if (binding.DelegationHintProvider?.TryGetWarning(callNode, this, out var warning) ?? false)
+            {
+                SuggestDelegationHint(callNode, binding);
+            }
+
             return false;
         }
 

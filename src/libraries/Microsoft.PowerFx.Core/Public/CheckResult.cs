@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
@@ -642,7 +643,7 @@ namespace Microsoft.PowerFx
             {
                 var parse = ApplyParse();
 
-                _expressionAnonymous = parse.GetAnonymizedFormula();
+                _expressionAnonymous = StructuralPrint.Print(parse.Root, _binding);
             }
 
             return _expressionAnonymous;

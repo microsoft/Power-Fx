@@ -868,8 +868,9 @@ false
 >> ParseJSON("""1990-06-30""") <= Date(1990,7,1)
 true
 
+// Value will be parsed as a date, so hour component will be ignored
 >> ParseJSON("""1900-01-01T09:00:01""") <= Date(1900,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1299, expected: false
+true
 
 >> ParseJSON("16") <= Date(1900,1,15)
 Error({Kind:ErrorKind.InvalidArgument})
