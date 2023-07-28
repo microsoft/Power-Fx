@@ -199,11 +199,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
                 return true;
             }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName(isPrefetching) + _runtimeFunctionNameSuffix;
-            }
         }
 
         public class MockFunction : BuiltinFunction
@@ -238,11 +233,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             {
                 yield break;
             }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName() + _runtimeFunctionNameSuffix;
-            }
         }
 
         public sealed class MockFunctionWithScope : FunctionWithTableInput
@@ -269,11 +259,6 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
             {
                 yield break;
-            }
-
-            public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-            {
-                return base.GetUniqueTexlRuntimeName() + _runtimeFunctionNameSuffix;
             }
         }
 
