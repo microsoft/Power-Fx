@@ -121,3 +121,14 @@ Table({a:1},Blank(),{a:3})
 
 >> Concat(ForAll([1,2,3,4,5],If(Value = 1 Or Value = 3 Or Value = 5, {a:Value},Value = 4, {a:Blank()},Blank())),If(IsBlank(ThisRecord), "<<blank record>>",IsBlank(ThisRecord.a), "<<blank value>>",Text(ThisRecord.a)),",")
 "1,<<blank record>>,3,<<blank value>>,5"
+
+>> Concat(ForAll([1,2,3],If(Value=1 Or Value=3,Sequence(Value),Blank())),If(IsBlank(ThisRecord),"<<blank record>>",IsBlank(Value),"<<blank value>>",$"Table with{CountRows(Value)}elements"),", ")
+"Table with1elements, <<blank value>>, Table with3elements"
+
+// Blank records are not wrapped
+>> ForAll([1,2,3,4,5], If(Value = 1 Or Value = 3 Or Value = 5, {a:Value}, Value = 4, {a:Blank()}, Blank()))
+Table({a:1},Blank(),{a:3},{a:Blank()},{a:5})
+
+// Table blank values should be wrapped
+>> ForAll([1,2,3], If(Value = 1 Or Value = 3, Sequence(Value), Blank()))
+Table({Value:Table({Value:1})},{Value:Blank()},{Value:Table({Value:1},{Value:2},{Value:3})})
