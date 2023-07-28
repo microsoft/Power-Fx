@@ -3,7 +3,7 @@
 // Tests the default coercion of number to text over a wide range.
 //
 // Floating point will use scientific notation at an appropriate point, both large and small.
-// That point is host platform dependent and we only guarantee that 1e15 to 1e-5 results in a decimal output.
+// That point is host platform dependent and we only guarantee that 1e15 to 1e-4 results in a decimal output.
 // When scientific notation is used, a capital "E" is utilized consistent with Excel.
 //
 // Decimal will never output scientific notation.
