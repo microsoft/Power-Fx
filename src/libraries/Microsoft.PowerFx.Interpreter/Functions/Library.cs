@@ -1962,6 +1962,7 @@ namespace Microsoft.PowerFx.Functions
 
             return args.Select(arg =>
             {
+                
                 if (!forceSingleColumn && arg is RecordValue rv)
                 {
                     return DValue<RecordValue>.Of(rv);
@@ -1971,9 +1972,20 @@ namespace Microsoft.PowerFx.Functions
                     return DValue<RecordValue>.Of(bv);
                 }
 
-                // Handle the single-column-table case. 
+                // Handle the single-column-table case.
                 var columnName = tableType.SingleColumnFieldName;
-                var defaultField = new NamedValue(columnName, arg);
+                NamedValue defaultField = null;
+
+                if (arg is BlankValue)
+                {
+                    var fieldType = tableType.GetFieldType(columnName);
+                    defaultField = new NamedValue(columnName, FormulaValue.NewBlank(fieldType));
+                }
+                else
+                {
+                    defaultField = new NamedValue(columnName, arg);
+                }                                 
+                
                 return DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(recordType), new List<NamedValue>() { defaultField }));
             });
         }
