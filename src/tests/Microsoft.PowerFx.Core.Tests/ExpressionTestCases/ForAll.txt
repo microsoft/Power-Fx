@@ -115,3 +115,6 @@ Table(Blank())
 
 >> ForAll(Table(Blank()),Coalesce(ThisRecord))
 Table(Blank())
+
+>> ForAll([1,2,3], If(Value <> 2, {a:Value}))
+Table({a:1},{a:Blank()},{a:3})
