@@ -41,7 +41,7 @@
 >> Text( 3e10 )
 "30000000000"
 
-// There is a gap here where each platform may decide a different point to flup to scientific notation.
+// There is a gap here where each platform may decide a different point to flip to scientific notation.
 
 >> Text( 3e20 )
 "3E+20"
