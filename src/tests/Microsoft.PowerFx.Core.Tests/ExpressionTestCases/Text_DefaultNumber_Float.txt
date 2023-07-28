@@ -3,6 +3,7 @@
 // Tests the default coercion of number to text over a wide range.
 //
 // Floating point will use scientific notation at an appropriate point, both large and small.
+// That point is host platform dependent and we only guarantee that 1e15 to 1e-5 results in a decimal output.
 // When scientific notation is used, a capital "E" is utilized consistent with Excel.
 //
 // Decimal will never output scientific notation.
@@ -55,17 +56,7 @@
 >> Text( 3e15 )
 "3000000000000000"
 
->> Text( 3e16 )
-"30000000000000000"
-
->> Text( 3e17 )
-"3E+17"
-
->> Text( 3e18 )
-"3E+18"
-
->> Text( 3e19 )
-"3E+19"
+// There is a gap here where each platform may decide a different point to flup to scientific notation.
 
 >> Text( 3e20 )
 "3E+20"
@@ -106,23 +97,7 @@
 >> Text( 3e-4 )
 "0.0003"
 
->> Text( 3e-5 )
-"3E-05"
-
->> Text( 3e-6 )
-"3E-06"
-
->> Text( 3e-7 )
-"3E-07"
-
->> Text( 3e-8 )
-"3E-08"
-
->> Text( 3e-9 )
-"3E-09"
-
->> Text( 3e-10 )
-"3E-10"
+// there is a gap here where different platforms may have different scientific notation thresholds.
 
 >> Text( 3e-11 )
 "3E-11"
