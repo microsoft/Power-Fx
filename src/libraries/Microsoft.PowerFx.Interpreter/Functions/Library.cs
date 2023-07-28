@@ -1958,33 +1958,20 @@ namespace Microsoft.PowerFx.Functions
         {
             var tableType = (TableType)irContext.ResultType;
             var recordType = tableType.ToRecord();
-            var fieldCounter = tableType.FieldNames.Count();
-
             return args.Select(arg =>
-            {                
+            {
                 if (!forceSingleColumn && arg is RecordValue rv)
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && (fieldCounter == 0 || fieldCounter > 1))
+                else if (!forceSingleColumn && arg is BlankValue bv && bv.Type._type.IsAggregate)
                 {
                     return DValue<RecordValue>.Of(bv);
                 }
 
-                // Handle the single-column-table case.
+                // Handle the single-column-table case. 
                 var columnName = tableType.SingleColumnFieldName;
-                NamedValue defaultField = null;
-
-                if (arg is BlankValue)
-                {
-                    var fieldType = tableType.GetFieldType(columnName);
-                    defaultField = new NamedValue(columnName, FormulaValue.NewBlank(fieldType));
-                }
-                else
-                {
-                    defaultField = new NamedValue(columnName, arg);
-                }                                 
-                
+                var defaultField = new NamedValue(columnName, arg);
                 return DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(recordType), new List<NamedValue>() { defaultField }));
             });
         }
