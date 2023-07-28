@@ -1,0 +1,179 @@
+﻿#SETUP: NumberIsFloat
+
+// Tests the default coercion of number to text over a wide range.
+//
+// Floating point will use scientific notation at an appropriate point, both large and small.
+// When scientific notation is used, a capital "E" is utilized consistent with Excel.
+//
+// Decimal will never output scientific notation.
+
+>> Text( 3e0 )
+"3"
+
+>> Text( 3e1 )
+"30"
+
+>> Text( 3e2 )
+"300"
+
+>> Text( 3e3 )
+"3000"
+
+>> Text( 3e4 )
+"30000"
+
+>> Text( 3e5 )
+"300000"
+
+>> Text( 3e6 )
+"3000000"
+
+>> Text( 3e7 )
+"30000000"
+
+>> Text( 3e8 )
+"300000000"
+
+>> Text( 3e9 )
+"3000000000"
+
+>> Text( 3e10 )
+"30000000000"
+
+>> Text( 3e11 )
+"300000000000"
+
+>> Text( 3e12 )
+"3000000000000"
+
+>> Text( 3e13 )
+"30000000000000"
+
+>> Text( 3e14 )
+"300000000000000"
+
+>> Text( 3e15 )
+"3000000000000000"
+
+>> Text( 3e16 )
+"30000000000000000"
+
+>> Text( 3e17 )
+"3E+17"
+
+>> Text( 3e18 )
+"3E+18"
+
+>> Text( 3e19 )
+"3E+19"
+
+>> Text( 3e20 )
+"3E+20"
+
+>> Text( 3e21 )
+"3E+21"
+
+>> Text( 3e22 )
+"3E+22"
+
+>> Text( 3e23 )
+"3E+23"
+
+>> Text( 3e24 )
+"3E+24"
+
+>> Text( 3e25 )
+"3E+25"
+
+>> Text( 3e26 )
+"3E+26"
+
+>> Text( 3e27 )
+"3E+27"
+
+>> Text( 3e28 )
+"3E+28"
+
+>> Text( 3e-1 )
+"0.3"
+
+>> Text( 3e-2 )
+"0.03"
+
+>> Text( 3e-3 )
+"0.003"
+
+>> Text( 3e-4 )
+"0.0003"
+
+>> Text( 3e-5 )
+"3E-05"
+
+>> Text( 3e-6 )
+"3E-06"
+
+>> Text( 3e-7 )
+"3E-07"
+
+>> Text( 3e-8 )
+"3E-08"
+
+>> Text( 3e-9 )
+"3E-09"
+
+>> Text( 3e-10 )
+"3E-10"
+
+>> Text( 3e-11 )
+"3E-11"
+
+>> Text( 3e-12 )
+"3E-12"
+
+>> Text( 3e-13 )
+"3E-13"
+
+>> Text( 3e-14 )
+"3E-14"
+
+>> Text( 3e-15 )
+"3E-15"
+
+>> Text( 3e-16 )
+"3E-16"
+
+>> Text( 3e-17 )
+"3E-17"
+
+>> Text( 3e-18 )
+"3E-18"
+
+>> Text( 3e-19 )
+"3E-19"
+
+>> Text( 3e-20 )
+"3E-20"
+
+>> Text( 3e-21 )
+"3E-21"
+
+>> Text( 3e-22 )
+"3E-22"
+
+>> Text( 3e-23 )
+"3E-23"
+
+>> Text( 3e-24 )
+"3E-24"
+
+>> Text( 3e-25 )
+"3E-25"
+
+>> Text( 3e-26 )
+"3E-26"
+
+>> Text( 3e-27 )
+"3E-27"
+
+>> Text( 3e-28 )
+"3E-28"
