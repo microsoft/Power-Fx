@@ -99,6 +99,7 @@ namespace Microsoft.PowerFx.Core.Tests
             possible.Add("OptionSetSortTestSetup");
             possible.Add("AllEnumsSetup");
             possible.Add("RegEx");
+            possible.Add("DecimalSupport");
 
             foreach (Match match in Regex.Matches(setup, @"(disable:)?(([\w]+|//)(\([^\)]*\))?)"))
             {

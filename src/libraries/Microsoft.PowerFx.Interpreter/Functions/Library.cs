@@ -1964,7 +1964,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                else if (!forceSingleColumn && arg is BlankValue bv && bv.Type._type.IsRecord)
                 {
                     return DValue<RecordValue>.Of(bv);
                 }
