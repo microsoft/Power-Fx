@@ -51,4 +51,3 @@ Errors: Error 0-14: Invalid argument type. Expecting one of the following: Boole
 
 >> If(Date(2000,1,1),1,2)
 Errors: Error 3-17: Invalid argument type (Date). Expecting a Boolean value instead.
-
