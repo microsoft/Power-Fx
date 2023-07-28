@@ -1961,8 +1961,7 @@ namespace Microsoft.PowerFx.Functions
             var fieldCounter = tableType.FieldNames.Count();
 
             return args.Select(arg =>
-            {
-                
+            {                
                 if (!forceSingleColumn && arg is RecordValue rv)
                 {
                     return DValue<RecordValue>.Of(rv);
