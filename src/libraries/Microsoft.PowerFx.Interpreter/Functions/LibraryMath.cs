@@ -1312,6 +1312,12 @@ namespace Microsoft.PowerFx.Functions
             return new NumberValue(irContext, Math.PI);
         }
 
+        public static async ValueTask<FormulaValue> IsClock24(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var is24h = runner.CultureInfo.DateTimeFormat.ShortTimePattern.Contains("H");
+            return new BooleanValue(irContext, is24h);
+        }
+
         // Given the absence of Math.Cot function, we compute Cot(x) as 1/Tan(x)
         // Reference: https://en.wikipedia.org/wiki/Trigonometric_functions
         private static FormulaValue Cot(IRContext irContext, NumberValue[] args)

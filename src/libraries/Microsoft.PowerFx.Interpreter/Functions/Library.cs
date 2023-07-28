@@ -249,6 +249,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: Boolean_UO)
             },
             {
+                BuiltinFunctionsCore.Clock24,
+                NoErrorHandling(IsClock24)
+            },
+            {
                 BuiltinFunctionsCore.Concat,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.Concat.Name,
