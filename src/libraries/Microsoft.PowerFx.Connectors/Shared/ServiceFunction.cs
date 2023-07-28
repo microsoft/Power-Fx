@@ -180,12 +180,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             }
         }
 
-        // Used in tests
-        internal (string Namespace, string Name) GetName()
-        {
-            return (base.Namespace.Name.Value, base.Name);
-        }
-
         // Helper class so that we can return StringGetters from GetSignatures
         private class CaptureString
         {

@@ -50,12 +50,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains(
                 functionList,
                 func =>
-                {
-                    var (functionNamespace, functionName) = func.GetName();
-                    return
-                        functionNamespace == "ACSL" &&
-                        functionName == "ConversationAnalysisAnalyzeConversationConversation";
-                });
+                    func.Namespace.Name.Value == "ACSL" &&
+                    func.Name == "ConversationAnalysisAnalyzeConversationConversation");
         }
 
 #pragma warning disable SA1118, SA1137
@@ -487,12 +483,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains(
                 functionList,
                 func =>
-                {
-                    var (functionNamespace, functionName) = func.GetName();
-                    return
-                        functionNamespace == "LQA" &&
-                        functionName == "GetAnswersFromText";
-                });
+                    func.Namespace.Name.Value == "LQA" &&
+                    func.Name == "GetAnswersFromText");
         }
 
         [Fact]
@@ -503,12 +495,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Contains(
                 functionList,
                 func =>
-                {
-                    var (functionNamespace, functionName) = func.GetName();
-                    return
-                        functionNamespace == "SQL" &&
-                        functionName == "GetProcedureV2";
-                });
+                    func.Namespace.Name.Value == "SQL" &&
+                    func.Name == "GetProcedureV2");
         }
 
         [Fact]
