@@ -79,3 +79,6 @@ Table({y:{x:{a:1,b:Blank()}}},{y:{x:{a:1,b:2}}})
 
 >> Last([ {a:"str"}, {a:GUID("5cc45615-f759-4a53-b225-d3a2497f60ad")} ]).a
 "5cc45615-f759-4a53-b225-d3a2497f60ad"
+
+>> Table({items: [{x: []}, {y: []}]}, {items: [{x: [{t : "test"}]}]})
+Table({items:Table({x:Table(),y:Blank()},{x:Blank(),y:Table()})},{items:Table({x:Table({t:"test"}),y:Blank()})})
