@@ -490,22 +490,21 @@ Blank()
 true
 
 >> Text(ParseJSON("1.234"), "#.##")
-"1.23"
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 25-31: Not supported format for non numeric and datetime in 'Text'.
 
 >> Text(ParseJSON("1.234"), "#.##", "fr-fr")
-"1,23"
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 25-31: Not supported format for non numeric and datetime in 'Text'.    
 
 >> Text(ParseJSON("null"), "#.##")
-""
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 24-30: Not supported format for non numeric and datetime in 'Text'.
 
 >> Text(ParseJSON("null"), "#.##", "fr-fr")
-""
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 24-30: Not supported format for non numeric and datetime in 'Text'.
 
 >> Text(ParseJSON("1.234"), Blank())
 ""
-
 >> Text(ParseJSON("1.234"), "#.##", Blank())
-""
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 25-31: Not supported format for non numeric and datetime in 'Text'.
 
 >> Text(ParseJSON("null"))
 Blank()

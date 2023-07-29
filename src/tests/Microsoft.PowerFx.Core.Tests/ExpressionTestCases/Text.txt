@@ -4,9 +4,6 @@
 >> Text(123.4, "#.000")
 "123.400"
 
->> Text(Blank(), "#.000")
-""
-
 // ******** NUMBER PARAMETERS ********
 
 //Excel needs two parameters for Text function
@@ -89,10 +86,6 @@
 >> Text("HELLO")
 "HELLO"
 
-// Calling Text on a string value returns that value
->> Text("abc", "0.00")
-"abc"
-
 // ******** BOOLEAN PARAMETERS ********
 
 //Excel needs two parameters for Text function
@@ -133,16 +126,6 @@ Blank()
 //Excel needs two parameters for Text function
 >> Text(Blank()*Blank())
 "0"
-
-//Excel returns "$"
->> Text(Blank(), "$ #,###")
-""
-
->> Text(Blank(), "#,#")
-""
-
->> Text(Blank(), "#,###")
-""
 
 >> Text(123.4, Blank())
 ""
@@ -256,36 +239,8 @@ Blank()
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"))
 "0f8fad5b-d9cb-469f-a165-70867728950e"
 
-// GUID is always formatted the same way by the text function
->> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b")
-"0f8fad5b-d9cb-469f-a165-70867728950e"
-
->> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "d", "vi-Vn")
-"0f8fad5b-d9cb-469f-a165-70867728950e"
-
->> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "p", "vi-Vn")
-"0f8fad5b-d9cb-469f-a165-70867728950e"
-
->> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "n", "vi-Vn")
-"0f8fad5b-d9cb-469f-a165-70867728950e"
-
->> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b", "vi-Vn")
-"0f8fad5b-d9cb-469f-a165-70867728950e"
-
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "", "vi-Vn")
 "0f8fad5b-d9cb-469f-a165-70867728950e"
-
->> Text("ss", "true")
-"ss"
-
->> Text("ss", "false")
-"ss"
-
->> Text("", "0,00.0")
-""
-
->> Text("", "####.#")
-""
 
 //Excel throws error
 >> Text(DateTimeValue(""), DateTimeFormat.ShortDate)

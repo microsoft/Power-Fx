@@ -5216,4 +5216,8 @@
   <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
     <value>This record cannot be copied. Instead, create an inline record using {...} notation to copy the individual fields desired.</value>
   </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Not supported format for non numeric and datetime in '{0}'.</value>
+    <comment>Error Message.</comment>
+  </data>
 </root>

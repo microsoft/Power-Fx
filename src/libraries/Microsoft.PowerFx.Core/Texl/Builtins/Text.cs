@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
@@ -13,6 +14,7 @@ using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -26,6 +28,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override bool IsSelfContained => true;
 
         public const string TextInvariantFunctionName = "Text";
+
+        private static readonly IReadOnlyList<DType> AllowedListToUseFormatString = new DType[] { DType.Number, DType.Decimal, DType.DateTime, DType.Date, DType.Time };
 
         public TextFunction()
             : base(TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
@@ -142,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         internal static void ValidateFormatArgs(string name, CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, ref bool isValid)
-        {
+        {            
             if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
             {
                 // Coerce enum values to string
@@ -155,29 +159,37 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg))
             {
-                if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
+                if (AllowedListToUseFormatString.Contains(argTypes[0]) || string.IsNullOrEmpty(formatArg))
                 {
-                    var textFormatArgs = new TextFormatArgs
+                    if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
                     {
-                        FormatCultureName = null,
-                        FormatArg = null,
-                        HasDateTimeFmt = false,
-                        HasNumericFmt = false
-                    };
+                        var textFormatArgs = new TextFormatArgs
+                        {
+                            FormatCultureName = null,
+                            FormatArg = null,
+                            HasDateTimeFmt = false,
+                            HasNumericFmt = false
+                        };
 
-                    if (!TextFormatUtils.IsValidFormatArg(formatArg, formatCulture: null, defaultLanguage: null, out textFormatArgs))
+                        if (!TextFormatUtils.IsValidFormatArg(formatArg, formatCulture: null, defaultLanguage: null, out textFormatArgs))
+                        {
+                            isValid = false;
+                        }
+                    }
+                    else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
                     {
                         isValid = false;
                     }
-                }
-                else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
-                {
-                    isValid = false;
-                }
 
-                if (!isValid)
+                    if (!isValid)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
+                    }
+                }
+                else
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
+                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
+                    isValid = false;
                 }
             }
 
