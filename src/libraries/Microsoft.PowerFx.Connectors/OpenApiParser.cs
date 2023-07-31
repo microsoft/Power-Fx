@@ -245,7 +245,9 @@ namespace Microsoft.PowerFx.Connectors
             opExtensions.Remove("x-ms-api-annotation");
             opExtensions.Remove("x-ms-no-generic-test");
 
-            // Not supported x-ms-pageable - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
+            // https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
+            opExtensions.Remove("x-ms-pageable");
+            
             // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
             // Other not supported extensions:
             //   x-ms-notification-content, x-ms-url-encoding, x-components, x-generator, x-ms-openai-data, x-ms-docs, x-servers
@@ -320,7 +322,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 ValidateSupportedOpenApiPathItem(ops, ref isSupported, ref notSupportedReason);
 
-                foreach (var kv2 in ops.Operations)
+                foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
                 {
                     HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
                     OpenApiOperation op = kv2.Value;
@@ -358,33 +360,17 @@ namespace Microsoft.PowerFx.Connectors
                     int cacheTimeoutMs = 10000;
                     bool isHidden = false;
                     string description = op.Description ?? $"Invoke {operationName}";
+                    string pageLink = op.PageLink();
 
-                    ServiceFunction sfunc = new ServiceFunction(
-                        null,
-                        theNamespace,
-                        operationName,
-                        operationName,
-                        description, // Template.GetFunctionDescription(funcTemplate.Name),
-                        returnType._type,
-                        BigInteger.Zero,
-                        argMapper.ArityMin,
-                        argMapper.ArityMax,
-                        isBehavior,
-                        isAutoRefreshable,
-                        isDynamic,
-                        isCacheEnabled,
-                        cacheTimeoutMs,
-                        isHidden,
-                        parameterOptions,
-                        argMapper.OptionalParamInfo,
-                        argMapper.RequiredParamInfo,
-                        parameterDefaultValues,
-                        "action", //  funcTemplate.ActionName,??
-                        numberIsFloat,
-                        argMapper._parameterTypes)
+#pragma warning disable SA1117 // parameters should be on same line or all on different lines
+
+                    ServiceFunction sfunc = new ServiceFunction(null, theNamespace, operationName, operationName, description, returnType._type, BigInteger.Zero, argMapper.ArityMin, argMapper.ArityMax, isBehavior, isAutoRefreshable, isDynamic, isCacheEnabled, 
+                        cacheTimeoutMs, isHidden, parameterOptions, argMapper.OptionalParamInfo, argMapper.RequiredParamInfo, parameterDefaultValues, pageLink, "action", numberIsFloat, argMapper._parameterTypes)
                     {
                         _invoker = invoker
                     };
+
+#pragma warning restore SA1117 // parameters should be on same line or all on different lines
 
                     functions.Add(sfunc);
                 }

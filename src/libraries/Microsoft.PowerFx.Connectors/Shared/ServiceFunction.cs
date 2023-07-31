@@ -46,6 +46,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly WeakReference<IService> _parentService;
         private readonly string _actionName;
         private readonly bool _numberIsFloat;
+        private readonly string _pageLink;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
@@ -53,11 +54,11 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override Capabilities Capabilities => Capabilities.OutboundInternetAccess | Capabilities.EnterpriseAuthentication | Capabilities.PrivateNetworkAccess;
         public override bool IsHidden => _isHidden;
         public override bool IsSelfContained => !_isBehaviorOnly;
+        public bool IsPageable => !string.IsNullOrEmpty(_pageLink);
 
-        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
-            DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
-            Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
+        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable,
+            bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
+            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -116,6 +117,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _actionName = actionName;
             _requiredParameters = requiredParamInfo;
             _numberIsFloat = numberIsFloat;
+            _pageLink = pageLink;
 
             if (arityMax > arityMin)
             {

@@ -11,6 +11,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
@@ -38,6 +40,16 @@ namespace Microsoft.PowerFx.Connectors
         /// Defines if the function is supported or contains unsupported elements.
         /// </summary>
         public bool IsSupported { get; private set; }
+
+        /// <summary>
+        /// Defines if the function is pageable (using x-ms-pageable extension).
+        /// </summary>
+        public bool IsPageable => !string.IsNullOrEmpty(PageLink);
+
+        /// <summary>
+        /// Page Link as defined in the x-ms-pageable extension.
+        /// </summary>
+        public string PageLink => Operation.PageLink();
 
         /// <summary>
         /// Reason for which the function isn't supported.
@@ -252,7 +264,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable SA1117 // parameters should be on same line or all on different lines
 
             ServiceFunction serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
-                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), "action", NumberIsFloat, ArgumentMapper._parameterTypes)
+                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), PageLink, "action", NumberIsFloat, ArgumentMapper._parameterTypes)
             {
                 _invoker = invoker
             };
@@ -363,5 +375,23 @@ namespace Microsoft.PowerFx.Connectors
         public bool IsCompleted { get; internal set; }
 
         public ConnectorParameterWithSuggestions[] Parameters { get; internal set; }
+    }
+
+    internal static class Extensions
+    {
+        internal static string PageLink(this OpenApiOperation op)
+        {
+            if (op.Extensions.ContainsKey("x-ms-pageable"))
+            {
+                IOpenApiExtension ext = op.Extensions["x-ms-pageable"];
+
+                if (ext is OpenApiString oas)
+                {
+                    return oas.Value;
+                }
+            }
+
+            return null;
+        }
     }
 }

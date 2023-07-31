@@ -9,10 +9,12 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using TestExtensions = Microsoft.PowerFx.Core.Tests.Extensions;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -257,6 +259,25 @@ namespace Microsoft.PowerFx.Tests
             AssertEqual(expected, actual);
         }
 
+        [Fact]
+        public async Task AzureBlobConnector_ListFiles()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"ey...";
+
+            using HttpClient httpClient = new HttpClient(); //testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            IEnumerable<FunctionInfo> funcInfos = config.AddService("azbs", apiDoc, ppClient);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            FormulaValue fv = await engine.EvalAsync(@"azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"")", CancellationToken.None).ConfigureAwait(false);
+
+
+        }
+
         // Very documentation strings from the Swagger show up in the intellisense.
         [Theory]
         [InlineData("MSNWeather.CurrentWeather(", false, false)]
@@ -275,11 +296,11 @@ namespace Microsoft.PowerFx.Tests
 
             if (expectedBehaviorError)
             {
-                Assert.Contains(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+                Assert.Contains(check.Errors, d => d.Message == TestExtensions.GetErrBehaviorPropertyExpectedMessage());
             }
             else
             {
-                Assert.DoesNotContain(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+                Assert.DoesNotContain(check.Errors, d => d.Message == TestExtensions.GetErrBehaviorPropertyExpectedMessage());
             }
 
             var result = engine.Suggest(check, expr.Length);
