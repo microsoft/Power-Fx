@@ -386,17 +386,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         internal static string PageLink(this OpenApiOperation op)
         {
-            if (op.Extensions.ContainsKey("x-ms-pageable"))
-            {
-                IOpenApiExtension ext = op.Extensions["x-ms-pageable"];
-
-                if (ext is OpenApiString oas)
-                {
-                    return oas.Value;
-                }
-            }
-
-            return null;
+            return op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) && ext is OpenApiString oas ? oas.Value : null;
         }
     }
 }
