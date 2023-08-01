@@ -7,8 +7,23 @@
 >> "a" in Blank()
 false
 
+>> "a" exactin Blank()
+false
+
 >> "" in Blank()
 true
 
+>> "" exactin Blank()
+true
+
 >> Blank() in Blank()
+true
+
+>> Blank() exactin Blank()
+true
+
+>> Blank() in "hello"
+true
+
+>> Blank() exactin "hello"
 true
