@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Tests
 
             var funcs = config.AddService("AzureBlobStorage", apiDoc, client);            
             var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
-            Assert.Equal(funcNames, new string[] { "AppendFile", "CopyFile", "CopyFileOld", "CreateFile", "CreateFileOld", "DeleteFile", "DeleteFileOld", "ExtractFolderOld", "ExtractFolderV2", "GetDataSetsMetadata", "GetFileContent", "GetFileContentByPath", "GetFileContentByPathOld", "GetFileContentOld", "GetFileMetadata", "GetFileMetadataByPath", "GetFileMetadataByPathOld", "GetFileMetadataOld", "ListAllRootFolders", "ListAllRootFoldersV2", "ListFolder", "ListFolderOld", "ListFolderV2", "ListRootFolder", "ListRootFolderOld", "ListRootFolderV2", "TestConnection", "UpdateFile", "UpdateFileOld" });
+            Assert.Equal(funcNames, new string[] { "AppendFile", "AppendFileV2", "CopyFile", "CopyFileOld", "CopyFileV2", "CreateBlockBlob", "CreateBlockBlobV2", "CreateFile", "CreateFileOld", "CreateFileV2", "CreateFolder", "CreateFolderV2", "CreateShareLinkByPath", "CreateShareLinkByPathV2", "DeleteFile", "DeleteFileOld", "DeleteFileV2", "ExtractFolderOld", "ExtractFolderV2", "ExtractFolderV3", "GetAccessPolicies", "GetAccessPoliciesV2", "GetDataSets", "GetDataSetsMetadata", "GetFileContent", "GetFileContentByPath", "GetFileContentByPathOld", "GetFileContentByPathV2", "GetFileContentOld", "GetFileContentV2", "GetFileMetadata", "GetFileMetadataByPath", "GetFileMetadataByPathOld", "GetFileMetadataByPathV2", "GetFileMetadataOld", "GetFileMetadataV2", "ListAllRootFolders", "ListAllRootFoldersV2", "ListAllRootFoldersV3", "ListAllRootFoldersV4", "ListFolder", "ListFolderOld", "ListFolderV2", "ListFolderV3", "ListFolderV4", "ListRootFolder", "ListRootFolderOld", "ListRootFolderV2", "ListRootFolderV3", "ListRootFolderV4", "RenameFile", "RenameFileV2", "SetBlobTierByPath", "SetBlobTierByPathV2", "TestConnection", "UpdateFile", "UpdateFileOld", "UpdateFileV2" });
 
             // Now execute it...
             var engine = new RecalcEngine(config);                        
@@ -242,7 +242,7 @@ namespace Microsoft.PowerFx.Tests
             var actual = testConnector._log.ToString();
 
             var version = PowerPlatformConnectorClient.Version;
-            var host = useSwaggerParameter ? "tip1-shared.azure-apim.net" : "tip1-shared-002.azure-apim.net";
+            var host = useSwaggerParameter ? "localhost:23340" : "tip1-shared-002.azure-apim.net";
             var expected = @$"POST https://{host}/invoke
  authority: {host}
  Authorization: Bearer eyJ0eX...
@@ -387,7 +387,7 @@ namespace Microsoft.PowerFx.Tests
                 httpClient);
 
             Assert.NotNull(ppcl3);
-            Assert.Equal("tip1-shared.azure-apim.net", ppcl3.Endpoint);
+            Assert.Equal("localhost:23340", ppcl3.Endpoint);
 
             using var testConnector2 = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
             var apiDoc2 = testConnector2._apiDocument;

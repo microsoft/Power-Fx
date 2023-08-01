@@ -2559,7 +2559,7 @@
         }
       }
     },
-    "/datasets/default/files/{id}": {
+    "/{connectionId}/datasets/default/files/{id}": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -2958,7 +2958,7 @@
         }
       }
     },
-    "/datasets/default/GetFileByPath": {
+    "/{connectionId}/datasets/default/GetFileByPath": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3053,7 +3053,7 @@
         }
       }
     },
-    "/datasets/default/GetFileContentByPath": {
+    "/{connectionId}/datasets/default/GetFileContentByPath": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3157,7 +3157,7 @@
         }
       }
     },
-    "/datasets/default/files/{id}/content": {
+    "/{connectionId}/datasets/default/files/{id}/content": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3254,7 +3254,7 @@
         }
       }
     },
-    "/datasets/default/files": {
+    "/{connectionId}/datasets/default/files": {
       "post": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3390,7 +3390,7 @@
         }
       }
     },
-    "/datasets/default/files/{id}/rename": {
+    "/{connectionId}/datasets/default/files/{id}/rename": {
       "post": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3490,7 +3490,7 @@
         }
       }
     },
-    "/datasets/default/copyFile": {
+    "/{connectionId}/datasets/default/copyFile": {
       "post": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3568,7 +3568,7 @@
         }
       }
     },
-    "/api/blob/files/{id}": {
+    "/{connectionId}/api/blob/files/{id}": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3672,7 +3672,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/api/blob/GetFileByPath": {
+    "/{connectionId}/api/blob/GetFileByPath": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3707,7 +3707,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/api/blob/GetFileContentByPath": {
+    "/{connectionId}/api/blob/GetFileContentByPath": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3740,7 +3740,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/api/blob/files/{id}/content": {
+    "/{connectionId}/api/blob/files/{id}/content": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3773,7 +3773,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/api/blob/files": {
+    "/{connectionId}/api/blob/files": {
       "post": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3824,7 +3824,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/api/blob/copyFile": {
+    "/{connectionId}/api/blob/copyFile": {
       "post": {
         "tags": [
           "AzureBlobSingletonFileTransferFileData"
@@ -3873,7 +3873,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/datasets/default/triggers/onnewfile": {
+    "/{connectionId}/datasets/default/triggers/onnewfile": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileDataTrigger"
@@ -4014,7 +4014,7 @@
         }
       }
     },
-    "/datasets/default/triggers/onupdatedfile": {
+    "/{connectionId}/datasets/default/triggers/onupdatedfile": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileDataTrigger"
@@ -4165,7 +4165,7 @@
         }
       }
     },
-    "/datasets/default/triggers/batch/onnewfile": {
+    "/{connectionId}/datasets/default/triggers/batch/onnewfile": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileDataTrigger"
@@ -4263,7 +4263,7 @@
         }
       }
     },
-    "/datasets/default/triggers/batch/onupdatedfile": {
+    "/{connectionId}/datasets/default/triggers/batch/onupdatedfile": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileDataTrigger"
@@ -4377,7 +4377,7 @@
         }
       }
     },
-    "/api/trigger/onnewfile": {
+    "/{connectionId}/api/trigger/onnewfile": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileDataTrigger"
@@ -4433,7 +4433,7 @@
         "x-ms-trigger": "single"
       }
     },
-    "/api/trigger/onupdatedfile": {
+    "/{connectionId}/api/trigger/onupdatedfile": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFileDataTrigger"
@@ -4489,7 +4489,7 @@
         "x-ms-trigger": "single"
       }
     },
-    "/datasets/default/folders/{id}": {
+    "/{connectionId}/datasets/default/folders/{id}": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -4580,7 +4580,7 @@
         }
       }
     },
-    "/datasets/default/foldersV2/{id}": {
+    "/{connectionId}/datasets/default/foldersV2/{id}": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -4691,7 +4691,7 @@
         }
       }
     },
-    "/datasets/default/folders": {
+    "/{connectionId}/datasets/default/folders": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -4814,7 +4814,7 @@
         }
       }
     },
-    "/datasets/default/foldersV2": {
+    "/{connectionId}/datasets/default/foldersV2": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -4872,7 +4872,7 @@
         }
       }
     },
-    "/datasets/default/rootfolders": {
+    "/{connectionId}/datasets/default/rootfolders": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -4906,7 +4906,7 @@
         }
       }
     },
-    "/datasets/default/rootfoldersV2": {
+    "/{connectionId}/datasets/default/rootfoldersV2": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -4951,7 +4951,7 @@
         }
       }
     },
-    "/datasets/default/extractFolderV2": {
+    "/{connectionId}/datasets/default/extractFolderV2": {
       "post": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -5115,7 +5115,7 @@
         }
       }
     },
-    "/api/blob/folders/{id}": {
+    "/{connectionId}/api/blob/folders/{id}": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -5153,7 +5153,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/api/blob/folders": {
+    "/{connectionId}/api/blob/folders": {
       "get": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -5182,7 +5182,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/api/blob/extractFolder": {
+    "/{connectionId}/api/blob/extractFolder": {
       "post": {
         "tags": [
           "AzureBlobSingletonFileTransferFolderData"
@@ -5225,7 +5225,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/v2/datasets/{storageAccountName}/CreateSharedLinkByPath": {
+    "/{connectionId}/v2/datasets/{storageAccountName}/CreateSharedLinkByPath": {
       "post": {
         "tags": [
           "AzureBlobV2"
@@ -5342,7 +5342,7 @@
         }
       }
     },
-    "/v2/datasets/{storageAccountName}/SetBlobTierByPath": {
+    "/{connectionId}/v2/datasets/{storageAccountName}/SetBlobTierByPath": {
       "post": {
         "tags": [
           "AzureBlobV2"
@@ -5453,7 +5453,7 @@
         }
       }
     },
-    "/v2/datasets/{storageAccountName}/policies": {
+    "/{connectionId}/v2/datasets/{storageAccountName}/policies": {
       "get": {
         "tags": [
           "AzureBlobV2"
@@ -5560,7 +5560,7 @@
         }
       }
     },
-    "/v2/codeless/datasets/{storageAccountName}/CreateBlockBlob": {
+    "/{connectionId}/v2/codeless/datasets/{storageAccountName}/CreateBlockBlob": {
       "post": {
         "tags": [
           "AzureBlobV2"
@@ -5689,7 +5689,7 @@
         }
       }
     },
-    "/v2/codeless/GetDataSets": {
+    "/{connectionId}/v2/codeless/GetDataSets": {
       "get": {
         "tags": [
           "AzureBlobV2"
@@ -5746,7 +5746,7 @@
         "x-ms-visibility": "internal"
       }
     },
-    "/datasets/default/CreateSharedLinkByPath": {
+    "/{connectionId}/datasets/default/CreateSharedLinkByPath": {
       "post": {
         "tags": [
           "SingletonAzureBlob"
@@ -5846,7 +5846,7 @@
         }
       }
     },
-    "/datasets/default/SetBlobTierByPath": {
+    "/{connectionId}/datasets/default/SetBlobTierByPath": {
       "post": {
         "tags": [
           "SingletonAzureBlob"
@@ -5940,7 +5940,7 @@
         }
       }
     },
-    "/datasets/default/policies": {
+    "/{connectionId}/datasets/default/policies": {
       "get": {
         "tags": [
           "SingletonAzureBlob"
