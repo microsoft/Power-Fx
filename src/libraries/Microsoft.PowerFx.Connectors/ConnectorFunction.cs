@@ -384,9 +384,6 @@ namespace Microsoft.PowerFx.Connectors
 
     internal static class Extensions
     {
-        internal static string PageLink(this OpenApiOperation op)
-        {
-            return op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) && ext is OpenApiString oas ? oas.Value : null;
-        }
+        internal static string PageLink(this OpenApiOperation op) => op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) && ext is OpenApiString oas ? oas.Value : null;
     }
 }
