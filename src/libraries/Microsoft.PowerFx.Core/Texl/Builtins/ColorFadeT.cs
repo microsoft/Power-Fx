@@ -39,11 +39,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { LanguageConstants.ColorEnumString };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -62,7 +57,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             TexlNode otherArg = null;
 
             // At least one of the arguments has to be a table.
-            if (type0.IsTable)
+            if (type0.IsTableNonObjNull)
             {
                 // Ensure we have a one-column table of colors.
                 fValid &= CheckColorColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap, out returnType);
@@ -76,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 Contracts.Assert(returnType.IsTable);
                 Contracts.Assert(!fValid || returnType.IsColumn);
             }
-            else if (type1.IsTable)
+            else if (type1.IsTableNonObjNull)
             {
                 // Ensure we have a one-column table of numerics.
                 fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
@@ -114,7 +109,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(expectedType == DType.Color || expectedType == DType.Number);
             Contracts.AssertValue(errors);
 
-            if (otherType.IsTable)
+            if (otherType.IsTableNonObjNull)
             {
                 // Ensure we have a one-column table of numerics/color values based on expected type.
                 return CheckColumnType(context, otherArg, otherType, expectedType == DType.Number ? DType.Number : DType.Color, errors, ref nodeToCoercedTypeMap);

@@ -47,7 +47,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("ACSL", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "aCSL__ConversationAnalysisAnalyzeConversationConversation");
+            Assert.Contains(
+                functionList,
+                func =>
+                    func.Namespace.Name.Value == "ACSL" &&
+                    func.Name == "ConversationAnalysisAnalyzeConversationConversation");
         }
 
 #pragma warning disable SA1118, SA1137
@@ -243,6 +247,25 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public async Task AzureOpenAiGetFunctions()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Azure Open AI.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+
+            PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToArray();
+
+            Assert.Equal("ChatCompletionsCreate", functions[0].Name);
+            Assert.Equal("![choices:*[finish_reason:s, index:w, message:![content:s, role:s]], created:w, id:s, model:s, object:s, usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[0].ReturnType.ToStringWithDisplayNames());
+
+            Assert.Equal("CompletionsCreate", functions[1].Name);
+            Assert.Equal("![choices:*[finish_reason:s, index:w, logprobs:![text_offset:*[Value:w], token_logprobs:*[Value:w], tokens:*[Value:s], top_logprobs:*[]], text:s], created:w, id:s, model:s, object:s, usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[1].ReturnType.ToStringWithDisplayNames());
+            
+            Assert.Equal("ExtensionsChatCompletionsCreate", functions[2].Name);
+            Assert.Equal("![choices:*[content_filter_results:![error:![code:s, message:s], hate:![filtered:b, severity:s], self_harm:![filtered:b, severity:s], sexual:![filtered:b, severity:s], violence:![filtered:b, severity:s]], finish_reason:s, index:w, messages:*[content:s, end_turn:b, index:w, recipient:s, role:s]], created:w, id:s, model:s, object:s, prompt_filter_results:*[content_filter_results:![error:![code:s, message:s], hate:![filtered:b, severity:s], self_harm:![filtered:b, severity:s], sexual:![filtered:b, severity:s], violence:![filtered:b, severity:s]], prompt_index:w], usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[2].ReturnType.ToStringWithDisplayNames());
+        }
+
+        [Fact]
         public async Task ACSL_InvokeFunction_v21()
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language v2.1.json");
@@ -269,7 +292,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             // We can call the function with a RuntimeConfig parameters (unused here) that can contain TimeZoneInformation or other runtime settings
-            FormulaValue httpResult = await function.InvokeAync(new FormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -457,7 +480,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("LQA", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "lQA__GetAnswersFromText");
+            Assert.Contains(
+                functionList,
+                func =>
+                    func.Namespace.Name.Value == "LQA" &&
+                    func.Name == "GetAnswersFromText");
         }
 
         [Fact]
@@ -465,7 +492,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("SQL", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "sQL__GetProcedureV2");
+            Assert.Contains(
+                functionList,
+                func =>
+                    func.Namespace.Name.Value == "SQL" &&
+                    func.Name == "GetProcedureV2");
         }
 
         [Fact]

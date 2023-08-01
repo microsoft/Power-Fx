@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var retval = false;
 
-            for (var i = 1; i < args.Length; i += 2)
+            for (var i = 1; i < args.Count; i += 2)
             {
                 var columnType = binding.GetType(args[i]);
                 var columnNode = args[i].AsStrLit();
@@ -382,11 +382,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public SortByColumnsOrderTableFunction()
             : base("SortByColumns", TexlStrings.AboutSortByColumnsWithOrderValues, FunctionCategories.Table, DType.EmptyTable, 0, 3, 3, DType.EmptyTable, DType.String, DType.EmptyTable)
         {
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "OrderTable");
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()

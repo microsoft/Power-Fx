@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Value(CreateFormattingInfo(runner), irContext, args);
+            return Value(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Float(CreateFormattingInfo(runner), irContext, args);
+            return Float(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -176,11 +176,9 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryFloat(formatInfo, irContext, args[0], out NumberValue result);
+            bool isValue = TryFloat(formatInfo.With(culture), irContext, args[0], out NumberValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -228,7 +226,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Decimal(CreateFormattingInfo(runner), irContext, args);
+            return Decimal(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -251,11 +249,9 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryDecimal(formatInfo, irContext, args[0], out DecimalValue result);
+            bool isValue = TryDecimal(formatInfo.With(culture), irContext, args[0], out DecimalValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -322,7 +318,7 @@ namespace Microsoft.PowerFx.Functions
             }
 
             runner.CancellationToken.ThrowIfCancellationRequested();
-            return Text(CreateFormattingInfo(runner), irContext, args, runner.CancellationToken);
+            return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -352,8 +348,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
             // We limit the format string size
@@ -363,7 +357,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, defaultLanguage, out textFormatArgs))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, culture, defaultLanguage, out textFormatArgs))
             {
                 if (formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase) && !(textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt))
                 {
@@ -374,7 +368,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
+            var isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
@@ -412,7 +406,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "G", culture));
                     }
 
                     break;
@@ -428,7 +422,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var normalized = dec.Normalize();
-                        result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, normalized.ToString(formatString ?? "G", culture));
                     }
 
                     break;

@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Sifat data tersuai komponen dengan parameter hanya boleh dicapai dari dalam bahagian dalam komponen atau daripada sifat output komponen.</value>
+    <value>Sifat atau parameter fungsi komponen hanya boleh dicapai daripada bahagian dalam komponen atau daripada sifat output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Sifat atau parameter fungsi komponen hanya boleh merujuk sifat fungsi lain.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Operasi ini pada jadual '{0}' mungkin tidak berfungsi jika mempunyai lebih daripada {1} baris.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Predikat ini akan sentiasa benar. Adakah anda bermaksud untuk menggunakan ThisRecord atau [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Tidak dapat menugaskan {0}: hanya menyokong penugasan untuk carian pada medan kunci utama '{1}'.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Tidak dapat menugaskan {0}: mengandungi fungsi kelakuan '{1}'.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teks untuk dialih keluar tag HTML dan XMLnya.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Fungsi penapisan tidak membenarkan fungsi tingkah laku sebagaimana yang diramalkan.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gunakan operator And untuk menggabungkan berbilang ramalan ke dalam argumen kedua.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Jadual ini tidak boleh disalin. Sebaliknya, cipta jadual sebaris dengan menggunakan fungsi ForAll dan notasi {...} untuk menyalin lajur individu yang diingini.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Rekod ini tidak boleh disalin. Sebaliknya, cipta rekod sebaris dengan menggunakan notasi {...} untuk menyalin medan individu yang diingini.</value>
   </data>
 </root>

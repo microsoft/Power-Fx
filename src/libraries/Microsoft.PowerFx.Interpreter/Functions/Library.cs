@@ -44,15 +44,6 @@ namespace Microsoft.PowerFx.Functions
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
-        public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
-        {
-            return new FormattingInfo()
-            {
-                CultureInfo = runner.CultureInfo,
-                TimeZoneInfo = runner.TimeZoneInfo
-            };
-        }
-
         static Library()
         {
             var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
@@ -1973,7 +1964,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                else if (!forceSingleColumn && arg is BlankValue bv && bv.Type._type.IsRecord)
                 {
                     return DValue<RecordValue>.Of(bv);
                 }
@@ -2145,6 +2136,10 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return new VoidValue(irContext);
+            }
+            else if (result is BlankValue && result.IRContext.ResultType._type.Kind == DKind.ObjNull)
+            {
+                return new BlankValue(irContext); // Convert the untyped blank to a typed blank value
             }
             else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
             {

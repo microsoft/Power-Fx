@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -84,7 +85,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 // Check that target table is not an expanded entity (1-N/N-N relationships)
                 // TASK 9966488: Enable CountRows/CountIf delegation for table relationships
                 var args = callNode.Args.Children.VerifyValue();
-                if (args.Length > 0)
+                if (args.Count > 0)
                 {
                     if (binding.GetType(args[0]).HasExpandInfo)
                     {
@@ -132,11 +133,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.CountArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

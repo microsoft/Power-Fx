@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponenta pielāgotajam datu rekvizītam ar parametriem var piekļūt tikai no komponenta vai komponenta izvades rekvizītiem.</value>
+    <value>Komponenta funkcijas rekvizītam vai parametram var piekļūt tikai no komponenta vai komponenta izvades rekvizītiem.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponenta funkcijas rekvizīts vai parametrs var atsaukties tikai uz citiem funkcijas rekvizītiem.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Šī darbība tabulā “{0}” var nedarboties, ja tās rindu skaits pārsniedz {1}.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Šis predikāts vienmēr būs patiess. Vai vēlējāties izmantot ThisRecord vai [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Nevar deleģēt {0}: deleģēšana tiek atbalstīta tikai primārās atslēgas lauka '{1}' uzmeklēšanai.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Nevar deleģēt {0}: satur uzvedības funkciju '{1}'.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teksts, no kā jānoņem tā HTML un XML atzīmes.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtra funkcijas neatļauj izmantot uzvedības funkcijas kā predikātus.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Izmantojiet operatoru And, lai apvienotu vairākus predikātus otrā argumentā.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Šo tabulu nevar kopēt. Tā vietā izveidojiet iekļauto tabulu, izmantojot funkciju ForAll un {...} notāciju, lai kopētu atsevišķas vajadzīgās kolonnas.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Šo ierakstu nevar kopēt. Tā vietā izveidojiet iekļauto ierakstu, izmantojot {...} notāciju, lai kopētu atsevišķus vajadzīgos laukus.</value>
   </data>
 </root>

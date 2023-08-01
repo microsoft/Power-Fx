@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Delegation;
+using Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Texl;
@@ -266,7 +267,8 @@ namespace Microsoft.PowerFx.Core.Binding
             bool updateDisplayNames = false,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = null)
+            Features features = null,
+            DelegationHintProvider delegationHintProvider = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValue(bindingConfig);
@@ -327,6 +329,7 @@ namespace Microsoft.PowerFx.Core.Binding
             HasLocalScopeReferences = false;
             TransitionsFromAsyncToSync = false;
             Rule = rule;
+            DelegationHintProvider = delegationHintProvider;
             if (resolver != null)
             {
                 EntityPath = resolver.CurrentEntityPath;
@@ -347,8 +350,62 @@ namespace Microsoft.PowerFx.Core.Binding
                 numberIsFloat: bindingConfig.NumberIsFloat);
         }
 
+        /// <summary>
+        /// May be invoked during delegation visitation to provide a way to report warnings.
+        /// </summary>
+        internal readonly DelegationHintProvider DelegationHintProvider;
+
         // Binds a Texl parse tree.
         // * resolver provides the name context used to bind names to globals, resources, etc. This may be null.
+        
+        /// <summary>
+        /// Binds a Power Fx parse true.
+        /// </summary>
+        /// <param name="glue">
+        /// Encapsulated dependencies from Power Apps Client project code.  This may be null.
+        /// </param>
+        /// <param name="scopeResolver">
+        /// A special name resolver that provides scoped names to the binder.
+        /// <see cref="ScopedNameLookupInfo"/> for more information.  This may be null.
+        /// </param>
+        /// <param name="queryOptionsMap">
+        /// A means of collecting usage data from the binder.  This may be null.
+        /// </param>
+        /// <param name="node">
+        /// Node representing the root of the parse tree to be bound. This may not be null.
+        /// </param>
+        /// <param name="resolver">
+        /// Name resolver used to bind names to globals, resources, etc. This may be null.
+        /// </param>
+        /// <param name="bindingConfig">
+        /// Augments behavior in a similar way to the features argument, but for features
+        /// particular to Power Apps Client.  When possible, use Features instead. 
+        /// </param>
+        /// <param name="updateDisplayNames">
+        /// If true, the binder will update the display names of the nodes in the parse tree.
+        /// </param>
+        /// <param name="ruleScope">
+        /// The type defining a list of valid names for the rule.  This may be null.
+        /// </param>
+        /// <param name="forceUpdateDisplayNames">
+        /// If true, the binder will update the display names of the nodes in the parse tree
+        /// even if the display names are already set.
+        /// </param>
+        /// <param name="rule">
+        /// The rule that is being bound.  This may be null.  As long as a parse tree is provided,
+        /// it will be bound.
+        /// </param>
+        /// <param name="features">
+        /// A set of features that augment the behavior of the binder.
+        /// </param>
+        /// <param name="delegationHintProvider">
+        /// A pseudo visitor that will be called when delegation warning visitation occurs.
+        /// Provides a way to annotate nodes with additional errors and warnings.
+        /// See <see cref="DelegationValidationStrategy"/> for more information.
+        /// </param>
+        /// <returns>
+        /// A means of reading the data that was bound to the provided parse tree for the run.
+        /// </returns>
         public static TexlBinding Run(
             IBinderGlue glue,
             IExternalRuleScopeResolver scopeResolver,
@@ -360,14 +417,15 @@ namespace Microsoft.PowerFx.Core.Binding
             DType ruleScope = null,
             bool forceUpdateDisplayNames = false,
             IExternalRule rule = null,
-            Features features = null)
+            Features features = null,
+            DelegationHintProvider delegationHintProvider = null)
         {
             Contracts.AssertValue(node);
             Contracts.AssertValueOrNull(resolver);
 
             features ??= Features.None;
 
-            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule, features: features);
+            var txb = new TexlBinding(glue, scopeResolver, queryOptionsMap, node, resolver, bindingConfig, ruleScope, updateDisplayNames, forceUpdateDisplayNames, rule: rule, features: features, delegationHintProvider: delegationHintProvider);
             var vis = new Visitor(txb, resolver, ruleScope, bindingConfig.UseThisRecordForRuleScope, features);
             vis.Run();
 
@@ -699,7 +757,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             if (node.Kind == NodeKind.Call)
             {
-                if (node.AsCall().Args.Children.Length == 0)
+                if (node.AsCall().Args.Children.Count == 0)
                 {
                     tabularDataQueryOptionsMap = null;
                     return false;
@@ -1985,7 +2043,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         {
                             var scopeFunction = callInfo.Function;
 
-                            Contracts.Assert(callInfo.Node.Args.Children.Length > 0);
+                            Contracts.Assert(callInfo.Node.Args.Children.Count > 0);
                             var firstArg = callInfo.Node.Args.Children[0];
 
                             // Determine if we arrived as the first (scope) argument of the function call
@@ -3922,7 +3980,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private static bool IsValidAccessToScopedProperty(IExternalControl lhsControl, IExternalControlProperty rhsProperty, IExternalControl currentControl, IExternalControlProperty currentProperty)
@@ -4034,7 +4092,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     var args = node.Args.Children;
                     var set = ScopeUseSet.GlobalsOnly;
 
-                    for (var i = 0; i < args.Length; i++)
+                    for (var i = 0; i < args.Count; i++)
                     {
                         var argScopeUseSet = _txb.GetScopeUseSet(args[i]);
 
@@ -4353,7 +4411,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // The zeroth arg should not be a lambda. Instead it defines the context type for the lambdas.
                 Contracts.Assert(!maybeFunc.IsLambdaParam(0));
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argTypes = new DType[args.Length];
 
                 // We need to know which variables are volatile in case the first argument is or contains a
@@ -4616,7 +4674,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Give warning if returning dynamic metadata without a known dynamic type
                 else if (func.IsDynamic && _nameResolver.Document.Properties.EnabledFeatures.IsDynamicSchemaEnabled)
                 {
-                    if (!func.CheckForDynamicReturnType(_txb, node.Args.Children))
+                    if (!func.CheckForDynamicReturnType(_txb, node.Args.Children.ToArray()))
                     {
                         _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDynamicMetadata);
                     }
@@ -4740,7 +4798,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 // Make a binder-aware call to Concatenate
                 _txb.GenerateCallNode(node);
 
-                var args = node.Children;
+                var args = node.Children.ToArray();
                 var argTypes = new DType[args.Length];
 
                 // Process arguments
@@ -4802,7 +4860,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
 
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private bool TryGetAffectScopeVariableFunc(CallNode node, out TexlFunction func)
@@ -4826,7 +4884,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(func.SupportsMetadataTypeArg);
                 Contracts.Assert(!func.HasLambdas);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argCount = args.Length;
 
                 var returnType = func.ReturnType;
@@ -4897,7 +4955,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.AssertIndexInclusive(argCountVisited, node.Args.Count);
                 Contracts.AssertValueOrNull(scopeNew);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var argCount = args.Length;
 
                 var info = _txb.GetInfo(node);
@@ -5112,11 +5170,11 @@ namespace Microsoft.PowerFx.Core.Binding
                 Contracts.Assert(overloads.Length > 1);
                 Contracts.AssertAllValues(overloads);
 
-                var args = node.Args.Children;
+                var args = node.Args.Children.ToArray();
                 var carg = args.Length;
                 var argTypes = args.Select(_txb.GetType).ToArray();
 
-                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, node.Args.Children, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
+                if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, args, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
@@ -5167,7 +5225,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 AssertValid();
                 Contracts.AssertValue(node);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
             }
 
             private bool IsRecordScopeFieldName(DName name, out Scope scope)
@@ -5289,7 +5347,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, nodeType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
 
@@ -5366,7 +5424,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 _txb.SetType(node, tableType);
                 SetVariadicNodePurity(node);
-                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children));
+                _txb.SetScopeUseSet(node, JoinScopeUseSets(node.Children.ToArray()));
                 _txb.SetSelfContainedConstant(node, isSelfContainedConstant);
             }
         }

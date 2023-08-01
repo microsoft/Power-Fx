@@ -1,0 +1,5 @@
+#SETUP: TableSyntaxDoesntWrapRecords,PowerFxV1CompatibilityRules
+
+// Untyped blanks are not allowed in the argument that defines the row scope
+>> Filter(Blank(), Blank())
+Errors: Error 7-14: Invalid argument type.|Error 0-24: The function 'Filter' has some invalid arguments.

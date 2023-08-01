@@ -293,7 +293,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (SchemaObject(("x", SchemaInteger), ("y", SchemaString)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
+                ["a"] = (SchemaObject(("x", SchemaInteger, false), ("y", SchemaString, false)), GetRecord(("x", FormulaValue.New(1)), ("y", FormulaValue.New("foo"))))
             });
 
             Assert.Equal("a.x=1&a.y=foo", str);
@@ -305,9 +305,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
                 ["a"] = (SchemaObject(
-                            ("x", SchemaInteger), 
-                            ("y", SchemaString), 
-                            ("z", SchemaObject(("a", SchemaInteger)))),
+                            ("x", SchemaInteger, false), 
+                            ("y", SchemaString, false), 
+                            ("z", SchemaObject(("a", SchemaInteger, false)), false)),
                          GetRecord(
                              ("x", FormulaValue.New(1)), 
                              ("y", FormulaValue.New("foo")), 
@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             var ex = Assert.Throws<NotImplementedException>(() => SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>()
             {
-                ["a"] = (SchemaObject(("x", SchemaInteger), ("y", SchemaString)), GetRecord(("x", FormulaValue.New(1))))
+                ["a"] = (SchemaObject(("x", SchemaInteger, true), ("y", SchemaString, true)), GetRecord(("x", FormulaValue.New(1))))
             }));
 
             Assert.Equal("Missing property y, object is too complex or not supported", ex.Message);
@@ -336,7 +336,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
             rtConfig.SetTimeZone(TimeZoneInfo.Local);            
-            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new FormattingInfo());
+            string str = SerializeUrlEncoder(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, FormattingInfoHelper.CreateFormattingInfo());
             
             string dateStr = str.Substring(2);
             Assert.Equal(date, DateTime.Parse(HttpUtility.UrlDecode(dateStr)));            

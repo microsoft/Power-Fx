@@ -337,7 +337,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
         {
             cts.ThrowIfCancellationRequested();
-            return await dynamicApi.ServiceFunction.InvokeAsync(new FormattingInfo(), arguments, cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(FormattingInfoHelper.CreateFormattingInfo(), arguments, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -418,13 +418,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             Contracts.AssertValue(paramName);
 
             return _parameterDefaultValues.TryGetValue(paramName, out defaultValue);
-        }
-
-        // We changed all async functions to append "Async" to the end of async function names,
-        // but to maintain the previous behavior of service functions, we suppress this in this case.
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "", suppressAsync: true);
         }
 
         // Provide as hook for execution. 

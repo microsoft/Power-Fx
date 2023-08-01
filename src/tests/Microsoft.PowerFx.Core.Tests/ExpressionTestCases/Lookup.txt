@@ -84,10 +84,10 @@ Error({Kind:ErrorKind.Div0})
 >> LookUp([1,2,3,4], Blank())
 Blank()
 
->> LookUp(Blank(), Blank())
+>> LookUp(If(1<0,[1,2,3]), Blank())
 Blank()
 
->> LookUp(Blank(), Blank(), "constant")
+>> LookUp(If(1<0,[1,2,3]), Blank(), "constant")
 Blank()
 
 >> LookUp([100, 200, 300], Value > 250, Power(100, Value))

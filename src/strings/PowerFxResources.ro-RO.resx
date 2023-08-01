@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Proprietatea de date particularizate a componentelor cu parametri poate fi accesată numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    <value>Proprietatea sau parametrul de funcție a componentelor pot fi accesate numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Proprietatea sau parametrul de funcție a componentelor pot face referire numai la alte proprietăți ale funcției.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4859,15 +4863,15 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Această operațiune pe tabel pe „{0}” este posibil să nu funcționeze dacă are mai mult de {1} rânduri.</value>
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>Acest predicat va fi întotdeauna adevărat. Ați vrut să folosiși ThisRecord sau [@ ]?</value>
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Nu se poate delega {0}: numai delegarea cu suport pentru căutare în câmpul de cheie primară „{1}”.</value>
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
@@ -4875,7 +4879,7 @@
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Nu se poate delega {0}: conține o funcție de comportament „{1}”.</value>
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5001,5 +5005,19 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Textul pentru care se elimină etichetele HTML și XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funcțiile de filtrare nu permit funcții comportamentale ca predicate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilizați operatorul And pentru a combina mai multe predicate în cel de-al doilea argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Acest tabel nu se poate copia. Creați în schimb un tabel în linie utilizând funcția ForAll și notația {...} pentru a copia coloanele individuale de care aveți nevoie.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Această înregistrare nu se poate copia. Creați în schimb o înregistrare în linie utilizând notația {...} pentru a copia câmpurile individuale de care aveți nevoie.</value>
   </data>
 </root>

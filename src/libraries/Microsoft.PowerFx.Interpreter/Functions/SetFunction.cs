@@ -47,6 +47,16 @@ namespace Microsoft.PowerFx.Interpreter
         {
         }
 
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            nodeToCoercedTypeMap = null;
+            returnType = DType.Boolean;
+
+            var isValid = CheckType(context, args[1], argTypes[1], argTypes[0], errors, ref nodeToCoercedTypeMap);
+
+            return isValid;
+        }
+
         // 2nd argument should be same type as 1st argument. 
         public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
         {
@@ -72,7 +82,8 @@ namespace Microsoft.PowerFx.Interpreter
                     // We have a variable. type check
                     var arg1 = argTypes[1];
 
-                    if (!arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules))
+                    if (!(arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: binding.Features.PowerFxV1CompatibilityRules) ||
+                         (arg0.IsNumeric && arg1.IsNumeric)))
                     {
                         errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType_ExpectedType_ProvidedType, arg0.GetKindString(), arg1.GetKindString());
                         return;

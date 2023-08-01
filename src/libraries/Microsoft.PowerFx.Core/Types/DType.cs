@@ -578,6 +578,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull || Kind == DKind.LazyTable;
 
+        public bool IsTableNonObjNull => Kind == DKind.Table || Kind == DKind.LazyTable;
+
         public bool IsEnum => Kind == DKind.Enum || Kind == DKind.ObjNull;
 
         public bool IsColumn => IsTable && ChildCount == 1;
@@ -3844,6 +3846,20 @@ namespace Microsoft.PowerFx.Core.Types
             // suggestions.
             return similar != null &&
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
+        }
+
+        public bool AggregateHasExpandedType()
+        {
+            var ret = false;
+
+            if (IsAggregate)
+            {
+                var record = ToRecord();
+
+                ret = record.GetAllNames(DPath.Root).Any(name => name.Type.IsExpandEntity);
+            }
+
+            return ret;
         }
 
         /// <summary>

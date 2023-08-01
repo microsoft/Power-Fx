@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Tests
 
         // From dateTime to other types
         [Theory]
-        [InlineData("2/5/2023", null, "44962", "44962", "2/5/2023 12:00 AM", "2/5/2023 12:00 AM")]
+        [InlineData("2/5/2023", null, "44962", "44962", "02/05/2023 00:00", "2/5/2023 12:00 AM")]
         public void TryCoerceFromDateTimeTest(string value, string exprBool, string exprNumber, string exprDecimal, string exprStr, string exprDateTime)
         {
             TryCoerceToTargetTypes(FormulaValue.New(DateTime.Parse(value)), exprBool, exprNumber, exprDecimal, exprStr, exprDateTime);
@@ -118,9 +118,13 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Number));
             Assert.True(FormulaType.Decimal.CanPotentiallyCoerceTo(FormulaType.Decimal));
             Assert.True(FormulaType.Guid.CanPotentiallyCoerceTo(FormulaType.Guid));
+            Assert.True(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.DateTime));
+            Assert.True(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.String));
 
             Assert.False(FormulaType.Color.CanPotentiallyCoerceTo(FormulaType.String));
             Assert.False(FormulaType.Number.CanPotentiallyCoerceTo(FormulaType.Hyperlink));
+            Assert.False(FormulaType.String.CanPotentiallyCoerceTo(FormulaType.Color));
+            Assert.False(FormulaType.DateTime.CanPotentiallyCoerceTo(FormulaType.Boolean));
 
             RecordType inputType = RecordType.Empty()
                 .Add(new NamedFormulaType("a", FormulaType.String))
@@ -344,9 +348,8 @@ namespace Microsoft.PowerFx.Tests
 
             var runtimeConfig = new RuntimeConfig();
 
-            // $$$ can't use current culture
-            runtimeConfig.SetCulture(CultureInfo.CurrentCulture);
-            runtimeConfig.SetTimeZone(TimeZoneInfo.Utc);
+            runtimeConfig.SetCulture(CultureInfo.InvariantCulture);
+            runtimeConfig.SetTimeZone(TimeZoneInfo.Local);
             isSucceeded = inputValue.TryCoerceTo(runtimeConfig, out StringValue resultString);
             if (exprStr != null)
             {

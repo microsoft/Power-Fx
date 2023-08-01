@@ -36,6 +36,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal("Blank()", result.ToString());
         }
 
+        [Fact]
+        public async void TestEmptyFieldOfRecordTable()
+        {
+            string recordName = "BooleanRecord";
+            string tableName = "BooleanTable";
+            string columnName = "BooleanColumn";
+            
+            // Test empty field of record
+            RecordType schemaType = RecordType.Empty().Add(columnName, FormulaType.Boolean);
+            var emptyField = new List<NamedValue>();
+            FormulaValue recordFormulaValue = FormulaValue.NewRecordFromFields(schemaType, emptyField);
+
+            var engine = new RecalcEngine();
+            var rc = new RuntimeConfig();
+            
+            engine.UpdateVariable(recordName, recordFormulaValue);
+
+            var check = engine.Check(recordName + "." + columnName);
+            Assert.True(check.IsSuccess);
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+
+            Assert.Null(result.ToObject());
+
+            // Test empty record of table
+            var emptyRecord = new List<RecordValue>();
+            FormulaValue tableFormulaValue = FormulaValue.NewTable(schemaType, emptyRecord);
+            engine.UpdateVariable(tableName, tableFormulaValue);
+
+            check = engine.Check("First(" + tableName + ")." + columnName);
+            Assert.True(check.IsSuccess);
+
+            result = await check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            
+            Assert.Null(result.ToObject());
+        }
+
         private FormulaValue Run_Collect_Worflow(bool serialize)
         {
             // Define initial FormulaValue
