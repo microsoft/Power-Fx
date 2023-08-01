@@ -365,7 +365,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable SA1117 // parameters should be on same line or all on different lines
 
                     ServiceFunction sfunc = new ServiceFunction(null, theNamespace, operationName, operationName, description, returnType._type, BigInteger.Zero, argMapper.ArityMin, argMapper.ArityMax, isBehavior, isAutoRefreshable, isDynamic, isCacheEnabled, 
-                        cacheTimeoutMs, isHidden, parameterOptions, argMapper.OptionalParamInfo, argMapper.RequiredParamInfo, parameterDefaultValues, pageLink, "action", numberIsFloat, argMapper._parameterTypes)
+                        cacheTimeoutMs, isHidden, parameterOptions, argMapper.OptionalParamInfo, argMapper.RequiredParamInfo, parameterDefaultValues, pageLink, op.Deprecated, "action", numberIsFloat, argMapper._parameterTypes)
                     {
                         _invoker = invoker
                     };

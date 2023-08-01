@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Intellisense
                 Contracts.AssertValid(firstNameInfo.Name);
 
                 var namespacePath = new DPath().Append(firstNameInfo.Name);
-                functions = binding.NameResolver.LookupFunctionsInNamespace(namespacePath);
+                functions = binding.NameResolver.LookupFunctionsInNamespace(namespacePath).Where(f => f is not ISupportsDeprecatedFunctions sdf || !sdf.IsDeprecated);
 
                 return functions.Any();
             }

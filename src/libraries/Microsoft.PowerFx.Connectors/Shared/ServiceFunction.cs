@@ -29,7 +29,7 @@ using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
     [System.Diagnostics.DebuggerDisplay("ServiceFunction: {LocaleSpecificName}")]
-    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2
+    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2, ISupportsDeprecatedFunctions
     {
         private readonly List<string[]> _signatures;
         private readonly string[] _orderedRequiredParams;
@@ -47,6 +47,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly string _actionName;
         private readonly bool _numberIsFloat;
         private readonly string _pageLink;
+        private readonly bool _isDeprecated;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
@@ -55,10 +56,11 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override bool IsHidden => _isHidden;
         public override bool IsSelfContained => !_isBehaviorOnly;
         public bool IsPageable => !string.IsNullOrEmpty(_pageLink);
+        public bool IsDeprecated => _isDeprecated;
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable,
             bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
+            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isDeprecated, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -118,6 +120,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _requiredParameters = requiredParamInfo;
             _numberIsFloat = numberIsFloat;
             _pageLink = pageLink;
+            _isDeprecated = isDeprecated;
 
             if (arityMax > arityMin)
             {

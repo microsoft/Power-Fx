@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
 using TestExtensions = Microsoft.PowerFx.Core.Tests.Extensions;
@@ -260,22 +262,37 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public async Task AzureBlobConnector_ListFiles()
+        public async Task AzureBlobConnector_UseOfDeprecatedFunction()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
-            string token = @"ey...";
+            string token = @"eyJ0eXAi...";
 
-            using HttpClient httpClient = new HttpClient(); //testConnector);
+            using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
             IEnumerable<FunctionInfo> funcInfos = config.AddService("azbs", apiDoc, ppClient);
             RecalcEngine engine = new RecalcEngine(config);
 
-            FormulaValue fv = await engine.EvalAsync(@"azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"")", CancellationToken.None).ConfigureAwait(false);
+            CheckResult checkResult = engine.Check("azbs.", symbolTable: null);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, 5);
+            List<string> suggestedFuncs = suggestions.Suggestions.Select(s => s.DisplayText.Text).ToList();
+            Assert.Equal(33, suggestedFuncs.Count());
 
+            // ListRootFolderV3 is deprecated and should not appear in the list of suggested functions
+            Assert.DoesNotContain(suggestedFuncs, str => str == "ListRootFolderV3");
+            Assert.Contains(suggestedFuncs, str => str == "ListRootFolderV4");
 
+            testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_ListRootFolderV3_response.json");
+
+            // We can still call ListRootFolderV3 deprecated function
+            FormulaValue fv = await engine.EvalAsync(@"First(azbs.ListRootFolderV3(""pfxdevstgaccount1"")).DisplayName", CancellationToken.None).ConfigureAwait(false);
+            Assert.False(fv is ErrorValue);
+            Assert.True(fv is StringValue);
+
+            StringValue sv = (StringValue)fv;
+            Assert.Equal("container", sv.Value);
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.

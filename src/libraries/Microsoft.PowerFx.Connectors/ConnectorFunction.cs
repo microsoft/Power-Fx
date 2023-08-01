@@ -42,6 +42,11 @@ namespace Microsoft.PowerFx.Connectors
         public bool IsSupported { get; private set; }
 
         /// <summary>
+        /// Defines if the function is deprecated.
+        /// </summary>
+        public bool IsDeprecated => Operation.Deprecated;
+
+        /// <summary>
         /// Defines if the function is pageable (using x-ms-pageable extension).
         /// </summary>
         public bool IsPageable => !string.IsNullOrEmpty(PageLink);
@@ -264,7 +269,7 @@ namespace Microsoft.PowerFx.Connectors
 #pragma warning disable SA1117 // parameters should be on same line or all on different lines
 
             ServiceFunction serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
-                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), PageLink, "action", NumberIsFloat, ArgumentMapper._parameterTypes)
+                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), PageLink, IsDeprecated, "action", NumberIsFloat, ArgumentMapper._parameterTypes)
             {
                 _invoker = invoker
             };

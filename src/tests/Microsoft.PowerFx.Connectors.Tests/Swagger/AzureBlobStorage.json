@@ -6193,6 +6193,11 @@
         "FileLocator": {
           "description": "The filelocator of the file or folder.",
           "type": "string"
+        },
+        "LastModifiedBy": {
+          "format": "string",
+          "description": "The author of the last modification.",
+          "type": "string"
         }
       }
     },
