@@ -32,13 +32,50 @@ namespace Microsoft.PowerFx.Tests
                 script,
                 flags: Flags.EnableExpressionChaining);
 
-            Assert.Equal(expected, result.GetAnonymizedFormula());
-            
+            Assert.Equal(expected, StructuralPrint.Print(result.Root));
+
             // Test same cases via CheckResult
             var check = new CheckResult(new Engine());
             check.SetText(script, new ParserOptions { AllowsSideEffects = true });
             var result2 = check.ApplyGetLogging();
             Assert.Equal(expected, result2);
+        }
+
+        [Theory]
+        [InlineData(
+            "With({t:Table({a:1},{a:2})},t)",
+            "With({ #$fieldname$#:Table({ #$fieldname$#:#$decimal$# }, { #$fieldname$#:#$decimal$# }) }, #$firstname$#)",
+            "With({ #$fieldname$#:Table({ #$fieldname$#:#$decimal$# }, { #$fieldname$#:#$decimal$# }) }, #$LambdaField$#)")]
+        [InlineData(
+            "Set(x, 1); Set(y, 2); x + y",
+            "Set(#$firstname$#, #$decimal$#) ; Set(#$firstname$#, #$decimal$#) ; #$firstname$# + #$firstname$#",
+            "Set(#$firstname$#, #$decimal$#) ; Set(#$firstname$#, #$decimal$#) ; #$firstname$# + #$firstname$#")]
+        [InlineData(
+            "ForAll([1,2,3], Value * 2)",
+            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$firstname$# * #$decimal$#)",
+            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaField$# * #$decimal$#)")]
+        [InlineData(
+            "ForAll([1,2,3], ThisRecord.Value * 2)",
+            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$firstname$#.#$righthandid$# * #$decimal$#)",
+            "ForAll([ #$decimal$#, #$decimal$#, #$decimal$# ], #$LambdaFullRecord$#.#$righthandid$# * #$decimal$#)")]
+
+        public void TestStucturalPrintWithBinding(string script, string beforebinding, string afterbinding)
+        {
+            var result = ParseScript(
+                script,
+                flags: Flags.EnableExpressionChaining);
+
+            Assert.Equal(beforebinding, StructuralPrint.Print(result.Root));
+
+            // Test same cases via CheckResult
+            var check = new CheckResult(new Engine());
+
+            check.SetText(script, new ParserOptions { AllowsSideEffects = true })
+                .SetBindingInfo()
+                .ApplyBinding();
+
+            var result2 = check.ApplyGetLogging();
+            Assert.Equal(afterbinding, result2);
         }
 
         private class TestSanitizer : ISanitizedNameProvider
