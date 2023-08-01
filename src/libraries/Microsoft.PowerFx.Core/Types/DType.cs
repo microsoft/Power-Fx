@@ -3848,6 +3848,20 @@ namespace Microsoft.PowerFx.Core.Types
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
         }
 
+        public bool AggregateHasExpandedType()
+        {
+            var ret = false;
+
+            if (IsAggregate)
+            {
+                var record = ToRecord();
+
+                ret = record.GetAllNames(DPath.Root).Any(name => name.Type.IsExpandEntity);
+            }
+
+            return ret;
+        }
+
         /// <summary>
         /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
         /// </summary>

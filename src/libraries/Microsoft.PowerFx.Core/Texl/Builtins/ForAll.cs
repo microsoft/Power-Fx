@@ -76,11 +76,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return index == 0;
         }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: isPrefetching ? "_ParallelPrefetching" : string.Empty);
-        }
     }
 
     internal sealed class ForAllFunction_UO : BuiltinFunction
@@ -138,11 +133,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(index >= 0);
 
             return index == 0;
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

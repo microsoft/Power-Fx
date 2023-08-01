@@ -69,6 +69,12 @@ namespace Microsoft.PowerFx
 
             var arg1 = argTypes[1];
 
+            // coerce number to decimal and vice versa.
+            if (arg0.IsNumeric && arg1.IsNumeric)
+            {
+                return CheckType(context, args[1], argTypes[1], argTypes[0], errors, ref nodeToCoercedTypeMap);
+            }
+
             if (!arg0.Accepts(arg1, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 errors.EnsureError(DocumentErrorSeverity.Critical, args[1], ErrBadType);

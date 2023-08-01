@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Data;
 using System.Threading;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -36,28 +38,45 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(15m, r1.ToObject());          
         }
 
-        [Fact]
-        public void SetVarNumber()
+        [Theory]
+        [InlineData("Set(x, Float(15))", true, true)]
+        [InlineData("Set(x, Decimal(15))", true, true)]
+        [InlineData("Set(x, 15)", true, true)]
+
+        [InlineData("Set(x, Float(15))", true, false)]
+        [InlineData("Set(x, Decimal(15))", true, false)]
+        [InlineData("Set(x, 15)", true, false)]
+
+        // Set() only coerces Numeric values.
+        [InlineData("Set(x, \"15\")", false, true)]
+        [InlineData("Set(x, \"15\")", false, false)]
+        public void SetVarNumberCoercion(string expression, bool isCheckSuccess, bool isFloat)
         {
+            var option = new ParserOptions { NumberIsFloat = isFloat, AllowsSideEffects = true };
+            FormulaValue value = isFloat ? FormulaValue.New(12) : FormulaValue.New(12m);
+            var expectedValue = isFloat ? (object)15.0 : (object)15m;
+
             var config = new PowerFxConfig();
             config.EnableSetFunction();
             var engine = new RecalcEngine(config);
+            engine.UpdateVariable("x", value);
 
-            engine.UpdateVariable("x", FormulaValue.New(12));
+            var x = engine.Eval("x", null, option);
+            Assert.Equal(value.ToObject(), x.ToObject());
 
-            var r1 = engine.Eval("x", null, _opts); // 12.0
-            Assert.Equal(12.0, r1.ToObject());
+            var check = engine.Check(expression, option);
+            Assert.Equal(isCheckSuccess, check.IsSuccess);
 
-            var r2 = engine.Eval("Set(x, Float(15))", null, _opts);
+            if (isCheckSuccess)
+            {
+                var isSuccess = check.GetEvaluator().Eval();
 
-            // Set() returns constant 'true;
-            Assert.Equal(true, r2.ToObject());
+                // Set() returns constant true;
+                Assert.Equal(true, isSuccess.ToObject());
 
-            r1 = engine.Eval("x"); // 15
-            Assert.Equal(15.0, r1.ToObject());
-
-            r1 = engine.GetValue("x");
-            Assert.Equal(15.0, r1.ToObject());
+                var result = engine.Eval("x");
+                Assert.Equal(expectedValue, result.ToObject());
+            }
         }
 
         [Fact]
