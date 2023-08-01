@@ -339,6 +339,12 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length > 1 && args[1] is StringValue fs)
             {
                 formatString = fs.Value;
+
+                if (!string.IsNullOrEmpty(formatString) && !TextFormatUtils.AllowedListToUseFormatString.Contains(args[0].Type._type))
+                {
+                    var customErrorMessage = StringResources.Get(TexlStrings.ErrNotSupportedFormat_Func, formatInfo.CultureInfo.Name);
+                    return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                }
             }
 
             var culture = formatInfo.CultureInfo;

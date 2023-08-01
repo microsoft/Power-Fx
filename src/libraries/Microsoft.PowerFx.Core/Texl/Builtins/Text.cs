@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public const string TextInvariantFunctionName = "Text";
 
-        private static readonly IReadOnlyList<DType> AllowedListToUseFormatString = new DType[] { DType.Number, DType.Decimal, DType.DateTime, DType.Date, DType.Time };
-
         public TextFunction()
             : base(TextInvariantFunctionName, TexlStrings.AboutText, FunctionCategories.Table | FunctionCategories.Text | FunctionCategories.DateTime, DType.String, 0, 1, 3, DType.Number, DType.String, DType.String)
         {
@@ -146,7 +144,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         }
 
         internal static void ValidateFormatArgs(string name, CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, ref bool isValid)
-        {            
+        {
             if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
             {
                 // Coerce enum values to string
@@ -159,9 +157,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
             else if (BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg))
             {
-                if (AllowedListToUseFormatString.Contains(argTypes[0]) || string.IsNullOrEmpty(formatArg))
+                if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
                 {
-                    if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
+                    if (string.IsNullOrEmpty(formatArg) || argTypes[0] == DType.UntypedObject || TextFormatUtils.AllowedListToUseFormatString.Contains(argTypes[0]))
                     {
                         var textFormatArgs = new TextFormatArgs
                         {
@@ -176,20 +174,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                             isValid = false;
                         }
                     }
-                    else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
+                    else
                     {
+                        errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
                         isValid = false;
                     }
-
-                    if (!isValid)
-                    {
-                        errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
-                    }
                 }
-                else
+                else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
                 {
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
                     isValid = false;
+                }
+
+                if (!isValid)
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
                 }
             }
 

@@ -768,3 +768,15 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(1234.5678, "[$-fr-FR # ##]0,00", "vi-VI")
 Error({Kind:ErrorKind.BadLanguageCode})
+
+>> Text(ParseJSON("""\u202F"""), "##")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("Hello", If(1 < 0, "d", Blank()))
+""
+
+>> Text("Hello", If(1 < 0, "d", ""))
+"Hello"
+
+>> Text("Hello", If(1 > 0, "d", ""))
+Error({Kind:ErrorKind.InvalidArgument})
