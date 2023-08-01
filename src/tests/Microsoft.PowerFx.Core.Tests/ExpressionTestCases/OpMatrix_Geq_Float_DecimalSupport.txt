@@ -1,0 +1,174 @@
+#SETUP: NumberIsFloat,DecimalSupport
+
+// comparison done in floating point, decimal rounded
+>> Value(16) >= Decimal("16.000000000000000000002")
+true
+
+>> Value(16) >= Decimal("16")
+true
+
+>> Value("1e100") >= Decimal("2.00000000000000000000002")
+true
+
+>> "2" >= Decimal("2.000000000000000000000002")
+Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> "1e100" >= Decimal("2.000000000000000000000002")
+Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Decimal("1.000000000000000000000002")
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Decimal(1)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> true >= Decimal(0)
+Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Decimal("1.000000000000000000000002")
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Decimal(1)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> false >= Decimal(0)
+Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Blank() >= Decimal("2.000000000000000000000002")
+false
+
+>> Blank() >= Decimal("0")
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Date(1900,1,1) >= Decimal("2.000000000000000000000002")
+true
+
+>> Date(1900,1,1) >= Decimal("2.000000000000000000000000")
+true
+
+>> Date(1900,1,1) >= Decimal("1.999999999999999999999999")
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> DateTime(1900,1,1,12,0,0) >= Decimal("2.5000000000000000000002")
+true
+
+>> DateTime(1900,1,1,12,0,0) >= Decimal("2.5")
+true
+
+>> Time(3,0,0) >= Decimal("0.125")
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Time(3,0,0) >= Decimal("0.125000000000000000000001")
+true
+
+>> Time(3,0,0) >= Decimal("0.124999999999999999999999")
+true
+
+// comparisons done on float
+>> Decimal("2.000000000000000000000001") >= Value(2)
+true
+
+>> Decimal("2.000000000000000000000000") >= Value(2)
+true
+
+>> Decimal("1.999999999999999999999999") >= Value(2)
+true
+
+>> Decimal("1.9") >= Value(2)
+false
+
+>> Decimal("2.0") >= Value(2)
+true
+
+>> Decimal("2.1") >= Value(2)
+true
+
+>> Decimal("16.000000000000000000000001") >= "16"
+Errors: Error 42-46: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Decimal("1.000000000000000000000001") >= true
+Errors: Error 41-45: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
+
+>> Decimal("0.000000000000000000000001") >= Blank()
+true
+
+>> Decimal(0) >= Blank()
+true
+
+>> If(1<0,Decimal(1)) >= Blank()
+true
+
+>> Decimal("16.0000000000000000000001") >= Date(1900,1,15)
+true
+
+>> Decimal("16") >= Date(1900,1,15)
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Decimal("15.9999999999999999999999") >= Date(1900,1,15)
+true
+
+>> Decimal(2) >= Date(1900,1,1)
+true
+
+>> Decimal("2.0000000000000000000001") >= Date(1900,1,1)
+true
+
+>> Decimal(2) >= DateTime(1900,1,1,0,0,0)
+true
+
+>> Decimal("2.0000000000000000000001") >= DateTime(1900,1,1,12,0,0)
+false
+
+>> Decimal("2.5000000000000000000001") >= DateTime(1900,1,1,12,0,0)
+true
+
+// comparison done on floating point due to Date/DateTime/Time
+>> Decimal("2.4999999999999999999999") >= DateTime(1900,1,1,12,0,0)
+true
+
+>> Decimal(2.5) >= DateTime(1900,1,1,12,0,0)
+true
+
+>> Decimal(2.5) >= DateTime(1900,1,1,11,0,0)
+true
+
+>> Decimal(".5") >= Time(12,0,0)
+true
+
+>> Decimal(".5") >= Time(11,59,59)
+true
+
+>> Decimal(".5000000000000000000001") >= Time(12,0,0)
+true
+
+>> Decimal("16.000000000000000000000002") >= Decimal("16.000000000000000000000001")
+true
+
+>> Decimal("16.000000000000000000000002") >= Decimal("16.000000000000000000000002")
+true
+
+>> Decimal("16.000000000000000000000002") >= Decimal("16.000000000000000000000003")
+false
+
+>> Decimal("16.000000000000000000000002") >= ParseJSON("1e100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Decimal("16.000000000000000000000002") >= ParseJSON("16.000000000000000000000002")
+true
+
+>> Decimal("16.000000000000000000000002") >= ParseJSON("16.000000000000000000000001")
+true
+
+>> Decimal("16.000000000000000000000002") >= ParseJSON("16.000000000000000000000003")
+false
+
+>> ParseJSON("2.000000000000000000000000001") >= Decimal("2.000000000000000000000000001")
+true
+
+>> ParseJSON("1e100") >= Decimal("2.000000000000000000000000001")
+Error({Kind:ErrorKind.InvalidArgument})
+

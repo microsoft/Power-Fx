@@ -68,7 +68,7 @@ Table({Value:"true"},{Value:"ErrorKind=25"},{Value:"false"})
 Error({Kind:ErrorKind.Numeric})
 
 >> ForAll(Boolean([3, 1/0, 0, Sqrt(-1)]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))
-#SKIP: Boolean decimal support not done yet, expected: Table({Value:"true"},{Value:"ErrorKind=13"},{Value:"false"},{Value:"ErrorKind=24"})
+Table({Value:"true"},{Value:"ErrorKind=13"},{Value:"false"},{Value:"ErrorKind=24"})
 
 >> Boolean(ParseJSON("[1]"))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -197,7 +197,7 @@ Error({Kind:ErrorKind.Validation})
 Error({Kind:ErrorKind.Network})
 
 >> Error(Table({Kind:15},{Kind:14}))
-#SKIP: blocked on https://github.com/microsoft/Power-Fx/issues/1203, expected: Error(Table({Kind:ErrorKind.BadRegex},{Kind:ErrorKind.BadLanguageCode}))
+Error(Table({Kind:ErrorKind.BadRegex},{Kind:ErrorKind.BadLanguageCode}))
 
 >> Exp(1000000)
 Error({Kind:ErrorKind.Numeric})
@@ -544,11 +544,11 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Div0})
 
 >> Switch(2,1,"a",Sqrt(-1),"b","c")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1251, expected: Error({Kind:ErrorKind.Numeric})
+Error({Kind:ErrorKind.Numeric})
 
 // Errors not evaluated are not returned
 >> Switch(2,1,"a",2,"b",Sqrt(-1),"c","d")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1251, expected: "b"
+"b"
 
 // Errors can go in tables
 >> Table({a:1},If(1/0<2,{a:2}),{a:3})

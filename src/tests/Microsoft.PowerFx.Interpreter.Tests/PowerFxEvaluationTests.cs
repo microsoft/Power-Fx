@@ -27,8 +27,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             { "MutationFunctionsTestSetup", MutationFunctionsTestSetup },
             { "OptionSetSortTestSetup", OptionSetSortTestSetup },
             { "AllEnumsSetup", AllEnumsSetup },
-            { "RegEx", RegExSetup }
+            { "RegEx", RegExSetup },
+            { "DecimalSupport", NoOpSetup }, // Decimal is enabled in the C# interpreter
         };
+
+        private static (RecalcEngine engine, RecordValue parameters) NoOpSetup(PowerFxConfig config, bool numberIsFloat)
+        {
+            return (new RecalcEngine(config), null);
+        }
 
         private static (RecalcEngine engine, RecordValue parameters) RegExSetup(PowerFxConfig config, bool numberIsFloat)
         {

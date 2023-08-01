@@ -1,23 +1,6 @@
 ﻿#SETUP: PowerFxV1CompatibilityRules
 #SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
 
-// field22 is missing
->> Patch(
-     Table(
-       {field1:2, field2:{field21:"earth",field22:"venus"}},
-       {field1:3, field2:{field21:"moon",field22:"phobos"}}),
-     {field2:{field21:"moon"}},
-     {field1:7})
-#SKIP: awaiting https://github.com/microsoft/Power-Fx/issues/1383
-
->> Patch(
-     Table(
-       {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
-       {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
-    {Properties:{Moon:{Name:"Phobos"}}},
-    {Planet:"Jupter"})
-#SKIP: awaiting https://github.com/microsoft/Power-Fx/issues/1383
-
 >> Patch([1,2], {Value:1}, If(false, {x:1, Value:2}, {Value:11, z:2}))
 Errors: Error 24-66: The specified column 'x' does not exist.|Error 6-11: The value passed to the 'Patch' function cannot be changed.|Error 0-67: The function 'Patch' has some invalid arguments.
 
@@ -41,3 +24,20 @@ Errors: Error 73-114: The specified column 'x' does not exist.|Error 117-159: Th
 
 >> Collect(t_empty, {Value:1}); Collect(t_empty, If(false, {x:1, Value:2}, {Value:2, z:2})); Collect(t_empty, {Value:3}); Patch(t_empty, {Value:2}, {Value:11})
 Errors: Error 46-87: The specified column 'x' does not exist.|Error 29-88: The function 'Collect' has some invalid arguments.
+
+// field22 is missing
+>> Patch(
+     Table(
+       {field1:2, field2:{field21:"earth",field22:"venus"}},
+       {field1:3, field2:{field21:"moon",field22:"phobos"}}),
+     {field2:{field21:"moon"}},
+     {field1:7})
+Errors: Error 13-143: The value passed to the 'Patch' function cannot be changed.
+
+>> Patch(
+     Table(
+       {Planet:"earth",Properties:{Color:"blue",Size:"small",Weight:1000,Moon:{Name:"Moon", Color:"Silver"}}},
+       {Planet:"Saturn",Properties:{Color:"red-brown",Size:"huge",Weight:99999,Moon:{Name:"Phobos", Color:"yellow"}}}),
+    {Properties:{Moon:{Name:"Phobos"}}},
+    {Planet:"Jupter"})
+Errors: Error 13-251: The value passed to the 'Patch' function cannot be changed.

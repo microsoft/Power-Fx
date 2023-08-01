@@ -2,9 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Linq;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx
 {
@@ -32,20 +29,6 @@ namespace Microsoft.PowerFx
         public static T GetService<T>(this IServiceProvider serviceProvider)
         {
             return (T)serviceProvider.GetService(typeof(T));
-        }
-
-        public static bool AggregateHasExpandedType(this DType self)
-        {
-            var ret = false;
-
-            if (self.IsAggregate)
-            {
-                var record = self.ToRecord();
-
-                ret = record.GetAllNames(DPath.Root).Any(name => name.Type.IsExpandEntity);
-            }
-
-            return ret;
         }
     }
 }

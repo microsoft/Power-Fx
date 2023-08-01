@@ -1,4 +1,5 @@
 ﻿#OVERRIDE: inScalar_V1CompatDisabled.txt
+#SETUP: disable:PowerFxV1CompatibilityRules
 
 // Bug in pre-V1, fixed in V1
 >> "a" in Blank()
