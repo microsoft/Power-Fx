@@ -34,7 +34,7 @@ namespace Microsoft.PowerFx.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
-        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols)
+        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, Func<string, RecordType> logicalNameToRecordType)
         {
             var typeName = Type.Name;
 
@@ -54,17 +54,26 @@ namespace Microsoft.PowerFx.Core
                 return actualType;
             }
 
-            if (typeName != SchemaTypeName.RecordTypeName.Name)
+            if (typeName == SchemaTypeName.ExpandableTableTypeName.Name && logicalNameToRecordType != null)
+            {
+                return logicalNameToRecordType.Invoke(this.Description).ToTable();
+            }
+            else if (typeName == SchemaTypeName.ExpandableRecordTypeName.Name && logicalNameToRecordType != null)
+            {
+                return logicalNameToRecordType.Invoke(this.Description);
+            }
+            else if (typeName != SchemaTypeName.RecordTypeName.Name)
             {
                 return FormulaType.BindingError;
             }
 
             if (Fields == null || !Fields.Any())
             {
-                return FormulaType.BindingError;
+                FormulaType emptyAggregateType = Type.IsTable ? TableType.Empty() : RecordType.Empty();
+                return emptyAggregateType;
             }
 
-            var result = new UserDefinedRecordType(this, definedTypeSymbols);
+            var result = new UserDefinedRecordType(this, definedTypeSymbols, logicalNameToRecordType);
             return Type.IsTable ? result.ToTable() : result;
         }
 
@@ -119,6 +128,10 @@ namespace Microsoft.PowerFx.Core
         public bool IsTable { get; init; }
 
         public static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };
+
+        public static SchemaTypeName ExpandableTableTypeName => new () { Name = "ExpandableTable", IsTable = true };
+
+        public static SchemaTypeName ExpandableRecordTypeName => new () { Name = "ExpandableRecord", IsTable = false };
 
         public static SchemaTypeName TableTypeName => new () { Name = "Record", IsTable = true };
     }

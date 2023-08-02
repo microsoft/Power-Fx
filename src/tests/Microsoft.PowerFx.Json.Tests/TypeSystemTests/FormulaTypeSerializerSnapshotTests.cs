@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests.Helpers;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -55,6 +56,25 @@ namespace Microsoft.PowerFx.Json.Tests
                 else
                 {
                     TestUtils.AssertJsonEqual(actual, expected);
+                    var ft = JsonSerializer.Deserialize<FormulaType>(expected, options);
+
+                    if (type._type.IsRecord)
+                    {
+                        Assert.True(type._type.IsRecord);
+                    }
+                    else if (type._type.IsTable)
+                    {
+                        Assert.True(type._type.IsTable);
+                    }
+                    else if (type._type.IsError)
+                    {
+                        // Errors are returned as blank.
+                        Assert.Equal(DKind.ObjNull, ft._type.Kind);
+                    }
+                    else
+                    {
+                        Assert.Equal(type._type.Kind, ft._type.Kind);
+                    }
                 }
 #pragma warning restore CS0162
             }
