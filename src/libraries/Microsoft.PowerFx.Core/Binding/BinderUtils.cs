@@ -398,7 +398,7 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.Assert(!typeLeft.IsAggregate || typeLeft.IsTable || typeLeft.IsRecord);
             Contracts.Assert(!typeRight.IsAggregate || typeRight.IsTable || typeRight.IsRecord);
 
-            if (!typeLeft.IsAggregate)
+            if (!typeLeft.IsAggregate || (usePowerFxV1CompatibilityRules && typeLeft.Kind == DKind.ObjNull))
             {
                 // scalar in scalar: RHS must be a string (or coercible to string when LHS type is string). We'll allow coercion of LHS.
                 // This case deals with substring matches, e.g. 'FirstName in "Aldous Huxley"' or "123" in 123.
