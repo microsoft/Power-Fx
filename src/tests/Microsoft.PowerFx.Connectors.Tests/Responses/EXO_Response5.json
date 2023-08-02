@@ -1,0 +1,10 @@
+{
+  "@odata.context": "https://excelonline-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#drives('b%21kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb')/Files('01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO')/Tables('%7B00000000-000C-0000-FFFF-FFFF00000000%7D')/items/$entity",
+  "@odata.etag": "",
+  "ItemInternalId": "f830UPeAXoI",
+  "Site": "Atlanta",
+  "Supplier": "Wipro(WIP)",
+  "Organization": "onesupport",
+  "Tenant": "Modern Identity Tenant",
+  "__PowerAppsId__": "f830UPeAXoI"
+}
