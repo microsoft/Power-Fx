@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Immutable;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -104,7 +105,7 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 textFormatArgs.FormatCultureName = defaultLanguage;
             }
-
+                        
             // Use en-Us format string if a culture is defined in format string.
             if (formatCulture != null && !string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
             {
@@ -133,6 +134,73 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
 
                 textFormatArgs.FormatArg = enUSformatString;
+            }
+
+            if (textFormatArgs.HasNumericFmt)
+            {
+                // If format string contains odd number of double quotes then format is invalid (missing close quote)
+                if (textFormatArgs.FormatArg.Count(c => c == '\"') % 2 != 0)
+                {
+                    return false;
+                }
+
+                // If format string ends with e or e+ (not escaping character)
+                // or if format string ends with single quote but no following character then format is invalid
+                if ((textFormatArgs.FormatArg.EndsWith("e", StringComparison.Ordinal) && !textFormatArgs.FormatArg.EndsWith("\\e", StringComparison.Ordinal))
+                    || (textFormatArgs.FormatArg.EndsWith("e+", StringComparison.Ordinal) && !textFormatArgs.FormatArg.EndsWith("\\e+", StringComparison.Ordinal))
+                    || textFormatArgs.FormatArg.EndsWith("\\", StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                // Update ' to \' to escaping ' character to match with excel
+                // Update any \' to ' then update all ' to \' (ex: \'' to '')
+                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\\'", "\'");
+                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\'", "\\'");
+                
+                // If after decimal point, there is no numeric format character (all escaping characters - backsplash or double quote)
+                // Then add \ to decimal point to print out decimal point
+                var decimalPointIndex = textFormatArgs.FormatArg.IndexOf(".", StringComparison.Ordinal);
+                if (decimalPointIndex != -1)
+                {
+                    var subFormat = textFormatArgs.FormatArg.Substring(decimalPointIndex);
+                    if (HasAllEscapingCharacters(subFormat))
+                    {
+                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace(".", "\\.");
+                    }
+                }
+
+                // If before comma there is no numeric format character, treat them as escaping character
+                var commaIndex = textFormatArgs.FormatArg.IndexOf(",", StringComparison.Ordinal);
+                if (commaIndex != -1)
+                {
+                    var prefixFormat = textFormatArgs.FormatArg.Substring(0, commaIndex + 1);
+                    if (HasAllEscapingCharacters(prefixFormat))
+                    {
+                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace(",", "\\,");
+                    }
+                }
+            }
+
+            // Update \c to "c" to match with excel
+            if (textFormatArgs.HasDateTimeFmt)
+            {
+                var formatStr = textFormatArgs.FormatArg;
+                for (int i = formatStr.Length - 1; i >= 0; i--)
+                {
+                    if (formatStr[i] == '\\')
+                    {
+                        if (i == formatStr.Length - 1)
+                        {
+                            return false;
+                        }
+
+                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Insert(i + 2, "\"");
+                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Insert(i + 1, "\"");
+                    }
+                }
+
+                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\\", string.Empty);
             }
 
             return true;
@@ -194,6 +262,36 @@ namespace Microsoft.PowerFx.Core.Utils
             catch (CultureNotFoundException)
             {
                 return false;
+            }
+
+            return true;
+        }
+
+        private static bool HasAllEscapingCharacters(string formatStr)
+        {
+            if (formatStr.IndexOfAny(new char[] { '0', '#' }) == -1)
+            { 
+                return true; 
+            }
+            
+            for (int i = 0; i < formatStr.Length; i++)
+            {
+                if (formatStr[i] == '0' || formatStr[i] == '#')
+                {
+                    return false;
+                }
+                else if (formatStr[i] == '\\')
+                {
+                    i = i + 1;              
+                }
+                else if (formatStr[i] == '\"')
+                {
+                    i = formatStr.IndexOf('\"', i + 1);
+                    if (i == -1)
+                    {
+                        return false;
+                    }
+                }
             }
 
             return true;
