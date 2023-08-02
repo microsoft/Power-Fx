@@ -721,5 +721,109 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public async Task ExcelOnlineTest()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"eyJ0eXAiOiJ...";
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "b20e87387f9149e884bdf0b0c87a67e8" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc).OrderBy(f => f.Name).ToList();
+
+            IEnumerable<FunctionInfo> funcInfos = config.AddService("exob", apiDoc, ppClient);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            CheckResult checkResult = engine.Check("exob.", symbolTable: null);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, 5);
+            List<string> suggestedFuncs = suggestions.Suggestions.Select(s => s.DisplayText.Text).ToList();
+
+            string source = "me";
+
+            // Get "OneDrive" id = "b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb"
+            testConnector.SetResponseFromFile(@"Responses\EXO_Response1.json");
+            FormulaValue fv1 = await engine.EvalAsync(@$"exob.GetDrives(""{source}"")", CancellationToken.None).ConfigureAwait(false);                          
+            string drive = ((StringValue)((TableValue)((RecordValue)fv1).GetField("value")).Rows.First((DValue<RecordValue> row) => ((StringValue)row.Value.GetField("name")).Value == "OneDrive").Value.GetField("id")).Value;
+
+            // Get file id for "AM Site.xlxs" = "01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO"
+            testConnector.SetResponseFromFile(@"Responses\EXO_Response2.json");
+            FormulaValue fv2 = await engine.EvalAsync(@$"exob.ListRootFolder(""{source}"", ""{drive}"")", CancellationToken.None).ConfigureAwait(false);      
+            string file = ((StringValue)((TableValue)fv2).Rows.First((DValue<RecordValue> row) => row.Value.GetField("Name") is StringValue sv && sv.Value == "AM Site.xlsx").Value.GetField("Id")).Value;
+
+            // Get "Table1" id = "{00000000-000C-0000-FFFF-FFFF00000000}"
+            testConnector.SetResponseFromFile(@"Responses\EXO_Response3.json");
+            FormulaValue fv3 = await engine.EvalAsync(@$"exob.GetTables(""{source}"", ""{drive}"", ""{file}"")", CancellationToken.None).ConfigureAwait(false);
+            string table = ((StringValue)((TableValue)((RecordValue)fv3).GetField("value")).Rows.First((DValue<RecordValue> row) => ((StringValue)row.Value.GetField("name")).Value == "Table1").Value.GetField("id")).Value;
+
+            // Get PowerApps id for 2nd row = "f830UPeAXoI"
+            testConnector.SetResponseFromFile(@"Responses\EXO_Response4.json");
+            FormulaValue fv4 = await engine.EvalAsync(@$"exob.GetItems(""{source}"", ""{drive}"", ""{file}"", ""{table}"")", CancellationToken.None).ConfigureAwait(false);
+            string columnId = ((StringValue)((RecordValue)((TableValue)((RecordValue)fv4).GetField("value")).Rows.Skip(1).First().Value).GetField("__PowerAppsId__")).Value;
+
+            // Get Item by columnId
+            testConnector.SetResponseFromFile(@"Responses\EXO_Response5.json");
+            FormulaValue fv5 = await engine.EvalAsync(@$"exob.GetItem(""{source}"", ""{drive}"", ""{file}"", ""{table}"", ""__PowerAppsId__"", ""{columnId}"")", CancellationToken.None).ConfigureAwait(false);
+            RecordValue rv5 = (RecordValue)fv5;
+
+            Assert.Equal(FormulaType.String, rv5.GetField("Site").Type);
+            Assert.Equal("Atlanta", ((StringValue)rv5.GetField("Site")).Value);
+
+            string expected = @"POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXAiOiJ...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives?source=me
+ x-ms-user-agent: PowerFx/0.3.0-local
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXAiOiJ...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/root/children?source=me
+ x-ms-user-agent: PowerFx/0.3.0-local
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXAiOiJ...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/items/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/workbook/tables?source=me
+ x-ms-user-agent: PowerFx/0.3.0-local
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXAiOiJ...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/files/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/tables/%7b00000000-000C-0000-FFFF-FFFF00000000%7d/items?source=me
+ x-ms-user-agent: PowerFx/0.3.0-local
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXAiOiJ...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/36897fc0-0c0c-eee5-ac94-e12765496c20
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/files/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/tables/%7b00000000-000C-0000-FFFF-FFFF00000000%7d/items/f830UPeAXoI?source=me&idColumn=__PowerAppsId__
+ x-ms-user-agent: PowerFx/0.3.0-local
+";
+            Assert.Equal(expected, testConnector._log.ToString());
+        }
     }
 }

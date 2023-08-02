@@ -1,0 +1,40 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#drives",
+  "value": [
+    {
+      "createdDateTime": "2021-05-09T05:33:56Z",
+      "description": "",
+      "id": "b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb",
+      "lastModifiedDateTime": "2023-05-17T09:23:50Z",
+      "name": "OneDrive",
+      "webUrl": "https://capintegration01-my.sharepoint.com/personal/aurorauser07_capintegration01_onmicrosoft_com/Documents",
+      "driveType": "business",
+      "createdBy": {
+        "user": {
+          "displayName": "System Account"
+        }
+      },
+      "lastModifiedBy": {
+        "user": {
+          "email": "aurorauser07@capintegration01.onmicrosoft.com",
+          "id": "5f3d4411-814c-4696-9dd2-5933cc9fe0c9",
+          "displayName": "aurorauser07"
+        }
+      },
+      "owner": {
+        "user": {
+          "email": "aurorauser07@capintegration01.onmicrosoft.com",
+          "id": "5f3d4411-814c-4696-9dd2-5933cc9fe0c9",
+          "displayName": "aurorauser07"
+        }
+      },
+      "quota": {
+        "deleted": 0,
+        "remaining": 1099063413266,
+        "state": "normal",
+        "total": 1099511627776,
+        "used": 448214510
+      }
+    }
+  ]
+}
