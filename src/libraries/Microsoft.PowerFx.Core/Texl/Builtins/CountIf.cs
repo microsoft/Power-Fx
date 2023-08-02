@@ -120,9 +120,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 return false;
             }
 
-            // Don't delegate 1-N/N-N counts
+            // Don't delegate 1-N/N-N counts, View counts
             // TASK 9966488: Enable CountRows/CountIf delegation for table relationships
-            if (binding.GetType(args[0]).HasExpandInfo)
+            if (binding.GetType(args[0]).HasExpandInfo || ExpressionContainsView(callNode, binding))
             {
                 SuggestDelegationHint(callNode, binding);
                 return false;
@@ -147,6 +147,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             return true;
+        }
+
+        private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
+        {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+
+            var viewFinderVisitor = new ViewFinderVisitor(binding);
+            callNode.Accept(viewFinderVisitor);
+
+            return viewFinderVisitor.ContainsView;
         }
     }
 }
