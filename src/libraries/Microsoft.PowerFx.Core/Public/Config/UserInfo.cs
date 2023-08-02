@@ -50,6 +50,14 @@ namespace Microsoft.PowerFx
         public virtual async Task<string> TeamsMemberId(CancellationToken cancel = default) => throw Ex();
 
         /// <summary>
+        /// The Entra ID (Azure AD Object ID) of the user.
+        /// https://learn.microsoft.com/en-us/azure/active-directory/.
+        /// </summary>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
+        public virtual async Task<Guid> EntraObjectId(CancellationToken cancel = default) => throw Ex();
+
+        /// <summary>
         /// Get the Power Fx type for a User object that has the given fields exposed. 
         /// </summary>
         /// <param name="fields">Valid subset of fields on user object.</param>
@@ -92,7 +100,8 @@ namespace Microsoft.PowerFx
                     type = type.Add(new NamedFormulaType(field, FormulaType.String));
                 } 
                 else if (
-                    field == nameof(DataverseUserId))                    
+                    field == nameof(DataverseUserId) ||
+                    field == nameof(EntraObjectId))                    
                 {
                     type = type.Add(new NamedFormulaType(field, FormulaType.Guid));
                 }
@@ -120,6 +129,8 @@ namespace Microsoft.PowerFx
 
         public string TeamsMemberId { get; set; }
 
+        public Guid EntraObjectId { get; set; }
+
         public UserInfo UserInfo => new Adapter(this);
         
         // for convenience, we want synchronous properties for the User fields. 
@@ -141,6 +152,8 @@ namespace Microsoft.PowerFx
             public override async Task<Guid> DataverseUserId(CancellationToken cancel) => _parent.DataverseUserId;
 
             public override async Task<string> TeamsMemberId(CancellationToken cancel) => _parent.TeamsMemberId;
+
+            public override async Task<Guid> EntraObjectId(CancellationToken cancel) => _parent.EntraObjectId;
         }
     }
 }
