@@ -49,7 +49,7 @@ namespace Microsoft.PowerFx.Core
                 };
             }
 
-            if (type._type.AssociatedDataSources.Any())
+            if (type._type.AggregateHasExpandedType())
             {
                 var logicalName = type._type.AssociatedDataSources.First().EntityName.Value;
                 var schemaTypeName = type._type.IsTable ? SchemaTypeName.ExpandableTableTypeName : SchemaTypeName.ExpandableRecordTypeName;
