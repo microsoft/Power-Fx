@@ -5217,7 +5217,7 @@
     <value>This record cannot be copied. Instead, create an inline record using {...} notation to copy the individual fields desired.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>Not supported format for non numeric and datetime in '{0}'.</value>
-    <comment>Error Message.</comment>
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <comment>Error message when function use the second argument for non numeric or date/time value.</comment>
   </data>
 </root>

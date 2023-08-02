@@ -145,49 +145,45 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal static void ValidateFormatArgs(string name, CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, ref bool isValid)
         {
-            if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+            bool hasConstFormat = BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg);
+            if (checkTypesContext.Features.PowerFxV1CompatibilityRules && argTypes[0] != DType.UntypedObject && !TextFormatUtils.AllowedListToUseFormatString.Contains(argTypes[0]))
             {
-                // Coerce enum values to string
-                CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
-            }
-            else if (!DType.String.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
-            {
-                errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
-                isValid = false;
-            }
-            else if (BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg))
-            {
-                if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
+                if (!hasConstFormat || !string.IsNullOrEmpty(formatArg))
                 {
-                    if (string.IsNullOrEmpty(formatArg) || argTypes[0] == DType.UntypedObject || TextFormatUtils.AllowedListToUseFormatString.Contains(argTypes[0]))
+                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
+                    isValid = false;
+                }
+            }
+            else
+            {
+                if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+                {
+                    // Coerce enum values to string
+                    CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);
+                }
+                else if (!DType.String.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+                {
+                    errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
+                    isValid = false;
+                }
+                else if (hasConstFormat)
+                {
+                    if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
                     {
-                        var textFormatArgs = new TextFormatArgs
-                        {
-                            FormatCultureName = null,
-                            FormatArg = null,
-                            HasDateTimeFmt = false,
-                            HasNumericFmt = false
-                        };
-
-                        if (!TextFormatUtils.IsValidFormatArg(formatArg, formatCulture: null, defaultLanguage: null, out textFormatArgs))
+                        if (!TextFormatUtils.IsValidFormatArg(formatArg, formatCulture: null, defaultLanguage: null, out var textFormatArgs))
                         {
                             isValid = false;
                         }
                     }
-                    else
+                    else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
                         isValid = false;
                     }
-                }
-                else if (!TextFormatUtils.IsLegacyValidCompiledTimeFormatArg(formatArg))
-                {
-                    isValid = false;
-                }
 
-                if (!isValid)
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
+                    if (!isValid)
+                    {
+                        errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrIncorrectFormat_Func, name);
+                    }
                 }
             }
 

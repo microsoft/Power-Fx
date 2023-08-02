@@ -116,9 +116,6 @@
 >> Text(Blank())
 Blank()
 
->> Text(Blank(), Blank())
-""
-
 //Excel needs two parameters for Text function
 >> Text("")
 ""
