@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Utils
     internal sealed class TextFormatUtils
     {
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
-
+        
         /// <summary>
         /// Validate if format string is valid or not and return format string object.
         /// </summary>
@@ -138,48 +138,63 @@ namespace Microsoft.PowerFx.Core.Utils
 
             if (textFormatArgs.HasNumericFmt)
             {
-                // If format string contains odd number of double quotes then format is invalid (missing close quote)
-                if (textFormatArgs.FormatArg.Count(c => c == '\"') % 2 != 0)
-                {
-                    return false;
-                }
+                bool hasNumericCharacters = false;
+                bool hasDecimalPoint = false;
+                var formatStr = textFormatArgs.FormatArg;
+                int n = formatStr.Length;
 
-                // If format string ends with e or e+ (not escaping character)
-                // or if format string ends with single quote but no following character then format is invalid
-                if ((textFormatArgs.FormatArg.EndsWith("e", StringComparison.Ordinal) && !textFormatArgs.FormatArg.EndsWith("\\e", StringComparison.Ordinal))
-                    || (textFormatArgs.FormatArg.EndsWith("e+", StringComparison.Ordinal) && !textFormatArgs.FormatArg.EndsWith("\\e+", StringComparison.Ordinal))
-                    || textFormatArgs.FormatArg.EndsWith("\\", StringComparison.Ordinal))
+                for (int i = 0; i < n; i++)
                 {
-                    return false;
-                }
-
-                // Update ' to \' to escaping ' character to match with excel
-                // Update any \' to ' then update all ' to \' (ex: \'' to '')
-                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\\'", "\'");
-                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\'", "\\'");
-                
-                // If after decimal point, there is no numeric format character (all escaping characters - backsplash or double quote)
-                // Then add \ to decimal point to print out decimal point
-                var decimalPointIndex = textFormatArgs.FormatArg.IndexOf(".", StringComparison.Ordinal);
-                if (decimalPointIndex != -1)
-                {
-                    var subFormat = textFormatArgs.FormatArg.Substring(decimalPointIndex);
-                    if (HasAllEscapingCharacters(subFormat))
+                    if (formatStr[i] == '0' || formatStr[i] == '#')
                     {
-                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace(".", "\\.");
+                        hasNumericCharacters = true;
                     }
-                }
-
-                // If before comma there is no numeric format character, treat them as escaping character
-                var commaIndex = textFormatArgs.FormatArg.IndexOf(",", StringComparison.Ordinal);
-                if (commaIndex != -1)
-                {
-                    var prefixFormat = textFormatArgs.FormatArg.Substring(0, commaIndex + 1);
-                    if (HasAllEscapingCharacters(prefixFormat))
+                    else if (formatStr[i] == ',' && !hasNumericCharacters)
                     {
+                        // If there is no numeric format character before group separator character, then treat it as an escaping character.
                         textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace(",", "\\,");
                     }
+                    else if (formatStr[i] == '.')
+                    {
+                        // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
+                        hasDecimalPoint = true;
+                        hasNumericCharacters = false;
+                    }
+                    else if (i == n - 1)
+                    {
+                        // If format string ends with backsplash but no following character or ends with e or e+ (not escaping character) then format is invalid.
+                        if (formatStr[i] == '\\' || formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+'))
+                        {
+                            return false;
+                        }
+                    }
+                    else if (formatStr[i] == '\\')
+                    {
+                        // Skip next character if seeing escaping character \.
+                        i++;
+                    }
+                    else if (formatStr[i] == '\"' && i < n - 1)
+                    {
+                        // Jump to close quote to pass all escaping characters.
+                        i = formatStr.IndexOf('\"', i + 1);
+
+                        // Format is invalid if missing close quote.
+                        if (i == -1)
+                        {
+                            return false;
+                        }
+                    }
                 }
+
+                // If there is no numeric format character (all escaping characters - backsplash or double quote) after decimal point then treat it as an escaping character.
+                if (hasDecimalPoint && !hasNumericCharacters)
+                {
+                    textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace(".", "\\.");
+                }
+
+                // Update \' to escaping character ' to match with C# then update any \' to ' to match with Excel (ex: \'' to '').
+                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\\'", "\'");
+                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\'", "\\'");
             }
 
             // Update \c to "c" to match with excel
@@ -262,36 +277,6 @@ namespace Microsoft.PowerFx.Core.Utils
             catch (CultureNotFoundException)
             {
                 return false;
-            }
-
-            return true;
-        }
-
-        private static bool HasAllEscapingCharacters(string formatStr)
-        {
-            if (formatStr.IndexOfAny(new char[] { '0', '#' }) == -1)
-            { 
-                return true; 
-            }
-            
-            for (int i = 0; i < formatStr.Length; i++)
-            {
-                if (formatStr[i] == '0' || formatStr[i] == '#')
-                {
-                    return false;
-                }
-                else if (formatStr[i] == '\\')
-                {
-                    i = i + 1;              
-                }
-                else if (formatStr[i] == '\"')
-                {
-                    i = formatStr.IndexOf('\"', i + 1);
-                    if (i == -1)
-                    {
-                        return false;
-                    }
-                }
             }
 
             return true;
