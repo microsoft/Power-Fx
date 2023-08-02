@@ -16,33 +16,33 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly DefinedTypeSymbolTable _definedTypes;
 
-        private readonly FormulaTypeSerializerSettings _settings;
+        private Func<string, RecordType> _logicalNameToRecordType;
 
         internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
-            _settings = new FormulaTypeSerializerSettings(null);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FormulaTypeJsonConverter"/> class.
-        /// </summary>
-        /// <param name="settings"></param>
-        public FormulaTypeJsonConverter(FormulaTypeSerializerSettings settings)
-            : this(new DefinedTypeSymbolTable())
+        public FormulaTypeJsonConverter()
         {
-            _settings = settings ?? _settings;
+            _definedTypes = new DefinedTypeSymbolTable();
+            _logicalNameToRecordType = (dummyInput) => throw new InvalidOperationException("Lazy type converter not registered");
+        }
+
+        public void RegisterLazyTypeConvertor(Func<string, RecordType> logicalNameToRecordType)
+        {
+            _logicalNameToRecordType = logicalNameToRecordType;
         }
 
         public override FormulaType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var schemaPoco = JsonSerializer.Deserialize<FormulaTypeSchema>(ref reader, options);
-            return schemaPoco.ToFormulaType(_definedTypes, _settings);
+            return schemaPoco.ToFormulaType(_definedTypes, _logicalNameToRecordType);
         }
 
         public override void Write(Utf8JsonWriter writer, FormulaType value, JsonSerializerOptions options)
         {
-            var schemaPoco = value.ToSchema(_definedTypes, _settings);
+            var schemaPoco = value.ToSchema(_definedTypes, _logicalNameToRecordType);
             JsonSerializer.Serialize(writer, schemaPoco, options);
         }
     }

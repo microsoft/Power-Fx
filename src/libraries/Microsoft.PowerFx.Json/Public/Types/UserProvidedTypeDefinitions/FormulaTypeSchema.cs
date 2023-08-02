@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -35,7 +34,7 @@ namespace Microsoft.PowerFx.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
-        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings)
+        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, Func<string, RecordType> logicalNameToRecordType)
         {
             var typeName = Type.Name;
 
@@ -55,7 +54,6 @@ namespace Microsoft.PowerFx.Core
                 return actualType;
             }
 
-            var logicalNameToRecordType = settings.LogicalNameToRecordType;
             if (typeName == SchemaTypeName.ExpandableTableTypeName.Name && logicalNameToRecordType != null)
             {
                 return logicalNameToRecordType.Invoke(this.Description).ToTable();
@@ -64,19 +62,19 @@ namespace Microsoft.PowerFx.Core
             {
                 return logicalNameToRecordType.Invoke(this.Description);
             }
-            else if (typeName == SchemaTypeName.RecordTypeName.Name)
+            else if (typeName != SchemaTypeName.RecordTypeName.Name)
             {
-                if (Fields == null || !Fields.Any())
-                {
-                    FormulaType emptyAggregateType = Type.IsTable ? TableType.Empty() : RecordType.Empty();
-                    return emptyAggregateType;
-                }
-
-                var result = new UserDefinedRecordType(this, definedTypeSymbols, settings);
-                return Type.IsTable ? result.ToTable() : result;
+                return FormulaType.BindingError;
             }
 
-            return FormulaType.BindingError;
+            if (Fields == null || !Fields.Any())
+            {
+                FormulaType emptyAggregateType = Type.IsTable ? TableType.Empty() : RecordType.Empty();
+                return emptyAggregateType;
+            }
+
+            var result = new UserDefinedRecordType(this, definedTypeSymbols, logicalNameToRecordType);
+            return Type.IsTable ? result.ToTable() : result;
         }
 
         private static bool TryLookupType(string typeName, DefinedTypeSymbolTable definedTypeSymbols, out FormulaType type)
