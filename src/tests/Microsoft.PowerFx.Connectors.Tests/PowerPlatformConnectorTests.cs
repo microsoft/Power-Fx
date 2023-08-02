@@ -714,7 +714,7 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue fv1 = await engine.EvalAsync(@$"exob.GetDrives(""{source}"")", CancellationToken.None).ConfigureAwait(false);                          
             string drive = ((StringValue)((TableValue)((RecordValue)fv1).GetField("value")).Rows.First((DValue<RecordValue> row) => ((StringValue)row.Value.GetField("name")).Value == "OneDrive").Value.GetField("id")).Value;
 
-            // "AM Site.xlxs" file id = "01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO"
+            // Get file id for "AM Site.xlxs" = "01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response2.json");
             FormulaValue fv2 = await engine.EvalAsync(@$"exob.ListRootFolder(""{source}"", ""{drive}"")", CancellationToken.None).ConfigureAwait(false);      
             string file = ((StringValue)((TableValue)fv2).Rows.First((DValue<RecordValue> row) => row.Value.GetField("Name") is StringValue sv && sv.Value == "AM Site.xlsx").Value.GetField("Id")).Value;
