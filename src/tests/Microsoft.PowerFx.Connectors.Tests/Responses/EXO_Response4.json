@@ -1,0 +1,725 @@
+{
+  "@odata.context": "https://excelonline-dfscus.azconn-dfscus-002.p.azurewebsites.net/$metadata#drives('b%21kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb')/Files('01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO')/Tables('%7B00000000-000C-0000-FFFF-FFFF00000000%7D')/items",
+  "value": [
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "K3ei2t603OE",
+      "Site": "Angeles City",
+      "Supplier": "Majorel",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "K3ei2t603OE"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "f830UPeAXoI",
+      "Site": "Atlanta",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "f830UPeAXoI"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "c1fukDIlkms",
+      "Site": "Beijing",
+      "Supplier": "Wicresoft",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "c1fukDIlkms"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "QFIQUV3oAw8",
+      "Site": "Bengaluru",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "QFIQUV3oAw8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "u8h4Kwp-JKc",
+      "Site": "Bengaluru",
+      "Supplier": "Infosys",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "u8h4Kwp-JKc"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "l0xGUei2hA8",
+      "Site": "Bengaluru",
+      "Supplier": "Mindtree",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "l0xGUei2hA8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "NskHP_Ow348",
+      "Site": "Bengaluru",
+      "Supplier": "Sonata",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "NskHP_Ow348"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "66gfeUkXql8",
+      "Site": "Bengaluru",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "66gfeUkXql8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "8FY6sVfALvE",
+      "Site": "Bogota",
+      "Supplier": "Teleperformance",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "8FY6sVfALvE"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "mykMDZBcd0k",
+      "Site": "BTS-Internal",
+      "Supplier": "BTS-Test",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "mykMDZBcd0k"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "WrLf_v5dfK4",
+      "Site": "Bucharest",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "WrLf_v5dfK4"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "T3A9yFxyIxM",
+      "Site": "Bucharest",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "T3A9yFxyIxM"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "_FxzOj6sG44",
+      "Site": "Buenos Aires",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "_FxzOj6sG44"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "YGhfDVO56ww",
+      "Site": "Cairo",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "YGhfDVO56ww"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "ADlDMKbO-Eg",
+      "Site": "Cebu",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "ADlDMKbO-Eg"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "QLnGRqp2Sp0",
+      "Site": "Chennai",
+      "Supplier": "Infosys",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "QLnGRqp2Sp0"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "Dk9ieioxXe4",
+      "Site": "Chennai",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "Dk9ieioxXe4"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "BbPGmlUmL1Q",
+      "Site": "Colorado Springs",
+      "Supplier": "Tek Experts",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "BbPGmlUmL1Q"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "0i0kB4hNhy8",
+      "Site": "Dalian",
+      "Supplier": "Tek Experts",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "0i0kB4hNhy8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "XTrdRZHbNzk",
+      "Site": "Dalian",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "XTrdRZHbNzk"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "jHhUlgcZ9HA",
+      "Site": "Dublin",
+      "Supplier": "Infosys",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "jHhUlgcZ9HA"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "rXMea_TZevE",
+      "Site": "Dublin",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "rXMea_TZevE"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "wKIdbwY80QQ",
+      "Site": "Findlay",
+      "Supplier": "Plumbline (PLM)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "wKIdbwY80QQ"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "FYaDwszRIDo",
+      "Site": "Gdnask",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "FYaDwszRIDo"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "Id5iQuScbTI",
+      "Site": "Gurgaon",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "Id5iQuScbTI"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "oozjNMnD_cI",
+      "Site": "Hanoi",
+      "Supplier": "Tek Experts",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "oozjNMnD_cI"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "g6JalJRGfoo",
+      "Site": "Hyderabad",
+      "Supplier": "Sonata",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "g6JalJRGfoo"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "l8UUkRY45DY",
+      "Site": "Hyderabad",
+      "Supplier": "Infosys",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "l8UUkRY45DY"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "FoDPluw6ubo",
+      "Site": "Hyderabad",
+      "Supplier": "Mindtree",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "FoDPluw6ubo"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "2R506o6223A",
+      "Site": "Hyderabad",
+      "Supplier": "Allyis",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "2R506o6223A"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "DnrvKCetlsY",
+      "Site": "Hyderabad",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "DnrvKCetlsY"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "rwz1oxb0r4Q",
+      "Site": "Hyderabad",
+      "Supplier": "Tata Consultancy Services",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "rwz1oxb0r4Q"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "DXeyO-x9wjg",
+      "Site": "Hyderabad",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "DXeyO-x9wjg"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "KSUw5WlClpM",
+      "Site": "Internal",
+      "Supplier": "Microsoft",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "KSUw5WlClpM"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "XxHN6yyzJss",
+      "Site": "Jaipur",
+      "Supplier": "Teleperformance",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "XxHN6yyzJss"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "0-dUQGe20a4",
+      "Site": "Kuala Lumpur",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "0-dUQGe20a4"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "mmJ7sAqXJQ8",
+      "Site": "La Coruna",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "mmJ7sAqXJQ8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "e4MpeqmNf4Y",
+      "Site": "Lagos",
+      "Supplier": "Tek Experts",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "e4MpeqmNf4Y"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "6jjd_ov9XAE",
+      "Site": "Las Colinas",
+      "Supplier": "APEX (APX)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "6jjd_ov9XAE"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "q2JxP-f_BTE",
+      "Site": "Lisbon",
+      "Supplier": "Teleperformance",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "q2JxP-f_BTE"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "7jMo0uMsOPc",
+      "Site": "Manila",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "7jMo0uMsOPc"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "JB6HAmjEdgI",
+      "Site": "Mega Mall",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "JB6HAmjEdgI"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "gz_7eXhlOa8",
+      "Site": "Mexico City",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "gz_7eXhlOa8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "Uk4iAgO6srI",
+      "Site": "MSFT Management",
+      "Supplier": "MSFT Management",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "Uk4iAgO6srI"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "A2om8lsM9-g",
+      "Site": "Muenster",
+      "Supplier": "Majorel",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "A2om8lsM9-g"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "0HYwpIAxjiA",
+      "Site": "New Jersey",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "0HYwpIAxjiA"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "268iQ8PZLys",
+      "Site": "New York",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "268iQ8PZLys"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "RdImfVHYFhs",
+      "Site": "Okinawa",
+      "Supplier": "Relia",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "RdImfVHYFhs"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "OvNpuUqjLP8",
+      "Site": "OneVet Operations",
+      "Supplier": "OneVet Operations",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "OvNpuUqjLP8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "kwJlfDMuwMA",
+      "Site": "Pune",
+      "Supplier": "Infosys",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "kwJlfDMuwMA"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "fof1jEW5cc8",
+      "Site": "Pune",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "fof1jEW5cc8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "yujtLTr3QPA",
+      "Site": "Pune",
+      "Supplier": "Mindtree",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "yujtLTr3QPA"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "L7R5mo8Kboc",
+      "Site": "Quezon",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "L7R5mo8Kboc"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "s3Xw2qNr31Y",
+      "Site": "Quezon",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "s3Xw2qNr31Y"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "yaAM7vPMxz4",
+      "Site": "Quezon City",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "yaAM7vPMxz4"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "2jY8gP8_bKs",
+      "Site": "Rave commercial",
+      "Supplier": "O365 Rave Commercial",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "2jY8gP8_bKs"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "AXuOBb7A6dU",
+      "Site": "Redmond",
+      "Supplier": "Infosys",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "AXuOBb7A6dU"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "bluQXnZl64Q",
+      "Site": "Redmond",
+      "Supplier": "Allyis",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "bluQXnZl64Q"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "kCp7BpyqIUA",
+      "Site": "Redmond",
+      "Supplier": "Sonata",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "kCp7BpyqIUA"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "TIIP9AyoEMk",
+      "Site": "Redmond",
+      "Supplier": "Mindtree",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "TIIP9AyoEMk"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "i3smZly59Fc",
+      "Site": "Redmond",
+      "Supplier": "APEX (APX)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "i3smZly59Fc"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "p5x7uOCa-70",
+      "Site": "San Jose",
+      "Supplier": "Tek Experts",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "p5x7uOCa-70"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "IGRt3SCBR-A",
+      "Site": "Sao Paulo",
+      "Supplier": "Teleperformance",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "IGRt3SCBR-A"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "tVmeQEJ5Jfo",
+      "Site": "Sapporo",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "tVmeQEJ5Jfo"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "B74B0b0siMc",
+      "Site": "Sapporo",
+      "Supplier": "NTT Communications (NTC)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "B74B0b0siMc"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "NlFwtqQdRAU",
+      "Site": "Sendai",
+      "Supplier": "NTT Communications (NTC)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "NlFwtqQdRAU"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "L-lAq2ZyH5k",
+      "Site": "Seoul",
+      "Supplier": "Transcosmos",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "L-lAq2ZyH5k"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "vb2_QpCIDHA",
+      "Site": "Shanghai",
+      "Supplier": "Wicresoft",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "vb2_QpCIDHA"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "UenQGrNSHss",
+      "Site": "Sofia",
+      "Supplier": "Tek Experts",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "UenQGrNSHss"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "7R5SUBKSecA",
+      "Site": "Sofia",
+      "Supplier": "Concentrix",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "7R5SUBKSecA"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "8QbYx-XNcx8",
+      "Site": "Szczecin",
+      "Supplier": "Majorel",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "8QbYx-XNcx8"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "0Mb9ccTcLpE",
+      "Site": "Tlaquerpague",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "0Mb9ccTcLpE"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "S8KJzRsHvSk",
+      "Site": "Tokyo",
+      "Supplier": "NTT Communications (NTC)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "S8KJzRsHvSk"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "gjed-O4Nu-k",
+      "Site": "Valencia",
+      "Supplier": "Majorel",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "gjed-O4Nu-k"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "jy80l7eKWYE",
+      "Site": "Vancouver",
+      "Supplier": "Infosys",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "jy80l7eKWYE"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "MLzaXNp1hlc",
+      "Site": "Warsaw",
+      "Supplier": "Accenture",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "MLzaXNp1hlc"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "LZ3mXRL8_8M",
+      "Site": "Warsaw",
+      "Supplier": "Wipro(WIP)",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "LZ3mXRL8_8M"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "wkQS5SLL_Uw",
+      "Site": "Wuxi",
+      "Supplier": "Wicresoft",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "wkQS5SLL_Uw"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "4jGEsFDYc4s",
+      "Site": "Yokohama",
+      "Supplier": "Relia",
+      "Organization": "onesupport",
+      "Tenant": "Modern Identity Tenant",
+      "__PowerAppsId__": "4jGEsFDYc4s"
+    },
+    {
+      "@odata.etag": "",
+      "ItemInternalId": "HgKhJsryCoQ",
+      "Site": "",
+      "Supplier": "",
+      "Organization": "",
+      "Tenant": "",
+      "__PowerAppsId__": "HgKhJsryCoQ"
+    }
+  ]
+}

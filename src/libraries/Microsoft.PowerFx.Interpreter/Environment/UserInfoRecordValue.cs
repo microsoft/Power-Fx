@@ -55,6 +55,9 @@ namespace Microsoft.PowerFx
                     case nameof(UserInfo.TeamsMemberId):
                         value = FormulaValue.New(await _userInfo.TeamsMemberId(cancellationToken).ConfigureAwait(false));
                         break;
+                    case nameof(UserInfo.EntraObjectId):
+                        value = FormulaValue.New(await _userInfo.EntraObjectId(cancellationToken).ConfigureAwait(false));
+                        break;
 
                     default:
                         // Never should get here in an expression - binder should have blocked it.

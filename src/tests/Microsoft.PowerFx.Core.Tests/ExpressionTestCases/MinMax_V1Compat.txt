@@ -10,6 +10,22 @@ Date(2022,3,8)
 >> Min(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
 Date(2022,3,8)
 
+// Date(2022, 9, 9) = 44813
+>> Max(Date(2022, 9, 9), 50000)
+Date(2036,11,21)
+
+>> Min(Date(2022, 9, 9), 50000)
+Date(2022,9,9)
+
+>> Max(Date(2022, 9, 9), 40000)
+Date(2022,9,9)
+
+>> Min(Date(2022, 9, 9), 40000)
+Date(2009,7,6)
+
+>> Min(40000, Date(2022, 9, 9))
+40000
+
 >> Min(Date(1985,3,5), DateTime(2014,11,11,13,50,0), Time(12, 1, 7))
 Date(1899,12,30)
 
@@ -25,8 +41,33 @@ Date(1985,3,5)
 >> Min(DateTime(2014,11,11,13,50,0), Date(1985,3,5))
 DateTime(1985,3,5,0,0,0,0)
 
+>> Max("1",2)
+2
+
+>> Max(1,"2")
+2
+
+>> Min(1/0, Date(2023, 4, 20)) 
+Error({Kind:ErrorKind.Div0})
+
+>> Min(Date(2023, 4, 20), 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> Min(1, "foo")
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> Min(Today(), 3)
 Date(1900,1,2)
+
+// "2023" as a string cannot be coerced to a DateTime (invalid format)
+>> Min(Now(), "2023")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>>Min(Now(), "2023-01-01")
+DateTime(2023,1,1,0,0,0,0)
+
+>> Min("1E1", "20")
+10
 
 // Value(Date(2023,3,15)) = 45000
 >> Min(Date(2112,1,1), 45000)
@@ -68,18 +109,17 @@ Time(12,0,0,0)
 >> Min(Time(12,0,0), "06:00:00", "03:45:00")
 Time(3,45,0,0)
  
-// ****** Mix and numeric and date/time arguments, scalar arguments (result is numeric) ******
+>> Min(50000, Date(2023,3,15))
+45000
 
-// Date(2022, 9, 9) = 44813
->> Max(Date(2022, 9, 9), 50000)
-Date(2036,11,21)
+>> Min(50000, DateTime(2023,3,15,18,0,0))
+45000.75
 
->> Min(Date(2022, 9, 9), 50000)
-Date(2022,9,9)
+>> Min(0.75, Time(12,0,0))
+0.5
 
->> Max(Date(2022, 9, 9), 40000)
-Date(2022,9,9)
+>> Min(3, true, "5")
+1
 
->> Min(Date(2022, 9, 9), 40000)
-Date(2009,7,6)
-
+>> Min(3, true, "-5")
+-5

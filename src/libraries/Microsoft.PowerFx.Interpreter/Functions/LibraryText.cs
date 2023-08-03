@@ -406,7 +406,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "G", culture));
                     }
 
                     break;
@@ -422,7 +422,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var normalized = dec.Normalize();
-                        result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, normalized.ToString(formatString ?? "G", culture));
                     }
 
                     break;
