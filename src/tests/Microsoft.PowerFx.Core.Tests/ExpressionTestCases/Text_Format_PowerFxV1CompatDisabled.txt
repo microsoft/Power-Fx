@@ -24,20 +24,42 @@ Error({Kind:ErrorKind.BadLanguageCode})
 >> Text(1234.5678, "[$-fr-FR][$-en-US] # ##0,00", "vi-VI")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 1234567.1234567, "0.00e+" )
+>> Text(1234567.1234567, "0.00e+")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 1234567.1234567, "0.00e" )
+>> Text(1234567.1234567, "0.00e")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 1234567.1234567, "\""#\""\" )
+>> Text(1234567.1234567, "\""#\""\")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123.456, "\m\m\m\-ddd\-yyy\" )
+>> Text(123.456, "\m\m\m\-ddd\-yyy\")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 1234567.1234567, """""""#" )
+>> Text(1234567.1234567, """""""#")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 1234567.1234567, """\""""#" )
+>> Text(1234567.1234567, """\""""#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm "" dd, yyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470, "DDDD, MMM "" DD, YYY") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Format does not have close double quote
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ([""][^""]*[""]) dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470, "mmm ([""][^""]*[""]) dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""])"" dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470, "mmm ""([""][^""]*[""])"" dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(Date(1983, 6, 3), "dddd, mmm "" dd, yyy") 
 Error({Kind:ErrorKind.InvalidArgument})

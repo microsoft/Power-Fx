@@ -741,6 +741,7 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(1234.5678, "[$-fr-FR # ##]0,00", "vi-VI")
 Error({Kind:ErrorKind.BadLanguageCode})
+
 ﻿// Text function consistency with Excel
 //  
 // We do not support all the formats that Excel does.  For the moment, we are blocking several patterns that 
@@ -1285,3 +1286,7 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(123.456, "#.#0""##""0")
 "123.45##6"
+
+// Format has mixed datetime and number
+>> Text(1234567.1234567, "\m\mm # ddd yyy")
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
