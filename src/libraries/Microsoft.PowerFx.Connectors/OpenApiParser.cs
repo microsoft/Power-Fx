@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             ValidateSupportedOpenApiDocument(openApiDocument);
 
-            List<ConnectorFunction> functions = new();
-            List<ServiceFunction> sFunctions = new();
+            List<ConnectorFunction> functions = new ();
+            List<ServiceFunction> sFunctions = new ();
             string basePath = openApiDocument.GetBasePath();
 
             foreach (KeyValuePair<string, OpenApiPathItem> kv in openApiDocument.Paths)

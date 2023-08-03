@@ -452,7 +452,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
             {
-                string nextLink = (pageLink as StringValue).Value;
+                string nextLink = (pageLink as StringValue)?.Value;
                 result = new PagedRecordValue(rv, () => GetNextPage(nextLink, cancellationToken), _maxRows);
             }
 
@@ -461,6 +461,11 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         private FormulaValue GetNextPage(string nextLink, CancellationToken cancellationToken)
         {
+            if (string.IsNullOrEmpty(nextLink))
+            {
+                return FormulaValue.NewBlank();
+            }
+
             FormulaValue result = _invoker.InvokeAsync(nextLink, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 
             if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
