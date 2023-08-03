@@ -359,14 +359,6 @@ namespace Microsoft.PowerFx.Functions
 
             if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, culture, defaultLanguage, out textFormatArgs))
             {
-                // Uncomment the following check when we support locale for datetime format string. For now we block it.
-                /*
-                if (formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase) && !(textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt))
-                {
-                    return CommonErrors.BadLanguageCode(irContext, formatString);
-                }
-                */
-
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }

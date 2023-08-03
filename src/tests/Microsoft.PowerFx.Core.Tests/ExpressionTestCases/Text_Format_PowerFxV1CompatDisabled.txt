@@ -484,10 +484,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234567.1234567, "gEnErAl")
 Error({Kind:ErrorKind.InvalidArgument})
 
-// Excel: #VALUE!
->> Text(1234567.1234567, "gen")
-Error({Kind:ErrorKind.InvalidArgument})
-
 // Excel: "Foo asdf"
 >> Text("asdf", "Foo @")
 Error({Kind:ErrorKind.InvalidArgument})

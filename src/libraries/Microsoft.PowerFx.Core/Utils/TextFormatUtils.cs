@@ -56,7 +56,6 @@ namespace Microsoft.PowerFx.Core.Utils
         {
             // Verify statically that the format string doesn't contain BOTH numeric and date/time
             // format specifiers. If it does, that's an error according to Excel and our spec.
-            int endIdx = -1;
             textFormatArgs = new TextFormatArgs
             {
                 FormatCultureName = null,
@@ -68,31 +67,8 @@ namespace Microsoft.PowerFx.Core.Utils
             // Process locale-prefix to get format culture name and numeric format string
             int startIdx = formatString.IndexOf("[$-", StringComparison.Ordinal);
 
-            // Block locale until we support locale for datetime as well. Remove this when we support locale later.
+            // Block locale until we support locale for datetime as well.
             if (startIdx == 0)
-            {
-                return false;
-            }
-
-            if (startIdx == 0)
-            {
-                endIdx = formatString.IndexOf(']', 3);
-                if (endIdx > 0)
-                {
-                    textFormatArgs.FormatCultureName = formatString.Substring(3, endIdx - 3).Trim();
-                    textFormatArgs.FormatArg = formatString.Substring(endIdx + 1);
-
-                    if (string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else if (startIdx > 0)
             {
                 return false;
             }
@@ -103,20 +79,20 @@ namespace Microsoft.PowerFx.Core.Utils
             var formatStr = textFormatArgs.FormatArg;
             bool hasColonWithNum = false;
 
-            //Block "gen"/"general"
-            if (formatStr.IndexOf("gen", StringComparison.OrdinalIgnoreCase) >= 0)
+            //Block "general"
+            if (formatStr.IndexOf("general", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
+
+            // Do not allow format string start with '/'
+            if (formatStr.Length > 0 && formatStr[0] == '/')
             {
                 return false;
             }
 
             for (int i = 0; i < formatStr.Length; i++)
             {
-                // Do not allow format string start with '/'
-                if (i == 0 && formatStr[i] == '/')
-                {
-                    return false;
-                }
-
                 if (_numericCharacters.Contains(formatStr[i]))
                 {
                     // ':' is not allowed between # or 0 (numeric)

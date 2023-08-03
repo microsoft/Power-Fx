@@ -484,10 +484,6 @@ Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-3
 >> Text(1234567.1234567, "gEnErAl")
 Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-31: Incorrect format specifier for 'Text'.
 
-// Excel: #VALUE!
->> Text(1234567.1234567, "gen")
-Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 22-27: Incorrect format specifier for 'Text'.
-
 // Excel: "Foo asdf"
 >> Text("asdf", "Foo @")
 Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 13-20: Incorrect format specifier for 'Text'.
