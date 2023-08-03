@@ -254,7 +254,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false)
-        {            
+        {
             IAsyncTexlFunction2 invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
             DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
@@ -266,16 +266,37 @@ namespace Microsoft.PowerFx.Connectors
                 invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
             }
 
-#pragma warning disable SA1117 // parameters should be on same line or all on different lines
-
-            ServiceFunction serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
-                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), PageLink, IsDeprecated, "action", NumberIsFloat, ArgumentMapper._parameterTypes)
+            ServiceFunction serviceFunction = new ServiceFunction(
+                parentService: null,
+                theNamespace: functionNamespace,
+                name: Name,
+                localeSpecificName: Name,
+                description: Description,
+                returnType: ReturnType._type,
+                maskLambdas: BigInteger.Zero,
+                arityMin: ArityMin,
+                arityMax: ArityMax,
+                isBehaviorOnly: IsBehavior,
+                isAutoRefreshable: false,
+                isDynamic: false,
+                isCacheEnabled: false,
+                cacheTimeoutMs: 10000,
+                isHidden: false,
+                parameterOptions: new Dictionary<TypedName, List<string>>(),
+                optionalParamInfo: ArgumentMapper.OptionalParamInfo,
+                requiredParamInfo: ArgumentMapper.RequiredParamInfo,
+                parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
+                pageLink: PageLink,
+                isSupported: IsSupported,
+                notSupportedReason: NotSupportedReason,
+                isDeprecated: IsDeprecated,
+                actionName: "action",
+                numberIsFloat: NumberIsFloat,
+                paramTypes: ArgumentMapper._parameterTypes)
             {
                 _invoker = invoker
             };
 
-#pragma warning restore SA1117
-            
             return serviceFunction;
         }
 
@@ -347,7 +368,7 @@ namespace Microsoft.PowerFx.Connectors
         public IReadOnlyList<ConnectorSuggestion> Suggestions { get; internal set; }
 
         public FormulaValue Value { get; private set; }
-        
+
         public FormulaValue[] Values { get; private set; }
 
         public string[] ParameterNames { get; internal set; }

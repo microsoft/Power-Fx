@@ -5078,6 +5078,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 // document errors for incorrect arguments, etc.
                 var func = overloads[0].VerifyValue();
 
+                ValidateSupportedFunction(node, func);
+
                 if (_txb._glue.IsComponentScopedPropertyFunction(func))
                 {
                     if (TryGetFunctionNameLookupInfo(node, funcNamespace, out var lookupInfo))
@@ -5147,6 +5149,24 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
             }
 
+            private void ValidateSupportedFunction(CallNode node, TexlFunction func)
+            {
+                if (func is IHasUnsupportedFunctions sdf)
+                {
+                    if (!sdf.IsSupported)
+                    {
+                        if (sdf.IsDeprecated)
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
+                        }
+                        else
+                        {
+                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
+                        }
+                    }
+                }
+            }
+
             private IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name)
             {
                 Contracts.Assert(theNamespace.IsValid);
@@ -5177,6 +5197,8 @@ namespace Microsoft.PowerFx.Core.Binding
                 if (TryGetBestOverload(_txb.CheckTypesContext, _txb.ErrorContainer, node, args, argTypes, overloads, out var function, out var nodeToCoercedTypeMap, out var returnType))
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
+
+                    ValidateSupportedFunction(node, function);                    
 
                     _txb.SetInfo(node, new CallInfo(function, node));
                     _txb.SetType(node, returnType);

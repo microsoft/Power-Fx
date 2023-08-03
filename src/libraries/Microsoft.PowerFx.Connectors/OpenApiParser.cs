@@ -347,30 +347,38 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
                         invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
-                    }
+                    }                   
 
-                    // Parameter (name,type) --> list of options. 
-                    Dictionary<TypedName, List<string>> parameterOptions = new ();
-                    Dictionary<string, Tuple<string, DType>> parameterDefaultValues = new (StringComparer.Ordinal);
-
-                    bool isBehavior = !IsSafeHttpMethod(verb);
-                    bool isDynamic = false;
-                    bool isAutoRefreshable = false;
-                    bool isCacheEnabled = false;
-                    int cacheTimeoutMs = 10000;
-                    bool isHidden = false;
-                    string description = op.Description ?? $"Invoke {operationName}";
-                    string pageLink = op.PageLink();
-
-#pragma warning disable SA1117 // parameters should be on same line or all on different lines
-
-                    ServiceFunction sfunc = new ServiceFunction(null, theNamespace, operationName, operationName, description, returnType._type, BigInteger.Zero, argMapper.ArityMin, argMapper.ArityMax, isBehavior, isAutoRefreshable, isDynamic, isCacheEnabled, 
-                        cacheTimeoutMs, isHidden, parameterOptions, argMapper.OptionalParamInfo, argMapper.RequiredParamInfo, parameterDefaultValues, pageLink, op.Deprecated, "action", numberIsFloat, argMapper._parameterTypes)
+                    ServiceFunction sfunc = new ServiceFunction(
+                        parentService: null,
+                        theNamespace: theNamespace, 
+                        name: operationName, 
+                        localeSpecificName: operationName,
+                        description: op.Description ?? $"Invoke {operationName}",
+                        returnType: returnType._type,
+                        maskLambdas: BigInteger.Zero,
+                        arityMin: argMapper.ArityMin,
+                        arityMax: argMapper.ArityMax,
+                        isBehaviorOnly: !IsSafeHttpMethod(verb),
+                        isAutoRefreshable: false,
+                        isDynamic: false,
+                        isCacheEnabled: false,
+                        cacheTimeoutMs: 10000,
+                        isHidden: false,
+                        parameterOptions: new Dictionary<TypedName, List<string>>(),
+                        optionalParamInfo: argMapper.OptionalParamInfo,
+                        requiredParamInfo: argMapper.RequiredParamInfo,
+                        parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
+                        pageLink: op.PageLink(),
+                        isSupported: isSupported,
+                        notSupportedReason: notSupportedReason,
+                        isDeprecated: op.Deprecated,
+                        actionName: "action",
+                        numberIsFloat: numberIsFloat,
+                        paramTypes: argMapper._parameterTypes)
                     {
                         _invoker = invoker
                     };
-
-#pragma warning restore SA1117 // parameters should be on same line or all on different lines
 
                     functions.Add(sfunc);
                 }

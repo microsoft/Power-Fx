@@ -29,7 +29,7 @@ using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
     [System.Diagnostics.DebuggerDisplay("ServiceFunction: {LocaleSpecificName}")]
-    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2, ISupportsDeprecatedFunctions
+    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2, IHasUnsupportedFunctions
     {
         private readonly List<string[]> _signatures;
         private readonly string[] _orderedRequiredParams;
@@ -48,6 +48,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly bool _numberIsFloat;
         private readonly string _pageLink;
         private readonly bool _isDeprecated;
+        private readonly bool _isSupported;
+        private readonly string _notSupportedReason;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
@@ -57,10 +59,12 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override bool IsSelfContained => !_isBehaviorOnly;
         public bool IsPageable => !string.IsNullOrEmpty(_pageLink);
         public bool IsDeprecated => _isDeprecated;
+        public bool IsSupported => _isSupported;
+        public string NotSupportedReason => _notSupportedReason;
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable,
-            bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isDeprecated, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
+            bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
+            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -111,7 +115,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _isAutoRefreshable = isAutoRefreshable;
             _isDynamic = isDynamic;
             _isCacheEnabled = isCacheEnabled;
-            _cacheTimeoutMs = cacheTimetoutMs;
+            _cacheTimeoutMs = cacheTimeoutMs;
             _isHidden = isHidden;
             _orderedRequiredParams = requiredParamInfo.Select(p => p.TypedName.Name.Value).ToArray();
             _signatures.Add(_orderedRequiredParams);
@@ -120,6 +124,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _requiredParameters = requiredParamInfo;
             _numberIsFloat = numberIsFloat;
             _pageLink = pageLink;
+            _isSupported = isSupported;
+            _notSupportedReason = notSupportedReason;
             _isDeprecated = isDeprecated;
 
             if (arityMax > arityMin)

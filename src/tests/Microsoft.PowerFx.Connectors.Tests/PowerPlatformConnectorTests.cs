@@ -267,6 +267,7 @@ namespace Microsoft.PowerFx.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
             string token = @"eyJ0eXAi...";
+            string expr = @"First(azbs.ListRootFolderV3(""pfxdevstgaccount1"")).DisplayName";
 
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
@@ -283,15 +284,27 @@ namespace Microsoft.PowerFx.Tests
             Assert.DoesNotContain(suggestedFuncs, str => str == "ListRootFolderV3");
             Assert.Contains(suggestedFuncs, str => str == "ListRootFolderV4");
 
-            testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_ListRootFolderV3_response.json");
+            // We return a warning message when using a deprecated function
+            CheckResult result = engine.Check(expr);
+            Assert.True(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.Equal("In namespace azbs, function ListRootFolderV3 is deprecated.", result.Errors.First().Message);
 
             // We can still call ListRootFolderV3 deprecated function
-            FormulaValue fv = await engine.EvalAsync(@"First(azbs.ListRootFolderV3(""pfxdevstgaccount1"")).DisplayName", CancellationToken.None).ConfigureAwait(false);
+            testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_ListRootFolderV3_response.json");
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None).ConfigureAwait(false);
             Assert.False(fv is ErrorValue);
             Assert.True(fv is StringValue);
 
             StringValue sv = (StringValue)fv;
             Assert.Equal("container", sv.Value);
+
+            //List<ConnectorFunction> unsupportedFunctions = OpenApiParser.GetFunctions(apiDoc).Where(x => !x.IsSupported && !x.IsDeprecated).OrderBy(x => x.Name).ToList();
+            string unsupportedExpr = @"azbs.CreateFileV2(""someDataset"", ""someFolderPath"", ""someName"", ""someContent"")";
+            CheckResult result2 = engine.Check(unsupportedExpr, new ParserOptions() { AllowsSideEffects = true });
+            Assert.False(result2.IsSuccess);
+            Assert.Single(result2.Errors);
+            Assert.Equal("In namespace azbs, function CreateFileV2 is not supported.", result2.Errors.First().Message);
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
