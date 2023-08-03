@@ -357,7 +357,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
         // Binds a Texl parse tree.
         // * resolver provides the name context used to bind names to globals, resources, etc. This may be null.
-        
+
         /// <summary>
         /// Binds a Power Fx parse true.
         /// </summary>
@@ -2064,8 +2064,8 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 // Accumulate the current type.
                 accumulatedType = DType.Union(
-                    accumulatedType, 
-                    currentRecordType, 
+                    accumulatedType,
+                    currentRecordType,
                     useLegacyDateTimeAccepts: false,
                     usePowerFxV1CompatibilityRules: Features.PowerFxV1CompatibilityRules);
             }
@@ -2120,7 +2120,7 @@ namespace Microsoft.PowerFx.Core.Binding
                     }
 
                     fields = DType.Union(
-                        fields, 
+                        fields,
                         DType.EmptyRecord.Add(ref fError, DPath.Root, name.Name, lambdaParamType),
                         useLegacyDateTimeAccepts: false,
                         usePowerFxV1CompatibilityRules: Features.PowerFxV1CompatibilityRules);
@@ -3361,7 +3361,7 @@ namespace Microsoft.PowerFx.Core.Binding
                         SetDottedNameError(node, TexlStrings.ErrInvalidIdentifier);
                         return;
                     }
-                    
+
                     // Validate that the name exists in the enum type
                     if (leftType.TryGetEnumValue(nameRhs, out value))
                     {
@@ -5151,18 +5151,15 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private void ValidateSupportedFunction(CallNode node, TexlFunction func)
             {
-                if (func is IHasUnsupportedFunctions sdf)
+                if (func is IHasUnsupportedFunctions sdf && !sdf.IsSupported)
                 {
-                    if (!sdf.IsSupported)
+                    if (sdf.IsDeprecated)
                     {
-                        if (sdf.IsDeprecated)
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
-                        }
-                        else
-                        {
-                            _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
-                        }
+                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Warning, node, TexlStrings.WarnDeprecatedFunction, func.Name, func.Namespace);
+                    }
+                    else
+                    {
+                        _txb.ErrorContainer.EnsureError(DocumentErrorSeverity.Critical, node, TexlStrings.ErrUnsupportedFunction, func.Name, func.Namespace);
                     }
                 }
             }
@@ -5198,7 +5195,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 {
                     function.CheckSemantics(_txb, args, argTypes, _txb.ErrorContainer);
 
-                    ValidateSupportedFunction(node, function);                    
+                    ValidateSupportedFunction(node, function);
 
                     _txb.SetInfo(node, new CallInfo(function, node));
                     _txb.SetType(node, returnType);
@@ -5398,11 +5395,11 @@ namespace Microsoft.PowerFx.Core.Binding
                     if (usePFxV1CompatRules)
                     {
                         if (DType.TryUnionWithCoerce(
-                            exprType, 
-                            childType, 
-                            usePowerFxV1CompatibilityRules: true, 
-                            coerceToLeftTypeOnly: true, 
-                            out var returnType, 
+                            exprType,
+                            childType,
+                            usePowerFxV1CompatibilityRules: true,
+                            coerceToLeftTypeOnly: true,
+                            out var returnType,
                             out var needCoercion))
                         {
                             exprType = returnType;
