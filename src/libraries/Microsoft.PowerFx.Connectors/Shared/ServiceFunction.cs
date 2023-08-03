@@ -470,7 +470,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
             {
-                string nextLink2 = (pageLink as StringValue).Value;
+                string nextLink2 = (pageLink as StringValue)?.Value;
                 result = new PagedRecordValue(rv, () => GetNextPage(nextLink2, cancellationToken), _maxRows);
             }
 
