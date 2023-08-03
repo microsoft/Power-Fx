@@ -40,5 +40,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return argumentIndex == 0;
         }
+
+        private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
+        {
+            Contracts.AssertValue(callNode);
+            Contracts.AssertValue(binding);
+
+            var viewFinderVisitor = new ViewFinderVisitor(binding);
+            callNode.Accept(viewFinderVisitor);
+
+            return viewFinderVisitor.ContainsView;
+        }
     }
 }

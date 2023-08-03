@@ -96,17 +96,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return firstNameStrategy.IsValidFirstNameNode(args[1].AsFirstName(), binding, null);
         }
 
-        private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            var viewFinderVisitor = new ViewFinderVisitor(binding);
-            callNode.Accept(viewFinderVisitor);
-
-            return viewFinderVisitor.ContainsView;
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
