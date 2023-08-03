@@ -48,6 +48,20 @@ namespace Microsoft.PowerFx
         // Explicitly provide types.
         // Necessary for Tables/Records
         protected ReflectionFunction(string name, FormulaType returnType, params FormulaType[] paramTypes)
+        : this(name, returnType, null /*change*/, paramTypes)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReflectionFunction"/> class.
+        /// Explicitly provide types and argument signatures.
+        /// </summary>
+        /// <param name="name">Function Name.</param>
+        /// <param name="returnType">Return Type.</param>
+        /// <param name="argSignature">Provide list of <see cref="CustomFunctionSignatureHelper"/>
+        /// where each entry represents a single overload of the function.</param>
+        /// <param name="paramTypes">Parameter Types.</param>
+        protected ReflectionFunction(string name, FormulaType returnType, IEnumerable<CustomFunctionSignatureHelper> argSignature, params FormulaType[] paramTypes)
         {
             var t = GetType();
             var m = t.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance) ?? throw new InvalidOperationException($"Missing Execute method");
@@ -61,7 +75,7 @@ namespace Microsoft.PowerFx
 
             var configType = ConfigType ?? default;
 
-            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
+            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, argSignature, isAsync);
         }
 
         private FunctionDescr Scan()
@@ -117,7 +131,7 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                return new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
+                return new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, null, isAsync);
             }
 
             return _info;

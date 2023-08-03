@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
@@ -12,22 +13,51 @@ namespace Microsoft.PowerFx
 {
     internal class CustomFunctionUtility
     {
-        public static TexlStrings.StringGetter[] GenerateArgSignature(DType[] paramTypes)
+        public static TexlStrings.StringGetter[] GenerateArgSignature(DType[] paramTypes, IEnumerable<CustomFunctionSignatureHelper> argumentSignatures = null)
         {
-            var count = paramTypes.Length;
-            var signature = new StringGetter[count];
+            var paramCount = paramTypes.Length;
+            var signature = new StringGetter[paramCount];
 
-            for (var i = 0; i < count; i++)
+            var customSignature = argumentSignatures?.GetEnumerator() ?? Enumerable.Empty<CustomFunctionSignatureHelper>().GetEnumerator();
+
+            for (var i = 0; i < paramCount; i++)
             {
-                signature[i] = SG($"Arg{i + 1} : {paramTypes[i].GetKindString()}");
+                if (customSignature.MoveNext())
+                {
+                    signature[i] = SG($"{customSignature.Current.ArgLabel[i]} : {paramTypes[i].GetKindString()}");
+                }
+                else
+                {
+                    signature[i] = SG($"Arg{i + 1} : {paramTypes[i].GetKindString()}");
+                }
             }
 
-            return signature;
+            return signature;        
         }
 
         public static StringGetter SG(string text)
         {
             return (string locale) => text;
+        }
+
+        private static IEnumerable<TexlStrings.StringGetter[]> GetCustomSignatures(IEnumerable<CustomFunctionSignatureHelper> argumentSignatures)
+        {
+            if (argumentSignatures == null)
+            {
+                yield break;
+            }
+
+            foreach (var signature in argumentSignatures)
+            {
+                TexlStrings.StringGetter[] sign = new StringGetter[signature.Count];
+
+                for (var i = 0; i < signature.Count; i++)
+                {
+                    sign[i] = SG(signature.ArgLabel[i]);
+                }
+
+                yield return sign;
+            }
         }
     }
 }

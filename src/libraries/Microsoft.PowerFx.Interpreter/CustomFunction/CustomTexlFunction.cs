@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,15 +33,29 @@ namespace Microsoft.PowerFx
 
         private readonly bool _isBehavior;
 
+        private readonly IEnumerable<CustomFunctionSignatureHelper> _argumentSignatures;
+
         public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, params FormulaType[] paramTypes)
             : this(name, functionCategory, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {
         }
 
         public CustomTexlFunction(string name, FunctionCategories functionCategory, DType returnType, params DType[] paramTypes)
+            : this(name, functionCategory, returnType, null, paramTypes)
+        {
+            _isBehavior = functionCategory == FunctionCategories.Behavior;
+        }
+
+        public CustomTexlFunction(string name, FunctionCategories functionCategory, DType returnType, IEnumerable<CustomFunctionSignatureHelper> argumentSignatures, params DType[] paramTypes)
             : base(DPath.Root, name, name, CustomFunctionUtility.SG("Custom func " + name), functionCategory, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
         {
             _isBehavior = functionCategory == FunctionCategories.Behavior;
+            _argumentSignatures = argumentSignatures ?? Enumerable.Empty<CustomFunctionSignatureHelper>();
+
+            if (_argumentSignatures == null)
+            {
+                _argumentSignatures = new CustomFunctionSignatureHelper[] { new CustomFunctionSignatureHelper("Arg 1") };
+            }
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
