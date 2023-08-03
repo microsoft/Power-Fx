@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
@@ -99,10 +100,12 @@ namespace Microsoft.PowerFx.Functions
         }
 
         public bool TryGetProperty(string value, out IUntypedObject result)
-        {
+        {  
             var res = _element.TryGetProperty(value, out var je);
             result = new JsonUntypedObject(je);
             return res;
         }
+
+        public IEnumerable<string> GetProperties() => _element.EnumerateObject().Select(x => x.Name);
     }
 }

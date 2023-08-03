@@ -337,7 +337,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
         {
             cts.ThrowIfCancellationRequested();
-            return await dynamicApi.ServiceFunction.InvokeAsync(FormattingInfoHelper.CreateFormattingInfo(), arguments, cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(FormattingInfoHelper.CreateFormattingInfo(), arguments, null, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -423,7 +423,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         // Provide as hook for execution. 
         public IAsyncTexlFunction2 _invoker;
 
-        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, FormulaType returnTypeOverride, CancellationToken cancellationToken)
         {
             if (_invoker == null)
             {
@@ -432,7 +432,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var result = await _invoker.InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
+            var result = await _invoker.InvokeAsync(context, args, returnTypeOverride, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)

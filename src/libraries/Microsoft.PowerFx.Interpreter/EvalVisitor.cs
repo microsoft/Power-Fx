@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx
             }
             else if (func is IAsyncTexlFunction2 asyncFunc2)
             {
-                result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
+                result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, null, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {

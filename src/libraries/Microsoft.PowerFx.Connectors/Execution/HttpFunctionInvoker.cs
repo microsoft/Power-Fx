@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
+        public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, FormulaType returnTypeOverride, bool throwOnError = false)
         {
             var text = response?.Content == null
                             ? string.Empty
@@ -175,8 +175,8 @@ namespace Microsoft.PowerFx.Connectors
             if (statusCode < 300)
             {
                 return string.IsNullOrWhiteSpace(text)
-                    ? FormulaValue.NewBlank(_returnType)
-                    : FormulaValueJSON.FromJson(text, _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    ? FormulaValue.NewBlank(returnTypeOverride ?? _returnType)
+                    : FormulaValueJSON.FromJson(text, returnTypeOverride ?? _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             if (throwOnError)
@@ -191,10 +191,10 @@ namespace Microsoft.PowerFx.Connectors
                         Severity = ErrorSeverity.Critical,
                         Message = $"The server returned an HTTP error with code {statusCode}. Response: {text}"
                     },
-                    _returnType);
+                    returnTypeOverride ?? _returnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, FormulaType returnTypeOverride, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -210,7 +210,7 @@ namespace Microsoft.PowerFx.Connectors
             return await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
+                return await DecodeResponseAsync(response, returnTypeOverride, throwOnError).ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
     }
@@ -236,11 +236,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Name { get; }
 
-        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, FormulaType returnTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            return _invoker.InvokeAsync(context, _cacheScope, args, cancellationToken, _throwOnError);
+            return _invoker.InvokeAsync(context, _cacheScope, args, returnTypeOverride, cancellationToken, _throwOnError);
         }
     }
 }

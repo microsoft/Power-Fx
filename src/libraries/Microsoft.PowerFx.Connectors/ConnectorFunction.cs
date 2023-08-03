@@ -262,22 +262,28 @@ namespace Microsoft.PowerFx.Connectors
             return serviceFunction;
         }
 
-        internal async Task<FormulaValue> InvokeAync(FormattingInfo context, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> InvokeAync(FormattingInfo context, HttpClient httpClient, FormulaValue[] values, FormulaType returnTypeOverride, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await GetServiceFunction(null, httpClient).InvokeAsync(context, values, cancellationToken).ConfigureAwait(false);
+            return await GetServiceFunction(null, httpClient).InvokeAsync(context, values, returnTypeOverride, cancellationToken).ConfigureAwait(false);
         }
 
         public Task<FormulaValue> InvokeAync(IRuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return InvokeAync(config.ServiceProvider.GetFormattingInfo(), httpClient, values, cancellationToken);
+            return InvokeAync(config.ServiceProvider.GetFormattingInfo(), httpClient, values, null, cancellationToken);
         }
 
         public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), httpClient, values, cancellationToken);
+            return InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), httpClient, values, null, cancellationToken);
+        }
+
+        public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, FormulaType returnType, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), httpClient, values, returnType, cancellationToken);
         }
     }
 
