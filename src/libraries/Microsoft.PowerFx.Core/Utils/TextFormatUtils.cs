@@ -42,6 +42,7 @@ namespace Microsoft.PowerFx.Core.Utils
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
         private static readonly IReadOnlyList<char> _dateTimeCharacters = new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' };
         private static readonly IReadOnlyList<char> _numericCharacters = new char[] { '0', '#' };
+        private static readonly IReadOnlyList<char> _unsupportedCharacters = new char[] { '?', '[', '_', '*', '@' };
 
         /// <summary>
         /// Validate if format string is valid or not and return format string object.
@@ -66,6 +67,13 @@ namespace Microsoft.PowerFx.Core.Utils
 
             // Process locale-prefix to get format culture name and numeric format string
             int startIdx = formatString.IndexOf("[$-", StringComparison.Ordinal);
+
+            // Block locale until we support locale for datetime as well. Remove this when we support locale later.
+            if (startIdx == 0)
+            {
+                return false;
+            }
+
             if (startIdx == 0)
             {
                 endIdx = formatString.IndexOf(']', 3);
@@ -91,12 +99,32 @@ namespace Microsoft.PowerFx.Core.Utils
 
             bool hasNumericCharacters = false;
             int decimalPointIndex = -1;
+            int sectionCount = 0;
             var formatStr = textFormatArgs.FormatArg;
+            bool hasColonWithNum = false;
+
+            //Block "gen"/"general"
+            if (formatStr.IndexOf("gen", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
+            }
 
             for (int i = 0; i < formatStr.Length; i++)
             {
+                // Do not allow format string start with '/'
+                if (i == 0 && formatStr[i] == '/')
+                {
+                    return false;
+                }
+
                 if (_numericCharacters.Contains(formatStr[i]))
                 {
+                    // ':' is not allowed between # or 0 (numeric)
+                    if (!textFormatArgs.HasDateTimeFmt && hasColonWithNum)
+                    {
+                        return false;
+                    }
+
                     textFormatArgs.HasNumericFmt = true;
 
                     // Use hasNumericCharacters to check if format string has numeric character before group separator or after decimal point.
@@ -114,15 +142,27 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (!textFormatArgs.HasDateTimeFmt && formatStr[i] == '.')
                 {
-                    // If more than 1 decimal point, format is invalid.
-                    if (decimalPointIndex != -1)
-                    {
-                        return false;
-                    }
-
                     // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
                     decimalPointIndex = i;
                     hasNumericCharacters = false;
+                }
+                else if (_unsupportedCharacters.Contains(formatStr[i]))
+                {
+                    // Block all unsupported characters
+                    return false;
+                }
+                else if (formatStr[i] == ':')
+                {
+                    hasColonWithNum = true;
+                }
+                else if (formatStr[i] == ';')
+                {
+                    // Does not allow number of section are more than 2.
+                    sectionCount++;
+                    if (sectionCount > 2)
+                    {
+                        return false;
+                    }
                 }
                 else if (i == formatStr.Length - 1)
                 {
@@ -183,6 +223,12 @@ namespace Microsoft.PowerFx.Core.Utils
             // If there is no numeric format character (all escaping characters - backsplash or double quote) after decimal point then treat it as an escaping character.
             if (textFormatArgs.HasNumericFmt)
             {
+                // Block '/' for numeric format string
+                if (formatStr.Contains("/"))
+                {
+                    return false;
+                }
+
                 if (decimalPointIndex != -1 && !hasNumericCharacters)
                 {
                     formatStr = formatStr.Insert(decimalPointIndex, "\\");
@@ -192,6 +238,9 @@ namespace Microsoft.PowerFx.Core.Utils
                 formatStr = formatStr.Replace("\"\'\"", "\'");
                 formatStr = formatStr.Replace("\\'", "\'");
                 formatStr = formatStr.Replace("\'", "\\'");
+
+                // Update '‰' to '\‰' to escape '‰' in c# to match with excel.
+                formatStr = formatStr.Replace("‰", "\\‰");
             }
 
             textFormatArgs.FormatArg = formatStr;

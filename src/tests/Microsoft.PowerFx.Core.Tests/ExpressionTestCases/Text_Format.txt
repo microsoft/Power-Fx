@@ -478,12 +478,6 @@
 >> Text(30470, "mmm ""[some*]"" dd ""(de)+"" yyyy") 
 "Jun [some*] 03 (de)+ 1983"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[]) 03 1983"
-
->> Text(30470, "mmm ""([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[]) 03 1983"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""[de]+de"" dd yyyy") 
 "Jun [de]+de 03 1983"
 
@@ -618,73 +612,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // ******** Language Code and Numeric Format String ********
 
->> Text(1234.5678, "[$-fr-FR]# ##0,00", "en-US")
-"1,234.57"
-
->> Text(1234.5678, "[$-fr-FR]# ##0,00", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-en-US]#,##0.00", "en-US")
-"1,234.57"
-
->> Text(1234.5678, "[$-pt-BR]#.##0,00", "en-US")
-"1,234.57"
-
->> Text(1234.5678, "[$-pt-BR]#.##0,00", "fr-FR")
-"1 234,57"
-
->> Text(1234.5678, "[$-en-US]#,##0.00", "pt-BR")
-"1.234,57"
-
->> Text(1234.5678,"[$-en-US]0 # # # !!!", "en-US")
-"1 2 3 5 !!!"
-
-// The thousands separator in the fi-FI locale is the no-break space (U+00A0)
->> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "en-US")
-"12,345.68"
-
->> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "fi-FI")
-"12 345,68"
-
-// The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
->> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "en-US")
-"12,345.68"
-
->> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "fr-FR")
-"12 345,68"
-
->> Text(1234.5678, "[$-en-US]", "en-US")
-"1234.5678"
-
->> Text(1234.5678, "[$-fr-FR]", "fr-FR")
-"1234,5678"
-
->> Text(1234.5678, "[$-fr-FR]", "en-US")
-"1234.5678"
-
 >> Text(1234.5678, "# ##0,00", "fr-FR")
 " 1 235"
 
 >> Text(1234.5678, "# ##0,00")
 " 1,235"
 
->> Text(1234.5678, "[$-  fr-FR  ]# ##0,00", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-fr-FR  ]# ##0,00", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-  fr-FR]# ##0,00", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-fr-FR][# ##0,00]", "vi-VI")
-"[1.234,57]"
-
 >> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
 "$-fr-FR]  1.235"
-
->> Text(1234.5678, "$-fr-FR][ # ##0,00", "vi-VI")
-"$-fr-FR][  1.235"
 
 >> Text(1234.5678, "-fr-FR # ##0,00", "vi-VI")
 "-fr-FR  1.235"
@@ -692,55 +627,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234.5678, "fr-FR # ##0,00", "vi-VI")
 "fr-FR  1.235"
 
->> Text(1234.5678, "$[-fr-FR] # ##0,00", "vi-VI")
-"$[-fr-FR]  1.235"
-
->> Text(1234.5678, "$-[fr-FR] # ##0,00", "vi-VI")
-"$-[fr-FR]  1.235"
-
->> Text(1234.5678, "[$-fr-FR][$-fr-FR# ##0,00]", "vi-VI")
-"[$-fr-FR1.234,57]"
-
->> Text(1234.5678, "]$-fr-FR[ # ##0,00", "vi-VI")
-"]$-fr-FR[  1.235"
-
 >> Text(1234.5678, "{$-fr-FR} # ##0,00", "vi-VI")
 "{$-fr-FR}  1.235"
 
->> Text(1234.5678, "[$ # ##0,00", "vi-VI")
-"[$  1.235"
-
->> Text(1234.5678, "[$] # ##0,00", "vi-VI")
-"[$]  1.235"
-
->> Text(1234.5678, "][-$ # ##0,00", "vi-VI")
-"][-$  1.235"
-
-// If have wrong format string, throw error
 >> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
 Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "mnk  [$-fr-FR] # ##0,00"   , "vi-VI")
 Errors: Error 0-54: The function 'Text' has some invalid arguments.|Warning 16-41: Incorrect format specifier for 'Text'.
-
-// If does not have valid language code, throw error
->> Text(1234.5678, "[$-a]0,0", "en-US")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr - FR]# ##0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR #] ##0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR # ##0,00]", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR,en-US] # ##0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR # ##]0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
 
 ﻿// Text function consistency with Excel
 //  
@@ -1290,3 +1184,376 @@ Error({Kind:ErrorKind.BadLanguageCode})
 // Format has mixed datetime and number
 >> Text(1234567.1234567, "\m\mm # ddd yyy")
 Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# y")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# m")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+// Sections.  Three sections are supported, for positive, negative, and zero.
+>> Text(1234567.1234567, "##;(##);ZZZ")
+"1234567"
+
+>> Text(-1234567.1234567, "##;(##);ZZZ")
+"(1234567)"
+
+>> Text(0, "##;(##);ZZZ")
+"ZZZ"
+
+>> Text(1234567.1234567, "##;(##)")
+"1234567"
+
+>> Text(-1234567.1234567, "##;(##)")
+"(1234567)"
+
+>> Text(0, "##;(##)")
+""
+
+>> Text(1234567.1234567, "00.00;(00.00)")
+"1234567.12"
+
+>> Text(-1234567.1234567, "00.00;(00.00)")
+"(1234567.12)"
+
+// Excel supports a fourth section that is a string, for the case where the input is text.  We are strongly typed so less ipmortant.  We will error for now.
+>> Text(1234567.1234567, "##;(##);ZZZ;AAA")
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
+
+>> Text(-1234567.1234567, "##;(##);ZZZ;AAA")
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 23-40: Incorrect format specifier for 'Text'.
+
+>> Text(0, "##;(##);ZZZ;AAA")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 8-25: Incorrect format specifier for 'Text'.
+
+>> Text(1, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 8-30: Incorrect format specifier for 'Text'.
+
+>> Text(-1, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 9-31: Incorrect format specifier for 'Text'.
+
+>> Text(0, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 8-30: Incorrect format specifier for 'Text'.
+
+>> Text("asdf", "##;(##);ZZZ;""AAA """)
+Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 13-35: Incorrect format specifier for 'Text'.
+
+>> Text("asdf", "##;(##);ZZZ;""AAA ""@")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 13-36: Incorrect format specifier for 'Text'.
+
+// If only two sections, first format used for Zero.
+>> Text(0, "00.00;(00.00)")
+"00.00"
+
+// Excel: "€ 1,234,567.1235"
+>> Text(1234567.1234567, "[$€-de-DE] #,####.0000")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+
+// Excel: "$ 1,234,567.1235"
+>> Text(1234567.1234567, "[$$-de-DE] #,####.0000")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+
+// Excel: "€€€€ 1,234,567.1235"
+>> Text(1234567.1234567, "[$€€€€-de-DE] #,####.0000")
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-49: Incorrect format specifier for 'Text'.
+
+// Sections can be skipped.
+>> Text(1234567.1234567, ";(##)")
+""
+
+>> Text(-1234567.1234567, ";(##)")
+"(1234567)"
+
+>> Text(0, ";(##)")
+""
+
+>> Text(1234567.1234567, ";;ZZZ")
+""
+
+>> Text(0, ";;ZZZ")
+"ZZZ"
+
+>> Text(1234567.1234567, "##")
+"1234567"
+
+>> Text(-1234567.1234567, "##")
+"-1234567"
+
+>> Text(0, "##")
+""
+
+// Note that there are two spaces here.  The space after the * above was eaten.
+>> Text(1, "$  0.00")
+"$  1.00"
+
+>> Text(-1, "$  0.00")
+"-$  1.00"
+
+>> Text(0, "$  0.00")
+"$  0.00"
+
+>> Text(1234567.1234567, "\* #")
+"* 1234567"
+
+>> Text(1234567.1234567, """*"" #")
+"* 1234567"
+
+// Colon, interpreted as a time seperator, not allowed between numbers
+>> Text(2, ":")
+":"
+
+>> Text(2, "###:")
+"2:"
+
+>> Text(2, "0:z")
+"2:z"
+
+>> Text(2, "0:""#""z")
+"2:#z"
+
+// Time
+>> Text(0.324305555555556, "h")
+"7"
+
+>> Text(0.324305555555556, "hh")
+"07"
+
+>> Text(0.324305555555556, "m")
+"12"
+
+>> Text(0.324305555555556, "mm")
+"12"
+
+>> Text(0.324305555555556, "s")
+"0"
+
+>> Text(0.324305555555556, "ss")
+"00"
+
+>> Text(0.324305555555556, "h AM/PM")
+"7 AM"
+
+>> Text(0.324305555555556, "h:mm AM/PM")
+"7:47 AM"
+
+>> Text(0.324305555555556, "h:mm:ss A/P")
+"7:47:00 a"
+
+>> Text(0.324305555555556, "h:mm:ss.00")
+"7:47:00.00"
+
+>> Text(1.010101, "h:mm")
+"0:14"
+
+>> Text(1.010101, "mm:ss")
+"14:32"
+
+>> Text(1.010101, "ss.00")
+"32.72"
+
+>> Text(1.010101, "mm:")
+"12:"
+
+>> Text(1.010101, ":mm")
+":12"
+
+// Dates
+>> Text(3, "mm/dd/yyy")
+"01/02/1900"
+
+>> Text(3, "dd/mm/yyy")
+"02/01/1900"
+
+>> Text(3, "m/")
+"1/"
+
+// Excel: "7/8"
+>> Text(4.34, "7/8")
+"7/8"
+
+// Color specifications, ignored by Excel's Text function, but supported for cell formatting.  We should error for now.
+// Excel: "$1.00"
+>> Text(1, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+
+// Excel: "($1.00)"
+>> Text(-1, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 9-37: Incorrect format specifier for 'Text'.
+
+// Excel: "$0.00"
+>> Text(0, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+
+// Excel: "5"
+>> Text(5, "[Blue][<10]General;[Red][>=10]General")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 8-47: Incorrect format specifier for 'Text'.
+
+// Excel: "15"
+>> Text(15, "[Blue][<10]General;[Red][>=10]General")
+Errors: Error 0-49: The function 'Text' has some invalid arguments.|Warning 9-48: Incorrect format specifier for 'Text'.
+
+// Excel: "5"
+>> Text(5, "[Blue][<10]#;[Red][>=10](#)")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 8-37: Incorrect format specifier for 'Text'.
+
+// Excel: "(15)"
+>> Text(15, "[Blue][<10]#;[Red][>=10](#)")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 9-38: Incorrect format specifier for 'Text'.
+
+// Excel: "25.00"
+>> Text(25, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 9-42: Incorrect format specifier for 'Text'.
+
+// Excel: "7.0000"
+>> Text(7, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-42: The function 'Text' has some invalid arguments.|Warning 8-41: Incorrect format specifier for 'Text'.
+
+// Value not hit by either condition
+>> Text(3, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-42: The function 'Text' has some invalid arguments.|Warning 8-41: Incorrect format specifier for 'Text'.
+
+// Excel: "3.0000"
+>> Text(3, "[Blue][>10]0.00;[Red]0.0000")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 8-37: Incorrect format specifier for 'Text'.
+
+// More than two conditions not suported by Excel
+>> Text(3, "[Blue][>10]0.00;[Red][>5]0.0000;[Yellow][>0]0000.0")
+Errors: Error 0-61: The function 'Text' has some invalid arguments.|Warning 8-60: Incorrect format specifier for 'Text'.
+
+// Excel: "0000.0"
+>> Text(0, "[Blue][>10]0.00;[Red][>5]0.0000;[Yellow]0000.0")
+Errors: Error 0-57: The function 'Text' has some invalid arguments.|Warning 8-56: Incorrect format specifier for 'Text'.
+
+// Excel: "10.00"
+>> Text(10, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 9-45: Incorrect format specifier for 'Text'.
+
+// Excel: "5.0000"
+>> Text(5, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "12"
+>> Text(3, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "12"
+>> Text(0, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "7.00"
+>> Text(7, "[Blue][<>10]0.00;[Red][<>5]0.0000;12")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 8-46: Incorrect format specifier for 'Text'.
+
+// Excel: "10.0000"
+>> Text(10, "[Blue][<>10]0.00;[Red][<>5]0.0000;12")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 9-47: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP 1,234,567.123"
+>> Text(1234567.1234567, "[$GBP] #,###.000")
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 22-40: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP 3"
+>> Text(3, "[$GBP-000000] #")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 8-25: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP"
+>> Text(3, "[$GBP-809]")
+Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 8-20: Incorrect format specifier for 'Text'.
+
+>> Text(45, "###: number of foos")
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 9-30: Incorrect format specifier for 'Text'.
+
+>> Text(45, "000: number of foos")
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 9-30: Incorrect format specifier for 'Text'.
+
+// Excel: #VALUE!
+>> Text(1E+23, "General ###")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 12-25: Incorrect format specifier for 'Text'.
+
+// Can't mix time parts and numbers
+>> Text(1.010101, "hh:00")
+Errors: Error 0-23: The function 'Text' has some invalid arguments.|Warning 15-22: Incorrect format specifier for 'Text'.
+
+>> Text(1.010101, "hh:mm:00")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 15-25: Incorrect format specifier for 'Text'.
+
+>> Text(1.010101, "00:mm:ss")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 15-25: Incorrect format specifier for 'Text'.
+
+// Excel: "00.00"
+>> Text(0, "[ss].00")
+Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+
+// Excel: "28020.00"
+>> Text(0.324305555555556, "[ss].00")
+Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 24-33: Incorrect format specifier for 'Text'.
+
+// Excel: "87272.73"
+>> Text(1.010101, "[ss].00")
+Errors: Error 0-25: The function 'Text' has some invalid arguments.|Warning 15-24: Incorrect format specifier for 'Text'.
+
+// Can't mix date parts and numbers
+>> Text(3, "m/2001")
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
+
+>> Text(3, "2001/y")
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
+
+// Percent signs.  Multiplies the number by 100 before displaying and can be stacked.
+>> Text(0.244740088392962, "0%")
+"24%"
+
+>> Text(0.244740088392962, "0.0%")
+"24.5%"
+
+>> Text(0.244740088392962, "0.00%")
+"24.47%"
+
+>> Text(1234567.1234567, "0000%")
+"123456712%"
+
+>> Text(1234567.1234567, "0000%%")
+"12345671235%%"
+
+>> Text(1234567.1234567, "0000%%%")
+"1234567123457%%%"
+
+>> Text(1234567.1234567, "0,000%%%")
+"1,234,567,123,457%%%"
+
+>> Text(1234567.1234567, "####%")
+"123456712%"
+
+>> Text(1234567.1234567, "####%%")
+"12345671235%%"
+
+>> Text(1234567.1234567, "####%%%")
+"1234567123457%%%"
+
+>> Text(1234567.1234567, "#,###%%%")
+"1,234,567,123,457%%%"
+
+// Permille signs.  These have a meaning in C# but do not in Excel/Power Fx, they should be treated like any other character.
+>> Text(1234567.1234567, "0000‰")
+"1234567‰"
+
+>> Text(1234567.1234567, "0000‰‰")
+"1234567‰‰"
+
+>> Text(1234567.1234567, "0000‰%‰")
+"123456712‰%‰"
+
+>> Text(1234567.1234567, "0,000%‰%")
+"12,345,671,235%‰%"
+
+>> Text(1234567.1234567, "####‰")
+"1234567‰"
+
+>> Text(1234567.1234567, "####‰‰")
+"1234567‰‰"
+
+>> Text(1234567.1234567, "####‰%‰")
+"123456712‰%‰"
+
+>> Text(1234567.1234567, "#,###‰‰‰")
+"1,234,567‰‰‰"
