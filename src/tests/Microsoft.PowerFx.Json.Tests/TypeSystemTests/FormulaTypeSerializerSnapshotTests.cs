@@ -168,14 +168,13 @@ namespace Microsoft.PowerFx.Json.Tests
             Func<string, RecordType> logicalNameToRecordType = (x) => x == "logicalName" ? RecordType.Empty().Add("num", FormulaType.Number) : RecordType.Empty();
 
             var option = new JsonSerializerOptions();
-            var serializer = new FormulaTypeJsonConverter(settings: null);
+            var serializer = new FormulaTypeJsonConverter(logicalNameToRecordType: null);
             option.Converters.Add(serializer);
 
             Assert.Throws<InvalidOperationException>(() => JsonSerializer.Deserialize<FormulaType>(serialized, option));
 
             option = new JsonSerializerOptions();
-            var settings = new FormulaTypeSerializerSettings(logicalNameToRecordType);
-            serializer = new FormulaTypeJsonConverter(settings);
+            serializer = new FormulaTypeJsonConverter(logicalNameToRecordType);
             option.Converters.Add(serializer);
 
             var deserialized = JsonSerializer.Deserialize<FormulaType>(serialized, option);
