@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Tests
                 }
             }
 
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 // DataRow doesn't have a way to check if 
                 if (!TryGetValue(_row, fieldName, out var value))

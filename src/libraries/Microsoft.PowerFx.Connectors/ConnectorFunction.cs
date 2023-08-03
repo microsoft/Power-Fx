@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Connectors
         private ConnectorParameter[] _optionalParameters;
         internal readonly ServiceFunction _defaultServiceFunction;
 
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false, int maxRows = 1000)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -178,7 +178,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (httpClient != null)
             {
-                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError);
+                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError, maxRows: maxRows);
             }
         }
 
@@ -253,7 +253,7 @@ namespace Microsoft.PowerFx.Connectors
             return sb.ToString();
         }
 
-        internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false)
+        internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false, int maxRows = 1000)
         {
             IAsyncTexlFunction2 invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
@@ -290,6 +290,7 @@ namespace Microsoft.PowerFx.Connectors
                 isSupported: IsSupported,
                 notSupportedReason: NotSupportedReason,
                 isDeprecated: IsDeprecated,
+                maxRows: maxRows,
                 actionName: "action",
                 numberIsFloat: NumberIsFloat,
                 paramTypes: ArgumentMapper._parameterTypes)
@@ -405,6 +406,13 @@ namespace Microsoft.PowerFx.Connectors
 
     internal static class Extensions
     {
-        internal static string PageLink(this OpenApiOperation op) => op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) && ext is OpenApiString oas ? oas.Value : null;
+        internal static string PageLink(this OpenApiOperation op) 
+            => op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) && 
+               ext is OpenApiObject oao && 
+               oao.Any() && 
+               oao.First().Key == "nextLinkName" &&
+               oao.First().Value is OpenApiString oas 
+            ? oas.Value 
+            : null;
     }
 }

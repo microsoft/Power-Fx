@@ -48,6 +48,13 @@ namespace Microsoft.PowerFx.Tests
             ResponseSetMode = true;
         }
 
+        public void SetResponseFromFiles(params string[] files)
+        {
+            Responses = files.Select(file => Helpers.ReadAllText(file)).ToArray();
+            CurrentResponse = 0;
+            ResponseSetMode = true;
+        }
+
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
             if (string.IsNullOrEmpty(filename))

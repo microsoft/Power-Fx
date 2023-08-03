@@ -70,7 +70,7 @@ namespace Microsoft.PowerFx.Tests
                 _value = value;
             }
 
-            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 result = _value;
 

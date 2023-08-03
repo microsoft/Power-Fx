@@ -211,13 +211,18 @@ namespace Microsoft.PowerFx.Functions
 
             if (arg0 is TableValue table)
             {
-                var error = table.Rows.Where(r => r.IsError).Select(r => r.Error).FirstOrDefault();
-                if (error != null)
-                {
-                    return error;
-                }
+                int count = 0;
 
-                var count = table.Count();
+                foreach (DValue<RecordValue> row in table.Rows)
+                {
+                    if (row.IsError)
+                    {
+                        return row.Error;
+                    }
+
+                    count++;
+                }                
+                
                 return NumberOrDecimalValue(irContext, count);
             }
 

@@ -223,7 +223,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         //    }
         //}
 
-        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             if (fieldName.Equals("Id", StringComparison.OrdinalIgnoreCase))
             {

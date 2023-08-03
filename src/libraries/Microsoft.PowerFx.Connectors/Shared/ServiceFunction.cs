@@ -18,6 +18,7 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -50,6 +51,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly bool _isDeprecated;
         private readonly bool _isSupported;
         private readonly string _notSupportedReason;
+        private readonly int _maxRows;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
@@ -62,9 +64,10 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public bool IsSupported => _isSupported;
         public string NotSupportedReason => _notSupportedReason;
 
-        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable,
-            bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
+        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, 
+            bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, 
+            ServiceFunctionParameterTemplate[] requiredParamInfo, Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated, int maxRows,
+            string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -127,6 +130,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _isSupported = isSupported;
             _notSupportedReason = notSupportedReason;
             _isDeprecated = isDeprecated;
+            _maxRows = maxRows;
 
             if (arityMax > arityMin)
             {
@@ -435,27 +439,55 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public IAsyncTexlFunction2 _invoker;
 
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
-        {
-            if (_invoker == null)
-            {
-                throw new InvalidOperationException($"Function {Name} can't be invoked.");
-            }
-
+        {            
             cancellationToken.ThrowIfCancellationRequested();
 
-            var result = await _invoker.InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await (_invoker ?? throw new InvalidOperationException($"Function {Name} can't be invoked.")).InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
             {
-                result = FormulaValue.NewError(
-                    new ExpressionError()
-                    {
-                        Kind = er.Kind,
-                        Severity = er.Severity,
-                        Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}"
-                    },
-                    ev.Type);
+                result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type);
+            }
+
+            if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
+            {
+                string nextLink = (pageLink as StringValue).Value;
+                result = new PagedRecordValue(rv, () => GetNextPage(nextLink, cancellationToken), _maxRows);
+            }
+
+            return result;
+        }
+
+        private FormulaValue GetNextPage(string nextLink, CancellationToken cancellationToken)
+        {
+            FormulaValue result = _invoker.InvokeAsync(nextLink, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+
+            if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
+            {
+                string nextLink2 = (pageLink as StringValue).Value;
+                result = new PagedRecordValue(rv, () => GetNextPage(nextLink2, cancellationToken), _maxRows);
+            }
+
+            return result;
+        }
+
+        public async Task<FormulaValue> InvokeAsync(string url, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            FormulaValue result = await _invoker.InvokeAsync(url, cancellationToken).ConfigureAwait(false);
+            ExpressionError er = null;
+
+            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
+            {
+                result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type);
+            }
+
+            if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
+            {
+                string nextLink = (pageLink as StringValue).Value;
+                result = new PagedRecordValue(rv, () => GetNextPage(nextLink, cancellationToken), _maxRows);
             }
 
             return result;

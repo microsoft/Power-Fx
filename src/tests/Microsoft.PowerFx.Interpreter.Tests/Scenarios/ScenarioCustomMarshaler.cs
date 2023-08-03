@@ -147,7 +147,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return _source;
                 }
 
-                protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+                protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
                 {
                     // Forward all field lookups
                     result = _inner.GetField(fieldName);

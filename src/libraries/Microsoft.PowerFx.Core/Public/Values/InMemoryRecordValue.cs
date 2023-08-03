@@ -64,7 +64,7 @@ namespace Microsoft.PowerFx.Types
             return dict;
         }
 
-        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             return _fields.TryGetValue(fieldName, out result);
         }

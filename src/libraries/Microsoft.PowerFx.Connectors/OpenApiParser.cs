@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false, int maxRows = 1000)
         {
             ValidateSupportedOpenApiDocument(openApiDocument);
 
@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError, numberIsFloat: numberIsFloat);
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError, numberIsFloat: numberIsFloat, maxRows: maxRows);
 
                     functions.Add(connectorFunction);
                     sFunctions.Add(connectorFunction._defaultServiceFunction);
@@ -300,7 +300,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false)
+        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false, int maxRows = 1000)
         {
             if (string.IsNullOrWhiteSpace(functionNamespace))
             {
@@ -373,6 +373,7 @@ namespace Microsoft.PowerFx.Connectors
                         isSupported: isSupported,
                         notSupportedReason: notSupportedReason,
                         isDeprecated: op.Deprecated,
+                        maxRows: maxRows,
                         actionName: "action",
                         numberIsFloat: numberIsFloat,
                         paramTypes: argMapper._parameterTypes)

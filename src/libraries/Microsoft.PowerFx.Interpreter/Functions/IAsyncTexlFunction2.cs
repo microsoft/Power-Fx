@@ -12,5 +12,7 @@ namespace Microsoft.PowerFx.Core.Functions
     internal interface IAsyncTexlFunction2
     {
         Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken);
+
+        Task<FormulaValue> InvokeAsync(string url, CancellationToken cancellationToken);
     }
 }
