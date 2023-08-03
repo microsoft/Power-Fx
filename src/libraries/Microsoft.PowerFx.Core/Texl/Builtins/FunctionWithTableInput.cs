@@ -2,10 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Numerics;
+using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
@@ -41,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return argumentIndex == 0;
         }
 
-        private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
+        internal bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
