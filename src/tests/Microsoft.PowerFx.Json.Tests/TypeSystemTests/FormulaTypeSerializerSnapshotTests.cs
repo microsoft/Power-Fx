@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests.Helpers;
@@ -141,7 +143,45 @@ namespace Microsoft.PowerFx.Json.Tests
             });
         }
 
-        [Fact]
-        public void TestRegenerateSignatureHelpIsOff() => Assert.False(RegenerateSnapshots);
+        [Theory]
+        [InlineData(
+            @"{
+                ""Type"": 
+                    {
+                    ""Name"": ""ExpandableTable""
+                    },
+                ""Description"": ""logicalName""
+            }",
+            typeof(TableType))]
+
+        [InlineData(
+            @"{
+                ""Type"": 
+                    {
+                    ""Name"": ""ExpandableRecord""
+                    },
+                ""Description"": ""logicalName""
+            }",
+            typeof(RecordType))]
+        public void TestDataverseDerserialization(string serialized, Type type)
+        {
+            Func<string, RecordType> logicalNameToRecordType = (x) => x == "logicalName" ? RecordType.Empty().Add("num", FormulaType.Number) : RecordType.Empty();
+
+            var option = new JsonSerializerOptions();
+            var serializer = new FormulaTypeJsonConverter(logicalNameToRecordType: null);
+            option.Converters.Add(serializer);
+
+            Assert.Throws<InvalidOperationException>(() => JsonSerializer.Deserialize<FormulaType>(serialized, option));
+
+            option = new JsonSerializerOptions();
+            serializer = new FormulaTypeJsonConverter(logicalNameToRecordType);
+            option.Converters.Add(serializer);
+
+            var deserialized = JsonSerializer.Deserialize<FormulaType>(serialized, option);
+
+            Assert.IsAssignableFrom(type, deserialized);
+
+            Assert.Equal("num", ((AggregateType)deserialized).FieldNames.First());
+        }
     }
 }

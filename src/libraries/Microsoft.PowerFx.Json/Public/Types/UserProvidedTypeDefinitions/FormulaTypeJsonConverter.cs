@@ -16,22 +16,22 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly DefinedTypeSymbolTable _definedTypes;
 
-        private Func<string, RecordType> _logicalNameToRecordType;
+        private readonly Func<string, RecordType> _logicalNameToRecordType;
 
         internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
         }
 
-        public FormulaTypeJsonConverter()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormulaTypeJsonConverter"/> class.
+        /// </summary>
+        /// <param name="logicalNameToRecordType">This is needed only for de-serialization for Dataverse types.</param>
+        public FormulaTypeJsonConverter(Func<string, RecordType> logicalNameToRecordType)
         {
             _definedTypes = new DefinedTypeSymbolTable();
-            _logicalNameToRecordType = (dummyInput) => throw new InvalidOperationException("Lazy type converter not registered");
-        }
-
-        public void RegisterLazyTypeConvertor(Func<string, RecordType> logicalNameToRecordType)
-        {
-            _logicalNameToRecordType = logicalNameToRecordType;
+            Func<string, RecordType> debugHelper = (dummy) => throw new InvalidOperationException("Lazy type converter not registered");
+            _logicalNameToRecordType = logicalNameToRecordType ?? debugHelper;
         }
 
         public override FormulaType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
