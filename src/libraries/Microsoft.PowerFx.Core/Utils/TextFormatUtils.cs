@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
@@ -39,7 +40,9 @@ namespace Microsoft.PowerFx.Core.Utils
     internal sealed class TextFormatUtils
     {
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
-        
+        private static readonly IReadOnlyList<char> _dateTimeCharacters = new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' };
+        private static readonly IReadOnlyList<char> _numericCharacters = new char[] { '0', '#' };
+
         /// <summary>
         /// Validate if format string is valid or not and return format string object.
         /// </summary>
@@ -86,26 +89,118 @@ namespace Microsoft.PowerFx.Core.Utils
                 return false;
             }
 
-            textFormatArgs.HasDateTimeFmt = textFormatArgs.FormatArg.IndexOfAny(new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' }) >= 0;
-            textFormatArgs.HasNumericFmt = textFormatArgs.FormatArg.IndexOfAny(new char[] { '0', '#' }) >= 0;
-            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            bool hasNumericCharacters = false;
+            int decimalPointIndex = -1;
+            var formatStr = textFormatArgs.FormatArg;
+
+            for (int i = 0; i < formatStr.Length; i++)
             {
-                // Check if the date time format contains '0's after the seconds specifier, which
-                // is used for fractional seconds - in which case it is valid
-                var formatWithoutZeroSubseconds = _formatWithoutZeroSubsecondsRegex.Replace(textFormatArgs.FormatArg, m => m.Groups[1].Success ? string.Empty : m.Groups[1].Value);
-                textFormatArgs.HasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
+                if (_numericCharacters.Contains(formatStr[i]))
+                {
+                    textFormatArgs.HasNumericFmt = true;
+
+                    // Use hasNumericCharacters to check if format string has numeric character before group separator or after decimal point.
+                    hasNumericCharacters = true;
+                }
+                else if (_dateTimeCharacters.Contains(formatStr[i]))
+                {
+                    textFormatArgs.HasDateTimeFmt = true;
+                }
+                else if (!textFormatArgs.HasDateTimeFmt && formatStr[i] == ',' && !hasNumericCharacters)
+                {
+                    // If there is no numeric format character before group separator character, then treat it as an escaping character.
+                    formatStr = formatStr.Insert(i, "\\");
+                    i++;
+                }
+                else if (!textFormatArgs.HasDateTimeFmt && formatStr[i] == '.')
+                {
+                    // If more than 1 decimal point, format is invalid.
+                    if (decimalPointIndex != -1)
+                    {
+                        return false;
+                    }
+
+                    // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
+                    decimalPointIndex = i;
+                    hasNumericCharacters = false;
+                }
+                else if (i == formatStr.Length - 1)
+                {
+                    // If format string ends with backsplash but no following character (both numeric and datetime format), format is invalid.
+                    if (formatStr[i] == '\\')
+                    {
+                        return false;
+                    }
+
+                    // If format string ends with e or e+ (not escaping character) then format is invalid (only applied for numeric format)
+                    if (textFormatArgs.HasNumericFmt & (formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+')))
+                    {
+                        return false;
+                    }
+                }
+                else if (formatStr[i] == '\\')
+                {
+                    if (textFormatArgs.HasNumericFmt || (i < formatStr.Length - 1 && formatStr[i + 1] == '\"'))
+                    {
+                        // Skip next character if seeing escaping character \.
+                        i++;
+                    }
+                    else
+                    {
+                        // Update \c to "c" to match with                       
+                        formatStr = formatStr.Insert(i + 2, "\"");
+                        formatStr = formatStr.Insert(i + 1, "\"");
+                        formatStr = formatStr.Remove(i, 1);
+                        i += 2;
+                    }
+                }
+                else if (formatStr[i] == '\"' && i < formatStr.Length - 1)
+                {
+                    // Jump to close quote to pass all escaping characters.
+                    i = formatStr.IndexOf('\"', i + 1);
+
+                    // Format is invalid if missing close quote.
+                    if (i == -1)
+                    {
+                        return false;
+                    }
+                }
+
+                if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+                {
+                    // Check if the date time format contains '0's after the seconds specifier, which
+                    // is used for fractional seconds - in which case it is valid
+                    var formatWithoutZeroSubseconds = _formatWithoutZeroSubsecondsRegex.Replace(formatStr, m => m.Groups[1].Success ? string.Empty : m.Groups[1].Value);
+                    textFormatArgs.HasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(_numericCharacters.ToArray()) >= 0;
+                }
+
+                if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+                {
+                    return false;
+                }
             }
 
-            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            // If there is no numeric format character (all escaping characters - backsplash or double quote) after decimal point then treat it as an escaping character.
+            if (textFormatArgs.HasNumericFmt)
             {
-                return false;
+                if (decimalPointIndex != -1 && !hasNumericCharacters)
+                {
+                    formatStr = formatStr.Insert(decimalPointIndex, "\\");
+                }
+
+                // Update \' or "'" to escaping character ' to match with C# then update any \' to ' to match with Excel (ex: \'' to \'\').
+                formatStr = formatStr.Replace("\"\'\"", "\'");
+                formatStr = formatStr.Replace("\\'", "\'");
+                formatStr = formatStr.Replace("\'", "\\'");
             }
+
+            textFormatArgs.FormatArg = formatStr;
 
             if (string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
             {
                 textFormatArgs.FormatCultureName = defaultLanguage;
             }
-                        
+
             // Use en-Us format string if a culture is defined in format string.
             if (formatCulture != null && !string.IsNullOrEmpty(textFormatArgs.FormatCultureName))
             {
@@ -134,88 +229,6 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
 
                 textFormatArgs.FormatArg = enUSformatString;
-            }
-
-            if (textFormatArgs.HasNumericFmt)
-            {
-                bool hasNumericCharacters = false;
-                bool hasDecimalPoint = false;
-                var formatStr = textFormatArgs.FormatArg;
-                int n = formatStr.Length;
-
-                for (int i = 0; i < n; i++)
-                {
-                    if (formatStr[i] == '0' || formatStr[i] == '#')
-                    {
-                        hasNumericCharacters = true;
-                    }
-                    else if (formatStr[i] == ',' && !hasNumericCharacters)
-                    {
-                        // If there is no numeric format character before group separator character, then treat it as an escaping character.
-                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace(",", "\\,");
-                    }
-                    else if (formatStr[i] == '.')
-                    {
-                        // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
-                        hasDecimalPoint = true;
-                        hasNumericCharacters = false;
-                    }
-                    else if (i == n - 1)
-                    {
-                        // If format string ends with backsplash but no following character or ends with e or e+ (not escaping character) then format is invalid.
-                        if (formatStr[i] == '\\' || formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+'))
-                        {
-                            return false;
-                        }
-                    }
-                    else if (formatStr[i] == '\\')
-                    {
-                        // Skip next character if seeing escaping character \.
-                        i++;
-                    }
-                    else if (formatStr[i] == '\"' && i < n - 1)
-                    {
-                        // Jump to close quote to pass all escaping characters.
-                        i = formatStr.IndexOf('\"', i + 1);
-
-                        // Format is invalid if missing close quote.
-                        if (i == -1)
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                // If there is no numeric format character (all escaping characters - backsplash or double quote) after decimal point then treat it as an escaping character.
-                if (hasDecimalPoint && !hasNumericCharacters)
-                {
-                    textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace(".", "\\.");
-                }
-
-                // Update \' to escaping character ' to match with C# then update any \' to ' to match with Excel (ex: \'' to '').
-                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\\'", "\'");
-                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\'", "\\'");
-            }
-
-            // Update \c to "c" to match with excel
-            if (textFormatArgs.HasDateTimeFmt)
-            {
-                var formatStr = textFormatArgs.FormatArg;
-                for (int i = formatStr.Length - 1; i >= 0; i--)
-                {
-                    if (formatStr[i] == '\\')
-                    {
-                        if (i == formatStr.Length - 1)
-                        {
-                            return false;
-                        }
-
-                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Insert(i + 2, "\"");
-                        textFormatArgs.FormatArg = textFormatArgs.FormatArg.Insert(i + 1, "\"");
-                    }
-                }
-
-                textFormatArgs.FormatArg = textFormatArgs.FormatArg.Replace("\\", string.Empty);
             }
 
             return true;

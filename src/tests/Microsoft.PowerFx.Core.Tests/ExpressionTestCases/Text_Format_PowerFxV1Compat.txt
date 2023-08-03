@@ -41,3 +41,29 @@ Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 23-3
 
 >> Text( 1234567.1234567, """\""""#" )
 Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 23-33: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm "" dd, yyy") 
+Errors: Error 0-63: The function 'Text' has some invalid arguments.|Warning 40-62: Incorrect format specifier for 'Text'.
+
+>> Text(30470, "DDDD, MMM "" DD, YYY") 
+Errors: Error 0-35: The function 'Text' has some invalid arguments.|Warning 12-34: Incorrect format specifier for 'Text'.
+
+// Format has mixed datetime and number
+>> Text(1234567.1234567, "\m\mm # ddd yyy")
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
+
+// Format does not have close double quote
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ([""][^""]*[""]) dd yyyy") 
+Errors: Error 0-73: The function 'Text' has some invalid arguments.|Warning 42-72: Incorrect format specifier for 'Text'.
+
+>> Text(30470, "mmm ([""][^""]*[""]) dd yyyy") 
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 12-42: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""])"" dd yyyy") 
+Errors: Error 0-77: The function 'Text' has some invalid arguments.|Warning 42-76: Incorrect format specifier for 'Text'.
+
+>> Text(30470, "mmm ""([""][^""]*[""])"" dd yyyy") 
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 12-46: Incorrect format specifier for 'Text'.
+
+>> Text(Date(1983, 6, 3), "dddd, mmm "" dd, yyy") 
+Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 23-45: Incorrect format specifier for 'Text'.
