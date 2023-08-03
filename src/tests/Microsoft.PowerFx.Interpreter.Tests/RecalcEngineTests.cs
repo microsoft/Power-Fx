@@ -63,9 +63,9 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
-                $"{ns}.{nameof(TypeCoercionProvider)}",             
+                $"{ns}.{nameof(TypeCoercionProvider)}",
 
-                // Services for functions. 
+                // Services for functions.
                 $"{ns}.Functions.IRandomService"
             };
 
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(sb.Length == 0, $"Unexpected public types: {sb}");
 
-            // Types we expect to be in the assembly aren't there. 
+            // Types we expect to be in the assembly aren't there.
             if (allowed.Count > 0)
             {
                 throw new XunitException("Types missing: " + string.Join(",", allowed.ToArray()));
@@ -118,7 +118,7 @@ namespace Microsoft.PowerFx.Tests
                 .SetBindingInfo();
 
             // Call Evaluator directly.
-            // Ensure it also pulls engine's symbols. 
+            // Ensure it also pulls engine's symbols.
             var run = check.GetEvaluator();
 
             var result = run.Eval();
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("A", 20);
             AssertUpdate("B-->40;");
 
-            // Ensure we can update to null. 
+            // Ensure we can update to null.
             engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Number));
             AssertUpdate("B-->0;");
         }
@@ -170,12 +170,12 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("A", 20m);
             AssertUpdate("B-->40;");
 
-            // Ensure we can update to null. 
+            // Ensure we can update to null.
             engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Decimal));
             AssertUpdate("B-->0;");
         }
 
-        // depend on grand child directly 
+        // depend on grand child directly
         [Fact]
         public void Recalc2()
         {
@@ -187,15 +187,15 @@ namespace Microsoft.PowerFx.Tests
             engine.SetFormula("C", "B+5", OnUpdate);
             AssertUpdate("C-->15;");
 
-            // depend on grand child directly 
+            // depend on grand child directly
             engine.SetFormula("D", "B+A", OnUpdate);
             AssertUpdate("D-->11;");
 
-            // Updating A will recalc both D and B. 
-            // But D also depends on B, so verify D pulls new value of B. 
+            // Updating A will recalc both D and B.
+            // But D also depends on B, so verify D pulls new value of B.
             engine.UpdateVariable("A", 2);
 
-            // Batched up (we don't double fire)            
+            // Batched up (we don't double fire)
             AssertUpdate("B-->20;C-->25;D-->22;");
         }
 
@@ -264,16 +264,16 @@ namespace Microsoft.PowerFx.Tests
             engine.SetFormula("B", "A*2", OnUpdate);
             AssertUpdate("B-->2;");
 
-            // Can't set formulas, they're read only 
+            // Can't set formulas, they're read only
             var check = engine.Check("Set(B, 12)");
             Assert.False(check.IsSuccess);
 
-            // Set() function triggers recalc chain. 
+            // Set() function triggers recalc chain.
             engine.Eval("Set(A,2)", options: _opts);
             AssertUpdate("B-->4;");
 
             // Compare Before/After set within an expression.
-            // Before (A,B) = 2,4 
+            // Before (A,B) = 2,4
             // After  (A,B) = 3,6
             var result = engine.Eval("With({x:A, y:B}, Set(A,3); x & y & A & B)", options: _opts);
             Assert.Equal("2436", result.ToObject());
@@ -296,7 +296,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
 
-            // formula fails since 'B' is undefined. 
+            // formula fails since 'B' is undefined.
             Assert.Throws<InvalidOperationException>(() =>
                engine.SetFormula("A", "B*2", OnUpdate));
         }
@@ -319,7 +319,7 @@ namespace Microsoft.PowerFx.Tests
 
             engine.SetFormula("A", "2", OnUpdate);
 
-            // Can't redefine an existing formula. 
+            // Can't redefine an existing formula.
             Assert.Throws<InvalidOperationException>(() =>
                engine.SetFormula("A", "3", OnUpdate));
         }
@@ -503,7 +503,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(b is BlankValue);
         }
 
-        // Record with null values. 
+        // Record with null values.
         [Fact]
         public void ChangeRecord()
         {
@@ -537,7 +537,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Contains(nyiFunc, engine1.Functions.Functions);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            // RecalcEngine will add the interpreter's functions. 
+            // RecalcEngine will add the interpreter's functions.
             var engine2 = new RecalcEngine(config);
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -605,7 +605,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckBindError()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3+foo+2"); // foo is undefined 
+            var result = engine.Check("3+foo+2"); // foo is undefined
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
@@ -653,7 +653,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.True(result.IsSuccess);
 
-            // The resultant type will be the underlying type of the enum provided to 
+            // The resultant type will be the underlying type of the enum provided to
             // check.  In the case of TimeUnit, this is StringType
             Assert.True(result.ReturnType is StringType);
             Assert.Empty(result.TopLevelIdentifiers);
@@ -663,7 +663,7 @@ namespace Microsoft.PowerFx.Tests
         public void CheckBindErrorWithParseExpression()
         {
             var engine = new RecalcEngine();
-            var result = engine.Check("3+foo+2", RecordType.Empty()); // foo is undefined 
+            var result = engine.Check("3+foo+2", RecordType.Empty()); // foo is undefined
 
             Assert.False(result.IsSuccess);
             Assert.Single(result.Errors);
@@ -692,7 +692,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(11.0, (double)formulaValue.ToObject());
         }
 
-        // Test Globals + Locals + GetValuator() 
+        // Test Globals + Locals + GetValuator()
         [Fact]
         public void CheckGlobalAndLocal()
         {
@@ -891,7 +891,6 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
         [InlineData("Text(OptionSet)")]
-
         [InlineData("OptionSetInfo(OptionSet)")]
         [InlineData("OptionSetInfo(\"test\")")]
         [InlineData("OptionSetInfo(1)")]
@@ -1068,13 +1067,13 @@ namespace Microsoft.PowerFx.Tests
             var values = new RuntimeConfig();
             values.AddService<IRandomService>(new TestRandService());
 
-            // Rand 
+            // Rand
             var result = engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).Result;
             Assert.Equal(0.5, result.ToObject());
 
-            // 1 service can impact multiple functions. 
-            // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
-            // RandBetween maps 0.5 to 6. 
+            // 1 service can impact multiple functions.
+            // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used.
+            // RandBetween maps 0.5 to 6.
             result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
             Assert.Equal(6.0m, result.ToObject());
         }
@@ -1083,11 +1082,11 @@ namespace Microsoft.PowerFx.Tests
         public async Task FunctionServicesHostBug()
         {
             // Need to protect against bogus values from a poorly implemented service.
-            // These are exceptions, not ErrorValues, since it's a host bug. 
+            // These are exceptions, not ErrorValues, since it's a host bug.
             var engine = new RecalcEngine();
             var values = new RuntimeConfig();
 
-            // Host bug, service should be 0...1, this is out of range. 
+            // Host bug, service should be 0...1, this is out of range.
             var buggyService = new TestRandService { _value = 9999 };
 
             values.AddService<IRandomService>(buggyService);
@@ -1121,7 +1120,7 @@ namespace Microsoft.PowerFx.Tests
             var result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
 
-            // Adding a variable is ok. 
+            // Adding a variable is ok.
             var slotY = symTable.AddVariable("y", FormulaType.Number, null);
             result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
@@ -1130,7 +1129,7 @@ namespace Microsoft.PowerFx.Tests
             symTable.RemoveVariable("x");
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
 
-            // Even re-adding with same type still fails. 
+            // Even re-adding with same type still fails.
             // (somebody could have re-added with a different type)
             var slot2 = symTable.AddVariable("x", FormulaType.Number, null);
             symValues.Set(slot2, FormulaValue.New(20));
@@ -1167,19 +1166,19 @@ namespace Microsoft.PowerFx.Tests
 
         [Theory]
         [InlineData("ThisRecord.Field2", "_field2")] // row scope, no conflcit
-        [InlineData("Task", "_fieldTask")] // row scope wins the conflict, it's closer.         
+        [InlineData("Task", "_fieldTask")] // row scope wins the conflict, it's closer.
         [InlineData("[@Task]", "_globalTask")] // global scope
         [InlineData("[@Task] & Task", "_globalTask_fieldTask")] // both in same expression
-        [InlineData("[@Task] & ThisRecord.Task", "_globalTask_fieldTask")] // both, fully unambiguous. 
-        [InlineData("With({Task : true}, Task)", true)] // With() wins, shadows rowscope. 
+        [InlineData("[@Task] & ThisRecord.Task", "_globalTask_fieldTask")] // both, fully unambiguous.
+        [InlineData("With({Task : true}, Task)", true)] // With() wins, shadows rowscope.
         [InlineData("With({Task : true}, ThisRecord.Task)", true)] // With() also has ThisRecord, shadows previous rowscope.
         [InlineData("With({Task : true}, [@Task])", "_globalTask")] // Globals.
-        [InlineData("With({Task : true} As T2, Task)", "_fieldTask")] // As avoids the conflict. 
-        [InlineData("With({Task : true} As T2, ThisRecord.Task)", "_fieldTask")] // As avoids the conflict. 
-        [InlineData("With({Task : true} As T2, ThisRecord.Field2)", "_field2")] // As avoids the conflict. 
+        [InlineData("With({Task : true} As T2, Task)", "_fieldTask")] // As avoids the conflict.
+        [InlineData("With({Task : true} As T2, ThisRecord.Task)", "_fieldTask")] // As avoids the conflict.
+        [InlineData("With({Task : true} As T2, ThisRecord.Field2)", "_field2")] // As avoids the conflict.
 
         // Errors
-        [InlineData("[@Field2]")] // error, doesn't exist in global scope. 
+        [InlineData("[@Field2]")] // error, doesn't exist in global scope.
         [InlineData("With({Task : true}, ThisRecord.Field2)")] // Error. ThisRecord doesn't union, it refers exclusively to With().
         public void DisambiguationTest(string expr, object expected = null)
         {
@@ -1195,10 +1194,10 @@ namespace Microsoft.PowerFx.Tests
 
             var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type, allowThisRecord: true);
 
-            // ensure rowScope is listed first since that should get higher priority 
+            // ensure rowScope is listed first since that should get higher priority
             var symbols = ReadOnlySymbolTable.Compose(rowScope, globals);
 
-            // Values 
+            // Values
             var rowValues = ReadOnlySymbolValues.NewFromRecord(rowScope, record);
             var globalValues = globals.CreateValues();
             globalValues.Set(slot, FormulaValue.New("_globalTask"));
@@ -1261,11 +1260,50 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
+        [Theory]
+        [InlineData(TestAdaptiveCards.FailingOne)]
+        [InlineData(TestAdaptiveCards.FailingTwo)]
+        public void OnSomeAdaptiveCards_ThrowsAggregateException(string expressionText)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var checkResult = engine.Check(expressionText, new ParserOptions() { Culture = CultureInfo.InvariantCulture });
+            var evaluator = checkResult.GetEvaluator();
+            FormulaValue formula = null;
+            using (var cts = new CancellationTokenSource(100000))
+            {
+                formula = evaluator.EvalAsync(cts.Token).Result;
+            }
+
+            var visitor = new MinimalVisitor();
+            Assert.Throws<AggregateException>(() => formula.Visit(visitor));
+        }
+
+        [Theory]
+        [InlineData(TestAdaptiveCards.PassingOne)]
+        [InlineData(TestAdaptiveCards.PassingTwo)]
+        public void OnSomeAdaptiveCards_Succeeds(string expressionText)
+        {
+            var engine = new RecalcEngine(new PowerFxConfig());
+            var checkResult = engine.Check(expressionText, new ParserOptions() { Culture = CultureInfo.InvariantCulture });
+            var evaluator = checkResult.GetEvaluator();
+            FormulaValue formula = null;
+            using (var cts = new CancellationTokenSource(100000))
+            {
+                formula = evaluator.EvalAsync(cts.Token).Result;
+            }
+
+            var visitor = new MinimalVisitor();
+            formula.Visit(visitor);
+
+            // Implies that the visitor was successful
+            Assert.False(string.IsNullOrEmpty(visitor.LastResult));
+        }
+
         private class TestRandService : IRandomService
         {
             public double _value = 0.5;
 
-            // Returns between 0 and 1. 
+            // Returns between 0 and 1.
             public double NextDouble()
             {
                 return _value;
@@ -1288,6 +1326,117 @@ namespace Microsoft.PowerFx.Tests
 
             _updates.Append($"{name}-->{str};");
         }
-        #endregion
+
+        private static class TestAdaptiveCards
+        {
+            // These two have only a slight difference and they should both pass
+            public const string FailingOne = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  actions: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+            public const string PassingOne = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+
+            // Same here, they should both pass
+            public const string FailingTwo = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.ToggleVisibility\",\r\n                      id: \"refsShowHide\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                    {\r\n                      type: \"Column\",\r\n                      width: \"1\",\r\n                      verticalContentAlignment: \"Center\"\r\n                    }\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\",\r\n                      title: \"Submit\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+            public const string PassingTwo = "{\r\n          '$schema': \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n          type: \"AdaptiveCard\",\r\n          version: \"1.5\",\r\n          body: [\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.ToggleVisibility\",\r\n                      id: \"refsShowHide\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            },\r\n            {\r\n              type: \"Container\",\r\n              items: [\r\n                {\r\n                  type: \"ColumnSet\",\r\n                  columns: [\r\n                    {\r\n                      type: \"Column\",\r\n                      width: \"1\",\r\n                      verticalContentAlignment: \"Center\"\r\n                    }\r\n                  ]\r\n                },\r\n                {\r\n                  type: \"ActionSet\",\r\n                  actions: [\r\n                    {\r\n                      type: \"Action.Submit\",\r\n                      title: \"Submit\",\r\n                      id: \"test\"\r\n                    }\r\n                  ]\r\n                }\r\n              ]\r\n            }\r\n          ]\r\n        }";
+        }
+
+        private class MinimalVisitor : IValueVisitor
+        {
+            internal MinimalVisitor()
+            {
+                LastResult = string.Empty;
+            }
+
+            public string LastResult { get; private set; }
+
+            public void Visit(BlankValue value)
+            {
+                LastResult = "()";
+            }
+
+            public void Visit(StringValue value)
+            {
+                LastResult = value.Value;
+            }
+
+            public void Visit(RecordValue value)
+            {
+                var sb = new StringBuilder();
+                foreach (var item in value.Fields)
+                {
+                    item.Value.Visit(this);
+                    sb.Append($"{item.Name}, {LastResult!}");
+                }
+
+                LastResult = sb.ToString();
+            }
+
+            public void Visit(TableValue value)
+            {
+                var sb = new StringBuilder();
+                foreach (var row in value.Rows)
+                {
+                    row.ToFormulaValue().Visit(this);
+                    sb.Append($"{row.Value}, {LastResult!}");
+                }
+
+                LastResult = sb.ToString();
+            }
+
+            void IValueVisitor.Visit(NumberValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(DecimalValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(BooleanValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(ErrorValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(TimeValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(DateValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(DateTimeValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(UntypedObjectValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(OptionSetValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(ColorValue value)
+            {
+                throw new NotImplementedException();
+            }
+
+            void IValueVisitor.Visit(GuidValue value)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion Test
     }
 }
