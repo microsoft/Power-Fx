@@ -62,19 +62,19 @@ namespace Microsoft.PowerFx.Core
             {
                 return logicalNameToRecordType.Invoke(this.Description);
             }
-            else if (typeName != SchemaTypeName.RecordTypeName.Name)
+            else if (typeName == SchemaTypeName.RecordTypeName.Name)
             {
-                return FormulaType.BindingError;
+                if (Fields == null || !Fields.Any())
+                {
+                    FormulaType emptyAggregateType = Type.IsTable ? TableType.Empty() : RecordType.Empty();
+                    return emptyAggregateType;
+                }
+
+                var result = new UserDefinedRecordType(this, definedTypeSymbols, logicalNameToRecordType);
+                return Type.IsTable ? result.ToTable() : result;
             }
 
-            if (Fields == null || !Fields.Any())
-            {
-                FormulaType emptyAggregateType = Type.IsTable ? TableType.Empty() : RecordType.Empty();
-                return emptyAggregateType;
-            }
-
-            var result = new UserDefinedRecordType(this, definedTypeSymbols, logicalNameToRecordType);
-            return Type.IsTable ? result.ToTable() : result;
+            return FormulaType.BindingError;
         }
 
         private static bool TryLookupType(string typeName, DefinedTypeSymbolTable definedTypeSymbols, out FormulaType type)
