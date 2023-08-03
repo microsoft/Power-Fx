@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Public.Values
                     }
 
                     yield return currentRow;
-                }                
+                }
 
                 PagedTableValue ptv = this;
 

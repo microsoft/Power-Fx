@@ -322,14 +322,14 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("azbs2", apiDoc, ppClient);
             RecalcEngine engine = new RecalcEngine(config);
 
-            testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json", @"Responses\AzureBlobStorage_Paging_Response3.json");            
+            testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json", @"Responses\AzureBlobStorage_Paging_Response3.json");
             FormulaValue fv = await engine.EvalAsync(@"CountRows(azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None).ConfigureAwait(false);
             Assert.False(fv is ErrorValue);
-            Assert.True(fv is DecimalValue);            
+            Assert.True(fv is DecimalValue);
             Assert.Equal(10006m, ((DecimalValue)fv).Value);
 
             testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json");
-            fv = await engine.EvalAsync(@"CountRows(azbs2.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None).ConfigureAwait(false);            
+            fv = await engine.EvalAsync(@"CountRows(azbs2.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None).ConfigureAwait(false);
             Assert.True(fv is DecimalValue);
             Assert.Equal(1000m, ((DecimalValue)fv).Value);
         }

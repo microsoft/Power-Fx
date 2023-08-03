@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Data;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 

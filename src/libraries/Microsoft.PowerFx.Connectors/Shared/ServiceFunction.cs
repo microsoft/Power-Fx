@@ -64,8 +64,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public bool IsSupported => _isSupported;
         public string NotSupportedReason => _notSupportedReason;
 
-        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, 
-            bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, 
+        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly,
+            bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo,
             ServiceFunctionParameterTemplate[] requiredParamInfo, Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated, int maxRows,
             string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
@@ -439,7 +439,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public IAsyncTexlFunction2 _invoker;
 
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
-        {            
+        {
             cancellationToken.ThrowIfCancellationRequested();
 
             FormulaValue result = await (_invoker ?? throw new InvalidOperationException($"Function {Name} can't be invoked.")).InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);

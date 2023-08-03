@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,7 +20,7 @@ namespace Microsoft.PowerFx.Tests
     internal class LoggingTestServer : HttpMessageHandler
     {
         // Log HTTP calls. 
-        public StringBuilder _log = new ();
+        public StringBuilder _log = new();
 
         public OpenApiDocument _apiDocument;
 
@@ -68,7 +67,7 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponse(string text, HttpStatusCode status = HttpStatusCode.OK)
         {
-            Assert.Null(_nextResponse);            
+            Assert.Null(_nextResponse);
             _nextResponse = GetResponseMessage(text, status);
         }
 

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
-using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Utils;
@@ -57,21 +56,21 @@ namespace Microsoft.PowerFx
 
         public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, int maxRows = 1000)
         {
-            if (config == null) 
-            { 
-                throw new ArgumentNullException(nameof(config)); 
+            if (config == null)
+            {
+                throw new ArgumentNullException(nameof(config));
             }
 
-            if (!DName.IsValidDName(functionNamespace)) 
-            { 
-                throw new ArgumentException(nameof(functionNamespace), $"invalid functionNamespace: {functionNamespace}"); 
+            if (!DName.IsValidDName(functionNamespace))
+            {
+                throw new ArgumentException(nameof(functionNamespace), $"invalid functionNamespace: {functionNamespace}");
             }
 
-            if (function == null) 
-            { 
-                throw new ArgumentNullException(nameof(function)); 
+            if (function == null)
+            {
+                throw new ArgumentNullException(nameof(function));
             }
-            
+
             config.AddFunction(function.GetServiceFunction(functionNamespace, httpClient, cache, maxRows: maxRows));
         }
 

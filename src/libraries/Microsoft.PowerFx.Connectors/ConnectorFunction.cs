@@ -406,13 +406,13 @@ namespace Microsoft.PowerFx.Connectors
 
     internal static class Extensions
     {
-        internal static string PageLink(this OpenApiOperation op) 
-            => op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) && 
-               ext is OpenApiObject oao && 
-               oao.Any() && 
+        internal static string PageLink(this OpenApiOperation op)
+            => op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) &&
+               ext is OpenApiObject oao &&
+               oao.Any() &&
                oao.First().Key == "nextLinkName" &&
-               oao.First().Value is OpenApiString oas 
-            ? oas.Value 
+               oao.First().Value is OpenApiString oas
+            ? oas.Value
             : null;
     }
 }

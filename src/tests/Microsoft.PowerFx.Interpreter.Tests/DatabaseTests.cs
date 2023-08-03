@@ -212,17 +212,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Val = val;
         }
 
-        //public override IEnumerable<NamedValue> Fields
-        //{
-        //    get
-        //    {
-        //        Fields_Called++;
-        //        yield return new NamedValue("Id", FormulaValue.New(Id));                
-        //        yield return new NamedValue("Name", FormulaValue.New(Name));
-        //        yield return new NamedValue("Val", FormulaValue.New(Val));
-        //    }
-        //}
-
         protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             if (fieldName.Equals("Id", StringComparison.OrdinalIgnoreCase))

@@ -24,8 +24,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             ValidateSupportedOpenApiDocument(openApiDocument);
 
-            List<ConnectorFunction> functions = new ();
-            List<ServiceFunction> sFunctions = new ();
+            List<ConnectorFunction> functions = new();
+            List<ServiceFunction> sFunctions = new();
             string basePath = openApiDocument.GetBasePath();
 
             foreach (KeyValuePair<string, OpenApiPathItem> kv in openApiDocument.Paths)
@@ -177,9 +177,9 @@ namespace Microsoft.PowerFx.Connectors
 
             // Undocumented but only contains URL and description
             extensions.Remove("x-ms-docs");
-            
+
             if (extensions.Any())
-            {                
+            {
                 throw new NotImplementedException($"OpenApiDocument contains unsupported Extensions {string.Join(", ", extensions)}");
             }
 
@@ -247,7 +247,7 @@ namespace Microsoft.PowerFx.Connectors
 
             // https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
             opExtensions.Remove("x-ms-pageable");
-            
+
             // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
             // Other not supported extensions:
             //   x-ms-notification-content, x-ms-url-encoding, x-components, x-generator, x-ms-openai-data, x-ms-docs, x-servers
@@ -347,12 +347,12 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
                         invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
-                    }                   
+                    }
 
                     ServiceFunction sfunc = new ServiceFunction(
                         parentService: null,
-                        theNamespace: theNamespace, 
-                        name: operationName, 
+                        theNamespace: theNamespace,
+                        name: operationName,
                         localeSpecificName: operationName,
                         description: op.Description ?? $"Invoke {operationName}",
                         returnType: returnType._type,

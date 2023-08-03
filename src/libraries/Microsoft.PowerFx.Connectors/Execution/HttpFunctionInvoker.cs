@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Connectors
             // From RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", Section 4.2, "Message Headers"
             var headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             HttpContent body = null;
-            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
+            Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new();
 
             Dictionary<string, FormulaValue> map = _argMapper.ConvertToNamedParameters(args);
 
