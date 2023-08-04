@@ -44,6 +44,11 @@ namespace Microsoft.PowerFx.Types
         // This method need not be implemetned if ExteranlType.UntypedNumber is not used.
         // GetDouble and GetDecimal can be called on an ExternalType.UntypedNumber.
         string GetUntypedNumber();
+
+        /// <summary>
+        /// Returns the list of available properties if the current instance is an object.
+        /// </summary>
+        IEnumerable<string> GetProperties();
     }
 
     [DebuggerDisplay("UntypedObjectValue({Impl})")]

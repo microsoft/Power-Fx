@@ -104,5 +104,7 @@ namespace Microsoft.PowerFx.Functions
             result = new JsonUntypedObject(je);
             return res;
         }
+
+        public IEnumerable<string> GetProperties() => _element.EnumerateObject().Select(x => x.Name);
     }
 }
