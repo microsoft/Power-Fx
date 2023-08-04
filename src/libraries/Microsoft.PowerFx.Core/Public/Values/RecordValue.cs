@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Types
         /// <returns>true if field is present, else false.</returns>
         protected abstract bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result);
 
-        protected internal virtual Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+        protected virtual Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
         {
             var b = TryGetField(fieldType, fieldName, out FormulaValue result);
             return Task.FromResult((b, result));

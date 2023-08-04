@@ -47,7 +47,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly string _actionName;
         private readonly bool _numberIsFloat;
 
-        // URL to get next page of results in paged records/tables.
+        // Name of the field storing the page page link
         private readonly string _pageLink;
 
         // For functions that are marked as deprecated in swagger file
@@ -60,6 +60,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         // We return an error when used
         private readonly bool _isSupported;
         private readonly string _notSupportedReason;
+
+        // For functions supporting paging, this is the max number of items that will be returned, independently of the number of pages
         private readonly int _maxRows;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;
 
@@ -483,16 +485,13 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             if (IsPageable && result is RecordValue rv)
             {
-                (bool b, FormulaValue pageLink) = await rv.TryGetFieldAsync(FormulaType.String, _pageLink, cancellationToken).ConfigureAwait(false);
-                if (true)
-                {
-                    string nextLink = (pageLink as StringValue)?.Value;
+                FormulaValue pageLink = rv.GetField(_pageLink);
+                string nextLink = (pageLink as StringValue)?.Value;
 
-                    // If there is no next link, we'll return a "normal" RecordValue as no paging is needed
-                    if (!string.IsNullOrEmpty(nextLink))
-                    {
-                        result = new PagedRecordValue(rv, async () => await GetNextPageAsync(nextLink, cancellationToken).ConfigureAwait(false), _maxRows, cancellationToken);
-                    }
+                // If there is no next link, we'll return a "normal" RecordValue as no paging is needed
+                if (!string.IsNullOrEmpty(nextLink))
+                {
+                    result = new PagedRecordValue(rv, async () => await GetNextPageAsync(nextLink, cancellationToken).ConfigureAwait(false), _maxRows, cancellationToken);
                 }
             }
 

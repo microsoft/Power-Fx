@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx
             throw new NotImplementedException();
         }
 
-        protected internal override async Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+        protected override async Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
         {
             try
             {
