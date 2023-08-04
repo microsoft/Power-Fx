@@ -24,6 +24,24 @@ Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-3
 >> Text(1234.5678, "[$-fr-FR][$-en-US] # ##0,00", "vi-VI")
 Errors: Error 0-55: The function 'Text' has some invalid arguments.|Warning 16-45: Incorrect format specifier for 'Text'.
 
+>> Text(Color.Red, "###")
+Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(Color.Red, "@")
+Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 16-19: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(Color.Red, "@ @")
+Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(Color.Red, "#/4")
+Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(Color.Red, "Foo @")
+Errors: Error 0-24: The function 'Text' has some invalid arguments.|Warning 16-23: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(Color.Red, "Foo ####")
+Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 16-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
 // Not support format string for non numeric/datetime/date/time
 >> Text("123.456", "###")
 Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
@@ -58,18 +76,6 @@ Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 13-1
 >> Text("bsdf", "Foo @")
 Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 13-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
->> Text(If(1<0,"test",Blank()), "####")
-Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 29-35: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Blank(), Blank())
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Blank(), "Foo ####")
-Errors: Error 0-25: The function 'Text' has some invalid arguments.|Warning 14-24: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Blank(), "####")
-Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 14-20: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
 >> Text(true, "#")
 Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 11-14: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
@@ -82,38 +88,8 @@ Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 12-1
 >> Text(false, "0000")
 Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 12-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
->> Text(Color.Red, "###")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Color.Red, "@")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 16-19: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Color.Red, "@ @")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Color.Red, "#/4")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Color.Red, "Foo @")
-Errors: Error 0-24: The function 'Text' has some invalid arguments.|Warning 16-23: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Color.Red, "Foo ####")
-Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 16-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Blank(), "#.000")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
 >> Text("abc", "0.00")
 Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 12-18: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Blank(), "$ #,###")
-Errors: Error 0-24: The function 'Text' has some invalid arguments.|Warning 14-23: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Blank(), "#,#")
-Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 14-19: The second argument of the 'Text' function is only supported for numeric and date/time values.
-
->> Text(Blank(), "#,###")
-Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b")
 Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 47-50: The second argument of the 'Text' function is only supported for numeric and date/time values.
@@ -150,3 +126,12 @@ Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 14-3
 
 >> Text("Hello", If(1 > 0, "d", ""))
 Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 14-32: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(If(1<0,false), "0.00")
+Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 20-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(If(1<0,"test",Blank()), "####")
+Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 29-35: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(If(1 < 0, false), "mmm ddd yyy")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 23-36: The second argument of the 'Text' function is only supported for numeric and date/time values.

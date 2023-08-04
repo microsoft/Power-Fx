@@ -303,15 +303,21 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length == 1 && args[0].IsBlank())
+            if (args[0].IsBlank())
             {
-                // When used as a pure conversion function (single argument, no format string), this function propagates null values
-                return new BlankValue(irContext);
+                if (args.Length == 1)
+                {
+                    // When used as a pure conversion function (single argument, no format string), this function propagates null values
+                    return new BlankValue(irContext);
+                }
+
+                // Set blank to 0 because we only support numeric and datetime input when we have format string
+                args[0] = new NumberValue(IRContext.NotInSource(FormulaType.Number), 0);
             }
 
-            foreach (var arg in args)
+            for (int i = 1; i < args.Length; i++)
             {
-                if (arg.IsBlank())
+                if (args[i].IsBlank())
                 {
                     return new StringValue(irContext, string.Empty);
                 }

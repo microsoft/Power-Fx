@@ -771,3 +771,69 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(ParseJSON("""\u202F"""), "##")
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(Blank())
+Blank()
+
+>> Text(If(1<0,false))
+Blank()
+
+>> Text(If(1<0,123))
+Blank()
+
+>> Text(If(1<0,123), "0.00")
+"0.00"
+
+>> Text(Blank(), "0.00")
+"0.00"
+
+>> Text(Blank(), Blank())
+""
+
+>> Text(Blank(), "Foo ####")
+"Foo "
+
+>> Text(Blank(), "####")
+""
+
+>> Text(Blank(), "#.000")
+".000"
+
+>> Text(Blank(), "$ #,###")
+"$ "
+
+>> Text(Blank(), "#,#")
+""
+
+>> Text(Blank(), "#,###")
+""
+
+>> ForAll(ParseJSON("[""2011-01-15"", null]"), Text(DateValue(ThisRecord), "yyyy-MM-dd"))
+Table({Value:"2011-01-15"},{Value:"1899-12-30"})
+
+>> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisRecord), "HH:mm:ss"))
+Table({Value:"08:03:05"},{Value:"00:00:00"})
+
+>> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
+"Saturday, December 30, 1899"
+
+>> Text(DateTimeValue(""), DateTimeFormat.ShortDate)
+"12/30/1899"
+
+>> Text(If(1 < 0, 123), "mmm ddd yyy")
+"Dec Sat 1899"
+
+>> Text(Blank(), "mmm ddd yyy")
+"Dec Sat 1899"
+
+>> Text(0, "yyyy-mm-dd")
+"1899-12-30"
+
+>> Text(If(1 < 0, 0),"yyyy-mm-dd")
+"1899-12-30"
+
+>> Text(Blank(),"yyyy-mm-dd")
+"1899-12-30"
+
+>> Text(Blank(),"mmm ddd yyy")
+"Dec Sat 1899"

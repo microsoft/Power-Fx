@@ -23,3 +23,79 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(1234.5678, "[$-fr-FR][$-en-US] # ##0,00", "vi-VI")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Not support format string for non numeric/datetime/date/time
+>> Text("123.456", "###")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("123.456", "@")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("123.456", "@ @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("123.456", "#/4")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("123.456", "Foo @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("123.456", "Foo ####")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("bsdf", "###")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("bsdf", "@")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("bsdf", "@ @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("bsdf", "#/4")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("bsdf", "Foo @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(true, "#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(true, "###")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(false, "0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(false, "0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("abc", "0.00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "d", "vi-Vn")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "p", "vi-Vn")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "n", "vi-Vn")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b", "vi-Vn")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("ss", "true")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("ss", "false")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("", "0,00.0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("", "####.#")
+Error({Kind:ErrorKind.InvalidArgument})
