@@ -342,9 +342,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 throw new NotImplementedException();
             }
 
-            public IEnumerable<string> GetProperties()
+            public bool TryGetPropertyNames(out IEnumerable<string> result)
             {
-                throw new NotImplementedException();
+                result = null;
+                return false;
             }
         }
     }

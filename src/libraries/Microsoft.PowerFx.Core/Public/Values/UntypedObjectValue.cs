@@ -46,9 +46,10 @@ namespace Microsoft.PowerFx.Types
         string GetUntypedNumber();
 
         /// <summary>
-        /// Returns the list of available properties if the current instance is an object.
+        /// If the untyped value is an object then this method returns true and the list of available property names in the <paramref name="propertyNames"/> parameter.
+        /// Returns false otherwise, <paramref name="propertyNames"/> will be null in this case.
         /// </summary>
-        IEnumerable<string> GetProperties();
+        bool TryGetPropertyNames(out IEnumerable<string> propertyNames);
     }
 
     [DebuggerDisplay("UntypedObjectValue({Impl})")]

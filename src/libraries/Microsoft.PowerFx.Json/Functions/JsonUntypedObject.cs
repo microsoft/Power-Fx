@@ -105,6 +105,10 @@ namespace Microsoft.PowerFx.Functions
             return res;
         }
 
-        public IEnumerable<string> GetProperties() => _element.EnumerateObject().Select(x => x.Name);
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
+        {
+            result = _element.EnumerateObject().Select(x => x.Name);
+            return true;
+        }
     }
 }

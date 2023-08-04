@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -55,9 +56,10 @@ namespace Microsoft.PowerFx.Functions
             throw new NotImplementedException();
         }
 
-        public IEnumerable<string> GetProperties()
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
         {
-            throw new NotImplementedException();
+            result = null;
+            return false;
         }
     }
 }
