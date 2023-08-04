@@ -29,7 +29,7 @@ using Contracts = Microsoft.PowerFx.Core.Utils.Contracts;
 namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 {
     [System.Diagnostics.DebuggerDisplay("ServiceFunction: {LocaleSpecificName}")]
-    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2
+    internal sealed class ServiceFunction : BuiltinFunction, IAsyncTexlFunction2, IHasUnsupportedFunctions
     {
         private readonly List<string[]> _signatures;
         private readonly string[] _orderedRequiredParams;
@@ -46,6 +46,23 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly WeakReference<IService> _parentService;
         private readonly string _actionName;
         private readonly bool _numberIsFloat;
+
+        // Name of the field storing the page page link
+        private readonly string _pageLink;
+
+        // For functions that are marked as deprecated in swagger file
+        // Those functions will not appear in Intellisense but can be called
+        // Check will return a warning when used
+        private readonly bool _isDeprecated;
+
+        // Functions that we do not support for any reason (see _notSupportedReason)
+        // Deprecated functions are also marked as not supported but will work fine.
+        // We return an error when used
+        private readonly bool _isSupported;
+        private readonly string _notSupportedReason;
+
+        // For functions supporting paging, this is the max number of items that will be returned, independently of the number of pages
+        private readonly int _maxRows;
         internal readonly ServiceFunctionParameterTemplate[] _requiredParameters;
 
         public IEnumerable<TypedName> OptionalParams => _optionalParamInfo.Values;
@@ -53,11 +70,18 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override Capabilities Capabilities => Capabilities.OutboundInternetAccess | Capabilities.EnterpriseAuthentication | Capabilities.PrivateNetworkAccess;
         public override bool IsHidden => _isHidden;
         public override bool IsSelfContained => !_isBehaviorOnly;
+        public bool IsPageable => !string.IsNullOrEmpty(_pageLink);
+        public bool IsDeprecated => _isDeprecated;
+        public bool IsNotSupported => !_isSupported;
+        public string NotSupportedReason => _notSupportedReason;
 
-        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description,
-            DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly, bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimetoutMs, bool isHidden,
-            Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo, ServiceFunctionParameterTemplate[] requiredParamInfo,
-            Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
+        // Provide as hook for execution. 
+        public ScopedHttpFunctionInvoker _invoker { get; init; }
+
+        public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly,
+            bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo,
+            ServiceFunctionParameterTemplate[] requiredParamInfo, Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated, int maxRows,
+            string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -108,7 +132,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _isAutoRefreshable = isAutoRefreshable;
             _isDynamic = isDynamic;
             _isCacheEnabled = isCacheEnabled;
-            _cacheTimeoutMs = cacheTimetoutMs;
+            _cacheTimeoutMs = cacheTimeoutMs;
             _isHidden = isHidden;
             _orderedRequiredParams = requiredParamInfo.Select(p => p.TypedName.Name.Value).ToArray();
             _signatures.Add(_orderedRequiredParams);
@@ -116,6 +140,11 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _actionName = actionName;
             _requiredParameters = requiredParamInfo;
             _numberIsFloat = numberIsFloat;
+            _pageLink = pageLink;
+            _isSupported = isSupported;
+            _notSupportedReason = notSupportedReason;
+            _isDeprecated = isDeprecated;
+            _maxRows = maxRows;
 
             if (arityMax > arityMin)
             {
@@ -420,31 +449,50 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return _parameterDefaultValues.TryGetValue(paramName, out defaultValue);
         }
 
-        // Provide as hook for execution. 
-        public IAsyncTexlFunction2 _invoker;
 
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            if (_invoker == null)
-            {
-                throw new InvalidOperationException($"Function {Name} can't be invoked.");
-            }
-
             cancellationToken.ThrowIfCancellationRequested();
 
-            var result = await _invoker.InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await (_invoker ?? throw new InvalidOperationException($"Function {Name} can't be invoked.")).InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
+            result = await PostProcessResultAsync(result, cancellationToken).ConfigureAwait(false);
+
+            return result;
+        }
+
+        // Can return 3 possible FormulaValues
+        // - PagesRecordValue if the next page has a next link
+        // - RecordValue if there is no next link
+        // - ErrorValue
+        private async Task<FormulaValue> GetNextPageAsync(string nextLink, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            FormulaValue result = await _invoker.InvokeAsync(nextLink, cancellationToken).ConfigureAwait(false);
+            result = await PostProcessResultAsync(result, cancellationToken).ConfigureAwait(false);
+
+            return result;
+        }
+
+        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, CancellationToken cancellationToken)
+        {
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
             {
-                result = FormulaValue.NewError(
-                    new ExpressionError()
-                    {
-                        Kind = er.Kind,
-                        Severity = er.Severity,
-                        Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}"
-                    },
-                    ev.Type);
+                result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type);
+            }
+
+            if (IsPageable && result is RecordValue rv)
+            {
+                FormulaValue pageLink = rv.GetField(_pageLink);
+                string nextLink = (pageLink as StringValue)?.Value;
+
+                // If there is no next link, we'll return a "normal" RecordValue as no paging is needed
+                if (!string.IsNullOrEmpty(nextLink))
+                {
+                    result = new PagedRecordValue(rv, async () => await GetNextPageAsync(nextLink, cancellationToken).ConfigureAwait(false), _maxRows, cancellationToken);
+                }
             }
 
             return result;

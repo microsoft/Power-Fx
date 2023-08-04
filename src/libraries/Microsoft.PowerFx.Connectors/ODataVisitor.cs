@@ -15,7 +15,7 @@ namespace Microsoft.PowerFx.Connectors
     [ThreadSafeImmutable]
     internal class ODataVisitor : IRNodeVisitor<string, ODataVisitorContext>
     {
-        internal static readonly ODataVisitor I = new ODataVisitor();
+        internal static readonly ODataVisitor I = new ();
 
         public override string Visit(TextLiteralNode node, ODataVisitorContext runContext)
         {
