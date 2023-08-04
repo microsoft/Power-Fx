@@ -107,6 +107,12 @@ namespace Microsoft.PowerFx.Functions
 
         public bool TryGetPropertyNames(out IEnumerable<string> result)
         {
+            if (_element.ValueKind != JsonValueKind.Object)
+            {
+                result = null;
+                return false;
+            }
+             
             result = _element.EnumerateObject().Select(x => x.Name);
             return true;
         }
