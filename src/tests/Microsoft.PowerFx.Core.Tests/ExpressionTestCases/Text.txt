@@ -275,12 +275,6 @@ Blank()
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "", "vi-Vn")
 "0f8fad5b-d9cb-469f-a165-70867728950e"
 
->> Text("ss", "true")
-"ss"
-
->> Text("ss", "false")
-"ss"
-
 >> Text("", "0,00.0")
 ""
 

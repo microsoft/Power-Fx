@@ -24,12 +24,48 @@ Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 16-3
 >> Text(1234.5678, "[$-fr-FR][$-en-US] # ##0,00", "vi-VI")
 Errors: Error 0-55: The function 'Text' has some invalid arguments.|Warning 16-45: Incorrect format specifier for 'Text'.
 
-// end with e or e+ in numeric is invalid
+// End with e or e+ in numeric or datetime format is invalid
 >> Text(1234567.1234567, "0.00e+")
 Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 22-30: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "0.00e")
 Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 22-29: Incorrect format specifier for 'Text'.
+
+>> Text(0, "longdate")
+Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 8-18: Incorrect format specifier for 'Text'.
+
+>> Text(0, "shortdate")
+Errors: Error 0-20: The function 'Text' has some invalid arguments.|Warning 8-19: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime")
+Errors: Error 0-59: The function 'Text' has some invalid arguments.|Warning 44-58: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime")
+Errors: Error 0-60: The function 'Text' has some invalid arguments.|Warning 44-59: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime")
+Errors: Error 0-55: The function 'Text' has some invalid arguments.|Warning 44-54: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime")
+Errors: Error 0-56: The function 'Text' has some invalid arguments.|Warning 44-55: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "mmm ddd yyye")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 22-36: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "mmm ddd yyy e")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "mmm ddd yyy date")
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 22-40: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "mmm ddd yyye+")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 22-37: Incorrect format specifier for 'Text'.
+
+>> Text("ss", "true")
+Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 11-17: Incorrect format specifier for 'Text'.
+
+>> Text("ss", "false")
+Errors: Error 0-19: The function 'Text' has some invalid arguments.|Warning 11-18: Incorrect format specifier for 'Text'.
 
 >> Text(1234567.1234567, "\""#\""\")
 Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 22-32: Incorrect format specifier for 'Text'.
@@ -548,3 +584,10 @@ Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44
 // Excel: #VALUE!, Desired: 32.07:47:00.00
 >> Text(32.324305555, "[d].hh:mm:ss.00")
 Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 19-36: Incorrect format specifier for 'Text'.
+
+// Not allow the last character is opening quote (missing close quote).
+>> Text(123.456, "0.0""")
+Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
+
+>> Text(123.456, "mmm ddd yyy""")
+Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 14-29: Incorrect format specifier for 'Text'.

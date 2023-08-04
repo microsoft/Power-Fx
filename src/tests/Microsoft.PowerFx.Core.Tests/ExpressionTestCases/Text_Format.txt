@@ -34,12 +34,6 @@
 >> Text(0, "'shortdate'") 
 "12/30/1899"
 
->> Text(0, "longdate") 
-"long30ate"
-
->> Text(0, "shortdate") 
-"00ort30ate"
-
 >> Text(0, "short day") 
 "00ort 30a99"
 
@@ -394,12 +388,6 @@
 >> Text(33333.6875, "'shorttime'") 
 "4:30 PM"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime") 
-"long1ateti1e"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime") 
-"2514ort1ateti1e"
-
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime24") 
 "long1ateti1e24"
 
@@ -411,12 +399,6 @@
 
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime24") 
 "2514ortti32e24"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime") 
-"longti1e"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime") 
-"2514ortti32e"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), """h"" dddd, mmm dd, yyy") 
 "h Friday, Jun 03, 1983"
@@ -873,6 +855,15 @@ Errors: Error 0-54: The function 'Text' has some invalid arguments.|Warning 16-4
 >> Text(1234567.1234567, "0.00""e""")
 "1234567.12e"
 
+>> Text(1234567.1234567, "mmm ddd yyy\e")
+"Feb Thu 5280e"
+
+>> Text(1234567.1234567, "mmm ddd yyy\e+")
+"Feb Thu 5280e+"
+
+>> Text(1234567.1234567, "mmm ddd yyy""e""")
+"Feb Thu 5280e"
+
 >> Text(1234567.1234567, "0.00""e+""")
 "1234567.12e+"
 
@@ -1244,6 +1235,12 @@ Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 13-3
 // If only two sections, first format used for Zero.
 >> Text(0, "00.00;(00.00)")
 "00.00"
+
+>> Text(12345.6789,"0.00000;#.######")
+"12345.67890"
+
+>> Text(12345.6789,"#.######;0.00000")
+"12345.6789"
 
 // Excel: "€ 1,234,567.1235"
 >> Text(1234567.1234567, "[$€-de-DE] #,####.0000")

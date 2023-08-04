@@ -142,14 +142,14 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (i == formatStr.Length - 1)
                 {
-                    // If format string ends with backsplash but no following character (both numeric and datetime format), format is invalid.
-                    if (formatStr[i] == '\\')
+                    // If format string ends with backsplash but no following character or opening double quote then format is invalid.
+                    if (formatStr[i] == '\\' || formatStr[i] == '\"')
                     {
                         return false;
                     }
 
-                    // If format string ends with e or e+ (not escaping character) then format is invalid (only applied for numeric format)
-                    if (textFormatArgs.HasNumericFmt & (formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+')))
+                    // If format string ends with e or e+ (not escaping character) then format is invalid.
+                    if (formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+'))
                     {
                         return false;
                     }
@@ -181,19 +181,19 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
                 }
+            }
 
-                if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
-                {
-                    // Check if the date time format contains '0's after the seconds specifier, which
-                    // is used for fractional seconds - in which case it is valid
-                    var formatWithoutZeroSubseconds = _formatWithoutZeroSubsecondsRegex.Replace(formatStr, m => m.Groups[1].Success ? string.Empty : m.Groups[1].Value);
-                    textFormatArgs.HasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(_numericCharacters.ToArray()) >= 0;
-                }
+            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            {
+                // Check if the date time format contains '0's after the seconds specifier, which
+                // is used for fractional seconds - in which case it is valid
+                var formatWithoutZeroSubseconds = _formatWithoutZeroSubsecondsRegex.Replace(formatStr, m => m.Groups[1].Success ? string.Empty : m.Groups[1].Value);
+                textFormatArgs.HasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(_numericCharacters.ToArray()) >= 0;
+            }
 
-                if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
-                {
-                    return false;
-                }
+            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            {
+                return false;
             }
 
             // If there is no numeric format character (all escaping characters - backsplash or double quote) after decimal point then treat it as an escaping character.

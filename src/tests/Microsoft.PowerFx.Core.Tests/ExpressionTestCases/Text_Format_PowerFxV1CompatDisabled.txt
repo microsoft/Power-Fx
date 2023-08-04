@@ -31,6 +31,42 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234567.1234567, "0.00e")
 Error({Kind:ErrorKind.InvalidArgument})
 
+>> Text(0, "longdate")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(0, "shortdate")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "mmm ddd yyye")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "mmm ddd yyy e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "mmm ddd yyy date")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "mmm ddd yyye+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("ss", "true")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("ss", "false")
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> Text(1234567.1234567, "\""#\""\")
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -547,4 +583,11 @@ Error({Kind:ErrorKind.InvalidArgument})
 // Expanding elapsed time to include days
 // Excel: #VALUE!, Desired: 32.07:47:00.00
 >> Text(32.324305555, "[d].hh:mm:ss.00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Not allow the last character is opening quote (missing close quote).
+>> Text(123.456, "0.0""")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123.456, "mmm ddd yyy""")
 Error({Kind:ErrorKind.InvalidArgument})
