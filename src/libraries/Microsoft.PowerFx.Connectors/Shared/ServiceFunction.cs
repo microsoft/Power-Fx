@@ -18,7 +18,6 @@ using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Functions.Publish;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Public.Values;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -61,8 +60,11 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override bool IsSelfContained => !_isBehaviorOnly;
         public bool IsPageable => !string.IsNullOrEmpty(_pageLink);
         public bool IsDeprecated => _isDeprecated;
-        public bool IsSupported => _isSupported;
+        public bool IsNotSupported => !_isSupported;
         public string NotSupportedReason => _notSupportedReason;
+
+        // Provide as hook for execution. 
+        public ScopedHttpFunctionInvoker _invoker;
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly,
             bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo,
@@ -435,53 +437,33 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return _parameterDefaultValues.TryGetValue(paramName, out defaultValue);
         }
 
-        // Provide as hook for execution. 
-        public IAsyncTexlFunction2 _invoker;
 
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             FormulaValue result = await (_invoker ?? throw new InvalidOperationException($"Function {Name} can't be invoked.")).InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
-            ExpressionError er = null;
-
-            if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
-            {
-                result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type);
-            }
-
-            if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
-            {
-                string nextLink = (pageLink as StringValue)?.Value;
-                result = new PagedRecordValue(rv, () => GetNextPage(nextLink, cancellationToken), _maxRows);
-            }
+            result = await PostProcessResultAsync(result, cancellationToken).ConfigureAwait(false);
 
             return result;
         }
 
-        private FormulaValue GetNextPage(string nextLink, CancellationToken cancellationToken)
-        {
-            if (string.IsNullOrEmpty(nextLink))
-            {
-                return FormulaValue.NewBlank();
-            }
-
-            FormulaValue result = _invoker.InvokeAsync(nextLink, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
-
-            if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
-            {
-                string nextLink2 = (pageLink as StringValue)?.Value;
-                result = new PagedRecordValue(rv, () => GetNextPage(nextLink2, cancellationToken), _maxRows);
-            }
-
-            return result;
-        }
-
-        public async Task<FormulaValue> InvokeAsync(string url, CancellationToken cancellationToken)
+        // Can return 3 possible FormulaValues
+        // - PagesRecordValue if the next page has a next link
+        // - RecordValue if there is no next link
+        // - ErrorValue
+        private async Task<FormulaValue> GetNextPageAsync(string nextLink, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            FormulaValue result = await _invoker.InvokeAsync(url, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await _invoker.InvokeAsync(nextLink, cancellationToken).ConfigureAwait(false);
+            result = await PostProcessResultAsync(result, cancellationToken).ConfigureAwait(false);
+
+            return result;
+        }
+
+        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, CancellationToken cancellationToken)
+        {
             ExpressionError er = null;
 
             if (result is ErrorValue ev && (er = ev.Errors.FirstOrDefault(e => e.Kind == ErrorKind.Network)) != null)
@@ -489,10 +471,19 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                 result = FormulaValue.NewError(new ExpressionError() { Kind = er.Kind, Severity = er.Severity, Message = $"{Namespace.ToDottedSyntax()}.{Name} failed: {er.Message}" }, ev.Type);
             }
 
-            if (result is RecordValue rv && IsPageable && rv.TryGetField(FormulaType.String, _pageLink, out FormulaValue pageLink))
+            if (IsPageable && result is RecordValue rv)
             {
-                string nextLink = (pageLink as StringValue).Value;
-                result = new PagedRecordValue(rv, () => GetNextPage(nextLink, cancellationToken), _maxRows);
+                (bool b, FormulaValue pageLink) = await rv.TryGetFieldAsync(FormulaType.String, _pageLink, cancellationToken).ConfigureAwait(false);
+                if (true)
+                {
+                    string nextLink = (pageLink as StringValue)?.Value;
+
+                    // If there is no next link, we'll return a "normal" RecordValue as no paging is needed
+                    if (!string.IsNullOrEmpty(nextLink))
+                    {
+                        result = new PagedRecordValue(rv, async (cancellationToken) => await GetNextPageAsync(nextLink, cancellationToken).ConfigureAwait(false), _maxRows);
+                    }
+                }
             }
 
             return result;

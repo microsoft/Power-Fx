@@ -7,8 +7,9 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         bool IsDeprecated { get; }
 
-        bool IsSupported { get; }
+        bool IsNotSupported { get; }
 
+        // For internal use only. Not customer friendly, no need for localization.
         string NotSupportedReason { get; }
     }
 }

@@ -29,13 +29,13 @@ namespace Microsoft.PowerFx
             return userRecord;
         }
 
-        protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             // Should have called TryGetFieldAsync instead.
             throw new NotImplementedException();
         }
 
-        protected override async Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+        protected internal override async Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
         {
             try
             {

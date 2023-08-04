@@ -14,7 +14,6 @@ using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -255,7 +254,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false, int maxRows = 1000)
         {
-            IAsyncTexlFunction2 invoker = null;
+            ScopedHttpFunctionInvoker invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
             DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
             Namespace = func_ns;

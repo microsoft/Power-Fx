@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
             }
 
-            protected override Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
+            protected internal override Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
             {
                 var st = Environment.StackTrace;
 

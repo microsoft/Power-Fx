@@ -318,20 +318,20 @@ namespace Microsoft.PowerFx.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            config.AddService("azbs", apiDoc, ppClient, maxRows: 20000);
-            config.AddService("azbs2", apiDoc, ppClient);
+            config.AddService("azbs", apiDoc, ppClient);
+            config.AddService("azbs2", apiDoc, ppClient, maxRows: 7);
             RecalcEngine engine = new RecalcEngine(config);
 
             testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json", @"Responses\AzureBlobStorage_Paging_Response3.json");
             FormulaValue fv = await engine.EvalAsync(@"CountRows(azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None).ConfigureAwait(false);
             Assert.False(fv is ErrorValue);
             Assert.True(fv is DecimalValue);
-            Assert.Equal(10006m, ((DecimalValue)fv).Value);
+            Assert.Equal(12m, ((DecimalValue)fv).Value);
 
-            testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json");
+            testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json");
             fv = await engine.EvalAsync(@"CountRows(azbs2.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None).ConfigureAwait(false);
             Assert.True(fv is DecimalValue);
-            Assert.Equal(1000m, ((DecimalValue)fv).Value);
+            Assert.Equal(7m, ((DecimalValue)fv).Value);
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.

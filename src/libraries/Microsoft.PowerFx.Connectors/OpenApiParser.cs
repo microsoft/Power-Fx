@@ -10,7 +10,6 @@ using Microsoft.AppMagic.Authoring;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -341,7 +340,7 @@ namespace Microsoft.PowerFx.Connectors
                     FormulaType returnType = op.GetReturnType(numberIsFloat);
                     string opPath = basePath != null && basePath != "/" ? basePath + path : path;
                     ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, numberIsFloat);
-                    IAsyncTexlFunction2 invoker = null;
+                    ScopedHttpFunctionInvoker invoker = null;
 
                     if (httpClient != null)
                     {

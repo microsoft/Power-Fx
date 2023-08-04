@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 _testObj = testObj;
             }
 
-            protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+            protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
             {
                 result = FormulaValue.NewBlank(fieldType);
                 if (fieldType == FormulaType.UntypedObject)

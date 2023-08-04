@@ -25,58 +25,6 @@
       "ETag": "\"0x8DB23ED210A22A8\"",
       "FileLocator": "JTJmY29udGFpbmVyJTJmYWJjLnR4dA==",
       "LastModifiedBy": null
-    },
-    {
-      "Id": "JTJmY29udGFpbmVyJTJmYm9yYTEudHh0",
-      "Name": "bora1.txt",
-      "DisplayName": "bora1.txt",
-      "Path": "/container/bora1.txt",
-      "LastModified": "2023-03-13T18:00:01Z",
-      "Size": 14,
-      "MediaType": "text/plain",
-      "IsFolder": false,
-      "ETag": "\"0x8DB23ECC40C1902\"",
-      "FileLocator": "JTJmY29udGFpbmVyJTJmYm9yYTEudHh0",
-      "LastModifiedBy": null
-    },
-    {
-      "Id": "JTJmY29udGFpbmVyJTJmYm9yYTMudHh0",
-      "Name": "bora3.txt",
-      "DisplayName": "bora3.txt",
-      "Path": "/container/bora3.txt",
-      "LastModified": "2023-03-13T18:09:29Z",
-      "Size": 14,
-      "MediaType": "text/plain",
-      "IsFolder": false,
-      "ETag": "\"0x8DB23EE16B1FCA3\"",
-      "FileLocator": "JTJmY29udGFpbmVyJTJmYm9yYTMudHh0",
-      "LastModifiedBy": null
-    },
-    {
-      "Id": "JTJmY29udGFpbmVyJTJmYm9yYTQudHh0",
-      "Name": "bora4.txt",
-      "DisplayName": "bora4.txt",
-      "Path": "/container/bora4.txt",
-      "LastModified": "2023-03-14T11:26:32Z",
-      "Size": 3,
-      "MediaType": "text/plain",
-      "IsFolder": false,
-      "ETag": "\"0x8DB247EF69C9568\"",
-      "FileLocator": "JTJmY29udGFpbmVyJTJmYm9yYTQudHh0",
-      "LastModifiedBy": null
-    },
-    {
-      "Id": "JTJmY29udGFpbmVyJTJmJTdiaSU3ZC50eHQ=",
-      "Name": "{i}.txt",
-      "DisplayName": "{i}.txt",
-      "Path": "/container/{i}.txt",
-      "LastModified": "2023-07-31T13:26:35Z",
-      "Size": 0,
-      "MediaType": "text/plain",
-      "IsFolder": false,
-      "ETag": "\"0x8DB91C9C3731394\"",
-      "FileLocator": "JTJmY29udGFpbmVyJTJmJTdiaSU3ZC50eHQ=",
-      "LastModifiedBy": null
     }
   ]
 }

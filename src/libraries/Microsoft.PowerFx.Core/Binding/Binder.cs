@@ -5151,7 +5151,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
             private void ValidateSupportedFunction(CallNode node, TexlFunction func)
             {
-                if (func is IHasUnsupportedFunctions sdf && !sdf.IsSupported)
+                if (func is IHasUnsupportedFunctions sdf && sdf.IsNotSupported)
                 {
                     if (sdf.IsDeprecated)
                     {

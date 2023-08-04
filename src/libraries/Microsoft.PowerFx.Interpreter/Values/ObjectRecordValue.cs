@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
         }
 
         /// <inheritdoc/>
-        protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             return _marshaller.TryGetField(Source, fieldName, out result);
         }

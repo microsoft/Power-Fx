@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Types
 
         public override bool CanShallowCopy => true;
 
-        protected internal override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
+        protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
             if (Type.TryGetFieldType(fieldName, out var compileTimeType))
             {
