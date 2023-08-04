@@ -18,16 +18,18 @@ namespace Microsoft.PowerFx.Connectors
         public readonly RecordValue CurrentPage;
         public readonly TableValue CurrentTable;
         public readonly string TableFieldName;
+        public readonly CancellationToken CancellationToken;
 
         // Method used to retrieve the next page
-        public readonly Func<CancellationToken, Task<FormulaValue>> GetNextRecordAsync;
+        public readonly Func<Task<FormulaValue>> GetNextRecordAsync;
 
-        public PagedRecordValue(RecordValue recordValue, Func<CancellationToken, Task<FormulaValue>> getNextRecordAsync, int maxRows)
+        public PagedRecordValue(RecordValue recordValue, Func<Task<FormulaValue>> getNextRecordAsync, int maxRows, CancellationToken cancellation)
             : base(recordValue.Type)
         {
             CurrentPage = recordValue;
             GetNextRecordAsync = getNextRecordAsync;
             MaxRows = maxRows;
+            CancellationToken = cancellation;
 
             NamedValue tableProp = CurrentPage.Fields.FirstOrDefault((NamedValue nv) => nv.Value is TableValue) ?? throw new InvalidOperationException("PagedRecordValue must contain a table");
             TableFieldName = tableProp.Name;
@@ -53,6 +55,8 @@ namespace Microsoft.PowerFx.Connectors
         public readonly PagedRecordValue PagedRecordValue;
 
         public int MaxRows => PagedRecordValue.MaxRows;
+
+        public CancellationToken CancellationToken => PagedRecordValue.CancellationToken;
 
         public PagedTableValue(PagedRecordValue prv)
             : base(prv.CurrentTable.Type)
@@ -86,7 +90,7 @@ namespace Microsoft.PowerFx.Connectors
                         yield break;
                     }
 
-                    FormulaValue nextPage = currentRecord.GetNextRecordAsync(CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                    FormulaValue nextPage = currentRecord.GetNextRecordAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
                     if (nextPage is ErrorValue ev)
                     {
@@ -101,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors
                         yield break;
                     }
                     
-                    (bool b, FormulaValue nextTableValue) = nextRecord.TryGetFieldAsync(currentRecord.CurrentTable.Type, currentRecord.TableFieldName, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                    (bool b, FormulaValue nextTableValue) = nextRecord.TryGetFieldAsync(currentRecord.CurrentTable.Type, currentRecord.TableFieldName, CancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 
                     if (!b || nextTableValue is not TableValue newTable)
                     {

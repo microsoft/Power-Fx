@@ -491,7 +491,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                     // If there is no next link, we'll return a "normal" RecordValue as no paging is needed
                     if (!string.IsNullOrEmpty(nextLink))
                     {
-                        result = new PagedRecordValue(rv, async (cancellationToken) => await GetNextPageAsync(nextLink, cancellationToken).ConfigureAwait(false), _maxRows);
+                        result = new PagedRecordValue(rv, async () => await GetNextPageAsync(nextLink, cancellationToken).ConfigureAwait(false), _maxRows, cancellationToken);
                     }
                 }
             }
