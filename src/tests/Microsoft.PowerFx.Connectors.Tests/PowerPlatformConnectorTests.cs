@@ -739,7 +739,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(FormulaType.String, rv5.GetField("Site").Type);
             Assert.Equal("Atlanta", ((StringValue)rv5.GetField("Site")).Value);
 
-            string expected = @"POST https://tip1-shared-002.azure-apim.net/invoke
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
  Authorization: Bearer eyJ0eXAiOiJ...
  path: /invoke
@@ -748,7 +749,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
  x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives?source=me
- x-ms-user-agent: PowerFx/0.3.0-local
+ x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
  Authorization: Bearer eyJ0eXAiOiJ...
@@ -758,7 +759,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
  x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/root/children?source=me
- x-ms-user-agent: PowerFx/0.3.0-local
+ x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
  Authorization: Bearer eyJ0eXAiOiJ...
@@ -768,7 +769,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
  x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/codeless/v1.0/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/items/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/workbook/tables?source=me
- x-ms-user-agent: PowerFx/0.3.0-local
+ x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
  Authorization: Bearer eyJ0eXAiOiJ...
@@ -778,7 +779,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
  x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/files/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/tables/%7b00000000-000C-0000-FFFF-FFFF00000000%7d/items?source=me
- x-ms-user-agent: PowerFx/0.3.0-local
+ x-ms-user-agent: PowerFx/{version}
 POST https://tip1-shared-002.azure-apim.net/invoke
  authority: tip1-shared-002.azure-apim.net
  Authorization: Bearer eyJ0eXAiOiJ...
@@ -788,7 +789,7 @@ POST https://tip1-shared-002.azure-apim.net/invoke
  x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
  x-ms-request-method: GET
  x-ms-request-url: /apim/excelonlinebusiness/b20e87387f9149e884bdf0b0c87a67e8/drives/b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb/files/01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO/tables/%7b00000000-000C-0000-FFFF-FFFF00000000%7d/items/f830UPeAXoI?source=me&idColumn=__PowerAppsId__
- x-ms-user-agent: PowerFx/0.3.0-local
+ x-ms-user-agent: PowerFx/{version}
 ";
             Assert.Equal(expected, testConnector._log.ToString());
         }
