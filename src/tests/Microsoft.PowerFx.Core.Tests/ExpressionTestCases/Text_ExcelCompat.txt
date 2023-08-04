@@ -1,0 +1,963 @@
+﻿
+// ******** Language Code and Numeric Format String ********
+
+>> Text(1234.5678, "# ##0,00", "fr-FR")
+" 1 235"
+
+>> Text(1234.5678, "# ##0,00")
+" 1,235"
+
+>> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
+"$-fr-FR]  1.235"
+
+>> Text(1234.5678, "-fr-FR # ##0,00", "vi-VI")
+"-fr-FR  1.235"
+
+>> Text(1234.5678, "fr-FR # ##0,00", "vi-VI")
+"fr-FR  1.235"
+
+>> Text(1234.5678, "{$-fr-FR} # ##0,00", "vi-VI")
+"{$-fr-FR}  1.235"
+
+>> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
+
+>> Text(1234.5678, "mnk  [$-fr-FR] # ##0,00"   , "vi-VI")
+Errors: Error 0-54: The function 'Text' has some invalid arguments.|Warning 16-41: Incorrect format specifier for 'Text'.
+
+﻿// Text function consistency with Excel
+//  
+// We do not support all the formats that Excel does.  For the moment, we are blocking several patterns that 
+// we may want to support in the future:
+//   1. ? - Whitespace padding digit (same as 0 with a space instead of a 0)
+//   2. #/ 0/ ?/ - Fractions (/ is too common to ban outright, only blocked if after a number placeholder)
+//   3. [] with anything other than [@-ll-RR] - Conditionals, currency symbols, output locale, elapsed time
+//   4. _ - Whitespace padding
+//   5. * - Alignment
+//   6. third ; - Fourth string based optional section
+//   7. "General" - General keyword (case insensitive)
+//   8. @ - Embeddable version of "General"
+//   9. : with anything other than time placeholders - Colon
+// All of these patterns can be embedded with escaping (backslash or double quotes)
+
+// Basic usage
+>> Text(1234567.1234567, "###")
+"1234567"
+
+>> Text(1234567.1234567, "000")
+"1234567"
+
+>> Text(1234567.1234567, "###.###")
+"1234567.123"
+
+>> Text(1234567.1234567, "#,###.###")
+"1,234,567.123"
+
+>> Text(1234567.1234567, "000,000,000")
+"001,234,567"
+
+>> Text(-1234567.1234567, "###")
+"-1234567"
+
+>> Text(-1234567.1234567, "000")
+"-1234567"
+
+>> Text(-1234567.1234567, "###.###")
+"-1234567.123"
+
+>> Text(-1234567.1234567, "#,###.###")
+"-1,234,567.123"
+
+>> Text(-1234567.1234567, "000,000,000")
+"-001,234,567"
+
+>> Text(0, "###")
+""
+
+>> Text(0, "000")
+"000"
+
+>> Text(0, "###.###")
+""
+
+>> Text(0, "#,###.###")
+""
+
+>> Text(0, "000,000,000")
+"000,000,000"
+
+>> Text(1234.567, "#,##0.00")
+"1,234.57"
+
+>> Text(1, "00000")
+"00001"
+
+>> Text(12, "00000")
+"00012"
+
+>> Text(123, "00000")
+"00123"
+
+>> Text(1234, "00000")
+"01234"
+
+>> Text(12345, "00000")
+"12345"
+
+>> Text(1234567.1234567, "0000000000")
+"0001234567"
+
+>> Text(1234567.1234567, "##########")
+"1234567"
+
+// Escape with backslash.
+>> Text(1234567.1234567, "\#,###.###")
+"#,1234567.123"
+
+>> Text(1234567.1234567, "\\#,###.###")
+"\1,234,567.123"
+
+>> Text(1234567.1234567, "\##,###.###")
+"#1,234,567.123"
+
+>> Text(1234567.1234567, "##\,###.###")
+"1234,567.123"
+
+>> Text(1234567.1234567, "\""#\""")
+"""1234567"""
+
+>> Text(123.456, "\m\m\m ddd yyy")
+"mmm Wed 1900"
+
+>> Text(123.456, "mm\m ddd yyy")
+"05m Wed 1900"
+
+>> Text(123.456, "mmm d\dd yyy")
+"May 2d2 1900"
+
+>> Text(123.456, "mm\m ddd \y\yy")
+"05m Wed yy00"
+
+>> Text(123.456, "\m\m\m\-ddd\-yyy")
+"mmm-Wed-1900"
+
+// Escape with double quoted string.
+>> Text(1234567.1234567, """0000""")
+"0000"
+
+>> Text(1234567.1234567, "0""00""0")
+"123456007"
+
+>> Text(1234567.1234567, """#"",###.###")
+"#,1234567.123"
+
+>> Text(1234567.1234567, ",###.###")
+",1234567.123"
+
+>> Text(1234567.1234567, """#""#,###.###")
+"#1,234,567.123"
+
+>> Text(1234567.1234567, """0#,#0""0")
+"0#,#01234567"
+
+// Can't insert a double quote in this manner, must use backslash.
+>> Text(1234567.1234567, """""""""#")
+"1234567"
+
+>> Text(1234567.1234567, "\""0.0\""")
+"""1234567.1"""
+
+>> Text(123.456, "mmm ddd yyy")
+"May Wed 1900"
+
+>> Text(123.456, """mmm"" ddd yyy")
+"mmm Wed 1900"
+
+>> Text(123.456, "mmm ""ddd"" ""yyy""")
+"May ddd yyy"
+
+>> Text(123.456, "mm""m"" ddd yyy")
+"05m Wed 1900"
+
+>> Text(123.456, "mmm ddd yyy ""year""")
+"May Wed 1900 year"
+
+>> Text(123.456, "mmm ddd yyy ""date""")
+"May Wed 1900 date"
+
+>> Text(123.456, "mmm ""-"" ddd ""-"" yyy")
+"May - Wed - 1900"
+
+>> Text(123.456, "mmm""/""ddd""/""yyy")
+"May/Wed/1900"
+
+// Single quote.  Has a meaning in C# (alternative to double quotes) but does not in Excel/Power Fx, treated as a normal character.
+>> Text(1234567.1234567, "'0000")
+"'1234567"
+
+>> Text(1234567.1234567, "000'00")
+"12345'67"
+
+>> Text(1234567.1234567, "000'00.00'000")
+"12345'67.12'346"
+
+>> Text(1234567.1234567, "'0000'")
+"'1234567'"
+
+>> Text(1234567.1234567, "0'00'0")
+"1234'56'7"
+
+>> Text(1234567.1234567, "'#'###.###")
+"'1234'567.123"
+
+>> Text(1234567.1234567, "'#,'###.###")
+"'1,234,'567.123"
+
+>> Text(1234567.1234567, "'##,'###.###")
+"'1,234,'567.123"
+
+>> Text(1234567.1234567, "'0#,#0'0")
+"'1,234,56'7"
+
+>> Text(1234567.1234567, "'''#")
+"'''1234567"
+
+>> Text(1234567.1234567, "'''''#")
+"'''''1234567"
+
+>> Text(1234567.1234567, "\''#")
+"''1234567"
+
+>> Text(1234567.1234567, "\'0.0\'")
+"'1234567.1'"
+
+>> Text(123.456, "'mmm' ddd yyy")
+"'May' Wed 1900"
+
+>> Text(123.456, "'mmm ddd yyy'")
+"'May Wed 1900'"
+
+>> Text(123.456, "'mmm ddd yyy")
+"'May Wed 1900"
+
+>> Text(123.456, "mmm'ddd'yyy")
+"May'Wed'1900"
+
+>> Text(123.456, "mmm''ddd'yyy")
+"May''Wed'1900"
+
+// Lower case 'e' notation is not supported in Excel and instead results in an error when used in this manner.  As it is an error in Excel, it is documented in Excel, C# supports it, and it is generally useful, we will support it. 
+>> Text(1234567.1234567, "0.00e+00")
+"1.23e+06"
+
+>> Text(1234567.1234567, "0.00e+0")
+"1.23e+6"
+
+>> Text(1234567.1234567, "0.00\e")
+"1234567.12e"
+
+>> Text(1234567.1234567, "0.00\e+")
+"1234567.12e+"
+
+>> Text(1234567.1234567, "0.00""e""")
+"1234567.12e"
+
+>> Text(1234567.1234567, "mmm ddd yyy\e")
+"Feb Thu 5280e"
+
+>> Text(1234567.1234567, "mmm ddd yyy\e+")
+"Feb Thu 5280e+"
+
+>> Text(1234567.1234567, "mmm ddd yyy""e""")
+"Feb Thu 5280e"
+
+>> Text(1234567.1234567, "0.00""e+""")
+"1234567.12e+"
+
+>> Text(1234567.1234567, "0000.00e+00")
+"1234.57e+03"
+
+>> Text(1234567.1234567, "0e+00")
+"1e+06"
+
+>> Text(1234567.1234567, "#.00e+00")
+"1.23e+06"
+
+>> Text(1234567.1234567, "####.00e+00")
+"1234.57e+03"
+
+>> Text(1234567.1234567, "#e+00")
+"1e+06"
+
+>> Text(1234567.1234567, "#e+00000")
+"1e+00006"
+
+>> Text(1234567.1234567, "0.00E-00")
+"1.23E06"
+
+>> Text(1234567.1234567, "0000.00E-00")
+"1234.57E03"
+
+>> Text(1234567.1234567, "0E-00")
+"1E06"
+
+>> Text(1234567.1234567, "#.00E-00")
+"1.23E06"
+
+>> Text(1234567.1234567, "####.00E-00")
+"1234.57E03"
+
+>> Text(1234567.1234567, "#E-00")
+"1E06"
+
+>> Text(1234567.1234567, "#E-00000")
+"1E00006"
+
+>> Text(1234567.1234567, "0.00e-00")
+"1.23e06"
+
+>> Text(1234567.1234567, "0000.00e-00")
+"1234.57e03"
+
+>> Text(1234567.1234567, "0e-00")
+"1e06"
+
+>> Text(1234567.1234567, "#.00e-00")
+"1.23e06"
+
+>> Text(1234567.1234567, "####.00e-00")
+"1234.57e03"
+
+>> Text(1234567.1234567, "#e-00")
+"1e06"
+
+>> Text(1234567.1234567, "#e-00000")
+"1e00006"
+
+// Number of digits.  Without exponent, this should fully expand.
+>> Text(1, "0")
+"1"
+
+>> Text(10, "0")
+"10"
+
+>> Text(100, "0")
+"100"
+
+>> Text(1000, "0")
+"1000"
+
+>> Text(10000, "0")
+"10000"
+
+>> Text(100000, "0")
+"100000"
+
+>> Text(1000000, "0")
+"1000000"
+
+>> Text(10000000, "0")
+"10000000"
+
+>> Text(100000000, "0")
+"100000000"
+
+>> Text(1000000000, "0")
+"1000000000"
+
+>> Text(10000000000, "0")
+"10000000000"
+
+>> Text(100000000000, "0")
+"100000000000"
+
+>> Text(1000000000000, "0")
+"1000000000000"
+
+>> Text(10000000000000, "0")
+"10000000000000"
+
+>> Text(100000000000000, "0")
+"100000000000000"
+
+>> Text(1E+15, "0")
+"1000000000000000"
+
+>> Text(1E+16, "0")
+"10000000000000000"
+
+>> Text(1E+17, "0")
+"100000000000000000"
+
+>> Text(1E+18, "0")
+"1000000000000000000"
+
+>> Text(1E+19, "0")
+"10000000000000000000"
+
+>> Text(1E+20, "0")
+"100000000000000000000"
+
+>> Text(1E+21, "0")
+"1000000000000000000000"
+
+>> Text(1E+22, "0")
+"10000000000000000000000"
+
+>> Text(1E+23, "0")
+"100000000000000000000000"
+
+>> Text(1E+24, "0")
+"1000000000000000000000000"
+
+>> Text(1E+25, "0")
+"10000000000000000000000000"
+
+>> Text(1E+26, "0")
+"100000000000000000000000000"
+
+>> Text(1E+27, "0")
+"1000000000000000000000000000"
+
+>> Text(1E+28, "0")
+"10000000000000000000000000000"
+
+>> Text(1, "#")
+"1"
+
+>> Text(10, "#")
+"10"
+
+>> Text(100, "#")
+"100"
+
+>> Text(1000, "#")
+"1000"
+
+>> Text(10000, "#")
+"10000"
+
+>> Text(100000, "#")
+"100000"
+
+>> Text(1000000, "#")
+"1000000"
+
+>> Text(10000000, "#")
+"10000000"
+
+>> Text(100000000, "#")
+"100000000"
+
+>> Text(1000000000, "#")
+"1000000000"
+
+>> Text(10000000000, "#")
+"10000000000"
+
+>> Text(100000000000, "#")
+"100000000000"
+
+>> Text(1000000000000, "#")
+"1000000000000"
+
+>> Text(10000000000000, "#")
+"10000000000000"
+
+>> Text(100000000000000, "#")
+"100000000000000"
+
+>> Text(1E+15, "#")
+"1000000000000000"
+
+>> Text(1E+16, "#")
+"10000000000000000"
+
+>> Text(1E+17, "#")
+"100000000000000000"
+
+>> Text(1E+18, "#")
+"1000000000000000000"
+
+>> Text(1E+19, "#")
+"10000000000000000000"
+
+>> Text(1E+20, "#")
+"100000000000000000000"
+
+>> Text(1E+21, "#")
+"1000000000000000000000"
+
+>> Text(1E+22, "#")
+"10000000000000000000000"
+
+>> Text(1E+23, "#")
+"100000000000000000000000"
+
+>> Text(1E+24, "#")
+"1000000000000000000000000"
+
+>> Text(1E+25, "#")
+"10000000000000000000000000"
+
+>> Text(1E+26, "#")
+"100000000000000000000000000"
+
+>> Text(1E+27, "#")
+"1000000000000000000000000000"
+
+>> Text(1E+28, "#")
+"10000000000000000000000000000"
+
+// Text format string has decimal point
+>> Text(123.456, "#.\#\#")
+"123.##"
+
+>> Text(123.456, "#.\#\##")
+"123.##5"
+
+>> Text(123.456, "#.\#\##\fz")
+"123.##5fz"
+
+>> Text(123.456, "#.f\#\##\fz")
+"123.f##5fz"
+
+>> Text(123.456, "#.##\#\##\fz")
+"123.45##6fz"
+
+>> Text(123.456, "#.'##'")
+"123.'46'"
+
+>> Text(123.456, "#.'#''#'")
+"123.'4''6'"
+
+>> Text(123.456, "#.#'#''#'")
+"123.4'5''6'"
+
+>> Text(123.456, "#.#'#'\z#'f'")
+"123.4'5'z6'f'"
+
+>> Text(123.456, "'#.##'")
+"'123.46'"
+
+>> Text(123.456, "'q#.##'")
+"'q123.46'"
+
+>> Text(123.456, "#.##'")
+"123.46'"
+
+>> Text(123.456, "#.""##""")
+"123.##"
+
+>> Text(123.456, "#.#""##""")
+"123.5##"
+
+>> Text(123.456, "#.""##""#")
+"123.##5"
+
+>> Text(123.456, "#.""##""0")
+"123.##5"
+
+>> Text(123.456, "#.")
+"123."
+
+>> Text(123.456, "#.'f'")
+"123.'f'"
+
+>> Text(123.456, "#.""\""")
+"123.\"
+
+>> Text(123.456, "#.0""##""")
+"123.5##"
+
+>> Text(123.456, "#.00""##""")
+"123.46##"
+
+>> Text(123.456, "#.#0""##""")
+"123.46##"
+
+>> Text(123.456, "#.#0""##""0")
+"123.45##6"
+
+// Format has mixed datetime and number
+>> Text(1234567.1234567, "\m\mm # ddd yyy")
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# y")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# m")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+// Sections.  Three sections are supported, for positive, negative, and zero.
+>> Text(1234567.1234567, "##;(##);ZZZ")
+"1234567"
+
+>> Text(-1234567.1234567, "##;(##);ZZZ")
+"(1234567)"
+
+>> Text(0, "##;(##);ZZZ")
+"ZZZ"
+
+>> Text(1234567.1234567, "##;(##)")
+"1234567"
+
+>> Text(-1234567.1234567, "##;(##)")
+"(1234567)"
+
+>> Text(0, "##;(##)")
+""
+
+>> Text(1234567.1234567, "00.00;(00.00)")
+"1234567.12"
+
+>> Text(-1234567.1234567, "00.00;(00.00)")
+"(1234567.12)"
+
+// Excel supports a fourth section that is a string, for the case where the input is text.  We are strongly typed so less ipmortant.  We will error for now.
+>> Text(1234567.1234567, "##;(##);ZZZ;AAA")
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
+
+>> Text(-1234567.1234567, "##;(##);ZZZ;AAA")
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 23-40: Incorrect format specifier for 'Text'.
+
+>> Text(0, "##;(##);ZZZ;AAA")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 8-25: Incorrect format specifier for 'Text'.
+
+>> Text(1, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 8-30: Incorrect format specifier for 'Text'.
+
+>> Text(-1, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 9-31: Incorrect format specifier for 'Text'.
+
+>> Text(0, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 8-30: Incorrect format specifier for 'Text'.
+
+>> Text("asdf", "##;(##);ZZZ;""AAA """)
+Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 13-35: Incorrect format specifier for 'Text'.
+
+>> Text("asdf", "##;(##);ZZZ;""AAA ""@")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 13-36: Incorrect format specifier for 'Text'.
+
+// If only two sections, first format used for Zero.
+>> Text(0, "00.00;(00.00)")
+"00.00"
+
+>> Text(12345.6789,"0.00000;#.######")
+"12345.67890"
+
+>> Text(12345.6789,"#.######;0.00000")
+"12345.6789"
+
+// Excel: "€ 1,234,567.1235"
+>> Text(1234567.1234567, "[$€-de-DE] #,####.0000")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+
+// Excel: "$ 1,234,567.1235"
+>> Text(1234567.1234567, "[$$-de-DE] #,####.0000")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+
+// Excel: "€€€€ 1,234,567.1235"
+>> Text(1234567.1234567, "[$€€€€-de-DE] #,####.0000")
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-49: Incorrect format specifier for 'Text'.
+
+// Sections can be skipped.
+>> Text(1234567.1234567, ";(##)")
+""
+
+>> Text(-1234567.1234567, ";(##)")
+"(1234567)"
+
+>> Text(0, ";(##)")
+""
+
+>> Text(1234567.1234567, ";;ZZZ")
+""
+
+>> Text(0, ";;ZZZ")
+"ZZZ"
+
+>> Text(1234567.1234567, "##")
+"1234567"
+
+>> Text(-1234567.1234567, "##")
+"-1234567"
+
+>> Text(0, "##")
+""
+
+// Note that there are two spaces here.  The space after the * above was eaten.
+>> Text(1, "$  0.00")
+"$  1.00"
+
+>> Text(-1, "$  0.00")
+"-$  1.00"
+
+>> Text(0, "$  0.00")
+"$  0.00"
+
+>> Text(1234567.1234567, "\* #")
+"* 1234567"
+
+>> Text(1234567.1234567, """*"" #")
+"* 1234567"
+
+// Colon, interpreted as a time seperator, not allowed between numbers
+>> Text(2, ":")
+":"
+
+>> Text(2, "###:")
+"2:"
+
+>> Text(2, "0:z")
+"2:z"
+
+>> Text(2, "0:""#""z")
+"2:#z"
+
+// Time
+>> Text(0.324305555555556, "h")
+"7"
+
+>> Text(0.324305555555556, "hh")
+"07"
+
+>> Text(0.324305555555556, "m")
+"12"
+
+>> Text(0.324305555555556, "mm")
+"12"
+
+>> Text(0.324305555555556, "s")
+"0"
+
+>> Text(0.324305555555556, "ss")
+"00"
+
+>> Text(0.324305555555556, "h AM/PM")
+"7 AM"
+
+>> Text(0.324305555555556, "h:mm AM/PM")
+"7:47 AM"
+
+>> Text(0.324305555555556, "h:mm:ss A/P")
+"7:47:00 a"
+
+>> Text(0.324305555555556, "h:mm:ss.00")
+"7:47:00.00"
+
+>> Text(1.010101, "h:mm")
+"0:14"
+
+>> Text(1.010101, "mm:ss")
+"14:32"
+
+>> Text(1.010101, "ss.00")
+"32.72"
+
+>> Text(1.010101, "mm:")
+"12:"
+
+>> Text(1.010101, ":mm")
+":12"
+
+// Dates
+>> Text(3, "mm/dd/yyy")
+"01/02/1900"
+
+>> Text(3, "dd/mm/yyy")
+"02/01/1900"
+
+>> Text(3, "m/")
+"1/"
+
+// Excel: "7/8"
+>> Text(4.34, "7/8")
+"7/8"
+
+// Color specifications, ignored by Excel's Text function, but supported for cell formatting.  We should error for now.
+// Excel: "$1.00"
+>> Text(1, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+
+// Excel: "($1.00)"
+>> Text(-1, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 9-37: Incorrect format specifier for 'Text'.
+
+// Excel: "$0.00"
+>> Text(0, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+
+// Excel: "5"
+>> Text(5, "[Blue][<10]General;[Red][>=10]General")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 8-47: Incorrect format specifier for 'Text'.
+
+// Excel: "15"
+>> Text(15, "[Blue][<10]General;[Red][>=10]General")
+Errors: Error 0-49: The function 'Text' has some invalid arguments.|Warning 9-48: Incorrect format specifier for 'Text'.
+
+// Excel: "5"
+>> Text(5, "[Blue][<10]#;[Red][>=10](#)")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 8-37: Incorrect format specifier for 'Text'.
+
+// Excel: "(15)"
+>> Text(15, "[Blue][<10]#;[Red][>=10](#)")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 9-38: Incorrect format specifier for 'Text'.
+
+// Excel: "25.00"
+>> Text(25, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 9-42: Incorrect format specifier for 'Text'.
+
+// Excel: "7.0000"
+>> Text(7, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-42: The function 'Text' has some invalid arguments.|Warning 8-41: Incorrect format specifier for 'Text'.
+
+// Value not hit by either condition
+>> Text(3, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-42: The function 'Text' has some invalid arguments.|Warning 8-41: Incorrect format specifier for 'Text'.
+
+// Excel: "3.0000"
+>> Text(3, "[Blue][>10]0.00;[Red]0.0000")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 8-37: Incorrect format specifier for 'Text'.
+
+// More than two conditions not suported by Excel
+>> Text(3, "[Blue][>10]0.00;[Red][>5]0.0000;[Yellow][>0]0000.0")
+Errors: Error 0-61: The function 'Text' has some invalid arguments.|Warning 8-60: Incorrect format specifier for 'Text'.
+
+// Excel: "0000.0"
+>> Text(0, "[Blue][>10]0.00;[Red][>5]0.0000;[Yellow]0000.0")
+Errors: Error 0-57: The function 'Text' has some invalid arguments.|Warning 8-56: Incorrect format specifier for 'Text'.
+
+// Excel: "10.00"
+>> Text(10, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 9-45: Incorrect format specifier for 'Text'.
+
+// Excel: "5.0000"
+>> Text(5, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "12"
+>> Text(3, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "12"
+>> Text(0, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "7.00"
+>> Text(7, "[Blue][<>10]0.00;[Red][<>5]0.0000;12")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 8-46: Incorrect format specifier for 'Text'.
+
+// Excel: "10.0000"
+>> Text(10, "[Blue][<>10]0.00;[Red][<>5]0.0000;12")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 9-47: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP 1,234,567.123"
+>> Text(1234567.1234567, "[$GBP] #,###.000")
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 22-40: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP 3"
+>> Text(3, "[$GBP-000000] #")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 8-25: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP"
+>> Text(3, "[$GBP-809]")
+Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 8-20: Incorrect format specifier for 'Text'.
+
+>> Text(45, "###: number of foos")
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 9-30: Incorrect format specifier for 'Text'.
+
+>> Text(45, "000: number of foos")
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 9-30: Incorrect format specifier for 'Text'.
+
+// Excel: #VALUE!
+>> Text(1E+23, "General ###")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 12-25: Incorrect format specifier for 'Text'.
+
+// Can't mix time parts and numbers
+>> Text(1.010101, "hh:00")
+Errors: Error 0-23: The function 'Text' has some invalid arguments.|Warning 15-22: Incorrect format specifier for 'Text'.
+
+>> Text(1.010101, "hh:mm:00")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 15-25: Incorrect format specifier for 'Text'.
+
+>> Text(1.010101, "00:mm:ss")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 15-25: Incorrect format specifier for 'Text'.
+
+// Excel: "00.00"
+>> Text(0, "[ss].00")
+Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+
+// Excel: "28020.00"
+>> Text(0.324305555555556, "[ss].00")
+Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 24-33: Incorrect format specifier for 'Text'.
+
+// Excel: "87272.73"
+>> Text(1.010101, "[ss].00")
+Errors: Error 0-25: The function 'Text' has some invalid arguments.|Warning 15-24: Incorrect format specifier for 'Text'.
+
+// Can't mix date parts and numbers
+>> Text(3, "m/2001")
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
+
+>> Text(3, "2001/y")
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
+
+// Percent signs.  Multiplies the number by 100 before displaying and can be stacked.
+>> Text(0.244740088392962, "0%")
+"24%"
+
+>> Text(0.244740088392962, "0.0%")
+"24.5%"
+
+>> Text(0.244740088392962, "0.00%")
+"24.47%"
+
+>> Text(1234567.1234567, "0000%")
+"123456712%"
+
+>> Text(1234567.1234567, "0000%%")
+"12345671235%%"
+
+>> Text(1234567.1234567, "0000%%%")
+"1234567123457%%%"
+
+>> Text(1234567.1234567, "0,000%%%")
+"1,234,567,123,457%%%"
+
+>> Text(1234567.1234567, "####%")
+"123456712%"
+
+>> Text(1234567.1234567, "####%%")
+"12345671235%%"
+
+>> Text(1234567.1234567, "####%%%")
+"1234567123457%%%"
+
+>> Text(1234567.1234567, "#,###%%%")
+"1,234,567,123,457%%%"
+
+// Permille signs.  These have a meaning in C# but do not in Excel/Power Fx, they should be treated like any other character.
+>> Text(1234567.1234567, "0000‰")
+"1234567‰"
+
+>> Text(1234567.1234567, "0000‰‰")
+"1234567‰‰"
+
+>> Text(1234567.1234567, "0000‰%‰")
+"123456712‰%‰"
+
+>> Text(1234567.1234567, "0,000%‰%")
+"12,345,671,235%‰%"
+
+>> Text(1234567.1234567, "####‰")
+"1234567‰"
+
+>> Text(1234567.1234567, "####‰‰")
+"1234567‰‰"
+
+>> Text(1234567.1234567, "####‰%‰")
+"123456712‰%‰"
+
+>> Text(1234567.1234567, "#,###‰‰‰")
+"1,234,567‰‰‰"
