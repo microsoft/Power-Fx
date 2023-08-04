@@ -21,6 +21,7 @@ namespace Microsoft.PowerFx.Core
         internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
+            _logicalNameToRecordType = (dummy) => throw new InvalidOperationException("Lazy type converter not registered");
         }
 
         /// <summary>
