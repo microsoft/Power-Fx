@@ -5009,14 +5009,6 @@
     <value>This feature is deprecated and is no longer supported.</value>
     <comment>An error message for deprecated features.</comment>
   </data>
-  <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
-    <comment>A warning message when a function is deprecated.</comment>
-  </data>
-  <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
-    <comment>An error message when a function is not supported.</comment>
-  </data>  
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Warning: Deferred type provided.</value>
     <comment>Warning given when the input has deferred Type. Deferred type is unknown type at compile time and correct type will be supplied by user before evaluation.</comment>

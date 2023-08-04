@@ -417,7 +417,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static bool GetExplicitInput(IOpenApiExtensible param)
         {
-            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-explicit-input", out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;            
+            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-explicit-input", out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool ? apiBool.Value : false;            
         }
 
         private static ConnectorDynamicValue GetDynamicValue(IOpenApiExtensible param, bool numberIsFloat)

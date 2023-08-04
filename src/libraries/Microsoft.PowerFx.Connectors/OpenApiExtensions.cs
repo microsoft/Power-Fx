@@ -490,7 +490,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
         { 
-            return op.Extensions.TryGetValue("x-ms-require-user-confirmation", out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;            
+            return op.Extensions.TryGetValue("x-ms-require-user-confirmation", out IOpenApiExtension openExt) && openExt is OpenApiBoolean b ? b.Value : false;            
         }
 
         private static ConnectorParameterType GetConnectorParameterReturnType(OpenApiOperation op, bool numberIsFloat)

@@ -197,19 +197,8 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
             using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
-        }
-
-        public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, CancellationToken cancellationToken, bool throwOnError = false)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            using HttpRequestMessage request = new HttpRequestMessage(_method, new Uri(url).PathAndQuery);
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
-        }
-
-        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, CancellationToken cancellationToken)
-        {
             var key = request.RequestUri.ToString();
 
             if (request.Method != HttpMethod.Get)
@@ -250,13 +239,8 @@ namespace Microsoft.PowerFx.Connectors
         public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return _invoker.InvokeAsync(context, _cacheScope, args, cancellationToken, _throwOnError);
-        }
 
-        public Task<FormulaValue> InvokeAsync(string url, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            return _invoker.InvokeAsync(url, _cacheScope, cancellationToken, _throwOnError);
+            return _invoker.InvokeAsync(context, _cacheScope, args, cancellationToken, _throwOnError);
         }
     }
 }

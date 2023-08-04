@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
+using Microsoft.OpenApi.Expressions;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Utils;
@@ -26,8 +27,7 @@ namespace Microsoft.PowerFx
         /// <param name="httpClient">Required iff we want to invoke the API. A client to invoke the endpoints described in the api document. This must handle auth or any other tranforms the API expects.</param>
         /// <param name="cache">A cache to avoid redundant HTTP gets.</param>
         /// <param name="numberIsFloat">Number is float.</param>
-        /// <param name="maxRows">Max rows.</param>
-        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false, int maxRows = 1000)
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false)
         {
             if (functionNamespace == null)
             {
@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(openApiDocument));
             }
 
-            List<ServiceFunction> functions = OpenApiParser.Parse(functionNamespace, openApiDocument, httpClient, cache, numberIsFloat, maxRows);
+            List<ServiceFunction> functions = OpenApiParser.Parse(functionNamespace, openApiDocument, httpClient, cache, numberIsFloat);
             foreach (ServiceFunction function in functions)
             {
                 config.AddFunction(function);
@@ -54,24 +54,24 @@ namespace Microsoft.PowerFx
             return functionInfos;
         }
 
-        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, int maxRows = 1000)
+        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null)
         {
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
+            if (config == null) 
+            { 
+                throw new ArgumentNullException(nameof(config)); 
             }
 
-            if (!DName.IsValidDName(functionNamespace))
-            {
-                throw new ArgumentException(nameof(functionNamespace), $"invalid functionNamespace: {functionNamespace}");
+            if (!DName.IsValidDName(functionNamespace)) 
+            { 
+                throw new ArgumentException(nameof(functionNamespace), $"invalid functionNamespace: {functionNamespace}"); 
             }
 
-            if (function == null)
-            {
-                throw new ArgumentNullException(nameof(function));
+            if (function == null) 
+            { 
+                throw new ArgumentNullException(nameof(function)); 
             }
-
-            config.AddFunction(function.GetServiceFunction(functionNamespace, httpClient, cache, maxRows: maxRows));
+            
+            config.AddFunction(function.GetServiceFunction(functionNamespace, httpClient, cache));
         }
 
         public static void Add(this Dictionary<string, FormulaValue> map, string fieldName, FormulaValue value)
