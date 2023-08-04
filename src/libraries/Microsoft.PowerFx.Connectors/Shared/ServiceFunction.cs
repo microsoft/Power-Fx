@@ -64,7 +64,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public string NotSupportedReason => _notSupportedReason;
 
         // Provide as hook for execution. 
-        public ScopedHttpFunctionInvoker _invoker;
+        public ScopedHttpFunctionInvoker _invoker { get; init; }
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly,
             bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo,
