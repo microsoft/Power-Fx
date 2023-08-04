@@ -46,8 +46,18 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         private readonly WeakReference<IService> _parentService;
         private readonly string _actionName;
         private readonly bool _numberIsFloat;
+
+        // URL to get next page of results in paged records/tables.
         private readonly string _pageLink;
+
+        // For functions that are marked as deprecated in swagger file
+        // Those functions will not appear in Intellisense but can be called
+        // Check will return a warning when used
         private readonly bool _isDeprecated;
+
+        // Functions that we do not support for any reason (see _notSupportedReason)
+        // Deprecated functions are also marked as not supported but will work fine.
+        // We return an error when used
         private readonly bool _isSupported;
         private readonly string _notSupportedReason;
         private readonly int _maxRows;
