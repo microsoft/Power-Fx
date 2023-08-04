@@ -135,3 +135,9 @@ Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 29-3
 
 >> Text(If(1 < 0, false), "mmm ddd yyy")
 Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 23-36: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(Boolean("True"), "", "vi-Vn")
+Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-24: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+>> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "", "vi-Vn")
+Errors: Error 0-59: The function 'Text' has some invalid arguments.|Warning 47-49: The second argument of the 'Text' function is only supported for numeric and date/time values.

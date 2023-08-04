@@ -145,14 +145,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal static void ValidateFormatArgs(string name, CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, ref bool isValid)
         {
-            bool hasConstFormat = BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg);
             if (checkTypesContext.Features.PowerFxV1CompatibilityRules && argTypes[0] != DType.UntypedObject && !TextFormatUtils.AllowedListToUseFormatString.Contains(argTypes[0]))
             {
-                if (!hasConstFormat || !string.IsNullOrEmpty(formatArg))
-                {
-                    errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
-                    isValid = false;
-                }
+                errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
+                isValid = false;
             }
             else
             {
@@ -166,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrStringExpected);
                     isValid = false;
                 }
-                else if (hasConstFormat)
+                else if (BinderUtils.TryGetConstantValue(checkTypesContext, args[1], out var formatArg))
                 {
                     if (checkTypesContext.Features.PowerFxV1CompatibilityRules)
                     {
