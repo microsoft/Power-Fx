@@ -2,10 +2,12 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
@@ -37,6 +39,8 @@ namespace Microsoft.PowerFx.Core.Utils
 
     internal sealed class TextFormatUtils
     {
+        internal static readonly IReadOnlyList<DType> AllowedListToUseFormatString = new DType[] { DType.Number, DType.Decimal, DType.DateTime, DType.Date, DType.Time, DType.ObjNull };
+
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
 
         /// <summary>
