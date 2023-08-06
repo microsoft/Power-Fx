@@ -1483,7 +1483,6 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Text(123, \"$000.000\")")]
         [InlineData("Text(123, \"dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(\"hello world\")")]
-        [InlineData("Text(\"hello world\", \"mm/dd/yyyy\")")]
         [InlineData("Text(1.23, \"[$-en-us]0.00\")")]
         [InlineData("Text(1.23, \"[$-fr-fr]0,00\")")]
         [InlineData("Text(123, \"yyyy-mm-dd hh:mm:ss.000\") // 0 is valid if after seconds")]
@@ -1499,6 +1498,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("Text(123, \"###.####    dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(123, \"###.#### \" & \"   dddd, mm/dd/yy, at hh:mm:ss am/pm\")")]
         [InlineData("Text(Now(), \"yyyy-mm-dd 0 hh:mm:ss.000\") // 0 is only valid after seconds")]
+        [InlineData("Text(\"hello world\", \"mm/dd/yyyy\") // not support format string for a string input")]
         public void TexlFunctionTypeSemanticsText_Negative(string script)
         {
             // Can't use both numeric formatting and date/time formatting within the same format string.

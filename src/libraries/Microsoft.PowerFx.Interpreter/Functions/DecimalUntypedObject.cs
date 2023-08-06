@@ -54,5 +54,11 @@ namespace Microsoft.PowerFx.Functions
         {
             throw new NotImplementedException();
         }
+
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
+        {
+            result = null;
+            return false;
+        }
     }
 }
