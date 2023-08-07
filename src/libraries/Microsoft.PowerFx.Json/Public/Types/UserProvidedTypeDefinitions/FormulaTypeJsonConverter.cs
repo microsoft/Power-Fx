@@ -16,34 +16,33 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly DefinedTypeSymbolTable _definedTypes;
 
-        private readonly Func<string, RecordType> _logicalNameToRecordType;
+        private readonly SerializerSerttings _settings;
 
         internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
-            _logicalNameToRecordType = (dummy) => throw new InvalidOperationException("Lazy type converter not registered");
+            _settings = new SerializerSerttings(null);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaTypeJsonConverter"/> class.
         /// </summary>
-        /// <param name="logicalNameToRecordType">This is needed only for de-serialization for Dataverse types.</param>
-        public FormulaTypeJsonConverter(Func<string, RecordType> logicalNameToRecordType)
+        /// <param name="settings"></param>
+        public FormulaTypeJsonConverter(SerializerSerttings settings)
+            : this(new DefinedTypeSymbolTable())
         {
-            _definedTypes = new DefinedTypeSymbolTable();
-            Func<string, RecordType> debugHelper = (dummy) => throw new InvalidOperationException("Lazy type converter not registered");
-            _logicalNameToRecordType = logicalNameToRecordType ?? debugHelper;
+            _settings = settings ?? _settings;
         }
 
         public override FormulaType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var schemaPoco = JsonSerializer.Deserialize<FormulaTypeSchema>(ref reader, options);
-            return schemaPoco.ToFormulaType(_definedTypes, _logicalNameToRecordType);
+            return schemaPoco.ToFormulaType(_definedTypes, _settings);
         }
 
         public override void Write(Utf8JsonWriter writer, FormulaType value, JsonSerializerOptions options)
         {
-            var schemaPoco = value.ToSchema(_definedTypes, _logicalNameToRecordType);
+            var schemaPoco = value.ToSchema(_definedTypes, _settings);
             JsonSerializer.Serialize(writer, schemaPoco, options);
         }
     }
