@@ -12,24 +12,37 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
-    internal class FormulaTypeJsonConverter : JsonConverter<FormulaType>
+    public class FormulaTypeJsonConverter : JsonConverter<FormulaType>
     {
         private readonly DefinedTypeSymbolTable _definedTypes;
 
-        public FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
+        private readonly FormulaTypeSerializerSerttings _settings;
+
+        internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
+            _settings = new FormulaTypeSerializerSerttings(null);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormulaTypeJsonConverter"/> class.
+        /// </summary>
+        /// <param name="settings"></param>
+        public FormulaTypeJsonConverter(FormulaTypeSerializerSerttings settings)
+            : this(new DefinedTypeSymbolTable())
+        {
+            _settings = settings ?? _settings;
         }
 
         public override FormulaType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var schemaPoco = JsonSerializer.Deserialize<FormulaTypeSchema>(ref reader, options);
-            return schemaPoco.ToFormulaType(_definedTypes);
+            return schemaPoco.ToFormulaType(_definedTypes, _settings);
         }
 
         public override void Write(Utf8JsonWriter writer, FormulaType value, JsonSerializerOptions options)
         {
-            var schemaPoco = value.ToSchema(_definedTypes);
+            var schemaPoco = value.ToSchema(_definedTypes, _settings);
             JsonSerializer.Serialize(writer, schemaPoco, options);
         }
     }
