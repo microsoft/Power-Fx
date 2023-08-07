@@ -187,6 +187,11 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, new ConnectorSettings() { NumberIsFloat = numberIsFloat })
+        {
+        }
+
         public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
