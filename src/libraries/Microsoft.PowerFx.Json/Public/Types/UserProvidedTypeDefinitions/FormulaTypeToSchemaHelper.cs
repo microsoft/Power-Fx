@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core
 {
     internal static class FormulaTypeToSchemaHelper
     {
-        public static FormulaTypeSchema ToSchema(this FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, SerializerSerttings settings)
+        public static FormulaTypeSchema ToSchema(this FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSerttings settings)
         {
             // Converting a formulaType to a FormulaTypeSchema requires cutting off at a max depth
             // FormulaType may contain recurisve definitions that are not supported by FormulaTypeSchema
@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core
             return ToSchema(type, definedTypeSymbols, settings, maxDepth: 5);
         }
 
-        private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, SerializerSerttings settings, int maxDepth)
+        private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSerttings settings, int maxDepth)
         {
             if (TryLookupTypeName(type, definedTypeSymbols, out var typeName))
             {
@@ -102,7 +102,7 @@ namespace Microsoft.PowerFx.Core
             return false;
         }
 
-        private static Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type, DefinedTypeSymbolTable definedTypeSymbols, SerializerSerttings settings, int maxDepth)
+        private static Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSerttings settings, int maxDepth)
         {
             var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
             foreach (var child in type.GetFieldTypes())
