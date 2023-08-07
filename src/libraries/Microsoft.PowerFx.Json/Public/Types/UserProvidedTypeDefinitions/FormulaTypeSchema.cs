@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
-        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, SerializerSerttings settings)
+        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSerttings settings)
         {
             var typeName = Type.Name;
 

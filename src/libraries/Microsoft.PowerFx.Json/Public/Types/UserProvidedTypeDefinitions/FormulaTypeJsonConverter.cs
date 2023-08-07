@@ -16,19 +16,19 @@ namespace Microsoft.PowerFx.Core
     {
         private readonly DefinedTypeSymbolTable _definedTypes;
 
-        private readonly SerializerSerttings _settings;
+        private readonly FormulaTypeSerializerSerttings _settings;
 
         internal FormulaTypeJsonConverter(DefinedTypeSymbolTable definedTypes)
         {
             _definedTypes = definedTypes;
-            _settings = new SerializerSerttings(null);
+            _settings = new FormulaTypeSerializerSerttings(null);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaTypeJsonConverter"/> class.
         /// </summary>
         /// <param name="settings"></param>
-        public FormulaTypeJsonConverter(SerializerSerttings settings)
+        public FormulaTypeJsonConverter(FormulaTypeSerializerSerttings settings)
             : this(new DefinedTypeSymbolTable())
         {
             _settings = settings ?? _settings;
