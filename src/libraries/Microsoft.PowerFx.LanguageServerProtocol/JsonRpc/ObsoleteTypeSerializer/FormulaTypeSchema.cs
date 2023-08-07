@@ -34,7 +34,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             Unknown,
             Error,
             Deferred,
-            Void
+            Void,
+            Unsupported,
         }
 
         /// <summary>
