@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public InternalTesting(ITestOutputHelper output)
         {
-            Console = output;
+            Console = output;            
         }
 
         // This test is only meant for internal testing
