@@ -742,7 +742,7 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
-            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out var propertyNames));
+            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
             Assert.Equal(3, propertyNames.Count());
 
             string actual = testConnector._log.ToString();
