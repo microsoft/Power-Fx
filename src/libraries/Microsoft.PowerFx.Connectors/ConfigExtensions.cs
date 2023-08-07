@@ -15,6 +15,26 @@ namespace Microsoft.PowerFx
     [ThreadSafeImmutable]
     public static class ConfigExtensions
     {
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument)
+        {
+            return config.AddService(functionNamespace, openApiDocument, null, null, false, 1000);
+        }
+        
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient)
+        {
+            return config.AddService(functionNamespace, openApiDocument, httpClient, null, false, 1000);
+        }
+        
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient, ICachingHttpClient cache)
+        {
+            return config.AddService(functionNamespace, openApiDocument, httpClient, cache, false, 1000);
+        }
+
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient, ICachingHttpClient cache, bool numberIsFloat)
+        {
+            return config.AddService(functionNamespace, openApiDocument, httpClient, cache, numberIsFloat, 1000);
+        }
+
         /// <summary>
         /// Add functions for each operation in the <see cref="OpenApiDocument"/>. 
         /// Functions names will be 'functionNamespace.operationName'.
@@ -27,7 +47,7 @@ namespace Microsoft.PowerFx
         /// <param name="cache">A cache to avoid redundant HTTP gets.</param>
         /// <param name="numberIsFloat">Number is float.</param>
         /// <param name="maxRows">Max rows.</param>
-        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false, int maxRows = 1000)
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient, ICachingHttpClient cache, bool numberIsFloat, int maxRows)
         {
             if (functionNamespace == null)
             {
@@ -54,7 +74,22 @@ namespace Microsoft.PowerFx
             return functionInfos;
         }
 
-        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, int maxRows = 1000)
+        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function)
+        {
+            config.AddService(functionNamespace, function, null, null, 1000);
+        }
+
+        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient)
+        {
+            config.AddService(functionNamespace, function, httpClient, null, 1000);
+        }
+
+        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient, ICachingHttpClient cache)
+        {
+            config.AddService(functionNamespace, function, httpClient, cache, 1000);
+        }
+
+        public static void AddService(this PowerFxConfig config, string functionNamespace, ConnectorFunction function, HttpMessageInvoker httpClient, ICachingHttpClient cache, int maxRows)
         {
             if (config == null)
             {

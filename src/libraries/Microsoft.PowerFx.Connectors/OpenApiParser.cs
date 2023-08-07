@@ -19,7 +19,27 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false, int maxRows = 1000)
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
+        {
+            return GetFunctions(openApiDocument, null, false, false, 1000);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient)
+        {
+            return GetFunctions(openApiDocument, httpClient, false, false, 1000);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError)
+        {
+            return GetFunctions(openApiDocument, httpClient, throwOnError, false, 1000);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
+        {
+            return GetFunctions(openApiDocument, httpClient, throwOnError, numberIsFloat, 1000);
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat, int maxRows)
         {
             ValidateSupportedOpenApiDocument(openApiDocument);
 
@@ -54,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError, numberIsFloat: numberIsFloat, maxRows: maxRows);
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, numberIsFloat, maxRows);
 
                     functions.Add(connectorFunction);
                     sFunctions.Add(connectorFunction._defaultServiceFunction);

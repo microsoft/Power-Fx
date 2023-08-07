@@ -165,7 +165,32 @@ namespace Microsoft.PowerFx.Connectors
         private ConnectorParameter[] _optionalParameters;
         internal readonly ServiceFunction _defaultServiceFunction;
 
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false, int maxRows = 1000)
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, null, null, false, false, 1000)
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, null, false, false, 1000)
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, false, false, 1000)
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, false, 1000)
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, numberIsFloat, 1000)
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, bool numberIsFloat, int maxRows)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
