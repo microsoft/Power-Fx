@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.OpenApiHelperFunctions",
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
-              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
+              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient"
             };
 
             var sb = new StringBuilder();
