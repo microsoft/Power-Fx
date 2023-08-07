@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using TestExtensions = Microsoft.PowerFx.Core.Tests.Extensions;
 
 namespace Microsoft.PowerFx.Tests
 {
@@ -220,12 +221,12 @@ namespace Microsoft.PowerFx.Tests
                     SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
                 };
 
-            var funcs = config.AddService("AzureBlobStorage", apiDoc, client);            
+            var funcs = config.AddService("AzureBlobStorage", apiDoc, client);
             var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
-            Assert.Equal(funcNames, new string[] { "AppendFile", "CopyFile", "CopyFileOld", "CreateFile", "CreateFileOld", "DeleteFile", "DeleteFileOld", "ExtractFolderOld", "ExtractFolderV2", "GetDataSetsMetadata", "GetFileContent", "GetFileContentByPath", "GetFileContentByPathOld", "GetFileContentOld", "GetFileMetadata", "GetFileMetadataByPath", "GetFileMetadataByPathOld", "GetFileMetadataOld", "ListAllRootFolders", "ListAllRootFoldersV2", "ListFolder", "ListFolderOld", "ListFolderV2", "ListRootFolder", "ListRootFolderOld", "ListRootFolderV2", "TestConnection", "UpdateFile", "UpdateFileOld" });
+            Assert.Equal(funcNames, new string[] { "AppendFile", "AppendFileV2", "CopyFile", "CopyFileOld", "CopyFileV2", "CreateBlockBlob", "CreateBlockBlobV2", "CreateFile", "CreateFileOld", "CreateFileV2", "CreateFolder", "CreateFolderV2", "CreateShareLinkByPath", "CreateShareLinkByPathV2", "DeleteFile", "DeleteFileOld", "DeleteFileV2", "ExtractFolderOld", "ExtractFolderV2", "ExtractFolderV3", "GetAccessPolicies", "GetAccessPoliciesV2", "GetDataSets", "GetDataSetsMetadata", "GetFileContent", "GetFileContentByPath", "GetFileContentByPathOld", "GetFileContentByPathV2", "GetFileContentOld", "GetFileContentV2", "GetFileMetadata", "GetFileMetadataByPath", "GetFileMetadataByPathOld", "GetFileMetadataByPathV2", "GetFileMetadataOld", "GetFileMetadataV2", "ListAllRootFolders", "ListAllRootFoldersV2", "ListAllRootFoldersV3", "ListAllRootFoldersV4", "ListFolder", "ListFolderOld", "ListFolderV2", "ListFolderV3", "ListFolderV4", "ListRootFolder", "ListRootFolderOld", "ListRootFolderV2", "ListRootFolderV3", "ListRootFolderV4", "RenameFile", "RenameFileV2", "SetBlobTierByPath", "SetBlobTierByPathV2", "TestConnection", "UpdateFile", "UpdateFileOld", "UpdateFileV2" });
 
             // Now execute it...
-            var engine = new RecalcEngine(config);                        
+            var engine = new RecalcEngine(config);
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
             var result = await engine.EvalAsync(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
@@ -241,7 +242,7 @@ namespace Microsoft.PowerFx.Tests
             var actual = testConnector._log.ToString();
 
             var version = PowerPlatformConnectorClient.Version;
-            var host = useSwaggerParameter ? "tip1-shared.azure-apim.net" : "tip1-shared-002.azure-apim.net";
+            var host = useSwaggerParameter ? "localhost:23340" : "tip1-shared-002.azure-apim.net";
             var expected = @$"POST https://{host}/invoke
  authority: {host}
  Authorization: Bearer eyJ0eX...
@@ -257,6 +258,80 @@ namespace Microsoft.PowerFx.Tests
 ";
 
             AssertEqual(expected, actual);
+        }
+
+        [Fact]
+        public async Task AzureBlobConnector_UseOfDeprecatedFunction()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"eyJ0eXAi...";
+            string expr = @"First(azbs.ListRootFolderV3(""pfxdevstgaccount1"")).DisplayName";
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            IEnumerable<FunctionInfo> funcInfos = config.AddService("azbs", apiDoc, ppClient);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            CheckResult checkResult = engine.Check("azbs.", symbolTable: null);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, 5);
+            List<string> suggestedFuncs = suggestions.Suggestions.Select(s => s.DisplayText.Text).ToList();
+            Assert.Equal(33, suggestedFuncs.Count());
+
+            // ListRootFolderV3 is deprecated and should not appear in the list of suggested functions
+            Assert.DoesNotContain(suggestedFuncs, str => str == "ListRootFolderV3");
+            Assert.Contains(suggestedFuncs, str => str == "ListRootFolderV4");
+
+            // We return a warning message when using a deprecated function
+            CheckResult result = engine.Check(expr);
+            Assert.True(result.IsSuccess);
+            Assert.Single(result.Errors);
+            Assert.Equal("In namespace azbs, function ListRootFolderV3 is deprecated.", result.Errors.First().Message);
+
+            // We can still call ListRootFolderV3 deprecated function
+            testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_ListRootFolderV3_response.json");
+            FormulaValue fv = await engine.EvalAsync(expr, CancellationToken.None).ConfigureAwait(false);
+            Assert.False(fv is ErrorValue);
+            Assert.True(fv is StringValue);
+
+            StringValue sv = (StringValue)fv;
+            Assert.Equal("container", sv.Value);
+
+            //List<ConnectorFunction> unsupportedFunctions = OpenApiParser.GetFunctions(apiDoc).Where(x => !x.IsSupported && !x.IsDeprecated).OrderBy(x => x.Name).ToList();
+            string unsupportedExpr = @"azbs.CreateFileV2(""someDataset"", ""someFolderPath"", ""someName"", ""someContent"")";
+            CheckResult result2 = engine.Check(unsupportedExpr, new ParserOptions() { AllowsSideEffects = true });
+            Assert.False(result2.IsSuccess);
+            Assert.Single(result2.Errors);
+            Assert.Equal("In namespace azbs, function CreateFileV2 is not supported.", result2.Errors.First().Message);
+        }
+
+        [Fact]
+        public async Task AzureBlobConnector_Paging()
+        {
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\AzureBlobStorage.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"eyJ0eX...";
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            config.AddService("azbs", apiDoc, ppClient);
+            config.AddService("azbs2", apiDoc, ppClient, new ConnectorSettings() { MaxRows = 7 });
+            RecalcEngine engine = new RecalcEngine(config);
+
+            testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json", @"Responses\AzureBlobStorage_Paging_Response3.json");
+            FormulaValue fv = await engine.EvalAsync(@"CountRows(azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None).ConfigureAwait(false);
+            Assert.False(fv is ErrorValue);
+            Assert.True(fv is DecimalValue);
+            Assert.Equal(12m, ((DecimalValue)fv).Value);
+
+            testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json");
+            fv = await engine.EvalAsync(@"CountRows(azbs2.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None).ConfigureAwait(false);
+            Assert.True(fv is DecimalValue);
+            Assert.Equal(7m, ((DecimalValue)fv).Value);
         }
 
         // Very documentation strings from the Swagger show up in the intellisense.
@@ -277,11 +352,11 @@ namespace Microsoft.PowerFx.Tests
 
             if (expectedBehaviorError)
             {
-                Assert.Contains(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+                Assert.Contains(check.Errors, d => d.Message == TestExtensions.GetErrBehaviorPropertyExpectedMessage());
             }
             else
             {
-                Assert.DoesNotContain(check.Errors, d => d.Message == Extensions.GetErrBehaviorPropertyExpectedMessage());
+                Assert.DoesNotContain(check.Errors, d => d.Message == TestExtensions.GetErrBehaviorPropertyExpectedMessage());
             }
 
             var result = engine.Suggest(check, expr.Length);
@@ -352,7 +427,7 @@ namespace Microsoft.PowerFx.Tests
                 httpClient);
 
             Assert.NotNull(ppcl3);
-            Assert.Equal("tip1-shared.azure-apim.net", ppcl3.Endpoint);
+            Assert.Equal("localhost:23340", ppcl3.Endpoint);
 
             using var testConnector2 = new LoggingTestServer(@"Swagger\TestOpenAPI.json");
             var apiDoc2 = testConnector2._apiDocument;
@@ -386,9 +461,9 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "02199f4f-8306-4996-b1c3-1b6094c2b7f8"
             };
 
-            config.AddService("Office365Users", apiDoc, client);           
-            var engine = new RecalcEngine(config);            
-            testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");            
+            config.AddService("Office365Users", apiDoc, client);
+            var engine = new RecalcEngine(config);
+            testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
             var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None).ConfigureAwait(false);
 
             Assert.IsType<StringValue>(result);
@@ -532,7 +607,7 @@ namespace Microsoft.PowerFx.Tests
 
             IReadOnlyList<FunctionInfo> fi = config.AddService("Office365Outlook", apiDoc, client);
             Assert.Equal(107, fi.Count());
-            
+
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc);
             Assert.Equal(107, functions.Count());
 
@@ -713,12 +788,12 @@ namespace Microsoft.PowerFx.Tests
 
             // Get "OneDrive" id = "b!kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response1.json");
-            FormulaValue fv1 = await engine.EvalAsync(@$"exob.GetDrives(""{source}"")", CancellationToken.None).ConfigureAwait(false);                          
+            FormulaValue fv1 = await engine.EvalAsync(@$"exob.GetDrives(""{source}"")", CancellationToken.None).ConfigureAwait(false);
             string drive = ((StringValue)((TableValue)((RecordValue)fv1).GetField("value")).Rows.First((DValue<RecordValue> row) => ((StringValue)row.Value.GetField("name")).Value == "OneDrive").Value.GetField("id")).Value;
 
             // Get file id for "AM Site.xlxs" = "01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO"
             testConnector.SetResponseFromFile(@"Responses\EXO_Response2.json");
-            FormulaValue fv2 = await engine.EvalAsync(@$"exob.ListRootFolder(""{source}"", ""{drive}"")", CancellationToken.None).ConfigureAwait(false);      
+            FormulaValue fv2 = await engine.EvalAsync(@$"exob.ListRootFolder(""{source}"", ""{drive}"")", CancellationToken.None).ConfigureAwait(false);
             string file = ((StringValue)((TableValue)fv2).Rows.First((DValue<RecordValue> row) => row.Value.GetField("Name") is StringValue sv && sv.Value == "AM Site.xlsx").Value.GetField("Id")).Value;
 
             // Get "Table1" id = "{00000000-000C-0000-FFFF-FFFF00000000}"

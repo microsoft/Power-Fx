@@ -10,7 +10,6 @@ using Microsoft.AppMagic.Authoring;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
@@ -20,7 +19,27 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
+        {
+            return GetFunctions(openApiDocument, null, false, new ConnectorSettings());
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient)
+        {
+            return GetFunctions(openApiDocument, httpClient, false, new ConnectorSettings());
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError)
+        {
+            return GetFunctions(openApiDocument, httpClient, throwOnError, new ConnectorSettings());
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
+        {
+            return GetFunctions(openApiDocument, httpClient, throwOnError, new ConnectorSettings() { NumberIsFloat = numberIsFloat });
+        }
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
         {
             ValidateSupportedOpenApiDocument(openApiDocument);
 
@@ -55,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, httpClient: httpClient, throwOnError: throwOnError, numberIsFloat: numberIsFloat);
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, connectorSettings);
 
                     functions.Add(connectorFunction);
                     sFunctions.Add(connectorFunction._defaultServiceFunction);
@@ -177,9 +196,9 @@ namespace Microsoft.PowerFx.Connectors
 
             // Undocumented but only contains URL and description
             extensions.Remove("x-ms-docs");
-            
+
             if (extensions.Any())
-            {                
+            {
                 throw new NotImplementedException($"OpenApiDocument contains unsupported Extensions {string.Join(", ", extensions)}");
             }
 
@@ -245,7 +264,9 @@ namespace Microsoft.PowerFx.Connectors
             opExtensions.Remove("x-ms-api-annotation");
             opExtensions.Remove("x-ms-no-generic-test");
 
-            // Not supported x-ms-pageable - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
+            // https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
+            opExtensions.Remove("x-ms-pageable");
+
             // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
             // Other not supported extensions:
             //   x-ms-notification-content, x-ms-url-encoding, x-components, x-generator, x-ms-openai-data, x-ms-docs, x-servers
@@ -298,7 +319,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false)
+        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ConnectorSettings connectorSettings = null)
         {
             if (string.IsNullOrWhiteSpace(functionNamespace))
             {
@@ -310,6 +331,7 @@ namespace Microsoft.PowerFx.Connectors
             List<ServiceFunction> functions = new List<ServiceFunction>();
             string basePath = openApiDocument.GetBasePath();
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
+            connectorSettings ??= new ConnectorSettings();
 
             foreach (var kv in openApiDocument.Paths)
             {
@@ -320,7 +342,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 ValidateSupportedOpenApiPathItem(ops, ref isSupported, ref notSupportedReason);
 
-                foreach (var kv2 in ops.Operations)
+                foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
                 {
                     HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
                     OpenApiOperation op = kv2.Value;
@@ -336,52 +358,44 @@ namespace Microsoft.PowerFx.Connectors
                     // We need to remove invalid chars to be consistent with Power Apps
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
 
-                    FormulaType returnType = op.GetReturnType(numberIsFloat);
+                    FormulaType returnType = op.GetReturnType(connectorSettings.NumberIsFloat);
                     string opPath = basePath != null && basePath != "/" ? basePath + path : path;
-                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, numberIsFloat);
-                    IAsyncTexlFunction2 invoker = null;
+                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, connectorSettings.NumberIsFloat);
+                    ScopedHttpFunctionInvoker invoker = null;
 
                     if (httpClient != null)
                     {
-                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
+                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, connectorSettings.Cache);
                         invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
                     }
 
-                    // Parameter (name,type) --> list of options. 
-                    Dictionary<TypedName, List<string>> parameterOptions = new ();
-                    Dictionary<string, Tuple<string, DType>> parameterDefaultValues = new (StringComparer.Ordinal);
-
-                    bool isBehavior = !IsSafeHttpMethod(verb);
-                    bool isDynamic = false;
-                    bool isAutoRefreshable = false;
-                    bool isCacheEnabled = false;
-                    int cacheTimeoutMs = 10000;
-                    bool isHidden = false;
-                    string description = op.Description ?? $"Invoke {operationName}";
-
                     ServiceFunction sfunc = new ServiceFunction(
-                        null,
-                        theNamespace,
-                        operationName,
-                        operationName,
-                        description, // Template.GetFunctionDescription(funcTemplate.Name),
-                        returnType._type,
-                        BigInteger.Zero,
-                        argMapper.ArityMin,
-                        argMapper.ArityMax,
-                        isBehavior,
-                        isAutoRefreshable,
-                        isDynamic,
-                        isCacheEnabled,
-                        cacheTimeoutMs,
-                        isHidden,
-                        parameterOptions,
-                        argMapper.OptionalParamInfo,
-                        argMapper.RequiredParamInfo,
-                        parameterDefaultValues,
-                        "action", //  funcTemplate.ActionName,??
-                        numberIsFloat,
-                        argMapper._parameterTypes)
+                        parentService: null,
+                        theNamespace: theNamespace,
+                        name: operationName,
+                        localeSpecificName: operationName,
+                        description: op.Description ?? $"Invoke {operationName}",
+                        returnType: returnType._type,
+                        maskLambdas: BigInteger.Zero,
+                        arityMin: argMapper.ArityMin,
+                        arityMax: argMapper.ArityMax,
+                        isBehaviorOnly: !IsSafeHttpMethod(verb),
+                        isAutoRefreshable: false,
+                        isDynamic: false,
+                        isCacheEnabled: false,
+                        cacheTimeoutMs: 10000,
+                        isHidden: false,
+                        parameterOptions: new Dictionary<TypedName, List<string>>(),
+                        optionalParamInfo: argMapper.OptionalParamInfo,
+                        requiredParamInfo: argMapper.RequiredParamInfo,
+                        parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
+                        pageLink: op.PageLink(),
+                        isSupported: isSupported,
+                        notSupportedReason: notSupportedReason,
+                        isDeprecated: op.Deprecated,
+                        actionName: "action",
+                        connectorSettings: connectorSettings,
+                        paramTypes: argMapper._parameterTypes)
                     {
                         _invoker = invoker
                     };
