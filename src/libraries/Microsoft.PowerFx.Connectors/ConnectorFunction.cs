@@ -147,7 +147,9 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Numbers are defined as "double" type (otherwise "decimal").
         /// </summary>
-        public bool NumberIsFloat { get; }
+        public bool NumberIsFloat => ConnectorSettings.NumberIsFloat;
+
+        public ConnectorSettings ConnectorSettings;
 
         /// <summary>
         /// ArgumentMapper class.
@@ -166,43 +168,38 @@ namespace Microsoft.PowerFx.Connectors
         internal readonly ServiceFunction _defaultServiceFunction;
 
         public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, null, null, false, false, 1000)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, null, null, false, new ConnectorSettings())
         {
         }
 
         public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, null, false, false, 1000)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, null, false, new ConnectorSettings())
         {
         }
 
         public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, false, false, 1000)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, false, new ConnectorSettings())
         {
         }
 
         public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, false, 1000)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, new ConnectorSettings())
         {
         }
 
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, numberIsFloat, 1000)
-        {
-        }
-
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, bool numberIsFloat, int maxRows)
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
             OperationPath = operationPath ?? throw new ArgumentNullException(nameof(operationPath));
             HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
-            NumberIsFloat = numberIsFloat;
+            ConnectorSettings = connectorSettings;
             IsSupported = isSupported;
             NotSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new ArgumentNullException(nameof(notSupportedReason)));
 
             if (httpClient != null)
             {
-                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError, maxRows: maxRows);
+                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError, connectorSettings);
             }
         }
 
@@ -277,16 +274,17 @@ namespace Microsoft.PowerFx.Connectors
             return sb.ToString();
         }
 
-        internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false, int maxRows = 1000)
+        internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, bool throwOnError = false, ConnectorSettings connectorSettings = null)
         {
             ScopedHttpFunctionInvoker invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
             DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
             Namespace = func_ns;
+            connectorSettings ??= new ConnectorSettings();
 
             if (httpClient != null)
             {
-                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, cache);
+                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache);
                 invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
             }
 
@@ -313,10 +311,9 @@ namespace Microsoft.PowerFx.Connectors
                 pageLink: PageLink,
                 isSupported: IsSupported,
                 notSupportedReason: NotSupportedReason,
-                isDeprecated: IsDeprecated,
-                maxRows: maxRows,
+                isDeprecated: IsDeprecated,                
                 actionName: "action",
-                numberIsFloat: NumberIsFloat,
+                connectorSettings: connectorSettings,
                 paramTypes: ArgumentMapper._parameterTypes)
             {
                 _invoker = invoker
