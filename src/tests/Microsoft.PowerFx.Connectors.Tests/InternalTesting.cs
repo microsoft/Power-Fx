@@ -35,8 +35,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {            
             string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
             string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
-            string reportName = @"Analysis.txt";
-            string jsonReport = @"Report.json";
+            string reportName = @"report\Analysis.txt";
+            string jsonReport = @"report\Report.json";
 
             // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
             // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
@@ -44,6 +44,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Console.WriteLine($"OUT: {outFolder}");
             Console.WriteLine($"SRC: {srcFolder}");
 
+            Directory.CreateDirectory(Path.Combine(outFolder, "report"));
             GenerateReport(reportName, outFolder, srcFolder);
             AnalyzeReport(reportName, outFolder, srcFolder, jsonReport);
         }
