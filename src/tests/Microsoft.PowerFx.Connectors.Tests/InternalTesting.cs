@@ -38,6 +38,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string reportName = @"report\Analysis.txt";
             string jsonReport = @"report\Report.json";
 
+            // New report name every second
+            string jsonReport2 = @$"report\Report_{Math.Round(DateTime.UtcNow.Ticks / 1e7):00000000000}.json";
+
             // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
             // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
             Console.WriteLine($"ENV: {Environment.CurrentDirectory}");
@@ -47,6 +50,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Directory.CreateDirectory(Path.Combine(outFolder, "report"));
             GenerateReport(reportName, outFolder, srcFolder);
             AnalyzeReport(reportName, outFolder, srcFolder, jsonReport);
+
+            File.Copy(Path.Combine(outFolder, jsonReport), Path.Combine(outFolder, jsonReport2));
         }
 
         private void AnalyzeReport(string reportName, string outFolder, string srcFolder, string jsonReport)
