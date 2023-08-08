@@ -21,25 +21,45 @@ namespace Microsoft.PowerFx.Connectors
     {
         public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
         {
-            return GetFunctions(openApiDocument, null, false, false, 1000);
+            return GetFunctions(openApiDocument, null, false, new ConnectorSettings());
         }
 
         public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient)
         {
-            return GetFunctions(openApiDocument, httpClient, false, false, 1000);
+            return GetFunctions(openApiDocument, httpClient, false, new ConnectorSettings());
         }
 
         public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError)
         {
-            return GetFunctions(openApiDocument, httpClient, throwOnError, false, 1000);
+            return GetFunctions(openApiDocument, httpClient, throwOnError, new ConnectorSettings());
         }
 
         public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
         {
-            return GetFunctions(openApiDocument, httpClient, throwOnError, numberIsFloat, 1000);
+            return GetFunctions(openApiDocument, httpClient, throwOnError, new ConnectorSettings() { NumberIsFloat = numberIsFloat });
         }
 
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat, int maxRows)
+        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
+        //{
+        //    return GetFunctions(openApiDocument, null, false, false, 1000);
+        //}
+
+        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient)
+        //{
+        //    return GetFunctions(openApiDocument, httpClient, false, false, 1000);
+        //}
+
+        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError)
+        //{
+        //    return GetFunctions(openApiDocument, httpClient, throwOnError, false, 1000);
+        //}
+
+        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
+        //{
+        //    return GetFunctions(openApiDocument, httpClient, throwOnError, numberIsFloat, 1000);
+        //}
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
         {
             ValidateSupportedOpenApiDocument(openApiDocument);
 
@@ -78,7 +98,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, numberIsFloat, maxRows);
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, connectorSettings);
 
                     functions.Add(connectorFunction);
                     sFunctions.Add(connectorFunction._defaultServiceFunction);
@@ -329,7 +349,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool numberIsFloat = false, int maxRows = 1000)
+        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ConnectorSettings connectorSettings = null)
         {
             if (string.IsNullOrWhiteSpace(functionNamespace))
             {
@@ -341,6 +361,7 @@ namespace Microsoft.PowerFx.Connectors
             List<ServiceFunction> functions = new List<ServiceFunction>();
             string basePath = openApiDocument.GetBasePath();
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
+            connectorSettings ??= new ConnectorSettings();
 
             foreach (var kv in openApiDocument.Paths)
             {
@@ -373,14 +394,14 @@ namespace Microsoft.PowerFx.Connectors
                     // We need to remove invalid chars to be consistent with Power Apps
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
 
-                    FormulaType returnType = op.GetReturnType(numberIsFloat);
+                    FormulaType returnType = op.GetReturnType(connectorSettings.NumberIsFloat);
                     string opPath = basePath != null && basePath != "/" ? basePath + path : path;
-                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, numberIsFloat);
+                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, connectorSettings.NumberIsFloat);
                     ScopedHttpFunctionInvoker invoker = null;
 
                     if (httpClient != null)
                     {
-                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, cache);
+                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, connectorSettings.Cache);
                         invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
                     }
 
@@ -408,9 +429,8 @@ namespace Microsoft.PowerFx.Connectors
                         isSupported: isSupported,
                         notSupportedReason: notSupportedReason,
                         isDeprecated: op.Deprecated,
-                        maxRows: maxRows,
                         actionName: "action",
-                        numberIsFloat: numberIsFloat,
+                        connectorSettings: connectorSettings,
                         paramTypes: argMapper._parameterTypes)
                     {
                         _invoker = invoker

@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Tests;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -36,6 +37,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             string srcFolder = @"c:\data";
             string reportName = @"Analysis.txt";
             string jsonReport = @"Report.json";
+
+            Console.WriteLine($"ENV: {Environment.CurrentDirectory}");
 
             GenerateReport(reportName, outFolder, srcFolder);
             AnalyzeReport(reportName, outFolder, jsonReport);

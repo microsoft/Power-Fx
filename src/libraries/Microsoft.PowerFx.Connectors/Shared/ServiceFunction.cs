@@ -80,8 +80,8 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly,
             bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo,
-            ServiceFunctionParameterTemplate[] requiredParamInfo, Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated, int maxRows,
-            string actionName = "", bool numberIsFloat = false, params DType[] paramTypes)
+            ServiceFunctionParameterTemplate[] requiredParamInfo, Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated,
+            string actionName = "", ConnectorSettings connectorSettings = null, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
             Contracts.AssertValueOrNull(parentService);
@@ -104,6 +104,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
             _optionalParamInfo = new Dictionary<string, TypedName>(optionalParamInfo.Length);
             _parameterDescriptionMap = new Dictionary<string, string>(optionalParamInfo.Length + requiredParamInfo.Length);
+            connectorSettings ??= new ConnectorSettings();
 
             foreach (var optionalParam in optionalParamInfo)
             {
@@ -139,12 +140,12 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _parameterDefaultValues = parameterDefaultValues;
             _actionName = actionName;
             _requiredParameters = requiredParamInfo;
-            _numberIsFloat = numberIsFloat;
+            _numberIsFloat = connectorSettings.NumberIsFloat;
             _pageLink = pageLink;
             _isSupported = isSupported;
             _notSupportedReason = notSupportedReason;
             _isDeprecated = isDeprecated;
-            _maxRows = maxRows;
+            _maxRows = connectorSettings.MaxRows;
 
             if (arityMax > arityMin)
             {
