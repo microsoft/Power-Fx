@@ -1,0 +1,7 @@
+#SETUP: disable:StronglyTypedBuiltinEnums
+
+>> DateAdd(Date(2000,1,1), 1, "invalidunit")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> DateDiff(Date(2000,1,1), Date(2022,1,1), "invalidunit")
+Error({Kind:ErrorKind.InvalidArgument})

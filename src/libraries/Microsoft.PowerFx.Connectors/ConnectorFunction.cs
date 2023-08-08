@@ -11,8 +11,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AppMagic.Authoring.Texl.Builtins;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -38,6 +39,21 @@ namespace Microsoft.PowerFx.Connectors
         /// Defines if the function is supported or contains unsupported elements.
         /// </summary>
         public bool IsSupported { get; private set; }
+
+        /// <summary>
+        /// Defines if the function is deprecated.
+        /// </summary>
+        public bool IsDeprecated => Operation.Deprecated;
+
+        /// <summary>
+        /// Defines if the function is pageable (using x-ms-pageable extension).
+        /// </summary>
+        public bool IsPageable => !string.IsNullOrEmpty(PageLink);
+
+        /// <summary>
+        /// Page Link as defined in the x-ms-pageable extension.
+        /// </summary>
+        public string PageLink => Operation.PageLink();
 
         /// <summary>
         /// Reason for which the function isn't supported.
@@ -131,7 +147,9 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Numbers are defined as "double" type (otherwise "decimal").
         /// </summary>
-        public bool NumberIsFloat { get; }
+        public bool NumberIsFloat => ConnectorSettings.NumberIsFloat;
+
+        public ConnectorSettings ConnectorSettings;
 
         /// <summary>
         /// ArgumentMapper class.
@@ -149,19 +167,44 @@ namespace Microsoft.PowerFx.Connectors
         private ConnectorParameter[] _optionalParameters;
         internal readonly ServiceFunction _defaultServiceFunction;
 
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace = null, HttpClient httpClient = null, bool throwOnError = false, bool numberIsFloat = false)
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, null, null, false, new ConnectorSettings())
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, null, false, new ConnectorSettings())
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, false, new ConnectorSettings())
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, new ConnectorSettings())
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
+            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, new ConnectorSettings() { NumberIsFloat = numberIsFloat })
+        {
+        }
+
+        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
             OperationPath = operationPath ?? throw new ArgumentNullException(nameof(operationPath));
             HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
-            NumberIsFloat = numberIsFloat;
+            ConnectorSettings = connectorSettings;
             IsSupported = isSupported;
             NotSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new ArgumentNullException(nameof(notSupportedReason)));
 
             if (httpClient != null)
             {
-                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError);
+                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError, connectorSettings);
             }
         }
 
@@ -236,29 +279,51 @@ namespace Microsoft.PowerFx.Connectors
             return sb.ToString();
         }
 
-        internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, ICachingHttpClient cache = null, bool throwOnError = false)
-        {            
-            IAsyncTexlFunction2 invoker = null;
+        internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, bool throwOnError = false, ConnectorSettings connectorSettings = null)
+        {
+            ScopedHttpFunctionInvoker invoker = null;
             string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
             DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
             Namespace = func_ns;
+            connectorSettings ??= new ConnectorSettings();
 
             if (httpClient != null)
             {
-                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, cache);
+                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache);
                 invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
             }
 
-#pragma warning disable SA1117 // parameters should be on same line or all on different lines
-
-            ServiceFunction serviceFunction = new ServiceFunction(null, functionNamespace, Name, Name, Description, ReturnType._type, BigInteger.Zero, ArityMin, ArityMax, IsBehavior, false, false, false, 10000, false, new Dictionary<TypedName, List<string>>(),
-                ArgumentMapper.OptionalParamInfo, ArgumentMapper.RequiredParamInfo, new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal), "action", NumberIsFloat, ArgumentMapper._parameterTypes)
+            ServiceFunction serviceFunction = new ServiceFunction(
+                parentService: null,
+                theNamespace: functionNamespace,
+                name: Name,
+                localeSpecificName: Name,
+                description: Description,
+                returnType: ReturnType._type,
+                maskLambdas: BigInteger.Zero,
+                arityMin: ArityMin,
+                arityMax: ArityMax,
+                isBehaviorOnly: IsBehavior,
+                isAutoRefreshable: false,
+                isDynamic: false,
+                isCacheEnabled: false,
+                cacheTimeoutMs: 10000,
+                isHidden: false,
+                parameterOptions: new Dictionary<TypedName, List<string>>(),
+                optionalParamInfo: ArgumentMapper.OptionalParamInfo,
+                requiredParamInfo: ArgumentMapper.RequiredParamInfo,
+                parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
+                pageLink: PageLink,
+                isSupported: IsSupported,
+                notSupportedReason: NotSupportedReason,
+                isDeprecated: IsDeprecated,                
+                actionName: "action",
+                connectorSettings: connectorSettings,
+                paramTypes: ArgumentMapper._parameterTypes)
             {
                 _invoker = invoker
             };
 
-#pragma warning restore SA1117
-            
             return serviceFunction;
         }
 
@@ -330,7 +395,7 @@ namespace Microsoft.PowerFx.Connectors
         public IReadOnlyList<ConnectorSuggestion> Suggestions { get; internal set; }
 
         public FormulaValue Value { get; private set; }
-        
+
         public FormulaValue[] Values { get; private set; }
 
         public string[] ParameterNames { get; internal set; }
@@ -363,5 +428,17 @@ namespace Microsoft.PowerFx.Connectors
         public bool IsCompleted { get; internal set; }
 
         public ConnectorParameterWithSuggestions[] Parameters { get; internal set; }
+    }
+
+    internal static class Extensions
+    {
+        internal static string PageLink(this OpenApiOperation op)
+            => op.Extensions.TryGetValue("x-ms-pageable", out IOpenApiExtension ext) &&
+               ext is OpenApiObject oao &&
+               oao.Any() &&
+               oao.First().Key == "nextLinkName" &&
+               oao.First().Value is OpenApiString oas
+            ? oas.Value
+            : null;
     }
 }

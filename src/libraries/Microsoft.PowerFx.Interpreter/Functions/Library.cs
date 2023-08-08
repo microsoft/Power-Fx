@@ -1768,7 +1768,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.BooleanW_T,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN], DoNotReplaceBlank)
+                StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanW], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 

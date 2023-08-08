@@ -13,15 +13,15 @@ namespace Microsoft.PowerFx.Core
 {
     internal static class FormulaTypeToSchemaHelper
     {
-        public static FormulaTypeSchema ToSchema(this FormulaType type, DefinedTypeSymbolTable definedTypeSymbols)
+        public static FormulaTypeSchema ToSchema(this FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings)
         {
             // Converting a formulaType to a FormulaTypeSchema requires cutting off at a max depth
             // FormulaType may contain recurisve definitions that are not supported by FormulaTypeSchema
             // As such, capping the depth ensures that we don't stack overflow when converting those types. 
-            return ToSchema(type, definedTypeSymbols, maxDepth: 5);
+            return ToSchema(type, definedTypeSymbols, settings, maxDepth: 5);
         }
 
-        private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, int maxDepth)
+        private static FormulaTypeSchema ToSchema(FormulaType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings, int maxDepth)
         {
             if (TryLookupTypeName(type, definedTypeSymbols, out var typeName))
             {
@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core
 
             // Possible that the record type is defined for a TableType variant
             if (type is TableType tableType && TryLookupTypeName(tableType.ToRecord(), definedTypeSymbols, out typeName))
-            {                
+            {
                 return new FormulaTypeSchema()
                 {
                     Type = new SchemaTypeName() { Name = typeName, IsTable = true }
@@ -48,6 +48,17 @@ namespace Microsoft.PowerFx.Core
                     Type = new SchemaTypeName() { Name = "None" }
                 };
             }
+
+            if (type._type.AggregateHasExpandedType())
+            {
+                var logicalName = type._type.AssociatedDataSources.First().EntityName.Value;
+                var schemaTypeName = type._type.IsTable ? SchemaTypeName.ExpandableTableTypeName : SchemaTypeName.ExpandableRecordTypeName;
+                return new FormulaTypeSchema()
+                {
+                    Type = schemaTypeName,
+                    Description = logicalName
+                };
+            }
             
             if (maxDepth < 0)
             {
@@ -58,7 +69,7 @@ namespace Microsoft.PowerFx.Core
                 };
             }
 
-            var children = GetChildren(aggregateType, definedTypeSymbols, maxDepth - 1);
+            var children = GetChildren(aggregateType, definedTypeSymbols, settings, maxDepth - 1);
 
             if (aggregateType is RecordType)
             {
@@ -91,12 +102,12 @@ namespace Microsoft.PowerFx.Core
             return false;
         }
 
-        private static Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type, DefinedTypeSymbolTable definedTypeSymbols, int maxDepth)
+        private static Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type, DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings, int maxDepth)
         {
             var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
             foreach (var child in type.GetFieldTypes())
             {
-                fields.Add(child.Name, ToSchema(child.Type, definedTypeSymbols, maxDepth));
+                fields.Add(child.Name, ToSchema(child.Type, definedTypeSymbols, settings, maxDepth));
             }
 
             return fields;

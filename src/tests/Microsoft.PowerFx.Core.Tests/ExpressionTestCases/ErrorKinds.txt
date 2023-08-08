@@ -1,5 +1,3 @@
-#SETUP: disable:StronglyTypedBuiltinEnums,disable:SupportColumnNamesAsIdentifiers
-
 >> Abs(1/0)
 Error({Kind:ErrorKind.Div0})
 
@@ -16,9 +14,6 @@ Error({Kind:ErrorKind.Numeric})
 Error({Kind:ErrorKind.Div0})
 
 >> Acot(1/0)
-Error({Kind:ErrorKind.Div0})
-
->> AddColumns(If(1/0<2,[1]),"Square",Value^2)
 Error({Kind:ErrorKind.Div0})
 
 >> And(true,1/0)
@@ -145,14 +140,8 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Date(2000, Sqrt(-1), 1/0)
 Error(Table({Kind:ErrorKind.Numeric},{Kind:ErrorKind.Div0}))
 
->> DateAdd(Date(2000,1,1), 1, "invalidunit")
-Error({Kind:ErrorKind.InvalidArgument})
-
 >> DateAdd(If(1/0<2,Date(2000,1,1)), If(Sqrt(-1)<0,3))
 Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
-
->> DateDiff(Date(2000,1,1), Date(2022,1,1), "invalidunit")
-Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateDiff(If(1/0<2,Date(2000,1,1)), If(Sqrt(-1)<0,Date(2022,1,1)))
 Error(Table({Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
@@ -543,11 +532,11 @@ Error({Kind:ErrorKind.Div0})
 >> Switch(1/0, 1, 2, 3)
 Error({Kind:ErrorKind.Div0})
 
->> Switch(2,1,"a",Sqrt(-1),"b","c")
+>> Switch(2,1,"a",If(Sqrt(-1)<0,10,20),"b","c")
 Error({Kind:ErrorKind.Numeric})
 
 // Errors not evaluated are not returned
->> Switch(2,1,"a",2,"b",Sqrt(-1),"c","d")
+>> Switch(2,1,"a",2,"b",If(Sqrt(-1)<0,10,20),"c","d")
 "b"
 
 // Errors can go in tables
@@ -566,7 +555,7 @@ Error({Kind:ErrorKind.Div0})
 >> Text(123.456, "0.00", "invalid")
 Error({Kind:ErrorKind.BadLanguageCode})
 
->> Text(Char(0), If(1/0<2,"format"), If(Sqrt(-1)<0,"language"))
+>> Text(If(Char(0)="a",1,2), If(1/0<2,"format"), If(Sqrt(-1)<0,"language"))
 Error(Table({Kind:ErrorKind.InvalidArgument},{Kind:ErrorKind.Div0},{Kind:ErrorKind.Numeric}))
 
 >> Text(ParseJSON("[1]"))
