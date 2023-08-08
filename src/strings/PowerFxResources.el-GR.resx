@@ -4813,6 +4813,14 @@
     <value>Αυτή η δυνατότητα δεν χρησιμοποιείται και δεν υποστηρίζεται πλέον.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Στον χώρο ονομάτων {1}, η συνάρτηση {0} δεν χρησιμοποιείται.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Στο χώρο ονομάτων {1}, η συνάρτηση {0} δεν υποστηρίζεται.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Προειδοποίηση: Παρέχεται τύπος χωρίς αναβολή.</value>
     
@@ -4863,23 +4871,23 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
+    <value>Αυτή η λειτουργία στον πίνακα '{0}' ενδέχεται να μην λειτουργεί, εάν έχει περισσότερες από {1} γραμμές.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <value>Αυτό το πρόθεμα θα είναι πάντα αληθές. Θέλατε να χρησιμοποιήσετε το ThisRecord ή το [@ ];</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
+    <value>Δεν είναι δυνατή η ανάθεση {0}: υποστηρίξτε μόνο την ανάθεση για αναζήτηση σε πεδίο πρωτεύοντος κλειδιού '{1}'.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Δεν είναι δυνατή η ανάθεση του {0}: Η έκφραση συγκρίνει πολλαπλά επίπεδα.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
+    <value>Δεν είναι δυνατή η ανάθεση {0}: περιέχει μια συνάρτηση συμπεριφοράς '{1}'.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5019,5 +5027,9 @@
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
     <value>Δεν είναι δυνατή η αντιγραφή αυτής της καρτέλας. Αντιθέτως, δημιουργήστε μια ενσωματωμένη καρτέλα χρησιμοποιώντας {...} σημειώσεις για την αντιγραφή των επιμέρους πεδίων που επιθυμείτε.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Το δεύτερο όρισμα της συνάρτησης '{0}' υποστηρίζεται μόνο για αριθμητικές τιμές και τιμές ημερομηνίας/ώρας.</value>
+    
   </data>
 </root>

@@ -4813,6 +4813,14 @@
     <value>此功能已淘汰，不再受支援。</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>在命名空間 {1} 中，函式 {0} 已被取代。</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>在命名空間 {1} 中，不支援函式 {0}。</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>警告: 已提供延期類型。</value>
     
@@ -4863,23 +4871,23 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
+    <value>資料表 '{0}' 如果超過 {1} 列，則此作業可能無法運作。</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <value>此述詞將永遠為 true。您要使用 ThisRecord 還是 [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
+    <value>無法委派 {0}: 僅支援委派對主索引鍵欄位 '{1}' 的查詢。</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>無法委派 {0}: 運算式比較了多個欄位。</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
+    <value>無法委派 {0}: 包含行為函式 '{1}'。</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5019,5 +5027,9 @@
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
     <value>無法複製此記錄。請改用 {...} 標記法來建立內嵌記錄，以複製需要的個別欄位。</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 函式的第二個引數僅支援數字與日期/時間值。</value>
+    
   </data>
 </root>
