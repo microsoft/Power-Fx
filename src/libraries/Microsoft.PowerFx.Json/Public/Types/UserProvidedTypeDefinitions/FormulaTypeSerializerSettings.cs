@@ -8,7 +8,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
 {
-    public class FormulaTypeSerializerSerttings
+    public class FormulaTypeSerializerSettings
     {
         /// <summary>
         /// Functions which takes in a logical name of <see cref="AggregateType"/> and returns its <see cref="RecordType"/>.
@@ -16,11 +16,11 @@ namespace Microsoft.PowerFx.Core
         public readonly Func<string, RecordType> LogicalNameToRecordType;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormulaTypeSerializerSerttings"/> class.
+        /// Initializes a new instance of the <see cref="FormulaTypeSerializerSettings"/> class.
         /// </summary>
         /// <param name="logicalNameToRecordType">Functions which takes in a logical name of <see cref="AggregateType"/> and returns its <see cref="RecordType"/>.
         /// This is needed only for de-serialization of Dataverse or Lazy Aggregate types.</param>
-        public FormulaTypeSerializerSerttings(Func<string, RecordType> logicalNameToRecordType)
+        public FormulaTypeSerializerSettings(Func<string, RecordType> logicalNameToRecordType)
         {
             Func<string, RecordType> debugHelper = (dummy) => throw new InvalidOperationException("Lazy type converter not registered");
             this.LogicalNameToRecordType = logicalNameToRecordType ?? debugHelper;

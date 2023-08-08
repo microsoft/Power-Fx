@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.Throws<InvalidOperationException>(() => JsonSerializer.Deserialize<FormulaType>(serialized, option));
 
             option = new JsonSerializerOptions();
-            var settings = new FormulaTypeSerializerSerttings(logicalNameToRecordType);
+            var settings = new FormulaTypeSerializerSettings(logicalNameToRecordType);
             serializer = new FormulaTypeJsonConverter(settings);
             option.Converters.Add(serializer);
 
