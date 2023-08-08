@@ -165,6 +165,31 @@ namespace Microsoft.PowerFx.Core.Parser
             return true;
         }
 
+        private TypeLiteralNode ParseTypeLiteral()
+        {
+            var leftTrivia = ParseTrivia();
+            var sourceList = new List<ITexlSource>
+            {
+                leftTrivia
+            };
+            if (_curs.TidCur == TokKind.Ident)
+            {
+                var ident = ParseIdentifier();
+                sourceList.Add(new TokenSource(ident.Token));
+                return new TypeLiteralNode(ref _idNext, ident.Token, new FirstNameNode(ref _idNext, ident.Token, ident), new SourceList(sourceList));
+            }
+            else if (_curs.TidCur == TokKind.CurlyOpen)
+            {
+                var leftBracket = _curs.TokCur;
+                var spreadSource = new SpreadSource();
+                var record_node = ParseRecordExpr(spreadSource);
+                sourceList.Add(spreadSource);
+                return new TypeLiteralNode(ref _idNext, leftBracket, record_node, new SourceList(sourceList));
+            }
+
+            return null;
+        }
+
         private bool ParseUDF(List<UDF> udfs)
         {
             // <udf> ::= IDENT '(' <args> ')' ':' IDENT ('=' EXP | <bracs-exp>)
@@ -239,6 +264,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
+            var definedTypes = new List<DefinedType>();
 
             ParseTrivia();
 
@@ -266,6 +292,25 @@ namespace Microsoft.PowerFx.Core.Parser
                     if (_curs.TidCur == TokKind.Semicolon)
                     {
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
+                    }
+
+                    if (_curs.TidCur == TokKind.Ident && _curs.TidPeek() == TokKind.ParenOpen)
+                    {
+                        IdentToken identToken = _curs.TokMove().As<IdentToken>();
+
+                        if (identToken.Name.Value.ToString() == "Type")
+                        {
+                            ParseTrivia();
+                            TokEat(TokKind.ParenOpen);
+                            TypeLiteralNode typeLiteralNode = ParseTypeLiteral();
+                            if (typeLiteralNode != null)
+                            {
+                                definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
+                            }
+
+                            TokEat(TokKind.ParenClose);
+                            ParseTrivia();
+                        }
                     }
 
                     // Extract expression
@@ -359,7 +404,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, _errors);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors);
         }
 
         // Parse the script
