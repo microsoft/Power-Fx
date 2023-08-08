@@ -32,23 +32,27 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
 #endif
         public void TestAllConnectors()
-        {
-            string outFolder = @"c:\temp\out";
-            string srcFolder = @"c:\data";
+        {            
+            string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
+            string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
             string reportName = @"Analysis.txt";
             string jsonReport = @"Report.json";
 
+            // On build servers: ENV: C:\__w\1\s\pfx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Release\netcoreapp3.1
+            // Locally         : ENV: C:\Data\Power-Fx\src\tests\Microsoft.PowerFx.Connectors.Tests\bin\Debug\netcoreapp3.1
             Console.WriteLine($"ENV: {Environment.CurrentDirectory}");
+            Console.WriteLine($"OUT: {outFolder}");
+            Console.WriteLine($"SRC: {srcFolder}");
 
             GenerateReport(reportName, outFolder, srcFolder);
-            AnalyzeReport(reportName, outFolder, jsonReport);
+            AnalyzeReport(reportName, outFolder, srcFolder, jsonReport);
         }
 
-        private void AnalyzeReport(string reportName, string outFolder, string jsonReport)
+        private void AnalyzeReport(string reportName, string outFolder, string srcFolder, string jsonReport)
         {
             List<Connector> connectors = new ();
             string[] lines = File.ReadAllLines(Path.Combine(outFolder, reportName));
-            Regex rex = new Regex(@"(.*) \[(c:\\data.*)\]: (.*)", RegexOptions.Compiled);
+            Regex rex = new Regex(@$"(.*) \[({srcFolder.Replace("\\", "\\\\")}.*)\]: (.*)", RegexOptions.Compiled);
             Regex rex2 = new Regex(@"OK - All ([0-9]+) functions are supported - \[([^\]]+)\]", RegexOptions.Compiled);
             Regex rex3 = new Regex(@"OK - ([0-9]+) supported functions \[([^\]]+)\], ([0-9]+) not supported functions(.*)", RegexOptions.Compiled);
             Regex rex4 = new Regex(@"(?<func>[^' ]*): ((?<dep>'OpenApiOperation is deprecated')|(?<uns>'[^']+'))");
@@ -233,6 +237,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             $"- Red: {totalRed}".Dump(Console);
             $"- Orange: {totalOrange}".Dump(Console);
             $"- Green: {totalGreen}".Dump(Console);
+            string.Empty.Dump(Console);
 
             List<Connector> orderedConnectors = connectors.OrderBy(c => (c.ParseError ? "0" : "1") + c.ConnectorName).ToList();
             orderedConnectors.Dump(Console);
@@ -299,6 +304,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             public string Result { get; set; }
 
             public string RawResult { get; set; }
+
+            public override string ToString()
+            {
+                return string.Join("\t", typeof(Connector).GetProperties().Select(pi => pi.GetValue(this)));
+            }
         }
 
         public enum Color
@@ -318,8 +328,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Dictionary<string, int> exceptionMessages = new ();
             Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new ();
 
-            foreach (string swaggerFile in Directory.EnumerateFiles(@$"{srcFolder}\AAPT-connectors\src", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })
-                                    .Union(Directory.EnumerateFiles(@$"{srcFolder}\PowerPlatformConnectors", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })))
+            // To create aapt and ppc folders locally, you can use NTFS junctions. Ex: mklink /J ppc <folder to PowerPlatformConnectors>
+            foreach (string swaggerFile in Directory.EnumerateFiles(@$"{srcFolder}\aapt\src", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })
+                                    .Union(Directory.EnumerateFiles(@$"{srcFolder}\ppc", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })))
             {
                 string title = $"<Unknown Name> [{swaggerFile}]";
                 i++;
