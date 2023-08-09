@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core
         /// Name for the custom type.<see cref="SchemaTypeName.CustomRecordTypeName"/> or <see cref="SchemaTypeName.CustomTableTypeName"/>.
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string CustomTypeName { get; init; }
+        public string CustomTypeName { get; set; }
 
         // Optional, description for the type
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

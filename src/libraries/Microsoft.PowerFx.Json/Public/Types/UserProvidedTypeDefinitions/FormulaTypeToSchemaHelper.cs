@@ -51,7 +51,7 @@ namespace Microsoft.PowerFx.Core
 
             if (type._type.AggregateHasExpandedType())
             {
-                var logicalName = ((AggregateType)type).TableSymbolName;
+                var logicalName = aggregateType.TableSymbolName;
                 var schemaTypeName = type._type.IsTable ? SchemaTypeName.CustomTableTypeName : SchemaTypeName.CustomRecordTypeName;
                 return new FormulaTypeSchema()
                 {

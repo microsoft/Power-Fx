@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Core
         /// <summary>
         /// Functions which takes in a logical name of <see cref="AggregateType"/> and returns its <see cref="RecordType"/>.
         /// </summary>
-        public readonly Func<string, RecordType> LogicalNameToRecordType;
+        public Func<string, RecordType> LogicalNameToRecordType { get; init; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaTypeSerializerSettings"/> class.

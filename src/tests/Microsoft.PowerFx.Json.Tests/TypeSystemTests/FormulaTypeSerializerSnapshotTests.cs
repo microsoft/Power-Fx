@@ -164,6 +164,15 @@ namespace Microsoft.PowerFx.Json.Tests
                 ""CustomTypeName"": ""logicalName""
             }",
             typeof(RecordType))]
+        [InlineData(
+            @"{
+                ""Type"": 
+                    {
+                    ""Name"": ""CustomType""
+                    },
+                ""CustomTypeName"": ""Record""
+            }",
+            typeof(RecordType))]
         public void TestDataverseDerserialization(string serialized, Type type)
         {
             Func<string, RecordType> logicalNameToRecordType = (x) => x == "logicalName" ? RecordType.Empty().Add("num", FormulaType.Number) : RecordType.Empty();
