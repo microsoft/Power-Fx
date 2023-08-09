@@ -482,7 +482,7 @@ namespace Microsoft.PowerFx.Connectors
         public static FormulaType GetReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
             (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(numberIsFloat);
-            return ct?.Type;
+            return ct?.Type ?? new BlankType();
         }
 
         public static string GetVisibility(this OpenApiOperation op)

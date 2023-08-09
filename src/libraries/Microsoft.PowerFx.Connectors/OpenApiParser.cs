@@ -296,6 +296,13 @@ namespace Microsoft.PowerFx.Connectors
             {
                 // param.AllowEmptyValue unused
 
+                if (param == null)
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiParameter is null";
+                    return;
+                }
+
                 if (param.Deprecated)
                 {
                     isSupported = false;

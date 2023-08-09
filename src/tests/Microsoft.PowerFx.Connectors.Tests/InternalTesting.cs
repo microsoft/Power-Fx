@@ -59,7 +59,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             List<Connector> connectors = new ();
             string[] lines = File.ReadAllLines(Path.Combine(outFolder, reportName));
             Regex rex = new Regex(@$"(.*) \[({srcFolder.Replace("\\", "\\\\")}.*)\]: (.*)", RegexOptions.Compiled);
-            Regex rex2 = new Regex(@"OK - All ([0-9]+) functions are supported - \[([^\]]+)\]", RegexOptions.Compiled);
+            Regex rex2 = new Regex(@"OK - All ([0-9]+) functions are supported - \[([^\]]*)\]", RegexOptions.Compiled);
             Regex rex3 = new Regex(@"OK - ([0-9]+) supported functions \[([^\]]+)\], ([0-9]+) not supported functions(.*)", RegexOptions.Compiled);
             Regex rex4 = new Regex(@"(?<func>[^' ]*): ((?<dep>'OpenApiOperation is deprecated')|(?<uns>'[^']+'))");
             Regex rex5 = new Regex(@"None of the ([0-9]+) functions is supported, (.*)", RegexOptions.Compiled);
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                     if (ok && allFunctionsSupported && !noSupported)
                     {
-                        // @"OK - All ([0-9]+) functions are supported - \[([^\]]+)\]"
+                        // @"OK - All ([0-9]+) functions are supported - \[([^\]]*)\]"
                         Match m2 = rex2.Match(line);
                         supportedFunctions = int.Parse(m2.Groups[1].Value);
                         supportedFunctionList = string.Join(", ", m2.Groups[2].Value.Split(",").Select(x => x.Trim()).OrderBy(x => x));
@@ -346,8 +346,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     title = $"{doc.Info.Title} [{swaggerFile}]";
 
                     // Check we can get the functions
-                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc);
-                    Assert.True(functions.Count() > 0, "No function found");
+                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc);                    
 
                     allFunctions.Add(title, functions);
                     var config = new PowerFxConfig();
