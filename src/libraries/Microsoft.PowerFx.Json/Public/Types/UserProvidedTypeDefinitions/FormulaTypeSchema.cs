@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core
 
                 return logicalNameToRecordType.Invoke(this.CustomTypeName);
             }
-            else if (typeName == SchemaTypeName.RecordTypeName.Name)
+            else if (typeName == SchemaTypeName.RecordTypeName.Name || typeName == SchemaTypeName.TableTypeName.Name)
             {
                 if (Fields == null || !Fields.Any())
                 {
