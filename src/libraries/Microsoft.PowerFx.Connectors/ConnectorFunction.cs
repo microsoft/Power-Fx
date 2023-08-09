@@ -206,6 +206,18 @@ namespace Microsoft.PowerFx.Connectors
             {
                 _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError, connectorSettings);
             }
+
+            if (isSupported)
+            {
+                // validate return type
+                (ConnectorParameterType ct, string unsupportedReason) = openApiOperation.GetConnectorParameterReturnType(connectorSettings.NumberIsFloat);
+
+                if (!string.IsNullOrEmpty(unsupportedReason))
+                {
+                    IsSupported = false;
+                    NotSupportedReason = unsupportedReason;
+                }
+            }
         }
 
         public ConnectorParameters GetParameters(FormulaValue[] knownParameters)
