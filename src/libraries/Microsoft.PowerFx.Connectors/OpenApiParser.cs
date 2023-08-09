@@ -39,26 +39,6 @@ namespace Microsoft.PowerFx.Connectors
             return GetFunctions(openApiDocument, httpClient, throwOnError, new ConnectorSettings() { NumberIsFloat = numberIsFloat });
         }
 
-        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
-        //{
-        //    return GetFunctions(openApiDocument, null, false, false, 1000);
-        //}
-
-        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient)
-        //{
-        //    return GetFunctions(openApiDocument, httpClient, false, false, 1000);
-        //}
-
-        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError)
-        //{
-        //    return GetFunctions(openApiDocument, httpClient, throwOnError, false, 1000);
-        //}
-
-        //public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
-        //{
-        //    return GetFunctions(openApiDocument, httpClient, throwOnError, numberIsFloat, 1000);
-        //}
-
         public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
         {
             ValidateSupportedOpenApiDocument(openApiDocument);
