@@ -297,14 +297,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.True(fv is StringValue);
 
             StringValue sv = (StringValue)fv;
-            Assert.Equal("container", sv.Value);
-
-            //List<ConnectorFunction> unsupportedFunctions = OpenApiParser.GetFunctions(apiDoc).Where(x => !x.IsSupported && !x.IsDeprecated).OrderBy(x => x.Name).ToList();
-            string unsupportedExpr = @"azbs.CreateFileV2(""someDataset"", ""someFolderPath"", ""someName"", ""someContent"")";
-            CheckResult result2 = engine.Check(unsupportedExpr, new ParserOptions() { AllowsSideEffects = true });
-            Assert.False(result2.IsSuccess);
-            Assert.Single(result2.Errors);
-            Assert.Equal("In namespace azbs, function CreateFileV2 is not supported.", result2.Errors.First().Message);
+            Assert.Equal("container", sv.Value);            
         }
 
         [Fact]
@@ -606,10 +599,10 @@ namespace Microsoft.PowerFx.Tests
             };
 
             IReadOnlyList<FunctionInfo> fi = config.AddService("Office365Outlook", apiDoc, client);
-            Assert.Equal(107, fi.Count());
+            Assert.Equal(97, fi.Count());
 
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc);
-            Assert.Equal(107, functions.Count());
+            Assert.Equal(97, functions.Count());
 
             ConnectorFunction cf = functions.First(cf => cf.Name == "ContactPatchItemV2");
 
@@ -742,7 +735,7 @@ namespace Microsoft.PowerFx.Tests
             FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }).ConfigureAwait(false);
 
             Assert.Equal(FormulaType.UntypedObject, result.Type);
-            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out var propertyNames));
+            Assert.True((result as UntypedObjectValue).Impl.TryGetPropertyNames(out IEnumerable<string> propertyNames));
             Assert.Equal(3, propertyNames.Count());
 
             string actual = testConnector._log.ToString();

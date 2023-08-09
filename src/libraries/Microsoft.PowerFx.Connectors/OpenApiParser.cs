@@ -54,7 +54,11 @@ namespace Microsoft.PowerFx.Connectors
                 bool isSupported = true;
                 string notSupportedReason = string.Empty;
 
-                // ops.Description
+                // Skip Webhooks
+                if (ops.Extensions.Any(kvp => kvp.Key == "x-ms-notification-content"))
+                {
+                    continue;
+                }
 
                 ValidateSupportedOpenApiPathItem(ops, ref isSupported, ref notSupportedReason);
 
@@ -264,12 +268,18 @@ namespace Microsoft.PowerFx.Connectors
             opExtensions.Remove("x-ms-api-annotation");
             opExtensions.Remove("x-ms-no-generic-test");
 
+            // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-capabilities
+            opExtensions.Remove("x-ms-capabilities");
+
             // https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
             opExtensions.Remove("x-ms-pageable");
 
+            opExtensions.Remove("x-ms-test-value");
+            opExtensions.Remove("x-ms-url-encoding");
+
             // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
             // Other not supported extensions:
-            //   x-ms-notification-content, x-ms-url-encoding, x-components, x-generator, x-ms-openai-data, x-ms-docs, x-servers
+            //   x-components, x-generator, x-ms-openai-data, x-ms-docs, x-servers
 
             if (isSupported && opExtensions.Any())
             {
@@ -285,6 +295,13 @@ namespace Microsoft.PowerFx.Connectors
             foreach (OpenApiParameter param in op.Parameters)
             {
                 // param.AllowEmptyValue unused
+
+                if (param == null)
+                {
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiParameter is null";
+                    return;
+                }
 
                 if (param.Deprecated)
                 {
@@ -340,6 +357,12 @@ namespace Microsoft.PowerFx.Connectors
                 bool isSupported = true;
                 string notSupportedReason = string.Empty;
 
+                // Skip Webhooks
+                if (ops.Extensions.Any(kvp => kvp.Key == "x-ms-notification-content"))
+                {
+                    continue;
+                }
+
                 ValidateSupportedOpenApiPathItem(ops, ref isSupported, ref notSupportedReason);
 
                 foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
@@ -354,6 +377,18 @@ namespace Microsoft.PowerFx.Connectors
 
                     ValidateSupportedOpenApiOperation(op, ref isSupported, ref notSupportedReason);
                     ValidateSupportedOpenApiParameters(op, ref isSupported, ref notSupportedReason);
+
+                    if (isSupported)
+                    {
+                        // validate return type
+                        (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(connectorSettings.NumberIsFloat);
+
+                        if (!string.IsNullOrEmpty(unsupportedReason))
+                        {
+                            isSupported = false;
+                            notSupportedReason = unsupportedReason;
+                        }
+                    }
 
                     // We need to remove invalid chars to be consistent with Power Apps
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
