@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Json.Tests
             typeof(RecordType))]
         public void TestDataverseDerserialization(string serialized, Type type)
         {
-            Func<string, RecordType> logicalNameToRecordType = (x) => x == "logicalName" ? RecordType.Empty().Add("num", FormulaType.Number) : RecordType.Empty();
+            Func<string, RecordType> logicalNameToRecordType = (x) => x == "logicalName" || x == "Record" ? RecordType.Empty().Add("num", FormulaType.Number) : RecordType.Empty();
 
             var option = new JsonSerializerOptions();
             var serializer = new FormulaTypeJsonConverter();
