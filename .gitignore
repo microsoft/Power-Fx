@@ -358,10 +358,11 @@ tool/
 # ApiCompat suppression files
 suppress.*.xml
 
-# Connetor analysis reports
-Analysis.txt
-Report.json
-Report_*.json
+# Connector analysis reports
+/report/Analysis.txt
+/report/Report.json
+/report/Report_*.json
 
 # global.json
-global.json
+/src/global.json
+/global.json
