@@ -27,6 +27,14 @@ namespace Microsoft.PowerFx.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaTypeJsonConverter"/> class.
         /// </summary>
+        public FormulaTypeJsonConverter()
+            : this(settings: null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormulaTypeJsonConverter"/> class.
+        /// </summary>
         /// <param name="settings"></param>
         public FormulaTypeJsonConverter(FormulaTypeSerializerSerttings settings)
             : this(new DefinedTypeSymbolTable())

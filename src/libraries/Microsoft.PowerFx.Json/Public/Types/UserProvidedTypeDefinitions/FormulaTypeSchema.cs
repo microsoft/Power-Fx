@@ -21,6 +21,12 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         public SchemaTypeName Type { get; set; }
 
+        /// <summary>
+        /// Name for the custom type.<see cref="SchemaTypeName.CustomRecordTypeName"/> or <see cref="SchemaTypeName.CustomTableTypeName"/>.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string CustomTypeName { get; init; }
+
         // Optional, description for the type
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Description { get; set; }
@@ -56,13 +62,14 @@ namespace Microsoft.PowerFx.Core
             }
 
             var logicalNameToRecordType = settings.LogicalNameToRecordType;
-            if (typeName == SchemaTypeName.ExpandableTableTypeName.Name && logicalNameToRecordType != null)
+            if ((typeName == SchemaTypeName.CustomTableTypeName.Name || typeName == SchemaTypeName.CustomRecordTypeName.Name) && logicalNameToRecordType != null)
             {
-                return logicalNameToRecordType.Invoke(this.Description).ToTable();
-            }
-            else if (typeName == SchemaTypeName.ExpandableRecordTypeName.Name && logicalNameToRecordType != null)
-            {
-                return logicalNameToRecordType.Invoke(this.Description);
+                if (Type.IsTable)
+                {
+                    return logicalNameToRecordType.Invoke(this.CustomTypeName).ToTable();
+                }
+
+                return logicalNameToRecordType.Invoke(this.CustomTypeName);
             }
             else if (typeName == SchemaTypeName.RecordTypeName.Name)
             {
@@ -131,9 +138,9 @@ namespace Microsoft.PowerFx.Core
 
         public static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };
 
-        public static SchemaTypeName ExpandableTableTypeName => new () { Name = "ExpandableTable", IsTable = true };
+        public static SchemaTypeName CustomRecordTypeName => new () { Name = "CustomType", IsTable = false };
 
-        public static SchemaTypeName ExpandableRecordTypeName => new () { Name = "ExpandableRecord", IsTable = false };
+        public static SchemaTypeName CustomTableTypeName => new () { Name = "CustomType", IsTable = true };
 
         public static SchemaTypeName TableTypeName => new () { Name = "Record", IsTable = true };
     }

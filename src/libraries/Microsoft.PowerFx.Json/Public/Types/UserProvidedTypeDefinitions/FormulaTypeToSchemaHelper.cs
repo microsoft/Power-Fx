@@ -51,12 +51,12 @@ namespace Microsoft.PowerFx.Core
 
             if (type._type.AggregateHasExpandedType())
             {
-                var logicalName = type._type.AssociatedDataSources.First().EntityName.Value;
-                var schemaTypeName = type._type.IsTable ? SchemaTypeName.ExpandableTableTypeName : SchemaTypeName.ExpandableRecordTypeName;
+                var logicalName = ((AggregateType)type).TableSymbolName;
+                var schemaTypeName = type._type.IsTable ? SchemaTypeName.CustomTableTypeName : SchemaTypeName.CustomRecordTypeName;
                 return new FormulaTypeSchema()
                 {
                     Type = schemaTypeName,
-                    Description = logicalName
+                    CustomTypeName = logicalName,
                 };
             }
             

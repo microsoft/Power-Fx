@@ -148,9 +148,10 @@ namespace Microsoft.PowerFx.Json.Tests
             @"{
                 ""Type"": 
                     {
-                    ""Name"": ""ExpandableTable""
+                    ""Name"": ""CustomType"",
+                    ""IsTable"": true
                     },
-                ""Description"": ""logicalName""
+                ""CustomTypeName"": ""logicalName""
             }",
             typeof(TableType))]
 
@@ -158,9 +159,9 @@ namespace Microsoft.PowerFx.Json.Tests
             @"{
                 ""Type"": 
                     {
-                    ""Name"": ""ExpandableRecord""
+                    ""Name"": ""CustomType""
                     },
-                ""Description"": ""logicalName""
+                ""CustomTypeName"": ""logicalName""
             }",
             typeof(RecordType))]
         public void TestDataverseDerserialization(string serialized, Type type)
@@ -168,7 +169,7 @@ namespace Microsoft.PowerFx.Json.Tests
             Func<string, RecordType> logicalNameToRecordType = (x) => x == "logicalName" ? RecordType.Empty().Add("num", FormulaType.Number) : RecordType.Empty();
 
             var option = new JsonSerializerOptions();
-            var serializer = new FormulaTypeJsonConverter(settings: null);
+            var serializer = new FormulaTypeJsonConverter();
             option.Converters.Add(serializer);
 
             Assert.Throws<InvalidOperationException>(() => JsonSerializer.Deserialize<FormulaType>(serialized, option));
