@@ -14,13 +14,13 @@ namespace Microsoft.PowerFx.Core
     /// Aggregate Type Definition derived from a .fx.yaml file
     /// This may recursively refer to itself or other types, and so we resolve
     /// the field types lazily using the DefinedTypeSymbolTable 
-    /// passed to <see cref="FormulaTypeSchema.ToFormulaType(DefinedTypeSymbolTable, FormulaTypeSerializerSerttings)"/>"/>.
+    /// passed to <see cref="FormulaTypeSchema.ToFormulaType(DefinedTypeSymbolTable, FormulaTypeSerializerSettings)"/>"/>.
     /// </summary>
     internal class UserDefinedRecordType : RecordType
     {
         private readonly FormulaTypeSchema _backingSchema;
         private readonly DefinedTypeSymbolTable _symbolTable;
-        private readonly FormulaTypeSerializerSerttings _settings;
+        private readonly FormulaTypeSerializerSettings _settings;
 
         public override IEnumerable<string> FieldNames => _backingSchema.Fields?.Keys ?? Enumerable.Empty<string>();
 
@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core
             _symbolTable = definedTypes;
         }
 
-        public UserDefinedRecordType(FormulaTypeSchema backingSchema, DefinedTypeSymbolTable definedTypes, FormulaTypeSerializerSerttings settings)
+        public UserDefinedRecordType(FormulaTypeSchema backingSchema, DefinedTypeSymbolTable definedTypes, FormulaTypeSerializerSettings settings)
         {
             _backingSchema = backingSchema;
             _symbolTable = definedTypes;
