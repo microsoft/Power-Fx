@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -34,7 +35,7 @@ namespace Microsoft.PowerFx.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
-        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols)
+        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings)
         {
             var typeName = Type.Name;
 
@@ -54,18 +55,28 @@ namespace Microsoft.PowerFx.Core
                 return actualType;
             }
 
-            if (typeName != SchemaTypeName.RecordTypeName.Name)
+            var logicalNameToRecordType = settings.LogicalNameToRecordType;
+            if (typeName == SchemaTypeName.ExpandableTableTypeName.Name && logicalNameToRecordType != null)
             {
-                return FormulaType.BindingError;
+                return logicalNameToRecordType.Invoke(this.Description).ToTable();
+            }
+            else if (typeName == SchemaTypeName.ExpandableRecordTypeName.Name && logicalNameToRecordType != null)
+            {
+                return logicalNameToRecordType.Invoke(this.Description);
+            }
+            else if (typeName == SchemaTypeName.RecordTypeName.Name)
+            {
+                if (Fields == null || !Fields.Any())
+                {
+                    FormulaType emptyAggregateType = Type.IsTable ? TableType.Empty() : RecordType.Empty();
+                    return emptyAggregateType;
+                }
+
+                var result = new UserDefinedRecordType(this, definedTypeSymbols, settings);
+                return Type.IsTable ? result.ToTable() : result;
             }
 
-            if (Fields == null || !Fields.Any())
-            {
-                return FormulaType.BindingError;
-            }
-
-            var result = new UserDefinedRecordType(this, definedTypeSymbols);
-            return Type.IsTable ? result.ToTable() : result;
+            return FormulaType.BindingError;
         }
 
         private static bool TryLookupType(string typeName, DefinedTypeSymbolTable definedTypeSymbols, out FormulaType type)
@@ -119,6 +130,10 @@ namespace Microsoft.PowerFx.Core
         public bool IsTable { get; init; }
 
         public static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };
+
+        public static SchemaTypeName ExpandableTableTypeName => new () { Name = "ExpandableTable", IsTable = true };
+
+        public static SchemaTypeName ExpandableRecordTypeName => new () { Name = "ExpandableRecord", IsTable = false };
 
         public static SchemaTypeName TableTypeName => new () { Name = "Record", IsTable = true };
     }

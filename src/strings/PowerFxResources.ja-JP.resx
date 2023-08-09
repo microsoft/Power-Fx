@@ -4813,6 +4813,14 @@
     <value>この機能は廃止されたため、現在はサポートされていません。</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>名前空間 {1}、関数 {0} は廃止されています。</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>名前空間 {1}、関数 {0} はサポートされていません。</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>警告: 未定の型が指定されています。</value>
     
@@ -4863,23 +4871,23 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
+    <value>テーブル '{0}' の行数が {1} を超える場合、この操作は機能しない可能性があります。</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <value>この述語は常に true になります。ThisRecord や [@ ] の使用を意図していますか?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
+    <value>{0} を委任できません: サポートしているのは主キー フィールド '{1}' に対するルックアップの委任のみです。</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} をデリゲートできません: 式が複数のフィールドを比較しています。</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
+    <value>{0} を委任できません: 動作機能 '{1}' を含みます。</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5019,5 +5027,9 @@
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
     <value>このレコードはコピーできません。{...} の表記を使用してインライン レコードを作成し、必要なフィールドを個別にコピーしてください。</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 関数の第 2 引数に指定できるのは、数値と日付/時刻の値のみです。</value>
+    
   </data>
 </root>
