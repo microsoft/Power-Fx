@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
-            Assert.Equal("Number", parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.Type.AsFirstName().Ident.Name.ToString());
+            Assert.Equal("Number", parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsFirstName().Ident.Name.ToString());
             Assert.Equal("Foo", parsedNamedFormulasAndUDFs.DefinedTypes.First().Ident.Name.ToString());
         }
 
@@ -39,7 +39,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
             Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
-            var record = parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.Type.AsRecord();
+            var record = parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsRecord();
             Assert.Equal("Age", record.Ids.First().Name.ToString());
             Assert.Equal("Number", record.ChildNodes.First().AsFirstName().ToString());
         }

@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
@@ -294,25 +295,6 @@ namespace Microsoft.PowerFx.Core.Parser
                         CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
                     }
 
-                    if (_curs.TidCur == TokKind.Ident && _curs.TidPeek() == TokKind.ParenOpen)
-                    {
-                        IdentToken identToken = _curs.TokMove().As<IdentToken>();
-
-                        if (identToken.Name.Value.ToString() == "Type")
-                        {
-                            ParseTrivia();
-                            TokEat(TokKind.ParenOpen);
-                            TypeLiteralNode typeLiteralNode = ParseTypeLiteral();
-                            if (typeLiteralNode != null)
-                            {
-                                definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
-                            }
-
-                            TokEat(TokKind.ParenClose);
-                            ParseTrivia();
-                        }
-                    }
-
                     // Extract expression
                     while (_curs.TidCur != TokKind.Semicolon)
                     {
@@ -325,6 +307,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         // Parse expression
                         var result = ParseExpr(Precedence.None);
+                        if (result.GetType() == typeof(TypeLiteralNode))
+                        {
+                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), (TypeLiteralNode)result));
+                            continue;
+                        }
+
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result)));
                     }
 
@@ -1062,7 +1050,18 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
+                        if (ident.Token.As<IdentToken>().Name.Value.ToString() == "Type")
+                        {
+                            ParseTrivia();
+                            TokEat(TokKind.ParenOpen);
+                            var node = ParseTypeLiteral();
+                            ParseTrivia();
+                            TokEat(TokKind.ParenClose);
+                            return node;
+                        }
+
                         trivia = ParseTrivia();
+
                         return ParseInvocation(ident, trivia, null);
                     }
 
