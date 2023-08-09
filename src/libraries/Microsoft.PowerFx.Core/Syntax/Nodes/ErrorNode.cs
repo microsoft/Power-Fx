@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -18,7 +19,7 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public string Message { get; }
 
-        internal readonly object[] Args;
+        internal readonly IReadOnlyList<object> Args;
 
         internal ErrorNode(ref int idNext, Token primaryToken, string msg)
             : base(ref idNext, primaryToken, new SourceList(primaryToken))

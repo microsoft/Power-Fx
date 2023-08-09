@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Types;
@@ -13,18 +14,19 @@ namespace Microsoft.PowerFx
     /// Will lazily create a symbol table. 
     /// To match to an existing symbol table, call <see cref="SymbolExtensions.CreateValues(ReadOnlySymbolTable, ReadOnlySymbolValues[])"/>.
     /// </summary>
+    [NotThreadSafe]
     public class SymbolValues : ReadOnlySymbolValues
     {
         // Map of name Slots --> Values. 
         // Index by Slot.SlotIndex. This could be optimized to be a dense array. 
-        private readonly Dictionary<int, Tuple<ISymbolSlot, FormulaValue>> _symbolValues = new Dictionary<int, Tuple<ISymbolSlot, FormulaValue>>();
+        private readonly ConcurrentDictionary<int, Tuple<ISymbolSlot, FormulaValue>> _symbolValues = new ConcurrentDictionary<int, Tuple<ISymbolSlot, FormulaValue>>();
 
         private readonly ReadOnlySymbolTable _symTable;
 
         /// <summary>
         /// Register an event to invoke when <see cref="Set(ISymbolSlot, FormulaValue)"/> is called.
         /// </summary>
-        public event Action<ISymbolSlot, FormulaValue> OnUpdate;
+        public readonly Action<ISymbolSlot, FormulaValue> OnUpdate;
 
         // Table will be inferred from the values we add. 
         // Take debugName as a parameter so that we can pass it to SymbolTable that we create.
@@ -34,12 +36,14 @@ namespace Microsoft.PowerFx
         }
 
         // Values for an existing table.
-        public SymbolValues(SymbolTable table)
+        public SymbolValues(SymbolTable table, Action<ISymbolSlot, FormulaValue> onUpdateAction = null)
             : base(table)
         {
             _symTable = table ?? throw new ArgumentNullException(nameof(table));
 
             DebugName = table.DebugName;
+
+            OnUpdate = onUpdateAction;
         }
 
         // Limit which kinds of SymbolTables this handles.
@@ -74,17 +78,13 @@ namespace Microsoft.PowerFx
         {
             ValidateSlot(slot);
 
-            if (value == null)
-            {
-                _symbolValues.Remove(slot.SlotIndex);
-            }
-            else
+            _symbolValues[slot.SlotIndex] = Tuple.Create(slot, value);
+
+            if (value != null)
             {
                 _symTable.ValidateAccepts(slot, value.Type);
-                _symbolValues[slot.SlotIndex] = Tuple.Create(slot, value);
+                OnUpdate?.Invoke(slot, value);
             }
-
-            OnUpdate?.Invoke(slot, value);
         }
 
         public override FormulaValue Get(ISymbolSlot slot)
@@ -93,7 +93,7 @@ namespace Microsoft.PowerFx
 
             if (_symbolValues.TryGetValue(slot.SlotIndex, out var value))
             {
-                if (!value.Item1.IsDisposed())
+                if (value.Item2 != null && !value.Item1.IsDisposed())
                 {
                     return value.Item2;
                 }

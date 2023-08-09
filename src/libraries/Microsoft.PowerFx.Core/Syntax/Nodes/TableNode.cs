@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Syntax
     /// </summary>
     public sealed class TableNode : VariadicBase
     {
-        internal readonly Token[] Commas;
+        internal readonly IReadOnlyList<Token> Commas;
 
         // BracketClose can be null.
         internal readonly Token BracketClose;
@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Syntax
                 newNodes.Add(Children[i], children[i]);
             }
 
-            return new TableNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), children, Clone(Commas, ts), BracketClose.Clone(ts));
+            return new TableNode(ref idNext, Token.Clone(ts), SourceList.Clone(ts, newNodes), children, Clone(Commas.ToArray(), ts), BracketClose.Clone(ts));
         }
 
         /// <inheritdoc />

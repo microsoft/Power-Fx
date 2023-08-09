@@ -77,6 +77,23 @@ namespace Microsoft.PowerFx.Syntax
             return newToks;
         }
 
+        internal static Token[] Clone(IReadOnlyList<Token> toks, Span ts)
+        {
+            Contracts.AssertValueOrNull(toks);
+            if (toks == null)
+            {
+                return null;
+            }
+
+            var newToks = new Token[toks.Count];
+            for (var x = 0; x < toks.Count; x++)
+            {
+                newToks[x] = toks[x].Clone(ts);
+            }
+
+            return newToks;
+        }
+
         public int Count => Children.Count;
 
         public void AcceptChildren(TexlVisitor visitor)
