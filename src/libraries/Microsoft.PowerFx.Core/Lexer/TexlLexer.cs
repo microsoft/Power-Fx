@@ -1632,12 +1632,13 @@ namespace Microsoft.PowerFx.Syntax
                     startingPosition--;
                 }
 
-                var commentToken = new CommentToken(_sb.ToString(), GetTextSpan());
+                bool isOpenBlock = false;
                 if (_sb.ToString().Trim().StartsWith("/*", StringComparison.Ordinal) && !_sb.ToString().Trim().EndsWith("*/", StringComparison.Ordinal))
                 {
-                    commentToken.IsOpenBlock = true;
+                    isOpenBlock = true;
                 }
-
+                
+                var commentToken = new CommentToken(_sb.ToString(), GetTextSpan(), isOpenBlock);
                 _lastCommentTokenPos = commentToken.Span.Lim; // Set last seen comment token position.
 
                 return commentToken;

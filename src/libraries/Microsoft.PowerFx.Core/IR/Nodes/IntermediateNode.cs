@@ -3,6 +3,7 @@
 
 namespace Microsoft.PowerFx.Core.IR.Nodes
 {
+    [ThreadSafeImmutable]
     internal abstract class IntermediateNode
     {
         public IRContext IRContext { get; }

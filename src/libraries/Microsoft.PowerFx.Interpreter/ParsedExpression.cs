@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Interpreter;
@@ -81,13 +82,7 @@ namespace Microsoft.PowerFx
             var irResult = result.ApplyIR();
             result.ThrowOnErrors();
 
-            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, result.ParserCultureInfo)
-            {
-                _globals = globals,
-                _allSymbols = result.Symbols,
-                _parameterSymbolTable = result.Parameters,
-                _additionalFunctions = result.Engine.Config.AdditionalFunctions
-            };
+            var expr = new ParsedExpression(irResult.TopNode, irResult.RuleScopeSymbol, stackMarker, globals, result.Symbols, result.Parameters, result.Engine.Config.AdditionalFunctions, result.ParserCultureInfo);
 
             return expr;
         }
@@ -95,21 +90,25 @@ namespace Microsoft.PowerFx
 
     internal class ParsedExpression : IExpressionEvaluator
     {
-        internal IntermediateNode _irnode;
+        internal readonly IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
         private readonly CultureInfo _cultureInfo;
         private readonly StackDepthCounter _stackMarker;
 
-        internal ReadOnlySymbolValues _globals;
-        internal ReadOnlySymbolTable _allSymbols;
-        internal ReadOnlySymbolTable _parameterSymbolTable;
-        internal IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
+        internal readonly ReadOnlySymbolValues _globals;
+        internal readonly ReadOnlySymbolTable _allSymbols;
+        internal readonly ReadOnlySymbolTable _parameterSymbolTable;
+        internal readonly IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
 
-        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
+        internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, ReadOnlySymbolValues globals, ReadOnlySymbolTable allSymbols, ReadOnlySymbolTable parameterSymbolTable, IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> additionalFunctions, CultureInfo cultureInfo = null)
         {
             _irnode = irnode;
             _topScopeSymbol = topScope;
             _stackMarker = stackMarker;
+            _globals = globals;
+            _allSymbols = allSymbols;
+            _parameterSymbolTable = parameterSymbolTable;
+            _additionalFunctions = additionalFunctions;
 
             // $$$ can't use current culture
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;

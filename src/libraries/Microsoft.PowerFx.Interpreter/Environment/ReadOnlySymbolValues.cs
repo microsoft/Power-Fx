@@ -14,6 +14,7 @@ namespace Microsoft.PowerFx
     /// See <see cref="SymbolValues"/> for a mutable derived class. 
     /// </summary>
     [DebuggerDisplay("{this.GetType().Name}({DebugName})")]
+    [ThreadSafeImmutable]
     public abstract class ReadOnlySymbolValues
     {
         private readonly ReadOnlySymbolTable _symbolTable;

@@ -11,13 +11,14 @@ namespace Microsoft.PowerFx.Syntax
     /// </summary>
     public sealed class CommentToken : Token
     {
-        internal bool IsOpenBlock;
+        internal readonly bool IsOpenBlock;
 
-        internal CommentToken(string val, Span span)
+        internal CommentToken(string val, Span span, bool isOpenBlock = false)
             : base(TokKind.Comment, span)
         {
             Contracts.AssertValue(val);
             Value = val;
+            IsOpenBlock = isOpenBlock;
         }
 
         /// <summary>

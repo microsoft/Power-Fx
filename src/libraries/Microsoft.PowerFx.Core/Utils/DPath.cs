@@ -17,6 +17,7 @@ namespace Microsoft.PowerFx.Core.Utils
     [ThreadSafeImmutable]
     public struct DPath : IEquatable<DPath>, ICheckable
     {
+        [ThreadSafeImmutable]
         private class Node : ICheckable
         {
             public const int HashNull = 0x340CA819;

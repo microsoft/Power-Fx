@@ -22,11 +22,12 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Internal adapter for adding custom functions. 
     /// </summary>
+    [ThreadSafeImmutable]
     internal class CustomTexlFunction : TexlFunction
     {
-        public Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
+        public readonly Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> _impl;
 
-        internal BigInteger LamdaParamMask;
+        internal readonly BigInteger LamdaParamMask;
 
         public override bool IsSelfContained => !_isBehavior;
 
@@ -35,6 +36,14 @@ namespace Microsoft.PowerFx
         public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, params FormulaType[] paramTypes)
             : this(name, functionCategory, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
         {
+        }
+
+        public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, Func<IServiceProvider, FormulaValue[], CancellationToken, Task<FormulaValue>> impl, BigInteger lamdaParamMask, params FormulaType[] paramTypes)
+            : this(name, functionCategory, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+        {
+            _impl = impl;
+            LamdaParamMask = lamdaParamMask;
+            _isBehavior = functionCategory == FunctionCategories.Behavior;
         }
 
         public CustomTexlFunction(string name, FunctionCategories functionCategory, DType returnType, params DType[] paramTypes)

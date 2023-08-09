@@ -61,9 +61,10 @@ namespace Microsoft.PowerFx.Core.Tests
                     var fieldName = $"{t.FullName}.{field.Name}";
                     checkedCount++;
 
-                    if (!field.IsInitOnly)
+                    // If it is not const and not readonly
+                    if (!field.IsLiteral && !field.IsInitOnly)
                     {
-                        errors.AppendLine($"{fieldName} is not readonly");
+                        errors.AppendLine($"{fieldName} is not const or readonly");
                     }
 
                     if (!AnalyzeThreadSafety.IsTypeImmutable(field.FieldType))
