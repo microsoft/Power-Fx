@@ -371,6 +371,18 @@ namespace Microsoft.PowerFx.Connectors
                     ValidateSupportedOpenApiOperation(op, ref isSupported, ref notSupportedReason);
                     ValidateSupportedOpenApiParameters(op, ref isSupported, ref notSupportedReason);
 
+                    if (isSupported)
+                    {
+                        // validate return type
+                        (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(connectorSettings.NumberIsFloat);
+
+                        if (!string.IsNullOrEmpty(unsupportedReason))
+                        {
+                            isSupported = false;
+                            notSupportedReason = unsupportedReason;
+                        }
+                    }
+
                     // We need to remove invalid chars to be consistent with Power Apps
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
 
