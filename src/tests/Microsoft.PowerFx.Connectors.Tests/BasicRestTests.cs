@@ -3,11 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
 using Xunit;
@@ -136,6 +139,47 @@ namespace Microsoft.PowerFx.Tests
 
             // Ensure we use HTTPS protocol
             Assert.Equal("https", apiDoc.GetScheme().Substring(0, 5));
+        }
+
+        [Fact]
+        public async Task RealTest()
+        {
+            var config = new PowerFxConfig();
+
+            var swaggerUrl = "https://api.math.tools/yaml/math.tools.numbers.openapi.yaml";
+            
+            //var doc = await ReadSwaggerFromUrl("https://api.apis.guru/v2/specs/weatherbit.io/2.0.0/swagger.json").ConfigureAwait(false);
+            // var doc = await ReadSwaggerFromUrl("https://www.weatherbit.io/static/swagger.json").ConfigureAwait(false);
+            var doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
+
+            using var client = new HttpClient(); // public auth 
+            var funcs = config.AddService("Math", doc, client);
+            
+            var engine = new RecalcEngine(config);
+
+            // var expr = "Weather.numbersordinal({number : 123} )";
+            var expr = "Math.numberscardinal({number :13})";
+            var check = engine.Check(expr);
+            var ok = check.IsSuccess;
+
+            var result = engine.Eval(expr);
+        }
+
+        // Get a swagger file from the embedded resources. 
+        private static async Task<OpenApiDocument> ReadSwaggerFromUrl(string url)
+        {
+            using var http = new HttpClient();            
+            using (var stream = await http.GetStreamAsync(new Uri(url)).ConfigureAwait(false))
+            {
+                var doc = new OpenApiStreamReader().Read(stream, out OpenApiDiagnostic diag);
+
+                if ((doc == null || doc.Paths == null || doc.Paths.Count == 0) && diag != null && diag.Errors.Count > 0)
+                {
+                    throw new InvalidDataException($"Unable to parse Swagger file: {string.Join(", ", diag.Errors.Select(err => err.Message))}");
+                }
+
+                return doc;
+            }
         }
     }
 }

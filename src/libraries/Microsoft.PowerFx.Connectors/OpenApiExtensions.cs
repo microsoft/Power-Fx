@@ -326,6 +326,7 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case null:
+                        case "integer":
                         case "int32":
                             return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
 
