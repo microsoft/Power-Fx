@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Töödeldav tekstväärtuste veerg.</value>
+    <value>Töödeldavate tekstväärtuste veerg.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Teisendab „arvu“ loogiliseks väärtuseks.</value>
@@ -568,22 +568,22 @@
     
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+    <value>Teisendab arvu tähistava teksti kümnendväärtuseks.</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Väärtuse teisendamisel kasutatav keelekood.</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a Decimal value.</value>
+    <value>Kümnendväärtuseks teisendatav tekstväärtus.</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Float value.</value>
+    <value>Teisendab arvu tähistava teksti ujukomaarvväärtuseks.</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Väärtuse teisendamisel kasutatav keelekood.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>Ujukomaarvväärtuseks teisendatav tekstväärtus.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>tekst</value>
@@ -1465,6 +1465,14 @@
     <value>sisend</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikaator</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikaator</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Tagastab tekstväärtuse algusest määratud arvu märke.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parameetritega komponendi kohandatud andmeatribuudile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    <value>Komponendi funktsiooniatribuudile või -parameetrile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponendi funktsiooniatribuut või -parameeter saab viidata ainult teistele funktsiooniatribuutidele.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Funktsiooni {0} esimene argument peab olema ühe veeruga tabel.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati tekstväärtuste veergu.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati kuupäevaväärtuste veergu.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati arvväärtuste veergu.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Sobimatu skeem, üksuse {0} jaoks eeldati värviväärtuste veergu.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Sobimatu skeem, üksuse „{1}“ jaoks eeldati väärtuste {0} veergu.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Arvväärtus on liiga suur.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Reserveeritud sõna kasutamine, mida praegu ei toetata.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemaatika ja statistika</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Teave</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Ei toetata valemiveergudes.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Funktsioonil {0} on sobimatu arv argumente: saadi {1}, eeldati {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumenti {0} ei toetata valemiveergude funktsioonis {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Seda argumenti ei saa valemiveergudes selle tüübina edastada.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Seda argumenti ei saa valemiveergudesse edastada tüübina {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Selle argumendi puhul toetatakse ainult sõnasõnalist väärtust.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Toimingut {0} ei saa sellel sisendil teha ilma ajavööndi teisenduseta, mida valemiveergudes ei toetata.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Seda toimingut ei saa teha erinevate kuupäeva ja kellaaja käitumisega väärtustel.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Valemiveergudes toetatakse ainult lühikese vorminguga kuupäeva- ja kellaaja stringe.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} on kuupäeva aritmeetilise funktsiooni {1} sobimatu/toetuseta ajaühik.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Lokaadipõhiseid vormingutõendeid (nt "." ja ",") valemiveergudes ei toetata.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Üksust {0} ei toetata valemiveergudes, kasutage selle asemel üksust {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Seda toimingut ei saa valemiveergudes teha tüübiga {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Tulemitüüp {0} pole valemiveergudes toetatud.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Valemiveergudes ei toetata kogu kirje otsest viitamist. Viidake kirjes kehtivale väljale.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Selle valemi tulemi tüüp peab olema {0}, kuid tegelik tulemi tüüp on {1}. Valemiveeru tulemi tüüpi ei saa muuta.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Veerud, mille tüüp on {0}, pole valemiveergudes toetatud.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Veerud, mille tüüp on {0} ja vorming {1}, pole valemiveergudes toetatud.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Kirjete või tabelite koondamist ei toetata valemiveergudes.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Üheveerulisi tabeleid ei toetata valemiveergudes.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Valemiveergudes ei saa virtuaaltabelile {0} viidata.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Eeldati operandi. Valem või väljend eeldab kehtivat operandi. Näiteks saate lisada operandi „2“ avaldisele „ 1 +_“, nii et tulemus on „3“. Või võite lisada operandi "there" avaldisele „"Hi "&amp; _ “, nii et tulemus on „Hi there“.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Nimega valem peab olema avaldis.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Kasutaja määratletud funktsioonil peab olema sisu.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funktsioon {0} on juba määratletud.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameeter {0} on duplikaat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tundmatu tüüp {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Märgitud funktsiooni tagastustüüp ei vasta funktsiooni sisu tagastustüübile.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on juba olemas.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>See funktsioon on iganenud ja seda ei toetata enam.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Hoiatus: esitati edasi lükatud tüüp.</value>
     
@@ -4912,7 +4863,173 @@
     <value>Kodeeritav URL.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>„{0}“ on tuntud, kuid toetuseta funktsioon.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Tüübi teisendamine nurjus, kuna antud väärtus oli tüübiga „{0}“, eeldati tüüpi „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>See tegevus tabelis „{0}“ ei pruugi töötada, kui ridu on rohkem kui {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>See predikaat on alati tõene. Kas soovisite kasutada argumenti ThisRecord või [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Üksust {0} ei saa delegeerida: ainult toe delegeerimine primaarvõtme väljal „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Ei saa delegeerida {0}: avaldis võrdleb mitut välja.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Üksust {0} ei saa delegeerida: sisaldab käitumisfunktsiooni „{1}“.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Määrab, kas esitatud tekstil esineb esitatud tekstivormingu vaste.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Tekst, mida vorminguga võrreldakse.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Vorming, mille suhtes teksti kontrollida. See võib olla loetelu TextFormat või regulaaravaldise väärtus.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Määrab, millist teksti osa soovime vastendada. See võib olla loetelu MatchOptions väärtus.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>vorming</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>ulatus</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Otsib esitatud tekstist määratud regulaaravaldist, tagastades selle esimese vastenduse.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Otsib esitatud tekstist määratud regulaaravaldist, tagastades kõik selle vastendused.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Tekst, mida regulaaravaldise suhtes otsitakse.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Regulaaravaldis, mille suhtes teksti kontrollida. See võib sisaldada hõiveid (ümarsulgudes olevad väärtused), mis tagastatakse eduka vastenduse korral.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Määrab, millist teksti osa soovime vastendada. See võib olla loetelu MatchOptions väärtus.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Tekst, mida regulaaravaldise suhtes otsitakse.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Regulaaravaldis, mille suhtes teksti kontrollida. See võib sisaldada hõiveid (ümarsulgudes olevad väärtused), mis tagastatakse eduka vastenduse korral.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Määrab, millist teksti osa soovime vastendada. See võib olla loetelu MatchOptions väärtus.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulaaravaldis</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>suvandid</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Värskendab määratud andmeallikat.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>ühendatud_andmeallikas</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Eeldati kirjet või tabeliväärtust.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Värskendatav ühendatud andmeallikas.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Värskendada saab ainult hallatavaid ühendusi.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Kehtetu regulaaravaldis.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulaaravaldised peavad olema konstantsed väärtused.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Funktsioonile „{0}“ edastatud väärtust ei saa muuta.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise täieliku vaste. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täielik vaste.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise rühma vasted. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis kõik alamvasted.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Hõive nimi '{0}' peidab eelnevalt määratletud atribuuti, mis tagastab regulaaravaldise vaste asukoha. Soovitame selle ümber nimetada, kui soovite kasutada selle nimega atribuuti, et ekstraktida määratud tekstis täieliku vaste asukoha.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Eemaldab kogu vormingu ja tagastab lihttekstväärtuse.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Tekst, mille HTML- ja XML-sildid eemaldatakse.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtri funktsioonid ei luba predikaatidena käitumisfunktsioone.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Kasutage mitme predikaadi teiseks argumendiks ühendamiseks tehtemärki And.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Seda tabelit ei saa kopeerida. Selle asemel looge tekstisisene tabel, kasutades soovitud üksikute väljade kopeerimiseks funktsiooni ForAll ja märget {...}.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Seda kirjet ei saa kopeerida. Selle asemel looge tekstisisene kirje, kasutades soovitud üksikute väljade kopeerimiseks märget {...}.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

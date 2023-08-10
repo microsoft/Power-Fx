@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
 using Microsoft.PowerFx.Interpreter;
@@ -70,7 +71,7 @@ namespace Microsoft.PowerFx
         internal static IExpressionEvaluator GetEvaluator(this CheckResult result, StackDepthCounter stackMarker)
         {
             ReadOnlySymbolValues globals = null;
-                
+
             if (result.Engine is RecalcEngine recalcEngine)
             {
                 // Pull global values from the engine. 
@@ -84,14 +85,15 @@ namespace Microsoft.PowerFx
             {
                 _globals = globals,
                 _allSymbols = result.Symbols,
-                _parameterSymbolTable = result.Parameters
+                _parameterSymbolTable = result.Parameters,
+                _additionalFunctions = result.Engine.Config.AdditionalFunctions
             };
 
             return expr;
         }
     }
 
-    internal class ParsedExpression : IExpression, IExpressionEvaluator
+    internal class ParsedExpression : IExpressionEvaluator
     {
         internal IntermediateNode _irnode;
         private readonly ScopeSymbol _topScopeSymbol;
@@ -101,6 +103,7 @@ namespace Microsoft.PowerFx
         internal ReadOnlySymbolValues _globals;
         internal ReadOnlySymbolTable _allSymbols;
         internal ReadOnlySymbolTable _parameterSymbolTable;
+        internal IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> _additionalFunctions;
 
         internal ParsedExpression(IntermediateNode irnode, ScopeSymbol topScope, StackDepthCounter stackMarker, CultureInfo cultureInfo = null)
         {
@@ -112,53 +115,28 @@ namespace Microsoft.PowerFx
             _cultureInfo = cultureInfo ?? CultureInfo.CurrentCulture;
         }
 
-        // Obsolete. Use IExpressionEvaluator. 
-        async Task<FormulaValue> IExpression.EvalAsync(RecordValue parameters, CancellationToken cancellationToken)
-        {
-            var useRowScope = _topScopeSymbol.AccessedFields.Count > 0;
-            ReadOnlySymbolValues symbolValues = null;
-
-            // For backwards compat - if a caller with internals access created a IR that binds to 
-            // rowscope directly, then apply parameters to row scope. 
-            if (!useRowScope)
-            {
-                symbolValues = SymbolValues.NewFromRecord(parameters);
-                parameters = RecordValue.Empty();
-            }
-
-            var runtimeConfig = new RuntimeConfig(symbolValues, _cultureInfo);
-            var evalVisitor = new EvalVisitor(runtimeConfig, cancellationToken);
-            try
-            {
-                var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.NewTopScope(_topScopeSymbol, parameters), _stackMarker)).ConfigureAwait(false);
-                return newValue;
-            }
-            catch (MaxCallDepthException maxCallDepthException)
-            {
-                return maxCallDepthException.ToErrorValue(_irnode.IRContext);
-            }
-        }
-
         public async Task<FormulaValue> EvalAsync(CancellationToken cancellationToken, IRuntimeConfig runtimeConfig = null)
         {
-            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(
-                false,
-                _allSymbols,
-                runtimeConfig?.Values,
-                _globals);
+            ReadOnlySymbolValues symbolValues = ComposedReadOnlySymbolValues.New(false, _allSymbols, runtimeConfig?.Values, _globals);
+            BasicServiceProvider innerServices = new BasicServiceProvider();
+            bool hasInnerServices = false;
 
-            IServiceProvider innerServices = null;
             if (_cultureInfo != null)
             {
-                var temp = new BasicServiceProvider();
-                temp.AddService(_cultureInfo);
-                innerServices = temp;
+                innerServices.AddService(_cultureInfo);
+                hasInnerServices = true;
             }
 
-            var runtimeConfig2 = new RuntimeConfig
+            if (_additionalFunctions.Any())
+            {
+                innerServices.AddService(_additionalFunctions);
+                hasInnerServices = true;
+            }
+
+            RuntimeConfig runtimeConfig2 = new RuntimeConfig
             {
                 Values = symbolValues,
-                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, innerServices)
+                ServiceProvider = new BasicServiceProvider(runtimeConfig?.ServiceProvider, hasInnerServices ? innerServices : null)
             };
 
             var evalVisitor = new EvalVisitor(runtimeConfig2, cancellationToken);
@@ -167,6 +145,11 @@ namespace Microsoft.PowerFx
             {
                 var newValue = await _irnode.Accept(evalVisitor, new EvalVisitorContext(SymbolContext.New(), _stackMarker)).ConfigureAwait(false);
                 return newValue;
+            }
+            catch (CustomFunctionErrorException customError)
+            {
+                var error = new ErrorValue(_irnode.IRContext, customError.ExpressionError);
+                return error;
             }
             catch (MaxCallDepthException maxCallDepthException)
             {
@@ -181,8 +164,9 @@ namespace Microsoft.PowerFx
 
             var runtimeConfig2 = new RuntimeConfig
             {
-                Values = symbolValues                
+                Values = symbolValues
             };
+
             if (_cultureInfo != null)
             {
                 runtimeConfig2.SetCulture(_cultureInfo);

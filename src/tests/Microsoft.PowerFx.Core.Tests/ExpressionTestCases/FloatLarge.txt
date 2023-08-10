@@ -1,4 +1,4 @@
-﻿#SKIPFILE:disable:NumberIsFloat
+﻿#SETUP: NumberIsFloat
 
 // Tests that take or result in large floating point values, outside the range of Decimal (~ +/- 1E29)
 // These cause problems with the serialization/deserialization test in BaseRunner.cs/RunAsync2
@@ -72,7 +72,7 @@ Error({Kind:ErrorKind.Numeric})
 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
 >> Mod(1E+300,1E-20)
-Error({Kind:ErrorKind.Numeric})
+6.0682893566359166E-21
 
 >> Dec2Hex([1,1e-45,1e45,2])
 Table({Value:"1"},{Value:"0"},{Value:Error({Kind:ErrorKind.Numeric})},{Value:"2"})

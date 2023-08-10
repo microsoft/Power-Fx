@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     {
         public override bool IsSelfContained => true;
 
+        public override bool PropagatesMutability => true;
+
         private readonly bool _isFirst;
 
         public FirstLastFunction(bool isFirst)
@@ -115,11 +117,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.FirstLastArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

@@ -70,10 +70,9 @@ namespace Microsoft.PowerFx
                 (var irnode, var ruleScopeSymbol) = IRTranslator.Translate(binding);
 
                 var scope = this;
-
                 var symbols = _parent._symbolValues;
+                var runtimeConfig = new RuntimeConfig(symbols, _cultureInfo);                             
 
-                var runtimeConfig = new RuntimeConfig(symbols, _cultureInfo);
                 var v = new EvalVisitor(runtimeConfig, CancellationToken.None);
 
                 var newValue = irnode.Accept(v, new EvalVisitorContext(SymbolContext.New(), new StackDepthCounter(_parent.Config.MaxCallDepth))).Result;

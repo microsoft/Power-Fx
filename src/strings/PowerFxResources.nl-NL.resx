@@ -1465,6 +1465,14 @@
     <value>invoer</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifier</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Hiermee wordt het opgegeven aantal tekens vanaf de start van een tekstwaarde geretourneerd.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Aangepaste gegevenseigenschappen voor onderdelen met parameters zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    <value>Functie-eigenschappen of parameters voor onderdelen zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Functie-eigenschappen of parameters voor onderdelen kunnen alleen naar andere functie-eigenschappen verwijzen.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Het eerste argument van {0} moet een tabel met één kolom zijn.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met tekstwaarden voor {0} verwacht.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met datumwaarden voor {0} verwacht.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met numerieke waarden voor {0} verwacht.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Het schema is ongeldig. Er wordt een kolom met kleurwaarden voor {0} verwacht.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Het schema is ongeldig. Er wordt een kolom met waarden met {0} voor {1} verwacht.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>De numerieke waarde is te groot.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Gebruik van een gereserveerd woord dat momenteel niet wordt ondersteund.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Wiskundig en statistisch</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informatie</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ongeldig aantal argumenten voor functie {0}: {1} ontvangen {2} verwacht</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Het argument {0} wordt niet ondersteund voor de functie {1} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Dit argument kan niet worden doorgegeven als dit type in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Dit argument kan niet worden doorgegeven als type {0} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Er wordt alleen een letterlijke waarde ondersteund voor dit argument.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kan niet worden uitgevoerd op deze invoer zonder een tijdzoneconversie die niet wordt ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Deze bewerking kan niet worden uitgevoerd op waarden met een ander datum-/tijdgedrag.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Alleen tekenreeksen voor de korte datum- en tijdnotatie worden ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Het argument {0} is een ongeldige/niet-ondersteunde tijdseenheid voor de rekenkundige functie {1} van de datum.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Landspecifieke opmaaktokens, zoals '.' en ',', worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} wordt niet ondersteund in formulekolommen. Gebruik {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Deze bewerking kan niet worden uitgevoerd op type {0} in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Het resultaattype {0} wordt niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Rechtstreeks verwijzen naar een volledige record wordt niet ondersteund in formulekolommen. Verwijzing naar een geldig veld in de record.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Het resultaattype voor deze formule is waarschijnlijk {0}, maar het werkelijke resultaattype is {1}. Het resultaattype van een formulekolom kan niet worden gewijzigd.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Kolommen van het type {0} worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Kolommen van het type {0} met {1} worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Afwijken van records of tabellen wordt niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabellen met één kolom worden niet ondersteund in formulekolommen.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Kan niet verwijzen naar virtuele tabel {0} in formulekolommen.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Er wordt een operand verwacht. Voor de formule of expressie wordt een geldige operand verwacht. U kunt bijvoorbeeld de operand 2 toevoegen aan de expressie 1 +_ zodat het resultaat 3 ontstaat. U kunt ook de operand 'daar' toevoegen aan de expressie 'Hallo '&amp; _ voor het resultaat Hallo daar.</value>
     
@@ -4789,6 +4712,26 @@
     <value>De genoemde formule moet een expressie zijn.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Door de gebruiker gedefinieerde functie moet een hoofdtekst hebben.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Functie {0} is al gedefinieerd.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} is een duplicaat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Onbekend type {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Het vermelde retourtype van de werkfunctie komt niet overeen met het retourtype van de functiehoofdtekst.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} bestaat al.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Deze functie is afgeschaft en wordt niet meer ondersteund.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Functie {0} in naamruimte {1} afgeschaft.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Functie {0} in naamruimte {1} wordt niet ondersteund.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Waarschuwing: uitgesteld type opgegeven.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} is een herkende maar niet ondersteunde functie.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Typeconversie is mislukt omdat de gegeven waarde van het type {0} was en type {1} werd verwacht.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Deze bewerking op tabel {0} werkt mogelijk niet als deze meer {1} rijen bevat.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Dit predicaat is altijd waar. Wilde u ThisRecord of [@ ] gebruiken?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Kan {0} niet machtigen: machtiging alleen ondersteund voor opzoekactie van primaire-sleutelveld {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Kan {0} niet machtigen: expressie vergelijkt meerdere velden.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Kan {0} niet machtigen: bevat de gedragsfunctie {1}.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Bepaalt of er voor de opgegeven tekst een overeenkomst in de aangeleverde tekstindeling bestaat.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>De tekst die met de indeling moet worden vergeleken.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>De indeling waarop de tekst moet worden gecontroleerd. Dit kan een waarde van de enum TextFormat of een reguliere expressie zijn.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>indeling</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>omvang</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Hiermee wordt in de opgegeven tekst naar de opgegeven reguliere expressie gezocht en worden de eerste overeenkomsten uit deze expressie geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Hiermee wordt in de opgegeven tekst naar de opgegeven reguliere expressie gezocht en worden alle overeenkomsten uit deze expressie geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>De tekst waarop moet worden gezocht voor de reguliere expressie.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>De reguliere expressie om de tekst op te controleren. Kan opnamen (waarden tussen haakjes) bevatten die in het geval van een overeenkomst worden geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>De tekst waarop moet worden gezocht voor de reguliere expressie.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>De reguliere expressie om de tekst op te controleren. Kan opnamen (waarden tussen haakjes) bevatten die in het geval van een overeenkomst worden geretourneerd.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Hiermee wordt bepaald voor welk deel van de tekst een overeenkomst moet worden gevonden. Dit kan een waarde van de enum MatchOptions zijn.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguliere_expressie</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opties</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Hiermee wordt de opgegeven gegevensbron vernieuwd.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>verbonden_bron_gegevens</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Er wordt een record of tabelwaarde verwacht.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Een gekoppelde gegevensbron die moet worden vernieuwd.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Alleen beheerde verbindingen kunnen worden vernieuwd.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ongeldige reguliere expressie.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Reguliere expressies moeten constante waarden zijn.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>De waarde die is doorgegeven aan functie {0} kan niet worden gewijzigd.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de volledige overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de groepsovereenkomsten in de reguliere expressie worden geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om alle subovereenkomsten in de opgegeven tekst te extraheren.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de locatie van de overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de positie van de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Hiermee wordt alle opmaak verwijderd en wordt er een tekstwaarde zonder opmaak geretourneerd.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>De tekst waarvan de HTML- en XML-codes worden verwijderd.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfuncties staan geen gedragsfuncties toe als predicaten.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gebruik de And-operator om meerdere predicaten in het tweede argument te combineren.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Deze tabel kan niet worden gekopieerd. Maak in plaats daarvan een inlinetabel met de functie ForAll en notatie {...} om de gewenste individuele kolommen te kopiëren.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Deze record kan niet worden gekopieerd. Maak in plaats daarvan een inlinerecord met notatie {...} om de gewenste afzonderlijke velden te kopiëren.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Het tweede argument van de functie {0} wordt alleen ondersteund voor numerieke waarden en datum-/tijdwaarden.</value>
     
   </data>
 </root>

@@ -9,6 +9,7 @@ namespace Microsoft.PowerFx.Core.Types
 {
     // Represents a (simple) name together with an DType.
     // TASK: 67008 - Make this public, or expose a public shim in Document.
+    [ThreadSafeImmutable]
     internal struct TypedName : IEquatable<TypedName>, ICheckable
     {
         public readonly DName Name;

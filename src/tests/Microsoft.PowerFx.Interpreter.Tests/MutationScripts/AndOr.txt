@@ -1,0 +1,72 @@
+﻿// Case to test how shortcut verification work along with behavior functions
+
+>> Set( t1, [false,true] )
+Table({Value:false},{Value:true})
+
+// AND
+>> false && Collect(t1, {Value:true}).Value;t1
+Table({Value:false},{Value:true})
+
+>> false && Patch(t1, First(t1), {Value:true}).Value;t1
+Table({Value:false},{Value:true})
+
+>> false && Remove(t1, First(t1));t1
+Table({Value:false},{Value:true})
+
+>> false && Set(t1, [true,true]);t1
+Table({Value:false},{Value:true})
+
+>> And(false, Collect(t1, {Value:true}).Value);t1
+Table({Value:false},{Value:true})
+
+>> And(false && Patch(t1, First(t1), {Value:true}).Value);t1
+Table({Value:false},{Value:true})
+
+>> And(false && Remove(t1, First(t1)));t1
+Table({Value:false},{Value:true})
+
+>> And(false && Set(t1, [true,true]));t1
+Table({Value:false},{Value:true})
+
+// OR
+>> false || Collect(t1, {Value:true}).Value
+true
+
+>> 1;t1
+Table({Value:false},{Value:true},{Value:true})
+
+>> false || Patch(t1, First(t1), {Value:true}).Value
+true
+
+>> 2;t1
+Table({Value:true},{Value:true},{Value:true})
+
+>> false || IsBlank(Remove(t1, First(t1), "All"))
+true
+
+>> 3;t1
+Table()
+
+>> false || Set(t1, [false, true]);t1
+Table({Value:false},{Value:true})
+
+>> Or(false, Collect(t1, {Value:true}).Value)
+true
+
+>> 4;t1
+Table({Value:false},{Value:true},{Value:true})
+
+>> Or(false, Patch(t1, First(t1), {Value:true}).Value)
+true
+
+>> 5;t1
+Table({Value:true},{Value:true},{Value:true})
+
+>> Or(false, IsBlank(Remove(t1, First(t1), "All")))
+true
+
+>> 6;t1
+Table()
+
+>> Or(false, Set(t1, [false, false]));t1
+Table({Value:false},{Value:false})

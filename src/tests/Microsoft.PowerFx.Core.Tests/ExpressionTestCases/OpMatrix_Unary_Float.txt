@@ -1,4 +1,7 @@
-#SKIPFILE: disable:NumberIsFloat
+#SETUP: NumberIsFloat
+
+// Float() has been replaced with Value() for PA client compatibility.  
+// When in NumberIsFloat mode, Value and Float functions are effectively the same.
 
 // UNARY
 
@@ -17,16 +20,16 @@
 
 // -
 
->> -Float(16)
+>> -Value(16)
 -16
 
->> -Float(16) + 1.000000000000000000000002
+>> -Value(16) + 1.000000000000000000000002
 -15
 
->> -Float("1e100")
+>> -Value("1e100")
 -1E+100
 
->> -Float("-1e100")
+>> -Value("-1e100")
 1E+100
 
 >> -"2"
@@ -57,16 +60,26 @@
 2
 
 >> -Date(2000,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 36526
+Date(1799,12,28)
+
+// This shows why the previous test has the result it does
+>> [Value(Date(2000,1,1)), Value(-Date(2000,1,1)),Value(Date(1799,12,28))]
+Table({Value:36526},{Value:-36526},{Value:-36526})
 
 >> -DateTime(2000,1,1,12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 36526.5
+DateTime(1799,12,27,12,0,0,0)
 
->> -Time(12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1294, expected: 0.5
+// This shows why the previous test has the result it does
+>> [Value(DateTime(2000,1,1,12,0,0)), Value(-DateTime(2000,1,1,12,0,0)), Value(DateTime(1799,12,27,12,0,0,0))]
+Table({Value:36526.5},{Value:-36526.5},{Value:-36526.5})
 
->> -Decimal("2.000000000000000000000002")
--2.000000000000000000000002
+// The value of the time will be 6am on the day before the 'date 0' - but the default representation only shows the time portion
+>> -Time(18,0,0)
+Time(6,0,0,0)
+
+// This shows why the previous test has the result it does
+>> [Value(-Time(18,0,0)), Value(Time(6,0,0)-1)]
+Table({Value:-0.75},{Value:-0.75})
 
 >> -2.000000000000000000000002
 -2
@@ -97,13 +110,13 @@
 
 // %
 
->> Float(16)%
+>> Value(16)%
 0.16
 
->> Float("1e100")%
+>> Value("1e100")%
 1E+98
 
->> Float("-1e100")%
+>> Value("-1e100")%
 -1E+98
 
 >> "2"%
@@ -130,9 +143,6 @@
 >> Time(12,0,0)%
 0.005
 
->> Decimal("2.000000000000000000000002")%
-0.02000000000000000000000002
-
 >> 2.000000000000000000000002%
 0.02
 
@@ -153,13 +163,13 @@
 
 // !
 
->> !Float(16)
+>> !Value(16)
 false
 
->> !Float("1e100")
+>> !Value("1e100")
 false
 
->> !Float(0)
+>> !Value(0)
 true
 
 >> !"2"
@@ -188,15 +198,6 @@ Errors: Error 1-26: Invalid argument type. Expecting one of the following: Boole
 
 >> !Time(12,0,0)
 Errors: Error 1-13: Invalid argument type. Expecting one of the following: Boolean, Number, Decimal, Text, OptionSetValue, UntypedObject.
-
->> !Decimal("2.000000000000000000000002")
-false
-
->> !Decimal("0")
-true
-
->> !Decimal("0.000000000000000000000002")
-false
 
 >> !ParseJSON("2")
 false
@@ -228,13 +229,13 @@ false
 
 // Not (for good measure and to compare to the above)
 
->> Not(Float(16))
+>> Not(Value(16))
 false
 
->> Not(Float("1e100"))
+>> Not(Value("1e100"))
 false
 
->> Not(Float(0))
+>> Not(Value(0))
 true
 
 >> Not("2")
@@ -263,15 +264,6 @@ Errors: Error 4-29: Invalid argument type (DateTime). Expecting a Boolean value 
 
 >> Not(Time(12,0,0))
 Errors: Error 4-16: Invalid argument type (Time). Expecting a Boolean value instead.|Error 0-17: The function 'Not' has some invalid arguments.
-
->> Not(Decimal("2.000000000000000000000002"))
-false
-
->> Not(Decimal("0"))
-true
-
->> Not(Decimal("0.000000000000000000000002"))
-false
 
 >> Not(ParseJSON("2"))
 false

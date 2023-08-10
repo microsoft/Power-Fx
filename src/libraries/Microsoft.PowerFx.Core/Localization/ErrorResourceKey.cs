@@ -15,11 +15,22 @@ namespace Microsoft.PowerFx.Core.Localization
     {
         public string Key { get; }
 
+        internal IExternalStringResources ResourceManager { get; }
+
         public ErrorResourceKey(string key)
         {
             Contracts.AssertNonEmpty(key);
 
             Key = key;
+            ResourceManager = StringResources.LocalStringResources;
+        }
+
+        internal ErrorResourceKey(string key, IExternalStringResources externalStringResources = null)
+        {
+            Contracts.AssertNonEmpty(key);
+
+            Key = key;
+            ResourceManager = externalStringResources;
         }
     }
 }

@@ -35,27 +35,21 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();
+            nodeToCoercedTypeMap = new Dictionary<TexlNode, DType>();            
             var fArgsValid = true;
             returnType = argTypes[0];
 
-            // If there is mixing of Date and DateTime, coerce Date to DateTime
-            if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime) && !Array.TrueForAll(argTypes, element => element.Kind == DKind.Date))
+            if (context.Features.PowerFxV1CompatibilityRules)
             {
-                for (var i = 0; i < argTypes.Length; i++)
-                {
-                    if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
-                    {
-                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.DateTime, allowDupes: true);
-                        returnType = DType.DateTime;
-                    }
+                // When PowerFxV1CompatibilityRules is enabled
+                // return type is
+                // - always argTypes[0] if 1st element is [Date, Time, DateTime, Number, Decimal]
+                // - otherwise it's Decimal or Number, depending on NumberIsFloat flag
+                if (!(returnType.IsDateTimeGroup || returnType.IsNumeric))
+                { 
+                    returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
                 }
-            } // If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
-            else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
-            {
-                returnType = DetermineNumericFunctionReturnType(nativeDecimal: true, context.NumberIsFloat, argTypes[0]);
 
-                // Ensure that all the arguments are numeric/coercible to numeric.
                 for (var i = 0; i < argTypes.Length; i++)
                 {
                     if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
@@ -64,10 +58,35 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                         fArgsValid = false;
                     }
                 }
-            } // No coercion necessary
-            else 
-            { 
-                fArgsValid = true; 
+            }
+            else
+            {
+                // If there is mixing of Date and DateTime, coerce Date to DateTime
+                if (Array.TrueForAll(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime) && !Array.TrueForAll(argTypes, element => element.Kind == DKind.Date))
+                {
+                    for (var i = 0; i < argTypes.Length; i++)
+                    {
+                        if (argTypes[i].Kind == DKind.Date && argTypes[i].CoercesTo(DType.DateTime, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: false))
+                        {
+                            CollectionUtils.Add(ref nodeToCoercedTypeMap, args[i], DType.DateTime, allowDupes: true);
+                            returnType = DType.DateTime;
+                        }
+                    }
+                } // If there are elements of mixed types OR if the elements are NOT a Date/Time/DateTime, attempt to coerce to numeric.
+                else if (!Array.TrueForAll(argTypes, element => element.Kind == argTypes[0].Kind) || !Array.Exists(argTypes, element => element.Kind == DKind.Date || element.Kind == DKind.DateTime || element.Kind == DKind.Time))
+                {
+                    returnType = DetermineNumericFunctionReturnType(nativeDecimal: true, context.NumberIsFloat, argTypes[0]);
+
+                    // Ensure that all the arguments are numeric/coercible to numeric.
+                    for (var i = 0; i < argTypes.Length; i++)
+                    {
+                        if (!CheckType(context, args[i], argTypes[i], returnType, DefaultErrorContainer, ref nodeToCoercedTypeMap))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrNumberExpected);
+                            fArgsValid = false;
+                        }
+                    }
+                }               
             }
 
             if (!fArgsValid)

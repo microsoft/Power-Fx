@@ -1,4 +1,7 @@
-#SKIPFILE: disable:NumberIsFloat
+#SETUP: NumberIsFloat
+
+// Float() has been replaced with Value() for PA client compatibility.  
+// When in NumberIsFloat mode, Value and Float functions are effectively the same.
 
 // DIVIDE
 
@@ -24,72 +27,66 @@
 
 // Float
 
->> Float(16)/Float(2)
+>> Value(16)/Value(2)
 8
 
->> Float("1e100")/Float(2)
+>> Value("1e100")/Value(2)
 5E+99
 
->> Float(16)/"2"
+>> Value(16)/"2"
 8
 
->> Float("1e100")/"2"
+>> Value("1e100")/"2"
 5E+99
 
->> Float(16)/true
+>> Value(16)/true
 16
 
->> Float("1e100")/true
+>> Value("1e100")/true
 1E+100
 
->> Float(16)/Blank()
+>> Value(16)/Blank()
 Error({Kind:ErrorKind.Div0})
 
->> Float("1e100")/Blank()
+>> Value("1e100")/Blank()
 Error({Kind:ErrorKind.Div0})
 
 >> Value(Date(2000,1,1))
 36526
 
->> Float(365260000)/Date(2000,1,1)
+>> Value(365260000)/Date(2000,1,1)
 10000
 
 >> Value(DateTime(2000,1,1,12,0,0))
 36526.5
 
->> Float(365265000)/DateTime(2000,1,1,12,0,0)
+>> Value(365265000)/DateTime(2000,1,1,12,0,0)
 10000
 
 >> Value(Time(12,0,0))
 0.5
 
->> Float(16)/Time(12,0,0)
+>> Value(16)/Time(12,0,0)
 32
 
->> Float(16)/Decimal("2.00000000000000000000000002")
+>> Value(16)/ParseJSON("2")
 8
 
->> Float("1e100")/Decimal("2.00000000000000000000000002")
-5E+99
-
->> Float(16)/ParseJSON("2")
-8
-
->> Float(16)/ParseJSON("1e100")
+>> Value(16)/ParseJSON("1e100")
 1.6E-99
 
->> Float("1e100")/ParseJSON("2")
+>> Value("1e100")/ParseJSON("2")
 5E+99
 
->> Float("1e100")/ParseJSON("1e100")
+>> Value("1e100")/ParseJSON("1e100")
 1
 
 // Text
 
->> "16"/Float(2)
+>> "16"/Value(2)
 8
 
->> "1e100"/Float(2)
+>> "1e100"/Value(2)
 5E+99
 
 >> "16"/"2"
@@ -122,12 +119,6 @@ Error({Kind:ErrorKind.Div0})
 >> "16"/Time(12,0,0)
 32
 
->> "16"/Decimal("2.000000000000000000000002")
-8
-
->> "1e100"/Decimal("2.000000000000000000000002")
-5E+99
-
 >> "16"/ParseJSON("2")
 8
 
@@ -139,10 +130,10 @@ Error({Kind:ErrorKind.Div0})
 
 // Boolean
 
->> true/Float(2)
+>> true/Value(2)
 0.5
 
->> true/Float("1e100")
+>> true/Value("1e100")
 1E-100
 
 >> true/"2"
@@ -166,9 +157,6 @@ Error({Kind:ErrorKind.Div0})
 >> true/Time(12,0,0)
 2
 
->> true/Decimal("2.000000000000000000000002")
-0.5
-
 >> true/ParseJSON("2")
 0.5
 
@@ -177,10 +165,10 @@ Error({Kind:ErrorKind.Div0})
 
 // Blank
 
->> Blank()/Float(2)
+>> Blank()/Value(2)
 0
 
->> Blank()/Float("1e100")
+>> Blank()/Value("1e100")
 0
 
 >> Blank()/"2"
@@ -204,12 +192,6 @@ Error({Kind:ErrorKind.Div0})
 >> Blank()/Time(12,0,0)
 0
 
->> Blank()/Decimal("2.000000000000000000000002")
-0
-
->> Blank()/Decimal("2.000000000000000000000002")+2.000000000000000000000002
-2
-
 >> Blank()/ParseJSON("2")
 0
 
@@ -218,7 +200,7 @@ Error({Kind:ErrorKind.Div0})
 
 // Date
 
->> Date(2000,1,1)/Float(2)
+>> Date(2000,1,1)/Value(2)
 18263
 
 >> Date(2000,1,1)/"2"
@@ -242,9 +224,6 @@ Error({Kind:ErrorKind.Div0})
 >> Date(2000,1,1)/Time(12,0,0)
 73052
 
->> Date(2000,1,1)/Decimal("2.000000000000000000000002")
-18263
-
 >> Date(2000,1,1)/ParseJSON("2")
 18263
 
@@ -253,7 +232,7 @@ Error({Kind:ErrorKind.Div0})
 
 // DateTime
 
->> DateTime(2000,1,1,12,0,0)/Float(2)
+>> DateTime(2000,1,1,12,0,0)/Value(2)
 18263.25
 
 >> DateTime(2000,1,1,12,0,0)/"2"
@@ -280,9 +259,6 @@ Error({Kind:ErrorKind.Div0})
 >> DateTime(2000,1,1,12,0,0)/Time(12,0,0)
 73053
 
->> DateTime(2000,1,1,12,0,0)/Decimal("2.0000000000000000000002")
-18263.25
-
 >> DateTime(2000,1,1,12,0,0)/ParseJSON("2")
 18263.25
 
@@ -291,7 +267,7 @@ Error({Kind:ErrorKind.Div0})
 
 // Time
 
->> Time(9,0,0)/Float(0.125)
+>> Time(9,0,0)/Value(0.125)
 3
 
 >> Time(9,0,0)/"0.125"
@@ -318,63 +294,18 @@ Error({Kind:ErrorKind.Div0})
 >> 1+(Time(9,0,0)/Time(12,0,0)/1e20)
 1
 
->> Time(9,0,0)/Decimal("0.125")
-3
-
->> 1+(Time(9,0,0)/Decimal("0.125")/1e20)
-1
-
->> Time(9,0,0)/Decimal("0.125000000000000000000001")
-3
-
 >> Time(9,0,0)/ParseJSON("2")
 0.1875
 
 >> Time(9,0,0)/ParseJSON("1e100")
 3.75E-101
 
-// Decimal
-
->> Decimal("16.000000000000000000000001")/Float(2)
-8
-
->> Decimal("16.000000000000000000000001")/"2"
-8
-
->> Decimal("16.000000000000000000000001")/true
-16
-
->> Decimal("16.000000000000000000000001")/Blank()
-Error({Kind:ErrorKind.Div0})
-
->> Decimal("16.0000000000000000000001")/Date(1900,1,7)
-2
-
->> Decimal("16.0000000000000000000001")/DateTime(1900,1,1,12,0,0)
-6.4
-
->> Decimal("16.000000000000000000001")/Time(12,0,0)
-32
-
-// this is the one result in this file that should be decimal, everything else is done in floating point
->> Decimal("16.000000000000000000000002")/Decimal("2.000000000000000000000001")
-7.999999999999999999999997
-
->> Decimal("7.999999999999999999999997")*Decimal("2.000000000000000000000001")
-16
-
->> Decimal("16.000000000000000000000002")/ParseJSON("2")
-8
-
->> Decimal("16.000000000000000000000002")/ParseJSON("1e100")
-1.6E-99
-
 // Untyped
 
->> ParseJSON("16.00000000000000000000001")/Float(2)
+>> ParseJSON("16.00000000000000000000001")/Value(2)
 8
 
->> ParseJSON("1e100")/Float(2)
+>> ParseJSON("1e100")/Value(2)
 5E+99
 
 >> ParseJSON("16.00000000000000000000001")/"2"
@@ -412,12 +343,6 @@ Error({Kind:ErrorKind.Div0})
 
 >> ParseJSON("1e100")/Time(12,0,0)
 2E+100
-
->> ParseJSON("16.000000000000000000000002")/Decimal("2.000000000000000000000000001")
-8
-
->> ParseJSON("1e100")/Decimal("2.000000000000000000000000001")
-5E+99
 
 >> ParseJSON("16.000000000000000000000002")/ParseJSON("2")
 8

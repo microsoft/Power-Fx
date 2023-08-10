@@ -6,6 +6,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
+    [Obsolete("Remove this")]
     public static class SymbolTableExtensions
     {
         /// <summary>

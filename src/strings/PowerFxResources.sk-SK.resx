@@ -1465,6 +1465,14 @@
     <value>vstup</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikátor</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikátor</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Vráti zadaný počet znakov od začiatku textovej hodnoty.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Prístup k vlastnosti vlastných údajov súčasti s parametrami je možný iba zo samotnej súčasti alebo z výstupných vlastností súčastí.</value>
+    <value>Prístup k vlastnosti funkcie alebo parametru súčasti je možný iba zo súčasti alebo z výstupných vlastností súčasti.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Vlastnosť funkcie súčasti alebo parameter môže odkazovať iba na iné vlastnosti funkcie.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Prvý argument pre {0} má byť jednostĺpcová tabuľka.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec textových hodnôt pre {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec dátumových hodnôt pre {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec numerických hodnôt pre {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Neplatná schéma, očakával sa stĺpec hodnôt farieb pre {0}.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Neplatná schéma, očakával sa stĺpec {0} hodnôt pre {1}.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Numerická hodnota je príliš veľká.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Bolo použité vyhradené slovo, ktoré momentálne nie je podporované.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematické a štatistické</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informácie</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Táto možnosť nie je v stĺpcoch vzorcov podporovaná.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Neplatný počet argumentov pre {0} funkciu: prijatý počet: {1}, očakávaný počet: {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argument {0} nie je podporovaný pre funkciu {1} v stĺpcoch vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tento typ argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Typ {0} argumentu nie je možné odovzdať do stĺpcov vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Pre tento argument je podporovaná iba hodnota literálu.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Funkcia {0} sa nedá vykonať použitím tejto zadanej hodnoty bez konverzie časového pásma, ktorá však nie je v stĺpcoch vzorcov podporovaná.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Túto operáciu nie je možné vykonať použitím hodnôt, ktoré iným spôsobom vyhodnocujú dátum a čas.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>V stĺpcoch vzorcov sú podporované len reťazce s krátkym formátom dátumu a času.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} je neplatná/nepodporovaná jednotka času pre aritmetickú funkciu dátumu {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Formátovacie tokeny špecifické pre miestne nastavenia, ako napríklad „.“ a „,“, nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Funkcia {0} nie je podporovaná v stĺpcoch vzorcov, použite namiesto toho funkciu {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Túto operáciu nie je možné vykonať na type {0} v stĺpcoch vzorcov.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Typ výsledku {0} nie je v stĺpcoch vzorcov podporovaný.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Priame odkazovanie na celý záznam nie je v stĺpcoch vzorcov podporované. Vytvorte odkaz na platné pole v zázname.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Očakávaný typ výsledku pre tento vzorec by mal byť {0}, skutočný typ výsledku je však {1}. Typ výsledku v stĺpci vzorca nie je možné zmeniť.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Stĺpce typu {0} nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Stĺpce typu {0} vo formáte {1} nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Vynútenie záznamov alebo tabuliek nie je v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabuľky s jedným stĺpcom nie sú v stĺpcoch vzorcov podporované.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>V stĺpcoch vzorcov nemožno odkazovať na virtuálnu tabuľku {0}.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Očakával sa operand. Vzorec alebo výraz očakáva platný operand. Môžete napríklad pridať operand 2 do výrazu 1 +_ tak, aby výsledok bol 3. Alebo môžete do výrazu Dobrý &amp; _ pridať operand Deň, aby bol výsledok Dobrý deň.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Pomenovaný vzorec musí byť výraz.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Funkcia definovaná používateľom musí mať telo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkcia {0} je už definovaná.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} je duplikát.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Neznámy typ {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Uvedený typ vrátenej hodnoty funkcie sa nezhoduje s typom vrátenej hodnoty tela funkcie.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} už existuje.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Táto funkcia je zastaraná a už nie je podporovaná.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Upozornenie: Zadali ste neznámy typ.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} je rozpoznaná, ale nepodporovaná funkcia.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Konverzia typu zlyhala, pretože zadaná hodnota bola typu {0}, no očakávaný bol typ {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Táto operácia v tabuľke {0} možno nebude fungovať, ak je počet jej riadkov vyšší ako {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Tento predikát bude mať vždy hodnotu true. Chceli ste použiť ThisRecord alebo [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} nie je možné delegovať: podporuje iba delegovanie pri vyhľadávaní v poli primárneho kľúča {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Nie je možné delegovať {0}: Výraz porovnáva viaceré polia.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>{0} nie je možné delegovať: obsahuje funkciu správania {1}.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Určuje, či zadaný text obsahuje zhodu zadaného formátu textu.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Text, ktorý sa má porovnať s formátom.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formát, s ktorým sa má text porovnať. Môže ísť o hodnotu enumerácie TextFormat alebo regulárny výraz.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Určuje, pre ktorú časť textu chceme nájsť zhodu. Môže ísť o hodnotu enumerácie MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formát</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>rozsah</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Vyhľadá v zadanom texte zadaný regulárny výraz a vráti z textu prvú zhodu.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Vyhľadá v zadanom texte zadaný regulárny výraz a vráti z textu všetky zhody.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Text, ktorý sa má vyhľadať podľa regulárneho výrazu.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Regulárny výraz, v súvislosti s ktorým sa má skontrolovať text. Môže obsahovať hodnoty medzi zátvorkami, ktoré sa vrátia v prípade úspešnej zhody.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Určuje, pre ktorú časť textu chceme nájsť zhodu. Môže ísť o hodnotu enumerácie MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Text, ktorý sa má vyhľadať podľa regulárneho výrazu.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Regulárny výraz, v súvislosti s ktorým sa má skontrolovať text. Môže obsahovať hodnoty medzi zátvorkami, ktoré sa vrátia v prípade úspešnej zhody.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Určuje, pre ktorú časť textu chceme nájsť zhodu. Môže ísť o hodnotu enumerácie MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulárny_výraz</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>možnosti</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Obnoví zadaný zdroj údajov.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>pripojený_zdroj_údajov</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Očakával sa záznam alebo hodnota tabuľky.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Pripojený zdroj údajov, ktorý sa má obnoviť.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Obnoviť možno iba spravované pripojenia.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Neplatný regulárny výraz.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulárne výrazy musia byť konštantnými hodnotami.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Hodnotu odovzdanú funkcii {0} nemožno zmeniť.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia úplnú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie úplnej zhody v zadanom texte.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia skupinovú zhodu daného regulárneho výrazu. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie čiastočnej zhody v zadanom texte.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia miesto, kde nastala zhoda s daným regulárnym výrazom. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie pozície úplnej zhody v zadanom texte.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Odstráni všetko formátovanie a vráti hodnotu vo formáte obyčajného textu.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Text, z ktorého sa majú odstrániť značky jazykov HTML a XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcie filtra nepovoľujú funkcie správania ako predikáty.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Pomocou operátora And môžete skombinovať viaceré predikáty do druhého argumentu.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Túto tabuľku nie je možné kopírovať. Namiesto toho vytvorte vnorenú tabuľku pomocou funkcie ForAll a zápisu {...} a skopírujte jednotlivé požadované stĺpce.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Tento záznam nie je možné kopírovať. Namiesto toho vytvorte vnorený záznam pomocou zápisu {...} a skopírujte jednotlivé požadované polia.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

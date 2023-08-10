@@ -583,7 +583,7 @@
     <value>Språkkoden som ska användas vid konvertering av värdet.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>Textvärdet som ska konverteras till ett flyttalsvärde.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
@@ -1465,6 +1465,14 @@
     <value>indata</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifierare</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifierare</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Returnerar angivet antal tecken från början av ett textvärde.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentens anpassade dataegenskap med parametrar kan endast användas inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    <value>Egenskap eller parameter för komponentfunktion kan endast nås inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Egenskap eller parameter för komponentfunktion kan endast referera till andra funktionsegenskaper.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Det första argumentet för {0} ska vara en enkolumnstabell.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Ogiltigt schema, en kolumn med textvärden för {0} förväntades.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Ogiltigt schema, en kolumn med datumvärden för {0} förväntades.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Ogiltigt schema, en kolumn med numeriska värden för {0} förväntades.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Ogiltigt schema, en kolumn med färgvärden för {0} förväntades.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Ogiltigt schema, en kolumn med {0} värden för "{1}" förväntades.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Det numeriska värdet är för stort.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Användning av ett reserverat ord som för närvarande inte stöds.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik och statistik</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Information</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Stöds inte i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ogiltigt antal argument för funktionen {0}: mottaget {1}, förväntat {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumentet {0} stöds inte för funktionen {1} i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Det här argumentet kan inte skickas som den här typen i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Det här argumentet kan inte skickas som typen {0} i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Endast ett literalt värde stöds för det här argumentet.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kan inte utföras på dessa indata utan en tidszonskonvertering, som inte stöds i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Åtgärden kan inte utföras på värden som har olika datum-/tidsbeteenden.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Endast de korta strängarna för datum- och tidsformat stöds i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumentet {0} är en ogiltig tidsenhet eller tidsenhet som inte stöds för den aritmetiska funktionen {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Språkspecifika formateringstoken som "." och "," stöds inte i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} stöds inte i formelkolumner. Använd {1} i stället.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Den här åtgärden kan inte utföras på typen {0} i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Resultattypen {0} stöds inte i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Direkt refererande av en hel post stöds inte i formelkolumner. Referera till ett giltigt fält i posten.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Resultattypen för den här formeln förväntas vara {0}, men den faktiska resultattypen är {1}. Resultattypen för en formelkolumn kan inte ändras.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Kolumner av typen {0} stöds inte i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Kolumner av typen {0} med formatet {1} stöds inte i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Det går inte att använda flera samtidiga poster eller tabeller i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabeller med en kolumn stöds inte i formelkolumner.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Det går inte att referera till den virtuella tabellen {0} i formelkolumner.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>En operand förväntades. Formeln eller uttrycket förväntar sig en giltig operand. Du kan t.ex. lägga till operanden '2' till uttrycket ' 1 +_' så att resultatet blir '3'. Du kan lägga till operanden 'där' till uttrycket '"Hej "&amp; _ ' så att resultatet blir 'Hej där'.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Den namngivna formeln måste vara ett uttryck.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>En användardefinierad funktion måste ha en brödtext.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funktionen {0} är redan definierad.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametern {0} är en dubblett.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Okänd typ {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Den angivna funktionens returtyp överensstämmer inte med funktionstextens returtyp.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' finns redan.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Den här funktionen är inaktuell och stöds inte längre.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Varning! En senarelagd typ har angetts.</value>
     
@@ -4912,7 +4863,173 @@
     <value>En url som ska kodas.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>"{0}" är en känd funktion som inte stöds.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Typkonverteringen misslyckades eftersom det angivna värdet var av typen "{0}", förväntad typ: "{1}".</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Den här åtgärden i tabellen "{0}" kanske inte fungerar om den har fler än {1} rader.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Det här predikatet kommer alltid att vara sant. Ville du använda ThisRecord eller [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Det går inte att delegera {0}: stöder endast delegering för sökning i primärnyckelfältet {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Det går inte att delegera {0}: Uttrycket jämför flera fält.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Det går inte att delegera {0}: innehåller en beteendefunktion {1}.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Fastställer om den angivna texten har en matchning för det angivna textformatet.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Texten att jämföra mot formatet.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräkningen eller ett reguljärt uttryck.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>omfattning</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Söker i den tillhandahållna texten efter det angivna reguljära uttrycket och returnerar den första matchningen.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Söker i den tillhandahållna texten efter det angivna reguljära uttrycket och returnerar alla matchningar.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Texten att jämföra mot det reguljära uttrycket.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Det reguljära uttrycket att kontrollera texten mot. Det kan innehålla insamlingar (värden inom parenteser) som returneras vid en lyckad matchning.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Texten att jämföra mot det reguljära uttrycket.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Det reguljära uttrycket att kontrollera texten mot. Det kan innehålla insamlingar (värden inom parenteser) som returneras vid en lyckad matchning.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguljärt_uttryck</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>alternativ</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Uppdaterar den angivna datakällan.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>ansluten_data_källa</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Ett post- eller tabellvärde förväntades.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>En ansluten datakälla att uppdatera.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Bara hanterade anslutningar kan uppdateras.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ogiltigt reguljärt uttryck.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Reguljära uttryck måste vara konstanta värden.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Det värde som skickas till funktionen "{0}" kan inte ändras.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar den fullständiga matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera den fullständiga matchningen i den angivna texten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar gruppmatchningarna i det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera alla underordnade matchningar i den angivna texten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar platsen för matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera positionen för den fullständiga matchningen i den angivna texten.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Tar bort all formatering och returnerar ett oformaterat textvärde.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Texten för att ta bort HTML- och XML-taggar.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunktioner tillåter inte beteendefunktioner som predikat.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Använd operatorn And för att kombinera flera predikat i det andra argumentet.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Det går inte att kopiera den här tabellen. Skapa i stället en infogad tabell med ForAll-funktionen och {...}-format för att kopiera de enskilda kolumner som du vill använda.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Det går inte att kopiera den här posten. Skapa i stället en infogad post med {...}-format för att kopiera de enskilda fält som du vill använda.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

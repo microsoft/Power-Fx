@@ -115,27 +115,6 @@ Time(2,0,0,0)
 >> Min(Time(1,50,0),Time(2,0,0))
 Time(1,50,0,0)
 
->> Max(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
-DateTime(2022,3,8,13,50,0,0)
-
->> Min(Date(2022,3,8),DateTime(2022,3,8,13,50,0))
-DateTime(2022,3,8,0,0,0,0)
-
-// ****** Mix and numeric and date/time arguments, scalar arguments (result is numeric) ******
-
-// Date(2022, 9, 9) = 44813
->> Max(Date(2022, 9, 9), 50000)
-50000
-
->> Min(Date(2022, 9, 9), 50000)
-44813
-
->> Max(Date(2022, 9, 9), 40000)
-44813
-
->> Min(Date(2022, 9, 9), 40000)
-40000
-
 // ****** Coercions, scalar arguments ******
 
 >> Max("1","2")
@@ -316,3 +295,14 @@ Errors: Error 13-16: Expected number. We expect a number at this point in the fo
 >> Max([1,2,3], [1])
 Errors: Error 13-16: Expected number. We expect a number at this point in the formula.|Error 0-17: The function 'Max' has some invalid arguments.
 
+>> Max(Table({a:1},Blank(),{a:3}), If(IsBlank(ThisRecord),100,a))
+100
+
+>> Max([-1, Blank(), -3], If(IsBlank(ThisRecord),100,Value))
+-1
+
+>> Min(Table({a:1},Blank(),{a:3}), If(IsBlank(ThisRecord),-100,a))
+-100
+
+>> Min([1, Blank(), 3], If(IsBlank(ThisRecord),-100,Value))
+1

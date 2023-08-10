@@ -4,16 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
-using System.Xml.Schema;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Functions;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 
 namespace Microsoft.PowerFx.Types
 {
@@ -27,7 +22,6 @@ namespace Microsoft.PowerFx.Types
             try
             {
                 using JsonDocument document = JsonDocument.Parse(jsonString);
-                using MemoryStream jsonMemStream = new MemoryStream();
                 JsonElement propBag = document.RootElement;
 
                 return FromJson(propBag, formulaType, numberIsFloat);
@@ -77,6 +71,21 @@ namespace Microsoft.PowerFx.Types
                     if (skipTypeValidation || formulaType is StringType)
                     {
                         return StringValue.New(element.GetString());
+                    }
+                    else if (formulaType is DateType)
+                    {
+                        DateTime dt1 = element.GetDateTime().Date;
+                        return DateValue.New(dt1);
+                    }
+                    else if (formulaType is DateTimeType)
+                    {
+                        DateTime dt2 = element.GetDateTime(); // Kind is Local
+                        return DateTimeValue.New(dt2);
+                    }
+                    else if (formulaType is DateTimeNoTimeZoneType)
+                    {
+                        DateTime dt3 = element.GetDateTime(); // Kind is Local
+                        return DateTimeValue.New(TimeZoneInfo.ConvertTimeToUtc(dt3));
                     }
                     else
                     {
@@ -163,8 +172,12 @@ namespace Microsoft.PowerFx.Types
         {
             Contract.Assert(array.ValueKind == JsonValueKind.Array);
 
-            var records = new List<RecordValue>();            
-            bool isArray = tableType?._type.IsColumn == true;
+            var records = new List<RecordValue>();
+
+            // Single Column table (e.g. [1,2,3]) Pattern for table is unique
+            // since in that case nested elements are not object and hence needs to be handled differently.
+            var nestedElementsAreObjects = array.EnumerateArray().Any(nestedElement => nestedElement.ValueKind == JsonValueKind.Object);
+            bool isArray = tableType?._type.IsColumn == true && !nestedElementsAreObjects;
             FormulaType ft = isArray ? tableType.ToRecord().GetFieldType("Value") : tableType?.ToRecord();
 
             for (var i = 0; i < array.GetArrayLength(); ++i)
@@ -179,7 +192,9 @@ namespace Microsoft.PowerFx.Types
             TableType type;
             if (records.Count == 0)
             {
-                type = TableType.Empty();
+                // Keep expected table type when there is no record
+                // so that the returned empty table has a matching type.
+                type = tableType ?? TableType.Empty();
             }
             else
             {

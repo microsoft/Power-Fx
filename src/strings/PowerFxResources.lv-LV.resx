@@ -483,7 +483,7 @@
     <value>Teksta vērtība, kas jāpārvērš par skaitlisku vērtību.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Valodas kods, ko izmantot, konvertējot vērtību.</value>
+    <value>Valodas kods, ko izmantot, pārvēršot vērtību.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1465,6 +1465,14 @@
     <value>ievade</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikators</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikators</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Atgriež norādīto rakstzīmju skaitu no teksta vērtības sākuma.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponenta pielāgotajam datu rekvizītam ar parametriem var piekļūt tikai no komponenta vai komponenta izvades rekvizītiem.</value>
+    <value>Komponenta funkcijas rekvizītam vai parametram var piekļūt tikai no komponenta vai komponenta izvades rekvizītiem.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponenta funkcijas rekvizīts vai parametrs var atsaukties tikai uz citiem funkcijas rekvizītiem.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>{0} pirmajam argumentam ir jābūt vienas kolonnas tabulai.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Nederīga shēma, paredzēta teksta vērtību kolonna šim: {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Nederīga shēma, paredzēta datumu vērtību kolonna šim: {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Nederīga shēma, paredzēta skaitlisko vērtību kolonna šim: {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Nederīga shēma, paredzēta krāsu vērtību kolonna šim: {0}.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Nederīga shēma, paredzēta {0} vērtību kolonna šim: '{1}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Skaitliskā vērtība ir pārāk liela..</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Tāda rezervēta vārda izmantošana, kas pašlaik netiek atbalstīta.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemātika un statistika</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informācija</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Netiek atbalstīts formulu kolonnās.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Nederīgs argumentu skaits funkcijai {0}: saņemtais {1}, paredzētais {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās arguments {0} funkcijai {1} netiek atbalstīts.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Šo argumentu formulu kolonnās nevar nodot kā šāda tipa argumentu.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Šo argumentu formulu kolonnās nevar nodot argumentu, kura tips ir kā {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Šim argumentam tiek atbalstīta tikai literāļa vērtība.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Funkciju {0} šai ievadei nevar veikt bez laika joslas pārvēršanas, kas formulu kolonnās netiek atbalstīta.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Šo operāciju nevar izpildīt vērtībām, kurām ir atšķirīgs datuma un laika scenārijs.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās tiek atbalstītas tikai īsās datuma un laika formāta virknes.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Arguments {0} ir nederīga/neatbalstīta laika vienība datuma aritmētiskajai funkcijai {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Lokalizācijas formatējuma marķieri, piemēram, "." un "," netiek atbalstīti formulas kolonnās.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} netiek atbalstīts formulas kolonnās, tā vietā izmantojiet {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās šo darbību nevar veikt tipam {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Rezultātu tips {0} netiek atbalstīts formulu kolonnās.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās netiek atbalstīta tieša atsauce uz visu ierakstu. Lūdzu, norādiet atsauci uz derīgu lauku ierakstā.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Ir paredzams, ka šīs formulas rezultāta tips būs {0}, taču faktiskais rezultāta tips ir {1}. Formulas kolonnas rezultāta tipu nevar mainīt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās netiek atbalstītas kolonnas, kuru tips ir {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās netiek atbalstītas kolonnas, kuru tips ir {0}, formāts {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās netiek atbalstīti piespiedu ieraksti vai tabulas.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Formulas kolonnās netiek atbalstītas vienas kolonnas tabulas.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Formulu kolonnās nevar atsaukties uz virtuālo tabulu {0}.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Tika paredzēts operands. Formulai vai izteiksmei tika paredzēts derīgs operands. Piemēram, varat pievienot operandu “2” izteiksmei “1 + _” un iegūt rezultātu “3”. Vai arī varat pievienot operandu “sveicināts” izteiksmei “"Esiet "&amp; _” un iegūt rezultātu “Esiet sveicināts”.</value>
     
@@ -4681,7 +4604,7 @@
     
   </data>
   <data name="ErrorResource_SuggestRemoteExecutionHint_InOpInvalidColumn_HowToFix_2" xml:space="preserve">
-    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.
+    <value>Ja datu kopā ir pārsniegts 500 ierakstu ierobežojums, bet tajā ir mazāk par 2000 ierakstiem, mēģiniet atiestatīt ierobežojumu.
       </value>
     
   </data>
@@ -4789,6 +4712,26 @@
     <value>Nosauktajai formulai ir jābūt izteiksmei.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Lietotāja definētajai funkcijai ir jābūt pamattekstam.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkcija {0} jau ir definēta.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametrs {0} ir dublikāts.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Nezināms tips {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Norādītais funkcijas atgriešanas tips neatbilst funkcijas pamatteksta atgriešanas tipam.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Formula ar nosaukumu “{0}” jau pastāv.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Šis līdzeklis ir novecojis un vairs netiek atbalstīts.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Brīdinājums. Norādīts atlikta ieraksta tips.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' ir atpazīta, taču neatbalstīta funkcija.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Tipa pārvēršana neizdevās, jo dotās vērtības tips bija “{0}”, paredzamais tips: “{1}”.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Šī darbība tabulā “{0}” var nedarboties, ja tās rindu skaits pārsniedz {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Šis predikāts vienmēr būs patiess. Vai vēlējāties izmantot ThisRecord vai [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Nevar deleģēt {0}: deleģēšana tiek atbalstīta tikai primārās atslēgas lauka '{1}' uzmeklēšanai.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Nevar deleģēt šo: {0}: izteiksme salīdzina vairākus laukus.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Nevar deleģēt {0}: satur uzvedības funkciju '{1}'.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Nosaka, vai norādītais teksts atbilst norādītajam teksta formātam.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teksts, kas jāsalīdzina ar formātu.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formāts, salīdzinājumā ar kuru jāpārbauda teksts. Tā var būt uzskaitījuma TextFormat vērtība vai regulāra izteiksme.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Šādi tiek noteikts, kurai teksta daļai vēlamies noteikt atbilstību. Tā var būt uzskaitījuma MatchOptions vērtība.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>teksts</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formāts</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>apjoms</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Meklē sniegto tekstu norādītajai regulārajai izteiksmei, atgriežot pirmo atbilstību.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Meklē sniegto tekstu norādītajai regulārajai izteiksmei, atgriežot visas atbilstības.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Parastā izteiksmē meklējamais teksts.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Parasta izteiksme, pret kuru jāpārbauda teksts. Tajā var būt tvērumi (iekavās ietvertas vērtības), kas tiks atgriezti sekmīgas atbilstības gadījumā.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Šādi tiek noteikts, kurai teksta daļai vēlamies noteikt atbilstību. Tā var būt uzskaitījuma MatchOptions vērtība.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Parastā izteiksmē meklējamais teksts.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Parasta izteiksme, pret kuru jāpārbauda teksts. Tajā var būt tvērumi (iekavās ietvertas vērtības), kas tiks atgriezti sekmīgas atbilstības gadījumā.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Šādi tiek noteikts, kurai teksta daļai vēlamies noteikt atbilstību. Tā var būt uzskaitījuma MatchOptions vērtība.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>teksts</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulāra_izteiksme</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opcijas</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Atsvaidzina norādīto datu avotu.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>pievienotais_datu_avots</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Paredzēta ieraksta vai tabulas vērtība.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Atsvaidzināmais savienotais datu avots.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Atsvaidzināt var tikai pārvaldītos savienojumus.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Nederīga regulārā izteiksme.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulārajām izteiksmēm jābūt konstantām vērtībām.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Funkcijai “{0}” nodoto vērtību nevar mainīt.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež pilnu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu pilnīgai norādītā teksta atbilstības izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež grupu atbilstību parastajai izteiksmei. Lai šo rekvizītu izmantotu visu norādītā teksta pakārtoto atbilstību izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež atbilstības atrašanās vietu parastajā izteiksmē. Lai šo rekvizītu izmantotu pilnīgas norādītā teksta atbilstības atrašanās vietas izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Noņem visu formatējumu un atgriež vienkārša teksta vērtību.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>teksts</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Teksts, no kā jānoņem tā HTML un XML atzīmes.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtra funkcijas neatļauj izmantot uzvedības funkcijas kā predikātus.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Izmantojiet operatoru And, lai apvienotu vairākus predikātus otrā argumentā.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Šo tabulu nevar kopēt. Tā vietā izveidojiet iekļauto tabulu, izmantojot funkciju ForAll un {...} notāciju, lai kopētu atsevišķas vajadzīgās kolonnas.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Šo ierakstu nevar kopēt. Tā vietā izveidojiet iekļauto ierakstu, izmantojot {...} notāciju, lai kopētu atsevišķus vajadzīgos laukus.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

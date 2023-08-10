@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 {
     internal abstract class StringOneArgFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }
@@ -100,11 +100,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.StringTFuncArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

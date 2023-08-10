@@ -58,3 +58,27 @@ RGBA(255,255,255,0.004)
 // This is due to rounding error and not due to language semantics. 
 >> RGBA(255,255,255,0.0003)
 RGBA(255,255,255,0)
+
+>> RGBA(1e28, 255, 255, 1.0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> RGBA(255, 1e28, 255, 1.0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> RGBA(255, 255, 1e28, 1.0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> RGBA(255, 255, 255, 1e28)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> RGBA(-1e28, 255, 255, 1.0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> RGBA(255, -1e28, 255, 1.0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> RGBA(255, 255, -1e28, 1.0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> RGBA(255, 255, 255, -1e28)
+Error({Kind:ErrorKind.InvalidArgument})

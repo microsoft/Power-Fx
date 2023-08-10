@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
@@ -25,7 +24,7 @@ namespace Microsoft.PowerFx.Functions
                     "-",
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: ReplaceBlankWithFloatZero,
-                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeTypes: ExactValueType<NumberValue>,
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: NumericNegate)
@@ -40,6 +39,39 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeTypeChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: DecimalNegate)
+            },
+            {
+                UnaryOpKind.NegateDate,
+                StandardErrorHandling<FormulaValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DateTimeNegate)
+            },
+            {
+                UnaryOpKind.NegateDateTime,
+                StandardErrorHandling<FormulaValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: DateTimeNegate)
+            },
+            {
+                UnaryOpKind.NegateTime,
+                StandardErrorHandling<TimeValue>(
+                    "-",
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: ReplaceBlankWithDecimalZero,
+                    checkRuntimeTypes: DateNumberTimeOrDateTime,
+                    checkRuntimeValues: DeferRuntimeTypeChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: TimeNegate)
             },
             {
                 UnaryOpKind.Percent,
@@ -457,7 +489,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Guid)
+                    targetFunction: GuidPure)
             },
             {
                 UnaryOpKind.GUIDToText,
@@ -470,10 +502,32 @@ namespace Microsoft.PowerFx.Functions
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
                     targetFunction: Text)
             },
+            {
+                UnaryOpKind.UntypedStringToUntypedFloat,
+                StandardErrorHandling<UntypedObjectValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: UntypedStringToUntypedFloat)
+            },
+            {
+                UnaryOpKind.UntypedStringToUntypedDecimal,
+                StandardErrorHandling<UntypedObjectValue>(
+                    functionName: null, // internal function, no user-facing name
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    targetFunction: UntypedStringToUntypedDecimal)
+            },
         };
-#endregion
+        #endregion
 
-#region Unary Operator Implementations
+        #region Unary Operator Implementations
         private static NumberValue NumericNegate(IRContext irContext, NumberValue[] args)
         {
             var result = -args[0].Value;
@@ -484,6 +538,30 @@ namespace Microsoft.PowerFx.Functions
         {
             var result = -args[0].Value;
             return new DecimalValue(irContext, result);
+        }
+
+        private static TimeValue TimeNegate(IRContext irContext, TimeValue[] args)
+        {
+            var result = -args[0].Value;
+            return new TimeValue(irContext, result);
+        }
+
+        private static FormulaValue DateTimeNegate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var numericValue = DateToNumber(runner, context, IRContext.NotInSource(FormulaType.Number), args);
+            if (numericValue is NumberValue nv)
+            {
+                if (irContext.ResultType == FormulaType.Date)
+                {
+                    return NumberToDate(irContext, new[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), -nv.Value) });
+                }
+                else
+                {
+                    return NumberToDateTime(runner, context, irContext, new[] { new NumberValue(IRContext.NotInSource(FormulaType.Number), -nv.Value) });
+                }
+            }
+
+            return numericValue; // error
         }
 
         private static NumberValue NumericPercent(IRContext irContext, NumberValue[] args)
@@ -565,7 +643,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return DateToDecimal(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateToDecimal(runner.GetFormattingInfo(), irContext, args[0]);
         }
 
         public static DecimalValue DateToDecimal(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
@@ -576,7 +654,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static DecimalValue DateTimeToDecimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
         {
-            return DateTimeToDecimal(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateTimeToDecimal(runner.GetFormattingInfo(), irContext, args[0]);
         }
 
         public static DecimalValue DateTimeToDecimal(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
@@ -686,7 +764,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue DateToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return DateToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateToNumber(runner.GetFormattingInfo(), irContext, args[0]);
         }
 
         public static NumberValue DateToNumber(FormattingInfo formatInfo, IRContext irContext, FormulaValue value)
@@ -697,7 +775,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static NumberValue DateTimeToNumber(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DateTimeValue[] args)
         {
-            return DateTimeToNumber(CreateFormattingInfo(runner), irContext, args[0]);
+            return DateTimeToNumber(runner.GetFormattingInfo(), irContext, args[0]);
         }
 
         public static NumberValue DateTimeToNumber(FormattingInfo formatInfo, IRContext irContext, DateTimeValue value)
@@ -722,12 +800,12 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue NumberToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, NumberValue[] args)
         {
-            return NumberToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+            return NumberToDateTime(runner.GetFormattingInfo(), irContext, args[0]);
         }
 
         public static DateTimeValue DecimalToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, DecimalValue[] args)
         {
-            return DecimalToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+            return DecimalToDateTime(runner.GetFormattingInfo(), irContext, args[0]);
         }
 
         public static DateTimeValue DecimalToDateTime(FormattingInfo formatInfo, IRContext irContext, DecimalValue value)
@@ -839,7 +917,7 @@ namespace Microsoft.PowerFx.Functions
             TimeZoneInfo timeZoneInfo = runner.TimeZoneInfo;
             DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            var time = arg0.TimeOfDay;
+            var time = arg0.Subtract(_epoch);
             return new TimeValue(irContext, time);
         }
 
@@ -858,7 +936,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static DateTimeValue TimeToDateTime(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, TimeValue[] args)
         {
-            return TimeToDateTime(CreateFormattingInfo(runner), irContext, args[0]);
+            return TimeToDateTime(runner.GetFormattingInfo(), irContext, args[0]);
         }
 
         public static DateTimeValue TimeToDateTime(FormattingInfo formatInfo, IRContext irContext, TimeValue value)

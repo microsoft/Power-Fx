@@ -17,30 +17,40 @@ namespace Microsoft.PowerFx.Types
         private readonly RecordType _recordType;
 
         internal InMemoryTableValue(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
-            : base(irContext, records.ToList())
+            : base(irContext, MaybeAdjustType(irContext, records).ToList())
         {
             Contract.Assert(IRContext.ResultType is TableType);
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
         }
 
+        // copy of rows made by constructor above with .ToList().
+        internal InMemoryTableValue(InMemoryTableValue orig)
+            : this(orig.IRContext, orig.Rows)
+        {
+        }
+
+        public override bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new InMemoryTableValue(this);
+            return true;
+        }
+
+        public override bool CanShallowCopy => true;
+
+        private static IEnumerable<DValue<RecordValue>> MaybeAdjustType(IRContext irContext, IEnumerable<DValue<RecordValue>> records)
+        {
+            return records.Select(record => record.IsValue ? DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(((TableType)irContext.ResultType).ToRecord(), record.Value)) : record);
+        }
+
         protected override DValue<RecordValue> Marshal(DValue<RecordValue> record)
         {
-            if (record.IsValue)
-            {
-                var compileTimeType = _recordType;
-                var record2 = CompileTimeTypeWrapperRecordValue.AdjustType(compileTimeType, record.Value);
-                return DValue<RecordValue>.Of(record2);
-            }
-            else
-            {
-                return record;
-            }
+            return record;
         }
 
         protected override DValue<RecordValue> MarshalInverse(RecordValue row)
         {
-            return DValue<RecordValue>.Of(row);
+            return DValue<RecordValue>.Of(CompileTimeTypeWrapperRecordValue.AdjustType(_recordType, row));
         }
     }
 
@@ -58,6 +68,19 @@ namespace Microsoft.PowerFx.Types
             var tableType = (TableType)IRContext.ResultType;
             _recordType = tableType.ToRecord();
         }
+
+        internal RecordsOnlyTableValue(RecordsOnlyTableValue orig)
+            : this(orig.IRContext, orig.Rows.Select(record => record.Value).ToList())
+        {
+        }
+
+        public override bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new RecordsOnlyTableValue(this);
+            return true;
+        }
+
+        public override bool CanShallowCopy => true;
 
         protected override DValue<RecordValue> Marshal(RecordValue record)
         {

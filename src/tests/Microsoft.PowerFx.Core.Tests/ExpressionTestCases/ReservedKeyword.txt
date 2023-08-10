@@ -1,0 +1,77 @@
+﻿
+// common tests
+
+>> {OkToUse :1}
+{OkToUse:1}
+
+>> {As :1}
+Errors: Error 1-3: Unexpected characters. The formula contains 'As' where 'Ident' is expected.|Error 1-3: Unexpected characters. The formula contains 'As' where 'Colon' is expected.|Error 1-3: Expected colon. We expect a colon (:) at this point in the formula.|Error 4-5: Unexpected characters. The formula contains 'Colon' where 'CurlyClose' is expected.|Error 4-5: Unexpected characters. Characters are used in the formula in an unexpected way.
+
+// ReservedKeywords escaped shuold work with or without DisabledReservedKeywords
+
+>> {'As' :1}
+{'As':1}
+
+>> {'OkToUse' :1}
+{OkToUse:1}
+
+>> {'Is'      :1}
+{'Is':1}
+
+>> {'This'    :1}
+{'This':1}
+
+>> {'blank'   :1}
+{'blank':1}
+
+>> {'empty'   :1}
+{'empty':1}
+
+>> {'null'    :1}
+{'null':1}
+
+>> {'none'    :1}
+{'none':1}
+
+>> {'nothing' :1}
+{'nothing':1}
+
+>> {'undefined':1}
+{'undefined':1}
+
+>> {'Child':1}
+{'Child':1}
+
+>> {'Children':1}
+{'Children':1}
+
+>> {'Siblings':1}
+{'Siblings':1}
+
+>> {'Parent':1}
+{'Parent':1}
+
+>> {'Self':1}
+{'Self':1}
+
+>> {'true':1}
+{'true':1}
+
+>> {'false':1}
+{'false':1}
+
+>> {'And':1}
+{'And':1}
+
+>> {'Or':1}
+{'Or':1}
+
+>> {'Not':1}
+{'Not':1}
+
+>> {'in':1}
+{'in':1}
+
+>> {'exactin':1}
+{'exactin':1}
+

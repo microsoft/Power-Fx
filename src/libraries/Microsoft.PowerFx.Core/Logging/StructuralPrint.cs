@@ -82,6 +82,13 @@ namespace Microsoft.PowerFx.Core.Logging
             }
 
             var info = _binding?.GetInfo(node);
+
+            if (IsExpandedType(_binding, node))
+            {
+                // first name expanded
+                return LazyList<string>.Of($"#$fne$#");
+            }
+
             if (info != null && info.Kind != BindKind.Unknown)
             {
                 return LazyList<string>.Of($"#${Enum.GetName(typeof(BindKind), info.Kind)}$#");
@@ -337,11 +344,11 @@ namespace Microsoft.PowerFx.Core.Logging
             // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (var i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Count; ++i)
             {
                 result = result
                     .With(node.Children[i].Accept(this, Precedence.None));
-                if (i != node.Children.Length - 1)
+                if (i != node.Children.Count - 1)
                 {
                     result = result.With(listSep);
                 }
@@ -357,14 +364,14 @@ namespace Microsoft.PowerFx.Core.Logging
             // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (var i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Count; ++i)
             {
                 result = result
                     .With(
                         "#$fieldname$#",
                         TexlLexer.PunctuatorColon)
                     .With(node.Children[i].Accept(this, Precedence.SingleExpr));
-                if (i != node.Children.Length - 1)
+                if (i != node.Children.Count - 1)
                 {
                     result = result.With(listSep);
                 }
@@ -390,10 +397,10 @@ namespace Microsoft.PowerFx.Core.Logging
             // $$$ can't use current culture
             var listSep = TexlLexer.GetLocalizedInstance(CultureInfo.CurrentCulture).LocalizedPunctuatorListSeparator + " ";
             var result = LazyList<string>.Empty;
-            for (var i = 0; i < node.Children.Length; ++i)
+            for (var i = 0; i < node.Children.Count; ++i)
             {
                 result = result.With(node.Children[i].Accept(this, Precedence.SingleExpr));
-                if (i != node.Children.Length - 1)
+                if (i != node.Children.Count - 1)
                 {
                     result = result.With(listSep);
                 }
@@ -442,6 +449,13 @@ namespace Microsoft.PowerFx.Core.Logging
             Contracts.AssertNonEmpty(op);
 
             return " " + op + " ";
+        }
+
+        private bool IsExpandedType(TexlBinding binding, TexlNode node)
+        {
+            var type = _binding?.GetType(node);
+
+            return type != null && type.AggregateHasExpandedType();
         }
     }
 }

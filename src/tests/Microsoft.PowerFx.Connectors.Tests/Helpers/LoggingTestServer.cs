@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -48,6 +47,13 @@ namespace Microsoft.PowerFx.Tests
             ResponseSetMode = true;
         }
 
+        public void SetResponseFromFiles(params string[] files)
+        {
+            Responses = files.Select(file => Helpers.ReadAllText(file)).ToArray();
+            CurrentResponse = 0;
+            ResponseSetMode = true;
+        }
+
         public void SetResponseFromFile(string filename, HttpStatusCode status = HttpStatusCode.OK)
         {
             if (string.IsNullOrEmpty(filename))
@@ -61,7 +67,7 @@ namespace Microsoft.PowerFx.Tests
 
         public void SetResponse(string text, HttpStatusCode status = HttpStatusCode.OK)
         {
-            Assert.Null(_nextResponse);            
+            Assert.Null(_nextResponse);
             _nextResponse = GetResponseMessage(text, status);
         }
 
@@ -113,9 +119,13 @@ namespace Microsoft.PowerFx.Tests
             }
 
             var response = ResponseSetMode ? GetResponseMessage(Responses[CurrentResponse++], HttpStatusCode.OK) : _nextResponse;
-            response.RequestMessage = request;
+            if (response != null)
+            {
+                response.RequestMessage = request;
+            }
+
             _nextResponse = null;
-            return response;
+            return response ?? new HttpResponseMessage(HttpStatusCode.InternalServerError);
         }
     }
 }

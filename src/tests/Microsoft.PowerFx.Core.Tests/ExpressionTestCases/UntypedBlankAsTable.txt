@@ -1,67 +1,72 @@
-// Using an untyped blank, such as the return type from Blank(), as an argument to a single column table enabled function.
-// We are inconsistent, but don't want to break existing behavior, and this scenario is not common or useful.
+
+// Consider an untyped blank, such as the return type from Blank(), as an argument to a single column table enabled function.
+//
+// We favor treating these as a scalar blank, rather than a table blank.  Scalar is the simpler form and more likely
+// what the maker wanted.  This treatment is also consistent with Canvas.
+//
 // A typed Blank, such as returned from a database or If(1<0,"foo") is fine, it specifically an untyped Blank that is odd.
+//
 // In general, a function that takes a blank table argument will return a blank table.
 
 >> Concatenate("a",Blank(),"b")
 "ab"
 
 >> Concatenate(["a","b"],Blank())
-Blank()
+Table({Value:"a"},{Value:"b"})
 
 >> Concatenate(Blank(),["a","b"])
-Blank()
+Table({Value:"a"},{Value:"b"})
 
 >> Left(["abc","def"],2)
 Table({Value:"ab"},{Value:"de"})
 
 >> Left(["abc","def"],Blank())
-#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
+Table({Value:""},{Value:""})
 
 >> Left("abcd",[2,3])
 Table({Value:"ab"},{Value:"abc"})
 
 >> Left(Blank(),[2,3])
-#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
+Table({Value:""},{Value:""})
 
 >> Right(["abc","def"],2)
 Table({Value:"bc"},{Value:"ef"})
 
 >> Right(["abc","def"],Blank())
-#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
+Table({Value:""},{Value:""})
 
 >> Right("abc",[2,3])
 Table({Value:"bc"},{Value:"abc"})
 
 >> Right(Blank(),[2,3])
-#SKIP: Waiting on https://github.com/microsoft/Power-Fx/issues/1317, JS and C# disagree
+Table({Value:""},{Value:""})
 
 >> Mid(["abc","def"],2)
 Table({Value:"bc"},{Value:"ef"})
 
 >> Mid(["abc","def"],Blank())
-Errors: Error 0-26: The function 'Mid' has some invalid arguments.|Error 4-17: Invalid argument type (Table). Expecting a Text value instead.
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Mid(["abc","def"],3,Blank())
-Errors: Error 0-28: The function 'Mid' has some invalid arguments.|Error 4-17: Invalid argument type (Table). Expecting a Text value instead.
+Table({Value:""},{Value:""})
 
->> Mid(Blank(),["abc","def"])
-Errors: Error 0-26: The function 'Mid' has some invalid arguments.|Error 12-25: Invalid argument type (Table). Expecting a Number value instead.
+>> Mid(Blank(),[1,2])
+Table({Value:""},{Value:""})
 
 >> Mod([10,22],[3,4])
 Table({Value:1},{Value:2})
 
 >> Mod([1,2],Blank())
-Errors: Error 0-18: The function 'Mod' has some invalid arguments.|Error 4-9: Invalid argument type (Table). Expecting a Decimal value instead.
+Table({Value:Error({Kind:ErrorKind.Div0})},{Value:Error({Kind:ErrorKind.Div0})})
 
 >> Mod(Blank(),[3,4])
-Errors: Error 0-18: The function 'Mod' has some invalid arguments.|Error 12-17: Invalid argument type (Table). Expecting a Decimal value instead.
+Table({Value:0},{Value:0})
 
 >> Power(Blank(),3)
 0
 
 >> Power(Blank(),[3])
-Errors: Error 0-18: The function 'Power' has some invalid arguments.|Error 14-17: Invalid argument type (Table). Expecting a Number value instead.
+Table({Value:0})
 
 >> Power(If(1<0,[1]),3)
 Blank()
@@ -70,12 +75,9 @@ Blank()
 Error({Kind:ErrorKind.Numeric})
 
 >> Log(Blank(),[3])
-Errors: Error 12-15: Invalid argument type (Table). Expecting a Number value instead.
+Table({Value:Error({Kind:ErrorKind.Numeric})})
 
 >> Log(If(1<0,[1]),3)
-Blank()
-
->> Sum(Blank(),1)
 Blank()
 
 >> Sum([4,5],Blank())
@@ -85,9 +87,6 @@ Blank()
 Blank()
 
 >> Sum(If(1<0,[1,2,3]),Blank())
-Blank()
-
->> Average(Blank(),1)
 Blank()
 
 // one argument, single column table functions, will treat Blank() as a scalar

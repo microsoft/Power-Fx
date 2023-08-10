@@ -1465,6 +1465,14 @@
     <value>ввод</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>модификатор</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>модификатор</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Возвращает указанное количество символов с начала текстового значения.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Доступ к свойству пользовательских данных компонента с параметрами возможен только из компонента или из выходных свойств компонента.</value>
+    <value>Доступ к свойству или параметру функции компонента возможен только из компонента или из выходных свойств компонента.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Свойство или параметр функции компонента может ссылаться только на другие свойства функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Первый аргумент "{0}" должен быть таблицей с одним столбцом.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Недопустимая схема; ожидается столбец текстовых значений для "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Недопустимая схема; ожидается столбец значений даты для "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Недопустимая схема; ожидается столбец числовых значений для "{0}".</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Недопустимая схема; ожидается столбец значений цвета для "{0}".</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Недопустимая схема; ожидается столбец значений "{0}" для "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Числовое значение слишком велико.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Использование зарезервированного слова, которое в настоящее время не поддерживается.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Математические и статистические</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Информация</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Недопустимое число аргументов для функции {0}: получено {1}, ожидалось {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Аргумент {0} не поддерживается для функции {1} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Этот аргумент нельзя передавать в качестве этого типа в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Этот аргумент нельзя передавать в качестве типа {0} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Для этого аргумента поддерживается только литеральное значение.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Операцию {0} невозможно выполнить для этих входных данных без преобразования часового пояса, которое не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Эту операцию невозможно выполнить над значениями, имеющие разные поведения даты и времени.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>В столбцах формул поддерживаются только строки в коротком формате даты и времени.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Аргумент {0} представляет собой недопустимую/неподдерживаемую единицу времени для функции операций с датами {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Зависящие от локали лексемы форматирования, такие как "." и "," не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} не поддерживается в столбцах формул. Используйте {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Эту операцию нельзя выполнять над типом {0} в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Тип результата {0} не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Непосредственные ссылки на всю запись не поддерживаются в столбцах формул. Ссылка должна указывать на допустимое поле в записи.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Ожидаемый тип результата для этой формулы — {0}, однако фактический тип результата — {1}. Изменить тип результата столбца формул невозможно.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Столбцы типа "{0}" не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Столбцы типа "{0}" с форматом {1} не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Приведение типов записей или таблиц не поддерживается в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Таблицы из одного столбца не поддерживаются в столбцах формул.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>В столбцах формул нельзя ссылаться на виртуальную таблицу {0}.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Ожидается операнд. В формуле или выражении ожидается допустимый операнд. Например, вы можете добавить операнд "2" в выражение "1 + _", чтобы получить результат "3", или операнд "день" в выражение «"Добрый "&amp; _ », чтобы получить результат "Добрый день".</value>
     
@@ -4789,6 +4712,26 @@
     <value>Именованная формула должна быть выражением.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Определяемая пользователем функция должна иметь основную часть.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Функция "{0}" уже определена.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Параметр "{0}" является дубликатом.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Неизвестный тип "{0}".</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Указанный тип возврата функции не соответствует типу возврата основной части функции.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Именованная формула "{0}" уже существует.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Эта функция устарела и больше не поддерживается.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>В пространстве имен "{1}" имен функция "{0}" устарела.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>В пространстве имен "{1}" функция "{0}" не поддерживается.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Предупреждение. Указан тип Deferred.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>Функция "{0}" распознана, но она не поддерживается.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Сбой преобразования типа. Заданное значение имеет тип "{0}", тогда как ожидался тип "{1}".</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Эта операция в таблице "{0}" может не работать, если в ней больше {1} строк.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Этот предикат всегда будет иметь значение true. Вы хотите использовать ThisRecord или [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Невозможно делегировать "{0}": поддерживается только делегирование для поиска в поле первичного ключа "{1}".</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Невозможно делегировать {0}: выражение сравнивает несколько полей.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Невозможно делегировать "{0}": содержит функцию поведения "{1}".</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Определяет, есть ли в предоставленном тексте совпадение с указанным форматом текста.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Текст, сверяемый с форматом.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Формат, с которым сверяется текст. Это может быть значение перечисления TextFormat или регулярное выражение.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Определяет, какую часть текста следует сопоставлять. Это может быть значение перечисления MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>экстент</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Выполняет поиск указанного текста для заданного регулярного выражения, возвращая первое соответствие с ним.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Выполняет поиск указанного текста для заданного регулярного выражения, возвращая все соответствия с ним.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Текст, сверяемый с регулярным выражением при поиске.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Регулярное выражение, с помощью которого проверяется текст. Оно может содержать записи (значения в скобках), которые будут возвращены при нахождении соответствия.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Определяет, какую часть текста следует сопоставлять. Это может быть значение перечисления MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Текст, сверяемый с регулярным выражением при поиске.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Регулярное выражение, с помощью которого проверяется текст. Оно может содержать записи (значения в скобках), которые будут возвращены при нахождении соответствия.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Определяет, какую часть текста следует сопоставлять. Это может быть значение перечисления MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>регулярное_выражение</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>параметры</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Обновляет указанный источник данных.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>подключенный_источник_данных</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Ожидается запись или табличное значение.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Подключенный источник данных, подлежащий обновлению.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Обновлять можно только управляемые подключения.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Недопустимое регулярное выражение.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Регулярные выражения должны быть константными значениями.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Значение, переданное функции "{0}", нельзя изменить.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает полное соответствие регулярного выражения. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения полного соответствия в указанном тексте.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает групповые соответствия в регулярном выражении. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения всех вложенных соответствий в указанном тексте.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает расположение соответствия регулярного выражения. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения позиции полного соответствия в указанном тексте.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Удаляет все форматирование и возвращает значение в виде обычного текста.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Текст, в котором нужно удалить теги HTML и XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функции фильтра не позволяют выполнять функции поведения в виде предикатов.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Используйте оператор "And" для объединения нескольких предикатов во второй аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Не удается скопировать эту таблицу. Вместо этого создайте встроенную таблицу с помощью функции ForAll и нотацию {...} для копирования нужных столбцов.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Эту запись невозможно скопировать. Вместо этого создайте встроенную запись с помощью нотации {...} для копирования нужных полей.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Второй аргумент функции "{0}" поддерживается только для числовых значений и значений даты и времени.</value>
     
   </data>
 </root>

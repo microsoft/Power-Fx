@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Resources;
-using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Core.Localization
@@ -25,10 +25,28 @@ namespace Microsoft.PowerFx.Core.Localization
         // If the dependency on ExternalStringResources is removed, this can be as well
         public static bool ShouldThrowIfMissing { get; set; } = true;
 
-        private static readonly ThreadSafeResouceManager _resourceManager = new ThreadSafeResouceManager();
+        internal static readonly IExternalStringResources LocalStringResources = new PowerFxStringResources("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly, true);
 
-        [ThreadSafeProtectedByLockAttribute("_errorResources")]
-        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new Dictionary<string, Dictionary<string, ErrorResource>>(StringComparer.OrdinalIgnoreCase);
+        public static string Get(string resourceKey, string locale = null)
+        {
+            return TryGet(resourceKey, out string resourceValue, locale) ? resourceValue : null;
+        }
+
+        public static bool TryGet(string resourceKey, out string resourceValue, string locale = null)
+        {            
+            if (LocalStringResources.TryGet(resourceKey, out resourceValue, locale))
+            {
+                return true;
+            }
+
+            if (ExternalStringResources != null && ExternalStringResources.TryGet(resourceKey, out resourceValue, locale))
+            {
+                return true;
+            }
+
+            resourceValue = null;
+            return false;
+        }
 
         public static ErrorResource GetErrorResource(ErrorResourceKey resourceKey, string locale = null)
         {
@@ -36,61 +54,162 @@ namespace Microsoft.PowerFx.Core.Localization
             Contracts.CheckValueOrNull(locale, nameof(locale));
 
             // As foreign languages can lag behind en-US while being localized, if we can't find it then always look in the en-US locale
-            if (!TryGetErrorResource(resourceKey, out var resourceValue, locale))
+            if (resourceKey.ResourceManager.TryGetErrorResource(resourceKey, out ErrorResource resourceValue, locale))
             {
-                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR error resource {0} not found", resourceKey));
-                if (ShouldThrowIfMissing)
-                {
-                    throw new System.IO.FileNotFoundException(resourceKey.Key);
-                }
+                return resourceValue;
             }
 
-            return resourceValue;
+            Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR error resource {0} not found", resourceKey));
+            throw new FileNotFoundException(resourceKey.Key);
         }
 
         public static string Get(ErrorResourceKey resourceKey, string locale = null)
         {
-            return Get(resourceKey.Key, locale);
+            return resourceKey.ResourceManager.TryGet(resourceKey.Key, out string resourceValue, locale) ? resourceValue : null;
         }
 
-        public static string Get(string resourceKey, string locale = null)
+        public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
         {
-            Contracts.CheckValue(resourceKey, nameof(resourceKey));
-            Contracts.CheckValueOrNull(locale, nameof(locale));
+            return resourceKey.ResourceManager.TryGetErrorResource(resourceKey, out resourceValue, locale);
+        }
+    }
 
-            if (!TryGet(resourceKey, out var resourceValue, locale))
+    [ThreadSafeImmutable]
+    internal class ThreadSafeResourceManager
+    {
+        // Get methods on this are threadsafe, as long as we never call ReleaseAll()
+        // This wrapper ensures that we don't accidentally do that        
+        private readonly ResourceManager _resourceManager;
+
+        internal string ResourceLocation => _resourceManager.BaseName;
+
+        internal ThreadSafeResourceManager(string resourceLocation, Assembly assembly)
+        {
+            _resourceManager = new ResourceManager(resourceLocation, assembly);
+        }
+
+        public string GetLocaleResource(string resourceKey, string locale)
+        {
+            if (string.IsNullOrEmpty(locale))
             {
-                // Prior to ErrorResources, error messages were fetched like other string resources.
-                // The resource associated with the key corresponds to the ShortMessage of the new
-                // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
-                // the error message manually (as opposed to going through the DocError class), we check
-                // if there is an error resource associated with this key if we did not find it normally.
-                if (TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale))
-                {
-                    return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
-                }
-
-                Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR resource string {0} not found", resourceKey));
-                if (ShouldThrowIfMissing)
-                {
-                    throw new System.IO.FileNotFoundException(resourceKey);
-                }
+                // $$$ Don't use CurrentUICulture
+                return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
             }
 
-            return resourceValue;
-        }        
+            return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));
+        }
+    }
 
-        public static bool TryGet(string resourceKey, out string resourceValue, string locale = null)
+    [DebuggerDisplay("{ResourceLocation}")]
+    internal class PowerFxStringResources : IExternalStringResources
+    {
+        internal readonly ThreadSafeResourceManager _resourceManager;
+        private readonly bool _useExternalResourceManager;
+
+        internal string ResourceLocation => _resourceManager.ResourceLocation;
+
+        [ThreadSafeProtectedByLockAttribute("_errorResources")]
+        private static readonly Dictionary<string, Dictionary<string, ErrorResource>> _errorResources = new (StringComparer.OrdinalIgnoreCase);
+
+        internal PowerFxStringResources(string resourceLocation, Assembly assembly, bool useResourceManagers = false)
+            : this(new ThreadSafeResourceManager(resourceLocation, assembly))
+        {
+            _useExternalResourceManager = useResourceManagers;
+        }
+
+        internal PowerFxStringResources(ThreadSafeResourceManager resourceManager)
+        {
+            _resourceManager = resourceManager;
+        }
+
+        bool IExternalStringResources.TryGet(string resourceKey, out string resourceValue, string locale)
         {
             Contracts.CheckValue(resourceKey, nameof(resourceKey));
             Contracts.CheckValueOrNull(locale, nameof(locale));
 
             resourceValue = _resourceManager.GetLocaleResource(resourceKey, locale);
 
-            return resourceValue != null ? true : (ExternalStringResources?.TryGet(resourceKey, out resourceValue, locale) ?? false);
+            if (string.IsNullOrEmpty(resourceValue) && _useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGet(resourceKey, out resourceValue, locale))
+            {
+                return true;
+            }
+
+            // Prior to ErrorResources, error messages were fetched like other string resources.
+            // The resource associated with the key corresponds to the ShortMessage of the new
+            // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
+            // the error message manually (as opposed to going through the DocError class), we check
+            // if there is an error resource associated with this key if we did not find it normally.
+            if (((IExternalStringResources)this).TryGetErrorResource(new ErrorResourceKey(resourceKey), out var potentialErrorResource, locale))
+            {
+                resourceValue = potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
+                return true;
+            }
+
+            return resourceValue != null;
         }
 
-        public static bool TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale = null)
+        public string Get(string resourceKey, string locale = null)
+        {
+            if (_useExternalResourceManager)
+            {
+                string str = Get(resourceKey, locale, false);
+
+                if (!string.IsNullOrEmpty(str))
+                {
+                    return str;
+                }
+
+                if (StringResources.ExternalStringResources != null)
+                {
+                    str = StringResources.ExternalStringResources.TryGet(resourceKey, out string resourceValue, locale) ? resourceValue : null;
+
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        return str;
+                    }
+                }
+
+                ThrowInternal(resourceKey);
+            }
+
+            return Get(resourceKey, locale, true);
+        }
+
+        internal string Get(string resourceKey, string locale = null, bool throwIfNotFound = true)
+        {
+            Contracts.CheckValue(resourceKey, nameof(resourceKey));
+            Contracts.CheckValueOrNull(locale, nameof(locale));
+
+            if (!((IExternalStringResources)this).TryGet(resourceKey, out var resourceValue, locale))
+            {
+                // Prior to ErrorResources, error messages were fetched like other string resources.
+                // The resource associated with the key corresponds to the ShortMessage of the new
+                // ErrorResource objects. For backwards compatibility with tests/telemetry that fetched
+                // the error message manually (as opposed to going through the DocError class), we check
+                // if there is an error resource associated with this key if we did not find it normally.
+                if (((IExternalStringResources)this).TryGetErrorResource(new ErrorResourceKey(resourceKey, this), out var potentialErrorResource, locale))
+                {
+                    return potentialErrorResource.GetSingleValue(ErrorResource.ShortMessageTag);
+                }
+
+                if (throwIfNotFound)
+                {
+                    ThrowInternal(resourceKey);
+                }
+
+                return null;
+            }
+
+            return resourceValue;
+        }
+
+        internal static void ThrowInternal(string resourceKey)
+        {
+            Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "ERROR resource string {0} not found", resourceKey));
+            throw new System.IO.FileNotFoundException(resourceKey);
+        }
+
+        bool IExternalStringResources.TryGetErrorResource(ErrorResourceKey resourceKey, out ErrorResource resourceValue, string locale)
         {
             Contracts.CheckValue(resourceKey.Key, nameof(resourceKey));
             Contracts.CheckValueOrNull(locale, nameof(locale));
@@ -99,6 +218,12 @@ namespace Microsoft.PowerFx.Core.Localization
             {
                 // $$$ Don't use CurrentUICulture
                 locale = CultureInfo.CurrentUICulture.Name;
+
+                if (string.IsNullOrEmpty(locale))
+                {
+                    locale = "en-US";
+                }
+
                 Contracts.CheckNonEmpty(locale, "locale");
             }
 
@@ -126,9 +251,8 @@ namespace Microsoft.PowerFx.Core.Localization
                     return true;
                 }
 
-                if (ExternalStringResources != null && ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
+                if (_useExternalResourceManager && StringResources.ExternalStringResources != null && StringResources.ExternalStringResources.TryGetErrorResource(resourceKey, out resourceValue, locale))
                 {
-                    localizedErrorResources.Add(resourceKey.Key, resourceValue);
                     return true;
                 }
             }
@@ -136,7 +260,7 @@ namespace Microsoft.PowerFx.Core.Localization
             return false;
         }
 
-        private static bool TryRebuildErrorResource(string key, string locale, out ErrorResource errorResource)
+        private bool TryRebuildErrorResource(string key, string locale, out ErrorResource errorResource)
         {
             var members = new Dictionary<string, Dictionary<int, string>>(StringComparer.OrdinalIgnoreCase);
             foreach (var tag in ErrorResource.ErrorResourceTagToReswSuffix)
@@ -151,7 +275,7 @@ namespace Microsoft.PowerFx.Core.Localization
                     }
                 }
                 else
-                {                    
+                {
                     // Max 10 multivalue tags, although that's absurd. 
                     for (var i = 1; i < 11; ++i)
                     {
@@ -200,24 +324,5 @@ namespace Microsoft.PowerFx.Core.Localization
                 return false;
             }
         }
-
-        [ThreadSafeImmutable]
-        private class ThreadSafeResouceManager
-        {
-            // Get methods on this are threadsafe, as long as we never call ReleaseAll()
-            // This wrapper ensures that we don't accidentally do that
-            private readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.PowerFx.Core.strings.PowerFxResources", typeof(StringResources).Assembly);
-
-            public string GetLocaleResource(string resourceKey, string locale)
-            {
-                if (string.IsNullOrEmpty(locale))
-                {
-                    // $$$ Don't use CurrentUICulture
-                    return _resourceManager.GetString(resourceKey, CultureInfo.CurrentUICulture);
-                }
-
-                return _resourceManager.GetString(resourceKey, CultureInfo.CreateSpecificCulture(locale));
-            }
-        } 
     }
 }

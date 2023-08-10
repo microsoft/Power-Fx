@@ -506,7 +506,7 @@
     
   </data>
   <data name="AboutBooleanT_input" xml:space="preserve">
-    <value>Stolpec besedilnih vrednosti za obdelavo</value>
+    <value>Stolpec besedilnih vrednosti za obdelavo.</value>
   </data>
   <data name="AboutBooleanN" xml:space="preserve">
     <value>Pretvori »število« v logično vrednost.</value>
@@ -1465,6 +1465,14 @@
     <value>vhod</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Vrne določeno število znakov od začetka besedilne vrednosti.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Do lastnosti podatkov po meri komponente s parametri je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    <value>Do lastnosti funkcije komponente ali parametra je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Lastnost funkcije komponente ali parameter lahko vsebuje samo sklice na druge lastnosti funkcije.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Prvi argument funkcije »{0}« mora biti tabela z enim stolpcem.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Neveljavna shema, pričakovan je stolpec z besedilnimi vrednostmi za »{0}«.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Neveljavna shema, pričakovan je stolpec z datumskimi vrednostmi za »{0}«.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Neveljavna shema, pričakovan je stolpec s številskimi vrednostmi za »{0}«.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Neveljavna shema, pričakovan je stolpcev z vrednostmi barv za »{0}«.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Neveljavna shema, pričakovan je stolpec z vrednostmi {0} za »{1}«.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Številska vrednost je prevelika.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Uporabljena je bila rezervirana besede, ki trenutno ni podprta.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematične in statistične</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacije</value>
@@ -3400,7 +3407,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Uporabi posodobitve v določeni vrstici in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
+    <value>Uporabi posodobitve določene vrstice in spremeni vrstico v določenem viru podatkov. Vrne posodobljeno vrstico.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Ni podprto v stolpcih s formulo.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Neveljavno število argumentov za funkcijo {0} – prejeto: {1}, pričakovano: {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argument {0} ni podprt za funkcijo {1} v stolpcih s formulo.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Tega argumenta ni mogoče prenesti v stolpce s formulami kot to vrsto.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Tega argumenta ni mogoče prenesti v stolpce s formulami kot vrsto {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Za ta argument je podprta samo vrednost z nizom.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Funkcije {0} ni mogoče izvesti za vnos brez pretvorbe časovnega pasu, kar pa ni podprto v stolpcih s formulo.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Tega postopka ni mogoče izvesti pri vrednostih, ki imajo različna vedenja datuma in ure.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>V stolpcih s formulo so podprti samo nizi s kratko obliko zapisa datuma in ure.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argument {0} je neveljaven/nepodprta časovna enota za aritmetično funkcijo datuma {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Žetoni za oblikovanje za določeno območje, kot sta ».« in »,«, niso podprti v stolpcih s formulo.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} ni podprto v stolpcih formule, namesto tega uporabite {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Tega postopka ni mogoče izvesti v stolpcih s formulami za vrsto {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Vrsta rezultata {0} ni podprta v stolpcih s formulo.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Neposreden sklic na celoten zapis ni podprt v stolpcih formule. Uporabite sklic na veljavno polje v zapisu.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Vrsta rezultata za to formulo naj bi bila {0}, vendar je dejanska vrsta rezultata {1}. Vrste rezultata stolpca s formulo ni mogoče spremeniti.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Stolpci vrste {0} niso podprti v stolpcih s formulo.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Stolpci vrste {0} z obliko zapisa {1} niso podprti v stolpcih s formulo.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Vsiljevanje zapisov ali tabel ni podprto v stolpcih formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabele z enim stolpcem niso podprte v stolpcih formule.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Na navidezno tabelo {0} v stolpcih s formulami se ni mogoče sklicevati.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Pričakovan je bil operand. Formula ali izraz pričakuje veljaven operand. Operand »2« lahko na primer dodate v izraz »1 + _«, da bo rezultat »3«. V izraz »"Lep pozdrav "&amp; _« pa lahko dodate operand »vsem«, da dobite rezultat »Lep pozdrav vsem«.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Navedena formula mora biti izraz.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Uporabniško določena funkcija mora imeti telo.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkcija {0} je že določena.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} je podvojen.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Neznana vrsta {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Vrnjena vrsta navedene funkcije se ne ujema z vrnjeno vrsto telesa funkcije.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula »{0}« že obstaja.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Ta funkcija je opuščena in ni več podprta.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Opozorilo: na voljo je odložena vrsta.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>Funkcija »{0}« je prepoznana, vendar ni podprta.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Vrste ni bilo mogoče pretvoriti, ker je imela navedena vrednost vrsto »{0}«, pričakovana pa je vrsta »{1}«.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Ta postopek morda ne bo deloval v tabeli »{0}«, če ima več kot {1} vrstic.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Ta predikat bo vedno imel vrednost »true«. Ali ste želeli uporabiti ta zapis ali [@]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Dodelitev za {0} ni mogoča: dodelitev je podprta le za iskanje v polju primarnega ključa »{1}«.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Ni mogoče pooblastiti – {0}: izraz primerja več polj.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Dodelitev za {0} ni mogoča: vsebuje funkcijo vedenja »{1}«.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Določi, ali navedeno besedilo ustreza obliki zapisa navedenega besedila.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Besedilo, ki bo primerjano z obliko zapisa.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Oblika zapisa, uporabljena za preverjanje besedila. Lahko je vrednost oštevilčenja »TextFormat« ali regularni izraz.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ta možnost določa, za kateri del besedila je treba poiskati zadetek. Lahko je vrednost oštevilčenja »MatchOptions«.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>besedilo</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>oblika_zapisa</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>obseg</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>V navedenem besedilu poišče navedeni regularni izraz in vrne prvi zadetek iz njega.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>V navedenem besedilu poišče navedeni regularni izraz in vrne vse zadetke iz njega.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Besedilo, ki ga želite preiskati z regularnim izrazom.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Regularni izraz, ki bo uporabljen za preverjanje besedila. Vsebuje lahko zajeme (vrednosti med oklepaji), ki bodo vrnjeni v primeru uspešnega ujemanja.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ta možnost določa, za kateri del besedila je treba poiskati zadetek. Lahko je vrednost oštevilčenja »MatchOptions«.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Besedilo, ki ga želite preiskati z regularnim izrazom.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Regularni izraz, ki bo uporabljen za preverjanje besedila. Vsebuje lahko zajeme (vrednosti med oklepaji), ki bodo vrnjeni v primeru uspešnega ujemanja.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ta možnost določa, za kateri del besedila je treba poiskati zadetek. Lahko je vrednost oštevilčenja »MatchOptions«.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>besedilo</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regularni_izraz</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>možnosti</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Osveži navedeni vir podatkov.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>povezan_vir_podatkov</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Pričakovana je vrednost zapisa ali tabele.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Povezan vir podatkov, ki ga je treba osvežiti.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Osvežiti je mogoče samo upravljane povezave.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Regularni izraz ni veljaven.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regularni izrazi morajo biti konstantne vrednosti.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Vrednosti, ki je bila posredovana za funkcijo »{0}«, ni mogoče spremeniti.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Ime posnetka »{0}« skriva vnaprej določeno lastnost, ki vrne polno ujemanje regularnega izraza. Priporočamo, da ga preimenujete, če želite uporabiti to poimenovano lastnost za izvlečenje polnega ujemanja v navedenem besedilu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Ime posnetka »{0}« skriva vnaprej določeno lastnost, ki vrne ujemanja skupine v regularnem izrazu. Priporočamo, da ga preimenujete, če želite uporabiti to poimenovano lastnost za izvlečenje pomožnih ujemanj v navedenem besedilu.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Ime posnetka »{0}« skriva vnaprej določeno lastnost, ki vrne mesto ujemanja regularnega izraza. Priporočamo, da ga preimenujete, če želite uporabiti to poimenovano lastnost za izvlečenje mesta polnega ujemanja v navedenem besedilu.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Odstrani vse oblikovanje in vrne vrednost v navadnem besedilu.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>besedilo</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Besedilo, iz katerega bodo odstranjene oznake HTML in XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcije za filtriranje ne omogočajo funkcij delovanja, kot so predikati.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Uporabite operator »And« in združite več predikatov v drugi argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tabele ni mogoče kopirati. S funkcijo »ForAll« in zapisom {...} ustvarite tabelo v vrstici, da kopirate posamezne izbrane stolpce.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Zapisa ni mogoče kopirati. Ustvarite zapis v vrstici z oznako {...}, če želite kopirati želena posamezna polja.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json;
 using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -32,8 +34,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public delegate void SendToClient(string data);
 
         private readonly SendToClient _sendToClient;
-
         private readonly IPowerFxScopeFactory _scopeFactory;
+        private readonly Action<string> _logger;
 
         public delegate void NotifyDidChange(DidChangeTextDocumentParams didChangeParams);
 
@@ -52,13 +54,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         public event OnLogUnhandledExceptionHandler LogUnhandledExceptionHandler;
 
-        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory)
+        public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
             Contracts.AssertValue(sendToClient);
             Contracts.AssertValue(scopeFactory);
 
             _sendToClient = sendToClient;
             _scopeFactory = scopeFactory;
+
+            _logger = logger;
         }
 
         /// <summary>
@@ -67,6 +71,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         public void OnDataReceived(string jsonRpcPayload)
         {
             Contracts.AssertValue(jsonRpcPayload);
+
+            // Only log when logger is provided and not null
+            // Creating log string is expensive here, especially for the completion requests
+            // Only create log strings when logger is not null
+            _logger?.Invoke($"[PFX] OnDataReceived Received: {jsonRpcPayload ?? "<null>"}");
 
             string id = null;
             try
@@ -81,18 +90,21 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                     if (!element.TryGetProperty("method", out var methodElement))
                     {
+                        _logger?.Invoke($"[PFX] OnDataReceived CreateErrorResult InvalidRequest (method not found)");
                         _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                         return;
                     }
 
                     if (!element.TryGetProperty("params", out var paramsElement))
                     {
+                        _logger?.Invoke($"[PFX] OnDataReceived CreateErrorResult InvalidRequest (params not found)");
                         _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                         return;
                     }
 
                     var method = methodElement.GetString();
                     var paramsJson = paramsElement.GetRawText();
+
                     switch (method)
                     {
                         case TextDocumentNames.DidOpen:
@@ -116,7 +128,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
                             break;
+                        case TextDocumentNames.FullDocumentSemanticTokens:
+                            HandleFullDocumentSemanticTokens(id, paramsJson);
+                            break;
+                        case TextDocumentNames.RangeDocumentSemanticTokens:
+                            HandleRangeDocumentSemanticTokens(id, paramsJson);
+                            break;
                         default:
+                            _logger?.Invoke($"[PFX] OnDataReceived CreateErrorResult InvalidRequest (unknown method)");
                             _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.MethodNotFound));
                             break;
                     }
@@ -124,6 +143,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
             catch (Exception ex)
             {
+                _logger?.Invoke($"[PFX] OnDataReceived Exception: {ex.GetType().FullName} - {ex.Message} - {ex.StackTrace}");
+
                 LogUnhandledExceptionHandler?.Invoke(ex);
 
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InternalError, ex.Message));
@@ -133,6 +154,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private void HandleCommandExecutedRequest(string id, string paramsJson)
         {
+            _logger?.Invoke($"[PFX] HandleCommandExecutedRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
             if (id == null)
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
@@ -181,6 +204,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         {
             Contracts.AssertValue(paramsJson);
 
+            _logger?.Invoke($"[PFX] HandleDidOpenNotification: paramsJson={paramsJson ?? "<null>"}");
+
             if (!TryParseParams(paramsJson, out DidOpenTextDocumentParams didOpenParams))
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(null, JsonRpcHelper.ErrorCode.ParseError));
@@ -203,6 +228,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         private void HandleDidChangeNotification(string paramsJson)
         {
             Contracts.AssertValue(paramsJson);
+
+            _logger?.Invoke($"[PFX] HandleDidChangeNotification: paramsJson={paramsJson ?? "<null>"}");
 
             if (!TryParseParams(paramsJson, out DidChangeTextDocumentParams didChangeParams))
             {
@@ -233,8 +260,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private void HandleCompletionRequest(string id, string paramsJson)
         {
+            _logger?.Invoke($"[PFX] HandleCompletionRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
             if (id == null)
             {
+                _logger?.Invoke($"[PFX] HandleCompletionRequest: Invalid Request, id is null");
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                 return;
             }
@@ -244,6 +274,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             if (!TryParseParams(paramsJson, out CompletionParams completionParams))
             {
+                _logger?.Invoke($"[PFX] HandleCompletionRequest: ParseError");
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
                 return;
             }
@@ -252,15 +283,22 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var uri = new Uri(documentUri);
-            var expression = HttpUtility.ParseQueryString(uri.Query).Get("expression");
+            var expression = GetExpression(completionParams, HttpUtility.ParseQueryString(uri.Query));
             if (expression == null)
             {
+                _logger?.Invoke($"[PFX] HandleCompletionRequest: InvalidParams, expression is null");
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidParams));
                 return;
             }
 
             var cursorPosition = GetPosition(expression, completionParams.Position.Line, completionParams.Position.Character);
+            _logger?.Invoke($"[PFX] HandleCompletionRequest: calling Suggest...");
             var result = scope.Suggest(expression, cursorPosition);
+
+            // Note: there are huge number of suggestions in initial requests
+            // Including each of them in the log string is very expensive
+            // Avoid this if possible
+            _logger?.Invoke($"[PFX] HandleCompletionRequest: Suggest results: Count:{result.Suggestions.Count()}, Suggestions:{string.Join(", ", result.Suggestions.Select(s => $@"[{s.Kind}]: '{s.DisplayText.Text}'"))}");
 
             var items = new List<CompletionItem>();
 
@@ -284,6 +322,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private void HandleSignatureHelpRequest(string id, string paramsJson)
         {
+            _logger?.Invoke($"[PFX] HandleSignatureHelpRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
             if (id == null)
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
@@ -303,7 +343,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var uri = new Uri(documentUri);
-            var expression = HttpUtility.ParseQueryString(uri.Query).Get("expression");
+            var expression = GetExpression(signatureHelpParams, HttpUtility.ParseQueryString(uri.Query));
             if (expression == null)
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidParams));
@@ -318,6 +358,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private void HandleInitialFixupRequest(string id, string paramsJson)
         {
+            _logger?.Invoke($"[PFX] HandleInitialFixupRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
             if (id == null)
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
@@ -348,6 +390,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         private void HandleCodeActionRequest(string id, string paramsJson)
         {
+            _logger?.Invoke($"[PFX] HandleCodeActionRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
             if (id == null)
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
@@ -366,7 +410,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var documentUri = codeActionParams.TextDocument.Uri;
 
             var uri = new Uri(documentUri);
-            var expression = HttpUtility.ParseQueryString(uri.Query).Get("expression");
+            var expression = GetExpression(codeActionParams, HttpUtility.ParseQueryString(uri.Query));
             if (expression == null)
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidParams));
@@ -413,6 +457,149 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, codeActions));
+        }
+
+        /// <summary>
+        /// Handles requests to compute semantic tokens for the full document or expression.
+        /// </summary>
+        /// <param name="id">Request Id.</param>
+        /// <param name="paramsJson">Request Params Stringified Body.</param>
+        private void HandleFullDocumentSemanticTokens(string id, string paramsJson)
+        {
+            _logger?.Invoke($"[PFX] HandleFullDocumentSemanticTokens: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+            if (!TryParseAndValidateSemanticTokenParams(id, paramsJson, out SemanticTokensParams semanticTokensParams))
+            {
+                return;
+            }
+
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens);
+        }
+
+        /// <summary>
+        /// Handles requests to compute semantic tokens for the a specific part of document or expression.
+        /// </summary>
+        /// <param name="id">Request Id.</param>
+        /// <param name="paramsJson">Request Params Stringified Body.</param>
+        private void HandleRangeDocumentSemanticTokens(string id, string paramsJson)
+        {
+            _logger?.Invoke($"[PFX] HandleRangeDocumentSemanticTokens: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+            if (!TryParseAndValidateSemanticTokenParams(id, paramsJson, out SemanticTokensRangeParams semanticTokensParams))
+            {
+                return;
+            }
+
+            if (semanticTokensParams.Range == null)
+            {
+                // No tokens for invalid range
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens);
+        }
+
+        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method)
+            where T : SemanticTokensParams
+        {
+            var uri = new Uri(semanticTokensParams.TextDocument.Uri);
+            var queryParams = HttpUtility.ParseQueryString(uri.Query);
+            var expression = GetExpression(semanticTokensParams, queryParams) ?? string.Empty;
+
+            if (string.IsNullOrEmpty(expression))
+            {
+                // Empty tokens for the empty expression
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            var isRangeSemanticTokensMethod = method == TextDocumentNames.RangeDocumentSemanticTokens;
+
+            // Monaco-Editor sometimes uses \r\n for the newline character. \n is not always the eol character so allowing clients to pass eol character
+            var eol = queryParams?.Get("eol");
+            eol = !string.IsNullOrEmpty(eol) ? eol : EOL.ToString();
+
+            var startIndex = -1;
+            var endIndex = -1;
+            if (isRangeSemanticTokensMethod)
+            {
+                (startIndex, endIndex) = (semanticTokensParams as SemanticTokensRangeParams).Range.ConvertRangeToPositions(expression, eol);
+                if (startIndex < 0 || endIndex < 0)
+                {
+                    SendEmptySemanticTokensResponse(id);
+                    return;
+                }
+            }
+
+            var tokenTypesToSkip = ParseTokenTypesToSkipParam(queryParams?.Get("tokenTypesToSkip"));
+            var scope = _scopeFactory.GetOrCreateInstance(semanticTokensParams.TextDocument.Uri);
+            var result = scope?.Check(expression);
+            if (result == null)
+            {
+                SendEmptySemanticTokensResponse(id);
+                return;
+            }
+
+            // Skip over the token types that clients don't want in the response
+            var tokens = result.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
+
+            if (isRangeSemanticTokensMethod)
+            {
+                // Only consider overlapping tokens. end index is exlcusive
+                tokens = tokens.Where(token => !(token.EndIndex <= startIndex || token.StartIndex >= endIndex));
+            }
+
+            var encodedTokens = SemanticTokensEncoder.EncodeTokens(tokens, expression, eol);
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse() { Data = encodedTokens }));
+        }
+
+        private HashSet<TokenType> ParseTokenTypesToSkipParam(string rawTokenTypesToSkipParam)
+        {
+            var tokenTypesToSkip = new HashSet<TokenType>();
+            if (string.IsNullOrWhiteSpace(rawTokenTypesToSkipParam))
+            {
+                return tokenTypesToSkip;
+            }
+
+            if (TryParseParams(rawTokenTypesToSkipParam, out List<int> tokenTypesToSkipParam))
+            {
+                foreach (var tokenTypeValue in tokenTypesToSkipParam)
+                {
+                    var tokenType = (TokenType)tokenTypeValue;
+                    if (tokenType != TokenType.Lim)
+                    {
+                        tokenType = tokenType == TokenType.Min ? TokenType.Unknown : tokenType;
+                        tokenTypesToSkip.Add(tokenType);
+                    }
+                }
+            }
+
+            return tokenTypesToSkip;
+        }
+
+        private bool TryParseAndValidateSemanticTokenParams<T>(string id, string paramsJson, out T semanticTokenParams)
+            where T : SemanticTokensParams
+        {
+            semanticTokenParams = null;
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return false;
+            }
+
+            if (!TryParseParams(paramsJson, out semanticTokenParams) || string.IsNullOrWhiteSpace(semanticTokenParams?.TextDocument.Uri))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return false;
+            }
+
+            return true;
+        }
+
+        private void SendEmptySemanticTokensResponse(string id)
+        {
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse()));
         }
 
         private CompletionItemKind GetCompletionItemKind(SuggestionKind kind)
@@ -494,6 +681,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     Uri = uri,
                     Diagnostics = diagnostics.ToArray()
                 }));
+        }
+
+        /// <summary>
+        /// Returns the expression from preferrably the request params or query params if not present in the request params.
+        /// </summary>
+        /// <param name="requestParams">Request params.</param>
+        /// <param name="queryParams">Query Params.</param>
+        /// <returns>Expression.</returns>
+        private static string GetExpression(LanguageServerRequestBaseParams requestParams, NameValueCollection queryParams)
+        {
+            return requestParams?.Text ?? queryParams.Get("expression");
         }
 
         /// <summary>

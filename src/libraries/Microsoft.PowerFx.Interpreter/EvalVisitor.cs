@@ -12,7 +12,6 @@ using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.IR.Symbols;
-using Microsoft.PowerFx.Core.Texl.Builtins;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.Exceptions;
@@ -30,7 +29,7 @@ namespace Microsoft.PowerFx
 
         private readonly CancellationToken _cancellationToken;
 
-        internal CancellationToken CancellationToken => _cancellationToken;
+        public CancellationToken CancellationToken => _cancellationToken;
 
         private readonly IServiceProvider _services;
 
@@ -43,18 +42,15 @@ namespace Microsoft.PowerFx
         public DateTimeKind DateTimeKind => TimeZoneInfo.BaseUtcOffset == TimeSpan.Zero ? DateTimeKind.Utc : DateTimeKind.Unspecified;
 
         public Governor Governor { get; private set; }
-        
+
         public EvalVisitor(IRuntimeConfig config, CancellationToken cancellationToken)
         {
             _symbolValues = config.Values; // may be null 
             _cancellationToken = cancellationToken;
-
             _services = config.ServiceProvider ?? new BasicServiceProvider();
 
             TimeZoneInfo = GetService<TimeZoneInfo>() ?? TimeZoneInfo.Local;
-
             Governor = GetService<Governor>() ?? new Governor();
-            
             CultureInfo = GetService<CultureInfo>();
         }
 
@@ -255,9 +251,15 @@ namespace Microsoft.PowerFx
             var childContext = context.SymbolContext.WithScope(node.Scope);
 
             FormulaValue result;
-            if (func is IAsyncTexlFunction asyncFunc)
+            IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction> extraFunctions = _services.GetService<IReadOnlyDictionary<TexlFunction, IAsyncTexlFunction>>();
+
+            if (func is IAsyncTexlFunction asyncFunc || extraFunctions?.TryGetValue(func, out asyncFunc) == true)
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
+            }
+            else if (func is IAsyncTexlFunction2 asyncFunc2)
+            {
+                result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {
@@ -270,8 +272,8 @@ namespace Microsoft.PowerFx
                 result = await customTexlFunc.InvokeAsync(FunctionServices, args, _cancellationToken).ConfigureAwait(false);
             }
             else
-            {               
-                if (FunctionImplementations.TryGetValue(func, out var ptr))
+            {
+                if (FunctionImplementations.TryGetValue(func, out AsyncFunctionPtr ptr))
                 {
                     try
                     {
@@ -280,17 +282,10 @@ namespace Microsoft.PowerFx
                     catch (CustomFunctionErrorException ex)
                     {
                         var irContext = node.IRContext;
-                        result = new ErrorValue(
-                            irContext, 
-                            new ExpressionError()
-                            {
-                                Message = ex.Message,
-                                Span = irContext.SourceContext,
-                                Kind = ex.ErrorKind
-                            });
+                        result = new ErrorValue(irContext, new ExpressionError() { Message = ex.Message, Span = irContext.SourceContext, Kind = ex.ErrorKind });
                     }
-                    
-                    if (!(result.IRContext.ResultType == node.IRContext.ResultType || result is ErrorValue || result.IRContext.ResultType is BlankType || func is IfErrorFunction))
+
+                    if (!(result.IRContext.ResultType._type == node.IRContext.ResultType._type || result is ErrorValue || result.IRContext.ResultType is BlankType))
                     {
                         throw CommonExceptions.RuntimeMisMatch;
                     }
@@ -375,12 +370,16 @@ namespace Microsoft.PowerFx
                     return OperatorBinaryNeqPolymorphic(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtNumbers:
+                case BinaryOpKind.GtNull:
                     return OperatorBinaryGt(this, context, node.IRContext, args);
                 case BinaryOpKind.GeqNumbers:
+                case BinaryOpKind.GeqNull:
                     return OperatorBinaryGeq(this, context, node.IRContext, args);
                 case BinaryOpKind.LtNumbers:
+                case BinaryOpKind.LtNull:
                     return OperatorBinaryLt(this, context, node.IRContext, args);
                 case BinaryOpKind.LeqNumbers:
+                case BinaryOpKind.LeqNull:
                     return OperatorBinaryLeq(this, context, node.IRContext, args);
 
                 case BinaryOpKind.GtDecimals:
@@ -543,16 +542,23 @@ namespace Microsoft.PowerFx
                     {
                         var fields = new List<NamedValue>();
                         var scopeContext = context.SymbolContext.WithScope(node.Scope);
-                        foreach (var coercion in node.FieldCoercions)
+
+                        foreach (var field in row.Value.Fields)
                         {
                             CheckCancel();
 
-                            var record = row.Value;
-                            var newScope = scopeContext.WithScopeValues(record);
+                            if (node.FieldCoercions.TryGetValue(new Core.Utils.DName(field.Name), out var coercion))
+                            {
+                                var record = row.Value;
+                                var newScope = scopeContext.WithScopeValues(record);
+                                var newValue = await coercion.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
 
-                            var newValue = await coercion.Value.Accept(this, context.NewScope(newScope)).ConfigureAwait(false);
-                            var name = coercion.Key;
-                            fields.Add(new NamedValue(name.Value, newValue));
+                                fields.Add(new NamedValue(field.Name, newValue));
+                            }
+                            else
+                            {
+                                fields.Add(field);
+                            }
                         }
 
                         resultRows.Add(DValue<RecordValue>.Of(new InMemoryRecordValue(IRContext.NotInSource(tableType.ToRecord()), fields)));
@@ -614,14 +620,7 @@ namespace Microsoft.PowerFx
             if (node.Value is ScopeSymbol s2)
             {
                 var r = context.SymbolContext.ScopeValues[s2.Id];
-                if (r is RecordScope r2)
-                {
-                    return r2._context;
-                }
-                else if (r is UntypedObjectThisRecordScope r3)
-                {
-                    return r3._thisRecord;
-                }
+                return r.Resolve(string.Empty);
             }
 
             return CommonErrors.UnreachableCodeError(node.IRContext);
@@ -642,6 +641,14 @@ namespace Microsoft.PowerFx
             }
 
             var record = (RecordValue)left;
+
+            if (node.IRContext.IsMutation)
+            {
+                // Records that are not mutable should have been stopped by the compiler before we get here.
+                // But if we get here and the cast fails, the implementation of the record was not prepared for the mutation.
+                ((IMutationCopyField)record).ShallowCopyFieldInPlace(node.Field.Value);
+            }
+
             var val = await record.GetFieldAsync(node.IRContext.ResultType, node.Field.Value, _cancellationToken).ConfigureAwait(false);
 
             return val;
@@ -693,17 +700,17 @@ namespace Microsoft.PowerFx
         {
             switch (node.Value)
             {
-                case NameSymbol name: 
-                    return GetVariableOrFail(node, name);
+                case NameSymbol name:
+                    return GetVariableOrFail(node, name, node.IRContext.IsMutation);
                 case FormulaValue fi:
                     return fi;
                 case IExternalOptionSet optionSet:
                     return ResolvedObjectHelpers.OptionSet(optionSet, node.IRContext);
-                case Func<IServiceProvider, FormulaValue> getHostObject:
+                case Func<IServiceProvider, Task<FormulaValue>> getHostObject:
                     FormulaValue hostObj;
                     try
                     {
-                        hostObj = getHostObject(_services);
+                        hostObj = await getHostObject(_services).ConfigureAwait(false);
                         if (!hostObj.Type._type.Accepts(node.IRContext.ResultType._type, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: true))
                         {
                             hostObj = CommonErrors.RuntimeTypeMismatch(node.IRContext);
@@ -720,13 +727,19 @@ namespace Microsoft.PowerFx
             }
         }
 
-        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot)
+        private FormulaValue GetVariableOrFail(ResolvedObjectNode node, ISymbolSlot slot, bool isMutation = false)
         {
             if (_symbolValues != null)
             {
                 var value = _symbolValues.Get(slot);
                 if (value != null)
                 {
+                    if (isMutation)
+                    {
+                        value = value.MaybeShallowCopy();
+                        _symbolValues.Set(slot, value);
+                    }
+
                     return value;
                 }
             }

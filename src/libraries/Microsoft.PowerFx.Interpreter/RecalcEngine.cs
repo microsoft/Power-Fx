@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx
     /// <summary>
     /// Holds a set of Power Fx variables and formulas. Formulas are recalculated when their dependent variables change.
     /// </summary>
-    public sealed class RecalcEngine : Engine, IPowerFxEngine
+    public sealed class RecalcEngine : Engine
     {
         // Map SlotIndex --> Value
         internal Dictionary<int, RecalcFormulaInfo> Formulas { get; } = new Dictionary<int, RecalcFormulaInfo>();
@@ -59,19 +59,6 @@ namespace Microsoft.PowerFx
         internal INameResolver TestCreateResolver()
         {
             return CreateResolverInternal();
-        }
-
-        /// <summary>
-        /// Create an evaluator over the existing binding.
-        /// </summary>
-        /// <param name = "result" >A successful binding from a previous call to.<see cref="Engine.Check(string, RecordType, ParserOptions)"/>. </param>        
-        /// <returns></returns>
-        [Obsolete("Call CheckResult.GetEvaluator()")]
-        public static IExpression CreateEvaluatorDirect(CheckResult result)
-        {
-            var eval = result.GetEvaluator();
-            var eval2 = (ParsedExpression)eval;
-            return eval2;
         }
 
         // Event handler fired when we update symbol values. 
@@ -116,6 +103,11 @@ namespace Microsoft.PowerFx
         public void UpdateVariable(string name, FormulaValue value)
         {
             var x = value;
+
+            if (value is TableValue && !value.CanShallowCopy)
+            {
+                throw new InvalidOperationException($"Can't set '{name}' to a table value that cannot be copied.");
+            }
 
             if (TryGetByName(name, out var fi))
             {
@@ -177,6 +169,8 @@ namespace Microsoft.PowerFx
             var parameterSymbols = runtimeConfig?.Values?.SymbolTable;
             var symbolsAll = ReadOnlySymbolTable.Compose(parameterSymbols, symbolTable);
 
+            options ??= this.GetDefaultParserOptionsCopy();
+
             var check = Check(expressionText, options, symbolsAll);
             check.ThrowOnErrors();
 
@@ -200,7 +194,7 @@ namespace Microsoft.PowerFx
                 udf.ReturnType.GetFormulaType(),
                 udf.IsImperative,
                 udf.NumberIsFloat,
-                udf.Args.Select(arg => new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType())).ToArray())).ToArray();
+                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), arg.TypeIdent.GetFormulaType())).ToArray())).ToArray();
 
             return DefineFunctions(udfDefinitions);
         }

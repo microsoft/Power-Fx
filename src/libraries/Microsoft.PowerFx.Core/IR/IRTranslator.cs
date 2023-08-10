@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -172,7 +173,15 @@ namespace Microsoft.PowerFx.Core.IR
                         result = new CallNode(irc, BuiltinFunctionsCore.Not, child);
                         break;
                     case UnaryOp.Minus:
-                        result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.NegateDecimal : UnaryOpKind.Negate, child);
+                        UnaryOpKind unaryOpKind = irc.ResultType._type.Kind switch
+                        {
+                            DKind.Decimal => UnaryOpKind.NegateDecimal,
+                            DKind.Date => UnaryOpKind.NegateDate,
+                            DKind.DateTime => UnaryOpKind.NegateDateTime,
+                            DKind.Time => UnaryOpKind.NegateTime,
+                            _ => UnaryOpKind.Negate
+                        };
+                        result = new UnaryOpNode(irc, unaryOpKind, child);
                         break;
                     case UnaryOp.Percent:
                         result = new UnaryOpNode(irc, irc.ResultType == FormulaType.Decimal ? UnaryOpKind.PercentDecimal : UnaryOpKind.Percent, child);
@@ -200,7 +209,12 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Call Node Replacements:
                     case BinaryOpKind.Power:
-                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, left, right);
+                        var args = new List<IntermediateNode> { left, right };
+
+                        // Since we are directly injecting Power Function and Power function delegates arg preprocessing to IR.
+                        // we need to make sure that the arguments are attached with preprocessor e.g. Blank to Zero.
+                        args = AttachArgPreprocessor(args, BuiltinFunctionsCore.Power, node, 2, context);
+                        binaryOpResult = new CallNode(context.GetIRContext(node), BuiltinFunctionsCore.Power, args);
                         break;
                     case BinaryOpKind.Concatenate:
                         binaryOpResult = ConcatenateArgs(left, right, context.GetIRContext(node));
@@ -248,16 +262,23 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.DateDifference:
                     case BinaryOpKind.TimeDifference:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate)
+                        if (right is UnaryOpNode unaryNegate)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate.Op == UnaryOpKind.Negate ||
+                                unaryNegate.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, unaryNegate.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, unaryNegate.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     case BinaryOpKind.AddDateAndTime:
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate3)
+                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate or UnaryOpKind.NegateTime } unaryNegate3)
                         {
                             binaryOpResult = new BinaryOpNode(context.GetIRContext(node), kind, left, right);
                         }
@@ -271,23 +292,37 @@ namespace Microsoft.PowerFx.Core.IR
                     case BinaryOpKind.SubtractNumberAndDate:
                     case BinaryOpKind.SubtractNumberAndDateTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate4)
+                        if (right is UnaryOpNode unaryNegate4)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate4.Op == UnaryOpKind.Negate ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate4.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate4.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndDate, left, unaryNegate4.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     case BinaryOpKind.SubtractNumberAndTime:
                         // Validated in Matrix + Binder
-                        if (right is not UnaryOpNode { Op: UnaryOpKind.Negate } unaryNegate5)
+                        if (right is UnaryOpNode unaryNegate5)
                         {
-                            throw new NotSupportedException();
+                            if (unaryNegate5.Op == UnaryOpKind.Negate ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDecimal ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDate ||
+                                unaryNegate5.Op == UnaryOpKind.NegateDateTime ||
+                                unaryNegate5.Op == UnaryOpKind.NegateTime)
+                            {
+                                binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
+                                break;
+                            }
                         }
 
-                        binaryOpResult = new BinaryOpNode(context.GetIRContext(node), BinaryOpKind.SubtractNumberAndTime, left, unaryNegate5.Child);
-                        break;
+                        throw new NotSupportedException();
 
                     // All others used directly
                     default:
@@ -322,6 +357,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < carg; ++i)
                 {
                     var arg = node.Args.Children[i];
+                    var argContext = i == 0 && func.MutatesArg0 ? new IRTranslatorContext(context, isMutation: true) : context;
 
                     var supportColumnNamesAsIdentifiers = _features.SupportColumnNamesAsIdentifiers;
                     if (supportColumnNamesAsIdentifiers && func.IsIdentifierParam(i))
@@ -331,22 +367,22 @@ namespace Microsoft.PowerFx.Core.IR
 
                         // Transform the identifier node as a string literal
                         var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
-                        args.Add(new TextLiteralNode(context.GetIRContext(arg, DType.String), nodeName.Value));
+                        args.Add(new TextLiteralNode(argContext.GetIRContext(arg, DType.String), nodeName.Value));
                     }
                     else if (func.IsLazyEvalParam(i))
                     {
-                        var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? context.With(scope) : context);
-                        args.Add(new LazyEvalNode(context.GetIRContext(arg), child));
+                        var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
+                        args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
                     }
                     else
                     {
-                        args.Add(arg.Accept(this, context));
+                        args.Add(arg.Accept(this, argContext));
                     }
                 }
 
                 // This can add pre-processing to arguments, such as BlankToZero, Truncate etc...
                 // based on the function.
-                args = AttachArgPreprocessor(args, func, node, context);
+                args = AttachArgPreprocessor(args, func, node, node.Args.Count, context);
 
                 // this can rewrite the entire call node to any intermediate node.
                 // e.g. For Boolean(true), Instead of IR as Call(Boolean, true) it can be rewritten directly to emit true.
@@ -355,7 +391,7 @@ namespace Microsoft.PowerFx.Core.IR
                 return MaybeInjectCoercion(node, irNode, context);
             }
 
-            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlCallNode node, IRTranslatorContext context)
+            private List<IntermediateNode> AttachArgPreprocessor(List<IntermediateNode> args, TexlFunction func, TexlNode node, int argCount, IRTranslatorContext context)
             {
                 var len = args.Count;
                 List<IntermediateNode> convertedArgs = new List<IntermediateNode>(len);
@@ -363,7 +399,7 @@ namespace Microsoft.PowerFx.Core.IR
                 for (var i = 0; i < len; i++)
                 {
                     IntermediateNode convertedNode;
-                    var argPreprocessor = func.GetArgPreprocessor(i);
+                    var argPreprocessor = func.GetArgPreprocessor(i, argCount);
 
                     switch (argPreprocessor)
                     {
@@ -389,6 +425,17 @@ namespace Microsoft.PowerFx.Core.IR
                         case ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable:
                             var callIRContext_SCT = context.GetIRContext(node);
                             convertedNode = ReplaceBlankWithCallTypedZero_Scalar(args[i], ((TableType)callIRContext_SCT.ResultType).SingleColumnFieldType);
+                            break;
+                        case ArgPreprocessor.UntypedStringToUntypedNumber:
+                            if (context.Binding.BindingConfig.NumberIsFloat)
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedFloat, args[i]);
+                            }
+                            else
+                            {
+                                convertedNode = new UnaryOpNode(IRContext.NotInSource(FormulaType.UntypedObject), UnaryOpKind.UntypedStringToUntypedDecimal, args[i]);
+                            }
+
                             break;
                         default:
                             convertedNode = args[i];
@@ -677,37 +724,25 @@ namespace Microsoft.PowerFx.Core.IR
                 {
                     // Field access within a record.
                     Contracts.Assert(typeLhs.IsRecord);
-
-                    if (typeLhs.TryGetType(nameRhs, out var typeRhs) &&
-                        typeRhs.IsExpandEntity &&
-                        context.Binding.TryGetEntityInfo(node, out var expandInfo) &&
-                        expandInfo.IsTable)
+                    typeLhs.TryGetType(nameRhs, out var typeRhs);
+                    if (node.Left is FirstNameNode namespaceNode && context.Binding.GetInfo(namespaceNode)?.Kind == BindKind.QualifiedValue)
                     {
-                        // No relationships in PFX yet
-                        Contracts.Assert(false, "Relationships not yet supported");
+                        Contracts.Assert(false, "QualifiedValues not yet supported by PowerFx");
                         throw new NotSupportedException();
+                    }
+
+                    if (typeRhs.IsDeferred)
+                    {
+                        throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
+                    }
+
+                    if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)
+                    {
+                        result = new ScopeAccessNode(context.GetIRContext(node), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(nameRhs)));
                     }
                     else
                     {
-                        if (node.Left is FirstNameNode namespaceNode && context.Binding.GetInfo(namespaceNode)?.Kind == BindKind.QualifiedValue)
-                        {
-                            Contracts.Assert(false, "QualifiedValues not yet supported by PowerFx");
-                            throw new NotSupportedException();
-                        }
-
-                        if (typeRhs.IsDeferred)
-                        {
-                            throw new NotSupportedException(DeferredNotSupportedExceptionMsg);
-                        }
-
-                        if (left is ScopeAccessNode valueAccess && valueAccess.Value is ScopeSymbol scope)
-                        {
-                            result = new ScopeAccessNode(context.GetIRContext(node), new ScopeAccessSymbol(scope, scope.AddOrGetIndexForField(nameRhs)));
-                        }
-                        else
-                        {
-                            result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
-                        }
+                        result = new RecordFieldAccessNode(context.GetIRContext(node), left, nameRhs);
                     }
                 }
                 else if (typeLhs.IsUntypedObject)
@@ -733,7 +768,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                if (node.Children.Length == 1)
+                if (node.Children.Count == 1)
                 {
                     return MaybeInjectCoercion(node, node.Children[0].Accept(this, context), context);
                 }
@@ -752,7 +787,12 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                if (node.Children.Length == 1)
+                if (node.Children.Count == 0)
+                {
+                    return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
+                }
+
+                if (node.Children.Count == 1)
                 {
                     return MaybeInjectCoercion(node, node.Children[0].Accept(this, context), context);
                 }
@@ -1148,20 +1188,30 @@ namespace Microsoft.PowerFx.Core.IR
         {
             public readonly TexlBinding Binding;
             public ScopeSymbol[] Scopes;
+            public bool IsMutation;
 
-            public IRTranslatorContext(TexlBinding binding, ScopeSymbol baseScope)
+            public IRTranslatorContext(TexlBinding binding, ScopeSymbol baseScope, bool isMutation = false)
             {
                 Contracts.AssertValue(binding);
                 Contracts.AssertValue(baseScope);
 
                 Binding = binding;
                 Scopes = new ScopeSymbol[] { baseScope };
+                IsMutation = isMutation;
             }
 
-            private IRTranslatorContext(IRTranslatorContext context, ScopeSymbol newScope)
+            private IRTranslatorContext(IRTranslatorContext context, ScopeSymbol newScope, bool isMutation = false)
             {
                 Binding = context.Binding;
                 Scopes = context.Scopes.Concat(new List<ScopeSymbol>() { newScope }).ToArray();
+                IsMutation = isMutation;
+            }
+
+            public IRTranslatorContext(IRTranslatorContext context, bool isMutation)
+            {
+                Binding = context.Binding;
+                Scopes = context.Scopes;
+                IsMutation = isMutation;
             }
 
             public IRTranslatorContext With(ScopeSymbol scope)
@@ -1171,12 +1221,12 @@ namespace Microsoft.PowerFx.Core.IR
 
             public IRContext GetIRContext(TexlNode node)
             {
-                return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)));
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(Binding.GetType(node)), isMutation: IsMutation);
             }
 
             public IRContext GetIRContext(TexlNode node, DType type)
             {
-                return new IRContext(node.GetTextSpan(), FormulaType.Build(type));
+                return new IRContext(node.GetTextSpan(), FormulaType.Build(type), isMutation: IsMutation);
             }
         }
     }

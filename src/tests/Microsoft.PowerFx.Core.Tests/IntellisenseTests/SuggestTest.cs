@@ -261,9 +261,9 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         }
 
         [Theory]
-        [InlineData("SortByColumns(|", 2, "The table to sort.", "SortByColumns(source, column, ...)")]
-        [InlineData("SortByColumns(tbl1,|", 2, "A unique column name.", "SortByColumns(source, column, ...)")]
-        [InlineData("SortByColumns(tbl1,col1,|", 1, "SortOrder.Ascending or SortOrder.Descending", "SortByColumns(source, column, order, ...)")]
+        [InlineData("SortByColumns(|", 3, "The table to sort.", "SortByColumns(source, column, ...)")]
+        [InlineData("SortByColumns(tbl1,|", 3, "A unique column name.", "SortByColumns(source, column, ...)")]
+        [InlineData("SortByColumns(tbl1,col1,|", 2, "SortOrder.Ascending or SortOrder.Descending", "SortByColumns(source, column, order, ...)")]
         [InlineData("SortByColumns(tbl1,col1,SortOrder.Ascending,|", 2, "A unique column name.", "SortByColumns(source, column, order, column, ...)")]
         [InlineData("IfError(1|", 1, "Value that is returned if it is not an error.", "IfError(value, fallback, ...)")]
         [InlineData("IfError(1,2|", 1, "Value that is returned if the previous argument is an error.", "IfError(value, fallback, ...)")]
@@ -407,7 +407,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
                 { new DName("logical2"), new DName("display2") }
             });
 
-            var symTable = new DeferredSymbolTable(map, (disp, logical) =>
+            var symTable = ReadOnlySymbolTable.NewFromDeferred(map, (disp, logical) =>
             {
                 return FormulaType.Number;
             });
@@ -453,6 +453,24 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             rowScopeSymbols = ReadOnlySymbolTable.NewFromRecord(recordType, allowThisRecord: false, allowMutable: true, debugName: $"RowScope");
             actualSuggestions = SuggestStrings(expression, config, null, rowScopeSymbols);
             Assert.Empty(actualSuggestions);
+        }
+
+        [Theory]
+        [InlineData("ThisRec|", "ThisRecord")]
+        [InlineData("ThisRecord.|", "field1", "field2")]
+
+        // Do not suggest field, unless explicitly ThisRecord is prepended.
+        [InlineData("field|")]
+        public void SuggestBlockImplicitThisRecord(string expression, params string[] expected)
+        {
+            var recordType = RecordType.Empty()
+                .Add("field1", FormulaType.Number)
+                .Add("field2", FormulaType.String);
+
+            var rowScopeSymbols = ReadOnlySymbolTable.NewFromRecordWithoutImplicitThisRecord(recordType, allowMutable: true, debugName: $"RowScope");
+            var config = new PowerFxConfig();
+            var actualSuggestions = SuggestStrings(expression, config, null, rowScopeSymbols);
+            Assert.Equal(expected, actualSuggestions);
         }
 
         private class LazyRecursiveRecordType : RecordType

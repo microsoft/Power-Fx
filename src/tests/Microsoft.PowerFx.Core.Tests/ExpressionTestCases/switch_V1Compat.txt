@@ -1,0 +1,22 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+//Date-DateTime
+>> Switch("Case1","Case2",Date(2000,1,4),"Case1",DateTimeValue("4/1/2001 10:00:00"))
+Date(2001,4,1)
+
+//Time-DateTime
+>> Switch("Case1","Case2",Time(6,30,30),"Case1",DateTimeValue("4/1/2001 10:00:00"))
+Time(10,0,0,0)
+
+// Records - first type wins
+>> Switch(0, 0, {a:1,b:true}, 1, {b:"false",c:"hello"})
+{a:1,b:true,c:Blank()}
+
+>> Switch(1, 0, {a:1,b:true}, 1, {b:"false",c:"hello"})
+{a:Blank(),b:false,c:"hello"}
+
+>> Switch(0, 0, {x:1, y:2}, {y:3, z:4})
+{x:1,y:2,z:Blank()}
+
+>> Switch(1, 0, {x:1, y:2}, {y:3, z:4})
+{x:Blank(),y:3,z:4}

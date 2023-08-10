@@ -334,7 +334,7 @@ DateTime(2022,10,1,12,34,56,0)
 
 // Time wraps 30h to 6h
 >> Date(2022, 10, 1) + Time(30, 0, 0)
-DateTime(2022,10,1,6,0,0,0)
+DateTime(2022,10,2,6,0,0,0)
 
 >> Date(2022, 10, 10) - Time(12, 34, 56)
 DateTime(2022,10,9,11,25,4,0)
@@ -451,3 +451,31 @@ Error({Kind:ErrorKind.Div0})
 
 >> Year(If(1/0<2,Date(2000,1,1)))
 Error({Kind:ErrorKind.Div0})
+
+>> Date(1e28,5,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,1e28,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,5,1e28)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(-1e28,5,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,-1e28,3)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Date(1970,5,-1e28)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Negation
+>> -Date(1900,1,1)
+Date(1899,12,28)
+
+>> Value(-Date(1900,1,1))
+-2
+
+>> With({d:Today()}, Value(d) + Value(-d))
+0

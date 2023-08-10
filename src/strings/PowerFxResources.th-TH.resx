@@ -571,7 +571,7 @@
     <value>แปลง 'ข้อความ' ที่อยู่ในรูปของตัวเลขให้เป็นค่าตัวเลขทศนิยม</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>โค้ดภาษาที่จะใช้ขณะแปลงเป็นค่า</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
     <value>ค่าข้อความที่จะแปลงเป็นค่าตัวเลขทศนิยม</value>
@@ -580,7 +580,7 @@
     <value>แปลง 'ข้อความ' ที่อยู่ในรูปของตัวเลขให้เป็นค่าตัวเลขทศนิยม</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>โค้ดภาษาที่จะใช้ขณะแปลงเป็นค่า</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
     <value>ค่าข้อความที่จะแปลงเป็นค่าเป็นทศนิยมลอยตัว</value>
@@ -778,7 +778,7 @@
     <value>ข้อความที่จะนำไปแทนที่</value>
   </data>
   <data name="AboutReplace_text_column" xml:space="preserve">
-    <value>คอลัมน์ของข้อความที่จะดำเนินการ</value>
+    <value>คอลัมน์ของค่าข้อความที่จะดำเนินการ</value>
   </data>
   <data name="AboutError" xml:space="preserve">
     <value>สร้างข้อผิดพลาดด้วยค่าแบบกำหนดเอง</value>
@@ -857,7 +857,7 @@
     <value>ระบุเหตุการณ์ของข้อความที่จะแทนที่</value>
   </data>
   <data name="AboutSubstitute_text_column" xml:space="preserve">
-    <value>คอลัมน์ของข้อความที่จะดำเนินการ</value>
+    <value>คอลัมน์ของค่าข้อความที่จะดำเนินการ</value>
   </data>
   <data name="AboutSort" xml:space="preserve">
     <value>เรียงลำดับ 'source' ตามผลลัพธ์ของ 'expression' ที่ประเมินไว้สำหรับแต่ละแถว และสามารถเลือกกำหนด 'order’ การเรียงลำดับได้</value>
@@ -1465,6 +1465,14 @@
     <value>ป้อนข้อมูล</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>ตัวปรับเปลี่ยน</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>ตัวปรับเปลี่ยน</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>คืนค่าตัวเลขที่กำหนดของอักขระเริ่มต้นของข้อความ</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>คุณสมบัติข้อมูลแบบกำหนดเองของคอมโพเนนต์ที่มีพารามิเตอร์สามารถเข้าถึงได้จากภายในคอมโพเนนต์หรือจากคุณสมบัติผลลัพธ์ของคอมโพเนนต์เท่านั้น</value>
+    <value>คุณสมบัติหรือพารามิเตอร์ฟังก์ชันของคอมโพเนนต์ สามารถเข้าถึงได้จากภายในคอมโพเนนต์หรือจากคุณสมบัติผลลัพธ์ของคอมโพเนนต์เท่านั้น</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>คุณสมบัติหรือพารามิเตอร์ของฟังก์ชันคอมโพเนนต์สามารถอ้างอิงได้เฉพาะคุณสมบัติฟังก์ชันอื่นๆ เท่านั้น</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>อาร์กิวเมนต์แรกของ '{0}' ควรเป็นตารางคอลัมน์เดียว</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าตัวอักษรสำหรับ '{0}'</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าวันที่สำหรับ '{0}'</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าตัวเลขสำหรับ '{0}'</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Schema ไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่าสีสำหรับ '{0}'</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>สคีมาไม่ถูกต้อง ควรจะเป็นคอลัมน์ของค่า {0} สำหรับ '{1}'</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>ค่าตัวเลขสูงเกินไป</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>การใช้คำสงวนที่ไม่รองรับในขณะนี้</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>คณิตศาสตร์และทางสถิติ</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>ข้อมูล</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>จำนวนอาร์กิวเมนต์ที่ไม่ถูกต้องสำหรับฟังก์ชัน {0}: ได้รับ {1}, ที่คาดไว้ {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>อาร์กิวเมนต์ {0} ไม่ได้รับการสนับสนุนสำหรับฟังก์ชัน {1} ในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิดนี้ในคอลัมน์สูตรได้</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>ไม่สามารถส่งผ่านอาร์กิวเมนต์เป็นชนิด {0} ในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>อาร์กิวเมนต์นี้สนับสนุนเฉพาะค่าสัญพจน์เท่านั้น</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} ไม่สามารถดำเนินการกับข้อมูลป้อนเข้านี้โดยไม่มีการแปลงโซนเวลา ซึ่งไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>ไม่สามารถดำเนินการนี้กับค่าที่มีลักษณะการทำงานของวันที่และเวลาแตกต่างกันได้</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>คอลัมน์สูตรสนับสนุนเฉพาะสตริงรูปแบบวันที่และเวลาแบบสั้นเท่านั้น</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>อาร์กิวเมนต์ {0} เป็นหน่วยเวลาที่ไม่ถูกต้อง/ไม่ได้รับการสนับสนุนสำหรับฟังก์ชันเลขคณิตของวันที่ {1}</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>โทเค็นการจัดรูปแบบเฉพาะตำแหน่งที่ตั้ง เช่น "." และ "," ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร ให้ใช้ {1} แทน</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>ไม่สามารถดำเนินการนี้กับชนิด {0} ในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>ชนิดผลลัพธ์ {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>การอ้างอิงโดยตรงทั้งเรกคอร์ดไม่ได้รับการสนับสนุนในคอลัมน์สูตร โปรดอ้างอิงฟิลด์ที่ถูกต้องในเรกคอร์ด</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>คาดว่าชนิดผลลัพธ์สำหรับสูตรนี้จะเป็น {0} แต่ชนิดผลลัพธ์จริงเป็น {1} ชนิดผลลัพธ์ของคอลัมน์สูตรไม่สามารถเปลี่ยนแปลงได้</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>คอลัมน์ชนิด {0} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>คอลัมน์ชนิด {0} ที่มีรูปแบบ {1} ไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>การแปลงข้อมูลเรกคอร์ดหรือตารางไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>ตารางคอลัมน์เดียวไม่ได้รับการสนับสนุนในคอลัมน์สูตร</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>ไม่สามารถอ้างอิงตารางเสมือน {0} ในคอลัมน์สูตร</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>คาดหวังตัวถูกดำเนินการ สูตรหรือนิพจน์ต้องการตัวถูกดำเนินการที่ถูกต้อง ตัวอย่างเช่น คุณสามารถเพิ่มตัวถูกดำเนินการ '2' ไปยังนิพจน์ '1 +_' เพื่อที่จะได้ผลลัพธ์เป็น '3' หรือ คุณสามารถเพิ่มตัวถูกดำเนินการ 'ทุกคน' ไปยังนิพจน์ 'สวัสดี &amp; _' เพื่อที่จะได้ผลลัพธ์เป็น 'สวัสดีทุกคน'</value>
     
@@ -4789,6 +4712,26 @@
     <value>สูตรที่มีชื่อต้องเป็นนิพจน์</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>ฟังก์ชันที่ผู้ใช้กำหนดต้องมีเนื้อหา</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>มีการกำหนดฟังก์ชัน {0} ไว้แล้ว</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>พารามิเตอร์ {0} ซ้ำกัน</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>ชนิดที่ไม่รู้จัก {0}</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>ประเภทการส่งคืนฟังก์ชันที่ระบุไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>มี NamedFormula '{0}' อยู่แล้ว</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>คุณลักษณะนี้ไม่สนับสนุนและไม่ได้รับการรองรับอีกต่อไป</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>ฟังก์ชัน {0} ไม่สนับสนุนใน namespace {1} แล้ว</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>ไม่รองรับฟังก์ชัน {0} ใน namespace {1} </value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>คำเตือน: ชนิดที่ระบุเป็นชนิดแบบเลื่อนเวลา</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' เป็นฟังก์ชันที่ได้รับการยอมรับ แต่ไม่รองรับ</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>การแปลงชนิดล้มเหลวเนื่องจากค่าที่ระบุเป็นชนิด '{0}' แต่ที่คาดไว้คือชนิด '{1}'</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>การดำเนินการนี้บนตาราง '{0}' อาจไม่ทำงาน ถ้าตารางมีแถวมากกว่า {1} แถว</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>เพรดิเคตนี้จะเป็นจริงเสมอ คุณหมายถึงการใช้ ThisRecord หรือ [@ ]</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: รองรับเฉพาะการมอบสิทธิ์สำหรับการค้นหาในฟิลด์คีย์หลัก '{1}' เท่านั้น</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: นิพจน์เปรียบเทียบหลายฟิลด์</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>ไม่สามารถมอบสิทธิ์ {0} ได้: มีฟังก์ชันการทำงาน '{1}'</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>กำหนดว่าข้อความที่ป้อนมีส่วนที่ตรงกับรูปแบบข้อความที่ป้อนหรือไม่</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>ข้อความที่จะเปรียบเทียบกับรูปแบบ</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>รูปแบบที่จะตรวจสอบข้อความ โดยอาจเป็นค่า enum TextFormat หรือนิพจน์ปกติ</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการจับคู่ โดยอาจเป็นค่าของ enum MatchOptions</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>รูปแบบ</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>ส่วนเพิ่ม</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>ค้นหาข้อความที่ให้มาสำหรับนิพจน์ปกติที่ระบุ และส่งกลับผลลัพธ์แรกที่ตรงกัน</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>ค้นหาข้อความที่ให้มาสำหรับนิพจน์ปกติที่ระบุ และส่งกลับผลลัพธ์ที่ตรงกันทั้งหมด</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>ข้อความที่จะค้นหาตามนิพจน์ปกติ</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>นิพจน์ปกติเพื่อตรวจสอบข้อความเทียบ ซึ่งสามารถมีการบันทึก (ค่าระหว่างวงเล็บ) ที่จะถูกส่งกลับในกรณีที่การจับคู่สำเร็จ</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการจับคู่ โดยอาจเป็นค่าของ enum MatchOptions</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>ข้อความที่จะค้นหาตามนิพจน์ปกติ</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>นิพจน์ปกติเพื่อตรวจสอบข้อความเทียบ ซึ่งสามารถมีการบันทึก (ค่าระหว่างวงเล็บ) ที่จะถูกส่งกลับในกรณีที่การจับคู่สำเร็จ</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>การดำเนินการนี้จะเป็นการกำหนดส่วนของข้อความที่เราต้องการจับคู่ โดยอาจเป็นค่าของ enum MatchOptions</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>นิพจน์ปกติ</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>ตัวเลือก</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>รีเฟรชแหล่งข้อมูลที่ระบุ</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>แหล่งข้อมูลที่เชื่อมต่อ</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>ต้องการค่าเรกคอร์ด หรือตาราง</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>แหล่งข้อมูลที่เชื่อมต่อที่จะรีเฟรช</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>สามารถรีเฟรชได้เฉพาะการเชื่อมต่อที่จัดการเท่านั้น</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติไม่ถูกต้อง</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>นิพจน์ปกติจะต้องเป็นค่าคงที่</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน '{0}' ไม่สามารถเปลี่ยนแปลงได้</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่ที่ตรงกันทั้งหมดของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับการจับคู่กลุ่มในนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกการจับคู่แบบย่อยทั้งหมดในข้อความที่ระบุ</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับตำแหน่งที่ตั้งของการจับคู่ของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกตำแหน่งของการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>นำการจัดรูปแบบทั้งหมดออกและส่งกลับเป็นข้อความแบบธรรมดา</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>ข้อความ</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>ข้อความที่จะลบแท็ก HTML และ XML</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>ฟังก์ชันตัวกรองไม่อนุญาตให้ใช้ฟังก์ชันพฤติกรรมเป็นเพรดิเคต</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>ใช้ตัวดำเนินการ And เพื่อรวมเพรดิเคตหลายตัวเป็นอาร์กิวเมนต์ที่สอง</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>ไม่สามารถคัดลอกตารางนี้ได้ ให้สร้างตารางแบบอินไลน์โดยใช้ฟังก์ชัน ForAll และสัญกรณ์ {...} เพื่อคัดลอกแต่ละคอลัมน์ที่ต้องการแทน</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>ไม่สามารถคัดลอกเรกคอร์ดนี้ได้ ให้สร้างเรกคอร์ดแบบอินไลน์โดยใช้สัญกรณ์ {...} เพื่อคัดลอกแต่ละฟิลด์ที่ต้องการแทน</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>อาร์กิวเมนต์ที่สองของฟังก์ชัน '{0}' รองรับเฉพาะค่าที่เป็นตัวเลขและวันที่/เวลาเท่านั้น</value>
     
   </data>
 </root>

@@ -1,4 +1,6 @@
-﻿// Blank()
+﻿#SETUP: TableSyntaxDoesntWrapRecords
+
+// Blank()
 >> If(true, {x:2},Blank()).x
 2
 

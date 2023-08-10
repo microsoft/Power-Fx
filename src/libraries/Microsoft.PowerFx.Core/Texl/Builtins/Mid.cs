@@ -46,11 +46,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.StringTFuncArg1, TexlStrings.StringFuncArg2, TexlStrings.StringFuncArg3 };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -67,7 +62,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             // Arg0 should be either a string or a column of strings.
             // Its type dictates the function return type.
-            if (type0.IsTable)
+            if (type0.IsTableNonObjNull)
             {
                 // Ensure we have a one-column table of strings
                 fValid &= CheckStringColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap, out returnType);
@@ -83,7 +78,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // Arg1 should be either a number or a column of numbers.
-            if (type1.IsTable)
+            if (type1.IsTableNonObjNull)
             {
                 fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
             }
@@ -97,7 +92,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             if (argTypes.Length > 2)
             {
                 var type2 = argTypes[2];
-                if (type2.IsTable)
+                if (type2.IsTableNonObjNull)
                 {
                     fValid &= CheckNumericColumnType(context, args[2], type2, errors, ref nodeToCoercedTypeMap);
                 }
@@ -109,7 +104,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             // At least one arg has to be a table.
-            if (!type0.IsTable && !type1.IsTable && (argTypes.Length <= 2 || !argTypes[2].IsTable))
+            if (!type0.IsTableNonObjNull && !type1.IsTableNonObjNull && (argTypes.Length <= 2 || !argTypes[2].IsTableNonObjNull))
             {
                 fValid = false;
                 errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);

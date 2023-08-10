@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Equivalent DAX/Excel function: Date
     internal sealed class DateFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }
@@ -48,12 +48,9 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
-        public ExtractDateTimeFunctionBase(string name, TexlStrings.StringGetter description, FunctionCategories fc, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, params DType[] paramTypes)
-            : base(name, description, fc, returnType, maskLambdas, arityMin, arityMax, paramTypes)
+        public ExtractDateTimeFunctionBase(string name, TexlStrings.StringGetter description)
+            : base(name, description, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
         {
-            Contracts.Assert(arityMin == 1);
-            Contracts.Assert(arityMax == 1);
-            Contracts.Assert(paramTypes[0] == DType.DateTime);
         }
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
@@ -64,13 +61,25 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             return base.IsRowScopedServerDelegatable(callNode, binding, metadata);
         }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+
+            return fValid;
+        }
     }
 
     // Time()
     // Equivalent DAX/Excel function: Time
     internal sealed class TimeFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }
@@ -94,7 +103,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // DateTime(year, month, day, hour, minute, second[, millisecond])
     internal sealed class DateTimeFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }
@@ -120,7 +129,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class YearFunction : ExtractDateTimeFunctionBase
     {
         public YearFunction()
-            : base("Year", TexlStrings.AboutYear, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+            : base("Year", TexlStrings.AboutYear)
         {
         }
 
@@ -137,7 +146,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MonthFunction : ExtractDateTimeFunctionBase
     {
         public MonthFunction()
-            : base("Month", TexlStrings.AboutMonth, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+            : base("Month", TexlStrings.AboutMonth)
         {
         }
 
@@ -154,7 +163,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class DayFunction : ExtractDateTimeFunctionBase
     {
         public DayFunction()
-            : base("Day", TexlStrings.AboutDay, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+            : base("Day", TexlStrings.AboutDay)
         {
         }
 
@@ -171,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class HourFunction : ExtractDateTimeFunctionBase
     {
         public HourFunction()
-            : base("Hour", TexlStrings.AboutHour, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+            : base("Hour", TexlStrings.AboutHour)
         {
         }
 
@@ -188,7 +197,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class MinuteFunction : ExtractDateTimeFunctionBase
     {
         public MinuteFunction()
-            : base("Minute", TexlStrings.AboutMinute, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+            : base("Minute", TexlStrings.AboutMinute)
         {
         }
 
@@ -205,7 +214,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     internal sealed class SecondFunction : ExtractDateTimeFunctionBase
     {
         public SecondFunction()
-            : base("Second", TexlStrings.AboutSecond, FunctionCategories.DateTime, DType.Number, 0, 1, 1, DType.DateTime)
+            : base("Second", TexlStrings.AboutSecond)
         {
         }
 
@@ -240,6 +249,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+
+            return fValid;
+        }
     }
 
     // WeekNum(date:d, [startOfWeek:n])
@@ -265,6 +286,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             return new List<string>() { LanguageConstants.StartOfWeekEnumString };
         }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+
+            return fValid;
+        }
     }
 
     // ISOWeekNum(date:d)
@@ -281,6 +314,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.ISOWeekNumArg1 };
+        }
+
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+
+            return fValid;
         }
     }
 
@@ -453,11 +498,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -568,6 +608,18 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.DateDiffArg1, TexlStrings.DateDiffArg2, TexlStrings.DateDiffArg3 };
         }
 
+        public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
+
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            returnType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+
+            return fValid;
+        }
+
         public override IEnumerable<string> GetRequiredEnumNames()
         {
             return new List<string>() { LanguageConstants.TimeUnitEnumString };
@@ -603,11 +655,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return new List<string>() { LanguageConstants.TimeUnitEnumString };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -617,12 +664,17 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
-            var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            var fValid = base.CheckTypes(context, args, argTypes, errors, out _, out nodeToCoercedTypeMap);
 
             var type0 = argTypes[0];
             var type1 = argTypes[1];
 
-            returnType = DType.CreateTable(new TypedName(DType.Number, GetOneColumnTableResultName(context.Features)));
+            // As this is an integer returning function, it can be either a number or a decimal depending on NumberIsFloat.
+            // We do this to preserve decimal precision if this function is used in a calculation
+            // since returning Float would promote everything to Float and precision could be lost
+            var returnScalarType = context.NumberIsFloat ? DType.Number : DType.Decimal;
+
+            returnType = DType.CreateTable(new TypedName(returnScalarType, GetOneColumnTableResultName(context.Features)));
 
             // Arg0 should be either a date or a column of dates.
             if (type0.IsTable)
@@ -711,11 +763,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.DateValueArg1 };
         }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
-        }
     }
 
     // TimeValue(time_text:uo) : T
@@ -734,11 +781,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         {
             yield return new[] { TexlStrings.TimeValueArg1 };
         }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
-        }
     }
 
     // DateTimeValue(arg:O) : d
@@ -756,11 +798,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.DateTimeValueArg1 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

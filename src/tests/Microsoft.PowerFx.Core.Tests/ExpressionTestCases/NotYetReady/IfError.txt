@@ -1,2 +1,0 @@
->> IfError(Error({Kind: 11}), TimeValue("3:30 PM"))
-3:30 PM

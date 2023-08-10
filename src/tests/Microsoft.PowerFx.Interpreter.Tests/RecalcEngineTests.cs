@@ -40,9 +40,6 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(RecalcEngine)}",
                 $"{ns}.{nameof(Governor)}",
                 $"{ns}.{nameof(ReflectionFunction)}",
-#pragma warning disable CS0618 // Type or member is obsolete
-                $"{ns}.{nameof(RecalcEngineScope)}",
-#pragma warning restore CS0618 // Type or member is obsolete
                 $"{ns}.{nameof(PowerFxConfigExtensions)}",
                 $"{ns}.{nameof(IExpressionEvaluator)}",
                 $"{ns}.{nameof(ITypeMarshallerProvider)}",
@@ -66,7 +63,7 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
                 $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
-                $"{ns}.{nameof(TypeCoercionProvider)}",                             
+                $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService"
@@ -551,7 +548,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Spot check some known functions
             Assert.NotEmpty(engine2.Functions.WithName("Cos"));
-            Assert.NotEmpty(engine2.Functions.WithName("ParseJSON"));            
+            Assert.NotEmpty(engine2.Functions.WithName("ParseJSON"));
         }
 
         [Fact]
@@ -572,7 +569,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CanRunWithWarnings()
         {
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             var engine = new RecalcEngine(config);
 
             var result = engine.Check("T.Var = 23", RecordType.Empty()
@@ -651,7 +648,7 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CheckBindEnum()
         {
-            var engine = new RecalcEngine();
+            var engine = new RecalcEngine(new PowerFxConfig(Features.None));
             var result = engine.Check("TimeUnit.Hours");
 
             Assert.True(result.IsSuccess);
@@ -721,26 +718,6 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
-        public void CheckIntefaceSuccess()
-        {
-            var engine = new RecalcEngine();
-            CheckThroughInterface(engine);
-        }
-
-        private void CheckThroughInterface(IPowerFxEngine engine)
-        {
-            var result = engine.Check(
-               "3*2+x",
-               RecordType.Empty().Add(
-                   new NamedFormulaType("x", FormulaType.Number)));
-
-            Assert.True(result.IsSuccess);
-            Assert.True(result.ReturnType is NumberType);
-            Assert.Single(result.TopLevelIdentifiers);
-            Assert.Equal("x", result.TopLevelIdentifiers.First());
-        }
-
-        [Fact]
         public void RecalcEngineMutateConfig()
         {
             var config = new PowerFxConfig();
@@ -791,7 +768,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("Func(7, 11)");
 
             Assert.IsType<NumberValue>(result);
-            
+
             // Multiply function is first and a valid overload so that's the one we use as coercion is valid for this one
             Assert.Equal(77.0, (result as NumberValue).Value);
         }
@@ -807,7 +784,7 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("Func(7, 11)");
 
             Assert.IsType<NumberValue>(result);
-            
+
             // Substract function is first and a valid overload so that's the one we use as coercion is valid for this one
             Assert.Equal(-4.0, (result as NumberValue).Value);
         }
@@ -817,7 +794,7 @@ namespace Microsoft.PowerFx.Tests
             public override bool IsSelfContained => true;
 
             public TestFunctionMultiply()
-                : base("Func", DType.Number, DType.Number, DType.String)
+                : base("Func", FunctionCategories.MathAndStat, DType.Number, DType.Number, DType.String)
             {
             }
 
@@ -840,7 +817,7 @@ namespace Microsoft.PowerFx.Tests
             public override bool IsSelfContained => true;
 
             public TestFunctionSubstract()
-                : base("Func", DType.Number, DType.String, DType.Number)
+                : base("Func", FunctionCategories.MathAndStat, DType.Number, DType.String, DType.Number)
             {
             }
 
@@ -882,7 +859,7 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("Text(OptionSet.option_1)", "Option1")]
         [InlineData("Text(OptionSet.Option1)", "Option1")]
         [InlineData("Text(Option1)", "Option1")]
-        [InlineData("Text(If(1<0, Option1))", "")]
+        [InlineData("Text(If(1<0, Option1))", null)]
 
         // OptionSetInfo() returns the logical name of the input option set value
         [InlineData("OptionSetInfo(OptionSet.option_1)", "option_1")]
@@ -900,14 +877,14 @@ namespace Microsoft.PowerFx.Tests
             optionSet.TryGetValue(new DName("option_1"), out var option1);
 
             var symbol = new SymbolTable();
-            var option1Solt = symbol.AddVariable("Option1", FormulaType.OptionSetValue);
+            var option1Solt = symbol.AddVariable("Option1", FormulaType.OptionSetValue, null);
             var symValues = new SymbolValues(symbol);
             symValues.Set(option1Solt, option1);
 
             var config = new PowerFxConfig() { SymbolTable = symbol };
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
-            
+
             var result = await recalcEngine.EvalAsync(expression, CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(expected, result.ToObject());
         }
@@ -928,7 +905,7 @@ namespace Microsoft.PowerFx.Tests
                     { "option_2", "Option2" }
             }));
 
-            var config = new PowerFxConfig();
+            var config = new PowerFxConfig(Features.None);
             config.AddOptionSet(optionSet);
             var recalcEngine = new RecalcEngine(config);
             var checkResult = recalcEngine.Check(expression, RecordType.Empty());
@@ -1048,7 +1025,7 @@ namespace Microsoft.PowerFx.Tests
         public void TestWithTimeZoneInfo()
         {
             // CultureInfo not set in PowerFxConfig as we use Symbols
-            var pfxConfig = new PowerFxConfig();
+            var pfxConfig = new PowerFxConfig(Features.None);
             var recalcEngine = new RecalcEngine(pfxConfig);
             var symbols = new RuntimeConfig();
 
@@ -1099,7 +1076,7 @@ namespace Microsoft.PowerFx.Tests
             // It also doesn't replace the function, so existing function logic (errors, range checks, etc) still is used. 
             // RandBetween maps 0.5 to 6. 
             result = engine.EvalAsync("RandBetween(1,10)", CancellationToken.None, runtimeConfig: values).Result;
-            Assert.Equal(6.0, result.ToObject());
+            Assert.Equal(6.0m, result.ToObject());
         }
 
         [Fact]
@@ -1131,7 +1108,7 @@ namespace Microsoft.PowerFx.Tests
         public async Task ExecutingWithRemovedVarFails()
         {
             var symTable = new SymbolTable();
-            var slot = symTable.AddVariable("x", FormulaType.Number);
+            var slot = symTable.AddVariable("x", FormulaType.Number, null);
 
             var engine = new RecalcEngine();
             var result = engine.Check("x+1", symbolTable: symTable);
@@ -1145,7 +1122,7 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal(11.0, result1.ToObject());
 
             // Adding a variable is ok. 
-            var slotY = symTable.AddVariable("y", FormulaType.Number);
+            var slotY = symTable.AddVariable("y", FormulaType.Number, null);
             result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
 
@@ -1155,7 +1132,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Even re-adding with same type still fails. 
             // (somebody could have re-added with a different type)
-            var slot2 = symTable.AddVariable("x", FormulaType.Number);
+            var slot2 = symTable.AddVariable("x", FormulaType.Number, null);
             symValues.Set(slot2, FormulaValue.New(20));
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
@@ -1205,22 +1182,22 @@ namespace Microsoft.PowerFx.Tests
         [InlineData("[@Field2]")] // error, doesn't exist in global scope. 
         [InlineData("With({Task : true}, ThisRecord.Field2)")] // Error. ThisRecord doesn't union, it refers exclusively to With().
         public void DisambiguationTest(string expr, object expected = null)
-        {            
+        {
             var engine = new RecalcEngine();
-            
+
             // Setup Global "Task", and RowScope with "Task" field.
             var record = FormulaValue.NewRecordFromFields(
                 new NamedValue("Task", FormulaValue.New("_fieldTask")),
                 new NamedValue("Field2", FormulaValue.New("_field2")));
 
             var globals = new SymbolTable();
-            var slot = globals.AddVariable("Task", FormulaType.String);
-            
+            var slot = globals.AddVariable("Task", FormulaType.String, null);
+
             var rowScope = ReadOnlySymbolTable.NewFromRecord(record.Type, allowThisRecord: true);
 
             // ensure rowScope is listed first since that should get higher priority 
-            var symbols = ReadOnlySymbolTable.Compose(rowScope, globals); 
-                        
+            var symbols = ReadOnlySymbolTable.Compose(rowScope, globals);
+
             // Values 
             var rowValues = ReadOnlySymbolValues.NewFromRecord(rowScope, record);
             var globalValues = globals.CreateValues();
@@ -1241,7 +1218,7 @@ namespace Microsoft.PowerFx.Tests
 
             var run = check.GetEvaluator();
             var result = run.Eval(runtimeConfig);
-            
+
             Assert.Equal(expected, result.ToObject());
         }
 
@@ -1267,10 +1244,10 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void ComparisonWithMismatchedTypes()
         {
-            foreach ((Features f, ErrorSeverity es) in new[] 
-            { 
-                (Features.PowerFxV1, ErrorSeverity.Severe), 
-                (Features.None, ErrorSeverity.Warning) 
+            foreach ((Features f, ErrorSeverity es) in new[]
+            {
+                (Features.PowerFxV1, ErrorSeverity.Severe),
+                (Features.None, ErrorSeverity.Warning)
             })
             {
                 var config = new PowerFxConfig(f);
@@ -1282,7 +1259,7 @@ namespace Microsoft.PowerFx.Tests
                 Assert.Equal(es, firstError.Severity);
                 Assert.Equal("Incompatible types for comparison. These types can't be compared: Decimal, Text.", firstError.Message);
             }
-        } 
+        }
 
         private class TestRandService : IRandomService
         {
@@ -1295,7 +1272,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-#region Test
+        #region Test
 
         private readonly StringBuilder _updates = new StringBuilder();
 
@@ -1311,6 +1288,6 @@ namespace Microsoft.PowerFx.Tests
 
             _updates.Append($"{name}-->{str};");
         }
-#endregion
+        #endregion
     }
 }

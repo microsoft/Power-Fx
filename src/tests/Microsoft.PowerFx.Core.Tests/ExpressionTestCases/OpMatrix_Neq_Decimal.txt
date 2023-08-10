@@ -1,10 +1,10 @@
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat
 
 // NOT EQUALS
 
 // In these tests, 1E100 or some other very large/small number is used to test floating point results which decimal can not represent, 
 // and a highly precise number is used for decimal, such as 2.00000000000000000000000000002 that would be rounded in floating point.
-// For example, if a decimal test results with 25+ signficant digits results in 2, then an inappropriate conversion to floating point was made.
+// For example, if a decimal test results with 25+ significant digits results in 2, then an inappropriate conversion to floating point was made.
 
 >> 1 <> 1
 false
@@ -56,54 +56,6 @@ false
 true
 
 >> Float(16) <> Float(18)
-true
-
-// comp todo: type mismatch error (string and number)
->> Float(16) <> "16"
-true
-
-// comp todo: type mismatch error (string and number)
->> Float(16) <> "16.000000000000000000002"
-true
-
-// comp todo: type mismatch error (string and number)
->> Float(16) <> "14"
-true
-
-// comp todo: type mismatch error (string and number)
->> Float(16) <> "18"
-true
-
-// comp todo: type mismatch error (string and number)
->> Float(16) <> "1e20"
-true
-
-// comp todo: type mismatch error (string and number)
->> Float(1e20) <> "1e20"
-true
-
-// comp todo: type mismatch error (boolean and number)
->> Float(1) <> true
-true
-
-// comp todo: type mismatch error (boolean and number)
->> Float(1) <> false
-true
-
-// comp todo: type mismatch error (boolean and number)
->> Float(0) <> true
-true
-
-// comp todo: type mismatch error (boolean and number)
->> Float(0) <> false
-true
-
-// comp todo: type mismatch error (boolean and number)
->> Float(2) <> true
-true
-
-// comp todo: type mismatch error (boolean and number)
->> Float(2) <> false
 true
 
 >> Float(0) <> Blank()
@@ -186,26 +138,6 @@ false
 
 // Text - Text can only be compared with other text
 
-// comp todo: type mismatch error (string and number)
->> "16" <> Float(16)
-true
-
-// comp todo: type mismatch error (string and number)
->> "16" <> Float(18)
-true
-
-// comp todo: type mismatch error (string and number)
->> "16" <> Float(14)
-true
-
-// comp todo: type mismatch error (string and number)
->> "1e100" <> Float(2)
-true
-
-// comp todo: type mismatch error (string and number)
->> "" <> Float(0)
-true
-
 >> "16" <> "16"
 false
 
@@ -221,14 +153,6 @@ true
 >> "1e100" <> "2"
 true
 
-// comp todo: type mismatch error (string and boolean)
->> "1" <> true
-true
-
-// comp todo: type mismatch error (string and boolean)
->> "1e100" <> true
-true
-
 >> "16" <> Blank()
 true
 
@@ -242,26 +166,6 @@ true
 true
 
 >> "1e100" <> Blank()
-true
-
-// comp todo: type mismatch error (string and date/datetime/time)
->> "36526" <> Date(2000,1,1)
-true
-
-// comp todo: type mismatch error (string and date/datetime/time)
->> "36526.5" <> DateTime(2000,1,1,12,0,0)
-true
-
-// comp todo: type mismatch error (string and date/datetime/time)
->> "16" <> Time(12,0,0)
-true
-
-// comp todo: type mismatch error (string and number)
->> "2" <> Decimal("2.000000000000000000000002")
-true
-
-// comp todo: type mismatch error (string and number)
->> "1e100" <> Decimal("2.000000000000000000000002")
 true
 
 // string comparisons with ParseJSON of a number are done on the underlying text representation of the number in the JSON, 
@@ -325,58 +229,6 @@ true
 
 // Boolean
 
-// comp todo: type mismatch error (boolean and number)
->> true <> Float(2)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> true <> Float(1)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> true <> Float(0)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> false <> Float(2)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> false <> Float(1)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> false <> Float(0)
-true
-
->> true <> Float("1e100")
-true
-
-// comp todo: type mismatch error (string and boolean)
->> true <> "1"
-true
-
-// comp todo: type mismatch error (string and boolean)
->> false <> "0"
-true
-
-// comp todo: type mismatch error (string and boolean)
->> false <> "1"
-true
-
-// comp todo: type mismatch error (string and boolean)
->> true <> "1E+100"
-true
-
-// comp todo: type mismatch error (string and boolean)
-// returns false in Excel
->> true <> "true"
-true
-
-// comp todo: type mismatch error (string and boolean)
->> false <> "false"
-true
-
 >> true <> true
 false
 
@@ -387,54 +239,6 @@ true
 true
 
 >> false <> Blank()
-true
-
-// comp todo: type mismatch error (boolean and date/datetime/time)
->> true <> Date(1927,5,18)
-true
-
-// comp todo: type mismatch error (boolean and date/datetime/time)
->> true <> DateTime(1927,5,18,0,0,0)
-true
-
-// comp todo: type mismatch error (boolean and date/datetime/time)
->> true <> Time(12,0,0)
-true
-
-// comp todo: type mismatch error (boolean and date/datetime/time)
->> false <> Date(1927,5,18)
-true
-
-// comp todo: type mismatch error (boolean and date/datetime/time)
->> false <> DateTime(1927,5,18,0,0,0)
-true
-
-// comp todo: type mismatch error (boolean and date/datetime/time)
->> false <> Time(12,0,0)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> true <> Decimal("1.000000000000000000000002")
-true
-
-// comp todo: type mismatch error (boolean and number)
->> true <> Decimal(1)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> true <> Decimal(0)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> false <> Decimal("1.000000000000000000000002")
-true
-
-// comp todo: type mismatch error (boolean and number)
->> false <> Decimal(1)
-true
-
-// comp todo: type mismatch error (boolean and number)
->> false <> Decimal(0)
 true
 
 >> true <> ParseJSON("2")
@@ -531,13 +335,6 @@ true
 >> Date(1900,1,1) <> Float(2)
 false
 
->> Date(1900,1,1) <> "2"
-true
-
-// comp todo: type mismatch error (boolean and number)
->> Date(1900,1,0) <> true
-true
-
 >> Date(2000,1,1) <> Blank()
 true
 
@@ -559,7 +356,6 @@ true
 >> Date(1954,10,3) <> Today()
 true
 
-// comp todo: type mismatch error (date and time)
 >> Date(2000,1,1) <> Time(12,0,0)
 true
 
@@ -576,17 +372,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> DateTime(1900,1,1,12,0,0) <> Float(2.5)
 false
-
-// comp todo: type mismatch error (date/datetime and string)
->> DateTime(1900,1,1,12,0,0) <> "2.5"
-true
-
-// comp todo: type mismatch error (date/datetime and boolean)
->> DateTime(2000,1,1,12,0,0) <> true
-true
-
->> DateTime(2000,1,0,0,0,0) <> true
-true
 
 >> DateTime(2000,1,1,12,0,0) <> Blank()
 true
@@ -635,23 +420,11 @@ true
 >> Time(9,0,0) <> Float(0.375)
 false
 
-// comp todo: type mismatch error (time and string)
->> Time(9,0,0) <> "0.375"
-true
-
-// comp todo: type mismatch error (time and boolean)
->> Time(9,0,0) <> true
-true
-
-// comp todo: type mismatch error (time and boolean)
->> Time(24,0,0) <> false
-true
-
 >> Time(24,0,0) <> 0
-false
+true
 
 >> Time(24,0,0) <> 1
-true
+false
 
 >> Time(9,0,0) <> Blank()
 true
@@ -665,12 +438,7 @@ false
 >> Time(9,0,1) <> Time(9,0,0)
 true
 
-// comp todo: type mismatch error (time and date)
 >> Time(9,0,0) <> Date(1900,1,2)
-true
-
-// comp todo: but we allow time and datetime?
->> Time(1,0,0) <> DateTime(1899,12,30,1,0,0)
 true
 
 >> Time(3,0,0) <> Decimal("0.125")
@@ -701,14 +469,6 @@ false
 
 >> Decimal("2.000000000000000000000001") <> Float(2)
 false
-
-// comp todo: type mismatch error (number and string)
->> Decimal("16.000000000000000000000001") <> "16"
-true
-
-// comp todo: type mismatch error (number and boolean)
->> Decimal("1.000000000000000000000001") <> true
-true
 
 >> Decimal("0.000000000000000000000001") <> Blank()
 true
@@ -853,9 +613,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("""1900-01-01""") <> Date(1900,1,1)
 false
-
->> ParseJSON("""1900-01-01T09:00:01""") <> Date(1900,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1299, expected: false
 
 >> ParseJSON("16") <> Date(1900,1,15)
 Error({Kind:ErrorKind.InvalidArgument})

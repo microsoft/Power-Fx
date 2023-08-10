@@ -483,7 +483,7 @@
     <value>Der Textwert, der in einen Zahlenwert konvertiert werden soll.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Zu verwendender Sprachcode für die Konvertierung des Werts.</value>
+    <value>Zu verwendender Sprachcode für die Konvertierung des Werts</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -568,22 +568,22 @@
     
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+    <value>Konvertiert einen „Text“, der eine Zahl darstellt, in einen Dezimalwert</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Zu verwendender Sprachcode für die Konvertierung des Werts</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a Decimal value.</value>
+    <value>Der Textwert, der in einen Dezimalwert konvertiert werden soll</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Float value.</value>
+    <value>Konvertiert einen „Text“, der eine Zahl darstellt, in einen Floatwert</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Zu verwendender Sprachcode für die Konvertierung des Werts</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>Der Textwert, der in einen Floatwert konvertiert werden soll</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>Text</value>
@@ -1465,6 +1465,14 @@
     <value>Eingabe</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>Modifizierer</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>Modifizierer</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Gibt die angegebene Anzahl Zeichen ab dem Anfang eines Textwerts zurück.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Auf benutzerdefinierte Dateneigenschaft der Komponente mit Parametern kann nur innerhalb einer Komponente oder über Komponentenausgabeeigenschaften zugegriffen werden.</value>
+    <value>Auf Komponentenfunktionseigenschaften oder -parameter kann nur innerhalb einer Komponente oder über Komponentenausgabeeigenschaften zugegriffen werden.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponentenfunktionseigenschaften oder -parameter können nur auf andere Funktionseigenschaften verweisen.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Das erste Argument von „{0}“ sollte eine einspaltige Tabelle sein.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Textwerten für „{0}“ erwartet.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Datumswerten für „{0}“ erwartet.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Zahlenwerten für „{0}“ erwartet.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Ungültiges Schema, es wurde eine Spalte mit Farbwerten für „{0}“ erwartet.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Ungültiges Schema, es wurde eine Spalte mit {0} Werten für „{1}“ erwartet.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Der Zahlenwert ist zu groß.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Die Verwendung eines reservierten Wortes, das derzeit nicht unterstützt wird</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Mathematik und Statistik</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informationen</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ungültige Anzahl von Argumenten für die Funktion {0}: empfangen {1}, erwartet {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Das {0}-Argument wird für die {1}-Funktion in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Dieses Argument kann nicht als dieser Typ in Formelspalten übergeben werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Dieses Argument kann nicht als Typ {0} in Formelspalten übergeben werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Für dieses Argument wird nur ein Literalwert unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kann für diese Eingabe ohne Zeitzonenumstellung nicht ausgeführt werden, was in Formelspalten nicht unterstützt wird.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Dieser Vorgang kann nicht für Werte ausgeführt werden, die ein anderes Datums-/Uhrzeitverhalten aufweisen.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Nur die Zeichenfolgen für das kurze Datums- und Zeitformat werden in den Formelspalten unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Das {0}-Argument ist eine ungültige/nicht unterstützte Zeiteinheit für {1} datumsarithmetische Funktion.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Ortsspezifische Formatierungstoken wie „.“ und „,“ werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} wird in Formelspalten nicht unterstützt. Verwenden Sie stattdessen {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Dieser Vorgang kann nicht für Typ {0} in Formelspalten ausgeführt werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Der Ergebnistyp {0} wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Das direkte Verweisen auf einen gesamten Datensatz wird in Formelspalten nicht unterstützt. Verweisen Sie auf ein gültiges Feld im Datensatz.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Der Ergebnistyp für diese Formel muss {0} sein, der tatsächliche Ergebnistyp ist jedoch {1}. Der Ergebnistyp einer Formelspalte kann nicht geändert werden.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Spalten vom Typ {0} werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Spalten vom Typ {0} mit Format {1} werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Das Erstellen von Datensätzen oder Tabellen wird in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabellen mit einer einzelnen Spalte werden in Formelspalten nicht unterstützt.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Es kann nicht auf die virtuelle Tabelle {0} in Formelspalten verwiesen werden.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Es wurde ein Operand erwartet. Für die Formel oder den Ausdruck wird ein gültiger Operand erwartet. Beispielsweise können Sie dem Ausdruck " 1 +_" den Operanden "2" hinzufügen, sodass das Ergebnis "3" lautet. Sie können dem Ausdruck ""Hallo "&amp; _ " den Operanden "zusammen" hinzufügen, sodass das Ergebnis "Hallo zusammen" lautet.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Die benannte Formel muss ein Ausdruck sein.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Die benutzerdefinierte Funktion muss einen Textkörper aufweisen.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funktion {0} ist bereits definiert.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} ist ein Duplikat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Unbekannter Typ {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Der Rückgabetyp der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ ist bereits vorhanden.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Diese Funktion ist veraltet und wird nicht mehr unterstützt.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Warnung: Verzögerter Typ bereitgestellt.</value>
     
@@ -4912,7 +4863,173 @@
     <value>Eine zu codierende URL.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>„{0}“ ist eine erkannte, aber nicht unterstützte Funktion</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Fehler bei der Typkonvertierung, da der angegebene Wert vom Typ „{0}“ war. Erwarteter Typ: „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Dieser Vorgang für Tabelle „{0}“ funktioniert möglicherweise nicht, wenn sie mehr als {1} Zeilen enthält.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Dieses Prädikat trifft immer zu. Wollten Sie ThisRecord oder [@ ] verwenden?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>{0} kann nicht delegiert werden: Nur die Delegierung für die Suche im Feld für den Primärschlüssel „{1}“ wird unterstützt.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>{0} kann nicht delegiert werden: Der Ausdruck vergleicht mehrere Felder.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>{0} kann nicht delegiert werden: Enthält eine Verhaltensfunktion „{1}“.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Ermittelt, ob der angegebene Text dem angegebenen Textformat entspricht.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Der Text, der mit dem Format abgeglichen wird.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Das Format, mit dem der Text abgeglichen wird. Es kann sich um einen Wert der TextFormat-Enumeration oder um einen regulären Ausdruck handeln.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Legt fest, welcher Teil des Textes abgeglichen werden soll. Es kann sich um einen Wert der MatchOptions-Enumeration handeln.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>Format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>Umfang</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Durchsucht den bereitgestellten Text nach dem angegebenen regulären Ausdruck und gibt die erste Übereinstimmung zurück.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Durchsucht den bereitgestellten Text nach dem angegebenen regulären Ausdruck und gibt alle Übereinstimmungen zurück.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Der Text, der anhand des regulären Ausdrucks durchsucht wird.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Der reguläre Ausdruck, nach dem der Text durchsucht wird. Dieser kann gruppierte Werte (Werte zwischen Klammern) enthalten, die im Falle einer erfolgreichen Übereinstimmung zurückgegeben werden.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Legt fest, welcher Teil des Textes abgeglichen werden soll. Es kann sich um einen Wert der MatchOptions-Enumeration handeln.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Der Text, der anhand des regulären Ausdrucks durchsucht wird.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Der reguläre Ausdruck, nach dem der Text durchsucht wird. Dieser kann gruppierte Werte (Werte zwischen Klammern) enthalten, die im Falle einer erfolgreichen Übereinstimmung zurückgegeben werden.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Legt fest, welcher Teil des Textes abgeglichen werden soll. Es kann sich um einen Wert der MatchOptions-Enumeration handeln.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulärer_Ausdruck</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>Optionen</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Aktualisiert die angegebene Datenquelle</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>Verbindungsdatenquellen</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Ein Datensatz- oder Tabellenwert wurde erwartet.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Eine verbundene Datenquelle zum Aktualisieren</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Nur verwaltete Verbindungen können aktualisiert werden.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ungültiger regulärer Ausdruck.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Reguläre Ausdrücke müssen konstante Werte sein.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Der Wert, der an die Funktion „{0}“ übergeben wurde, kann nicht geändert werden.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die vollständige Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die Gruppenübereinstimmungen des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren aller untergeordneten Übereinstimmungen im angegebenen Text verwenden möchten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die Position der Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der Position der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Entfernt alle Formatierung und gibt einen unformatierten Textwert zurück.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>Text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Der Text, dessen HTML- und XML-Tags entfernt werden sollen.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunktionen erlauben keine Verhaltensfunktionen als Prädikate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Verwenden Sie den And-Operator, um mehrere Prädikate im zweiten Argument zu kombinieren.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Diese Tabelle kann nicht kopiert werden. Erstellen Sie stattdessen mithilfe der ForAll-Funktion und der Notation {...} eine Inlinetabelle, um die einzelnen gewünschten Spalten zu kopieren.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Dieser Datensatz kann nicht kopiert werden. Erstellen Sie stattdessen einen Inline-Datensatz mithilfe der Notation {...}, um die einzelnen gewünschten Felder zu kopieren.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

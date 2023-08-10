@@ -1424,7 +1424,7 @@
     <value>En tabell som det trekkes ut distinkte verdier fra.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Et uttrykk som evalueres over hver rad i inndatatabellen, og som angir verdier for den distinkte operasjonen.</value>
+    <value>Et uttrykk som evalueres over hver rad i inndatatabellen, som angir verdier for den distinkte operasjonen.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Returnerer arctangens-verdien (i radianer) for de angitte x- og y-koordinatene.</value>
@@ -1463,6 +1463,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>inndata</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikator</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Egenskapen for komponenttilpassede data med parametere kan bare nås fra en komponent eller fra egenskaper for komponentutdata.</value>
+    <value>Egenskapen eller parameteren for komponentfunksjon kan bare nås fra en komponent eller fra egenskaper for komponentutdata.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Egenskapen eller parameteren for komponentfunksjon kan bare referere andre funksjonsegenskaper.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Det første argumentet for {0} må være en tabell med én kolonne.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Ugyldig skjema. Forventet en kolonne med tekstverdier for {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Ugyldig skjema. Forventet en kolonne med datoverdier for {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Ugyldig skjema. Forventet en kolonne med numeriske verdier for {0}.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Ugyldig skjema. Forventet en kolonne med fargeverdier for {0}.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Ugyldig skjema. Forventet en kolonne med {0} verdier for {1}.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Numerisk verdi er for stor.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Bruk av et reservert ord som ikke støttes for øyeblikket.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematikk og statistikk</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informasjon</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Støttes ikke i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Ugyldig antall argumenter for {0}-funksjon: mottatt {1}, forventet {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumentet {0} støttes ikke for funksjonen {1} i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Dette argumentet kan ikke sendes som denne typen i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Dette argumentet kan ikke sendes som typen {0} i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Bare en litteralverdi støttes for dette argumentet.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} kan ikke utføres for disse inndataene uten tidssonekonvertering, som ikke støttes i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Denne operasjonen kan ikke utføres på verdier som har ulike dato/klokkeslett-virkemåter.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Bare strengene for kort dato og klokkeslett-format støttes i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumentet {0} er en ugyldig/ustøttet tidsenhet for den aritmetiske datofunksjonen {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Spesifikke formateringstokener for nasjonal innstilling som «.» og «,» støttes ikke i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} støttes ikke i formelkolonner. Bruk {1} i stedet.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Denne operasjonen kan ikke utføres på typen {0} i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Resultattypen {0} støttes ikke i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Direkte henvisning til en hel oppføring støttes ikke i formelkolonner. Henvis til et gyldig felt i oppføringen.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Resultattypen for denne formelen forventes å være {0}, men den faktiske resultattypen er {1}. Resultattypen for en formelkolonne kan ikke endres.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Kolonner av typen {0} støttes ikke i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Kolonner av typen {0} med formatet {1} støttes ikke i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Tvungne oppføringer eller tabeller støttes ikke i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Tabeller med én kolonne støttes ikke i formelkolonner.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Kan ikke henvise til virtuell tabell {0} i formelkolonner.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Forventet en operand. Formelen eller uttrykket forventer en gyldig operand. Du kan for eksempel legge til operanden «2» i uttrykket «1 +_» slik at resultatet blir «3». Eller du kan legge til operanden «du» i uttrykket «Hei &amp; _» slik at resultatet blir «Hei du».</value>
     
@@ -4789,6 +4712,26 @@
     <value>Den navngitte formelen må være et uttrykk.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Brukerdefinert funksjon må ha en brødtekst.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funksjonen {0} er allerede definert.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameteren {0} er et duplikat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Ukjent type {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Den angitte funksjonsreturtypen samsvarer ikke med returtypen for funksjonsbrødteksten.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} finnes allerede.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Denne funksjonen er avskrevet og støttes ikke lenger.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Funksjonen {0} er avskrevet i navneområdet {1}.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Funksjonen {0} støttes ikke i navneområdet {1}.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Advarsel: Utsatt type oppgitt.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>{0} er en gjenkjent, men ikke støttet funksjon.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Konverteringstypen mislyktes fordi den angitte verdien var av typen {0}, forventet typen {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Denne operasjonen på tabellen {0} fungerer kanskje ikke hvis den har mer enn {1} rader.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Dette predikatet vil alltid være sant. Mente du å bruke ThisRecord eller [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Kan ikke delegere {0}: støtter bare delegering for oppslag i primærnøkkelfelt {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Kan ikke delegere {0}: Uttrykk sammenligner flere felter.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Kan ikke delegere {0}: inneholder en virkemåtefunksjon {1}.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Avgjør om den angitte teksten har et samsvar med det angitte tekstformatet.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teksten som skal sammenlignes med formatet.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formatet som teksten skal kontrolleres mot. Det kan være en verdi for opplistingen TextFormat eller et regulært uttrykk.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Dette bestemmer hvilken del av teksten vi vil ha samsvar med. Det kan være en verdi i MatchOptions-opplistingen.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>omfang</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Søker i vedlagt tekst etter det angitte regulære uttrykket og returnerer første treff fra det.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Søker i vedlagt tekst etter det angitte regulære uttrykket og returnerer alle treff fra det.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Teksten som skal søkes mot det vanlige uttrykket.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>RegEx som som teksten skal kontrolleres mot. Det kan inneholde opptak (verdier mellom parenteser) som returneres hvis det oppstår et vellykket samsvar.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Dette bestemmer hvilken del av teksten vi vil ha samsvar med. Det kan være en verdi i MatchOptions-opplistingen.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Teksten som skal søkes mot det vanlige uttrykket.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>RegEx som som teksten skal kontrolleres mot. Det kan inneholde opptak (verdier mellom parenteser) som returneres hvis det oppstår et vellykket samsvar.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Dette bestemmer hvilken del av teksten vi vil ha samsvar med. Det kan være en verdi i MatchOptions-opplistingen.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regulært_expression</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>alternativer</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Oppdaterer den angitte datakilden.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>tilkoblet_datakilde</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Forventet en post- eller tabellverdi.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>En koblet datakilde som skal oppdateres.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Bare administrerte tilkoblinger kan oppdateres.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ugyldig regulært uttrykk.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regulære uttrykk må være konstante verdier.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Verdien som ble sendt til funksjonen {0}, kan ikke endres.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer fullstendig samsvar for RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å trekke ut fullstendig samsvar i den angitte teksten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer gruppesamsvaret i RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å trekke ut alle delsamsvar i den angitte teksten.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Navnet på opphentingsforekomsten {0} skjuler den forhåndsdefinerte egenskapen som returnerer plasseringssamsvaret i RegEx. Vurder å endre navnet hvis du vil bruke den navngitte egenskapen til å hente ut plasseringen for fullstendig samsvar i den angitte teksten.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Fjerner all formatering og returnerer en verdi i ren tekst.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>tekst</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Teksten som HTML- og XML-merker skal fjernes for.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunksjoner tillater ikke virkemåtefunksjoner som predikater.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Bruk And-operatoren til å slå sammen flere predikater til det andre argumentet.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Denne tabellen kan ikke kopieres. Opprett i stedet en innebygd tabell ved hjelp av ForAll-funksjonen og {...}-notasjonen for å kopiere de ønskede enkeltkolonnene.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Denne oppføringen kan ikke kopieres. Opprett i stedet en innebygd oppføring med {...}-notasjon for å kopiere de ønskede enkeltfeltene.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Det andre argumentet for funksjonen {0} støttes bare for numeriske verdier og dato-/klokkeslettverdier.</value>
     
   </data>
 </root>

@@ -26,6 +26,12 @@ namespace Microsoft.PowerFx
         public bool NumberIsFloat { get; set; }
 
         /// <summary>
+        /// If true, various words have been reserved and are not available for identifiers.
+        /// Will only be set by Canvas apps, all other Power Fx hosts should have reserved keywords always enforced.
+        /// </summary>
+        internal bool DisableReservedKeywords { get; set; }
+
+        /// <summary>
         /// The culture that an expression will parse with. 
         /// This primarily determines numeric decimal separator character
         /// as well as chaining operator. 
@@ -65,7 +71,8 @@ namespace Microsoft.PowerFx
             }
 
             var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
-                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0);
+                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
+                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0);
 
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;

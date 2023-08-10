@@ -37,22 +37,12 @@ namespace Microsoft.PowerFx.Functions
         // Sync FunctionPtr - all args are evaluated before invoking this function.  
         public delegate FormulaValue FunctionPtr(SymbolContext symbolContext, IRContext irContext, FormulaValue[] args);
 
-        // Async - can invoke lambads.
+        // Async - can invoke lambdas.
         public delegate ValueTask<FormulaValue> AsyncFunctionPtr(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args);
 
         public static IEnumerable<TexlFunction> FunctionList => FunctionImplementations.Keys;
 
-        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;        
-
-        public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
-        {
-            return new FormattingInfo()
-            {
-                CultureInfo = runner.CultureInfo,
-                CancellationToken = runner.CancellationToken,
-                TimeZoneInfo = runner.TimeZoneInfo
-            };
-        }
+        public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
         static Library()
         {
@@ -775,6 +765,10 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: ForAll_UO)
             },
             {
+                BuiltinFunctionsCore.GUIDNoArg,
+                NoErrorHandling(GuidNoArg)
+            },
+            {
                 BuiltinFunctionsCore.GUIDPure,
                 StandardErrorHandling<StringValue>(
                     BuiltinFunctionsCore.GUIDPure.Name,
@@ -783,7 +777,7 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeTypes: ExactValueTypeOrBlank<StringValue>,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
-                    targetFunction: Guid)
+                    targetFunction: GuidPure)
             },
             {
                 BuiltinFunctionsCore.GUID_UO,
@@ -934,6 +928,10 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.ReturnFalseIfAnyArgIsBlank,
                     targetFunction: IsToday)
+            },
+            {
+                BuiltinFunctionsCore.Language,
+                NoErrorHandling(Language)
             },
             {
                 BuiltinFunctionsCore.Last,
@@ -1201,6 +1199,17 @@ namespace Microsoft.PowerFx.Functions
                 NoErrorHandling(Pi)
             },
             {
+                BuiltinFunctionsCore.PlainText,
+                StandardErrorHandling<StringValue>(
+                    BuiltinFunctionsCore.PlainText.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: NoOpAlreadyHandledByIR,
+                    checkRuntimeTypes: ExactValueType<StringValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    targetFunction: PlainText)
+            },
+            {
                 BuiltinFunctionsCore.Power,
                 StandardErrorHandling<NumberValue>(
                     BuiltinFunctionsCore.Power.Name,
@@ -1228,14 +1237,25 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.RandBetween,
-                StandardErrorHandling<NumberValue>(
+                StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.RandBetween.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
-                    checkRuntimeTypes: ExactValueType<NumberValue>,
+                    checkRuntimeTypes: NumberOrDecimal,
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: RandBetween)
+            },
+            {
+                BuiltinFunctionsCore.Refresh,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Refresh.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: ExactValueTypeOrBlank<TableValue>,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Refresh)
             },
             {
                 BuiltinFunctionsCore.Replace,
@@ -1519,18 +1539,18 @@ namespace Microsoft.PowerFx.Functions
                     replaceBlankValues: DoNotReplaceBlank,
                     checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnEmptyStringIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Text)
             },
             {
                 BuiltinFunctionsCore.Text_UO,
-                StandardErrorHandling<UntypedObjectValue>(
+                StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Text_UO.Name,
                     expandArguments: NoArgExpansion,
                     replaceBlankValues: DoNotReplaceBlank,
-                    checkRuntimeTypes: ExactValueTypeOrBlank<UntypedObjectValue>,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
                     checkRuntimeValues: DeferRuntimeValueChecking,
-                    returnBehavior: ReturnBehavior.ReturnBlankIfAnyArgIsBlank,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Text_UO)
             },
             {
@@ -1677,6 +1697,21 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: VarTable)
             },
             {
+                BuiltinFunctionsCore.Weekday,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.Weekday.Name,
+                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 1)),
+                    replaceBlankValues: ReplaceBlankWith(
+                        new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), _epoch),
+                        new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    checkRuntimeTypes: ExactSequence(
+                        DateOrTimeOrDateTime,
+                        ExactValueTypeOrBlank<NumberValue>),
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: Weekday)
+            },
+            {
                 BuiltinFunctionsCore.With,
                 StandardErrorHandlingAsync<FormulaValue>(
                     BuiltinFunctionsCore.With.Name,
@@ -1697,10 +1732,6 @@ namespace Microsoft.PowerFx.Functions
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
                     targetFunction: Year)
-            },
-            {
-                BuiltinFunctionsCore.Language,
-                NoErrorHandling(Language)
             }
         };
 
@@ -1737,7 +1768,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.BooleanW_T,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN], DoNotReplaceBlank)
+                StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanW], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 
@@ -1933,7 +1964,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                else if (!forceSingleColumn && arg is BlankValue bv && bv.Type._type.IsRecord)
                 {
                     return DValue<RecordValue>.Of(bv);
                 }
@@ -1971,16 +2002,21 @@ namespace Microsoft.PowerFx.Functions
         {
             // Blank or empty. 
             var arg0 = args[0];
-            return new BooleanValue(irContext, IsBlank(arg0));
+            return new BooleanValue(irContext, IsBlankOrEmpty(arg0));
         }
 
-        private static bool IsBlank(FormulaValue arg)
+        internal static bool IsBlank(this FormulaValue arg)
         {
-            if (arg is BlankValue)
+            if ((arg is BlankValue) || (arg is UntypedObjectValue uo && uo.Impl.Type == FormulaType.Blank))
             {
                 return true;
             }
 
+            return false;
+        }
+
+        private static bool IsBlankOrEmpty(FormulaValue arg)
+        {
             if (arg is StringValue str)
             {
                 return str.Value.Length == 0;
@@ -1991,7 +2027,7 @@ namespace Microsoft.PowerFx.Functions
                 return uo.Impl.GetString().Length == 0;
             }
 
-            return false;
+            return arg.IsBlank();
         }
 
         private static FormulaValue IsEmpty(IRContext irContext, FormulaValue[] args)
@@ -2078,7 +2114,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     var falseBranch = args[i + 2];
                     var falseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
-                    
+
                     return MaybeAdjustToCompileTimeType(falseBranchResult, irContext);
                 }
 
@@ -2100,6 +2136,10 @@ namespace Microsoft.PowerFx.Functions
                 }
 
                 return new VoidValue(irContext);
+            }
+            else if (result is BlankValue && result.IRContext.ResultType._type.Kind == DKind.ObjNull)
+            {
+                return new BlankValue(irContext); // Convert the untyped blank to a typed blank value
             }
             else if (result is RecordValue recordValue && irContext.ResultType is RecordType compileTimeType)
             {
@@ -2127,6 +2167,8 @@ namespace Microsoft.PowerFx.Functions
                     var allErrors = new List<RecordValue>();
                     foreach (var error in res.Error.Errors)
                     {
+                        runner.CheckCancel();
+
                         var kindProperty = new NamedValue("Kind", FormulaValue.New((int)error.Kind));
                         var messageProperty = new NamedValue(
                             "Message",
@@ -2156,18 +2198,20 @@ namespace Microsoft.PowerFx.Functions
 
                     var childContext = context.SymbolContext.WithScopeValues(new InMemoryRecordValue(IRContext.NotInSource(ifErrorScopeParamType), scopeVariables));
 
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    var errorHandlingBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(errorHandlingBranch, context.NewScope(childContext), errorHandlingBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    return MaybeAdjustToCompileTimeType(errorHandlingBranchResult, irContext);
                 }
 
                 if (i + 1 == args.Length - 1)
                 {
-                    return res.ToFormulaValue();
+                    return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
                 }
 
                 if (i + 2 == args.Length - 1)
                 {
-                    var falseBranch = args[i + 2];
-                    return (await runner.EvalArgAsync<ValidFormulaValue>(falseBranch, context, falseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    var otherwiseBranch = args[i + 2];
+                    var otherwiseBranchResult = (await runner.EvalArgAsync<ValidFormulaValue>(otherwiseBranch, context, otherwiseBranch.IRContext).ConfigureAwait(false)).ToFormulaValue();
+                    return MaybeAdjustToCompileTimeType(otherwiseBranchResult, irContext);
                 }
             }
 
@@ -2208,8 +2252,6 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var errorRecord in errorRecords)
             {
-                var messageField = errorRecord.GetField(ErrorType.MessageFieldName) as StringValue;
-
                 var kindField = errorRecord.GetField(ErrorType.KindFieldName);
                 if (kindField is ErrorValue error)
                 {
@@ -2232,10 +2274,114 @@ namespace Microsoft.PowerFx.Functions
                         return CommonErrors.RuntimeTypeMismatch(irContext);
                 }
 
-                result.Add(new ExpressionError { Kind = errorKind, Message = messageField?.Value as string });
+                var message = errorRecord.GetField(ErrorType.MessageFieldName) is StringValue messageField ? messageField.Value : GetDefaultErrorMessage(errorKind);
+                result.Add(new ExpressionError { Kind = errorKind, Message = message });
             }
 
             return result;
+        }
+
+        private static string GetDefaultErrorMessage(ErrorKind errorKind)
+        {
+            switch (errorKind)
+            {
+                case ErrorKind.None:
+                    // Default message that is shown to users when an error was produced, but with kind = 'none'
+                    return "System no error";
+                case ErrorKind.Sync:
+                case ErrorKind.Unknown:
+                case ErrorKind.Internal:
+                    // Default message that is shown to users when a system error was produced
+                    return "System error";
+                case ErrorKind.MissingRequired:
+                    // Default message that is shown to users when they try to insert / update a record without all the required fields
+                    return "Missing required field";
+                case ErrorKind.CreatePermission:
+                    // Default message that is shown to users when they try to create a record without the appropriate permissions
+                    return "Create record permission denied";
+                case ErrorKind.EditPermissions:
+                    // Default message that is shown to users when they try to update a record without the appropriate permissions
+                    return "Update record permission denied";
+                case ErrorKind.DeletePermissions:
+                    // Default message that is shown to users when they try to remove a record without the appropriate permissions
+                    return "Delete record permission denied";
+                case ErrorKind.GeneratedValue:
+                    // Default message that is shown to users when they try to insert / update a record with a column that is generated on the server
+                    return "Column is generated by the server and cannot be modified";
+                case ErrorKind.Conflict:
+                    // Default message that is shown to users when they try to update a record but there is a conflict on the server
+                    return "Record update conflict, refresh record and reapply your change";
+                case ErrorKind.NotFound:
+                    // Default message that is shown to users when they try to access a record that does not exist
+                    return "Record could not be found";
+                case ErrorKind.ConstraintViolated:
+                    // Default message that is shown to users when they try to create or update a record but it validates some constraints set on the server
+                    return "Validation error";
+                case ErrorKind.ReadOnlyValue:
+                    // Default message that is shown to users when they try to update a column in a record that is read-only
+                    return "Column is read-only";
+                case ErrorKind.Validation:
+                    // Default message that is shown to users when they try to send a record to the server with invalid properties
+                    return "Record is invalid";
+                case ErrorKind.Div0:
+                    // Default message that is shown to users when they try to divide a number by zero
+                    return "Division by zero";
+                case ErrorKind.BadLanguageCode:
+                    // Default message that is shown to users when they try to pass a language code to a function that is invalid
+                    return "Bad langauge code or invalid value";
+                case ErrorKind.BadRegex:
+                    // Default message that is shown to users when they use an invalid regular expression in one of their formulas
+                    return "Syntax error in regular expression";
+                case ErrorKind.InvalidFunctionUsage:
+                    // Default message that is shown to users when they try to use a function in an invalid way
+                    return "Invalid function usage";
+                case ErrorKind.FileNotFound:
+                    // Default message that is shown to users when they try to access a file that does not exist
+                    return "File not found";
+                case ErrorKind.AnalysisError:
+                    // Default message that is shown to users when they encounter an analysis error from Power Apps
+                    return "System analysis error";
+                case ErrorKind.ReadPermission:
+                    // Default message that is shown to users when they try to read a record for which they do not have permissions
+                    return "Read record permission denied";
+                case ErrorKind.NotSupported:
+                    // Default message that is shown to users when they create try to call a function that is not supported in their current environment
+                    return "Operation not supported by this player or device";
+                case ErrorKind.InsufficientMemory:
+                    // Default message that is shown to users when they try to perform an operation that exhausts the memory/storage in their device
+                    return "Insufficient memory or device storage";
+                case ErrorKind.QuotaExceeded:
+                    // Default message that is shown to users when they try to use more storage quota than they have access to
+                    return "Storage quota exceeded";
+                case ErrorKind.Network:
+                    // Default message that is shown to users when they receive an error over the network
+                    return "Network error";
+                case ErrorKind.Numeric:
+                    // Default message that is shown to users when they try to use a numerical function in an erroneous way
+                    return "Numeric error";
+                case ErrorKind.InvalidArgument:
+                    // Default message that is shown to users when they pass an invalid argument to a function
+                    return "Invalid argument";
+                case ErrorKind.NotApplicable:
+                    // Default message that is shown to users when they try to combine tables of different lenghts in a tabular function
+                    return "Not applicable";
+                case ErrorKind.Timeout:
+                    // Default message that is shown to users when they execute an operation that was cancelled because of a timeout
+                    return "Timeout error";
+                case ErrorKind.Custom:
+                    // Default message that is shown to users when they create an error with a custom kind
+                    return "Custom error";
+                default:
+                    var intKind = (int)errorKind;
+                    if (intKind < 1000)
+                    {
+                        // Default message that is shown to users when they create an error with a custom kind within a range of reserved values. The argument is the error kind, a number
+                        return $"Reserved error ({intKind})";
+                    }
+
+                    // Default message that is shown to users when they create an error with a custom kind. The argument is the error kind, a number
+                    return $"Custom error ({intKind})";
+            }
         }
 
         // Switch( Formula, Match1, Result1 [, Match2, Result2, ... [, DefaultResult ] ] )
@@ -2255,6 +2401,8 @@ namespace Microsoft.PowerFx.Functions
 
             for (var i = 1; i < args.Length - 1; i += 2)
             {
+                runner.CheckCancel();
+
                 var match = (LambdaFormulaValue)args[i];
                 var matchValue = await match.EvalAsync().ConfigureAwait(false);
 
@@ -2333,6 +2481,11 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errorRows);
             }
 
+            if (irContext.ResultType is Types.Void)
+            {
+                return new VoidValue(irContext);
+            }
+
             return new InMemoryTableValue(irContext, StandardTableNodeRecords(irContext, rows.ToArray(), forceSingleColumn: false));
         }
 
@@ -2344,19 +2497,9 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var row in sources)
             {
-                SymbolContext childContext;
-                if (row.IsValue)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Value);
-                }
-                else if (row.IsError)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Error);
-                }
-                else
-                {
-                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
-                }
+                runner.CheckCancel();
+
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 // Filter evals to a boolean
                 var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
@@ -2373,7 +2516,9 @@ namespace Microsoft.PowerFx.Functions
         {
             foreach (var row in sources)
             {
-                SymbolContext childContext = context.SymbolContext.WithThisItem(row.ToFormulaValue());
+                runner.CheckCancel();
+
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 // Filter evals to a boolean
                 var result = filter.EvalInRowScopeAsync(context.NewScope(childContext)).AsTask();
@@ -2390,7 +2535,7 @@ namespace Microsoft.PowerFx.Functions
 
         public static FormulaValue IsBlankOrError(IRContext irContext, FormulaValue[] args)
         {
-            if (IsBlank(args[0]) || args[0] is ErrorValue)
+            if (IsBlankOrEmpty(args[0]) || args[0] is ErrorValue)
             {
                 return new BooleanValue(irContext, true);
             }

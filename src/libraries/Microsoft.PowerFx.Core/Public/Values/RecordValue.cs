@@ -12,7 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Types
@@ -40,12 +39,22 @@ namespace Microsoft.PowerFx.Types
             return false;
         }
 
+        /// <summary>
+        /// Returns the name of the primary key, null if there is no primary key.
+        /// </summary>
+        /// <returns>Primary key name. Returns null in absence.</returns>
+        public virtual string GetPrimaryKeyName()
+        {
+            return null;
+        }
+
         private IEnumerable<NamedValue> GetFields()
         {
             foreach (var fieldName in Type.FieldNames)
             {
-                var formulaValue = GetField(fieldName);
-                yield return new NamedValue(fieldName, formulaValue);
+                // Since fieldName is being enumerated from Type, backing type should alway be found and below will always succeed.
+                Type.TryGetBackingDType(fieldName, out var backingDType);
+                yield return new NamedValue(fieldName, async () => GetField(fieldName), backingDType);
             }
         }
 
@@ -53,8 +62,10 @@ namespace Microsoft.PowerFx.Types
         {
             foreach (var fieldName in Type.FieldNames)
             {
-                var formulaValue = await GetFieldAsync(fieldName, cancellationToken).ConfigureAwait(false);
-                yield return new NamedValue(fieldName, formulaValue);
+                // below will always succeed.
+                Type.TryGetBackingDType(fieldName, out var backingDType);
+                Func<Task<FormulaValue>> getFormulaValue = async () => await GetFieldAsync(fieldName, cancellationToken).ConfigureAwait(false);
+                yield return new NamedValue(fieldName, getFormulaValue, backingDType);
             }
         }
 
@@ -152,14 +163,18 @@ namespace Microsoft.PowerFx.Types
                     // Ensure that the actual type matches the expected type.
                     if (!result.Type.Equals(fieldType))
                     {
-                        if (result is not ErrorValue && result.Type is not BlankType)
+                        if (result is BlankValue)
                         {
-                            throw HostException(fieldName, $"Wrong field type. Retuned {result.Type._type}, expected {fieldType._type}.");
+                            result = FormulaValue.NewBlank(fieldType);
+                        }
+                        else if (result is not ErrorValue)
+                        {
+                            throw HostException(fieldName, $"Wrong field type. Returned {result.Type._type}, expected {fieldType._type}.");
                         }
                     }
                 }
 
-                Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue || result.Type is BlankType);
+                Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue);
 
                 return result;
             }
@@ -184,7 +199,7 @@ namespace Microsoft.PowerFx.Types
         /// <param name="result"></param>
         /// <returns>true if field is present, else false.</returns>
         protected abstract bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result);
-        
+
         protected virtual Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
         {
             var b = TryGetField(fieldType, fieldName, out FormulaValue result);
@@ -256,7 +271,7 @@ namespace Microsoft.PowerFx.Types
 
                 flag = false;
 
-                sb.Append(IdentToken.MakeValidIdentifier(field.Name));
+                sb.Append(this.ToExpressionField(field.Name));
                 sb.Append(':');
 
                 field.Value.ToExpression(sb, settings);
@@ -264,5 +279,48 @@ namespace Microsoft.PowerFx.Types
 
             sb.Append("}");
         }
+
+        protected string ToExpressionField(string tableFieldName)
+        {
+            var fieldName = IdentToken.MakeValidIdentifier(tableFieldName);
+
+            if ((TexlLexer.IsKeyword(fieldName, out _) || TexlLexer.IsReservedKeyword(fieldName)) &&
+                !fieldName.StartsWith("'", StringComparison.Ordinal) && !fieldName.EndsWith("'", StringComparison.Ordinal))
+            {
+                fieldName = $"'{fieldName}'";
+            }
+
+            return fieldName;
+        }
+
+        /// <summary>
+        /// It is assumed that all records can be copied to an InMemoryRecordValue during a mutation copy-on-write.
+        /// This is possible for records, which will have a finite number of fields, but not for tables
+        /// and number of rows which could be unbounded.
+        /// </summary>
+        public override bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new InMemoryRecordValue(this.IRContext, this.Fields);
+            return true;
+        }
+
+        public override bool CanShallowCopy => true;
+    }
+
+    /// <summary>
+    /// Copy a single record field and shallow copy contents, used during mutation copy-on-write.
+    /// For example: Set( aa, [[1,2,3], [4,5,6]] ); Set( ab, First(aa) ); Patch( ab.Value, {Value:2}, {Value:9});
+    /// No copies are made until the mutation in Patch, and then copies are made as the first argument's 
+    /// value is traversed through EvalVisitor:
+    /// 1. ab (record) shallow copies the root record and dictionary which references fields with IMutationCopy.
+    /// 2. .Value (field) is copied with IMutationCopyField, which shallow copies the inner table with IMutationCopy.
+    /// </summary>
+    internal interface IMutationCopyField
+    {
+        /// <summary>
+        /// Makes a shallow copy of a field within a record, in place, and does not return the copy.
+        /// Earlier copies of the record will reference the original field.
+        /// </summary>
+        void ShallowCopyFieldInPlace(string fieldName);
     }
 }

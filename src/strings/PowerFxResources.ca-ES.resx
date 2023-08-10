@@ -568,22 +568,22 @@
     
   </data>
   <data name="AboutDecimal" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Decimal value.</value>
+    <value>Converteix un element "text" que representa un nombre en un valor decimal.</value>
   </data>
   <data name="AboutDecimal_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Codi de llengua que cal utilitzar en convertir el valor.</value>
   </data>
   <data name="AboutDecimal_text" xml:space="preserve">
-    <value>The text value to convert to a Decimal value.</value>
+    <value>Valor de text que es convertirà en un valor decimal.</value>
   </data>
   <data name="AboutFloat" xml:space="preserve">
-    <value>Converts a 'text' that represents a number to a Float value.</value>
+    <value>Converteix un element "text" que representa un nombre en un valor float.</value>
   </data>
   <data name="AboutFloat_language" xml:space="preserve">
-    <value>Language code to use when converting the value.</value>
+    <value>Codi de llengua que cal utilitzar en convertir el valor.</value>
   </data>
   <data name="AboutFloat_text" xml:space="preserve">
-    <value>The text value to convert to a Float value.</value>
+    <value>Valor de text que es convertirà en un valor float.</value>
   </data>
   <data name="ConcatenateArg1" xml:space="preserve">
     <value>text</value>
@@ -1465,6 +1465,14 @@
     <value>entrada</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modificador</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Retorna el nombre de caràcters especificats des del començament d'un valor de text.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Només es pot accedir a la propietat de dades personalitzada del component amb paràmetres des d'un component o des de les propietats de sortida del component.</value>
+    <value>Només es pot accedir a la propietat o al paràmetre de la funció del component des d'un component o des de les propietats de sortida del component.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>La propietat o el paràmetre de la funció del component només poden fer referència a altres propietats de la funció.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>El primer argument de '{0}' ha de ser una taula d'una sola columna.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors de text per a '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors de data per a '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors numèrics per a '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>L'esquema no és vàlid; s'esperava una columna de valors de color per a '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>L'esquema no és vàlid; s'esperava una columna de valors {0} per a "{1}".</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>El valor numèric és massa gran.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Ús d'una paraula reservada que actualment no s'admet.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matemàtiques i estadístiques</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>Definit per l'usuari</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informació</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>No s'admet a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Nombre d'arguments no vàlid per a la funció {0}: s'ha rebut {1}; s'esperava {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>L'argument {0} no és admès per a la funció {1} a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Aquest argument no es pot passar com a aquest tipus a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Aquest argument no es pot passar com a tipus {0} a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Només s'admet un valor literal per a aquest argument.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} no es pot realitzar en aquesta entrada sense una conversió de fus horari, que no està admesa a les columnes de la fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Aquesta operació no es pot dur a terme en valors de comportaments de data i hora diferents.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Només s'admeten les cadenes de format curt de data i hora a les columnes de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>L'argument {0} és una unitat de temps no vàlida o no admesa per a la funció aritmètica de data {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Els testimonis de format específics de la configuració regional, com ara "." i "," no s'admeten a les columnes de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>La funció {0} no està admesa a les columnes de fórmula, utilitzeu la funció {1} en el seu lloc.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Aquesta operació no es pot dur a terme al tipus {0} de les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>El tipus de resultat {0} no s'admet a les columnes de fórmula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>A les columnes de fórmules no s'admet fer referència directament a tot un registre. Feu referència a un camp vàlid del registre.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>S'espera que el tipus de resultat d'aquesta fórmula sigui {0}, però el tipus de resultat real és {1}. El tipus de resultat d'una columna de fórmula no es pot canviar.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Les columnes del tipus {0} no s'admeten a les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Les columnes del tipus {0} amb format {1} no s'admeten a les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Les columnes de fórmules no admeten la coerció de registres o taules.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Les taules d'una sola columna no s'admeten a les columnes de fórmules.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>No es pot fer referència a la taula virtual {0} en les columnes de fórmules.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>S'espera un operand. La fórmula o l'expressió espera un operand vàlid. Per exemple, podeu afegir l'operand "2" a l'expressió "1 + _" per tal que el resultat sigui "3". També podeu afegir l'operand "com esteu?" a l'expressió ""Hola, "&amp; _ " per tal que el resultat sigui "Hola, com esteu?".</value>
     
@@ -4789,6 +4712,26 @@
     <value>La fórmula amb nom ha de ser una expressió.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>La funció definida per l'usuari ha de tenir un cos.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>La funció {0} ja està definida.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>El paràmetre {0} està duplicat.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Tipus {0} desconegut.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>El tipus de retorn de la funció indicada no coincideix amb el tipus de retorn del cos de la funció.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>La fórmula NamedFormula "{0}" ja existeix.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Aquesta característica és obsoleta i ja no s'admet.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Advertiment: s'ha proporcionat el tipus ajornat.</value>
     
@@ -4912,7 +4863,173 @@
     <value>L'URL que es codificarà.</value>
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
-    <value>'{0}' is a recognized but not supported function.</value>
+    <value>"{0}" és una funció reconeguda, però no s'admet.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>S'ha produït un error en convertir el tipus perquè el valor proporcionat era del tipus "{0}" però s'esperava el tipus "{1}".</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>És possible que aquesta operació a la taula "{0}" no funcioni si té més de {1} files.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Aquest predicat sempre serà true. Volíeu utilitzar ThisRecord o [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>No es pot delegar {0}: només s'admet la delegació per a la cerca al camp de clau principal "{1}".</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>No es pot delegar {0}: l'expressió compara diversos camps.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>No es pot delegar {0}: conté una funció de comportament "{1}".</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determina si el text proporcionat coincideix amb el format de text proporcionat.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>El text que es compararà amb el format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>El format amb el qual s'ha de comprovar el text. Pot ser un valor de l'enumeració TextFormat o una expressió regular.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Determina la part de text que volem que coincideixi. Pot ser un valor de l'enumeració MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>extensió</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Cerca l'expressió regular especificada al text proporcionat i en retorna la primera coincidència.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Cerca l'expressió regular especificada al text proporcionat i en retorna totes les coincidències.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Text que se cercarà segons l'expressió regular.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Expressió regular amb la qual s'ha de comprovar el text. Pot contenir captures (valors entre parèntesi) que es retornaran si hi ha una coincidència correcta.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Determina la part de text que volem que coincideixi. Pot ser un valor de l'enumeració MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Text que se cercarà segons l'expressió regular.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Expressió regular amb la qual s'ha de comprovar el text. Pot contenir captures (valors entre parèntesi) que es retornaran si hi ha una coincidència correcta.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Determina la part de text que volem que coincideixi. Pot ser un valor de l'enumeració MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>expressió_regular</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>opcions</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Actualitza la font de dades especificada.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>origen_dades_connectat</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>S'esperava un valor de registre o de taula.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Font de dades connectada que s'ha d'actualitzar.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Només es poden actualitzar les connexions administrades.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>L'expressió regular no és vàlida.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Les expressions regulars han de ser valors constants.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>El valor passat a la funció "{0}" no es pot canviar.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna la coincidència completa de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure la coincidència completa del text especificat.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna les coincidències de grup de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure les coincidències secundàries del text especificat.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna la ubicació de la coincidència de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure la posició de la coincidència completa del text especificat.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Suprimeix tot el format i retorna un valor de text sense format.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Text del qual se suprimiran les etiquetes HTML i XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Les funcions de filtre no permeten funcions de comportament com a predicats.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilitzeu l'operador And per combinar diversos predicats al segon argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Aquesta taula no es pot copiar. Com a alternativa, creeu una taula en línia amb la funció ForAll i la notació {...} per copiar les columnes individuals desitjades.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Aquest registre no es pot copiar. Com a alternativa, creeu un registre en línia amb la notació {...} per copiar els camps individuals desitjades.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

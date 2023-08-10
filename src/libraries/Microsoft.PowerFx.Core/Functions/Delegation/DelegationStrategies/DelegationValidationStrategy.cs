@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Security.Authentication.ExtendedProtection;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
@@ -136,6 +137,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (node.Left.Kind == NodeKind.FirstName)
             {
+                var firstNameInfo = binding.GetInfo(node.Left.AsFirstName());
+                if (firstNameInfo != null && firstNameInfo.Kind == BindKind.PowerFxResolvedObject && firstNameInfo.Data is IExternalNamedFormula formula)
+                {
+                    return IsValidAsyncOrImpureNode(node.Left, binding);
+                }
+                
                 return true;
             }
 
@@ -393,6 +400,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             }
 
             var callInfo = binding.GetInfo(node);
+            if (binding.DelegationHintProvider?.TryGetWarning(node, callInfo?.Function, out var warning) ?? false)
+            {
+                SuggestDelegationHint(node, binding, warning, new object[] { callInfo?.Function.Name });
+            }
+
             if (callInfo?.Function != null && ((TexlFunction)callInfo.Function).IsRowScopedServerDelegatable(node, binding, metadata))
             {
                 return true;
@@ -444,7 +456,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
 
             if (isAsync)
             {
-                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, trackingFunction ?? Function);
+                TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.AsyncPredicate, node, binding, trackingFunction ?? Function, DelegationTelemetryInfo.CreateAsyncNodeTelemetryInfo(node, binding));
             }
 
             var telemetryMessage = string.Format(CultureInfo.InvariantCulture, "Kind:{0}, isAsync:{1}, isPure:{2}", node.Kind, isAsync, isPure);

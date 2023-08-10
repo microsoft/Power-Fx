@@ -1,0 +1,78 @@
+// ######### FirstN ##########
+
+>> FirstN([1, 2, 3, 4, 5], 1)
+Table({Value:1})
+
+>> FirstN([1, 2, 3, 4, 5], 2)
+Table({Value:1},{Value:2})
+
+>> FirstN([1, 2, 3, 4, 5], 6)
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> FirstN([1, 2, 3, 4, 5], -1)
+Table()
+
+>> FirstN([1, 2, 3, 4, 5], Blank())
+Table()
+
+>> FirstN(Blank(), 2)
+Blank()
+
+>> FirstN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
+Error({Kind:ErrorKind.Div0})
+
+>> FirstN([1, 2, 3, 4, 5], 1/0)
+Error({Kind:ErrorKind.Div0})
+
+>> FirstN(Filter([1,2,3],Value=4),2)
+Table()
+
+// ######### LastN ##########
+
+>> LastN([1, 2, 3, 4, 5], 2)
+Table({Value:4},{Value:5})
+
+>> LastN([1, 2, 3, 4, 5], 6)
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> LastN([1, 2, 3, 4, 5], -1)
+Table()
+
+>> LastN([1, 2, 3, 4, 5], Blank())
+Table()
+
+>> LastN(Blank(), 2)
+Blank()
+
+>> LastN(Sort([-2, -1, 0, 1, 2], 1 / Value), 2)
+Error({Kind:ErrorKind.Div0})
+
+>> LastN([1, 2, 3, 4, 5], 1/0)
+Error({Kind:ErrorKind.Div0})
+
+// Last2 have all values in column 'b' Blank(), but is still part of the type.
+>> LastN(Table({a:1, b:101}, {a:2}, {a:3}), 2)
+Table({a:2,b:Blank()},{a:3,b:Blank()})
+
+>> LastN(Table({a:1}, {a:2}, {a:3}), 2)
+Table({a:2},{a:3})
+
+>> LastN(Table({Value:1,Zulu:1}, {Value:2,Zulu:2}, {Value:3,Zulu:3}), 2)
+Table({Value:2,Zulu:2},{Value:3,Zulu:3})
+
+>> LastN(Filter([1,2,3],Value=4),2)
+Table()
+
+// ####### Coercions ########
+
+>> FirstN([1,2,3,4,5], "3")
+Table({Value:1},{Value:2},{Value:3})
+
+>> LastN([1,2,3,4,5], "3")
+Table({Value:3},{Value:4},{Value:5})
+
+>> FirstN([1,2,3,4,5], true)
+Table({Value:1})
+
+>> LastN([1,2,3,4,5], true)
+Table({Value:5})

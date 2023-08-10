@@ -2,11 +2,14 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
@@ -83,7 +86,7 @@ namespace Microsoft.PowerFx.Tests
             var func2 = engine.GetAllFunctionNames().First(name => name == "CustomFunctionError2");
 #pragma warning restore CS0618 // Type or member is obsolete
             Assert.NotNull(func2);
-
+            
             // Test for non async invokes.
             var result = engine.Eval("CustomFunctionError(20)");
             Assert.IsType<NumberValue>(result);
@@ -230,7 +233,7 @@ namespace Microsoft.PowerFx.Tests
         // Must have "Function" suffix. 
         private class TestRecordCustomFunction : ReflectionFunction
         {
-            public TestRecordCustomFunction() 
+            public TestRecordCustomFunction()
                 : base(
                       "RecordTest",
                       RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
@@ -244,6 +247,105 @@ namespace Microsoft.PowerFx.Tests
                     .Add(new NamedFormulaType("num", FormulaType.Number));
                 var val = FormulaValue.NewRecordFromFields(record, new NamedValue("num", FormulaValue.New(1)));
                 return val;
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestInvalidRecordCustomFunction : ReflectionFunction
+        {
+            public TestInvalidRecordCustomFunction()
+                : base(
+                      "InvalidRecordTest",
+                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static RecordValue Execute()
+            {
+                var recordType = RecordType.Empty()
+                    .Add(new NamedFormulaType("num1", FormulaType.Number));
+                var val = FormulaValue.NewRecordFromFields(recordType, new NamedValue("num1", FormulaValue.New(1)));
+                return val;
+            }
+        }
+
+        [Theory]
+        [InlineData("{x: 2}", true)]
+        [InlineData("{x: 2, y: 5}", true)]
+        [InlineData("{x: \"2\", y: \"5\"}", true)]
+        [InlineData("{x: 2, y: 5, a: 8}", false)]
+        [InlineData("{a: 8}", false)]
+        [InlineData("{x: {x : 2}}", false)]
+        public void CustomFunctionWithRecordTest(string inputRecord, bool isSuccess)
+        {
+            var emptyRecordType = RecordType.Empty();
+            var recordType = RecordType.Empty().Add(new NamedFormulaType("x", FormulaType.Number)).Add(new NamedFormulaType("y", FormulaType.Number));
+            var emptyTableType = emptyRecordType.ToTable();
+            var tableType = recordType.ToTable();
+
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<RecordType, RecordValue>(emptyRecordType), "(" + inputRecord + ")", true);
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<RecordType, RecordValue>(recordType), "(" + inputRecord + ")", isSuccess);
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<TableType, TableValue>(emptyTableType), "([" + inputRecord + "])", true);
+            TestCustomFunctionWithRecordArgument(new TestAggregateIdentityCustomFunction<TableType, TableValue>(tableType), "([" + inputRecord + "])", isSuccess);
+        }
+
+        private void TestCustomFunctionWithRecordArgument(ReflectionFunction reflectionFunction, string inputRecord, bool isSuccess)
+        {
+            var config = new PowerFxConfig();
+            config.AddFunction(reflectionFunction);
+            
+            var engine = new RecalcEngine(config);
+            var func = engine.GetFunctionsByName(reflectionFunction.GetFunctionName());
+            Assert.NotNull(func);
+
+            var check = engine.Check(reflectionFunction.GetFunctionName() + inputRecord);
+
+            FormulaValue result = null;
+            FormulaValue resultEngineEval = null;
+            ConfiguredTaskAwaitable<FormulaValue> resultAsync = new ConfiguredTaskAwaitable<FormulaValue>();
+            string errorMsg = string.Empty;
+            var rc = new RuntimeConfig();
+
+            try
+            {
+                resultEngineEval = engine.Eval(reflectionFunction.GetFunctionName() + inputRecord); // Test the GetFormulaResult in ReflectionFunction.
+                result = check.GetEvaluator().Eval(rc); // Test the CheckTypes in CustomTexlFunction.
+                resultAsync = check.GetEvaluator().EvalAsync(CancellationToken.None, rc).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                errorMsg = ex.ToString();
+            }
+
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);                
+                Assert.IsNotType<ErrorValue>(resultEngineEval);
+                Assert.IsNotType<ErrorValue>(result);
+                Assert.IsNotType<ErrorValue>(resultAsync);
+            }
+            else
+            {
+                Assert.False(check.IsSuccess);
+                Assert.Contains("invalid arguments", errorMsg);
+            }
+        }
+
+        // Must have "Function" suffix. 
+        private class TestAggregateIdentityCustomFunction<TType, TValue> : ReflectionFunction
+            where TType : AggregateType
+            where TValue : FormulaValue
+        {
+            public TestAggregateIdentityCustomFunction(TType argType)
+                : base("RecordsTest", argType, argType)
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static TValue Execute(TValue value)
+            {
+                return value;
             }
         }
 
@@ -277,26 +379,6 @@ namespace Microsoft.PowerFx.Tests
             public NumberValue Execute(TableValue table)
             {
                 return FormulaValue.New(table.Count());
-            }
-        }
-
-        // Must have "Function" suffix. 
-        private class TestInvalidRecordCustomFunction : ReflectionFunction
-        {
-            public TestInvalidRecordCustomFunction()
-                : base(
-                      "InvalidRecordTest",
-                      RecordType.Empty().Add(new NamedFormulaType("num", FormulaType.Number)))
-            {
-            }
-
-            // Must have "Execute" method. 
-            public static RecordValue Execute()
-            {
-                var recordType = RecordType.Empty()
-                    .Add(new NamedFormulaType("num1", FormulaType.Number));
-                var val = FormulaValue.NewRecordFromFields(recordType, new NamedValue("num1", FormulaValue.New(1)));
-                return val;
             }
         }
 
@@ -714,6 +796,8 @@ namespace Microsoft.PowerFx.Tests
             public double NumProp { get; set; }
 
             public bool BoolProp { get; set; }
+
+            public decimal DecimalProp { get; set; }
         }
 
         private static readonly ParserOptions _opts = new ParserOptions { AllowsSideEffects = true };
@@ -721,6 +805,9 @@ namespace Microsoft.PowerFx.Tests
         [Fact]
         public void CustomSetPropertyFunction()
         {
+            var floatOptions = new ParserOptions { NumberIsFloat = true, AllowsSideEffects = true };
+            var decimalOptions = new ParserOptions { NumberIsFloat = false, AllowsSideEffects = true };
+
             var config = new PowerFxConfig();
             config.AddFunction(new TestCustomSetPropFunction());
             var engine = new RecalcEngine(config);
@@ -730,10 +817,11 @@ namespace Microsoft.PowerFx.Tests
             var x = cache.Marshal(obj);
             engine.UpdateVariable("x", x);
 
-            // Test multiple overloads
-            engine.Eval("SetProperty(x.NumProp, Float(123))", options: _opts);
-            Assert.Equal(123.0, obj.NumProp);
+            var expressions = new[] { "Float(123)", "Decimal(124)", "125" };
+            CheckFloatCoercions(engine, obj, floatOptions, expressions);
+            CheckDecimalCoercions(engine, obj, decimalOptions, expressions);
 
+            // Tests multiple overloads
             engine.Eval("SetProperty(x.BoolProp, true)", options: _opts);
             Assert.True(obj.BoolProp);
 
@@ -741,11 +829,31 @@ namespace Microsoft.PowerFx.Tests
             var check = engine.Check("SetProperty(x.BoolProp, true)"); // Binding Fail, behavior prop 
             Assert.False(check.IsSuccess);
 
-            check = engine.Check("SetProperty(x.BoolProp, Float(123))"); // arg mismatch
+            check = engine.Check("SetProperty(x.BoolProp, Float(123))", options: _opts); // arg mismatch
             Assert.False(check.IsSuccess);
 
             check = engine.Check("SetProperty(x.numMissing, Float(123))", options: _opts); // Binding Fail
             Assert.False(check.IsSuccess);
+        }
+
+        private void CheckFloatCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, string[] expressions)
+        {
+            var expectedValues = new[] { 123.0, 124.0, 125.0 };
+            for (int i = 0; i < expressions.Length; i++)
+            {
+                engine.Eval($"SetProperty(x.NumProp, {expressions[i]})", null, options);
+                Assert.Equal(expectedValues[i], obj.NumProp);
+            }
+        }
+
+        private void CheckDecimalCoercions(RecalcEngine engine, TestObj obj, ParserOptions options, string[] expressions)
+        {
+            var expectedValues = new[] { 123.0m, 124.0m, 125.0m };
+            for (int i = 0; i < expressions.Length; i++)
+            {
+                engine.Eval($"SetProperty(x.DecimalProp, {expressions[i]})", null, options);
+                Assert.Equal(expectedValues[i], obj.DecimalProp);
+            }
         }
 
         // Must have "Function" suffix. 

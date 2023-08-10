@@ -1,0 +1,10 @@
+﻿#SETUP: DisableMemChecks,TableSyntaxDoesntWrapRecords,PowerFxV1CompatibilityRules
+
+// Untyped blanks are not allowed in the argument that defines the row scope
+>> LookUp(Blank(), Blank())
+Errors: Error 7-14: Invalid argument type.|Error 0-24: The function 'LookUp' has some invalid arguments.
+
+
+// Untyped blanks are not allowed in the argument that defines the row scope
+>> LookUp(Blank(), Blank(), "constant")
+Errors: Error 7-14: Invalid argument type.|Error 0-36: The function 'LookUp' has some invalid arguments.

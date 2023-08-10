@@ -29,6 +29,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
             // When specified, literal numbers are treated as floats.  By default, literal numbers are decimals.
             NumberIsFloat = 1 << 2,
+
+            // When specified, allows reserved keywords to be used as identifiers.
+            DisableReservedKeywords = 1 << 3,
         }
 
         private bool _hasSemicolon = false;
@@ -71,21 +74,21 @@ namespace Microsoft.PowerFx.Core.Parser
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(loc);
 
+            // UDFs always support ReservedKeywords, no back compat concern
             var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
             var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
 
             return parser.ParseUDFs(script);
         }
 
-        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, bool numberIsFloat, CultureInfo loc = null)
+        public static ParseUserDefinitionResult ParseUserDefinitionScript(string script, ParserOptions parserOptions)
         {
-            Contracts.AssertValue(script);
-            Contracts.AssertValueOrNull(loc);
+            Contracts.AssertValue(parserOptions);
+            var flags = Flags.NamedFormulas | (parserOptions.NumberIsFloat ? Flags.NumberIsFloat : 0);
+            var formulaTokens = TokenizeScript(script, parserOptions.Culture, flags);
+            var parser = new TexlParser(formulaTokens, flags);
 
-            var formulaTokens = TokenizeScript(script, loc, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-            var parser = new TexlParser(formulaTokens, Flags.NamedFormulas | (numberIsFloat ? Flags.NumberIsFloat : 0));
-
-            return parser.ParseUDFsAndNamedFormulas(script, numberIsFloat);
+            return parser.ParseUDFsAndNamedFormulas(script, parserOptions);
         }
 
         private ParseUDFsResult ParseUDFs(string script)
@@ -117,6 +120,7 @@ namespace Microsoft.PowerFx.Core.Parser
         private bool ParseUDFArgs(out HashSet<UDFArg> args)
         {
             args = new HashSet<UDFArg>();
+            int argIndex = 0;
             if (TokEat(TokKind.ParenOpen) == null)
             {
                 return false;
@@ -143,7 +147,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 ParseTrivia();
 
-                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>()));
+                args.Add(new UDFArg(varIdent.As<IdentToken>(), varType.As<IdentToken>(), argIndex++));
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
@@ -231,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, bool numberIsFloat)
+        private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
@@ -313,7 +317,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         _curs.TokMove();
                         _hasSemicolon = false;
                         ParseTrivia();
-                        _flagsMode.Push(Flags.EnableExpressionChaining);
+                        _flagsMode.Push(parserOptions.AllowsSideEffects ? Flags.EnableExpressionChaining : Flags.None);
                         var exp_result = ParseExpr(Precedence.None);
                         _flagsMode.Pop();
                         ParseTrivia();
@@ -322,7 +326,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             break;
                         }
 
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, numberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), exp_result, _hasSemicolon, parserOptions.NumberIsFloat));
                     }
                     else if (_curs.TidCur == TokKind.Equ)
                     {
@@ -330,7 +334,7 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         var result = ParseExpr(Precedence.None);
                         ParseTrivia();
-                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, numberIsFloat));
+                        udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat));
                     }
                     else
                     {
@@ -463,8 +467,8 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             Contracts.AssertValue(script);
             Contracts.AssertValueOrNull(culture);
-
-            var lexerFlags = flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : TexlLexer.Flags.None;
+            var lexerFlags = (flags.HasFlag(Flags.NumberIsFloat) ? TexlLexer.Flags.NumberIsFloat : 0) |
+                             (flags.HasFlag(Flags.DisableReservedKeywords) ? TexlLexer.Flags.DisableReservedKeywords : 0);
             culture ??= CultureInfo.CurrentCulture; // $$$ can't use current culture
 
             return TexlLexer.GetLocalizedInstance(culture).LexSource(script, lexerFlags);
@@ -1762,11 +1766,17 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        public static string Format(string text)
+        /// <summary>
+        /// Formats/Pretty Print the given expression text to more a readable form.
+        /// </summary>
+        /// <param name="text">Expression text to format.</param>
+        /// <param name="flags">Optional flags to customize the behavior of underlying lexer and parser. By default, expression chaining is enabled.</param>
+        /// <returns>Formatted expression text.</returns>
+        public static string Format(string text, Flags flags = Flags.EnableExpressionChaining)
         {
             var result = ParseScript(
                 text,
-                flags: Flags.EnableExpressionChaining);
+                flags: flags);
 
             // Can't pretty print a script with errors.
             if (result.HasError)

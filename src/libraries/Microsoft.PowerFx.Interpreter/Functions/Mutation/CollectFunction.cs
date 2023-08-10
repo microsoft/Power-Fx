@@ -40,13 +40,20 @@ namespace Microsoft.PowerFx.Interpreter
 
         protected virtual bool IsScalar => false;
 
-        public override bool SupportsParamCoercion => false;
-
         public override bool CanSuggestInputColumns => true;
 
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
+        }
+
+        public override bool MutatesArg0 => true;
+
+        public override bool IsLazyEvalParam(int index)
+        {
+            // First argument to mutation functions is Lazy for datasources that are copy-on-write.
+            // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
+            return index == 0;
         }
 
         /// <summary>
@@ -175,25 +182,39 @@ namespace Microsoft.PowerFx.Interpreter
 
             if (fValid)
             {
-                // The item type must be compatible with the collection schema.
-                var fError = false;
-                returnType = DType.Union(
-                    ref fError, 
-                    collectionType.ToRecord(), 
-                    collectedType, 
-                    useLegacyDateTimeAccepts: false, 
-                    usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
-                if (fError)
+                if (!collectedType.TryGetCoercionSubType(collectionType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
                     fValid = false;
-                    if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
+                }
+                else
+                {
+                    if (coercionNeeded)
                     {
-                        errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrNeedValidVariableName_Arg, Name);
+                        CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], coercionType);
+                    }
+
+                    var fError = false;
+
+                    returnType = DType.Union(ref fError, collectionType.ToRecord(), collectedType, useLegacyDateTimeAccepts: false, allowCoerce: true, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules);
+
+                    if (fError)
+                    {
+                        fValid = false;
+                        if (!SetErrorForMismatchedColumns(collectionType, collectedType, args[1], errors, context.Features))
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTableDoesNotAcceptThisType);
+                        }
                     }
                 }
             }
 
             return fValid;
+        }
+
+        public override void CheckSemantics(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors)
+        {
+            base.CheckSemantics(binding, args, argTypes, errors);
+            base.ValidateArgumentIsMutable(binding, args[0], errors);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -214,7 +235,19 @@ namespace Microsoft.PowerFx.Interpreter
 
         public virtual async Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
         {
-            var arg0 = args[0];
+            FormulaValue arg0;
+
+            // Need to check if the Lazy first argument has been evaluated since it may have already been
+            // evaluated in the ClearCollect case.
+            if (args[0] is LambdaFormulaValue arg0lazy)
+            {
+                arg0 = await arg0lazy.EvalAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                arg0 = args[0];
+            }
+
             var arg1 = args[1];
 
             // PA returns arg0.

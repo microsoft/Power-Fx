@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 >> Mid("Hello world", [3, 7])
 Table({Value:"llo world"},{Value:"world"})
 

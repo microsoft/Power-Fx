@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,11 +14,14 @@ using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Abstractions;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
 
 namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
@@ -36,10 +40,13 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         protected List<string> _sendToClientData;
         protected TestPowerFxScopeFactory _scopeFactory;
         protected TestLanguageServer _testServer;
+        private readonly ITestOutputHelper _output;
+        private readonly ConcurrentBag<Exception> _exList = new ConcurrentBag<Exception>();
 
-        public LanguageServerTests()
+        public LanguageServerTests(ITestOutputHelper output)
             : base()
         {
+            _output = output;
             Init();
         }
 
@@ -53,7 +60,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => engine.CreateEditorScope(options, GetFromUri(documentUri)));
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => _exList.Add(ex);
         }
 
         // The convention for getting the context from the documentUri is arbitrary and determined by the host. 
@@ -115,8 +123,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void TestLogCallbackExceptions()
         {
             var scopeFactory = new ErrorScopeFactory();
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
-
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
             var list = new List<Exception>();
 
             testServer.LogUnhandledExceptionHandler += (ex) =>
@@ -199,6 +206,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("abc", errorResponse.Id);
             Assert.Equal(MethodNotFound, errorResponse.Error.Code);
+
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -297,6 +306,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(ParseError, errorResponse.Error.Code);
+
+            Assert.Empty(_exList);
         }
 
         private static ParserOptions GetParserOptions(bool withAllowSideEffects)
@@ -338,6 +349,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }
 
             Assert.True(diagnosticsSet.Count() == 0);
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -360,6 +372,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 Severity = DiagnosticSeverity.Error
             }).ToArray();
             TestPublishDiagnostics("powerfx://app", "textDocument/didOpen", formula, expectedDiagnostics);
+
+            Assert.Empty(_exList);
         }
 
         [Fact]
@@ -413,6 +427,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             Assert.Equal(offset, diag.Range.Start.Character);
             Assert.Equal(offset, diag.Range.End.Character);
+
+            Assert.Empty(_exList);
         }
 
         private void CheckBehaviorError(string sentToClientData, bool expectBehaviorError, out Diagnostic[] diags)
@@ -435,90 +451,102 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         // $$$ This test generates an internal error as we use an behavior function but we have no way to check its presence
         [InlineData("Behavior(); Color.AliceBl", 25, false)]
-        public void TestCompletion(string text, int offset, bool withAllowSideEffects)
+        public void TestCompletionWithExpressionInUriOrNotInUri(string text, int offset, bool withAllowSideEffects)
+        {
+            foreach (var addExprToUri in new bool[] { true, false })
+            {
+                var params1 = new CompletionParams()
+                {
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text)) : GetTextDocument(),
+                    Text = addExprToUri ? null : text,
+                    Position = GetPosition(offset),
+                    Context = GetCompletionContext()
+                };
+                var params2 = new CompletionParams()
+                {
+                    TextDocument = addExprToUri ? 
+                                   GetTextDocument(GetUri("expression=Color.&context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}")) : 
+                                   GetTextDocument(GetUri("context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}")),
+                    Text = addExprToUri ? null : "Color.",
+                    Position = GetPosition(7),
+                    Context = GetCompletionContext()
+                };
+                var params3 = new CompletionParams()
+                {
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression={a:{},b:{},c:{}}.")) : GetTextDocument(),
+                    Text = addExprToUri ? null : "{a:{},b:{},c:{}}.",
+                    Position = GetPosition(17),
+                    Context = GetCompletionContext()
+                };
+                TestCompletionCore(params1, params2, params3, withAllowSideEffects);
+            }
+        }
+
+        [Fact]
+        public void TestCompletionWithExpressionBothInUriAndTextDocument()
+        {
+            int offset = 25;
+            string text = "Behavior(); Color.AliceBl";
+            string uriText = "Max(1,";
+            bool withAllowSideEffects = false;
+
+            var params1 = new CompletionParams()
+            {
+                TextDocument = GetTextDocument(GetUri("expression=" + uriText)),
+                Text = text,
+                Position = GetPosition(offset),
+                Context = GetCompletionContext()
+            };
+            var params2 = new CompletionParams()
+            {
+                TextDocument = GetTextDocument(GetUri("context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}&expression=1+1")),
+                Text = "Color.",
+                Position = GetPosition(7),
+                Context = GetCompletionContext()
+            };
+            var params3 = new CompletionParams()
+            {
+                TextDocument = GetTextDocument(GetUri("expression=Color.")),
+                Text = "{a:{},b:{},c:{}}.",
+                Position = GetPosition(17),
+                Context = GetCompletionContext()
+            };
+            TestCompletionCore(params1, params2, params3, withAllowSideEffects);
+        }
+
+        private void TestCompletionCore(CompletionParams params1, CompletionParams params2, CompletionParams params3, bool withAllowSideEffects)
         {
             Init(options: GetParserOptions(withAllowSideEffects));
 
             // test good formula
-            _testServer.OnDataReceived(
-                JsonSerializer.Serialize(new
-                {
-                    jsonrpc = "2.0",
-                    id = "123",
-                    method = "textDocument/completion",
-                    @params = new CompletionParams()
-                    {
-                        TextDocument = new TextDocumentIdentifier()
-                        {
-                            Uri = $"powerfx://test?expression={text}&context={{}}"
-                        },
-                        Position = new Position()
-                        {
-                            Line = 0,
-                            Character = offset
-                        },
-                        Context = new CompletionContext()
-                    }
-                }));
+            _sendToClientData.Clear();
+            var payload = GetCompletionPayload(params1);
+            _testServer.OnDataReceived(payload.payload);
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
-            Assert.Equal("123", response.Id);
+            Assert.Equal(payload.id, response.Id);
             var foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
 
             _sendToClientData.Clear();
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                id = "123",
-                method = "textDocument/completion",
-                @params = new CompletionParams()
-                {
-                    TextDocument = new TextDocumentIdentifier()
-                    {
-                        Uri = "powerfx://test?expression=Color.&context={\"A\":\"ABC\",\"B\":{\"Inner\":123}}"
-                    },
-                    Position = new Position()
-                    {
-                        Line = 0,
-                        Character = 7
-                    },
-                    Context = new CompletionContext()
-                }
-            }));
+            payload = GetCompletionPayload(params2);
+            _testServer.OnDataReceived(payload.payload);
             Assert.Single(_sendToClientData);
             response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
-            Assert.Equal("123", response.Id);
+            Assert.Equal(payload.id, response.Id);
             foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
 
             _sendToClientData.Clear();
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                id = "123",
-                method = "textDocument/completion",
-                @params = new CompletionParams()
-                {
-                    TextDocument = new TextDocumentIdentifier()
-                    {
-                        Uri = "powerfx://test?expression={a:{},b:{},c:{}}."
-                    },
-                    Position = new Position()
-                    {
-                        Line = 0,
-                        Character = 17
-                    },
-                    Context = new CompletionContext()
-                }
-            }));
+            payload = GetCompletionPayload(params3);
+            _testServer.OnDataReceived(payload.payload);
             Assert.Single(_sendToClientData);
             response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
-            Assert.Equal("123", response.Id);
+            Assert.Equal(payload.id, response.Id);
             foundItems = response.Result.Items.Where(item => item.Label == "a");
             Assert.True(Enumerable.Count(foundItems) == 1, "'a' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
@@ -531,30 +559,30 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // missing 'expression' in documentUri
             _sendToClientData.Clear();
-            _testServer.OnDataReceived(JsonSerializer.Serialize(new
+            payload = GetCompletionPayload(new CompletionParams()
             {
-                jsonrpc = "2.0",
-                id = "123",
-                method = "textDocument/completion",
-                @params = new CompletionParams()
-                {
-                    TextDocument = new TextDocumentIdentifier()
-                    {
-                        Uri = "powerfx://test"
-                    },
-                    Position = new Position()
-                    {
-                        Line = 0,
-                        Character = 1
-                    },
-                    Context = new CompletionContext()
-                }
-            }));
+                TextDocument = GetTextDocument("powerfx://test"),
+                Position = GetPosition(1),
+                Context = GetCompletionContext()
+            });
+            _testServer.OnDataReceived(payload.payload); 
             Assert.Single(_sendToClientData);
             var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", errorResponse.Jsonrpc);
-            Assert.Equal("123", errorResponse.Id);
+            Assert.Equal(payload.id, errorResponse.Id);
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
+
+            Assert.Empty(_exList);
+        }
+
+        private static (string payload, string id) GetCompletionPayload(CompletionParams completionParams)
+        {
+            return GetRequestPayload(completionParams, TextDocumentNames.Completion);
+        }
+
+        private static CompletionContext GetCompletionContext()
+        {
+            return new CompletionContext();
         }
 
         private class DummyQuickFixHandler : CodeFixHandler
@@ -594,8 +622,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             editor.AddQuickFixHandler(failHandler);
 
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editor);
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
-            
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+
             var errorList = new List<Exception>();
 
             testServer.LogUnhandledExceptionHandler += (ex) =>
@@ -612,10 +640,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 method = TextDocumentNames.CodeAction,
                 @params = new CodeActionParams()
                 {
-                    TextDocument = new TextDocumentIdentifier()
-                    {
-                        Uri = documentUri
-                    },
+                    TextDocument = GetTextDocument(documentUri),
                     Range = new LanguageServerProtocol.Protocol.Range()
                     {
                         Start = new Position
@@ -651,10 +676,39 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         // Test a codefix using a customization, ICodeFixHandler
         [Fact]
-        public void TestCodeActionWithHandler()
+        public void TestCodeActionWithHandlerAndExpressionInUriOrInTextDocument()
+        {
+            // Blank(A) is error, should change to IsBlank(A)
+            var original = "Blank(A)";
+            var updated = "IsBlank(A)";
+            foreach (var addExprToUri in new bool[] { true, false })
+            {
+                var codeActionParams = new CodeActionParams
+                {
+                    TextDocument = addExprToUri ?
+                                   GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}&expression=" + original)) :
+                                   GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}")),
+                    Text = addExprToUri ? null : original,
+                    Range = SemanticTokensRelatedTestsHelper.CreateRange(0, 0, 0, 10),
+                    Context = GetDefaultCodeActionContext()
+                };
+                TestCodeActionWithHandlerCore(codeActionParams, updated);
+            }
+
+            TestCodeActionWithHandlerCore(
+                new CodeActionParams
+            {
+                TextDocument = GetTextDocument(GetUri("context={\"A\":1,\"B\":[1,2,3]}&expression=Max(1,2")),
+                Text = original,
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(0, 0, 0, 10),
+                Context = GetDefaultCodeActionContext()
+            }, updated);
+        }
+
+        private void TestCodeActionWithHandlerCore(CodeActionParams codeActionParams, string updatedExpr)
         {
             var engine = new RecalcEngine();
-
+            _sendToClientData.Clear();
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) =>
             {
                 var scope = engine.CreateEditorScope();
@@ -662,54 +716,36 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 return scope;
             });
 
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
-            // Blank(A) is error, should change to IsBlank(A)
-            var original = "Blank(A)";
-            var updated = "IsBlank(A)";
-
-            var documentUri = "powerfx://test?expression=" + original + "&context={\"A\":1,\"B\":[1,2,3]}";
-
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
-            {
-                jsonrpc = "2.0",
-                id = "testDocument1",
-                method = TextDocumentNames.CodeAction,
-                @params = new CodeActionParams()
-                {
-                    TextDocument = new TextDocumentIdentifier()
-                    {
-                        Uri = documentUri
-                    },
-                    Range = new LanguageServerProtocol.Protocol.Range()
-                    {
-                        Start = new Position
-                        {
-                            Line = 0,
-                            Character = 0
-                        },
-                        End = new Position
-                        {
-                            Line = 0,
-                            Character = 10
-                        }
-                    },
-                    Context = new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } }
-                }
-            }));
+            var payload = GetCodeActionPayload(codeActionParams);
+            testServer.OnDataReceived(payload.payload);
 
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcCodeActionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
-            Assert.Equal("testDocument1", response.Id);
+            Assert.Equal(payload.id, response.Id);
             Assert.NotEmpty(response.Result);
             Assert.Contains(CodeActionKind.QuickFix, response.Result.Keys);
             Assert.True(response.Result[CodeActionKind.QuickFix].Length == 1, "Quick fix didn't return expected suggestion.");
             Assert.Equal(BlankHandler.Title, response.Result[CodeActionKind.QuickFix][0].Title);
             Assert.NotEmpty(response.Result[CodeActionKind.QuickFix][0].Edit.Changes);
-            Assert.Contains(documentUri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
+            Assert.Contains(codeActionParams.TextDocument.Uri, response.Result[CodeActionKind.QuickFix][0].Edit.Changes.Keys);
 
-            Assert.Equal(updated, response.Result[CodeActionKind.QuickFix][0].Edit.Changes[documentUri][0].NewText);
+            Assert.Equal(updatedExpr, response.Result[CodeActionKind.QuickFix][0].Edit.Changes[codeActionParams.TextDocument.Uri][0].NewText);
+            Assert.Empty(exList);
+        }
+
+        private static CodeActionContext GetDefaultCodeActionContext()
+        {
+            return new CodeActionContext() { Only = new[] { CodeActionKind.QuickFix } };
+        }
+
+        private static (string payload, string id) GetCodeActionPayload(CodeActionParams codeActionParams)
+        {
+            return GetRequestPayload(codeActionParams, TextDocumentNames.CodeAction);
         }
 
         [Fact]
@@ -724,7 +760,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 return scope;
             });
 
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+
             var documentUri = "powerfx://test?expression=Blank(A)&context={\"A\":1,\"B\":[1,2,3]}";
 
             testServer.OnDataReceived(JsonSerializer.Serialize(new
@@ -734,10 +773,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                 method = TextDocumentNames.CodeAction,
                 @params = new CodeActionParams()
                 {
-                    TextDocument = new TextDocumentIdentifier()
-                    {
-                        Uri = documentUri
-                    },
+                    TextDocument = GetTextDocument(documentUri),
                     Range = new LanguageServerProtocol.Protocol.Range()
                     {
                         Start = new Position
@@ -769,8 +805,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("Suggestion", codeActionResult.ActionResultContext.ActionIdentifier);
 
             _sendToClientData.Clear();
+            Assert.Empty(exList);
 
-            var testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -791,8 +829,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Empty(_sendToClientData);
 
             _sendToClientData.Clear();
+            Assert.Empty(exList);
 
-            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -817,8 +857,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
 
             _sendToClientData.Clear();
+            Assert.Empty(exList);
 
-            testServer1 = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            testServer1 = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            testServer1.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
             codeActionResult.ActionResultContext = null;
             testServer1.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -841,6 +883,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("testDocument1", errorResponse.Id);
             Assert.Equal(PropertyValueRequired, errorResponse.Error.Code);
+            Assert.Empty(exList);
         }
 
         [Theory]
@@ -863,6 +906,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             expression = expression.Substring(0, position) + expression[position + 1] + expression.Substring(position + 3);
 
             Assert.Equal(expected, _testServer.TestGetCharPosition(expression, position));
+            Assert.Empty(_exList);
         }
 
         [Fact]
@@ -876,6 +920,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(11, _testServer.TestGetPosition("123\n123456\n12345", 2, 0));
             Assert.Equal(13, _testServer.TestGetPosition("123\n123456\n12345", 2, 2));
             Assert.Equal(3, _testServer.TestGetPosition("123", 0, 999));
+
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -884,82 +930,80 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
         // This tests generates an internal error as we use an behavior function but we have no way to check its presence
         [InlineData("Behavior(); Power(", 18, "Behavior(); Power(2,", 20, false)]
-        public void TestSignatureHelp(string text, int offset, string text2, int offset2, bool withAllowSideEffects)
+        public void TestSignatureHelpWithExpressionInUriAndNotInUri(string text, int offset, string text2, int offset2, bool withAllowSideEffects)
+        {
+            foreach (var addExprToUri in new bool[] { true, false })
+            {
+                var signatureHelpParams1 = new SignatureHelpParams
+                {
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text)) : GetTextDocument(),
+                    Text = addExprToUri ? null : text,
+                    Position = GetPosition(offset),
+                    Context = GetSignatureHelpContext("(")
+                };
+                var signatureHelpParams2 = new SignatureHelpParams
+                {
+                    TextDocument = addExprToUri ? GetTextDocument(GetUri("expression=" + text2)) : GetTextDocument(),
+                    Text = addExprToUri ? null : text2,
+                    Position = GetPosition(offset2),
+                    Context = GetSignatureHelpContext(",")
+                };
+                TestSignatureHelpCore(signatureHelpParams1, signatureHelpParams2, withAllowSideEffects);
+            }
+        }
+
+        [Fact]
+        public void TestSignatureHelpWithExpressionInBothUriAndTextDocument()
+        {
+            var signatureHelpParams1 = new SignatureHelpParams
+            {
+                TextDocument = GetTextDocument(GetUri("expression=Max(")),
+                Text = "Power(",
+                Position = GetPosition(6),
+                Context = GetSignatureHelpContext("(")
+            };
+            var signatureHelpParams2 = new SignatureHelpParams
+            {
+                TextDocument = GetTextDocument(GetUri("expression=Max(")),
+                Text = "Behavior(); Power(2,",
+                Position = GetPosition(20),
+                Context = GetSignatureHelpContext(",")
+            };
+            TestSignatureHelpCore(signatureHelpParams1, signatureHelpParams2, true);
+        }
+
+        private void TestSignatureHelpCore(SignatureHelpParams signatureHelpParams1, SignatureHelpParams signatureHelpParams2, bool withAllowSideEffects)
         {
             Init(options: GetParserOptions(withAllowSideEffects));
 
             // test good formula
-            _testServer.OnDataReceived(
-                JsonSerializer.Serialize(new
-                {
-                    jsonrpc = "2.0",
-                    id = "123",
-                    method = "textDocument/signatureHelp",
-                    @params = new SignatureHelpParams()
-                    {
-                        TextDocument = new TextDocumentIdentifier()
-                        {
-                            Uri = $"powerfx://test?expression={text}&context={{}}"
-                        },
-                        Position = new Position()
-                        {
-                            Line = 0,
-                            Character = offset
-                        },
-                        Context = new SignatureHelpContext()
-                        {
-                            TriggerKind = SignatureHelpTriggerKind.TriggerCharacter,
-                            TriggerCharacter = "("
-                        }
-                    }
-                }));
+            var payload = GetSignatureHelpPayload(signatureHelpParams1);
+            _testServer.OnDataReceived(payload.payload);
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
-            Assert.Equal("123", response.Id);
+            Assert.Equal(payload.id, response.Id);
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(0U, response.Result.ActiveParameter);
             var foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
             Assert.Equal("exponent", foundItems.First().Parameters[1].Label);
 
             _sendToClientData.Clear();
-            _testServer.OnDataReceived(
-                JsonSerializer.Serialize(new
-                {
-                    jsonrpc = "2.0",
-                    id = "123",
-                    method = "textDocument/signatureHelp",
-                    @params = new SignatureHelpParams()
-                    {
-                        TextDocument = new TextDocumentIdentifier()
-                        {
-                            Uri = $"powerfx://test?expression={text2}&context={{}}"
-                        },
-                        Position = new Position()
-                        {
-                            Line = 0,
-                            Character = offset2
-                        },
-                        Context = new SignatureHelpContext()
-                        {
-                            TriggerKind = SignatureHelpTriggerKind.TriggerCharacter,
-                            TriggerCharacter = ","
-                        }
-                    }
-                }));
+            payload = GetSignatureHelpPayload(signatureHelpParams2);
+            _testServer.OnDataReceived(payload.payload);
 
             Assert.Single(_sendToClientData);
             response = JsonSerializer.Deserialize<JsonRpcSignatureHelpResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
-            Assert.Equal("123", response.Id);
+            Assert.Equal(payload.id, response.Id);
             Assert.Equal(0U, response.Result.ActiveSignature);
             Assert.Equal(1U, response.Result.ActiveParameter);
             foundItems = response.Result.Signatures.Where(item => item.Label.StartsWith("Power"));
-            Assert.True(Enumerable.Count(foundItems) == 1, "Power should be found from signatures result");
+            Assert.True(Enumerable.Count(foundItems) >= 1, "Power should be found from signatures result");
             Assert.Equal(0U, foundItems.First().ActiveParameter);
             Assert.Equal(2, foundItems.First().Parameters.Length);
             Assert.Equal("base", foundItems.First().Parameters[0].Label);
@@ -975,10 +1019,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                     method = "textDocument/signatureHelp",
                     @params = new CompletionParams()
                     {
-                        TextDocument = new TextDocumentIdentifier()
-                        {
-                            Uri = "powerfx://test"
-                        },
+                        TextDocument = GetTextDocument("powerfx://test"),
                         Position = new Position()
                         {
                             Line = 0,
@@ -993,6 +1034,30 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Equal("123", errorResponse.Id);
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
+            Assert.Empty(_exList);
+        }
+
+        private static (string payload, string id) GetSignatureHelpPayload(SignatureHelpParams signatureHelpParams)
+        {
+            return GetRequestPayload(signatureHelpParams, TextDocumentNames.SignatureHelp);
+        }
+
+        private static Position GetPosition(int offset, int line = 0)
+        {
+            return new Position()
+            {
+                Line = line,
+                Character = offset
+            };
+        }
+
+        private static SignatureHelpContext GetSignatureHelpContext(string triggerChar)
+        {
+            return new SignatureHelpContext
+            {
+                TriggerKind = SignatureHelpTriggerKind.TriggerCharacter,
+                TriggerCharacter = triggerChar
+            };
         }
 
         [Theory]
@@ -1111,6 +1176,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(TokenResultType.Function, response.Params.Tokens["Year"]);
 
             CheckBehaviorError(_sendToClientData[0], expectBehaviorError, out _);
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -1144,6 +1210,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.IsType(expectedType, response.Params.Type);
+
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -1174,6 +1242,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Null(response.Params.Type);
+            Assert.Empty(_exList);
         }
 
         [Theory]
@@ -1208,13 +1277,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("$/publishExpressionType", response.Method);
             Assert.Equal(documentUri, response.Params.Uri);
             Assert.Equal(expectedTypeJson, JsonSerializer.Serialize(response.Params.Type, _jsonSerializerOptions));
+            Assert.Empty(_exList);
         }
 
         [Fact]
         public void TestInitialFixup()
         {
             var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
-            var testServer = new TestLanguageServer(_sendToClientData.Add, scopeFactory);
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
             var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
@@ -1240,6 +1312,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // no change
             _sendToClientData.Clear();
+            Assert.Empty(exList);
             testServer.OnDataReceived(JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
@@ -1261,8 +1334,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("123", response.Id);
             Assert.Equal(documentUri, response.Result.Uri);
             Assert.Equal("Price * Quantity", response.Result.Text);
+            Assert.Empty(exList);
         }
-        
+
         [Fact]
         public void ErrorIsLocalized()
         {
@@ -1276,7 +1350,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             _sendToClientData = new List<string>();
             _scopeFactory = new TestPowerFxScopeFactory(
                 (string documentUri) => engine.CreateEditorScope(new ParserOptions() { Culture = locale }, GetFromUri(documentUri)));
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
+
+            List<Exception> exList = new List<Exception>();
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             _testServer.OnDataReceived(
                 JsonSerializer.Serialize(new
@@ -1299,6 +1376,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             // Checking if contains text in the correct locale
             Assert.Contains("Caractères inattendus.", diags.First().Message); // the value should be localized. Resx files have this localized.
+            Assert.Empty(exList);
         }
 
         // Parse in Culture1, Errors in culture2
@@ -1306,7 +1384,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void ParseAndErrorLocaleAreDifferent()
         {
             var engine = new Engine(new PowerFxConfig());
-                        
+
             var parseLocale = CultureInfo.CreateSpecificCulture("fr-FR");
             var errorLocale = CultureInfo.CreateSpecificCulture("es-ES");
 
@@ -1320,7 +1398,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
                         .SetBindingInfo()
                         .SetDefaultErrorCulture(errorLocale)));
 
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
+            List<Exception> exList = new List<Exception>();
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             _testServer.OnDataReceived(
                 JsonSerializer.Serialize(new
@@ -1344,7 +1424,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             // Checking if contains text in the correct locale
             // the value should be localized. Resx files have this localized.
             // If it's a different error message, then we may have a bug in the parser locale. 
-            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message); 
+            Assert.Contains("El nombre no es válido. No se reconoce \"foo\".", diags.First().Message);
+            Assert.Empty(exList);
         }
 
         // Test showing how LSP can fully customize check result. 
@@ -1352,7 +1433,10 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
         public void CustomCheckResult()
         {
             _scopeFactory = new TestPowerFxScopeFactory(this.TestCreateEditorScope);
-            _testServer = new TestLanguageServer(_sendToClientData.Add, _scopeFactory);
+            _testServer = new TestLanguageServer(_output, _sendToClientData.Add, _scopeFactory);
+
+            List<Exception> exList = new List<Exception>();
+            _testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
 
             _testServer.OnDataReceived(
              JsonSerializer.Serialize(new
@@ -1374,6 +1458,429 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
             Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
+            Assert.Empty(exList);
+        }
+
+        [Fact]
+        public void TestCorrectFullSemanticTokensAreReturnedWithExpressionInUri()
+        {
+            TestCorrectFullSemanticTokensAreReturned(new SemanticTokensParams
+            {
+                TextDocument = GetTextDocument(GetUri("expression=Max(1, 2, 3)"))
+            });
+        }
+
+        [Fact]
+        public void TestCorrectFullSemanticTokensAreReturnedWithExpressionNotInUri()
+        {
+            TestCorrectFullSemanticTokensAreReturned(new SemanticTokensParams
+            {
+                TextDocument = GetTextDocument(),
+                Text = "Max(1, 2, 3)"
+            });
+        }
+
+        [Fact]
+        public void TestCorrectFullSemanticTokensAreReturnedWithExpressionInBothUriAndTextDocument()
+        {
+            var expression = "Max(1, 2, 3)";
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = GetTextDocument(GetUri("expression=Color.White")),
+                Text = expression
+            };
+            TestCorrectFullSemanticTokensAreReturned(semanticTokenParams);
+        }
+
+        private void TestCorrectFullSemanticTokensAreReturned(SemanticTokensParams semanticTokensParams)
+        {
+            // Arrange
+            var expression = GetExpression(semanticTokensParams);
+            Assert.Equal("Max(1, 2, 3)", expression);
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokensParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            Assert.Single(decodedTokens.Where(tok => tok.TokenType == TokenType.Function));
+            Assert.Equal(3, decodedTokens.Where(tok => tok.TokenType == TokenType.NumLit || tok.TokenType == TokenType.DecLit).Count());
+        }
+
+        [Theory]
+        [InlineData("Create", TokenType.Function, TokenType.BoolLit)]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("[2, 3")]
+        [InlineData("Create", TokenType.StrInterpStart, TokenType.BinaryOp, TokenType.NumLit, TokenType.DecLit, TokenType.Control)]
+        [InlineData("[]")]
+        [InlineData("1,2]")]
+        [InlineData("[98]")]
+        [InlineData("Create", TokenType.Lim)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, TokenType.Lim)]
+        [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
+        [InlineData("   ")]
+        [InlineData("NotPresent")]
+        internal void TestCorrectFullSemanticTokensAreReturnedWithCertainTokenTypesSkipped(string tokenTypesToSkipParam, params TokenType[] tokenTypesToSkip)
+        {
+            // Arrange
+            var expression = "1+-2;true;\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment";
+            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Comment, TokenType.Function, TokenType.StrInterpStart, TokenType.IslandEnd, TokenType.IslandStart, TokenType.StrLit, TokenType.StrInterpEnd, TokenType.Delimiter, TokenType.BinaryOp };
+            if (tokenTypesToSkip.Length > 0)
+            {
+                expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
+            }
+
+            if (tokenTypesToSkipParam == "Create")
+            {
+                tokenTypesToSkipParam = JsonSerializer.Serialize(tokenTypesToSkip.Select(tokType => (int)tokType).ToList());
+            }
+
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = GetTextDocument(GetUri(tokenTypesToSkipParam == "NotPresent" ? string.Empty : "tokenTypesToSkip=" + tokenTypesToSkipParam)),
+                Text = expression
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            var actualTypes = decodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            Assert.Equal(expectedTypes.OrderBy(type => type), actualTypes.OrderBy(type => type));
+        }
+
+        [Theory]
+        [InlineData("Create", TokenType.Function, TokenType.BoolLit)]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("[2, 3")]
+        [InlineData("Create", TokenType.StrInterpStart, TokenType.BinaryOp, TokenType.NumLit, TokenType.DecLit, TokenType.Control)]
+        [InlineData("[]")]
+        [InlineData("1,2]")]
+        [InlineData("[98]")]
+        [InlineData("Create", TokenType.Lim)]
+        [InlineData("Create", TokenType.BoolLit, TokenType.BinaryOp, TokenType.Function, TokenType.Lim)]
+        [InlineData("Create", TokenType.Lim, TokenType.BinaryOp, TokenType.BoolLit)]
+        [InlineData("   ")]
+        [InlineData("NotPresent")]
+        internal void TestCorrectRangeSemanticTokensAreReturnedWithCertainTokenTypesSkipped(string tokenTypesToSkipParam, params TokenType[] tokenTypesToSkip)
+        {
+            // Arrange & Assert
+            var expression = "1+1+1+1+1+1+1+1;Sqrt(1);1+-2;true;\n\"String Literal\";Sum(1,2);Max(1,2,3);$\"1 + 2 = {3}\";// This is Comment;//This is comment2;false";
+            var range = SemanticTokensRelatedTestsHelper.CreateRange(1, 2, 3, 35);
+            var expectedTypes = new List<TokenType> { TokenType.DecLit, TokenType.BoolLit, TokenType.Function, TokenType.StrLit, TokenType.Delimiter, TokenType.BinaryOp };
+            if (tokenTypesToSkip.Length > 0)
+            {
+                expectedTypes = expectedTypes.Where(expectedType => !tokenTypesToSkip.Contains(expectedType)).ToList();
+            }
+
+            if (tokenTypesToSkipParam == "Create")
+            {
+                tokenTypesToSkipParam = JsonSerializer.Serialize(tokenTypesToSkip.Select(tokType => (int)tokType).ToList());
+            }
+
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = GetTextDocument(GetUri(tokenTypesToSkipParam == "NotPresent" ? string.Empty : "tokenTypesToSkip=" + tokenTypesToSkipParam)),
+                Text = expression,
+                Range = range
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            var decodedTokens = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression);
+            var actualTypes = decodedTokens.Select(tok => tok.TokenType).Distinct().ToList();
+            Assert.Equal(expectedTypes.OrderBy(type => type), actualTypes.OrderBy(type => type));
+        }
+
+        [Fact]
+        public void TestErrorResponseReturnedWhenUriIsNullForFullSemanticTokensRequest()
+        {
+            // Arrange
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = new TextDocumentIdentifier() { Uri = null }
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            AssertErrorPayload(_sendToClientData.FirstOrDefault(), payload.id, JsonRpcHelper.ErrorCode.ParseError);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyFullSemanticTokensResponseReturnedWhenExpressionIsInvalid(bool isNotNull)
+        {
+            // Arrange
+            string expression = string.Empty;
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = GetTextDocument(),
+                Text = isNotNull ? expression : null
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        [Fact]
+        public void TestFullSemanticTokensResponseReturnedWithDefaultEOL()
+        {
+            // Arrange
+            string expression = "Sum(\n1,1\n)";
+            var semanticTokenParams = new SemanticTokensParams
+            {
+                TextDocument = GetTextDocument(),
+                Text = expression 
+            };
+            var payload = GetFullDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.NotEmpty(response.Data);
+            Assert.Equal(expression.Where(c => c == '\n').Count(), SemanticTokensRelatedTestsHelper.DetermineNumberOfLinesThatTokensAreSpreadAcross(response));
+        }
+
+        [Theory]
+        [InlineData(1, 4, 1, 20, false, false)]
+        [InlineData(1, 6, 1, 20, true, false)]
+        [InlineData(1, 1, 1, 12, false, true)]
+        [InlineData(1, 5, 1, 24, true, false)]
+        [InlineData(1, 5, 1, 15, true, true)]
+        [InlineData(1, 9, 1, 14, true, true)]
+        [InlineData(1, 1, 3, 34, false, false)]
+        [InlineData(1, 3, 2, 12, false, true)]
+        [InlineData(2, 11, 3, 3, true, true)]
+        [InlineData(1, 24, 3, 17, false, false)]
+        public void TestCorrectRangeSemanticTokensAreReturned(int startLine, int startLineCol, int endLine, int endLineCol, bool tokenDoesNotAlignOnLeft, bool tokenDoesNotAlignOnRight)
+        {
+            // Arrange
+            var expression = "If(Len(Phone_Number) < 10,\nNotify(\"Invalid Phone\nNumber\"),Notify(\"Valid Phone No\"))";
+            var eol = "\n";
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = GetTextDocument(),
+                Text = expression,
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(startLine, endLine, startLineCol, endLineCol)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData.FirstOrDefault(), payload.id);
+            var (startIndex, endIndex) = semanticTokenParams.Range.ConvertRangeToPositions(expression, eol);
+            var decodedResponse = SemanticTokensRelatedTestsHelper.DecodeEncodedSemanticTokensPartially(response, expression, eol);
+
+            var leftMostTok = decodedResponse.Min(tok => tok.StartIndex);
+            var rightMostTok = decodedResponse.Max(tok => tok.EndIndex);
+
+            Assert.All(decodedResponse, (tok) => Assert.False(tok.EndIndex <= leftMostTok || tok.StartIndex >= rightMostTok));
+            if (tokenDoesNotAlignOnLeft)
+            {
+                Assert.True(leftMostTok < startIndex);
+            }
+            else
+            {
+                Assert.True(leftMostTok >= startIndex);
+            }
+
+            if (tokenDoesNotAlignOnRight)
+            {
+                Assert.True(rightMostTok > endIndex);
+            }
+            else
+            {
+                Assert.True(rightMostTok <= endIndex);
+            }
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyRangeSemanticTokensResponseReturnedWhenExpressionIsInvalid(bool isNotNull)
+        {
+            // Arrange
+            string expression = string.Empty;
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = GetTextDocument(),
+                Text = isNotNull ? expression : null,
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        [Fact]
+        public void TestErrorResponseReturnedWhenUriIsNullForRangeSemanticTokensRequest()
+        {
+            // Arrange
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = new TextDocumentIdentifier() { Uri = null },
+                Range = SemanticTokensRelatedTestsHelper.CreateRange(1, 1, 1, 4)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            AssertErrorPayload(_sendToClientData.FirstOrDefault(), payload.id, JsonRpcHelper.ErrorCode.ParseError);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void TestEmptyRangeSemanticTokensResponseReturnedWhenRangeIsNullOrInvalid(bool isNull)
+        {
+            // Arrange
+            var expression = "If(Len(Phone_Number) < 10,\nNotify(\"Invalid Phone\nNumber\"),Notify(\"Valid Phone No\"))";
+            var semanticTokenParams = new SemanticTokensRangeParams
+            {
+                TextDocument = GetTextDocument(),
+                Text = expression,
+                Range = isNull ? null : SemanticTokensRelatedTestsHelper.CreateRange(expression.Length + 2, 2, 1, 2)
+            };
+            var payload = GetRangeDocumentSemanticTokensRequestPayload(semanticTokenParams);
+
+            // Act
+            _testServer.OnDataReceived(payload.payload);
+
+            // Assert
+            var response = AssertAndGetSemanticTokensResponse(_sendToClientData?.FirstOrDefault(), payload.id);
+            Assert.Empty(response.Data);
+        }
+
+        private static SemanticTokensResponse AssertAndGetSemanticTokensResponse(string response, string id)
+        {
+            var tokensResponse = AssertAndGetResponsePayload<SemanticTokensResponse>(response, id);
+            Assert.NotNull(tokensResponse);
+            Assert.NotNull(tokensResponse.Data);
+            return tokensResponse;
+        }
+
+        private static void AssertErrorPayload(string response, string id, JsonRpcHelper.ErrorCode expectedCode)
+        {
+            Assert.NotNull(response);
+            var deserializedResponse = JsonDocument.Parse(response);
+            var root = deserializedResponse.RootElement;
+            Assert.True(root.TryGetProperty("id", out var responseId));
+            Assert.Equal(id, responseId.GetString());
+            Assert.True(root.TryGetProperty("error", out var errElement));
+            Assert.True(errElement.TryGetProperty("code", out var codeElement));
+            var code = (JsonRpcHelper.ErrorCode)codeElement.GetInt32();
+            Assert.Equal(expectedCode, code);
+        }
+
+        private static T AssertAndGetResponsePayload<T>(string response, string id)
+        {
+            Assert.NotNull(response);
+            var deserializedResponse = JsonDocument.Parse(response);
+            var root = deserializedResponse.RootElement;
+            root.TryGetProperty("id", out var responseId);
+            Assert.Equal(id, responseId.GetString());
+            root.TryGetProperty("result", out var resultElement);
+            var paramsObj = JsonSerializer.Deserialize<T>(resultElement.GetRawText(), _jsonSerializerOptions);
+            return paramsObj;
+        }
+
+        private static (string payload, string id) GetRangeDocumentSemanticTokensRequestPayload(SemanticTokensRangeParams semanticTokenRangeParams, string id = null)
+        {
+            return GetRequestPayload(semanticTokenRangeParams, TextDocumentNames.RangeDocumentSemanticTokens, id);
+        }
+
+        private static (string payload, string id) GetFullDocumentSemanticTokensRequestPayload(SemanticTokensParams semanticTokenParams, string id = null)
+        {
+            return GetRequestPayload(semanticTokenParams, TextDocumentNames.FullDocumentSemanticTokens, id);
+        }
+
+        private static string GetExpression(LanguageServerRequestBaseParams requestParams)
+        {
+            if (requestParams?.Text != null)
+            {
+                return requestParams.Text;
+            }
+
+            var uri = new Uri(requestParams.TextDocument.Uri);
+            return HttpUtility.ParseQueryString(uri.Query).Get("expression");
+        }
+
+        private static string GetUri(string queryParams = null)
+        {
+            var uriBuilder = new UriBuilder("powerfx://app")
+            {
+                Query = queryParams ?? string.Empty
+            };
+            return uriBuilder.Uri.AbsoluteUri;
+        }
+
+        private static (string payload, string id) GetRequestPayload<T>(T paramsObj, string method, string id = null)
+        {
+            id ??= Guid.NewGuid().ToString();
+            var payload = JsonSerializer.Serialize(
+            new
+            {
+                jsonrpc = "2.0",
+                id,
+                method,
+                @params = paramsObj
+            }, _jsonSerializerOptions);
+            return (payload, id);
+        }
+
+        private static TextDocumentIdentifier GetTextDocument(string uri = null)
+        {
+            return new TextDocumentIdentifier() { Uri = uri ?? GetUri() };
+        }
+
+        [Fact]
+        public async Task TestExpectedReturnValueForEmptyExpression()
+        {
+            var scope = TestCreateEditorScope(string.Empty);
+
+            var check = scope.Check(string.Empty);
+
+            Assert.True(check.IsSuccess);
+
+            var run = check.GetEvaluator();
+
+            var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
+
+            Assert.Null(result.ToObject());
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)

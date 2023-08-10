@@ -4,13 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.CodeAnalysis.Options;
+using System.Threading;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Builtins;
@@ -31,13 +32,43 @@ namespace Microsoft.PowerFx
         private const string OptionLargeCallDepth = "LargeCallDepth";
         private static bool _largeCallDepth = false;
 
+        private const string OptionFeaturesNone = "FeaturesNone";
+
+        private const string OptionPowerFxV1 = "PowerFxV1";
+
+        private const string OptionHashCodes = "HashCodes";
+        private static bool _hashCodes = false;
+
+        private const string OptionStackTrace = "StackTrace";
+        private static bool _stackTrace = false;
+
+        private static readonly BasicUserInfo _userInfo = new BasicUserInfo
+        {
+            FullName = "Susan Burk",
+            Email = "susan@contoso.com",
+            DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
+            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
+            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
+        };
+
         private static readonly Features _features = Features.PowerFxV1;
 
         private static void ResetEngine()
         {
-            var config = new PowerFxConfig(_features)
+            var props = new Dictionary<string, object>
             {
+                { "FullName", _userInfo.FullName },
+                { "Email", _userInfo.Email },
+                { "DataverseUserId", _userInfo.DataverseUserId },
+                { "TeamsMemberId", _userInfo.TeamsMemberId }
             };
+
+            var allKeys = props.Keys.ToArray();
+            SymbolTable userSymbolTable = new SymbolTable();
+
+            userSymbolTable.AddUserInfoObject(allKeys);
+
+            var config = new PowerFxConfig(_features) { SymbolTable = userSymbolTable };
 
             if (_largeCallDepth)
             {
@@ -48,7 +79,11 @@ namespace Microsoft.PowerFx
             {
                 { OptionFormatTable, OptionFormatTable },
                 { OptionNumberIsFloat, OptionNumberIsFloat },
-                { OptionLargeCallDepth, OptionLargeCallDepth }
+                { OptionLargeCallDepth, OptionLargeCallDepth },
+                { OptionFeaturesNone, OptionFeaturesNone },
+                { OptionPowerFxV1, OptionPowerFxV1 },
+                { OptionHashCodes, OptionHashCodes },
+                { OptionStackTrace, OptionStackTrace }
             };
 
             foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -135,12 +170,12 @@ namespace Microsoft.PowerFx
                                 var arg1 = call.Args.ChildNodes[1];
                                 var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
 
-                                var check = _engine.Check(arg1expr);
+                                var check = _engine.Check(arg1expr, GetParserOptions(), GetSymbolTable());
                                 if (check.IsSuccess)
                                 {
                                     var arg1Type = check.ReturnType;
 
-                                    varValue = check.GetEvaluator().Eval();
+                                    varValue = check.GetEvaluator().Eval(GetRuntimeConfig());
                                     _engine.UpdateVariable(arg0name, varValue);
 
                                     return true;
@@ -154,6 +189,32 @@ namespace Microsoft.PowerFx
             varValue = null;
             arg0name = null;
             return false;
+        }
+
+        private static ParserOptions GetParserOptions()
+        {
+            return new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
+        }
+
+        private static ReadOnlySymbolTable GetSymbolTable()
+        {
+            return _engine.EngineSymbols;
+        }
+
+        private static RuntimeConfig GetRuntimeConfig()
+        {
+            var rc = new RuntimeConfig();
+            rc.SetUserInfo(_userInfo);
+            return rc;
+        }
+
+        private static FormulaValue Eval(string expressionText)
+        {
+            CheckResult checkResult = _engine.Check(expressionText, GetParserOptions(), GetSymbolTable());
+            checkResult.ThrowOnErrors();
+
+            IExpressionEvaluator evaluator = checkResult.GetEvaluator();
+            return evaluator.Eval(GetRuntimeConfig());
         }
 
         public static void REPL(TextReader input, bool echo = false, TextWriter output = null)
@@ -213,7 +274,9 @@ namespace Microsoft.PowerFx
                     else
                     {
                         var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
-                        var result = _engine.Eval(expr, options: opts);
+                        var rc = new RuntimeConfig();
+                        rc.SetUserInfo(_userInfo);
+                        var result = Eval(expr);
 
                         if (output != null)
                         {
@@ -246,6 +309,12 @@ namespace Microsoft.PowerFx
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine(e.Message);
+
+                    if (_stackTrace)
+                    {
+                        Console.WriteLine(e.ToString());
+                    }
+
                     Console.ResetColor();
                     output?.WriteLine(Regex.Replace(e.InnerException.Message, "\r\n", "|") + "\n");
                 }
@@ -397,7 +466,7 @@ namespace Microsoft.PowerFx
 
         private static string PrintResult(FormulaValue value, bool minimal = false)
         {
-            string resultString;
+            string resultString = string.Empty;
 
             if (value is BlankValue)
             {
@@ -424,7 +493,12 @@ namespace Microsoft.PowerFx
                 else
                 {
                     var separator = string.Empty;
-                    resultString = "{";
+                    if (_hashCodes)
+                    {
+                        resultString += "#" + record.GetHashCode() + "#";
+                    }
+
+                    resultString += "{";
                     foreach (var field in record.Fields)
                     {
                         resultString += separator + $"{field.Name}:";
@@ -473,14 +547,26 @@ namespace Microsoft.PowerFx
                         }
                     }
 
+                    if (_hashCodes)
+                    {
+                        resultString += "#" + table.GetHashCode() + "#";
+                    }
+
                     // special treatment for single column table named Value
                     if (columnWidth.Length == 1 && table.Rows.First().Value != null && table.Rows.First().Value.Fields.First().Name == "Value")
                     {
                         var separator = string.Empty;
-                        resultString = "[";
+                        resultString += "[";
                         foreach (var row in table.Rows)
                         {
-                            resultString += separator + PrintResult(row.Value.Fields.First().Value);
+                            resultString += separator;
+
+                            if (_hashCodes)
+                            {
+                                resultString += "#" + row.Value.GetHashCode() + "# ";
+                            }
+
+                            resultString += PrintResult(row.Value.Fields.First().Value);
                             separator = ", ";
                         }
 
@@ -490,7 +576,7 @@ namespace Microsoft.PowerFx
                     // otherwise a full table treatment is needed
                     else if (_formatTable)
                     {
-                        resultString = "\n ";
+                        resultString += "\n ";
                         var column = 0;
 
                         foreach (var row in table.Rows)
@@ -542,7 +628,14 @@ namespace Microsoft.PowerFx
                         var separator = string.Empty;
                         foreach (var row in table.Rows)
                         {
-                            resultString += separator + PrintResult(row.Value);
+                            resultString += separator;
+
+                            if (_hashCodes)
+                            {
+                                resultString += "#" + row.Value.GetHashCode() + "# ";
+                            }
+
+                            resultString += PrintResult(row.Value);
                             separator = ", ";
                         }
 
@@ -599,15 +692,55 @@ namespace Microsoft.PowerFx
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionNumberIsFloat.ToLower(CultureInfo.InvariantCulture))
+                if (string.Equals(option.Value, OptionNumberIsFloat, StringComparison.OrdinalIgnoreCase))
                 {
                     _numberIsFloat = value.Value;
                     return value;
                 }
 
-                if (option.Value.ToLower(CultureInfo.InvariantCulture) == OptionLargeCallDepth.ToLower(CultureInfo.InvariantCulture))
+                if (string.Equals(option.Value, OptionLargeCallDepth, StringComparison.OrdinalIgnoreCase))
                 {
                     _largeCallDepth = value.Value;
+                    ResetEngine();
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionHashCodes, StringComparison.OrdinalIgnoreCase))
+                {
+                    _hashCodes = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionStackTrace, StringComparison.OrdinalIgnoreCase))
+                {
+                    _stackTrace = value.Value;
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionPowerFxV1, StringComparison.OrdinalIgnoreCase))
+                {
+                    foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    {
+                        if (prop.PropertyType == typeof(bool) && prop.CanWrite && (bool)prop.GetValue(Features.PowerFxV1))
+                        {
+                            prop.SetValue(_features, value.Value);
+                        }
+                    }
+
+                    ResetEngine();
+                    return value;
+                }
+
+                if (string.Equals(option.Value, OptionFeaturesNone, StringComparison.OrdinalIgnoreCase))
+                {
+                    foreach (var prop in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    {
+                        if (prop.PropertyType == typeof(bool) && prop.CanWrite)
+                        {
+                            prop.SetValue(_features, value.Value);
+                        }
+                    }
+
                     ResetEngine();
                     return value;
                 }
@@ -616,6 +749,7 @@ namespace Microsoft.PowerFx
                 if (featureProperty?.CanWrite == true)
                 {
                     featureProperty.SetValue(_features, value.Value);
+                    ResetEngine();
                     return value;
                 }
 

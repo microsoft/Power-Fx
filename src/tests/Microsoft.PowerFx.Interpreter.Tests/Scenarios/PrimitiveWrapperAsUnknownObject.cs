@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.PowerFx.Core.Tests;
@@ -188,6 +189,12 @@ namespace Microsoft.PowerFx.Tests
             }
 
             return true;
+        }
+
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
+        {
+            result = null;
+            return false;
         }
     }
 }

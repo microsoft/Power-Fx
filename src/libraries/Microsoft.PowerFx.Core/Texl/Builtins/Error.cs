@@ -118,29 +118,20 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
             }
 
-            bool matchedWithCoercion;
             bool typeValid;
-            if (argumentType.Kind == DKind.Record)
-            {
-                // A record with the proper types for the fields that are specified.
-                var expectedOptionalFieldsRecord = DType.CreateRecord(
+
+            var expectedOptionalFields = DType.CreateTable(
                     acceptedFields.Where(field =>
 
                         // Kind has already been handled before
                         ((requiredKindField.Type.Kind == DKind.Number) ? true : field.Name != "Kind") && names.Any(name => name.Name == field.Name)));
 
-                typeValid = CheckType(context, argument, argumentType, expectedOptionalFieldsRecord, errors, true, out matchedWithCoercion);
-            }
-            else
+            if (argumentType.Kind == DKind.Record)
             {
-                // A table with the proper types for the fields that are specified.
-                var expectedOptionalFieldsTable = DType.CreateTable(
-                    acceptedFields.Where(field =>
-
-                        // Kind has already been handled before
-                        field.Name != "Kind" && names.Any(name => name.Name == field.Name)));
-                typeValid = CheckType(context, argument, argumentType, expectedOptionalFieldsTable, errors, true, out matchedWithCoercion);
+                expectedOptionalFields = expectedOptionalFields.ToRecord();
             }
+
+            typeValid = CheckType(context, argument, argumentType, expectedOptionalFields, errors, true, out bool matchedWithCoercion);
 
             if (!typeValid)
             {

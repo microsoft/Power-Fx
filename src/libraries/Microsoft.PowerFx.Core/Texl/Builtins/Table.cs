@@ -74,7 +74,13 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    if (DType.TryUnionWithCoerce(rowType, argType, context.Features.PowerFxV1CompatibilityRules, out var newType, out bool coercionNeeded))
+                    if (DType.TryUnionWithCoerce(
+                        rowType,
+                        argType,
+                        context.Features.PowerFxV1CompatibilityRules,
+                        coerceToLeftTypeOnly: context.Features.StronglyTypedBuiltinEnums || context.Features.PowerFxV1CompatibilityRules,
+                        out var newType,
+                        out bool coercionNeeded))
                     {
                         rowType = newType;
 
@@ -124,11 +130,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             returnType = rowType.ToTable();
 
             return isValid;
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_UO");
         }
     }
 }

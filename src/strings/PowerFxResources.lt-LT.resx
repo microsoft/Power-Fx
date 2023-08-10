@@ -1465,6 +1465,14 @@
     <value>įvestis</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>modifikatorius</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>modifikatorius</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Pateikia nurodytą simbolių iš teksto reikšmės pradžios skaičių.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponento pasirinktinę duomenų ypatybę su parametrais galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    <value>Komponento funkcijos ypatybę arba parametrą galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponento funkcijos ypatybė arba parametras gali nurodyti tik kitas funkcijos ypatybes.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Pirmas „{0}“ argumentas turi būti vieno stulpelio lentelė.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Neleistina schema, tikimasi „{0}“ teksto reikšmių stulpelio.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Neleistina schema, tikimasi „{0}“ datos reikšmių stulpelio.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Neleistina schema, tikimasi „{0}“ skaitinių reikšmių stulpelio.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Neleistina schema, tikimasi „{0}“ spalvų reikšmių stulpelio.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Neleistina schema, {1} tikimasi {0} reikšmių stulpelio.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Skaitinė reikšmė per didelė.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Šiuo metu rezervuoto žodžio naudojimas nepalaikomas.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematikos ir statistikos</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informacija</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose nepalaikoma.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Netinkamas funkcijos {0} argumentų skaičius: gautas – {1}, numatytas – {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose funkcijos {1} argumentas {0} nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Šio argumento negalima perduoti formulės stulpeliuose kaip šio tipo.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Šio argumento negalima perduoti formulės stulpeliuose kaip tipo {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Šiame argumente palaikoma tik literalo reikšmė.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} negalima atlikti su šia įvestimi be laiko juostos konvertavimo, kuris formulės stulpeliuose nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Šios operacijos negalima atlikti su reikšmėmis, kurių datos ir laiko veikimo būdai yra kitokie.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose palaikomos tik trumpo datos ir laiko formato eilutės.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumentas {0} yra netinkamas / nepalaikomas datos aritmetinės funkcijos {1} laiko vienetas.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose lokalėms būdingi formatavimo atpažinimo ženklai (pvz., „.“ ir „,“) nepalaikomi.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Funkcija {0} formulės stulpeliuose nepalaikoma, vietoj jos naudokite {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Šios operacijos negalima atlikti formulės stulpelių tipe {0}.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>{0} tipo rezultatas formulės stulpeliuose nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Formulės stulpeliuose nepalaikoma tiesioginė nuoroda į visą įrašą. Nurodykite tinkamą įrašo lauką.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Tikimasi, kad šios formulės rezultato tipas bus {0}, tačiau faktinis rezultato tipas yra {1}. Formulės stulpelio rezultatų tipo pakeisti negalima.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} tipo stulpeliai formulės stulpeliuose nepalaikomi.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>{0} tipo stulpeliai, kurių formatas {1}, formulės stulpeliuose nepalaikomi.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Įrašų arba lentelių vertimas formulės stulpeliuose nepalaikomas.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Vieno stulpelio lentelės formulės stulpeliuose nepalaikomos.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Negalima nurodyti virtualiosios lentelės {0} formulės stulpeliuose.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Numatomas operandas. Formulė arba reiškinys numato gauti tinkamą operandą. Pvz., į reiškinį 1 +_ galite įtraukti operandą 2, kad rezultatas būtų 3. Arba į išraišką Sveiki "&amp; _ galite įtraukti operandą visi, kad rezultatas būtų Sveiki visi.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Įvardytoji formulė turi būti reiškinys.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Vartotojo apibrėžtoje funkcijoje turi būti teksto.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Funkcija {0} jau apibrėžta.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parametras {0} kartojasi.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Nežinomas tipas {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Nurodytas funkcijos grąžinimo tipas neatitinka funkcijos teksto grąžinimo tipo.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ jau yra.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Ši funkcija nerekomenduojama ir nebepalaikoma.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Įspėjimas: pateiktas atidėtas tipas.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ funkcija yra atpažįstama, bet nepalaikoma.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Nepavyko konvertuoti tipo, nes nurodytos reikšmės tipas buvo „{0}“, o tikimasi tipo „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Ši operacija lentelėje „{0}“ gali neveikti, jei joje yra daugiau nei {1} eil.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Ši taisyklės sąlyga visada bus teisinga. Ar norėjote naudoti „ThisRecord“, ar [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Negalima perduoti {0}: palaikomas tik pirminio rakto lauko „{1}“ peržvalgos perdavimas.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Negalima deleguoti {0}: išraiška lygina kelis laukus.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Negalima perduoti {0}: yra veikimo funkcija „{1}“.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Nustatoma, ar yra pateikto teksto atitikmuo pateikto teksto formatu.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Tekstas, kuris bus tikrinamas pagal formatą.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Formatas, pagal kurį tikrinamas tekstas. Tai gali būti TextFormat išvardijimo reikšmė arba paprastoji išraiška.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>tekstas</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formatas</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>sritis</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Pateiktame tekste ieškoma nurodytos paprastosios išraiškos ir pateikiamas pirmasis atitikmuo.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Pateiktame tekste ieškoma nurodytos paprastosios išraiškos ir pateikiami visi jos atitikmenys.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Tekstas, kurio reikia ieškoti pagal paprastąją išraišką.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Paprastoji išraiška, pagal kurią reikia tikrinti tekstą. Ji gali apimti užfiksuotus įrašus (reikšmes skliausteliuose), kurie bus pateikti sėkmingo sutapimo atveju.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Tekstas, kurio reikia ieškoti pagal paprastąją išraišką.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Paprastoji išraiška, pagal kurią reikia tikrinti tekstą. Ji gali apimti užfiksuotus įrašus (reikšmes skliausteliuose), kurie bus pateikti sėkmingo sutapimo atveju.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Nustatoma, kurią teksto dalį norime gretinti. Tai gali būti MatchOptions išvardijimo reikšmė.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>tekstas</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>reguliarusis_reiškinys</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>parinktys</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Atnaujina nurodytą duomenų šaltinį.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>prijungtas_duomenų_šaltinis</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Tikimasi įrašo arba lentelės reikšmės.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Prijungtas duomenų šaltinis, kurį reikia atnaujinti.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Galima atnaujinti tik valdomus ryšius.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Netinkama paprastoji išraiška.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Paprastosios išraiškos turi būti pastovios vertės.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Reikšmės, perduotos funkcijai „{0}“, pakeisti negalima.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia visišką paprastosios išraiškos atitiktį. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visišką atitiktį nurodytame tekste.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia atitikčių grupes paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visas dalines atitiktis nurodytame tekste.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia grupių atitiktis paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visiškos atitikties vietą nurodytame tekste.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Pašalina visą formatavimą ir pateikia paprastojo teksto reikšmę.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>tekstas</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Tekstas, kuriame reikia pašalinti HTML ir XML žymes.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtro funkcijos neleidžia veikimo funkcijų kaip taisyklių sąlygų.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Naudodami operatorių And sujunkite kelias taisyklių sąlygas antrajame argumente.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Šios lentelės negalima nukopijuoti. Vietoje to sukurkite įdėjimo lentelę naudodami funkciją ForAll ir {...} notaciją, kad galėtumėte kopijuoti atskirus norimus stulpelius.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Šio įrašo negalima nukopijuoti. Vietoje to sukurkite įdėjimo įrašą naudodami {...} notaciją, kad galėtumėte kopijuoti atskirus norimus laukus.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

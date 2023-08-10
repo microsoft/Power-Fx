@@ -1,0 +1,11 @@
+﻿#SETUP: PowerFxV1CompatibilityRules
+
+// "In" operator for Tables
+
+// When blank can be treated as a scalar or an aggregate, prefer scalar
+>> Blank() in [1, Blank(), 2] 
+true
+
+// When blank can be treated as a scalar or an aggregate, prefer scalar
+>> Blank() in Table({Value:1},Blank(),{Value:2})
+false

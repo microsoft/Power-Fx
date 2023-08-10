@@ -1,0 +1,56 @@
+#SETUP: disable:PowerFxV1CompatibilityRules
+
+>> 1 = "1"
+false
+
+>> 0 = false
+false
+
+// Second comparison ensures the test doesn't fail if it runs exactly at midnight
+>> With({n:Now(),t:Today()}, (t = n) && (Mod(Value(n), 1) > 0))
+false
+
+>> Date(1899,12,31) = 1
+true
+
+>> DateTime(1899,12,30,12,0,0) = 0.5
+true
+
+>> Time(12,0,0) = 0.5
+true
+
+>> Date(2020,2,20) = DateTime(2020,2,20,0,0,0)
+true
+
+>> Date(2020,2,20) = DateTime(2020,2,20,0,0,0,1)
+false
+
+>> Date(1899,12,30) = Time(0,0,0)
+true
+
+>> Date(1899,12,29) = Time(0,0,0)
+false
+
+>> ErrorKind.Custom = 100
+false
+
+>> ErrorKind.Custom = 1000
+true
+
+>> 100 = ErrorKind.Custom
+false
+
+>> 1000 = ErrorKind.Custom
+true
+
+>> "abc" = 23
+false
+
+>> 23 = "abc"
+false
+
+>> "abc" <> 23
+true
+
+>> 23 <> "abc"
+true

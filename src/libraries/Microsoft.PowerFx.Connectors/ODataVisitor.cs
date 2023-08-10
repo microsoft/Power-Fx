@@ -12,9 +12,10 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    [ThreadSafeImmutable]
     internal class ODataVisitor : IRNodeVisitor<string, ODataVisitorContext>
     {
-        internal static readonly ODataVisitor I = new ODataVisitor();
+        internal static readonly ODataVisitor I = new ();
 
         public override string Visit(TextLiteralNode node, ODataVisitorContext runContext)
         {
@@ -100,7 +101,7 @@ namespace Microsoft.PowerFx.Connectors
             return node.Op switch
             {
                 UnaryOpKind.Negate => NotOp(node.Child, runContext),
-                _ => throw new NotDelegableException(),
+                _ => SerializeLiteralValue(runContext.EvalAsync(node).Result)
             };
         }
 

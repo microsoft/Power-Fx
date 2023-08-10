@@ -1,15 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
@@ -19,6 +15,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging.Trackers;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -401,11 +398,11 @@ namespace Microsoft.PowerFx.Core.Binding
             Contracts.Assert(!typeLeft.IsAggregate || typeLeft.IsTable || typeLeft.IsRecord);
             Contracts.Assert(!typeRight.IsAggregate || typeRight.IsTable || typeRight.IsRecord);
 
-            if (!typeLeft.IsAggregate)
+            if (!typeLeft.IsAggregate || (usePowerFxV1CompatibilityRules && typeLeft.Kind == DKind.ObjNull))
             {
                 // scalar in scalar: RHS must be a string (or coercible to string when LHS type is string). We'll allow coercion of LHS.
                 // This case deals with substring matches, e.g. 'FirstName in "Aldous Huxley"' or "123" in 123.
-                if (!typeRight.IsAggregate)
+                if (!typeRight.IsAggregate || (usePowerFxV1CompatibilityRules && typeRight.Kind == DKind.ObjNull))
                 {
                     if (!DType.String.Accepts(typeRight, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules))
                     {
@@ -438,7 +435,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
 
                 // scalar in table: RHS must be a one column table. We'll allow coercion.
-                if (typeRight.IsTable)
+                if (typeRight.IsTableNonObjNull)
                 {
                     var names = typeRight.GetNames(DPath.Root);
                     if (names.Count() != 1)
@@ -1374,6 +1371,17 @@ namespace Microsoft.PowerFx.Core.Binding
                     var dottedNameNode = node.AsDottedName();
                     if (dottedNameNode.Left.Kind == NodeKind.FirstName)
                     {
+                        // Strongly-typed enums
+                        if (context.NameResolver.Lookup(dottedNameNode.Left.AsFirstName().Ident.Name, out NameLookupInfo nameInfo) && nameInfo.Kind == BindKind.Enum)
+                        {
+                            if (nameInfo.Data is EnumSymbol enumSymbol && enumSymbol.TryGetValue(dottedNameNode.Right.Name, out OptionSetValue osv))
+                            {
+                                nodeValue = osv.ToObject().ToString();
+                                return true;
+                            }
+                        }
+
+                        // With strongly-typed enums disabled
                         DType enumType = DType.Invalid;
                         if (context.NameResolver.EntityScope?.TryGetNamedEnum(dottedNameNode.Left.AsFirstName().Ident.Name, out enumType) ?? false)
                         {

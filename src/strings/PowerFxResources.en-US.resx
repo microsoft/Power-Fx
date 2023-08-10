@@ -1742,7 +1742,11 @@
     <comment>Error Message.</comment>
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Component custom data property with parameters can only be accessed from within a component or from component output properties.</value>
+    <value>Component function property or parameter can only be accessed from within a component or from component output properties.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Component function property or parameter can only reference other function properties.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1851,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Numeric value is too large.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Use of a reserved word that is currently not supported.</value>
     <comment>Error Message.</comment>
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -4130,90 +4138,6 @@
     <value>{0}</value>
     <comment>Error message. {0} will be replaced with the contents of the message. In a few specific instances, we pull error messages from a source other than this file, but we need a error key in this file to attach it to, hence why we have an error message that is only a format specifier.</comment>
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where there the full PowerApps support is not available.</comment>
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Invalid number of arguments for {0} function: received {1}, expected {2}</value>
-    <comment>Error Message. Used in formula columns for scenarios where an invalid number of arguments is supplied to a math function. The {0} will be the name of the function. The {1} will be the incorrect number of arguments received. The {2} will be the correct number of args expected. </comment>
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>The {0} argument is not supported for the {1} function in formula columns.</value>
-    <comment>Error Message. Used in formula columns for arguments that are not supported there.  The {0} will be the name of the argument that is not supported.  The {1} will be the name of the function.</comment>
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as this type in formula columns.</value>
-    <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>This argument cannot be passed as type {0} in formula columns.</value>
-    <comment>Error Message. Used in formula columns for an argument where the type is not supported. {0} is the attempted type the argument is being coerced to.</comment>
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Only a literal value is supported for this argument.</value>
-    <comment>Error Message. Used in formula columns for arguments where the value supplied must be a literal value (for example, a number or a string), instead of a calculation.</comment>
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} cannot be performed on this input without a time zone conversion, which is not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where time zone conversion is needed to perform the operation. The {0} will be the name of the function.</comment>
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>This operation cannot be performed on values which are of different Date Time Behaviors.</value>
-    <comment>Error Message. Used in formula columns for scenarios where values of different Date Time Behaviors are used together, which is not supported</comment>
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Only the short date and time format strings are supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>The {0} argument is an invalid/unsupported unit of time for the {1} date arithmetic function.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an unsupported unit of time to the DateAdd or DateDiff function. The {0} will be the name of the argument. The {1} will be the name of the function.</comment>
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Locale-specific formatting tokens such as "." and "," are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker supplies an invalid format string</comment>
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} is not supported in formula columns, use {1} instead.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to use a function that is not supported, providing an alternate function name.  The {0} will be the name of the function that is not supported, and {1} is the name of the suggested alternate.</comment>
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>This operation cannot be performed on type {0} in formula columns.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to perform an unsupported operatiom. The {0} will be the type the operation is not supported for.</comment>
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>The result type {0} is not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula that returns a type which is not supported.</comment>
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Directly referencing an entire record is not supported in formula columns. Please reference a valid field in the record.</value>
-    <comment>Error Message. Used in formula columns for scenarios where the maker attempts to reference an entire record instead of a specific field.</comment>
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>The result type for this formula is expected to be {0}, but the actual result type is {1}. The result type of a formula column cannot be changed.</value>
-    <comment>Error Message. Used in formula columns for a formula that returns an unexpected result type during editing. The {0} will be the name of the required type. The {1} will be the name of the incorrect type.</comment>
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Columns of type {0} are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is not supported, such as floating point.</comment>
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Columns of type {0} with format {1} are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula where the maker attempts to use a column from Dataverse that is of a format that not supported, such as whole number formatted as language.</comment>
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Coercing records or tables is not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula where the maker attempts record-record or table-table coercion.</comment>
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Single-column tables are not supported in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula that references a single-column table.</comment>
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Cannot reference virtual table {0} in formula columns.</value>
-    <comment>Error Message. Used in formula columns for a formula that references a virtual table.</comment>
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Expected an operand. The formula or expression expects a valid operand. For example, you can add the operand '2' to the expression ' 1 +_' so that the result is '3'. Or, you can add the operand "there" to the expression '"Hi "&amp; _ ' so that the result is 'Hi there'.</value>
     <comment>Error Message.</comment>
@@ -5085,6 +5009,14 @@
     <value>This feature is deprecated and is no longer supported.</value>
     <comment>An error message for deprecated features.</comment>
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    <comment>A warning message when a function is deprecated.</comment>
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    <comment>An error message when a function is not supported.</comment>
+  </data>  
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Warning: Deferred type provided.</value>
     <comment>Warning given when the input has deferred Type. Deferred type is unknown type at compile time and correct type will be supplied by user before evaluation.</comment>
@@ -5133,5 +5065,167 @@
   <data name="InvalidCast" xml:space="preserve">
     <value>Type conversion failed because the given value was of type '{0}', expected '{1}' type.</value>
     <comment>Error Message.</comment>
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
+    <comment>Warning message.</comment>
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Determines if the supplied text has a match of the supplied text format.</value>
+    <comment>Description of 'IsMatch' function.</comment>
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>The text to be compared against the format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>The format to check the text against. It may be a value of the TextFormat enum or a regular expression.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>This determines what part of the text we want to match. It may be a value of the MatchOptions enum.</value>
+    <comment>{Locked=MatchOptions} Tooltip for the third argument of the IsMatch function.</comment>
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>function_parameter - First argument to the IsMatch function - the text to be compared against the format.</comment>
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    <comment>function_parameter - Second argument to the IsMatch function - a regular expression format used to match the input text.</comment>
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>extent</value>
+    <comment>function_parameter - Third argument to the IsMatch function. An optional parameter of flags used to determine the extent with which the format is matched to the text.</comment>
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Searches the supplied text for the specified regular expression, returning the first match from it.</value>
+    <comment>Description of 'Match' function.</comment>
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Searches the supplied text for the specified regular expression, returning all matches from it.</value>
+    <comment>Description of 'MatchAll' function.</comment>
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>The text to be searched against the regular expression.</value>
+    <comment>Tooltip for the first argument of the Match function.</comment>
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>The regular expression to check the text against. It can contain captures (values between parenthesis) that will be returned in case of a successful match.</value>
+    <comment>Tooltip for the second argument of the Match function.</comment>
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>This determines what part of the text we want to match. It may be a value of the MatchOptions enum.</value>
+    <comment>{Locked=MatchOptions} Tooltip for the third argument of the MatchAll function.</comment>
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>The text to be searched against the regular expression.</value>
+    <comment>Tooltip for the first argument of the MatchAll function.</comment>
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>The regular expression to check the text against. It can contain captures (values between parenthesis) that will be returned in case of a successful match.</value>
+    <comment>Tooltip for the second argument of the MatchAll function.</comment>
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>This determines what part of the text we want to match. It may be a value of the MatchOptions enum.</value>
+    <comment>{Locked=MatchOptions} Tooltip for the third argument of the MatchAll function.</comment>
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>function_parameter - First argument to the Match function - the text to be compared against the regular expression.</comment>
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>regular_expression</value>
+    <comment>function_parameter - Second argument to the Match function - a regular expression to match against the input text. Translate this string. Maintain as a single word (do not add spaces)</comment>
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>options</value>
+    <comment>function_parameter - Third argument to the Match function. An optional parameter of flags used to determine the extent with which the regular expression is matched to the text.</comment>
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Refreshes the specified data source.</value>
+    <comment>Description of 'Refresh' function.</comment>
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>connected_data_source</value>
+    <comment>function_parameter - Parameter for the Refresh function, the name of a data source that needs to be refreshed locally. Translate this string. Maintain as a single word (do not add spaces).</comment>
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Expected a record or table value.</value>
+    <comment>Error Message.</comment>
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>A connected data source to refresh.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Only managed connections can be refreshed.</value>
+    <comment>Error message on non-service data sources passed to Refresh.</comment>
+  </data>  
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Invalid regular expression.</value>
+    <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Regular expressions must be constant values.</value>
+    <comment>Error Message.</comment>    
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>The value passed to the '{0}' function cannot be changed.</value>
+    <comment>Error message shown to the user if they try to use a mutation function (such as Patch / Collect) with a value that cannot be mutated.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the full match of the regular expression. Consider renaming it if you want to use that named property to extract the full match in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'FullMatch' in the function result.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the group matches in the regular expression. Consider renaming it if you want to use that named property to extract all the sub-matches in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'SubMatches' in the function result.</comment>
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>The capture name '{0}' is hiding the predefined property that returns the location of the match of the regular expression. Consider renaming it if you want to use that named property to extract the position of the full match in the specified text.</value>
+    <comment>Information message indicating that the maker used a group name that will hide the property 'StartMatch' in the function result.</comment>  
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Removes all formatting and returns a plain text value.</value>
+    <comment>Description of 'PlainText' function.</comment>
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>text</value>
+    <comment>Function_parameter - First argument of the PlainText function - the text to have its HTML and XML tags removed.</comment>
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>The text to have its HTML and XML tags removed.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filter functions don't allow behavior functions as predicates.</value>
+    <comment>When a filter function (like LookUp) contains a function as predicate that will trigger a side effect.</comment>
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Use the And operator to combine multiple predicates into the second argument.</value>
+    <comment>{Locked=And} Limiting the Filter funciton to just two arguments, like the LookUp function, allowing us to add a third argument later also like LookUp.</comment>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>This table cannot be copied. Instead, create an inline table using the ForAll function and {...} notation to copy the individual columns desired.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>This record cannot be copied. Instead, create an inline record using {...} notation to copy the individual fields desired.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <comment>Error message when function use the second argument for non numeric or date/time value.</comment>
   </data>
 </root>

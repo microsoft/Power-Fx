@@ -1,4 +1,7 @@
-#SKIPFILE: disable:NumberIsFloat
+#SETUP: NumberIsFloat
+
+// Float() has been replaced with Value() for PA client compatibility.  
+// When in NumberIsFloat mode, Value and Float functions are effectively the same.
 
 // MULTIPLY
 
@@ -24,72 +27,66 @@
 
 // Float
 
->> Float(16)*Float(2)
+>> Value(16)*Value(2)
 32
 
->> Float("1e100")*Float(2)
+>> Value("1e100")*Value(2)
 2E+100
 
->> Float(16)*"2"
+>> Value(16)*"2"
 32
 
->> Float("1e100")*"2"
+>> Value("1e100")*"2"
 2E+100
 
->> Float(16)*true
+>> Value(16)*true
 16
 
->> Float("1e100")*true
+>> Value("1e100")*true
 1E+100
 
->> Float(16)*Blank()
+>> Value(16)*Blank()
 0
 
->> Float("1e100")*Blank()
+>> Value("1e100")*Blank()
 0
 
 >> Value(Date(2000,1,1))
 36526
 
->> Float(16)*Date(2000,1,1)
+>> Value(16)*Date(2000,1,1)
 584416
 
 >> Value(DateTime(2000,1,1,12,0,0))
 36526.5
 
->> Float(16)*DateTime(2000,1,1,12,0,0)
+>> Value(16)*DateTime(2000,1,1,12,0,0)
 584424
 
 >> Value(Time(12,0,0))
 0.5
 
->> Float(16)*Time(12,0,0)
+>> Value(16)*Time(12,0,0)
 8
 
->> Float(16)*Decimal("2.00000000000000000000000000002")
+>> Value(16)*ParseJSON("2")
 32
 
->> Float("1e100")*Decimal("2.00000000000000000000000000002")
-2E+100
-
->> Float(16)*ParseJSON("2")
-32
-
->> Float(16)*ParseJSON("1e100")
+>> Value(16)*ParseJSON("1e100")
 1.6E+101
 
->> Float("1e100")*ParseJSON("2")
+>> Value("1e100")*ParseJSON("2")
 2E+100
 
->> Float("1e100")*ParseJSON("1e100")
+>> Value("1e100")*ParseJSON("1e100")
 1E+200
 
 // Text
 
->> "16"*Float(2)
+>> "16"*Value(2)
 32
 
->> "1e100"*Float(2)
+>> "1e100"*Value(2)
 2E+100
 
 >> "16"*"2"
@@ -122,12 +119,6 @@
 >> "16"*Time(12,0,0)
 8
 
->> "16"*Decimal("2.000000000000000000000002")
-32
-
->> "1e100"*Decimal("2.000000000000000000000002")
-2E+100
-
 >> "16"*ParseJSON("2")
 32
 
@@ -139,10 +130,10 @@
 
 // Boolean
 
->> true*Float(2)
+>> true*Value(2)
 2
 
->> true*Float("1e100")
+>> true*Value("1e100")
 1E+100
 
 >> true*"2"
@@ -166,9 +157,6 @@
 >> true*Time(12,0,0)
 0.5
 
->> true*Decimal("2.000000000000000000000002")
-2
-
 >> true*ParseJSON("2")
 2
 
@@ -177,10 +165,10 @@
 
 // Blank
 
->> Blank()*Float(2)
+>> Blank()*Value(2)
 0
 
->> Blank()*Float("1e100")
+>> Blank()*Value("1e100")
 0
 
 >> Blank()*"2"
@@ -204,12 +192,6 @@
 >> Blank()*Time(12,0,0)
 0
 
->> Blank()*Decimal("2.000000000000000000000002")
-0
-
->> Blank()*Decimal("2.000000000000000000000002")+2.000000000000000000000002
-2
-
 >> Blank()*ParseJSON("2")
 0
 
@@ -218,7 +200,7 @@
 
 // Date
 
->> Date(2000,1,1)*Float(2)
+>> Date(2000,1,1)*Value(2)
 73052
 
 >> Date(2000,1,1)*"2"
@@ -242,9 +224,6 @@
 >> Date(2000,1,1)*Time(12,0,0)
 18263
 
->> Date(2000,1,1)*Decimal("2.000000000000000000000002")
-73052
-
 >> Date(2000,1,1)*ParseJSON("2")
 73052
 
@@ -253,7 +232,7 @@
 
 // DateTime
 
->> DateTime(2000,1,1,12,0,0)*Float(2)
+>> DateTime(2000,1,1,12,0,0)*Value(2)
 73053
 
 >> DateTime(2000,1,1,12,0,0)*"2"
@@ -274,9 +253,6 @@
 >> DateTime(2000,1,1,12,0,0)*Time(12,0,0)
 18263.25
 
->> DateTime(2000,1,1,12,0,0)*Decimal("2.000000000000000000000002")
-73053
-
 >> DateTime(2000,1,1,12,0,0)*ParseJSON("2")
 73053
 
@@ -285,7 +261,7 @@
 
 // Time
 
->> Time(9,0,0)*Float(0.125)
+>> Time(9,0,0)*Value(0.125)
 0.046875
 
 >> Time(9,0,0)*"0.125"
@@ -309,57 +285,18 @@
 >> Time(9,0,0)*Time(12,0,0)
 0.1875
 
->> Time(9,0,0)*Decimal("0.125")
-0.046875
-
->> Time(9,0,0)*Decimal("0.125000000000000000000001")
-0.046875
-
 >> Text(Time(9,0,0)*ParseJSON("2"))
 "0.75"
 
 >> Time(6,0,0)*ParseJSON("1e100")
 2.5E+99
 
-// Decimal
-
->> Decimal("16.000000000000000000000001")*Float(2)
-32
-
->> Decimal("16.000000000000000000000001")*"2"
-32
-
->> Decimal("16.000000000000000000000001")*true
-16
-
->> Decimal("16.000000000000000000000001")*Blank()
-0
-
->> Decimal("16.0000000000000000000001")*Date(2000,1,1)
-584416
-
->> Decimal("16.0000000000000000000001")*DateTime(2000,1,1,12,0,0)
-584424
-
->> Decimal("16.000000000000000000001")*Time(12,0,0)
-8
-
-// this is the one result in this file that should be decimal, everything else is done in floating point
->> Decimal("16.000000000000000000000002")*Decimal("2.000000000000000000000001")
-32.00000000000000000000002
-
->> Decimal("16.000000000000000000000002")*ParseJSON("2")
-32
-
->> Decimal("16.000000000000000000000002")*ParseJSON("1e100")
-1.6E+101
-
 // Untyped
 
->> ParseJSON("16.00000000000000000000001")*Float(2)
+>> ParseJSON("16.00000000000000000000001")*Value(2)
 32
 
->> ParseJSON("1e100")*Float(2)
+>> ParseJSON("1e100")*Value(2)
 2E+100
 
 >> ParseJSON("16.00000000000000000000001")*"2"
@@ -397,12 +334,6 @@
 
 >> ParseJSON("1e100")*Time(12,0,0)
 5E+99
-
->> ParseJSON("16.000000000000000000000002")*Decimal("2.000000000000000000000000001")
-32
-
->> ParseJSON("1e100")*Decimal("2.000000000000000000000000001")
-2E+100
 
 >> ParseJSON("16.000000000000000000000002")*ParseJSON("2")
 32

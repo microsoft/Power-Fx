@@ -3,15 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.PowerFx.Core.App;
-using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
@@ -20,7 +13,6 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Syntax
 {
@@ -37,43 +29,37 @@ namespace Microsoft.PowerFx.Syntax
         /// A script containing one or more UDFs.
         /// </summary>
         private readonly string _script;
-
-        /// <summary>
-        /// The language settings used for parsing this script.
-        /// May be null if the script is to be parsed in the current locale.
-        /// </summary>
-        private readonly CultureInfo _loc;
-        private readonly bool _numberAsFloat;
-        private readonly IUserDefinitionSemanticsHandler _userDefinitionSemanticsHandler;
+        private readonly ParserOptions _parserOptions;
+        private readonly UserDefinedFunctionLibrary _library;
         private readonly Features _features;
+        private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
-        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, CultureInfo loc = null, bool numberAsFloat = false, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, Features features = null)
+        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, UserDefinedFunctionLibrary library, Features features = null)
         {
             _features = features ?? Features.None;
             _globalNameResolver = globalNameResolver;
             _documentBinderGlue = documentBinderGlue;
             _bindingConfig = bindingConfig;
             _script = script ?? throw new ArgumentNullException(nameof(script));
-            _loc = loc;
-            _numberAsFloat = numberAsFloat;
-            _userDefinitionSemanticsHandler = userDefinitionSemanticsHandler;
+            _parserOptions = parserOptions;
+            _library = library;
         }
 
-        public static ParseUserDefinitionResult Parse(string script, bool numberAsFloat = false, CultureInfo loc = null)
+        public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
         {
-            return TexlParser.ParseUserDefinitionScript(script, numberAsFloat, loc);
+            return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 
-        public static bool ProcessUserDefnitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, out UserDefinitionResult userDefinitionResult, IUserDefinitionSemanticsHandler userDefinitionSemanticsHandler = null, CultureInfo loc = null, bool numberAsFloat = false, Features features = null)
+        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, UserDefinedFunctionLibrary library, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
         {
-            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, loc, numberAsFloat, userDefinitionSemanticsHandler, features);
+            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, library, features);
 
             return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
         }
 
         public bool ProcessUserDefnitions(out UserDefinitionResult userDefinitionResult)
         {
-            var parseResult = TexlParser.ParseUserDefinitionScript(_script, _numberAsFloat, _loc);
+            var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
 
             if (parseResult.HasErrors)
             {
@@ -99,17 +85,21 @@ namespace Microsoft.PowerFx.Syntax
 
             foreach (var udf in uDFs)
             {
-                CheckParameters(udf.Args, errors, out var paramsRecordType);
-                CheckReturnType(udf.ReturnType, errors);
-
                 var udfName = udf.Ident.Name;
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType, udf.Body, udf.IsImperative, udf.Args, paramsRecordType);
-
-                if (texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName))
+                if (_restrictedUDFNames.Contains(udfName) || texlFunctionSet.AnyWithName(udfName) || BuiltinFunctionsCore._library.AnyWithName(udfName) || BuiltinFunctionsCore.OtherKnownFunctions.Contains(udfName))
                 {
                     errors.Add(new TexlError(udf.Ident, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_FunctionAlreadyDefined, udfName));
                     continue;
                 }
+
+                var parametersOk = CheckParameters(udf.Args, errors);
+                var returnTypeOk = CheckReturnType(udf.ReturnType, errors);
+                if (!parametersOk || !returnTypeOk)
+                {
+                    continue;
+                }
+                
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args, _library);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -124,45 +114,51 @@ namespace Microsoft.PowerFx.Syntax
         {
             foreach (var udf in userDefinedFunctions)
             {
-                var binding = udf.BindBody(_globalNameResolver, _documentBinderGlue, _bindingConfig, _userDefinitionSemanticsHandler, _features, functionNameResolver);
+                var binding = udf.BindBody(_globalNameResolver, _documentBinderGlue, _bindingConfig, _features, functionNameResolver);
                 udf.CheckTypesOnDeclaration(binding.CheckTypesContext, actualBodyReturnType: binding.ResultType, binding.ErrorContainer);
                 errors.AddRange(binding.ErrorContainer.GetErrors());
             }
         }
 
-        private void CheckParameters(ISet<UDFArg> args, List<TexlError> errors, out RecordType paramRecordType)
+        private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
         {
-            paramRecordType = RecordType.Empty();
+            var isParamCheckSuccessful = true;
             var argsAlreadySeen = new HashSet<string>();
 
             foreach (var arg in args)
             {
-                if (argsAlreadySeen.Contains(arg.VarIdent.Name))
+                if (argsAlreadySeen.Contains(arg.NameIdent.Name))
                 {
-                    errors.Add(new TexlError(arg.VarIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.VarIdent.Name));
+                    errors.Add(new TexlError(arg.NameIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_DuplicateParameter, arg.NameIdent.Name));
+                    isParamCheckSuccessful = false;
                 }
                 else
                 {
-                    argsAlreadySeen.Add(arg.VarIdent.Name);
+                    argsAlreadySeen.Add(arg.NameIdent.Name);
 
-                    if (arg.VarType.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
+                    if (arg.TypeIdent.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
                     {
-                        errors.Add(new TexlError(arg.VarType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.VarType.Name));
+                        errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
+                        isParamCheckSuccessful = false;
                     }
-
-                    paramRecordType = paramRecordType.Add(new NamedFormulaType(arg.VarIdent.ToString(), arg.VarType.GetFormulaType()));
                 }
             }
+
+            return isParamCheckSuccessful;
         }
 
-        private void CheckReturnType(IdentToken returnType, List<TexlError> errors)
+        private bool CheckReturnType(IdentToken returnType, List<TexlError> errors)
         {
             var returnTypeFormulaType = returnType.GetFormulaType()._type;
+            var isReturnTypeCheckSuccessful = true;
 
             if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind))
             {
                 errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
+                isReturnTypeCheckSuccessful = false;
             }
+
+            return isReturnTypeCheckSuccessful;
         }
     }
 }

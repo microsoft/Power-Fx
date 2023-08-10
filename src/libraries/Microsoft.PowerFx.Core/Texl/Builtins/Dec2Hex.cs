@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Dec2Hex(number:n, [places:n])
     internal sealed class Dec2HexFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return base.GetGenericArgPreprocessor(index);
         }
@@ -59,11 +59,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.Dec2HexTArg1, TexlStrings.Dec2HexTArg2 };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -74,7 +69,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
 
             var fValid = base.CheckTypes(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
-            Contracts.Assert(returnType.IsTable);
+            Contracts.Assert(returnType.IsTableNonObjNull);
             Contracts.Assert(!fValid || returnType.IsColumn);
             if (argTypes.Length == 1)
             {
@@ -89,7 +84,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var arg1 = args[0];
                 var arg2 = args[0];
 
-                if (!type0.IsTable && !type1.IsTable)
+                if (!type0.IsTableNonObjNull && !type1.IsTableNonObjNull)
                 {
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg1, TexlStrings.ErrTypeError);
                     errors.EnsureError(DocumentErrorSeverity.Severe, arg2, TexlStrings.ErrTypeError);
@@ -99,7 +94,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 var otherType = DType.Invalid;
                 TexlNode otherArg = null;
 
-                if (type0.IsTable)
+                if (type0.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(context, args[0], type0, errors, ref nodeToCoercedTypeMap);
@@ -108,7 +103,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     otherArg = args[1];
                     otherType = type1;
                 }
-                else if (type1.IsTable)
+                else if (type1.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(context, args[1], type1, errors, ref nodeToCoercedTypeMap);
@@ -121,7 +116,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 Contracts.Assert(otherType.IsValid);
                 Contracts.AssertValue(otherArg);
 
-                if (otherType.IsTable)
+                if (otherType.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= CheckNumericColumnType(context, otherArg, otherType, errors, ref nodeToCoercedTypeMap);

@@ -111,6 +111,12 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
                 return true;
             }
 
+            // Non row-scope, non async, pure nodes should always be valid because we can calculate value in runtime before delegation.
+            if (!binding.IsRowScope(node) && !binding.IsAsync(node) && binding.IsPure(node))
+            {
+                return true;
+            }
+            
             switch (node.Kind)
             {
                 case NodeKind.DottedName:
@@ -302,6 +308,11 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             {
                 SuggestDelegationHint(node, binding);
                 return false;
+            }
+
+            if (binding.DelegationHintProvider?.TryGetWarning(binaryOpNode, out var warning) ?? false)
+            {
+                SuggestDelegationHint(node, binding, warning, new object[] { binaryOpNode.Op.ToString() });
             }
 
             var leftType = binding.GetType(binaryOpNode.Left);

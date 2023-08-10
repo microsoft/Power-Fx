@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -262,69 +263,59 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("\"test string\"", false, true)]
-        [InlineData("\"test string\"", true, true)]
-        [InlineData("12", false, false)]       
-        [InlineData("12", true, true)]
-        [InlineData("{a:12, b:15}", true, false)]
-        [InlineData("{a:12, b:15}", false, false)]
-        public void CheckResultExpectedReturnValueString(string inputExpr, bool allowCoerceTo, bool isSuccess)
+        [InlineData("\"test string\"", false, true, "string", "")]
+        [InlineData("\"test string\"", true, true, "string", "")]
+        [InlineData("12", false, false, "decimal", "The type of this expression does not match the expected type 'Text'")]       
+        [InlineData("12", true, true, "decimal", "")]
+        [InlineData("{a:12, b:15}", true, false, "record", "The type of this expression does not match the expected type 'Text, Number, Decimal, DateTime, Date, Time, Boolean, Guid'")]
+        [InlineData("{a:12, b:15}", false, false, "record", "The type of this expression does not match the expected type 'Text'")]
+        public void CheckResultExpectedReturnValueString(string inputExpr, bool allowCoerceTo, bool isSuccess, string expectedType, string errorMsg)
         {
-            var check = new CheckResult(new Engine())
-                .SetText(inputExpr)
-                .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.String, allowCoerceTo);
-
-            if (isSuccess)
-            {
-                Assert.True(check.IsSuccess);
-            }
-            else
-            {
-                var errors = check.ApplyErrors();
-
-                Assert.False(check.IsSuccess);
-                Assert.Single(errors);
-                var error = errors.First();
-                Assert.Contains("The type of this expression does not match the expected type 'Text'", error.ToString());
-            }
+            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.String, GetFormulaType(expectedType));
         }
 
         [Theory]
-        [InlineData("12", false, true, "")]
-        [InlineData("12", true, true, "")]
-        [InlineData("\"test string\"", true, false, "The method or operation is not implemented")]
-        [InlineData("\"test string\"", false, false, "The type of this expression does not match the expected type 'Number'")]
-        [InlineData("{a:12, b:15}", true, false, "The method or operation is not implemented")]
-        [InlineData("{a:12, b:15}", false, false, "The type of this expression does not match the expected type 'Number'")]
-        public void CheckResultExpectedReturnValueNumber(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg)
+        [InlineData("12", false, false, "decimal", "")]
+        [InlineData("12", true, true, "decimal", "")]
+        [InlineData("\"test string\"", true, true, "string", "")]
+        [InlineData("\"test string\"", false, false, "string", "The type of this expression does not match the expected type 'Number'")]
+        [InlineData("{a:12, b:15}", true, false, "record", "The type of this expression does not match the expected type 'Text, Number, DateTime, Date, Boolean, Decimal'")]
+        [InlineData("{a:12, b:15}", false, false, "record", "The type of this expression does not match the expected type 'Number'")]
+        public void CheckResultExpectedReturnValueNumber(string inputExpr, bool allowCoerceTo, bool isSuccess, string expectedType, string errorMsg)
         {
-            var check = new CheckResult(new Engine())
-                .SetText(inputExpr)
-                .SetBindingInfo()
-                .SetExpectedReturnValue(FormulaType.Number, allowCoerceTo);
+            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.Number, GetFormulaType(expectedType));
+        }
 
-            if (isSuccess)
-            {
-                Assert.True(check.IsSuccess);
-            }
-            else
-            {
-                string exMsg = null;
+        [Theory]
+        [InlineData("23.45", false, true, "decimal", "")]
+        [InlineData("23.45", true, true, "decimal", "")]
+        [InlineData("{a:12, b:15}", true, false, "record", "The type of this expression does not match the expected type 'Text, Number, Decimal, DateTime, Date, Boolean'")]
+        [InlineData("{a:12, b:15}", false, false, "record", "The type of this expression does not match the expected type 'Decimal'")]
+        public void CheckResultExpectedReturnValueDecimal(string inputExpr, bool allowCoerceTo, bool isSuccess, string expectedType, string errorMsg)
+        {
+            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.Decimal, GetFormulaType(expectedType));
+        }
 
-                try
-                {
-                    var errors = check.ApplyErrors();
-                    exMsg = errorMsg.ToString();
-                    Assert.False(check.IsSuccess);
-                }
-                catch (Exception ex)
-                {
-                    exMsg = ex.ToString();
-                }
+        [Theory]
+        [InlineData("1.2", true, "decimal", "")]
+        [InlineData("203", true, "decimal", "")]
+        [InlineData("\"12\"", false, "string", "The type of this expression does not match the expected type 'Number, Decimal'")]
+        [InlineData("{a:1, b:2}", false, "record", "The type of this expression does not match the expected type 'Number, Decimal'")]
+        public void CheckResultExpectedReturnValueNumberDecimal(string inputExp, bool isSuccess, string expectedType, string errorMsg)
+        {
+            var expectedReturnTypes = new FormulaType[] { FormulaType.Number, FormulaType.Decimal };
+            CheckResultExpectedReturnTypes(inputExp, isSuccess, errorMsg, expectedReturnTypes, GetFormulaType(expectedType));
+        }
 
-                Assert.Contains(errorMsg, exMsg);
-            }
+        [Theory]
+        [InlineData("1.2", true, "decimal", "")]
+        [InlineData("203", true, "decimal", "")]
+        [InlineData("\"12\"", true, "string", "")]
+        [InlineData("{a:1, b:2}", false, "record", "The type of this expression does not match the expected type 'Number, Decimal, Text'")]
+        public void CheckResultExpectedReturnValueNumberDecimalString(string inputExp, bool isSuccess, string expectedType, string errorMsg)
+        {
+            var expectedReturnTypes = new FormulaType[] { FormulaType.Number, FormulaType.Decimal, FormulaType.String };
+            CheckResultExpectedReturnTypes(inputExp, isSuccess, errorMsg, expectedReturnTypes, GetFormulaType(expectedType));
         }
 
         [Fact]
@@ -479,6 +470,75 @@ namespace Microsoft.PowerFx.Core.Tests
             var log = check.ApplyGetLogging();
             Assert.Equal(success, check.IsSuccess);
             Assert.Equal(execptedLog, log);
+        }
+
+        private void CheckResultExpectedReturnValue(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg, FormulaType returnType, FormulaType expectedType)
+        {
+            var check = new CheckResult(new Engine())
+                .SetText(inputExpr)
+                .SetBindingInfo()
+                .SetExpectedReturnValue(returnType, allowCoerceTo);
+
+            check.ApplyBinding();
+
+            CheckExpectedReturn(check, isSuccess, errorMsg, expectedType);
+        }
+
+        private void CheckResultExpectedReturnTypes(string inputExpr, bool isSuccess, string errorMsg, FormulaType[] returnTypes, FormulaType expectedType)
+        {
+            var check = new CheckResult(new Engine())
+                .SetText(inputExpr)
+                .SetBindingInfo()
+                .SetExpectedReturnValue(returnTypes);
+
+            check.ApplyBinding();
+
+            CheckExpectedReturn(check, isSuccess, errorMsg, expectedType);
+        }
+
+        private void CheckExpectedReturn(CheckResult check, bool isSuccess, string errorMsg, FormulaType expectedType)
+        {
+            if (isSuccess)
+            {
+                Assert.True(check.IsSuccess);
+                Assert.Equal(expectedType, check.ReturnType);
+            }
+            else
+            {
+                string exMsg = null;
+
+                try
+                {
+                    var errors = check.ApplyErrors();
+                    exMsg = errors.First().Message;
+                    Assert.False(check.IsSuccess);
+                }
+                catch (Exception ex)
+                {
+                    exMsg = ex.ToString();
+                }
+
+                Assert.Contains(errorMsg, exMsg);
+            }
+        }
+
+        private FormulaType GetFormulaType(string type)
+        {
+            switch (type)
+            {
+                case "decimal":
+                    return FormulaType.Decimal;
+                case "number":
+                    return FormulaType.Number;
+                case "string":
+                    return FormulaType.String;
+                case "boolean": 
+                    return FormulaType.Boolean;
+                case "datetime":
+                    return FormulaType.DateTime;
+                default:
+                    return FormulaType.Blank;
+            }
         }
     }
 }

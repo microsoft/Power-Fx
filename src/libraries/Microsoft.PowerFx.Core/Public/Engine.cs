@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Entities.QueryOptions;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Texl;
-using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
@@ -22,7 +23,7 @@ namespace Microsoft.PowerFx
     /// Expose binding logic for Power Fx. 
     /// Derive from this to provide evaluation abilities. 
     /// </summary>
-    public class Engine : IPowerFxEngine
+    public class Engine
     {
         /// <summary>
         /// Configuration symbols for this Power Fx engine.
@@ -125,6 +126,20 @@ namespace Microsoft.PowerFx
             return symbols;
         }
 
+        /// <summary>
+        /// Overriable method to be able to supply custom implementation of IExternalRuleScopeResolver.
+        /// Defaults to Null.
+        /// </summary>
+        /// <returns>Implementation of IExternalRuleScopeResolver.</returns>
+        // <para>IExternalRuleScopeResolver is used in Canvas App backend when calling TexlBinding.Run(). 
+        // There was no option to supply a custom implementation of this in Engine, 
+        // so following the existing pattern in Engine, 
+        // added this virtual function for the derived classes of Engine to override and supply custom implementation.</para>
+        private protected virtual IExternalRuleScopeResolver CreateExternalRuleScopeResolver()
+        {
+            return null;
+        }
+
         private protected virtual IBinderGlue CreateBinderGlue()
         {
             return new Glue2DocumentBinderGlue();
@@ -134,9 +149,9 @@ namespace Microsoft.PowerFx
         {
             return new ParserOptions
             {
-                 Culture = null,
-                 AllowsSideEffects = false,
-                 MaxExpressionLength = Config.MaximumExpressionLength,
+                Culture = null,
+                AllowsSideEffects = false,
+                MaxExpressionLength = Config.MaximumExpressionLength,
             };
         }
 
@@ -171,7 +186,6 @@ namespace Microsoft.PowerFx
             }
 
             options ??= new ParserOptions();
-
             var result = options.Parse(expressionText, features ?? Features.None);
             return result;            
         }
@@ -191,26 +205,6 @@ namespace Microsoft.PowerFx
 
             CheckWorker(check);
             return check;
-        }
-
-        /// <summary>
-        /// Type check a formula without executing it. 
-        /// </summary>
-        /// <param name="parse">the parsed expression. Obtain from <see cref="Parse(string, ParserOptions)"/>.</param>
-        /// <param name="parameterType">types of additional args to pass.</param>
-        /// <param name="options">parser options to use.</param>
-        /// <returns></returns>
-        [Obsolete("Use other check overload. Shouldn't need both ParserOptions and ParseResult.")]
-        public CheckResult Check(ParseResult parse, RecordType parameterType, ParserOptions options)
-        {
-            return Check(parse, parameterType);
-        }
-
-        [Obsolete("Use other check overload. Shouldn't need both ParserOptions and ParseResult.")]
-        internal CheckResult Check(ParseResult parse, ParserOptions options)
-        {
-            parse.Options = options;
-            return Check(parse, null, options);
         }
 
         public CheckResult Check(ParseResult parse, RecordType parameterType = null)
@@ -278,6 +272,28 @@ namespace Microsoft.PowerFx
             return bindingConfig;
         }
 
+        /// <summary>
+        /// Creates and returns binding config from the given parser options.
+        /// </summary>
+        /// <param name="options">Parser Options.</param>
+        /// <param name="ruleScope">Optional: Rule Scope. If not supplied, then rule scope from <see cref="GetRuleScope"/> would be used.</param>
+        /// <returns>Binding Config.</returns>
+        // Power Apps never set BindingConfig.UseThisRecordForRuleScope to true
+        // This virtual overload of GetDefaultBindingConfig allows us to supply custom binding config from PowerApps
+        // Default implementation is similar to how binding config is created in ComputeBinding
+        // Optional ruleScope is passed from ComputeBinding() so we don't have to call GetRuleScope twice
+        private protected virtual BindingConfig GetDefaultBindingConfig(ParserOptions options, RecordType ruleScope = null)
+        {
+            ruleScope ??= this.GetRuleScope();
+
+            // Canvas apps uses rule scope for lots of cases. 
+            // But in general, we should only use rule scope for 'ThisRecord' binding. 
+            // Anything else should be accomplished with SymbolTables.
+            bool useThisRecordForRuleScope = ruleScope != null;
+
+            return new BindingConfig(options.AllowsSideEffects, useThisRecordForRuleScope, options.NumberIsFloat);
+        }
+
         // Called by CheckResult.ApplyBinding to compute the binding. 
         internal (TexlBinding, ReadOnlySymbolTable) ComputeBinding(CheckResult result)
         {
@@ -289,24 +305,25 @@ namespace Microsoft.PowerFx
             // We can still use that for intellisense.             
             var resolver = CreateResolverInternal(out var combinedSymbols, symbolTable);
 
+            var externalRuleScopeResolver = CreateExternalRuleScopeResolver();
+
             var glue = CreateBinderGlue();
 
             var ruleScope = this.GetRuleScope();
-
-            // Canvas apps uses rule scope for lots of cases. 
-            // But in general, we should only use rule scope for 'ThisRecord' binding. 
-            // Anything else should be accomplished with SymbolTables.
-            bool useThisRecordForRuleScope = ruleScope != null;
-
-            var bindingConfig = new BindingConfig(result.Parse.Options.AllowsSideEffects, useThisRecordForRuleScope, result.Parse.Options.NumberIsFloat);
+            var bindingConfig = GetDefaultBindingConfig(result.Parse.Options, ruleScope);
 
             var binding = TexlBinding.Run(
-                glue,
-                parse.Root,
-                resolver,
-                bindingConfig,
-                ruleScope: ruleScope?._type,
-                features: Config.Features);
+                            glue, 
+                            externalRuleScopeResolver, 
+                            new DataSourceToQueryOptionsMap(), 
+                            parse.Root, 
+                            resolver, 
+                            bindingConfig, 
+                            false, 
+                            ruleScope?._type, 
+                            false, 
+                            null, 
+                            Config.Features);
 
             return (binding, combinedSymbols);
         }
@@ -348,25 +365,6 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Get intellisense from the formula, with parser options.
-        /// </summary>
-        [Obsolete("Use overload without expression")]
-        public IIntellisenseResult Suggest(string expression, CheckResult checkResult, int cursorPosition)
-        {            
-            var binding = checkResult.Binding;
-            var formula = new Formula(expression, checkResult.ParserCultureInfo);
-            formula.ApplyParse(checkResult.Parse);
-
-            // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
-            // So these both become available to intellisense. 
-            var context = new IntellisenseContext(expression, cursorPosition);
-            var intellisense = CreateIntellisense();
-            var suggestions = intellisense.Suggest(context, binding, formula);
-
-            return suggestions;
-        }
-
-        /// <summary>
         /// Creates a renamer instance for updating a field reference from <paramref name="parameters"/> in expressions.
         /// </summary>
         /// <param name="parameters">Type of parameters for formula. The fields in the parameter record can 
@@ -390,7 +388,12 @@ namespace Microsoft.PowerFx
             ** but that we don't return any display names for them. Thus, we clone a PowerFxConfig but without 
             ** display name support and construct a resolver from that instead, which we use for the rewrite binding.
             */
-            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal(), CreateBinderGlue(), culture);
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal() as ReadOnlySymbolTable, CreateBinderGlue(), culture, false);
+        }
+
+        public RenameDriver CreateOptionSetRenamer(RecordType parameters, DPath pathToRename, DName updatedName, CultureInfo culture)
+        {
+            return new RenameDriver(parameters, pathToRename, updatedName, this, CreateResolverInternal() as ReadOnlySymbolTable, CreateBinderGlue(), culture, true);
         }
 
         /// <summary>

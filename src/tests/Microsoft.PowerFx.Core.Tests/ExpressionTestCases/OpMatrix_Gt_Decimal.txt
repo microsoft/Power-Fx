@@ -1,4 +1,4 @@
-#SKIPFILE: NumberIsFloat
+#SETUP: disable:NumberIsFloat
 
 // GREATER THAN
 
@@ -61,65 +61,53 @@ false
 >> Float(16) >  Float(18)
 false
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) >  "16"
 Errors: Error 13-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) >  "16.000000000000000000002"
 Errors: Error 13-39: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) >  "14"
 Errors: Error 13-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) >  "18"
 Errors: Error 13-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> Float(16) >  "1e20"
 Errors: Error 13-19: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> Float(1e20) >  "1e20"
 Errors: Error 15-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(1) >  true
 Errors: Error 12-16: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(1) >  false
 Errors: Error 12-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(0) >  true
 Errors: Error 12-16: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(0) >  false
 Errors: Error 12-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(2) >  true
 Errors: Error 12-16: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> Float(2) >  false
 Errors: Error 12-17: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Float(0) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Float(1) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Float(2) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> If(1<0,Float(1)) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Float(2) >  Date(1900,1,1)
 false
@@ -183,23 +171,18 @@ false
 
 // Text - Text can only be compared with other text
 
-// comp todo: type mismatch error (string and number)
 >> "16" >  Float(16)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> "16" >  Float(18)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> "16" >  Float(14)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> "1e100" >  Float(2)
 Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> "" >  Float(0)
 Errors: Error 0-2: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
@@ -218,11 +201,9 @@ Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number
 >> "1e100" >  "2"
 Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 11-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 >> "1" >  true
 Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 7-11: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 >> "1e100" >  true
 Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.|Error 11-15: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
@@ -241,23 +222,18 @@ Errors: Error 0-2: Invalid argument type. Expecting one of the following: Number
 >> "1e100" >  Blank()
 Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "36526" >  Date(2000,1,1)
 Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "36526.5" >  DateTime(2000,1,1,12,0,0)
 Errors: Error 0-9: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and date/datetime/time)
 >> "16" >  Time(12,0,0)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> "2" >  Decimal("2.000000000000000000000002")
 Errors: Error 0-3: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and number)
 >> "1e100" >  Decimal("2.000000000000000000000002")
 Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
@@ -299,55 +275,43 @@ Errors: Error 0-7: Invalid argument type. Expecting one of the following: Number
 
 // Boolean
 
-// comp todo: type mismatch error (boolean and number)
 >> true >  Float(2)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> true >  Float(1)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> true >  Float(0)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> false >  Float(2)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> false >  Float(1)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> false >  Float(0)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> true >  Float("1e100")
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 >> true >  "1"
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 >> false >  "0"
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 >> false >  "1"
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 >> true >  "1E+100"
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 // returns false in Excel
 >> true >  "true"
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (string and boolean)
 >> false >  "false"
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
@@ -363,51 +327,39 @@ Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number
 >> false >  Blank()
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true >  Date(1927,5,18)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true >  DateTime(1927,5,18,0,0,0)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> true >  Time(12,0,0)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false >  Date(1927,5,18)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false >  DateTime(1927,5,18,0,0,0)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and date/datetime/time)
 >> false >  Time(12,0,0)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> true >  Decimal("1.000000000000000000000002")
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> true >  Decimal(1)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> true >  Decimal(0)
 Errors: Error 0-4: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> false >  Decimal("1.000000000000000000000002")
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> false >  Decimal(1)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> false >  Decimal(0)
 Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
@@ -450,52 +402,52 @@ Errors: Error 0-5: Invalid argument type. Expecting one of the following: Number
 // Blank
 
 >> Blank() >  Float(2)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  Float("1e100")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  "2"
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Errors: Error 11-14: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Blank() >  Float(0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  "1e100"
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Errors: Error 11-18: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Blank() >  true
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Errors: Error 11-15: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Blank() >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1301
+false
 
 >> Blank() >  Date(2000,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  DateTime(2000,1,1,12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  Time(12,0,0)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  Decimal("2.000000000000000000000002")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  Decimal("0")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  ParseJSON("2")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  ParseJSON("1e100")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Blank() >  ParseJSON("null")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Blank() >  ParseJSON("0")
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 // Date
 
@@ -511,16 +463,14 @@ false
 >> Date(1900,1,2) >  Float(2)
 true
 
-// comp todo: type mismatch error (string and date/datetime)
 >> Date(1900,1,1) >  "2"
 Errors: Error 18-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (boolean and number)
 >> Date(1900,1,0) >  true
 Errors: Error 18-22: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Date(2000,1,1) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Date(1954,10,3) >  Date(1927,5,18)
 true
@@ -546,7 +496,6 @@ false
 >> Date(1954,10,3) >  Today()
 false
 
-// comp todo: type mismatch error (date and time) - no warning?
 >> Date(2000,1,1) >  Time(12,0,0)
 true
 
@@ -588,11 +537,9 @@ true
 >> DateTime(1900,1,1,12,0,1) >  Float(2.5)
 true
 
-// comp todo: type mismatch error (date/datetime and string)
 >> DateTime(1900,1,1,12,0,0) >  "2.5"
 Errors: Error 29-34: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (date/datetime and boolean)
 >> DateTime(2000,1,1,12,0,0) >  true
 Errors: Error 29-33: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
@@ -600,7 +547,7 @@ Errors: Error 29-33: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 28-32: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> DateTime(2000,1,1,12,0,0) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> DateTime(1927,5,18,0,0,0) >  Date(1927,5,18)
 false
@@ -621,7 +568,7 @@ true
 false
 
 >> DateTime(1900,1,1,12,0,0) >  Time(12,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
+true
 
 >> DateTime(1900,1,1,12,0,0) >  Decimal("2.5000000000000000000002")
 false
@@ -655,29 +602,26 @@ true
 >> Time(9,0,0) >  Float(0.375)
 false
 
-// comp todo: type mismatch error (time and string)
 >> Time(9,0,0) >  "0.375"
 Errors: Error 15-22: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (time and boolean)
 >> Time(9,0,0) >  true
 Errors: Error 15-19: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (time and boolean)
 >> Time(24,0,0) >  false
 Errors: Error 16-21: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Time(24,0,0) >  0
-false
+true
 
 >> Time(24,0,0) >  1
 false
 
 >> Time(9,0,0) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> If(1<0,Time(9,0,0)) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Time(9,0,0) >  Time(9,0,0)
 false
@@ -688,13 +632,11 @@ true
 >> Time(9,0,0) >  Time(9,0,1)
 false
 
-// comp todo: type mismatch error (time and date) - no warning?
 >> Time(9,0,0) >  Date(1900,1,2)
 false
 
-// comp todo: but we allow time and datetime?  no error for =
 >> Time(1,0,0) >  DateTime(1899,12,30,1,0,0)
-Error({Kind:ErrorKind.InvalidArgument})
+false
 
 >> Time(3,0,0) >  Decimal("0.125")
 false
@@ -744,22 +686,20 @@ false
 >> Decimal("2.1") >  Float(2)
 true
 
-// comp todo: type mismatch error (number and string)
 >> Decimal("16.000000000000000000000001") >  "16"
 Errors: Error 42-46: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
-// comp todo: type mismatch error (number and boolean)
 >> Decimal("1.000000000000000000000001") >  true
 Errors: Error 41-45: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> Decimal("0.000000000000000000000001") >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> Decimal(0) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> If(1<0,Decimal(1)) >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> Decimal("16.0000000000000000000001") >  Date(1900,1,15)
 true
@@ -894,16 +834,16 @@ Errors: Error 21-26: Invalid argument type. Expecting one of the following: Numb
 Errors: Error 22-26: Invalid argument type. Expecting one of the following: Number, Decimal, Date, Time, DateTime, UntypedObject.
 
 >> ParseJSON("16.000000000000000000000001") >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+true
 
 >> ParseJSON("0") >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> ParseJSON("null") >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> ParseJSON("1e100") >  Blank()
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("2") >  Date(1900,1,1)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -930,7 +870,7 @@ true
 false
 
 >> ParseJSON("""1900-01-01T09:00:01""") >  Date(1900,1,1)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1299, expected: false
+false
 
 >> ParseJSON("16") >  Date(1900,1,15)
 Error({Kind:ErrorKind.InvalidArgument})
@@ -939,7 +879,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> ParseJSON("null") >  Date(1900,1,15)
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1300
+false
 
 >> ParseJSON("16.500000000000000000001") >  DateTime(1900,1,15,12,0,0)
 Error({Kind:ErrorKind.InvalidArgument})

@@ -25,7 +25,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private readonly bool _nativeDecimal = false;
 
         public StatisticalTableFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
-            : base(name, description, fc, nativeDecimal ? DType.Unknown : DType.Number, 0x02, 2, 2, DType.EmptyTable, nativeDecimal ? DType.Unknown : DType.Number)
+            : base(name, description, fc, DType.Number, 0x02, 2, 2, DType.EmptyTable, DType.Number)
         {
             ScopeInfo = new FunctionScopeInfo(this, usesAllFieldsInScope: false, acceptsLiteralPredicates: false);
             _nativeDecimal = nativeDecimal;
@@ -39,11 +39,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
             yield return new[] { TexlStrings.StatisticalTArg1, TexlStrings.StatisticalTArg2 };
-        }
-
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
         }
 
         public override bool IsServerDelegatable(CallNode callNode, TexlBinding binding)
@@ -82,11 +77,11 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (binding.GetType(args[1]) != DType.Number)
                 {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.NotANumberArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelemetryInfo(binding.GetType(args[1])));
                 }
                 else
                 {
-                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.InvalidArgType, callNode, binding, this, DelegationTelemetryInfo.CreateEmptyDelegationTelemetryInfo());
+                    TrackingProvider.Instance.SetDelegationTrackerStatus(DelegationStatus.InvalidArgType, callNode, binding, this, DelegationTelemetryInfo.CreateUnsupportArgTelemetryInfo(binding.GetType(args[1])));
                 }
 
                 return false;
@@ -99,17 +94,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var firstNameStrategy = GetFirstNameNodeDelegationStrategy().VerifyValue();
             return firstNameStrategy.IsValidFirstNameNode(args[1].AsFirstName(), binding, null);
-        }
-
-        private bool ExpressionContainsView(CallNode callNode, TexlBinding binding)
-        {
-            Contracts.AssertValue(callNode);
-            Contracts.AssertValue(binding);
-
-            var viewFinderVisitor = new ViewFinderVisitor(binding);
-            callNode.Accept(viewFinderVisitor);
-
-            return viewFinderVisitor.ContainsView;
         }
 
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)

@@ -95,6 +95,11 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
 
             return false;
         }
+
+        public bool IsNameAvailable(string name, bool ignoreNamedFormulas = false)
+        {
+            return false;
+        }
     }
 
     internal class DelegatableSymbolTable : SymbolTable
@@ -200,6 +205,8 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
         public BidirectionalDictionary<string, string> DisplayNameMapping => new BidirectionalDictionary<string, string>();
 
         public BidirectionalDictionary<string, string> PreviousDisplayNameMapping => null;
+
+        public bool IsRefreshable => throw new NotImplementedException();
 
         IDelegationMetadata IExternalDataSource.DelegationMetadata => DelegationMetadata;
 

@@ -483,7 +483,7 @@
     <value>Nilai teks untuk ditukar kepada nilai nombor.</value>
   </data>
   <data name="AboutValue_language" xml:space="preserve">
-    <value>Kod bahasa untuk digunakan apabila menukar kepada nilai.</value>
+    <value>Kod bahasa untuk digunakan semasa menukar nilai.</value>
     
   </data>
   <data name="AboutBoolean" xml:space="preserve">
@@ -1424,7 +1424,7 @@
     <value>Jadual yang nilai berbezanya akan diekstrak.</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>Ungkapan dinilaikan terhadap setiap baris dalam jadual input dan yang memberikan nilai untuk operasi Berbeza.</value>
+    <value>Ungkapan dinilaikan ke atas setiap baris dalam jadual input dan yang memberikan nilai untuk operasi Berbeza.</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>Mengembalikan lengkuk tangen (dalam radian) koordinat_x dan koordinat_y yang ditentukan.</value>
@@ -1463,6 +1463,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>input</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>pengubah suai</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>pengubah suai</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Sifat data tersuai komponen dengan parameter hanya boleh dicapai dari dalam bahagian dalam komponen atau daripada sifat output komponen.</value>
+    <value>Sifat atau parameter fungsi komponen hanya boleh dicapai daripada bahagian dalam komponen atau daripada sifat output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Sifat atau parameter fungsi komponen hanya boleh merujuk sifat fungsi lain.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Argumen pertama '{0}' seharusnya jadual dengan satu lajur.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai teks untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai tarikh untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai angka untuk '{0}'.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Skema tidak sah, menjangkakan lajur nilai warna untuk '{0}'.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Skema tidak sah, menjangkakan lajur nilai {0} untuk '{1}'.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Nilai angka terlalu besar.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Penggunaan perkataan simpanan yang tidak disokong pada masa ini.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2141,7 +2145,7 @@
     <value>Nilai tarikh atau masa daripadanya komponen saat akan diekstrak.</value>
   </data>
   <data name="AboutWeekday" xml:space="preserve">
-    <value>Mengembalikan hari biasa nilai tarikhmasa. Secara lalai, julat hasil adalah dari 1 (Ahad) hingga 7 (Sabtu). Anda boleh menentukan julat yang berbeza dengan nilai penyenaraian PermulaanMinggu atau kod fungsi Minggu Biasa Excel Microsoft.</value>
+    <value>Mengembalikan hari biasa nilai tarikhmasa. Secara lalai, julat hasil adalah dari 1 (Ahad) hingga 7 (Sabtu). Anda boleh menentukan julat yang berbeza dengan nilai penyenaraian PermulaanMinggu atau kod fungsi Minggu Biasa Microsoft Excel.</value>
     
   </data>
   <data name="WeekdayArg1" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematik dan Statistik</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Maklumat</value>
@@ -2956,7 +2963,7 @@
     
   </data>
   <data name="Icon_GlobeNotConnected_DisplayName" xml:space="preserve">
-    <value>Glob - Tidak disambungkan</value>
+    <value>Globe - Tidak disambungkan</value>
     
   </data>
   <data name="Icon_GlobeRefresh_DisplayName" xml:space="preserve">
@@ -3400,7 +3407,7 @@
     
   </data>
   <data name="AboutPatch" xml:space="preserve">
-    <value>Menggunakan kemas kini pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
+    <value>Menggunakan kemaskinian pada baris yang ditentukan dan mengubah baris dalam sumber data yang ditentukan. Mengembalikan baris yang dikemas kini.</value>
     
   </data>
   <data name="PatchDataSourceArg" xml:space="preserve">
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Bilangan argumen untuk {0} fungsi tidak sah: {1} diterima, {2} dijangka</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Argumen {0} tidak disokong untuk fungsi {1} dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak boleh dihantar sebagai jenis ini dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Argumen ini tidak boleh dihantar sebagai jenis {0} dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Hanya nilai literal disokong untuk argumen ini.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} tidak dapat dilakukan pada input ini tanpa penukaran zon waktu yang tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Operasi ini tidak boleh dilakukan pada nilai yang berlainan Tingkah Laku Tarikh Masa.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Hanya rentetan format tarikh dan masa pendek disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Argumen {0} ialah unit masa yang tidak sah/tidak disokong untuk {1} fungsi aritmetik tarikh.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Token pemformatan khusus tempatan seperti "." dan "," tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} tidak disokong dalam lajur formula, gunakan {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Operasi ini tidak boleh dilakukan pada jenis {0} dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Jenis hasil {0} tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Tindakan merujuk keseluruhan rekod secara langsung tidak disokong dalam lajur formula. Sila rujuk medan yang sah dalam rekod.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Jenis hasil untuk formula ini dijangkakan untuk menjadi {0}, tetapi jenis hasil sebenar ialah {1}. Jenis hasil lajur formula tidak boleh diubah.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Lajur jenis {0} tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Lajur jenis {0} dengan format {1} tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Rekod atau jadual paksaan tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Jadual lajur tunggal tidak disokong dalam lajur formula.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Tidak boleh merujuk jadual maya {0} dalam lajur formula.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Operan dijangkakan. Formula atau ungkapan menjangkakan operan yang sah. Contohnya, anda boleh menambah operan '2' kepada ungkapan ' 1 +_' agar hasil ialah '3'. Atau, anda boleh menambah operan "awak" kepada ungkapan '"Hai "&amp; _ ' agar hasil ialah 'Hi awak'.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Formula yang dinamakan mestilah ungkapan.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Fungsi ditakrifkan pengguna mesti mempunyai isi.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Fungsi {0} sudah ditakrifkan.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Parameter {0} ialah duplikasi.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Jenis tidak diketahui {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Jenis kembali fungsi yang dinyatakan tidak sepadan dengan jenis kembali isi fungsi.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah wujud.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Ciri ini ditamatkan dan tidak lagi disokong.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Dalam ruang nama {1}, fungsi {0} ditamatkan.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Dalam ruang nama {1}, fungsi {0} tidak disokong.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Amaran: Jenis tertunda disediakan.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' ialah fungsi yang dikenali tetapi tidak disokong.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Penukaran jenis gagal kerana nilai yang diberikan ialah jenis '{0}', jenis '{1}' dijangkakan.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Operasi ini pada jadual '{0}' mungkin tidak berfungsi jika mempunyai lebih daripada {1} baris.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Predikat ini akan sentiasa benar. Adakah anda bermaksud untuk menggunakan ThisRecord atau [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Tidak dapat menugaskan {0}: hanya menyokong penugasan untuk carian pada medan kunci utama '{1}'.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Tidak dapat mewakili {0}: Ungkapan membandingkan berbilang medan.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Tidak dapat menugaskan {0}: mengandungi fungsi kelakuan '{1}'.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Menentukan sama ada teks yang dibekalkan sepadan dengan format teks yang dibekalkan atau tidak.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Teks untuk dibandingkan dengan format.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Format untuk disemak terhadap teks. Ia mungkin merupakan nilai enum TextFormat atau ungkapan biasa.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Ini menentukan bahagian teks yang ingin kami padankan. Ia mungkin merupakan nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>format</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>lanjut</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Mencari teks yang dibekalkan untuk ungkapan biasa yang ditentukan dengan mengembalikan padanan pertama daripadanya.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Mencari teks yang dibekalkan untuk ungkapan biasa yang ditentukan dengan mengembalikan semua padanan daripadanya.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Teks untuk dicari mengikut ungkapan biasa.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Ungkapan biasa untuk menyemak teks. Boleh mengandungi tangkapan (nilai antara kurungan) yang akan dikembalikan jika padanan berjaya.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Ini menentukan bahagian teks yang ingin kami padankan. Ia mungkin merupakan nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Teks untuk dicari mengikut ungkapan biasa.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Ungkapan biasa untuk menyemak teks. Boleh mengandungi tangkapan (nilai antara kurungan) yang akan dikembalikan jika padanan berjaya.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Ini menentukan bahagian teks yang ingin kami padankan. Ia mungkin merupakan nilai enum MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>ungkapan_biasa</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>pilihan</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Menyegar semula sumber data yang ditentukan.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>sumber_data_tersambung</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Nilai rekod atau jadual dijangka.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Sumber data yang disambungkan untuk disegar semula.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Hanya sambungan terurus boleh disegar semula.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa tidak sah.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Ungkapan biasa mestilah nilai yang tetap.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Nilai yang dihantar kepada fungsi '{0}' tidak boleh diubah.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan padanan penuh bagi ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak padanan penuh dalam teks yang ditentukan.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan kumpulan yang sepadan dalam ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak semua subpadanan dalam teks yang ditentukan.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan lokasi padanan bagi ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak kedudukan padanan penuh dalam teks yang ditentukan.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Mengalih keluar semua pemformatan dan mengembalikan nilai teks biasa.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>teks</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Teks untuk dialih keluar tag HTML dan XMLnya.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Fungsi penapisan tidak membenarkan fungsi tingkah laku sebagaimana yang diramalkan.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gunakan operator And untuk menggabungkan berbilang ramalan ke dalam argumen kedua.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Jadual ini tidak boleh disalin. Sebaliknya, cipta jadual sebaris dengan menggunakan fungsi ForAll dan notasi {...} untuk menyalin lajur individu yang diingini.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Rekod ini tidak boleh disalin. Sebaliknya, cipta rekod sebaris dengan menggunakan notasi {...} untuk menyalin medan individu yang diingini.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Argumen kedua fungsi '{0}' hanya disokong untuk nilai angka dan tarikh/masa.</value>
     
   </data>
 </root>

@@ -34,15 +34,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal static InternalSetup Parse(string setupHandlerName, bool numberIsFloat = false)
         {
-            var iSetup = new InternalSetup
-            {
-                // Default features
-                Features = new Features
-                {
-                    TableSyntaxDoesntWrapRecords = true,
-                    ConsistentOneColumnTableResult = true
-                }
-            };
+            return Parse(setupHandlerName, new Features(), numberIsFloat);
+        }
+
+        internal static InternalSetup Parse(string setupHandlerName, Features features, bool numberIsFloat = false)
+        {
+            var iSetup = new InternalSetup { Features = features };
 
             if (numberIsFloat)
             {
@@ -75,20 +72,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     if (isDisable)
                     {
-                        if (!iSetup.Flags.HasFlag(flag))
-                        {
-                            throw new InvalidOperationException($"Flag {partName} is already disabled");
-                        }
-
                         iSetup.Flags &= ~flag;
                     }
                     else
                     {
-                        if (iSetup.Flags.HasFlag(flag))
-                        {
-                            throw new InvalidOperationException($"Flag {partName} is already enabled");
-                        }
-
                         iSetup.Flags |= flag;
                     }
 
@@ -98,20 +85,10 @@ namespace Microsoft.PowerFx.Core.Tests
                 {
                     if (isDisable)
                     {
-                        if (!((bool)prop.GetValue(iSetup.Features)))
-                        {
-                            throw new InvalidOperationException($"Feature {partName} is already disabled");
-                        }
-
                         prop.SetValue(iSetup.Features, false);
                     }
                     else
                     {
-                        if ((bool)prop.GetValue(iSetup.Features))
-                        {
-                            throw new InvalidOperationException($"Feature {partName} is already enabled");
-                        }
-
                         prop.SetValue(iSetup.Features, true);
                     }
 

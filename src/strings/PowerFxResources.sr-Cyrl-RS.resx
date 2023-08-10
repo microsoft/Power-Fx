@@ -1465,6 +1465,14 @@
     <value>унос</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>модификатор</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>модификатор</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Враћа наведени број знакова од почетка вредности текста.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Својству прилагођених података компоненте са параметрима може се приступити само из компоненте или из излазних својстава компоненте.</value>
+    <value>Својству функције компоненте или параметрима може се приступити само из компоненте или из излазних својстава компоненте.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Својство или параметар функције компоненте могу да упућују само на друга својства функције.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>Први аргумент за „{0}“ треба да буде табела са једном колоном.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Неважећа шема, очекивана је колона текстуалних вредности за „{0}“.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Неважећа шема, очекивана је колона вредности датума за „{0}“.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Неважећа шема, очекивана је колона нумеричких вредности за „{0}“.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Неважећа шема, очекивана је колона вредности боје за „{0}“.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Неважећа шема, очекивана је колона вредности {0} за „{1}“.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Нумеричка вредност је превелика.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Употребљена је резервисана реч која тренутно није подржана.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Математички и статистички</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Информације</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Није подржано у колонама формула.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>Неважећи број аргумената за функцију {0}: примљено {1}, очекивано {2}</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>Аргумент {0} није подржан за функцију {1} у колонама формула.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Није могуће проследити овај аргумент као овај тип у колонама формула.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Није могуће проследити овај аргумент као тип {0} у колонама формула.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>За овај аргумент је подржана само вредност литерала.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>{0} није могуће извршити на овом уносу без конверзије временске зоне, која није подржана у колонама формула.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Ову операцију није могуће извршити на вредностима које имају различита понашања датума и времена.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>У колонама формула подржане су само ниске кратког формата датума и времена.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>Аргумент {0} је неважећа/неподржана јединица времена за функцију аритметичког датума {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Токени обликовања специфични за локални стандард, као што су „.“ и „,“ нису подржани у колонама формула.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>Функција {0} није подржана у колонама формула, користите {1} уместо ње.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Није могуће извршити ову операцију на типу {0} у колонама формуле.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>Тип резултата {0} није подржан у колонама са формулама.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Директно упућивање на цео запис није подржано у колонама формула. Поставите важеће поље у запису као референцу.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Очекивани тип резултата за ову формулу је {0}, али је стварни тип резултата {1}. Није могуће променити тип резултата колоне формуле.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>Колоне типа {0} нису подржане у колонама са формулама.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>Колоне типа {0} са форматом {1} нису подржане у колонама са формулама.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Принуда записа или табела није подржана у колонама формула.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Табеле са једном колоном нису подржане у колонама са формулама.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Није могуће поставити виртуелну табелу {0} као референцу у колонама формула.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Очекује се операнд. Формула или израз очекују важећи операнд. На пример, можете да додате операнд „2“ у израз „ 1 + _“ тако да резултат буде „3“. Или, можете да додате операнд „како си“ у израз „„Здраво, “&amp; _ “ тако да резултат буде „Здраво, како си“.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Именована формула мора да буде израз.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Кориснички дефинисана функција мора да има тело.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>Функција {0} је већ дефинисана.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>Параметар {0} је дупликат.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>Непознат тип {0}.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Наведени тип враћања функције не подудара се са типом враћања тела функције.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ већ постоји.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Ова функција је застарела и више није подржана.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Упозорење: Наведен је одложени тип.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>„{0}“ је препозната, али не и подржана функција.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Конверзија типа није успела јер је дата вредност била типа „{0}“, а очекује се тип „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>Ова операција на табели „{0}'“ можда неће функционисати ако има више од оволико редова: {1}.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Овај исказ ће увек бити истинит. Да ли сте желели да користите ThisRecord или [@ ]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Није могуће делегирати {0}: делегирање је подржано само за проналажење на пољу примарног кључа „{1}“.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Није могуће делегирати {0}: израз пореди више поља.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Није могуће делегирати {0}: садржи функцију понашања „{1}“.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Утврђује да ли обезбеђени текст садржи подударање са обезбеђеним форматом текста.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Текст који треба упоредити у односу на формат.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Формат у односу на који треба проверити текст. То може бити вредност TextFormat enum или регуларни израз.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Овим се одређује који део текста желимо да се подудара. То може бити вредност набрајања MatchOptions.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>формат</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>подручје</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Тражи наведени регуларни израз у датом тексту и враћа прво подударање из њега.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Тражи наведени регуларни израз у датом тексту и враћа сва подударања из њега.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Текст који треба претражити у односу на регуларни израз.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Регуларни израз у односу на који се проверава текст. Може да садржи записе (вредности између зарада) који ће се вратити у случају подударања.</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Овим се одређује који део текста желимо да се подудара. То може бити вредност набрајања MatchOptions.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Текст који треба претражити у односу на регуларни израз.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Регуларни израз у односу на који се проверава текст. Може да садржи записе (вредности између зарада) који ће се вратити у случају подударања.</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Овим се одређује који део текста желимо да се подудара. То може бити вредност набрајања MatchOptions.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>регуларни_израз</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>опције</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Освежава наведени извор података.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>повезани_извор_података</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Очекиван је запис или вредност табеле.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Повезани извор података који треба освежити.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Могуће је освежити само контролисане везе.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Неважећи регуларни израз.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Регуларни изрази морају представљати константне вредности.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Није могуће променити вредност „{0}“ која је прослеђена функцији.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>Име снимка „{0}“ скрива унапред дефинисано својство које је враћа потпуно подударање регуларног израза. Требало би да га преименујете ако желите да користите то именовано својство да бисте издвојили потпуно подударање у наведеном тексту.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>Име снимка „{0}“ скрива унапред дефинисано својство које је враћа групна подударања у регуларном изразу. Требало би да га преименујете ако желите да користите то именовано својство да бисте издвојили сва потподударања у наведеном тексту.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>Име снимка „{0}“ скрива унапред дефинисано својство које је враћа локацију подударања регуларног израза. Требало би да га преименујете ако желите да користите то именовано својство да бисте издвојили положај потпуног подударања у наведеном тексту.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Уклања сво обликовање и враћа вредност чистог текста.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>текст</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Текст из ког треба уклонити HTML и XML ознаке.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функције филтера не дозвољавају функције понашања као исказе.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Користите оператор And да бисте комбиновали више исказа у други аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Није могуће копирати ову табелу. Уместо тога, креирајте уметнуту табелу користећи функцију ForAll и анотацију {...} за копирање жељених појединачних колона.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Није могуће копирати овај запис. Уместо тога, креирајте уметнути запис користећи анотацију {...} да бисте копирали жељена појединачна поља.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

@@ -5,22 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
-using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
-using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Functions
 {
@@ -28,11 +22,13 @@ namespace Microsoft.PowerFx.Functions
     internal static class LibraryFlags
     {
         public static readonly RegexOptions RegExFlags = RegexOptions.Compiled | RegexOptions.CultureInvariant;
+        public static readonly RegexOptions RegExFlags_IgnoreCase = RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase;
     }
 
     internal static partial class Library
     {
         private static readonly RegexOptions RegExFlags = LibraryFlags.RegExFlags;
+        private static readonly RegexOptions RegExFlags_IgnoreCase = LibraryFlags.RegExFlags_IgnoreCase;
 
         private static readonly Regex _ampmReplaceRegex = new Regex("[aA][mM]\\/[pP][mM]", RegExFlags);
         private static readonly Regex _apReplaceRegex = new Regex("[aA]\\/[pP]", RegExFlags);
@@ -48,6 +44,14 @@ namespace Microsoft.PowerFx.Functions
         private static readonly Regex _minutesDetokenizeRegex = new Regex("[\u000A][\u000A]+", RegExFlags);
         private static readonly Regex _secondsDetokenizeRegex = new Regex("[\u0008][\u0008]+", RegExFlags);
         private static readonly Regex _milisecondsDetokenizeRegex = new Regex("[\u000e]+", RegExFlags);
+        private static readonly Regex _tdTagRegex = new Regex("<\\s*(td)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _lineBreakTagRegex = new Regex("<\\s*(br|li)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _doubleLineBreakTagRegex = new Regex("<\\s*(div|p|tr)[\\s\\S]*?\\/{0,1}>", RegExFlags_IgnoreCase);
+        private static readonly Regex _commentTagRegex = new Regex("<!--[\\s\\S]*?--\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _headerTagRegex = new Regex("<\\s*(header)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(header)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _scriptTagRegex = new Regex("<\\s*(script)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(script)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _styleTagRegex = new Regex("<\\s*(style)[\\s\\S]*?>[\\s\\S]*?<\\s*\\/\\s*(style)\\s*>", RegExFlags_IgnoreCase);
+        private static readonly Regex _htmlTagsRegex = new Regex("<[^\\>]*\\>", RegExFlags_IgnoreCase);
 
         // Char is used for PA string escaping 
         public static FormulaValue Char(IRContext irContext, NumberValue[] args)
@@ -75,6 +79,8 @@ namespace Microsoft.PowerFx.Functions
 
             foreach (var row in arg0.Rows)
             {
+                runner.CheckCancel();
+
                 if (first)
                 {
                     first = false;
@@ -84,19 +90,7 @@ namespace Microsoft.PowerFx.Functions
                     sb.Append(separator);
                 }
 
-                SymbolContext childContext;
-                if (row.IsValue)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Value);
-                }
-                else if (row.IsBlank)
-                {
-                    childContext = context.SymbolContext.WithScopeValues(RecordValue.Empty());
-                }
-                else
-                {
-                    childContext = context.SymbolContext.WithScopeValues(row.Error);
-                }
+                SymbolContext childContext = context.SymbolContext.WithScopeValues(row.ToFormulaValue());
 
                 var result = await arg1.EvalInRowScopeAsync(context.NewScope(childContext)).ConfigureAwait(false);
 
@@ -138,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Value(CreateFormattingInfo(runner), irContext, args);
+            return Value(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -159,7 +153,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Float(CreateFormattingInfo(runner), irContext, args);
+            return Float(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -178,15 +172,13 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
-                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryFloat(formatInfo, irContext, args[0], out NumberValue result);
+            bool isValue = TryFloat(formatInfo.With(culture), irContext, args[0], out NumberValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -234,7 +226,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Decimal(CreateFormattingInfo(runner), irContext, args);
+            return Decimal(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -253,15 +245,13 @@ namespace Microsoft.PowerFx.Functions
             var culture = formatInfo.CultureInfo;
             if (args.Length > 1)
             {
-                if (args[1] is StringValue cultureArg && !TryGetCulture(cultureArg.Value, out culture))
+                if (args[1] is StringValue cultureArg && !TextFormatUtils.TryGetCulture(cultureArg.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryDecimal(formatInfo, irContext, args[0], out DecimalValue result);
+            bool isValue = TryDecimal(formatInfo.With(culture), irContext, args[0], out DecimalValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -313,28 +303,63 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Text(CreateFormattingInfo(runner), irContext, args);
+            if (args[0].IsBlank())
+            {
+                if (args.Length == 1)
+                {
+                    // When used as a pure conversion function (single argument, no format string), this function propagates null values
+                    return new BlankValue(irContext);
+                }
+
+                // Set blank to 0 because we only support numeric and datetime input when we have format string
+                args[0] = new NumberValue(IRContext.NotInSource(FormulaType.Number), 0);
+            }
+
+            for (int i = 1; i < args.Length; i++)
+            {
+                if (args[i].IsBlank())
+                {
+                    return new StringValue(irContext, string.Empty);
+                }
+            }
+
+            runner.CancellationToken.ThrowIfCancellationRequested();
+            return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
         }
 
-        public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args)
+        public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             const int formatSize = 100;
             string formatString = null;
+            string defaultLanguage = Language(formatInfo.CultureInfo);
+            var textFormatArgs = new TextFormatArgs
+            {
+                FormatCultureName = null,
+                FormatArg = null,
+                HasDateTimeFmt = false,
+                HasNumericFmt = false
+            };
 
             if (args.Length > 1 && args[1] is StringValue fs)
             {
                 formatString = fs.Value;
+
+                if (!TextFormatUtils.AllowedListToUseFormatString.Contains(args[0].Type._type))
+                {
+                    var customErrorMessage = StringResources.Get(TexlStrings.ErrNotSupportedFormat_Func, formatInfo.CultureInfo.Name);
+                    return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                }
             }
 
             var culture = formatInfo.CultureInfo;
             if (args.Length > 2 && args[2] is StringValue languageCode)
             {
-                if (!TryGetCulture(languageCode.Value, out culture))
+                if (!TextFormatUtils.TryGetCulture(languageCode.Value, out culture))
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
             // We limit the format string size
@@ -344,28 +369,36 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out bool hasDateTimeFmt, out bool hasNumberFmt))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, culture, defaultLanguage, out textFormatArgs))
             {
+                if (formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase) && !(textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt))
+                {
+                    return CommonErrors.BadLanguageCode(irContext, formatString);
+                }
+
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], formatString, out StringValue result);
+            var isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, string formatString, out StringValue result)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, out StringValue result, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var timeZoneInfo = formatInfo.TimeZoneInfo;
             var culture = formatInfo.CultureInfo;
-            var hasDateTimeFmt = false;
-            var hasNumberFmt = false;
+            var formatString = textFormatArgs.FormatArg;
             result = null;
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, out hasDateTimeFmt, out hasNumberFmt))
+            // There is a difference between Windows 10 and 11 for French locale
+            // We fix the thousand separator here to be consistent 
+            if (culture.Name.Equals("fr-FR", StringComparison.OrdinalIgnoreCase) && culture.NumberFormat.NumberGroupSeparator == "\u00A0")
             {
-                return false;
+                culture.NumberFormat.NumberGroupSeparator = "\u202F";
             }
 
             Contract.Assert(StringValue.AllowedListConvertToString.Contains(value.Type));
@@ -376,37 +409,37 @@ namespace Microsoft.PowerFx.Functions
                     result = sv;
                     break;
                 case NumberValue num:
-                    if (formatString != null && hasDateTimeFmt)
+                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
 
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
                     else
                     {
-                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "G", culture));
                     }
 
                     break;
 
                 case DecimalValue dec:
-                    if (formatString != null && hasDateTimeFmt)
+                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var decNum = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)dec.Value);
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), decNum);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
                     else
                     {
                         var normalized = dec.Normalize();
-                        result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, normalized.ToString(formatString ?? "G", culture));
                     }
 
                     break;
                 case DateTimeValue dateTimeValue:
-                    if (formatString != null && hasNumberFmt)
+                    if (formatString != null && textFormatArgs.HasNumericFmt)
                     {
                         // It's a datetime, formatted as number. Let's convert it to a number value first
                         var newNumber = Library.DateTimeToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateTimeValue);
@@ -414,24 +447,24 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
                 case DateValue dateValue:
-                    if (formatString != null && hasNumberFmt)
+                    if (formatString != null && textFormatArgs.HasNumericFmt)
                     {
                         NumberValue newDateNumber = Library.DateToNumber(formatInfo, IRContext.NotInSource(FormulaType.Number), dateValue) as NumberValue;
                         result = new StringValue(irContext, newDateNumber.Value.ToString(formatString, culture));
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
                 case TimeValue timeValue:
-                    if (formatString != null && hasNumberFmt)
+                    if (formatString != null && textFormatArgs.HasNumericFmt)
                     {
                         var newNumber = Library.TimeToNumber(IRContext.NotInSource(FormulaType.Number), new TimeValue[] { timeValue });
                         result = new StringValue(irContext, newNumber.Value.ToString(formatString, culture));
@@ -439,7 +472,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var dtValue = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, formatInfo.CancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
@@ -456,6 +489,8 @@ namespace Microsoft.PowerFx.Functions
 
         internal static bool TryExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, string format, string defaultFormat, DateTime dateTime, TimeZoneInfo timeZoneInfo, CultureInfo culture, CancellationToken cancellationToken, out StringValue result)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             result = null;
             if (format == null)
             {
@@ -705,7 +740,7 @@ namespace Microsoft.PowerFx.Functions
                     var val = res.Value;
                     if (!(val is StringValue str && str.Value == string.Empty))
                     {
-                        return res.ToFormulaValue();
+                        return MaybeAdjustToCompileTimeType(res.ToFormulaValue(), irContext);
                     }
                 }
 
@@ -741,7 +776,7 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-len
         public static FormulaValue Len(IRContext irContext, StringValue[] args)
         {
-            return new NumberValue(irContext, args[0].Value.Length);
+            return NumberOrDecimalValue(irContext, args[0].Value.Length);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-left-mid-right
@@ -765,15 +800,18 @@ namespace Microsoft.PowerFx.Functions
                 return ErrorValue.Combine(irContext, errors);
             }
 
-            var source = (StringValue)args[0];
-            var start0Based = (int)(start.Value - 1);
-            if (source.Value == string.Empty || start0Based >= source.Value.Length)
+            TryGetInt(start, out int start1Based);
+            var start0Based = start1Based - 1;
+
+            string str = ((StringValue)args[0]).Value;
+            if (str == string.Empty || start0Based >= str.Length)
             {
                 return new StringValue(irContext, string.Empty);
             }
 
-            var minCount = Math.Min((int)count.Value, source.Value.Length - start0Based);
-            var result = source.Value.Substring(start0Based, minCount);
+            TryGetInt(count, out int countValue);
+            var minCount = Math.Min(countValue, str.Length - start0Based);
+            var result = str.Substring(start0Based, minCount);
 
             return new StringValue(irContext, result);
         }
@@ -832,14 +870,20 @@ namespace Microsoft.PowerFx.Functions
                 throw new NotImplementedException("Should have been handled by IR");
             }
 
-            return new StringValue(irContext, leftOrRight(source.Value, (int)count.Value));
+            TryGetInt(count, out int intCount);
+
+            return new StringValue(irContext, leftOrRight(source.Value, intCount));
         }
 
         private static FormulaValue Find(IRContext irContext, FormulaValue[] args)
         {
             var findText = (StringValue)args[0];
             var withinText = (StringValue)args[1];
-            var startIndexValue = (int)((NumberValue)args[2]).Value;
+
+            if (!TryGetInt(args[2], out int startIndexValue))
+            {
+                return CommonErrors.ArgumentOutOfRange(irContext);
+            }
 
             if (startIndexValue < 1 || startIndexValue > withinText.Value.Length + 1)
             {
@@ -864,15 +908,20 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.ArgumentOutOfRange(irContext);
             }
 
-            if (start >= int.MaxValue)
+            if (!TryGetInt(args[1], out int start1Based))
             {
-                start = source.Length + 1;
+                start1Based = source.Length + 1;
             }
 
-            var start0Based = (int)(start - 1);
+            var start0Based = start1Based - 1;
             var prefix = start0Based < source.Length ? source.Substring(0, start0Based) : source;
 
-            var suffixIndex = start0Based + (int)count;
+            if (!TryGetInt(args[2], out int intCount))
+            {
+                intCount = intCount - start0Based;
+            }
+
+            var suffixIndex = start0Based + intCount;
             var suffix = suffixIndex < source.Length ? source.Substring(suffixIndex) : string.Empty;
             var result = prefix + replacement + suffix;
 
@@ -893,39 +942,34 @@ namespace Microsoft.PowerFx.Functions
         }
 
         // This is static analysis before actually executing, so just use string lengths and avoid contents. 
-        internal static int SubstituteGetResultLength(
-            int sourceLen, int matchLen, int replacementLen, bool replaceAll)
+        internal static int SubstituteGetResultLength(int sourceLen, int matchLen, int replacementLen, bool replaceAll)
         {
             int maxLenChars;
 
-            if (matchLen > sourceLen)
+            if (matchLen == 0 || matchLen > sourceLen)
             {
-                // Match is too large, can't be found.
+                // Match is empty or too large, can't be found.
                 // So will not match and just return original.
                 return sourceLen;
             }
 
-            if (replaceAll)
+            checked
             {
-                // Replace all instances. 
-                // Maximum possible length of Substitute, convert all the Match to Replacement. 
-                // Unicode, so 2B per character.
-                if (matchLen == 0)
+                if (replaceAll)
                 {
-                    maxLenChars = sourceLen;
-                }
-                else
-                {
+                    // Replace all instances. 
+                    // Maximum possible length of Substitute, convert all the Match to Replacement. 
+                    // Unicode, so 2B per character.                        
                     // Round up as conservative estimate. 
                     maxLenChars = (int)Math.Ceiling((double)sourceLen / matchLen) * replacementLen;
                 }
+                else
+                {
+                    // Only replace 1 instance 
+                    maxLenChars = sourceLen - matchLen + replacementLen;
+                }
             }
-            else
-            {
-                // Only replace 1 instance 
-                maxLenChars = sourceLen - matchLen + replacementLen;
-            }
-
+            
             // If not match found, will still be source length 
             return Math.Max(sourceLen, maxLenChars);
         }
@@ -945,15 +989,24 @@ namespace Microsoft.PowerFx.Functions
                     return source;
                 }
 
-                instanceNum = (int)nv.Value;
+                TryGetInt(nv, out instanceNum);
             }
 
             // Compute max possible memory this operation may need.
             var sourceLen = source.Value.Length;
             var matchLen = match.Value.Length;
             var replacementLen = replacement.Value.Length;
+            var maxLenChars = sourceLen;
 
-            var maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+            try
+            {
+                maxLenChars = SubstituteGetResultLength(sourceLen, matchLen, replacementLen, instanceNum < 0);
+            }
+            catch (OverflowException)
+            {
+                return CommonErrors.OverflowError(irContext);
+            }
+
             runner.Governor.CanAllocateString(maxLenChars);
 
             var result = SubstituteWorker(runner, irContext, source, match, replacement, instanceNum);
@@ -1038,7 +1091,12 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, result);
         }
 
-        public static FormulaValue Guid(IRContext irContext, StringValue[] args)
+        public static FormulaValue GuidNoArg(IRContext irContext, FormulaValue[] args)
+        {
+            return new GuidValue(irContext, Guid.NewGuid());
+        }
+
+        public static FormulaValue GuidPure(IRContext irContext, StringValue[] args)
         {
             var text = args[0].Value;
             try
@@ -1060,10 +1118,72 @@ namespace Microsoft.PowerFx.Functions
             return new StringValue(irContext, logicalName);
         }
 
+        public static FormulaValue PlainText(IRContext irContext, StringValue[] args)
+        {
+            string text = args[0].Value.Trim();
+
+            // Replace header/script/style tags with empty text.
+            text = _headerTagRegex.Replace(text, string.Empty);
+            text = _scriptTagRegex.Replace(text, string.Empty);
+            text = _styleTagRegex.Replace(text, string.Empty);
+
+            // Remove all comments.
+            text = _commentTagRegex.Replace(text, string.Empty);
+
+            // Insert empty string in place of <td>
+            text = _tdTagRegex.Replace(text, string.Empty);
+
+            //Replace <br> or <li> with line break
+            text = _lineBreakTagRegex.Replace(text, Environment.NewLine);
+
+            // Insert double line breaks in place of <div>, <p> and <tr> tags.
+            text = _doubleLineBreakTagRegex.Replace(text, Environment.NewLine + Environment.NewLine);
+
+            // Replace all other tags with empty text.
+            text = _htmlTagsRegex.Replace(text, string.Empty);
+
+            //Decode html specific characters
+            text = WebUtility.HtmlDecode(text);
+
+            return new StringValue(irContext, text.Trim());
+        }
+
         private static DateTime ConvertToUTC(DateTime dateTime, TimeZoneInfo fromTimeZone)
         {
             var resultDateTime = new DateTimeOffset(DateTime.SpecifyKind(dateTime, DateTimeKind.Unspecified), fromTimeZone.GetUtcOffset(dateTime));
             return resultDateTime.UtcDateTime;
+        }
+
+        internal static bool TryGetInt(FormulaValue value, out int outputValue)
+        {
+            double inputValue;
+            outputValue = int.MinValue;
+
+            switch (value)
+            {
+                case NumberValue n:
+                    inputValue = n.Value;
+                    break;
+                case DecimalValue w:
+                    inputValue = (double)w.Value;
+                    break;
+                default:
+                    return false;
+            }
+
+            if (inputValue > int.MaxValue)
+            {
+                outputValue = int.MaxValue;
+                return false;
+            }
+            else if (inputValue < int.MinValue)
+            {
+                outputValue = int.MinValue;
+                return false;
+            }
+
+            outputValue = (int)inputValue;
+            return true;
         }
     }
 }

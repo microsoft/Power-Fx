@@ -13,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -52,10 +53,12 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public HttpRequestMessage BuildRequest(FormulaValue[] args)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, CancellationToken cancellationToken)
         {
             var path = _path;
             var query = new StringBuilder();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             // https://stackoverflow.com/questions/5258977/are-http-headers-case-sensitive
             // Header names are not case sensitive.
@@ -76,14 +79,14 @@ namespace Microsoft.PowerFx.Connectors
 
             if (bodyParts.Any())
             {
-                body = GetBody(_argMapper.ReferenceId, _argMapper.SchemaLessBody, bodyParts);
+                body = GetBody(_argMapper.ReferenceId, _argMapper.SchemaLessBody, bodyParts, context, cancellationToken);
             }
 
             foreach (var param in _argMapper.OpenApiParameters)
             {
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
-                    var valueStr = paramValue.ToObject().ToString();
+                    var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
                     switch (param.In.Value)
                     {
@@ -126,17 +129,19 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map)
+        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, FormattingInfo context, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             try
             {
                 serializer = _argMapper.ContentType.ToLowerInvariant() switch
                 {
-                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(schemaLessBody),
-                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(schemaLessBody),
-                    _ => new OpenApiJsonSerializer(schemaLessBody)
+                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(context, schemaLessBody),
+                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(context, schemaLessBody),
+                    _ => new OpenApiJsonSerializer(context, schemaLessBody)
                 };
 
                 serializer.StartSerialization(referenceId);
@@ -161,13 +166,16 @@ namespace Microsoft.PowerFx.Connectors
 
         public async Task<FormulaValue> DecodeResponseAsync(HttpResponseMessage response, bool throwOnError = false)
         {
-            var text = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var text = response?.Content == null
+                            ? string.Empty
+                            : await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
             var statusCode = (int)response.StatusCode;
 
             if (statusCode < 300)
-            {                
-                return string.IsNullOrWhiteSpace(text) 
-                    ? FormulaValue.NewBlank(_returnType) 
+            {
+                return string.IsNullOrWhiteSpace(text)
+                    ? FormulaValue.NewBlank(_returnType)
                     : FormulaValueJSON.FromJson(text, _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
@@ -186,11 +194,22 @@ namespace Microsoft.PowerFx.Connectors
                     _returnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
         {
-            FormulaValue result;
-            using HttpRequestMessage request = BuildRequest(args);
+            cancellationToken.ThrowIfCancellationRequested();
+            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
+        }
 
+        public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, CancellationToken cancellationToken, bool throwOnError = false)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using HttpRequestMessage request = new HttpRequestMessage(_method, new Uri(url).PathAndQuery);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, CancellationToken cancellationToken)
+        {
             var key = request.RequestUri.ToString();
 
             if (request.Method != HttpMethod.Get)
@@ -199,20 +218,16 @@ namespace Microsoft.PowerFx.Connectors
                 key = null; // don't bother caching
             }
 
-            var result2 = await _cache.TryGetAsync(cacheScope, key, async () =>
+            return await _cache.TryGetAsync(cacheScope, key, async () =>
             {
                 var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                result = await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
-
-                return result;
+                return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
             }).ConfigureAwait(false);
-
-            return result2;
         }
     }
 
     // Closure over a HttpFunctionInvoker, but scoped to a cacheScope.
-    internal class ScopedHttpFunctionInvoker : IAsyncTexlFunction
+    internal class ScopedHttpFunctionInvoker : IAsyncTexlFunction2
     {
         private readonly string _cacheScope;
         private readonly HttpFunctionInvoker _invoker;
@@ -232,9 +247,16 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Name { get; }
 
-        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
-            return _invoker.InvokeAsync(_cacheScope, args, cancellationToken, _throwOnError);
+            cancellationToken.ThrowIfCancellationRequested();
+            return _invoker.InvokeAsync(context, _cacheScope, args, cancellationToken, _throwOnError);
+        }
+
+        public Task<FormulaValue> InvokeAsync(string url, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return _invoker.InvokeAsync(url, _cacheScope, cancellationToken, _throwOnError);
         }
     }
 }

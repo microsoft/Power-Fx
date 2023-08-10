@@ -16,7 +16,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Sequence(records:n, start:n, step:n): *[Value:n]
     internal sealed class SequenceFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return index == 0 ? ArgPreprocessor.ReplaceBlankWithFloatZeroAndTruncate : ArgPreprocessor.ReplaceBlankWithCallZero_SingleColumnTable;
         }

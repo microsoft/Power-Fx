@@ -3,20 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.PowerFx.Core.Entities;
-using Microsoft.PowerFx.Core.Entities.Delegation;
-using Microsoft.PowerFx.Core.Entities.QueryOptions;
-using Microsoft.PowerFx.Core.Functions.Delegation;
-using Microsoft.PowerFx.Core.Functions.Delegation.DelegationMetadata;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.UtilityDataStructures;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -25,14 +17,14 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     public class DatabaseSimulationTests
     {
         [Theory]
-        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", false)]
+        [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: \"2022-11-14 7:22:06 pm\"})", true)]
         [InlineData("Patch(Table, First(Filter(Table, MyStr = \"Str3\")), {MyDate: DateTime(2022,11,14,19,22,6) })", true)]
         public async Task DatabaseSimulation_Test(string expr, bool checkSuccess)
         {
             var databaseTable = DatabaseTable.CreateTestTable(0);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
@@ -63,7 +55,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 20000);
             var symbols = new SymbolTable();
 
-            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType);
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
             symbols.EnableMutationFunctions();
 
             var engine = new RecalcEngine();
@@ -80,6 +72,29 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 // Won't complete - should throw cancellation task 
                 await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await run.EvalAsync(cts.Token, runtimeConfig).ConfigureAwait(false)).ConfigureAwait(false);
             }
+        }
+
+        [Theory]
+        [InlineData("Set(x, Table)", "Set(#$PowerFxResolvedObject$#, #$fne$#)")]
+        [InlineData("With({t:Table},t)", "With({ #$fieldname$#:#$fne$# }, #$fne$#)")]
+        [InlineData("ForAll(Table, ThisRecord.Value)", "ForAll(#$fne$#, #$fne$#.#$righthandid$#)")]
+        public async Task TestExpandedStucturalPrint(string expr, string anonymized)
+        {
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
+            var symbols = new SymbolTable();
+
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
+            symbols.EnableMutationFunctions();
+
+            var engine = new RecalcEngine();
+            var runtimeConfig = new SymbolValues(symbols);
+
+            engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
+            runtimeConfig.Set(slot, databaseTable);
+
+            CheckResult check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+
+            Assert.Equal(anonymized, check.ApplyGetLogging());
         }
 
         internal class DatabaseTable : InMemoryTableValue
@@ -106,6 +121,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 PatchDelay = patchDelay;
             }
+
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryTableValue
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
+            }
+
+            public override bool CanShallowCopy => false;
 
             protected override async Task<DValue<RecordValue>> PatchCoreAsync(RecordValue baseRecord, RecordValue changeRecord, CancellationToken cancellationToken)
             {
@@ -167,6 +192,16 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 throw new NotImplementedException("Cannot call TryGetField");
             }
+
+            // Doesn't perform a copy.  Not needed for testing purposes and 
+            // prevents this class from being replaced by a standard InMemoryRecordValue
+            public override bool TryShallowCopy(out FormulaValue copy)
+            {
+                copy = null;
+                return false;
+            }
+
+            public override bool CanShallowCopy => false;
         }
 
         internal class TestEntityType : FormulaType

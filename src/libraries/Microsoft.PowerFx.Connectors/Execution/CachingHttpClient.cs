@@ -2,11 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
@@ -15,6 +11,7 @@ namespace Microsoft.PowerFx.Connectors
     /// <summary>
     /// Interface for caching GET requests. 
     /// </summary>
+    [ThreadSafeImmutable]
     public interface ICachingHttpClient
     {
         // Clear all cache entries for the given namespace. 
@@ -53,7 +50,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         // For GETs, map of (CacheScope) -> (requestKey --> FormulaValue). 
         // requestKeyu is a URL-like, relative to the cache scope. 
-        private readonly Dictionary<string, Dictionary<string, FormulaValue>> _cache = new Dictionary<string, Dictionary<string, FormulaValue>>(StringComparer.Ordinal);
+        private readonly Dictionary<string, Dictionary<string, FormulaValue>> _cache = new (StringComparer.Ordinal);
 
         public CachingHttpClient()
         {            

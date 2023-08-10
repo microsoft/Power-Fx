@@ -1465,6 +1465,14 @@
     <value>sarrera</value>
     
   </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>aldatzailea</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>aldatzailea</value>
+    
+  </data>
   <data name="AboutLeft" xml:space="preserve">
     <value>Testu-balioaren hasieran zehaztutako karaktere kopurua itzultzen du.</value>
     
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parametrodun osagaiaren datu pertsonalizatuen propietatea osagai batetik edo osagaiaren irteerako propietateetatik atzi daiteke soilik.</value>
+    <value>Osagai-funtzioaren propietatea edo parametroa atzi dezakezu osagai batetik edo osagai baten irteerako propietateetatik soilik.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Osagai-funtzioaren propietateak edo parametroak beste funtzio-propietate batzuei soilik egin diezaieke erreferentzia.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>'{0}' elementuaren lehen argumentuak zutabe bakarreko taula bat izan behar du.</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>Eskemak ez du balio. '{0}' elementuaren testu-balioak dituen zutabe bat espero zen.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>Eskemak ez du balio. '{0}' elementuaren data-balioak dituen zutabe bat espero zen.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>Eskemak ez du balio. '{0}' elementuaren zenbakizko balioak dituen zutabe bat espero zen.</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>Eskemak ez du balio. '{0}' elementuaren kolore-balioak dituen zutabe bat espero zen.</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>Eskemak ez du balio. "{1}" elementuaren {0} balioak dituen zutabe bat espero zen.</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>Zenbakizko balioa handiegia da.</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>Onartzen ez den hitz erreserbatu bat erabili da.</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>Matematikoa eta estatistikoa</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>Informazioa</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>Ez da onartzen formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} funtzioaren argumentu kopuruak ez du balio: {1} jaso dira, baina {2} espero ziren</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>{0} argumentua ez da onartzen formula-zutabeetako {1} funtzioan.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>Argumentua ezin da pasatu mota honetako gisa formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>Argumentua ezin da pasatu {0} mota gisa formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>Argumentu honetarako balio literala besterik ez da onartzen.</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>Ezin da {0} funtzioa egin sarrera honetan ordu-zona bihurketarik gabe, hori ez baita onartzen formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>Operazioa ezin da egin data- eta ordu-portaera desberdineko datuekin.</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>Dataren eta orduaren formatu laburrak soilik onartzen dira formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} argumentuaren denbora-unitateak ez du balio edo ez da onartzen {1} dataren funtzio aritmetikoan.</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>Eskualdeko ezarpenen formatu-tokenak (adibidez "." eta ",") ez dira onartzen formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>{0} ez da onartzen formula-zutabeetan; horren ordez, erabili {1}.</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>Eragiketa ezin da egin formula-zutabeetako {0} motan.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>{0} emaitza mota ez da onartzen formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>Ezin da aipatu erregistro oso bat formula-zutabeetan. Aipatu erregistroko baliozko eremu bat.</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>Formularen emaitza motak {0} izan behar du, baina itzuli den emaitza mota {1} da. Gogoan izan ezin duzula aldatu formula-zutabe baten emaitza mota.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>{0} motako zutabeak ez dira onartzen formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>{1} formatudun {0} motako zutabeak ez dira onartzen formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>Ezin dira txertatu erregistroak edo taulak formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>Zutabe bakarreko taulak ez dira onartzen formula-zutabeetan.</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>Ezin da aipatu {0} taula birtuala formula-zutabeetan.</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>Eragingai bat espero zen. Formulak edo espresioak erabil daitekeen eragingai bat espero du. Adibidez, "2" eragingaia gehi dezakezu " 1 +_" espresioan, eta "3" izango da emaitza. Bestela, "there" eragingaia gehi dezakezu ""Hi "&amp; _ " espresioan, eta "Hi there" izango da emaitza.</value>
     
@@ -4789,6 +4712,26 @@
     <value>Izendatutako formulak adierazpen bat izan behar du.</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>Erabiltzaileak definitutako funtzioak gorputz bat izan behar du.</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>{0} funtzioa zehaztuta dago.</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>{0} parametroa bikoiztua da.</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>{0} mota ezezaguna.</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>Adierazitako funtzioak itzulitako elementu mota ez dator bat funtzioaren gorputzaren itzulitako elementu motarekin.</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Badago "{0}" deitzen den formula bat.</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>Eginbidea zaharkituta dago eta ez da aurrerantzean onartuko.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Abisua: atzeratutako mota bat eman da.</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' funtzio ezagutzen da, baina ez da onartzen.</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>Mota-bihurketak huts egin du, emandako balioa "{0}" motakoa zelako eta "{1}" motakoa espero zelako.</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>"{0}" taulako eragiketak ez du funtzionatuko {1} errenkada baino gehiago baditu.</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>Predikatu hau beti izango da egiazkoa. ThisRecord edo [@ ] erabili nahi zenuen?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>Ezin da eskuordetu {0}: onartu soilik gako-eremu nagusiko ("{1}") bilaketa eskuordetzea.</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>Ezin da eskuordetu {0}: adierazpenak hainbat eremu konparatzen ditu.</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>Ezin da eskuordetu {0}: "{1}" portaera-funtzioa dauka.</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>Emandako testua eta testuaren formatua bat datozen zehazten du.</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>Formatuarekin konparatuko den testua.</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>Testuarekin konparatuko den formatua. TextFormat enumerazioaren edo espresio erregular baten balioa izan daiteke.</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>formatua</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>hedadura</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>Zehaztutako espresio erregularra bilatzen du emandako testuan eta aurkitzen duen lehen emaitza itzultzen du.</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>Zehaztutako espresio erregularra bilatzen du emandako testuan eta aurkitzen dituen emaitza guztiak itzultzen ditu.</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>Espresio erregularra kontuan hartuta bilatuko den testua.</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>Testua egiaztatzeko erabiliko den espresio erregularra. Bat datorren balioren bat badago itzuliko diren kapturak eduki ditzake (hau da, parentesi arteko balioak).</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>Espresio erregularra kontuan hartuta bilatuko den testua.</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>Testua egiaztatzeko erabiliko den espresio erregularra. Bat datorren balioren bat badago itzuliko diren kapturak eduki ditzake (hau da, parentesi arteko balioak).</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>Eragiketa honek testuan konparatu nahi ditugun zatiak zehazten ditu. MatchOptions enumerazioaren balio bat izan daiteke.</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>espresio_erregularra</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>aukerak</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>Zehaztutako datu-iturburua freskatzen du.</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>konektatutako_datu_iturburua</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>Erregistro- edo taula-balio bat espero zen.</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>Freskatu behar den konektatutako datu-iturburua.</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>Kudeatutako konexioak soilik freska daitezke.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>Espresio erregularrak ez du balio.</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>Espresio erregularrek aldaketarik gabeko balioak izan behar dute.</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>Ezin da aldatu "{0}" funtzioari pasatako balioa.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>"{0}" kaptura-izena espresio erregularraren bat-etortze osoa itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoa ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>"{0}" kaptura-izena espresio erregularreko taldearen bat-etortzeak itzultzen dituen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat datozen azpielementu guztiak ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>"{0}" kaptura-izena espresio erregularraren bat-etortzearen kokalekua itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoaren kokalekua ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>Formatua kendu eta testu-balio arrunta itzultzen du.</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>testua</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>Testuari HTML eta XML etiketak kentzea.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Iragazteko funtzioek ez dituzte onartzen portaera-funtzioak predikatu gisa.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Erabili And eragilea hainbat predikatu bigarren argumentuan konbinatzeko.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Ezin da kopiatu taula hau. Horren ordez, sortu txertatutako taula bat ForAll funtzioa eta {...} erabiliz eta kopiatu behar dituzun zutabeak.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Ezin da kopiatu erregistro hau. Horren ordez, sortu txertatutako erregistro bat {...} notazioa erabiliz eta kopiatu behar dituzun eremuak.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     
   </data>
 </root>

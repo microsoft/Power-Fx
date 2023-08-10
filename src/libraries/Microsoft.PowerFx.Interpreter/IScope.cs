@@ -13,53 +13,23 @@ namespace Microsoft.PowerFx
         FormulaValue Resolve(string name);
     }
 
-    internal class RecordScope : IScope
+    internal class FormulaValueScope : IScope
     {
-        public readonly RecordValue _context;
+        public readonly FormulaValue _context;
 
-        public RecordScope(RecordValue context)
+        public FormulaValueScope(FormulaValue context)
         {
             _context = context;
         }
 
         public virtual FormulaValue Resolve(string name)
         {
-            return _context.GetField(name);
-        }
-    }
-
-    internal class ErrorScope : IScope
-    {
-        public readonly ErrorValue _context;
-
-        public ErrorScope(ErrorValue context)
-        {
-            _context = context;
-        }
-
-        public virtual FormulaValue Resolve(string name)
-        {
-            return _context;
-        }
-    }
-
-    internal class UntypedObjectThisRecordScope : IScope
-    {
-        public readonly FormulaValue _thisRecord;
-
-        public UntypedObjectThisRecordScope(FormulaValue thisItem)
-        {
-            _thisRecord = thisItem;
-        }
-
-        public virtual FormulaValue Resolve(string name)
-        {
-            if (name == TexlBinding.ThisRecordDefaultName.Value)
+            if (_context is RecordValue recorValue && name != string.Empty)
             {
-                return _thisRecord;
+                return recorValue.GetField(name);
             }
 
-            return null;
+            return _context;
         }
     }
 }

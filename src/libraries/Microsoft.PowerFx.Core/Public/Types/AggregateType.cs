@@ -24,7 +24,7 @@ namespace Microsoft.PowerFx.Types
         internal AggregateType(DType type)
             : base(type)
         {
-            Contracts.Assert(type.IsAggregate);
+            Contracts.Assert(type.IsAggregate || type.IsPolymorphic);
         }
 
         public AggregateType(bool isTable)
@@ -56,6 +56,26 @@ namespace Microsoft.PowerFx.Types
 
             type = Build(dType);
             return true;
+        }
+
+        internal bool TryGetBackingDType(string fieldName, out DType type)
+        {
+            if (_type == null)
+            {
+                // if the backing _type is null, maybe we have a derived type that can provide the type
+                if (TryGetFieldType(fieldName, out var formulaType))
+                {
+                    type = formulaType._type;
+                    return true;
+                }
+                else
+                {
+                    type = default;
+                    return false;
+                }
+            }
+            
+            return _type.TryGetType(new DName(fieldName), out type);
         }
 
         /// <summary>

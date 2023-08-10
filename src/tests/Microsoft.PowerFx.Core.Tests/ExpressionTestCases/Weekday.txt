@@ -1,8 +1,162 @@
->> Weekday(Date(2020,7,16))
-5
 
->> WeekNum(Date(2019,1,6))
+// **************** DEFAULT STARTOFWEEK (1-SUNDAY TO 7-SATURDAY) ****************
+
+// Sunday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2016, 1, 3))
+1
+
+// Monday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2016, 1, 4))
 2
 
->> ISOWeekNum(Date(2019,1,6))
+// Tuesday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2016, 1, 5))
+3
+
+// Wednesday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2016, 1, 6))
+4
+
+// Thursday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2016, 1, 7))
+5
+
+// Friday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2016, 1, 8))
+6
+
+// Saturday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2016, 1, 9))
+7
+
+// Saturday, Default StartOfWeek (Sunday)
+>> Weekday(DateTimeValue("1/1/2022 12:00:00 AM"))
+7
+
+// Sunday, Default StartOfWeek (Sunday)
+>> Weekday(DateValue("1/2/2022"))
 1
+
+// Monday, Default StartOfWeek (Sunday)
+>> Weekday(Date(2022,1,3))
+2
+
+// Leap day
+>> Weekday(Date(2016, 2, 29))
+2
+
+// **************** VALID STARTOFWEEK ENUMERATION AS START_OF_WEEK PARAMETER  ****************
+
+// Invalid blank coercion to number (0)
+>> Weekday(Date(2016, 1, 3),Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Sunday, StartOfWeek on Sunday
+>> Weekday(Date(2016, 1, 3),StartOfWeek.Sunday)
+1
+
+// Sunday, StartOfWeek on Monday
+>> Weekday(Date(2016, 1, 3),StartOfWeek.Monday)
+7
+
+// Sunday, Start on MondayZero
+>> Weekday(Date(2016, 1, 3),StartOfWeek.MondayZero)
+6
+
+// Monday, Start on MondayZero
+>> Weekday(Date(2016, 1, 4),StartOfWeek.MondayZero)
+0
+
+// Sunday, Start on Tuesday
+>> Weekday(Date(2016, 1, 3),StartOfWeek.Tuesday)
+6
+
+// Sunday, Start on Wednesday
+>> Weekday(Date(2016, 1, 3),StartOfWeek.Wednesday)
+5
+
+// Sunday, Start on Thursday
+>> Weekday(Date(2016, 1, 3),StartOfWeek.Thursday)
+4
+
+// Sunday, Start on Friday
+>> Weekday(Date(2016, 1, 3),StartOfWeek.Friday)
+3
+
+// Sunday, Start on Saturday
+>> Weekday(Date(2016, 1, 3),StartOfWeek.Saturday)
+2
+
+// ******************************** NUMBER PARAMETERS ********************************
+
+//Number passed as DateTimeValue
+>> Weekday(1,StartOfWeek.Sunday)
+1
+
+//Number passed as DateTimeValue
+>> Weekday(5,StartOfWeek.Sunday)
+5
+
+//Number passed as DateTimeValue
+>> Weekday(100,StartOfWeek.Sunday)
+2
+
+// Negative Number passed as DateTimeValue
+>> Weekday(-1,StartOfWeek.Sunday)
+6
+
+// Decimal Number passed as DateTimeValue
+>> Weekday(1.5,StartOfWeek.Sunday)
+1
+
+// ******************************** STRING PARAMETERS ********************************
+
+// Invalid String passed as DateTimeValue
+>> Weekday("ABC",StartOfWeek.Sunday)
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Valid date passed as string in DateTimeValue parameter
+>> Weekday("2023-01-01",StartOfWeek.Sunday)
+1
+
+// ******************************** NULL AND ERROR PARAMETERS ********************************
+
+// Saturday, Blank StartOfWeek parameter
+>> Weekday(Date(2016, 1, 9),Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Sunday, Blank StartOfWeek parameter
+>> Weekday(Date(2022,1,2),Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Blank Date, StartOfWeek as Saturday
+>> Weekday(Blank(),StartOfWeek.Saturday)
+1
+
+// Empty string as Date, StartOfWeek as Saturday
+>> Weekday("",StartOfWeek.Saturday)
+1
+
+// Blank Date, StartOfWeek as Tuesday
+>> Weekday(Blank(),StartOfWeek.Tuesday)
+5
+
+// Empty string as Date, StartOfWeek as Tuesday
+>> Weekday("",StartOfWeek.Tuesday)
+5
+
+// Blank Date and StartOfWeek parameter
+>> Weekday(Blank(),Blank())
+Error({Kind:ErrorKind.InvalidArgument})
+
+// 1/0 as StartOfWeek code
+>> Weekday(DateValue("1/2/2022"),If(1/0<2,StartOfWeek.Sunday))
+Error({Kind:ErrorKind.Div0})
+
+// 1/0 as DateTime value
+>> Weekday(1/0,StartOfWeek.Sunday)
+Error({Kind:ErrorKind.Div0})
+
+//Very large number as DateTimeValue
+>> Weekday(100000000,StartOfWeek.Sunday)
+Error({Kind:ErrorKind.InvalidArgument})

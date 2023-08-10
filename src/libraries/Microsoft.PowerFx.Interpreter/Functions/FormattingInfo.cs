@@ -2,19 +2,20 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using System.Threading;
 
 namespace Microsoft.PowerFx.Functions
 {
+    [ThreadSafeImmutable]
     internal class FormattingInfo
     {
-        internal CultureInfo CultureInfo { get; set; }
+        public readonly CultureInfo CultureInfo;
+        public readonly TimeZoneInfo TimeZoneInfo;
 
-        internal CancellationToken CancellationToken { get; set; }
-
-        internal TimeZoneInfo TimeZoneInfo { get; set; }
+        public FormattingInfo(CultureInfo cultureInfo, TimeZoneInfo timeZoneInfo)            
+        {
+            CultureInfo = cultureInfo;
+            TimeZoneInfo = timeZoneInfo;
+        }
     }
 }

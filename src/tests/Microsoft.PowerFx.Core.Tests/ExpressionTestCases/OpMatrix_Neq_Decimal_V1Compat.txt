@@ -1,0 +1,185 @@
+#SETUP: disable:NumberIsFloat,PowerFxV1CompatibilityRules
+
+>> Float(16) <> "16"
+Errors: Error 10-12: Incompatible types for comparison. These types can't be compared: Number, Text.
+
+>> Float(16) <> "16.000000000000000000002"
+Errors: Error 10-12: Incompatible types for comparison. These types can't be compared: Number, Text.
+
+>> Float(16) <> "14"
+Errors: Error 10-12: Incompatible types for comparison. These types can't be compared: Number, Text.
+
+>> Float(16) <> "18"
+Errors: Error 10-12: Incompatible types for comparison. These types can't be compared: Number, Text.
+
+>> Float(16) <> "1e20"
+Errors: Error 10-12: Incompatible types for comparison. These types can't be compared: Number, Text.
+
+>> Float(1e20) <> "1e20"
+Errors: Error 12-14: Incompatible types for comparison. These types can't be compared: Number, Text.
+
+>> Float(1) <> true
+Errors: Error 9-11: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+
+>> Float(1) <> false
+Errors: Error 9-11: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+
+>> Float(0) <> true
+Errors: Error 9-11: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+
+>> Float(0) <> false
+Errors: Error 9-11: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+
+>> Float(2) <> true
+Errors: Error 9-11: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+
+>> Float(2) <> false
+Errors: Error 9-11: Incompatible types for comparison. These types can't be compared: Number, Boolean.
+
+>> "16" <> Float(16)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Text, Number.
+
+>> "16" <> Float(18)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Text, Number.
+
+>> "16" <> Float(14)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Text, Number.
+
+>> "1e100" <> Float(2)
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Text, Number.
+
+>> "" <> Float(0)
+Errors: Error 3-5: Incompatible types for comparison. These types can't be compared: Text, Number.
+
+>> "1" <> true
+Errors: Error 4-6: Incompatible types for comparison. These types can't be compared: Text, Boolean.
+
+>> "1e100" <> true
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Text, Boolean.
+
+>> "36526" <> Date(2000,1,1)
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Text, Date.
+
+>> "36526.5" <> DateTime(2000,1,1,12,0,0)
+Errors: Error 10-12: Incompatible types for comparison. These types can't be compared: Text, DateTime.
+
+>> "16" <> Time(12,0,0)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Text, Time.
+
+>> "2" <> Decimal("2.000000000000000000000002")
+Errors: Error 4-6: Incompatible types for comparison. These types can't be compared: Text, Decimal.
+
+>> "1e100" <> Decimal("2.000000000000000000000002")
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Text, Decimal.
+
+>> true <> Float(2)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
+
+>> true <> Float(1)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
+
+>> true <> Float(0)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
+
+>> false <> Float(2)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Number.
+
+>> false <> Float(1)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Number.
+
+>> false <> Float(0)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Number.
+
+>> true <> Float("1e100")
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Number.
+
+>> true <> "1"
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Text.
+
+>> false <> "0"
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Text.
+
+>> false <> "1"
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Text.
+
+>> true <> "1E+100"
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Text.
+
+// returns false in Excel
+>> true <> "true"
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Text.
+
+>> false <> "false"
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Text.
+
+>> true <> Date(1927,5,18)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Date.
+
+>> true <> DateTime(1927,5,18,0,0,0)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, DateTime.
+
+>> true <> Time(12,0,0)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Time.
+
+>> false <> Date(1927,5,18)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Date.
+
+>> false <> DateTime(1927,5,18,0,0,0)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, DateTime.
+
+>> false <> Time(12,0,0)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Time.
+
+>> true <> Decimal("1.000000000000000000000002")
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> true <> Decimal(1)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> true <> Decimal(0)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> false <> Decimal("1.000000000000000000000002")
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> false <> Decimal(1)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> false <> Decimal(0)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> Date(1900,1,1) <> "2"
+Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: Date, Text.
+
+>> Date(1900,1,0) <> true
+Errors: Error 15-17: Incompatible types for comparison. These types can't be compared: Date, Boolean.
+
+>> DateTime(1900,1,1,12,0,0) <> "2.5"
+Errors: Error 26-28: Incompatible types for comparison. These types can't be compared: DateTime, Text.
+
+>> DateTime(2000,1,1,12,0,0) <> true
+Errors: Error 26-28: Incompatible types for comparison. These types can't be compared: DateTime, Boolean.
+
+>> DateTime(2000,1,0,0,0,0) <> true
+Errors: Error 25-27: Incompatible types for comparison. These types can't be compared: DateTime, Boolean.
+
+>> Time(9,0,0) <> "0.375"
+Errors: Error 12-14: Incompatible types for comparison. These types can't be compared: Time, Text.
+
+>> Time(9,0,0) <> true
+Errors: Error 12-14: Incompatible types for comparison. These types can't be compared: Time, Boolean.
+
+>> Time(24,0,0) <> false
+Errors: Error 13-15: Incompatible types for comparison. These types can't be compared: Time, Boolean.
+
+>> Time(1,0,0) <> DateTime(1899,12,30,1,0,0)
+false
+
+>> Decimal("16.000000000000000000000001") <> "16"
+Errors: Error 39-41: Incompatible types for comparison. These types can't be compared: Decimal, Text.
+
+>> Decimal("1.000000000000000000000001") <> true
+Errors: Error 38-40: Incompatible types for comparison. These types can't be compared: Decimal, Boolean.
+
+>> ParseJSON("""1900-01-01T09:00:01""") <> Date(1900,1,1)
+false

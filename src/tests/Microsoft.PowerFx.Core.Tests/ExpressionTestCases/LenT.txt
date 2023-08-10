@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult
+
 >> Len(["abc", "def"])
 Table({Value:3},{Value:3})
 

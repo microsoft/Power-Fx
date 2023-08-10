@@ -1,10 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Data;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Interpreter.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -37,7 +34,7 @@ namespace Microsoft.PowerFx.Tests
             using var table = CreateDataTable();
 
             var robinTable = new DataTableValue(table);
-            engine.UpdateVariable("robintable", robinTable);
+            engine._symbolValues.Add("robintable", robinTable);
 
             var result1 = engine.Eval("Index(robintable, 2).Scores"); // 20
             Assert.Equal(20.0, result1.ToObject());

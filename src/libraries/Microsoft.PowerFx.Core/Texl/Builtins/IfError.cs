@@ -92,7 +92,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             Contracts.Assert(args.Length == argTypes.Length);
             Contracts.AssertValue(errors);
             Contracts.Assert(MinArity <= args.Length && args.Length <= MaxArity);
+            
+            if (context.Features.PowerFxV1CompatibilityRules)
+            {
+                return CheckTypesLatest(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            }
+            else
+            {
+                return CheckTypesLegacy(context, args, argTypes, errors, out returnType, out nodeToCoercedTypeMap);
+            }
+        }
 
+        public bool CheckTypesLegacy(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
             var count = args.Length;
             nodeToCoercedTypeMap = null;
 
@@ -174,6 +186,60 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return fArgsValid;
         }
 
+        public bool CheckTypesLatest(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
+        {
+            var count = args.Length;
+            nodeToCoercedTypeMap = null;
+
+            var fArgsValid = true;
+
+            /*
+            If we were to write IfError(v1, f1, v2, f2, ..., vn, fn) in a try...catch way, it would look something like:
+                
+            var result
+            try {
+                result = v1();
+            } catch {
+                return f1();
+            }
+            try {
+                result = v2();
+            } catch {
+                return f2();
+            }
+            ...
+            try {
+                result = vn();
+            } catch {
+                return fn();  // omit this last catch if there is an odd number of arguments
+            }
+            return result;
+
+            In this case, we prefer the type of the last v_i as the return type.
+            Possible return values are:
+            Even case: f1, f2, ..., vn, fn
+            Odd case: f1, f2, ..., vn
+            */
+
+            var possibleResults = new List<(TexlNode node, DType type)>();
+            var lastValueNode = (count % 2 == 0) ? count - 2 : count - 1;
+            possibleResults.Add((args[lastValueNode], argTypes[lastValueNode]));
+            for (var i = 1; i < count; i += 2)
+            {
+                // Possible fallback results
+                possibleResults.Add((args[i], argTypes[i]));
+            }
+
+            if (!IfFunction.TryDetermineReturnTypePowerFxV1CompatRules(possibleResults, errors, ref nodeToCoercedTypeMap, out var type))
+            {
+                fArgsValid = false;
+            }
+
+            // Update the return type based on the specified invocation args.
+            returnType = type;
+            return fArgsValid;
+        }
+
         // In behavior properties, the arg type is irrelevant if nothing actually depends
         // on the output type of IfError (see If.cs, Switch.cs)
         private bool IsArgTypeInconsequential(TexlNode arg)
@@ -191,7 +257,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var ancestor = call;
             while (ancestor.Head.Name == Name)
             {
-                if (ancestor.Parent == null && ancestor.Args.Children.Length > 0)
+                if (ancestor.Parent == null && ancestor.Args.Children.Count > 0)
                 {
                     return true;
                 }
@@ -217,7 +283,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     }
 
                     // Only the last chain segment is consequential.
-                    var numSegments = chainNode.Children.Length;
+                    var numSegments = chainNode.Children.Count;
                     if (numSegments > 0 && !arg.InTree(chainNode.Children[numSegments - 1]))
                     {
                         return true;

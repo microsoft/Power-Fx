@@ -1,5 +1,5 @@
-﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup
-#SKIPFILE:disable:NumberIsFloat
+﻿#SETUP: EnableExpressionChaining,MutationFunctionsTestSetup,ConsistentOneColumnTableResult
+#SETUP: NumberIsFloat
 
 // Tests that can't be run in decimal yet and have #SKIP directives
 // Once decimal is done, this #SKIPs can be removed and this file can be removed
@@ -13,7 +13,7 @@ Blank()
 >> Boolean(Filter([1,2,3], Value > 10))
 Table()
 
->> With({ C2: Filter(Table({F1 : 0}), false),C3: Filter(Table({F1 : 0}), false)},ForAll(Sequence(5),Collect(C2, { F1: ThisRecord.Value }));ForAll(Sequence(CountRows(C2)),Collect(C3, Index(C2, ThisRecord.Value)));Patch(C2, First(C2), { F1 : 99});Patch(C3, Last(C2), { F1 : 88});Concat(C2, F1) & "," & Concat(C3, F1));
+>> ForAll(Sequence(5), Collect(t_empty, {Value:ThisRecord.Value})); ForAll(Sequence(CountRows(t_empty)), Collect(t_empty2, Index(t_empty, ThisRecord.Value))); Patch(t_empty, First(t_empty), {Value:99}); Patch(t_empty2, Last(t_empty2), {Value:88}); Concat(t_empty, Value) & "," & Concat(t_empty2, Value)
 "992345,123488"
 
 >> ForAll(Boolean([3, 1/0, 0, Sqrt(-1)]), IfError(Text(Value), $"ErrorKind={FirstError.Kind}"))

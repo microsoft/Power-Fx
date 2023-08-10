@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,13 +28,29 @@ namespace Microsoft.PowerFx.Types
         {
         }
 
+        public CompileTimeTypeWrapperRecordValue(CompileTimeTypeWrapperRecordValue orig)
+            : base(orig)
+        {
+        }
+
+        public override bool TryShallowCopy(out FormulaValue copy)
+        {
+            copy = new CompileTimeTypeWrapperRecordValue(this);
+            return true;
+        }
+
+        public override bool CanShallowCopy => true;
+
         protected override bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result)
         {
-            if (Type.TryGetFieldType(fieldName, out _))
+            if (Type.TryGetFieldType(fieldName, out var compileTimeType))
             {
                 // Only return field which were specified via the expectedType (IE RecordType),
                 // because inner record value may have more fields than the expected type.
-                return _fields.TryGetValue(fieldName, out result);
+                if (compileTimeType == fieldType && _fields.TryGetValue(fieldName, out result))
+                {
+                    return true;
+                }
             }
 
             result = default;

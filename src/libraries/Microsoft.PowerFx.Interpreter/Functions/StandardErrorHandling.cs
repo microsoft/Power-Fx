@@ -175,7 +175,7 @@ namespace Microsoft.PowerFx.Functions
         /// <param name="replaceBlankValues">Only supply this if its scalar function has <see cref="NoOpAlreadyHandledByIR(IRContext, int, FormulaType)"/>, meaning scalar has handled this via IR.</param>
         /// <returns></returns>
         private static AsyncFunctionPtr StandardErrorHandlingTabularOverload<TScalar>(
-            string functionName, 
+            string functionName,
             AsyncFunctionPtr targetFunction,
             Func<IRContext, int, FormulaType, FormulaValue> replaceBlankValues)
             where TScalar : FormulaValue => StandardErrorHandlingAsync<TableValue>(
@@ -234,6 +234,8 @@ namespace Microsoft.PowerFx.Functions
                 var resultRows = new List<DValue<RecordValue>>();
                 foreach (var row in args[0].Rows)
                 {
+                    runner.CheckCancel();
+
                     if (row.IsValue)
                     {
                         var value = row.Value.GetField(inputColumnNameStr);
@@ -289,11 +291,11 @@ namespace Microsoft.PowerFx.Functions
                     maxTableSize = Math.Max(maxTableSize, tableSize);
                     minTableSize = Math.Min(minTableSize, tableSize);
                 }
-                else if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTable)
+                else if (arg is BlankValue bv && bv.IRContext.ResultType._type.IsTableNonObjNull)
                 {
                     return (minTableSize, maxTableSize, new BlankValue(irContext));
                 }
-                else if (arg is ErrorValue ev && ev.IRContext.ResultType._type.IsTable)
+                else if (arg is ErrorValue ev && ev.IRContext.ResultType._type.IsTableNonObjNull)
                 {
                     return (minTableSize, maxTableSize, ev);
                 }
@@ -349,6 +351,8 @@ namespace Microsoft.PowerFx.Functions
                 var tabularArgRows = new DValue<RecordValue>[args.Length][];
                 for (var i = 0; i < args.Length; i++)
                 {
+                    runner.CheckCancel();
+
                     if (args[i] is TableValue tv)
                     {
                         tabularArgRows[i] = tv.Rows
@@ -359,10 +363,14 @@ namespace Microsoft.PowerFx.Functions
 
                 for (var i = 0; i < minTableSize; i++)
                 {
+                    runner.CheckCancel();
+
                     var functionArgs = new FormulaValue[args.Length];
                     ErrorValue errorRow = null;
                     for (var j = 0; j < args.Length; j++)
                     {
+                        runner.CheckCancel();
+
                         var arg = args[j];
                         if (arg is TableValue tv)
                         {
@@ -409,7 +417,7 @@ namespace Microsoft.PowerFx.Functions
                         var namedValue = new NamedValue(columnNameStr, rowResult);
                         var record = new InMemoryRecordValue(IRContext.NotInSource(resultType), new List<NamedValue>() { namedValue });
                         resultRows.Add(DValue<RecordValue>.Of(record));
-                    }    
+                    }
                 }
 
                 if (maxTableSize != minTableSize)
@@ -450,11 +458,11 @@ namespace Microsoft.PowerFx.Functions
         private static IEnumerable<FormulaValue> SequenceFunctionExpandArgs(IRContext irContext, IEnumerable<FormulaValue> args)
         {
             var res = new List<FormulaValue>(args);
-            
+
             while (res.Count < 3)
             {
                 if (((TableType)irContext.ResultType).SingleColumnFieldType == FormulaType.Decimal)
-                { 
+                {
                     var count = new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), 1m);
                     res.Add(count);
                 }

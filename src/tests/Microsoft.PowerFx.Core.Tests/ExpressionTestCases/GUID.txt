@@ -31,3 +31,13 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> GUID("thisisastringthatismuchlongerthanaguidshouldbeitisquitealongstringandwillfinderrorswithlongstringsinthisfunction")
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> IsBlank(GUID())
+false
+
+>> IsError(GUID())
+false
+
+// Multiple invocations are unique
+>> GUID() <> GUID()
+true

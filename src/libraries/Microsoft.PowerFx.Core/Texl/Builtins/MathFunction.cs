@@ -2,16 +2,12 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Texl.Builtins
@@ -19,7 +15,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all 1-arg math functions that return numeric values.
     internal abstract class MathOneArgFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return _nativeDecimal ? ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
         }
@@ -32,7 +28,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private readonly bool _nativeDecimal = false;
 
         public MathOneArgFunction(string name, TexlStrings.StringGetter description, FunctionCategories fc, bool nativeDecimal = false)
-            : base(name, description, fc, nativeDecimal ? DType.Unknown : DType.Number, 0, 1, 1, nativeDecimal ? DType.Unknown : DType.Number)
+            : base(name, description, fc, DType.Number, 0, 1, 1, DType.Number)
         {
             _nativeDecimal = nativeDecimal;
         }
@@ -88,11 +84,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.MathTFuncArg1 };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -133,7 +124,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
     // Abstract base class for all 2-arg math functions that return numeric values.
     internal abstract class MathTwoArgFunction : BuiltinFunction
     {
-        public override ArgPreprocessor GetArgPreprocessor(int index)
+        public override ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return _nativeDecimal && (index == 0 || !_secondArgFloat) ? 
                         ArgPreprocessor.ReplaceBlankWithCallZero_Scalar : ArgPreprocessor.ReplaceBlankWithFloatZero;
@@ -151,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
         private readonly bool _secondArgFloat = false;
 
         public MathTwoArgFunction(string name, TexlStrings.StringGetter description, int minArity, bool nativeDecimal = false, bool secondArgFloat = false)
-            : base(name, description, FunctionCategories.MathAndStat, nativeDecimal ? DType.Unknown : DType.Number, 0, minArity, 2, nativeDecimal ? DType.Unknown : DType.Number, nativeDecimal && !secondArgFloat ? DType.Unknown : DType.Number)
+            : base(name, description, FunctionCategories.MathAndStat, DType.Number, 0, minArity, 2, DType.Number, DType.Number)
         {
             _nativeDecimal = nativeDecimal;
             _secondArgFloat = secondArgFloat;
@@ -234,11 +225,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.MathTFuncArg1, TexlStrings.MathTFuncArg2 };
         }
 
-        public override string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(suffix: "_T");
-        }
-
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);
@@ -264,7 +250,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 DType otherDesiredScalarType;
 
                 // At least one of the arguments has to be a table.
-                if (type0.IsTable)    
+                if (type0.IsTableNonObjNull)
                 {
                     fValid &= TryGetSingleColumn(type0, args[0], errors, out var column0);
                     returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, column0.Type);
@@ -285,7 +271,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                     otherType = type1;
                     otherDesiredScalarType = _secondArgFloat ? DType.Number : returnScalarType;
                 }
-                else if (type1.IsTable)
+                else if (type1.IsTableNonObjNull)
                 {
                     fValid &= TryGetSingleColumn(type1, args[1], errors, out var column1);
                     returnScalarType = DetermineNumericFunctionReturnType(_nativeDecimal, context.NumberIsFloat, type0);
@@ -311,7 +297,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    Contracts.Assert(returnType.IsTable);
+                    Contracts.Assert(returnType.IsTableNonObjNull);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[1], TexlStrings.ErrTypeError);
 
@@ -321,10 +307,10 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 Contracts.Assert(otherType.IsValid);
                 Contracts.AssertValue(otherArg);
-                Contracts.Assert(returnType.IsTable);
+                Contracts.Assert(returnType.IsTableNonObjNull);
                 Contracts.Assert(!fValid || returnType.IsColumn);
 
-                if (otherType.IsTable)
+                if (otherType.IsTableNonObjNull)
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(otherType, otherArg, errors, out var otherColumn);
@@ -340,7 +326,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var type0 = argTypes[0];
 
-                if (type0.IsTable)                    
+                if (type0.IsTableNonObjNull)                    
                 {
                     // Ensure we have a one-column table of numerics
                     fValid &= TryGetSingleColumn(type0, args[0], errors, out var oneArgColumn);
@@ -349,7 +335,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
                 }
                 else
                 {
-                    Contracts.Assert(returnType.IsTable);
+                    Contracts.Assert(returnType.IsTableNonObjNull);
                     errors.EnsureError(DocumentErrorSeverity.Severe, args[0], TexlStrings.ErrTypeError);
                     fValid = false;
                 }

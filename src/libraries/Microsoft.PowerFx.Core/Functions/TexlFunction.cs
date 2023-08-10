@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -32,7 +31,6 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.IR.IRTranslator;
-using static Microsoft.PowerFx.Syntax.PrettyPrintVisitor;
 using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 using IRCallNode = Microsoft.PowerFx.Core.IR.Nodes.CallNode;
 
@@ -135,6 +133,9 @@ namespace Microsoft.PowerFx.Core.Functions
         // Returns true if the function is disabled for Commmanding
         public virtual bool DisableForCommanding => false;
 
+        // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
+        public virtual bool MutatesArg0 => false;
+
         // Returns true if the function should be suppressed in Intellisense for component.
         public virtual bool SuppressIntellisenseForComponent => DisableForComponent;
 
@@ -210,6 +211,30 @@ namespace Microsoft.PowerFx.Core.Functions
         public virtual bool RequireAllParamColumns => false;
 
         /// <summary>
+        /// Indicates whether the function will propagate the mutability of its first argument.
+        /// For example, if x is a mutable reference (i.e., a variable), then First(x) will still
+        /// be mutable (since First is one function which propagates mutability).
+        /// </summary>
+        public virtual bool PropagatesMutability => false;
+
+        /// <summary>
+        /// Adds an error to the container if the given argument is immutable.
+        /// </summary>
+        /// <param name="binding"></param>
+        /// <param name="arg"></param>
+        /// <param name="errors"></param>
+        protected void ValidateArgumentIsMutable(TexlBinding binding, TexlNode arg, IErrorContainer errors)
+        {
+            if (binding.Features.PowerFxV1CompatibilityRules && !binding.IsMutable(arg))
+            {
+                errors.EnsureError(
+                    arg,
+                    new ErrorResourceKey("ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue"),
+                    this.Name);
+            }
+        }
+
+        /// <summary>
         /// Indicates whether the function sets a value.
         /// </summary>
         public virtual bool ModifiesValues => false;
@@ -265,7 +290,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
                 return _signatureConstraint;
             }
-            protected set => _signatureConstraint = value;
+            protected init => _signatureConstraint = value;
         }
 
         /// <summary>
@@ -371,25 +396,6 @@ namespace Microsoft.PowerFx.Core.Functions
                     yield return signature;
                 }
             }
-        }
-
-        // Return a unique name for this function (useful in the presence of overloads).
-        // This is used for name mangling and Texl -> runtime function mapping.
-        // TASK: 68797: We need a TexlFunction name -> JS/runtime function name map.
-        public virtual string GetUniqueTexlRuntimeName(bool isPrefetching = false)
-        {
-            return GetUniqueTexlRuntimeName(string.Empty);
-        }
-
-        protected string GetUniqueTexlRuntimeName(string suffix, bool suppressAsync = false)
-        {
-            var name = Namespace.IsRoot ? LocaleInvariantName : Namespace.Name + "__" + LocaleInvariantName;
-            if (name.Length <= 1)
-            {
-                return name.ToLowerInvariant();
-            }
-
-            return char.ToLowerInvariant(name[0]).ToString() + name.Substring(1) + suffix + (IsAsync && !suppressAsync ? "Async" : string.Empty);
         }
 
         public bool HandleCheckInvocation(TexlBinding binding, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
@@ -500,7 +506,7 @@ namespace Microsoft.PowerFx.Core.Functions
                 }
 
                 var type = argTypes[i];
-                if (type.IsError || 
+                if (type.IsError ||
                     type.IsVoid)
                 {
                     errors.EnsureError(args[i], TexlStrings.ErrBadType);
@@ -607,7 +613,7 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             // Check with function if we actually need data for this param.
-            return RequiresPagedDataForParamCore(callNode.Args.Children, paramIndex, binding);
+            return RequiresPagedDataForParamCore(callNode.Args.Children.ToArray(), paramIndex, binding);
         }
 
         /// <summary>
@@ -698,6 +704,12 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             Contracts.AssertValue(callNode);
             Contracts.AssertValue(binding);
+
+            // Valiate to see if offline usage hints are applicable.
+            if (binding.DelegationHintProvider?.TryGetWarning(callNode, this, out var warning) ?? false)
+            {
+                SuggestDelegationHint(callNode, binding);
+            }
 
             return false;
         }
@@ -1406,7 +1418,7 @@ namespace Microsoft.PowerFx.Core.Functions
             return new DelegationValidationStrategy(this);
         }
 
-#endregion
+        #endregion
 
         internal TransportSchemas.FunctionInfo Info(string locale)
         {
@@ -1462,8 +1474,10 @@ namespace Microsoft.PowerFx.Core.Functions
         /// By default, function does not attach any pre-processing for arguments.
         /// </summary>
         /// <param name="index">0 based index of argument.</param>
+        /// <param name="argCount">The number of arguments passed in the function invocation. 
+        /// For example, the Text function has different blank handling behaviors depending on whether it receives 1 argument (blanks are propagated) or more (blanks are converted to empty strings).</param>
         /// <returns></returns>
-        public virtual ArgPreprocessor GetArgPreprocessor(int index)
+        public virtual ArgPreprocessor GetArgPreprocessor(int index, int argCount)
         {
             return ArgPreprocessor.None;
         }

@@ -1,3 +1,5 @@
+#SETUP: ConsistentOneColumnTableResult,TableSyntaxDoesntWrapRecords
+
 >> With({emptyTable:Filter(["one"], Len(Value) > 10)}, Substitute(emptyTable, emptyTable, emptyTable))
 Table()
 
@@ -26,10 +28,16 @@ Table({Value:"aaabbbcCc"},{Value:"xxxyyYzzz"})
 >> Substitute(If(1<0,"c"), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
 Table({Value:""},{Value:""})
 
+>> Substitute(Blank(), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
+Table({Value:""},{Value:""})
+
 >> Substitute(If(1<0,["a","b"]), [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}])
 Blank()
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1<0,"null"), [{repl:"X"}, {repl:"Y"}])
+Table({Value:"abcdefg"},{Value:"gg hh ii"})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], Blank(), [{repl:"X"}, {repl:"Y"}])
 Table({Value:"abcdefg"},{Value:"gg hh ii"})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], If(1<0,[{match:"a"},{match:"g"}]), [{repl:"X"}, {repl:"Y"}])
@@ -38,10 +46,16 @@ Blank()
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1<0,"null"))
 Table({Value:"bcdefg"},{Value:" hh ii"})
 
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], Blank())
+Table({Value:"bcdefg"},{Value:" hh ii"})
+
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], If(1<0,[{repl:"X"}, {repl:"Y"}]))
 Blank()
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1<0,1))
+Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
+
+>> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], Blank())
 Table({Value:Error({Kind:ErrorKind.InvalidArgument})},{Value:Error({Kind:ErrorKind.InvalidArgument})})
 
 >> Substitute( [{name: "abcdefg"}, {name: "gg hh ii"}], [{match:"a"},{match:"g"}], [{repl:"X"}, {repl:"Y"}], If(1<0,[1]))

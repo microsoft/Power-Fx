@@ -185,6 +185,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             {
                 throw new NotImplementedException();
             }
+
+            public bool TryGetPropertyNames(out IEnumerable<string> result)
+            {
+                result = null;
+                return false;
+            }
         }
 
         private class MutableObject : IUntypedObject
@@ -248,6 +254,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     return true;
                 }
 
+                result = null;
+                return false;
+            }
+
+            public bool TryGetPropertyNames(out IEnumerable<string> result)
+            {
                 result = null;
                 return false;
             }

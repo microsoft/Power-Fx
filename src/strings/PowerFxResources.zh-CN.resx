@@ -1424,7 +1424,7 @@
     <value>将从中提取非重复值的表。</value>
   </data>
   <data name="AboutDistinct_expression" xml:space="preserve">
-    <value>对输入表中为 Distinct 运算提供值的每一行计算的表达式。</value>
+    <value>对输入表中的每行进行计算并为 Distinct 运算提供值的表达式。</value>
   </data>
   <data name="AboutAtan2" xml:space="preserve">
     <value>返回指定 x 和 y 坐标的反正切(以弧度为单位)。</value>
@@ -1463,6 +1463,14 @@
   </data>
   <data name="MathTFuncArg1" xml:space="preserve">
     <value>输入</value>
+    
+  </data>
+  <data name="MathFuncArg2" xml:space="preserve">
+    <value>修改者</value>
+    
+  </data>
+  <data name="MathTFuncArg2" xml:space="preserve">
+    <value>修改者</value>
     
   </data>
   <data name="AboutLeft" xml:space="preserve">
@@ -1734,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>只能从组件内或从组件输出属性访问包含参数的组件自定义数据属性。</value>
+    <value>只能从组件内或从组件输出属性访问组件功能属性或参数。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>组件函数属性或参数只能引用其他函数属性。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -1801,20 +1813,8 @@
     <value>'{0}' 的第一个参数应是由一列组成的表。</value>
     
   </data>
-  <data name="ErrInvalidSchemaNeedStringCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的文本值组成的列。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedDateCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的日期值组成的列。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedNumCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的数值组成的列。</value>
-    
-  </data>
-  <data name="ErrInvalidSchemaNeedColorCol_Col" xml:space="preserve">
-    <value>架构无效，需要 '{0}' 的颜色值组成的列。</value>
+  <data name="ErrInvalidSchemaNeedTypeCol_Col" xml:space="preserve">
+    <value>架构无效，需要 '{1}' 的 {0} 值组成的列。</value>
     
   </data>
   <data name="ErrInvalidSchemaNeedCol" xml:space="preserve">
@@ -1855,6 +1855,10 @@
   </data>
   <data name="ErrNumberTooLarge" xml:space="preserve">
     <value>数值太大。</value>
+    
+  </data>
+  <data name="ErrReservedKeyword" xml:space="preserve">
+    <value>使用当前不支持的保留词。</value>
     
   </data>
   <data name="ErrTextTooLarge" xml:space="preserve">
@@ -2322,6 +2326,9 @@
   </data>
   <data name="MathAndStat" xml:space="preserve">
     <value>数学和统计</value>
+  </data>
+  <data name="UserDefined" xml:space="preserve">
+    <value>UserDefined</value>
   </data>
   <data name="Information" xml:space="preserve">
     <value>信息</value>
@@ -4083,90 +4090,6 @@
     <value>{0}</value>
     
   </data>
-  <data name="FormulaColumns_NotSupported" xml:space="preserve">
-    <value>在公式列中不受支持。</value>
-    
-  </data>
-  <data name="FormulaColumns_MathFunctionBadArity" xml:space="preserve">
-    <value>{0} 函数的参数数目无效: 收到 {1} 个，应为 {2} 个</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgNotSupported" xml:space="preserve">
-    <value>公式列中的 {1} 函数不支持 {0} 参数。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgTypeNotSupported" xml:space="preserve">
-    <value>此参数不能作为公式列中的此类型进行传递。</value>
-    
-  </data>
-  <data name="FormulaColumns_ArgumentTypeNotSupported" xml:space="preserve">
-    <value>此参数不能作为公式列中的类型 {0} 进行传递。</value>
-    
-  </data>
-  <data name="FormulaColumns_LiteralArgRequired" xml:space="preserve">
-    <value>此参数仅支持文字值。</value>
-    
-  </data>
-  <data name="FormulaColumns_TimeZoneConversion" xml:space="preserve">
-    <value>如果没有时区转换，则无法对此输入执行 {0}，而公式列不支持时区转换。</value>
-    
-  </data>
-  <data name="FormulaColumns_IncompatibleDateTimes" xml:space="preserve">
-    <value>无法对具有不同日期时间行为的值执行此操作。</value>
-    
-  </data>
-  <data name="FormulaColumns_DateTimeFormatNotSupported" xml:space="preserve">
-    <value>公式列仅支持短日期和时间格式字符串。</value>
-    
-  </data>
-  <data name="FormulaColumns_InvalidTimeUnit" xml:space="preserve">
-    <value>{0} 参数是 {1} 日期算术函数的无效/不受支持的时间单位。</value>
-    
-  </data>
-  <data name="FormulaColumns_NumericFormatNotSupported" xml:space="preserve">
-    <value>公式列中不支持特定于区域设置的格式标记，例如 "." 和 ","。</value>
-    
-  </data>
-  <data name="FormulaColumns_FunctionNotSupported" xml:space="preserve">
-    <value>公式列中不支持 {0}，请改用 {1}。</value>
-    
-  </data>
-  <data name="FormulaColumns_OperationNotSupported" xml:space="preserve">
-    <value>无法对公式列中的类型 {0} 执行此操作。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeNotSupported" xml:space="preserve">
-    <value>公式列中不支持结果类型 {0}。</value>
-    
-  </data>
-  <data name="FormulaColumns_RecordAccessNotSupported" xml:space="preserve">
-    <value>公式列中不支持直接引用整个记录。请引用记录中的有效字段。</value>
-    
-  </data>
-  <data name="FormulaColumns_ResultTypeMustMatch" xml:space="preserve">
-    <value>此公式的结果类型预计为 {0}，但实际结果类型为 {1}。无法更改公式列的结果类型。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnTypeNotSupported" xml:space="preserve">
-    <value>公式列不支持类型为 {0} 的列。</value>
-    
-  </data>
-  <data name="FormulaColumns_ColumnFormatNotSupported" xml:space="preserve">
-    <value>公式列不支持类型为 {0} 且格式为 {1} 的列。</value>
-    
-  </data>
-  <data name="FormulaColumns_AggregateCoercionNotSupported" xml:space="preserve">
-    <value>公式列中不支持强制记录或表格。</value>
-    
-  </data>
-  <data name="FormulaColumns_SingleColumnTableNotSupported" xml:space="preserve">
-    <value>公式列中不支持单列表。</value>
-    
-  </data>
-  <data name="FormulaColumns_VirtualTableNotSupported" xml:space="preserve">
-    <value>公式列中无法引用虚拟表 {0}。</value>
-    
-  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>预期接收一个操作数。公式或表达式预期接收一个有效操作数。例如，可将操作数 "2" 添加到表达式 "1 + _"，得到结果 "3"。或可将操作数“好”添加到表达式“您 _”，得到结果“您好”。</value>
     
@@ -4789,6 +4712,26 @@
     <value>指定的公式必须为表达式。</value>
     
   </data>
+  <data name="ErrUDF_MissingFunctionBody" xml:space="preserve">
+    <value>用户定义的函数必须有正文。</value>
+    
+  </data>
+  <data name="ErrUDF_FunctionAlreadyDefined" xml:space="preserve">
+    <value>函数 {0} 已定义。</value>
+    
+  </data>
+  <data name="ErrUDF_DuplicateParameter" xml:space="preserve">
+    <value>参数 {0} 重复。</value>
+    
+  </data>
+  <data name="ErrUDF_UnknownType" xml:space="preserve">
+    <value>未知类型 {0}。</value>
+    
+  </data>
+  <data name="ErrUDF_ReturnTypeDoesNotMatch" xml:space="preserve">
+    <value>所说明的函数返回类型与函数正文的返回类型不匹配。</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>
@@ -4870,6 +4813,14 @@
     <value>此功能已被弃用并且不再受支持。</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>在 {1} 命名空间中已弃用 {0} 函数。</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>在 {1} 命名空间中不支持 {0} 函数。</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>警告: 提供了延迟类型。</value>
     
@@ -4913,6 +4864,172 @@
   </data>
   <data name="ErrUnimplementedFunction" xml:space="preserve">
     <value>'{0}' 是一个可识别但不支持的函数。</value>
+    
+  </data>
+  <data name="InvalidCast" xml:space="preserve">
+    <value>类型转换失败，因为给定的值为 '{0}' 类型，但应为 '{1}' 类型。</value>
+    
+  </data>
+  <data name="WrnDelegationTableNotSupported" xml:space="preserve">
+    <value>如果表 '{0}' 超过 {1} 行，则此操作对该表可能不起作用。</value>
+    
+  </data>
+  <data name="WrnDelegationPredicate" xml:space="preserve">
+    <value>此谓词将永远为 true。您是要使用 ThisRecord 还是 [@]?</value>
+    
+  </data>
+  <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
+    <value>无法委托 {0}: 仅支持委托查找主键字段 '{1}'。</value>
+    
+  </data>
+  <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
+    <value>无法委托 {0}: 表达式将比较多个字段。</value>
+    
+  </data>
+  <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
+    <value>无法委托 {0}: 包含行为函数 '{1}'。</value>
+    
+  </data>
+  <data name="AboutIsMatch" xml:space="preserve">
+    <value>确定提供的文本是否与所提供的文本格式匹配。</value>
+    
+  </data>
+  <data name="AboutIsMatch_text" xml:space="preserve">
+    <value>要对格式进行比较的文本。</value>
+  </data>
+  <data name="AboutIsMatch_format" xml:space="preserve">
+    <value>要针对其来检查文本的格式。可能是一个 TextFormat 枚举值或正则表达式。</value>
+  </data>
+  <data name="AboutIsMatch_extent" xml:space="preserve">
+    <value>这将确定我们要匹配文本的哪一部分。可能是一个 MatchOptions 枚举值。</value>
+    
+  </data>
+  <data name="IsMatchArg1" xml:space="preserve">
+    <value>文本</value>
+    
+  </data>
+  <data name="IsMatchArg2" xml:space="preserve">
+    <value>格式</value>
+    
+  </data>
+  <data name="IsMatchArg3" xml:space="preserve">
+    <value>程度</value>
+    
+  </data>
+  <data name="AboutMatch" xml:space="preserve">
+    <value>在提供的文本中搜索指定的正则表达式，从中返回第一个匹配项。</value>
+    
+  </data>
+  <data name="AboutMatchAll" xml:space="preserve">
+    <value>在提供的文本中搜索指定的正则表达式，从中返回所有匹配项。</value>
+    
+  </data>
+  <data name="AboutMatch_text" xml:space="preserve">
+    <value>要根据正则表达式进行搜索的文本。</value>
+    
+  </data>
+  <data name="AboutMatch_regular_expression" xml:space="preserve">
+    <value>用于检查文本的正则表达式。它可以包含在成功匹配的情况下将返回的捕获(括号之间的值)。</value>
+    
+  </data>
+  <data name="AboutMatch_options" xml:space="preserve">
+    <value>这将确定我们要匹配文本的哪一部分。可能是一个 MatchOptions 枚举值。</value>
+    
+  </data>
+  <data name="AboutMatchAll_text" xml:space="preserve">
+    <value>要根据正则表达式进行搜索的文本。</value>
+    
+  </data>
+  <data name="AboutMatchAll_regular_expression" xml:space="preserve">
+    <value>用于检查文本的正则表达式。它可以包含在成功匹配的情况下将返回的捕获(括号之间的值)。</value>
+    
+  </data>
+  <data name="AboutMatchAll_options" xml:space="preserve">
+    <value>这将确定我们要匹配文本的哪一部分。可能是一个 MatchOptions 枚举值。</value>
+    
+  </data>
+  <data name="MatchArg1" xml:space="preserve">
+    <value>文本</value>
+    
+  </data>
+  <data name="MatchArg2" xml:space="preserve">
+    <value>正则表达式</value>
+    
+  </data>
+  <data name="MatchArg3" xml:space="preserve">
+    <value>选项</value>
+    
+  </data>
+  <data name="AboutRefresh" xml:space="preserve">
+    <value>刷新指定数据源。</value>
+    
+  </data>
+  <data name="RefreshArg1" xml:space="preserve">
+    <value>已连接数据源</value>
+    
+  </data>
+  <data name="ErrNeedAgg" xml:space="preserve">
+    <value>需要记录或表值。</value>
+    
+  </data>
+  <data name="AboutRefresh_connected_data_source" xml:space="preserve">
+    <value>要刷新的已连接数据源。</value>
+  </data>
+  <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
+    <value>只能刷新托管连接。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
+    <value>正则表达式无效。</value>
+    
+  </data>
+  <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
+    <value>正则表达式必须是常数值。</value>
+        
+  </data>
+  <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
+    <value>无法更改传递给 '{0}' 函数的值。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedFullMatchField" xml:space="preserve">
+    <value>捕获名称“{0}”将隐藏要返回正则表达式完整匹配的预定义属性。如果要使用该命名属性来提取指定文本中的完整匹配项，请对其重命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedSubMatchesField" xml:space="preserve">
+    <value>捕获名称“{0}”将隐藏要返回正则表达式中组匹配项的预定义属性。如果要使用该命名属性来提取指定文本中的所有子匹配项，请对其重命名。</value>
+    
+  </data>
+  <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
+    <value>捕获名称“{0}”将隐藏要返回正则表达式匹配项位置的预定义属性。如果要使用该命名属性来提取指定文本中完整匹配项的位置，请对其重命名。</value>
+      
+  </data>
+  <data name="AboutPlainText" xml:space="preserve">
+    <value>删除所有格式并返回纯文本值。</value>
+    
+  </data>
+  <data name="PlainTextArg1" xml:space="preserve">
+    <value>文本</value>
+    
+  </data>
+  <data name="AboutPlainText_text" xml:space="preserve">
+    <value>要移除其 HTML 和 XML 标记的文本。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>筛选器函数不允许将行为函数作为谓词。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>使用 And 运算符将多个谓词组合到第二个参数中。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>无法复制此表。请改为使用 ForAll 函数和 {...} 表示法创建内联表来复制所需的各个列。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>无法复制此记录。请改为使用 {...} 表示法创建内联记录来复制所需的各个字段。</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 函数的第二个参数仅支持数字和日期/时间值。</value>
     
   </data>
 </root>

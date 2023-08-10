@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Functions.Library;
@@ -18,21 +19,6 @@ namespace Microsoft.PowerFx
     /// </summary>
     public static class TypeCoercionProvider
     {
-        internal static FormattingInfo CreateFormattingInfo() => new FormattingInfo()
-        {
-            // $$$ can't use current culture
-            CultureInfo = CultureInfo.CurrentCulture,
-            CancellationToken = CancellationToken.None,
-            TimeZoneInfo = TimeZoneInfo.Local
-        };
-
-        internal static FormattingInfo CreateFormattingInfo(RuntimeConfig runtimeConfig, CancellationToken cancellationToken) => new FormattingInfo()
-        {
-            CultureInfo = runtimeConfig.GetService<CultureInfo>(),
-            CancellationToken = cancellationToken,
-            TimeZoneInfo = runtimeConfig.GetService<TimeZoneInfo>()
-        };
-
         /// <summary>
         /// Can convert value to source format to target or not.
         /// </summary>
@@ -53,34 +39,43 @@ namespace Microsoft.PowerFx
             return CanPotentiallyCoerceToTargetType(source, target);
         }
 
+        public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, out FormulaValue result)
+        {
+            return value.TryCoerceTo(targetType, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
+        }
+
         /// <summary>
         /// Try to convert value to target format.
         /// </summary>
         /// <param name="value">Input value.</param>
         /// <param name="targetType">Target type format.</param>
+        /// <param name="formattingInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
-        public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, out FormulaValue result)
+        internal static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, FormattingInfo formattingInfo, out FormulaValue result, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             bool canCoerce = false;
             if (value is RecordValue recordValue && targetType is RecordType recordType)
             {
-                canCoerce = recordValue.TryCoerceToRecord(recordType, out RecordValue recordResult);
+                canCoerce = recordValue.TryCoerceToRecord(recordType, formattingInfo, out RecordValue recordResult, cancellationToken);
                 result = recordResult;
             }
             else if (value is TableValue tableValue && targetType is TableType tableType)
             {
-                canCoerce = tableValue.TryCoerceToTable(tableType, out TableValue tableResult);
+                canCoerce = tableValue.TryCoerceToTable(tableType, formattingInfo, out TableValue tableResult, cancellationToken);
                 result = tableResult;
             }
             else
             {
-                canCoerce = TryCoerceToTargetType(value, targetType, out result);
+                canCoerce = TryCoerceToTargetType(value, targetType, formattingInfo, out result, cancellationToken);
             }
 
             return canCoerce;
         }
-        
+
         /// <summary>
         /// Can convert value to String format or not.
         /// </summary>
@@ -110,7 +105,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out StringValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
         }
 
         /// <summary>
@@ -126,16 +121,17 @@ namespace Microsoft.PowerFx
         }
 
         /// <summary>
-        /// Try to convert value to String format.
-        /// </summary>
-        /// <param name="value">Input value.</param>
-        /// <param name="runtimeConfig">Runtime Config.</param>
-        /// <param name="cancellationToken">Cancellation Token.</param>
-        /// <param name="result">Result value.</param>
-        /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
+         /// Try to convert value to String format.
+         /// </summary>
+         /// <param name="value">Input value.</param>
+         /// <param name="runtimeConfig">Runtime Config.</param>
+         /// <param name="cancellationToken">Cancellation Token.</param>
+         /// <param name="result">Result value.</param>
+         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, RuntimeConfig runtimeConfig, CancellationToken cancellationToken, out StringValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(runtimeConfig, cancellationToken), out result);
+            cancellationToken.ThrowIfCancellationRequested();
+            return TryCoerceTo(value, runtimeConfig.ServiceProvider.GetFormattingInfo(), out result, cancellationToken);
         }
 
         /// <summary>
@@ -144,10 +140,21 @@ namespace Microsoft.PowerFx
         /// <param name="value">Input value.</param>
         /// <param name="formatInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
-        internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result)
+        internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out StringValue result, CancellationToken cancellationToken)
         {
-            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, null, out result);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var textFormatArgs = new TextFormatArgs
+            {
+                FormatCultureName = null,
+                FormatArg = null,
+                HasDateTimeFmt = false,
+                HasNumericFmt = false
+            };
+
+            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, textFormatArgs, out result, cancellationToken);
         }
 
         /// <summary>
@@ -158,7 +165,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out NumberValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result);
         }
 
         /// <summary>
@@ -181,16 +188,16 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out DecimalValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result);
         }
-
+        
         /// <summary>
-        /// Try to convert value to Number format.
-        /// </summary>
-        /// <param name="value">Input value.</param>
-        /// <param name="formatInfo">Formatting Info.</param>
-        /// <param name="result">Result value.</param>
-        /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
+         /// Try to convert value to Number format.
+         /// </summary>
+         /// <param name="value">Input value.</param>
+         /// <param name="formatInfo">Formatting Info.</param>
+         /// <param name="result">Result value.</param>
+         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
         internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out DecimalValue result)
         {
             return TryDecimal(formatInfo, IRContext.NotInSource(FormulaType.Decimal), value, out result);
@@ -204,19 +211,24 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to DateTime type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out DateTimeValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result);
         }
 
         /// <summary>
-        /// Try to convert value to DateTime format.
-        /// </summary>
-        /// <param name="value">Input value.</param>
-        /// <param name="formatInfo">Formatting Info.</param>
-        /// <param name="result">Result value.</param>
-        /// <returns>True/False based on whether function can convert from original type to DateTime type.</returns> 
+         /// Try to convert value to DateTime format.
+         /// </summary>
+         /// <param name="value">Input value.</param>
+         /// <param name="formatInfo">Formatting Info.</param>
+         /// <param name="result">Result value.</param>
+         /// <returns>True/False based on whether function can convert from original type to DateTime type.</returns> 
         internal static bool TryCoerceTo(this FormulaValue value, FormattingInfo formatInfo, out DateTimeValue result)
         {
             return TryGetDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), value, out result);
+        }
+
+        public static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, out RecordValue result)
+        {
+            return value.TryCoerceToRecord(targetType, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
         }
 
         /// <summary>
@@ -224,40 +236,46 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="value">Input value.</param>
         /// <param name="targetType">Target type.</param>
+        /// <param name="formattingInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to Record type.</returns> 
-        public static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, out RecordValue result)
+        internal static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, FormattingInfo formattingInfo, out RecordValue result, CancellationToken cancellationToken)
         {
-            result = null;
-            int n = value.Fields.Count();
-            var recordResult = new NamedValue[n];
+            cancellationToken.ThrowIfCancellationRequested();
 
-            for (int i = 0; i < n; i++)
+            result = null;
+            var recordResult = new List<NamedValue>();
+
+            foreach (var targetField in targetType.GetFieldTypes())
             {
-                var fieldName = value.Fields.ElementAt(i).Name;
-                var fieldValue = value.GetField(fieldName);
-                if (!targetType.TryGetFieldType(fieldName, out FormulaType fieldType))
+                var fieldName = targetField.Name;
+                var fieldType = targetField.Type;
+                var fieldSourceValue = value.GetField(fieldName);
+
+                if (!value.Type.TryGetFieldType(fieldName, out FormulaType sourceFieldType))
                 {
-                    return false;
+                    recordResult.Add(new NamedValue(fieldName, FormulaValue.NewBlank(fieldType)));
+                    continue;
                 }
 
                 if (fieldType is RecordType recordType)
                 {
-                    if (!TryCoerceTo(fieldValue, fieldType, out FormulaValue fieldRecordResult))
+                    if (!TryCoerceTo(fieldSourceValue, fieldType, formattingInfo, out FormulaValue fieldRecordResult, cancellationToken))
                     {
                         return false;
                     }
 
-                    recordResult[i] = new NamedValue(fieldName, fieldRecordResult);
+                    recordResult.Add(new NamedValue(fieldName, fieldRecordResult));
                 }
                 else
                 {
-                    if (!TryCoerceToTargetType(fieldValue, fieldType, out FormulaValue fieldResult))
+                    if (!TryCoerceToTargetType(fieldSourceValue, fieldType, formattingInfo, out FormulaValue fieldResult, cancellationToken))
                     {
                         return false;
                     }
 
-                    recordResult[i] = new NamedValue(fieldName, fieldResult);
+                    recordResult.Add(new NamedValue(fieldName, fieldResult));
                 }
             }
 
@@ -265,29 +283,38 @@ namespace Microsoft.PowerFx
             return true;
         }
 
+        public static bool TryCoerceToTable(this TableValue value, TableType targetType, out TableValue result)
+        {
+            return value.TryCoerceToTable(targetType, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
+        }
+
         /// <summary>
         /// Try to convert value to Table format.
         /// </summary>
         /// <param name="value">Input value.</param>
         /// <param name="targetType">Target type.</param>
+        /// <param name="formattingInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to Table type.</returns> 
-        public static bool TryCoerceToTable(this TableValue value, TableType targetType, out TableValue result)
+        internal static bool TryCoerceToTable(this TableValue value, TableType targetType, FormattingInfo formattingInfo, out TableValue result, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             result = null;
             int n = value.Rows.Count();
             var records = new RecordValue[n];
 
             for (int i = 0; i < n; i++)
             {
-                if (!value.Rows.ElementAt(i).Value.TryCoerceToRecord(targetType.ToRecord(), out RecordValue recordResult))
+                if (!value.Rows.ElementAt(i).Value.TryCoerceToRecord(targetType.ToRecord(), formattingInfo, out RecordValue recordResult, cancellationToken))
                 {
                     return false;
                 }
 
                 records[i] = recordResult;
             }
-            
+
             result = FormulaValue.NewTable(targetType.ToRecord(), records.ToArray());
             return true;
         }
@@ -302,12 +329,7 @@ namespace Microsoft.PowerFx
         {
             foreach (var field in source.GetFieldTypes())
             {
-                if (!target.TryGetFieldType(field.Name, out FormulaType targetFieldType))
-                {
-                    return false;
-                }
-
-                if (!CanPotentiallyCoerceTo(field.Type, targetFieldType))
+                if (target.TryGetFieldType(field.Name, out FormulaType targetFieldType) && !CanPotentiallyCoerceTo(field.Type, targetFieldType))
                 {
                     return false;
                 }
@@ -335,21 +357,30 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from source type to target type.</returns> 
         public static bool CanPotentiallyCoerceToTargetType(FormulaType source, FormulaType target)
         {
-            if (source == FormulaType.Boolean)
+            if (source == target)
             {
-                return BooleanValue.AllowedListConvertToBoolean.Contains(target);
+                return true;
             }
-            else if (source == FormulaType.String)
+
+            if (target == FormulaType.Boolean)
             {
-                return StringValue.AllowedListConvertToString.Contains(target);
+                return BooleanValue.AllowedListConvertToBoolean.Contains(source);
             }
-            else if (source == FormulaType.Number)
+            else if (target == FormulaType.String)
             {
-                return NumberValue.AllowedListConvertToNumber.Contains(target);
+                return StringValue.AllowedListConvertToString.Contains(source);
             }
-            else if (source == FormulaType.DateTime)
+            else if (target == FormulaType.Number)
             {
-                return DateTimeValue.AllowedListConvertToDateTime.Contains(target);
+                return NumberValue.AllowedListConvertToNumber.Contains(source);
+            }
+            else if (target == FormulaType.Decimal)
+            {
+                return DecimalValue.AllowedListConvertToDecimal.Contains(source);
+            }
+            else if (target == FormulaType.DateTime)
+            {
+                return DateTimeValue.AllowedListConvertToDateTime.Contains(source);
             }
 
             return false;
@@ -360,10 +391,14 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// <param name="value">Input value.</param>
         /// <param name="targetType">Target type format.</param>
+        /// <param name="formattingInfo">Formatting Info.</param>
         /// <param name="result">Result value.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>True/False based on whether function can convert from original type to target type.</returns> 
-        private static bool TryCoerceToTargetType(FormulaValue value, FormulaType targetType, out FormulaValue result)
+        private static bool TryCoerceToTargetType(FormulaValue value, FormulaType targetType, FormattingInfo formattingInfo, out FormulaValue result, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             result = null;
             bool canCoerce = false;
 
@@ -374,22 +409,22 @@ namespace Microsoft.PowerFx
             }
             else if (targetType == FormulaType.String)
             {
-                canCoerce = value.TryCoerceTo(out StringValue stringResult);
+                canCoerce = value.TryCoerceTo(formattingInfo, out StringValue stringResult, cancellationToken);
                 result = stringResult;
             }
             else if (targetType == FormulaType.Number)
             {
-                canCoerce = value.TryCoerceTo(out NumberValue numResult);
+                canCoerce = value.TryCoerceTo(formattingInfo, out NumberValue numResult);
                 result = numResult;
             }
             else if (targetType == FormulaType.DateTime)
             {
-                canCoerce = value.TryCoerceTo(out DateTimeValue dateTimeResult);
+                canCoerce = value.TryCoerceTo(formattingInfo, out DateTimeValue dateTimeResult);
                 result = dateTimeResult;
             }
             else if (targetType == FormulaType.Decimal)
             {
-                canCoerce = value.TryCoerceTo(out DecimalValue decimalResult);
+                canCoerce = value.TryCoerceTo(formattingInfo, out DecimalValue decimalResult);
                 result = decimalResult;
             }
 

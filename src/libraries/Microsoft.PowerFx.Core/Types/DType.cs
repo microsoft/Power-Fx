@@ -205,13 +205,7 @@ namespace Microsoft.PowerFx.Core.Types
         /// </summary>
         public bool AreFieldsOptional { get; set; } = false;
 
-        #endregion 
-
-        /// <summary>
-        ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
-        ///  any location without coercion.
-        /// </summary>
-        internal bool IsUniversal => Kind == DKind.Error || Kind == DKind.ObjNull;
+        #endregion        
 
         // Constructor for the single invalid DType sentinel value.
         private DType()
@@ -584,6 +578,8 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsTable => Kind == DKind.Table || Kind == DKind.ObjNull || Kind == DKind.LazyTable;
 
+        public bool IsTableNonObjNull => Kind == DKind.Table || Kind == DKind.LazyTable;
+
         public bool IsEnum => Kind == DKind.Enum || Kind == DKind.ObjNull;
 
         public bool IsColumn => IsTable && ChildCount == 1;
@@ -633,7 +629,17 @@ namespace Microsoft.PowerFx.Core.Types
 
         public bool IsLazyType => Kind == DKind.LazyRecord || Kind == DKind.LazyTable;
 
+        public bool IsDateTimeGroup => Kind == DKind.Date || Kind == DKind.DateTime || Kind == DKind.Time;
+
+        public bool IsNumeric => Kind == DKind.Number || Kind == DKind.Decimal;
+
         public bool HasPolymorphicInfo => PolymorphicInfo != null;
+
+        /// <summary>
+        ///  Whether this type is a subtype of all possible types, meaning that it can be placed in
+        ///  any location without coercion.
+        /// </summary>
+        internal bool IsUniversal => Kind == DKind.Error || Kind == DKind.ObjNull;
 
         public int ChildCount
         {
@@ -665,7 +671,7 @@ namespace Microsoft.PowerFx.Core.Types
                     : 0;
 
         public bool HasErrors => IsAggregate
-                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || tn.Type.HasErrors)
+                    ? GetNames(DPath.Root).Any(tn => tn.Type.IsError || (!tn.Type.IsLazyType && tn.Type.HasErrors))
                     : IsError;
 
         public bool Contains(DName fieldName)
@@ -2053,7 +2059,15 @@ namespace Microsoft.PowerFx.Core.Types
 
                     break;
                 case DKind.Currency:
-                    accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
+                    if (usePowerFxV1CompatibilityRules)
+                    {
+                        accepts = DefaultReturnValue(type);
+                    }
+                    else
+                    {
+                        accepts = (!exact && type.Kind == DKind.Number) || DefaultReturnValue(type);
+                    }
+
                     break;
                 case DKind.DateTime:
                     if (usePowerFxV1CompatibilityRules)
@@ -2677,104 +2691,116 @@ namespace Microsoft.PowerFx.Core.Types
             return false;
         }
 
-        public static DType Union(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce = false)
+        public static DType Union(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce = false, bool unionToLeftTypeOnly = false)
         {
-            type1.AssertValid();
-            type2.AssertValid();
+            leftType.AssertValid();
+            rightType.AssertValid();
 
             // For Lazy Types, union operations must expand the current depth
-            if (type1.IsLazyType)
+            if (leftType.IsLazyType)
             {
-                if (type1 == type2)
+                if (leftType == rightType)
                 {
-                    return type1;
+                    return leftType;
                 }
 
-                type1 = type1.LazyTypeProvider.GetExpandedType(type1.IsTable);
+                leftType = leftType.LazyTypeProvider.GetExpandedType(leftType.IsTable);
             }
 
-            if (type2.IsLazyType)
+            if (rightType.IsLazyType)
             {
-                type2 = type2.LazyTypeProvider.GetExpandedType(type2.IsTable);
+                rightType = rightType.LazyTypeProvider.GetExpandedType(rightType.IsTable);
             }
 
-            if (type1.IsAggregate && type2.IsAggregate)
+            if (leftType.IsAggregate && rightType.IsAggregate)
             {
-                if (type1 == ObjNull)
+                if (leftType == ObjNull)
                 {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
                 }
 
-                if (type2 == ObjNull)
+                if (rightType == ObjNull)
                 {
-                    return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
                 }
 
-                if (type1.Kind != type2.Kind)
+                if (leftType.Kind != rightType.Kind)
                 {
                     fError = true;
                     return Error;
                 }
 
                 return CreateDTypeWithConnectedDataSourceInfoMetadata(
-                    UnionCore(ref fError, type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce),
-                    type2.AssociatedDataSources,
-                    type2.DisplayNameProvider);
+                    UnionCore(ref fError, leftType, rightType, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly),
+                    rightType.AssociatedDataSources,
+                    rightType.DisplayNameProvider);
             }
 
-            if (type1 == Unknown)
+            if (leftType == Unknown)
             {
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
             }
 
-            if (type2 == Unknown)
+            if (rightType == Unknown)
             {
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
             }
 
-            if (type1 == ObjNull)
+            if (leftType == ObjNull)
             {
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
             }
 
-            if (type2 == ObjNull)
+            if (rightType == ObjNull)
             {
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
             }
 
-            if (type1.Accepts(type2, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) 
-                || (allowCoerce && type1.CoercesTo(type2, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+            if (unionToLeftTypeOnly)
             {
-                fError |= type1.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type1, type2.AssociatedDataSources, type2.DisplayNameProvider);
+                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
+                    || (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                {
+                    fError |= leftType.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
+                }
             }
-
-            if (type2.Accepts(type1, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                (allowCoerce && type2.CoercesTo(type1, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+            else
             {
-                fError |= type2.IsError;
-                return CreateDTypeWithConnectedDataSourceInfoMetadata(type2, type1.AssociatedDataSources, type1.DisplayNameProvider);
+                if (leftType.Accepts(rightType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
+                    || (allowCoerce && leftType.CoercesTo(rightType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                {
+                    fError |= leftType.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(leftType, rightType.AssociatedDataSources, rightType.DisplayNameProvider);
+                }
+
+                if (rightType.Accepts(leftType, exact: true, useLegacyDateTimeAccepts: useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                    (allowCoerce && rightType.CoercesTo(leftType, aggregateCoercion: true, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)))
+                {
+                    fError |= rightType.IsError;
+                    return CreateDTypeWithConnectedDataSourceInfoMetadata(rightType, leftType.AssociatedDataSources, leftType.DisplayNameProvider);
+                }
             }
 
-            var result = Supertype(type1, type2, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
+            var result = Supertype(leftType, rightType, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules);
             fError = result == Error;
             return result;
         }
 
-        private static DType UnionCore(ref bool fError, DType type1, DType type2, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce)
+        private static DType UnionCore(ref bool fError, DType leftType, DType rightType, bool useLegacyDateTimeAccepts, bool usePowerFxV1CompatibilityRules, bool allowCoerce, bool unionToLeftTypeOnly)
         {
-            type1.AssertValid();
-            Contracts.Assert(type1.IsAggregate);
-            type2.AssertValid();
-            Contracts.Assert(type2.IsAggregate);
+            leftType.AssertValid();
+            Contracts.Assert(leftType.IsAggregate);
+            rightType.AssertValid();
+            Contracts.Assert(rightType.IsAggregate);
 
-            var result = type1;
+            var result = leftType;
 
-            foreach (var pair in type2.GetNames(DPath.Root))
+            foreach (var pair in rightType.GetNames(DPath.Root))
             {
                 var field2Name = pair.Name;
 
-                if (!type1.TryGetType(field2Name, out var field1Type))
+                if (!leftType.TryGetType(field2Name, out var field1Type))
                 {
                     result = result.Add(pair);
                     continue;
@@ -2793,7 +2819,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly);
                 }
                 else if (field1Type.IsAggregate || field2Type.IsAggregate)
                 {
@@ -2822,7 +2848,7 @@ namespace Microsoft.PowerFx.Core.Types
                 }
                 else
                 {
-                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce);
+                    fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly);
                 }
 
                 result = result.SetType(ref fError, DPath.Root.Append(field2Name), fieldType);
@@ -3388,7 +3414,8 @@ namespace Microsoft.PowerFx.Core.Types
                                  Decimal.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  DateTime.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Date.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
-                                 Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules);
+                                 Time.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
+                                 (Kind == DKind.OptionSetValue && OptionSetInfo != null && OptionSetInfo.BackingKind == DKind.Number);
                     break;
                 case DKind.String:
                     doesCoerce = Kind != DKind.Color && Kind != DKind.Control && Kind != DKind.DataEntity && Kind != DKind.OptionSet && Kind != DKind.View && Kind != DKind.Polymorphic && Kind != DKind.File && Kind != DKind.LargeImage;
@@ -3821,31 +3848,49 @@ namespace Microsoft.PowerFx.Core.Types
                    comparer.Distance(similar) < (name.Value.Length / 3) + 3;
         }
 
+        public bool AggregateHasExpandedType()
+        {
+            var ret = false;
+
+            if (IsAggregate)
+            {
+                var record = ToRecord();
+
+                ret = record.GetAllNames(DPath.Root).Any(name => name.Type.IsExpandEntity);
+            }
+
+            return ret;
+        }
+
         /// <summary>
         /// Try to union all table child types and checks if any coercion is necessary. Meant to be called from within table type check loop.
         /// </summary>
-        /// <param name="argType1">Current table child type.</param>
-        /// <param name="argType2">Current table child type.</param>
+        /// <param name="leftType">Current table child type.</param>
+        /// <param name="rightType">Current table child type.</param>
         /// <param name="usePowerFxV1CompatibilityRules">Use PFx v1 compatibility rules if enabled (less
         /// permissive Accepts relationships).</param>
+        /// <param name="coerceToLeftTypeOnly">If true, the union can only be done from the right type to the left type.
+        /// For example, if <paramref name="leftType"/> is a number and <paramref name="rightType"/> is a numeric
+        /// option set then the union will succeed (numeric option set can coerce to number), but not the other way
+        /// around (number cannot be coerced to a numeric option set).</param>
         /// <param name="returnType">Composed new type.</param>
         /// <param name="coercionNeeded">True if union with coercion was called.</param>
         /// <returns></returns>
-        public static bool TryUnionWithCoerce(DType argType1, DType argType2, bool usePowerFxV1CompatibilityRules, out DType returnType, out bool coercionNeeded)
+        public static bool TryUnionWithCoerce(DType leftType, DType rightType, bool usePowerFxV1CompatibilityRules, bool coerceToLeftTypeOnly, out DType returnType, out bool coercionNeeded)
         {
             var fError = false;
 
             coercionNeeded = false;
             returnType = null;
 
-            if (!argType1.IsValid || (argType1.IsRecord && argType1.Equals(DType.EmptyRecord)))
+            if (!leftType.IsValid || (leftType.IsRecord && leftType.Equals(DType.EmptyRecord)))
             {
-                returnType = argType2;
+                returnType = rightType;
             }
             else
             {
                 // Original union
-                var unionType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: false);
+                var unionType = Union(ref fError, leftType, rightType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: false);
 
                 if (!fError)
                 {
@@ -3856,7 +3901,7 @@ namespace Microsoft.PowerFx.Core.Types
                     fError = false;
 
                     // Union with coercion
-                    returnType = Union(ref fError, argType1, argType2, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: true);
+                    returnType = Union(ref fError, leftType, rightType, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules, allowCoerce: true, unionToLeftTypeOnly: coerceToLeftTypeOnly);
                     coercionNeeded = !fError;
                 }
             }

@@ -383,3 +383,64 @@ Time(11,12,0,0)
 
 >> TimeValue("11:12:00.1234567")
 Time(11,12,0,123)
+
+>> Time(1e28, 23, 34, 456)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(12, 1e28, 34, 456)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(12, 23, 1e28, 456)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(12, 23, 34, 1e28)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Time(32767, 32767, 32767, 32767)
+Time(10,13,39,767)
+
+>> Value(Time(18,0,0) + Time(18,0,0))
+1.5
+
+>> Value(Time(6,0,0) - Time(18,0,0))
+-0.5
+
+>> Value(If(1<0, Time(12,0,0), DateTime(1900,1,1,12,0,0)))
+2.5
+
+>> Time(6,0,0) - 0.5
+Time(18,0,0,0)
+
+>> Value(Time(6,0,0) - 0.5)
+-0.25
+
+>> Time(6,0,0) - 2.5
+Time(18,0,0,0)
+
+>> Value(Time(6,0,0) - 2.5)
+-2.25
+
+>> Time(30,0,0)
+Time(6,0,0,0)
+
+>> Value(Time(30,0,0))
+1.25
+
+>> Time(-6,0,0)
+Time(18,0,0,0)
+
+>> Value(Time(-6,0,0))
+-0.25
+
+>> Time(1e28,0,0)
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> -Time(6,0,0)
+Time(18,0,0,0)
+
+>> Value(-Time(6,0,0))
+-0.25
+
+// Negation may lose precision as Time values have smaller precision than numbers
+>> With({t:Time(RandBetween(0,23), RandBetween(0,59), RandBetween(0,59))}, Abs(Value(t) + Value(-t)) < 0.000001)
+true

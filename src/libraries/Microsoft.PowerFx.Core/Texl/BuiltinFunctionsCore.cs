@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Builtins;
 
@@ -19,8 +18,8 @@ namespace Microsoft.PowerFx.Core.Texl
         internal static readonly IReadOnlyCollection<string> OtherKnownFunctions = new HashSet<string>()
         {
             "Assert", "Back", "Choices", "ClearData", "Concurrent", "Confirm", "Copy", "DataSourceInfo", "Defaults", "Disable", "Distinct", "Download", "EditForm", "Enable", "Errors", "Exit", "GUID",
-            "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "PlainText", "Print", "ReadNFC",
-            "RecordInfo", "Refresh", "Relate", "RemoveAll", "RemoveIf", "RenameColumns", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Search", "Select", "SetFocus",
+            "GroupBy", "HashTags", "IsMatch", "IsType", "JSON", "Launch", "LoadData", "Match", "MatchAll", "Navigate", "NewForm", "Notify", "PDF", "Param", "Pending", "Print", "ReadNFC",
+            "RecordInfo", "Relate", "RemoveAll", "RemoveIf", "RenameColumns", "RequestHide", "Reset", "ResetForm", "Revert", "SaveData", "ScanBarcode", "Search", "Select", "SetFocus",
             "SetProperty", "ShowColumns", "State", "SubmitForm", "Trace", "TraceValue", "Ungroup", "Unrelate", "Update", "UpdateContext", "UpdateIf", "User", "Validate", "ValidateRecord", "ViewForm"
         };
 
@@ -28,8 +27,6 @@ namespace Microsoft.PowerFx.Core.Texl
         internal static readonly TexlFunctionSet _library = new TexlFunctionSet();
         internal static readonly TexlFunctionSet _featureGateFunctions = new TexlFunctionSet();
 
-        public static readonly TexlFunction AmPm = _library.Add(new AmPmFunction());
-        public static readonly TexlFunction AmPmShort = _library.Add(new AmPmShortFunction());
         public static readonly TexlFunction Abs = _library.Add(new AbsFunction());
         public static readonly TexlFunction AbsT = _library.Add(new AbsTableFunction());
         public static readonly TexlFunction Acos = _library.Add(new AcosFunction());
@@ -37,28 +34,30 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Acot = _library.Add(new AcotFunction());
         public static readonly TexlFunction AcotT = _library.Add(new AcotTableFunction());
         public static readonly TexlFunction AddColumns = _library.Add(new AddColumnsFunction());
+        public static readonly TexlFunction AmPm = _library.Add(new AmPmFunction());
+        public static readonly TexlFunction AmPmShort = _library.Add(new AmPmShortFunction());
         public static readonly TexlFunction And = _library.Add(new VariadicLogicalFunction(isAnd: true));
         public static readonly TexlFunction Asin = _library.Add(new AsinFunction());
         public static readonly TexlFunction AsinT = _library.Add(new AsinTableFunction());
         public static readonly TexlFunction AsType = _library.Add(new AsTypeFunction());
         public static readonly TexlFunction Atan = _library.Add(new AtanFunction());
-        public static readonly TexlFunction AtanT = _library.Add(new AtanTableFunction());
         public static readonly TexlFunction Atan2 = _library.Add(new Atan2Function());
+        public static readonly TexlFunction AtanT = _library.Add(new AtanTableFunction());
         public static readonly TexlFunction Average = _library.Add(new AverageFunction());
         public static readonly TexlFunction AverageT = _library.Add(new AverageTableFunction());
         public static readonly TexlFunction Blank = _library.Add(new BlankFunction());
         public static readonly TexlFunction Boolean = _library.Add(new BooleanFunction());
         public static readonly TexlFunction Boolean_T = _library.Add(new BooleanFunction_T());
-        public static readonly TexlFunction BooleanN = _library.Add(new BooleanNFunction());
-        public static readonly TexlFunction BooleanN_T = _library.Add(new BooleanNFunction_T());
+        public static readonly TexlFunction Boolean_UO = _library.Add(new BooleanFunction_UO());
         public static readonly TexlFunction BooleanB = _library.Add(new BooleanBFunction());
         public static readonly TexlFunction BooleanB_T = _library.Add(new BooleanBFunction_T());
+        public static readonly TexlFunction BooleanN = _library.Add(new BooleanNFunction());
+        public static readonly TexlFunction BooleanN_T = _library.Add(new BooleanNFunction_T());
         public static readonly TexlFunction BooleanW = _library.Add(new BooleanWFunction());
         public static readonly TexlFunction BooleanW_T = _library.Add(new BooleanWFunction_T());
-        public static readonly TexlFunction Boolean_UO = _library.Add(new BooleanFunction_UO());
-        public static readonly TexlFunction Clock24 = _library.Add(new IsClock24Function());
         public static readonly TexlFunction Char = _library.Add(new CharFunction());
         public static readonly TexlFunction CharT = _library.Add(new CharTFunction());
+        public static readonly TexlFunction Clock24 = _library.Add(new IsClock24Function());
         public static readonly TexlFunction Coalesce = _library.Add(new CoalesceFunction());
         public static readonly TexlFunction ColorFade = _library.Add(new ColorFadeFunction());
         public static readonly TexlFunction ColorFadeT = _library.Add(new ColorFadeTFunction());
@@ -101,13 +100,14 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Find = _library.Add(new FindFunction());
         public static readonly TexlFunction FindT = _library.Add(new FindTFunction());
         public static readonly TexlFunction First = _library.Add(new FirstLastFunction(isFirst: true));
-        public static readonly TexlFunction FirstN = _library.Add(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction First_UO = _library.Add(new FirstLastFunction_UO(isFirst: true));
+        public static readonly TexlFunction FirstN = _library.Add(new FirstLastNFunction(isFirst: true));
         public static readonly TexlFunction FirstN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: true));
         public static readonly TexlFunction ForAll = _library.Add(new ForAllFunction());
         public static readonly TexlFunction ForAll_UO = _library.Add(new ForAllFunction_UO());
-        public static readonly TexlFunction GUIDPure = _library.Add(new GUIDPureFunction());
         public static readonly TexlFunction GUID_UO = _library.Add(new GUIDPureFunction_UO());
+        public static readonly TexlFunction GUIDNoArg = _library.Add(new GUIDNoArgFunction());
+        public static readonly TexlFunction GUIDPure = _library.Add(new GUIDPureFunction());
         public static readonly TexlFunction Hex2Dec = _library.Add(new Hex2DecFunction());
         public static readonly TexlFunction Hex2DecT = _library.Add(new Hex2DecTFunction());
         public static readonly TexlFunction Hour = _library.Add(new HourFunction());
@@ -123,18 +123,18 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction IsBlankOrErrorOptionSetValue = _library.Add(new IsBlankOrErrorOptionSetValueFunction());
         public static readonly TexlFunction IsEmpty = _library.Add(new IsEmptyFunction());
         public static readonly TexlFunction IsError = _library.Add(new IsErrorFunction());
-        public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
         public static readonly TexlFunction IsNumeric = _library.Add(new IsNumericFunction());
         public static readonly TexlFunction ISOWeekNum = _library.Add(new ISOWeekNumFunction());
+        public static readonly TexlFunction IsToday = _library.Add(new IsTodayFunction());
         public static readonly TexlFunction Language = _library.Add(new LanguageFunction());
         public static readonly TexlFunction Last = _library.Add(new FirstLastFunction(isFirst: false));
-        public static readonly TexlFunction LastN = _library.Add(new FirstLastNFunction(isFirst: false));
         public static readonly TexlFunction Last_UO = _library.Add(new FirstLastFunction_UO(isFirst: false));
+        public static readonly TexlFunction LastN = _library.Add(new FirstLastNFunction(isFirst: false));
         public static readonly TexlFunction LastN_UO = _library.Add(new FirstLastNFunction_UO(isFirst: false));
         public static readonly TexlFunction Left = _library.Add(new LeftRightScalarFunction(isLeft: true));
+        public static readonly TexlFunction LeftST = _library.Add(new LeftRightScalarTableFunction(isLeft: true));
         public static readonly TexlFunction LeftTS = _library.Add(new LeftRightTableScalarFunction(isLeft: true));
         public static readonly TexlFunction LeftTT = _library.Add(new LeftRightTableTableFunction(isLeft: true));
-        public static readonly TexlFunction LeftST = _library.Add(new LeftRightScalarTableFunction(isLeft: true));
         public static readonly TexlFunction Len = _library.Add(new LenFunction());
         public static readonly TexlFunction LenT = _library.Add(new LenTFunction());
         public static readonly TexlFunction Ln = _library.Add(new LnFunction());
@@ -161,36 +161,38 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction OptionsSetInfo = _featureGateFunctions.Add(new OptionSetInfoFunction());
         public static readonly TexlFunction Or = _library.Add(new VariadicLogicalFunction(isAnd: false));
         public static readonly TexlFunction ParseJSON = _library.Add(new ParseJSONFunction());
+        public static readonly TexlFunction Pi = _library.Add(new PiFunction());
+        public static readonly TexlFunction PlainText = _library.Add(new PlainTextFunction());
         public static readonly TexlFunction Power = _library.Add(new PowerFunction());
         public static readonly TexlFunction PowerT = _library.Add(new PowerTFunction());
-        public static readonly TexlFunction Pi = _library.Add(new PiFunction());
         public static readonly TexlFunction Proper = _library.Add(new ProperFunction());
         public static readonly TexlFunction ProperT = _library.Add(new ProperTFunction());
         public static readonly TexlFunction Radians = _library.Add(new RadiansFunction());
         public static readonly TexlFunction RadiansT = _library.Add(new RadiansTableFunction());
         public static readonly TexlFunction Rand = _library.Add(new RandFunction());
         public static readonly TexlFunction RandBetween = _library.Add(new RandBetweenFunction());
+        public static readonly TexlFunction Refresh = _library.Add(new RefreshFunction());
         public static readonly TexlFunction Replace = _library.Add(new ReplaceFunction());
         public static readonly TexlFunction ReplaceT = _library.Add(new ReplaceTFunction());
         public static readonly TexlFunction RGBA = _library.Add(new RGBAFunction());
         public static readonly TexlFunction Right = _library.Add(new LeftRightScalarFunction(isLeft: false));
+        public static readonly TexlFunction RightST = _library.Add(new LeftRightScalarTableFunction(isLeft: false));
         public static readonly TexlFunction RightTS = _library.Add(new LeftRightTableScalarFunction(isLeft: false));
         public static readonly TexlFunction RightTT = _library.Add(new LeftRightTableTableFunction(isLeft: false));
-        public static readonly TexlFunction RightST = _library.Add(new LeftRightScalarTableFunction(isLeft: false));
         public static readonly TexlFunction Round = _library.Add(new RoundScalarFunction());
-        public static readonly TexlFunction RoundT = _library.Add(new RoundTableFunction());
         public static readonly TexlFunction RoundDown = _library.Add(new RoundDownScalarFunction());
         public static readonly TexlFunction RoundDownT = _library.Add(new RoundDownTableFunction());
+        public static readonly TexlFunction RoundT = _library.Add(new RoundTableFunction());
         public static readonly TexlFunction RoundUp = _library.Add(new RoundUpScalarFunction());
         public static readonly TexlFunction RoundUpT = _library.Add(new RoundUpTableFunction());
         public static readonly TexlFunction Second = _library.Add(new SecondFunction());
         public static readonly TexlFunction Sequence = _library.Add(new SequenceFunction());
         public static readonly TexlFunction Shuffle = _library.Add(new ShuffleFunction());
         public static readonly TexlFunction Sin = _library.Add(new SinFunction());
+        public static readonly TexlFunction SinT = _library.Add(new SinTableFunction());
         public static readonly TexlFunction Sort = _library.Add(new SortFunction());
         public static readonly TexlFunction SortByColumns = _library.Add(new SortByColumnsFunction());
         public static readonly TexlFunction SortByColumnsOrderTable = _library.Add(new SortByColumnsOrderTableFunction());
-        public static readonly TexlFunction SinT = _library.Add(new SinTableFunction());
         public static readonly TexlFunction Split = _library.Add(new SplitFunction());
         public static readonly TexlFunction Sqrt = _library.Add(new SqrtFunction());
         public static readonly TexlFunction SqrtT = _library.Add(new SqrtTableFunction());
@@ -206,15 +208,17 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Table_UO = _library.Add(new TableFunction_UO());
         public static readonly TexlFunction Tan = _library.Add(new TanFunction());
         public static readonly TexlFunction TanT = _library.Add(new TanTableFunction());
+        public static readonly TexlFunction Text = _library.Add(new TextFunction());
+        public static readonly TexlFunction Text_UO = _library.Add(new TextFunction_UO());
         public static readonly TexlFunction Time = _library.Add(new TimeFunction());
         public static readonly TexlFunction TimeValue = _library.Add(new TimeValueFunction());
         public static readonly TexlFunction TimeValue_UO = _library.Add(new TimeValueFunction_UO());
         public static readonly TexlFunction TimeZoneOffset = _library.Add(new TimeZoneOffsetFunction());
         public static readonly TexlFunction Today = _library.Add(new TodayFunction());
         public static readonly TexlFunction Trim = _library.Add(new TrimFunction());
-        public static readonly TexlFunction TrimT = _library.Add(new TrimTFunction());
         public static readonly TexlFunction TrimEnds = _library.Add(new TrimEndsFunction());
         public static readonly TexlFunction TrimEndsT = _library.Add(new TrimEndsTFunction());
+        public static readonly TexlFunction TrimT = _library.Add(new TrimTFunction());
         public static readonly TexlFunction Trunc = _library.Add(new TruncFunction());
         public static readonly TexlFunction TruncT = _library.Add(new TruncTableFunction());
         public static readonly TexlFunction Upper = _library.Add(new LowerUpperFunction(isLower: false));
@@ -223,8 +227,6 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction Value_UO = _library.Add(new ValueFunction_UO());
         public static readonly TexlFunction VarP = _library.Add(new VarPFunction());
         public static readonly TexlFunction VarPT = _library.Add(new VarPTableFunction());
-        public static readonly TexlFunction Text = _library.Add(new TextFunction());
-        public static readonly TexlFunction Text_UO = _library.Add(new TextFunction_UO());
         public static readonly TexlFunction Weekday = _library.Add(new WeekdayFunction());
         public static readonly TexlFunction WeekdaysLong = _library.Add(new WeekdaysLongFunction());
         public static readonly TexlFunction WeekdaysShort = _library.Add(new WeekdaysShortFunction());
@@ -232,13 +234,13 @@ namespace Microsoft.PowerFx.Core.Texl
         public static readonly TexlFunction With = _library.Add(new WithFunction());
         public static readonly TexlFunction Year = _library.Add(new YearFunction());
 
-        public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
-        public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
-        public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
         public static readonly TexlFunction Decimal = _featureGateFunctions.Add(new DecimalFunction());
         public static readonly TexlFunction Decimal_UO = _featureGateFunctions.Add(new DecimalFunction_UO());
         public static readonly TexlFunction Float = _featureGateFunctions.Add(new FloatFunction());
         public static readonly TexlFunction Float_UO = _featureGateFunctions.Add(new FloatFunction_UO());
+        public static readonly TexlFunction IsUTCToday = _featureGateFunctions.Add(new IsUTCTodayFunction());
+        public static readonly TexlFunction UTCNow = _featureGateFunctions.Add(new UTCNowFunction());
+        public static readonly TexlFunction UTCToday = _featureGateFunctions.Add(new UTCTodayFunction());
 
         // Slow API, only use for backward compatibility
 #pragma warning disable CS0618 // Type or member is obsolete        
