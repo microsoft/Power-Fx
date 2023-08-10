@@ -147,22 +147,29 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             var swaggerUrl = "https://api.math.tools/yaml/math.tools.numbers.openapi.yaml";
-            
-            //var doc = await ReadSwaggerFromUrl("https://api.apis.guru/v2/specs/weatherbit.io/2.0.0/swagger.json").ConfigureAwait(false);
-            // var doc = await ReadSwaggerFromUrl("https://www.weatherbit.io/static/swagger.json").ConfigureAwait(false);
+
+            // Other intersting files:
+            // "https://api.apis.guru/v2/specs/weatherbit.io/2.0.0/swagger.json"
+            // "https://www.weatherbit.io/static/swagger.json"
+
             var doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
 
             using var client = new HttpClient(); // public auth 
             var funcs = config.AddService("Math", doc, client);
             
             var engine = new RecalcEngine(config);
-
-            // var expr = "Weather.numbersordinal({number : 123} )";
+                        
+            // problems decoding return result...
+            // var expr = "Math.numberscardinal({number :13}).response.contents.result";
             var expr = "Math.numberscardinal({number :13})";
             var check = engine.Check(expr);
             var ok = check.IsSuccess;
 
+            Assert.True(ok);
+
             var result = engine.Eval(expr);
+
+            // $$$ Can we decode the return result? 
         }
 
         // Get a swagger file from the embedded resources. 

@@ -347,6 +347,10 @@ namespace Microsoft.PowerFx.Connectors
 
             List<ServiceFunction> functions = new List<ServiceFunction>();
             string basePath = openApiDocument.GetBasePath();
+
+            // $$$ basePath is just "/", but we expect it to be 'server' from the swagger file. 
+            // eg, "https://api.math.tools"
+
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
             connectorSettings ??= new ConnectorSettings();
 
