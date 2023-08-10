@@ -17,9 +17,10 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private TexlFunctionSet _library;
 
+        // Key is a function name without namespace
         private readonly Dictionary<string, TexlBinding> _bindings;
 
-        public Dictionary<string, List<TexlFunction>>.KeyCollection FunctionNames => _library.FunctionNames;
+        public IEnumerable<string> FunctionNames => _library.FunctionNames;
 
         public int Count => FunctionNames.Count();
 
@@ -35,11 +36,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
             if (_library.AnyWithName(function.Name))
             {
+                // Update the binding
+                _bindings[function.Name] = binding;
                 return false;
             }
 
             _bindings.Add(function.Name, binding);
-
             return _library.Add(function) != null;
         }
 
