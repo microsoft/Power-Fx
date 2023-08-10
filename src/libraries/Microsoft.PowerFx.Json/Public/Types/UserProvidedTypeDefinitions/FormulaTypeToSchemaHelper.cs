@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Utils;
@@ -49,9 +50,9 @@ namespace Microsoft.PowerFx.Core
                 };
             }
 
-            if (type._type.AggregateHasExpandedType())
+            var logicalName = aggregateType.TableSymbolName;
+            if (type._type.AggregateHasExpandedType() && logicalName != null)
             {
-                var logicalName = aggregateType.TableSymbolName;
                 var schemaTypeName = type._type.IsTable ? SchemaTypeName.CustomTableTypeName : SchemaTypeName.CustomRecordTypeName;
                 return new FormulaTypeSchema()
                 {
