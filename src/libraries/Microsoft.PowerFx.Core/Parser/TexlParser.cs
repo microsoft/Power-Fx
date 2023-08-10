@@ -611,7 +611,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
 
                 // Process operators and right operands as long as the precedence bound is satisfied.
-                for (; ;)
+                for (; ; )
                 {
                     var leftTrivia = ParseTrivia();
                     Contracts.AssertValue(node);
@@ -1322,7 +1322,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 new TokenSource(leftParen),
                 leftTrivia
             };
-            for (; ;)
+            for (; ; )
             {
                 while (_curs.TidCur == TokKind.Comma)
                 {
