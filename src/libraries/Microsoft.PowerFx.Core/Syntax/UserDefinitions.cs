@@ -30,10 +30,11 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         private readonly string _script;
         private readonly ParserOptions _parserOptions;
+        private readonly UserDefinedFunctionLibrary _library;
         private readonly Features _features;
         private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
-        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, Features features = null)
+        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, UserDefinedFunctionLibrary library, Features features = null)
         {
             _features = features ?? Features.None;
             _globalNameResolver = globalNameResolver;
@@ -41,6 +42,7 @@ namespace Microsoft.PowerFx.Syntax
             _bindingConfig = bindingConfig;
             _script = script ?? throw new ArgumentNullException(nameof(script));
             _parserOptions = parserOptions;
+            _library = library;
         }
 
         public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
@@ -48,9 +50,9 @@ namespace Microsoft.PowerFx.Syntax
             return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 
-        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
+        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, UserDefinedFunctionLibrary library, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
         {
-            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, features);
+            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, library, features);
 
             return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
         }
@@ -97,7 +99,7 @@ namespace Microsoft.PowerFx.Syntax
                     continue;
                 }
                 
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
+                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args, _library);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
