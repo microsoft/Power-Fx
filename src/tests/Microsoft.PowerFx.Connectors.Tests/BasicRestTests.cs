@@ -147,6 +147,7 @@ namespace Microsoft.PowerFx.Tests
         public async Task RealTest()
         {
             var config = new PowerFxConfig();
+            
             // Note that these APIs are rate limited and HTTP error 429 is possible
             var swaggerUrl = "https://api.math.tools/yaml/math.tools.numbers.openapi.yaml";
 
