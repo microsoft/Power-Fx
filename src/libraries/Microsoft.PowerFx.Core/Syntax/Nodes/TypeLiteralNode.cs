@@ -19,14 +19,17 @@ namespace Microsoft.PowerFx.Syntax
 
     public sealed class TypeLiteralNode : TexlNode
     {
-        internal TypeLiteralNode(ref int idNext, Token firstToken, SourceList sources)
+        internal TexlNode TypeRoot { get; }
+
+        internal TypeLiteralNode(ref int idNext, Token firstToken, TexlNode type, SourceList sources)
             : base(ref idNext, firstToken, sources)
         {
+            TypeRoot = type;
         }
 
         internal override TexlNode Clone(ref int idNext, Span ts)
         {
-            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), this.SourceList.Clone(ts, new Dictionary<TexlNode, TexlNode>()));
+            return new TypeLiteralNode(ref idNext, Token.Clone(ts).As<Token>(), TypeRoot, this.SourceList.Clone(ts, new Dictionary<TexlNode, TexlNode>()));
         }
 
         /// <inheritdoc />
