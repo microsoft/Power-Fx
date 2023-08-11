@@ -271,8 +271,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     switch (schema.Format)
                     {                        
-                        case "date":
-                            return new ConnectorParameterType(schema, FormulaType.Date);
+                        case "date":                            
                         case "date-time":
                             return new ConnectorParameterType(schema, FormulaType.DateTime);
                         case "date-no-tz":
@@ -326,6 +325,7 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case null:
+                        case "integer":
                         case "int32":
                             return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
 

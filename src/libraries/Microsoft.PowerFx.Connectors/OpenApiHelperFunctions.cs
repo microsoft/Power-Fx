@@ -17,6 +17,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public static string NormalizeOperationId(string operationId)
         {
+            if (operationId == null)
+            {
+                return null;
+            }
+
             return MakeValidXsdNCName(Regex.Replace(operationId, @"[^A-Za-z0-9]", string.Empty));
         }
         

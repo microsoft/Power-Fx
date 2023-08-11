@@ -91,6 +91,11 @@ namespace Microsoft.PowerFx.Connectors
         internal OpenApiOperation Operation { get; }
 
         /// <summary>
+        /// OpenApiDocuemnt containing the operation.
+        /// </summary>
+        internal OpenApiDocument Document { get; init; }
+
+        /// <summary>
         /// Visibility defined as "x-ms-visibility" string content.
         /// </summary>
         public string Visibility => Operation.GetVisibility();
@@ -301,7 +306,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (httpClient != null)
             {
-                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache);
+                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OpenApiParser.GetServer(Document, httpClient), OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache);
                 invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
             }
 
