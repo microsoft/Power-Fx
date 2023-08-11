@@ -45,6 +45,32 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
+        [InlineData("bar = AsType(foo, Type({Age: Number}));")]
+        public void AsTypeTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
+        }
+
+        [Theory]
+        [InlineData("Foo = Type({Age: Number}; Bar(x: Number): Number = Abs(x);")]
+        public void FailParsingTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var result = UserDefinitions.Parse(script, parserOptions);
+            Assert.True(result.HasErrors);
+            var udf = result.UDFs.First();
+            Assert.Equal("Bar", udf.Ident.ToString());
+        }
+
+        [Theory]
         [InlineData("Foo(x: Number): Number = Abs(x);")]
         public void DefFuncTest(string script)
         {

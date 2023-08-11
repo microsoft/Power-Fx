@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Syntax.SourceInformation;
 
@@ -168,27 +167,19 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private TypeLiteralNode ParseTypeLiteral()
         {
+            var lefterTrivia = ParseTrivia();
+            var parenOpen = TokEat(TokKind.ParenOpen);
             var leftTrivia = ParseTrivia();
             var sourceList = new List<ITexlSource>
             {
+                lefterTrivia,
                 leftTrivia
             };
-            if (_curs.TidCur == TokKind.Ident)
-            {
-                var ident = ParseIdentifier();
-                sourceList.Add(new TokenSource(ident.Token));
-                return new TypeLiteralNode(ref _idNext, ident.Token, new FirstNameNode(ref _idNext, ident.Token, ident), new SourceList(sourceList));
-            }
-            else if (_curs.TidCur == TokKind.CurlyOpen)
-            {
-                var leftBracket = _curs.TokCur;
-                var spreadSource = new SpreadSource();
-                var record_node = ParseRecordExpr(spreadSource);
-                sourceList.Add(spreadSource);
-                return new TypeLiteralNode(ref _idNext, leftBracket, record_node, new SourceList(sourceList));
-            }
-
-            return null;
+            
+            var expr = ParseExpr(Precedence.None);
+            sourceList.Add(ParseTrivia());
+            TokEat(TokKind.ParenClose);
+            return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
         }
 
         private bool ParseUDF(List<UDF> udfs)
@@ -307,9 +298,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         // Parse expression
                         var result = ParseExpr(Precedence.None);
-                        if (result.GetType() == typeof(TypeLiteralNode))
+                        if (result is TypeLiteralNode typeLiteralNode)
                         {
-                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), (TypeLiteralNode)result));
+                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
                             continue;
                         }
 
@@ -1050,14 +1041,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
-                        if (ident.Token.As<IdentToken>().Name.Value.ToString() == "Type")
+                        if (ident.Token.As<IdentToken>().Name.Value == "Type")
                         {
-                            ParseTrivia();
-                            TokEat(TokKind.ParenOpen);
-                            var node = ParseTypeLiteral();
-                            ParseTrivia();
-                            TokEat(TokKind.ParenClose);
-                            return node;
+                            return ParseTypeLiteral();
                         }
 
                         trivia = ParseTrivia();
