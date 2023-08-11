@@ -669,6 +669,11 @@ namespace Microsoft.PowerFx.Functions
             {
                 include = booleanValue.Value;
             }
+            else if (result is OptionSetValue optionSetValue)
+            {
+                var boolValue = optionSetValue.ExecutionValue as bool?;
+                include = boolValue ?? false;
+            }
             else if (result is ErrorValue errorValue)
             {
                 return DValue<RecordValue>.Of(errorValue);
