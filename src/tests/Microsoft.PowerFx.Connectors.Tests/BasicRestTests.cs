@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Tests
             var funcs = config.AddService("Holiday", doc, client);
 
             var engine = new RecalcEngine(config);            
-            var expr = @"Holiday.PublicHolidayPublicHolidaysV3(2023, ""US"")";
+            var expr = @"Index(Holiday.PublicHolidayPublicHolidaysV3(2023, ""US""), 8)";
 
             // Validate expression
             var check = engine.Check(expr);
@@ -278,9 +278,9 @@ namespace Microsoft.PowerFx.Tests
             string resultExpr = sb.ToString();
 
             // Create an object from the result and access it
-            dynamic[] dResult = (dynamic[])result.ToObject();
-            DateTime independanceDay = ((dynamic)dResult[7]).date;
-            string independanceDayName = ((dynamic)dResult[7]).name;
+            dynamic dResult = result.ToObject();
+            DateTime independanceDay = dResult.date;
+            string independanceDayName = dResult.name;
 
             Assert.Equal("Independence Day", independanceDayName);
             Assert.Equal(new DateTime(2023, 7, 4), independanceDay);
