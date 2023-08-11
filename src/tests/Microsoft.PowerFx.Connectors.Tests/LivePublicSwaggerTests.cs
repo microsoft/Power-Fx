@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
 
-            // No BaseAdress specified, we'll use the 1st one found in the swagger file
+            // No BaseAdress specified, we'll use the 1st HTTPS one found in the swagger file
             using var client = new HttpClient(); // public auth             
             var funcs = config.AddService("Math", doc, client);
 
