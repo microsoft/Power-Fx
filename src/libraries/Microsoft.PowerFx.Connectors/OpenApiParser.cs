@@ -79,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, connectorSettings);
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, connectorSettings) { Document = openApiDocument };
 
                     functions.Add(connectorFunction);
                     sFunctions.Add(connectorFunction._defaultServiceFunction);
@@ -364,16 +364,12 @@ namespace Microsoft.PowerFx.Connectors
 
             List<ServiceFunction> functions = new List<ServiceFunction>();
             string basePath = openApiDocument.GetBasePath();
+            string server = GetServer(openApiDocument, httpClient);
 
             // $$$ basePath is just "/", but we expect it to be 'server' from the swagger file. 
             // eg, "https://api.math.tools"
 
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));            
-
-            if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiDocument.Servers.Any())
-            {
-                hc.BaseAddress = new Uri(openApiDocument.Servers.First().Url);
-            }
 
             foreach (var kv in openApiDocument.Paths)
             {
@@ -425,7 +421,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (httpClient != null)
                     {
-                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, opPath, returnType, argMapper, connectorSettings.Cache);
+                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, server, opPath, returnType, argMapper, connectorSettings.Cache);
                         invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
                     }
 
@@ -482,6 +478,16 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return functions;
+        }
+
+        internal static string GetServer(OpenApiDocument openApiDocument, HttpMessageInvoker httpClient)
+        {
+            if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiDocument != null && openApiDocument.Servers.Any())
+            {
+                return openApiDocument.Servers.First().Url;
+            }
+
+            return null;
         }
 
         internal static bool IsSafeHttpMethod(HttpMethod httpMethod)
