@@ -364,11 +364,7 @@ namespace Microsoft.PowerFx.Connectors
 
             List<ServiceFunction> functions = new List<ServiceFunction>();
             string basePath = openApiDocument.GetBasePath();
-            string server = GetServer(openApiDocument, httpClient);
-
-            // $$$ basePath is just "/", but we expect it to be 'server' from the swagger file. 
-            // eg, "https://api.math.tools"
-
+            string server = GetServer(openApiDocument, httpClient);            
             DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));            
 
             foreach (var kv in openApiDocument.Paths)
@@ -484,7 +480,8 @@ namespace Microsoft.PowerFx.Connectors
         {
             if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiDocument != null && openApiDocument.Servers.Any())
             {
-                return openApiDocument.Servers.First().Url;
+                // descending order to prefer https
+                return openApiDocument.Servers.Select(s => new Uri(s.Url)).OrderByDescending(u => u.Scheme).First().OriginalString;
             }
 
             return null;
