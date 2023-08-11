@@ -284,6 +284,11 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal("Independence Day", independanceDayName);
             Assert.Equal(new DateTime(2023, 7, 4), independanceDay);
+
+            expr = @"First(Holiday.PublicHolidayPublicHolidaysV3(2023, ""US"")).localName";
+            result = engine.Eval(expr);
+
+            Assert.Equal("New Year's Day", ((StringValue)result).Value);
         }
 
         // Get a swagger file from the embedded resources. 
