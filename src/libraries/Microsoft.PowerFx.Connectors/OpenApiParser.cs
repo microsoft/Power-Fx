@@ -481,7 +481,7 @@ namespace Microsoft.PowerFx.Connectors
             if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiDocument != null && openApiDocument.Servers.Any())
             {
                 // descending order to prefer https
-                return openApiDocument.Servers.Select(s => new Uri(s.Url)).Where(s => s.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase)).FirstOrDefault().OriginalString;
+                return openApiDocument.Servers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault().OriginalString;
             }
 
             return null;
