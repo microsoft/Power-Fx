@@ -163,14 +163,18 @@ namespace Microsoft.PowerFx.Types
                     // Ensure that the actual type matches the expected type.
                     if (!result.Type.Equals(fieldType))
                     {
-                        if (result is not ErrorValue && result.Type is not BlankType && fieldType is not BlankType)
+                        if (result is BlankValue)
+                        {
+                            result = FormulaValue.NewBlank(fieldType);
+                        }
+                        else if (result is not ErrorValue)
                         {
                             throw HostException(fieldName, $"Wrong field type. Returned {result.Type._type}, expected {fieldType._type}.");
                         }
                     }
                 }
 
-                Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue || result.Type is BlankType || fieldType is BlankType);
+                Contract.Assert(result.Type.Equals(fieldType) || result is ErrorValue);
 
                 return result;
             }
@@ -195,7 +199,7 @@ namespace Microsoft.PowerFx.Types
         /// <param name="result"></param>
         /// <returns>true if field is present, else false.</returns>
         protected abstract bool TryGetField(FormulaType fieldType, string fieldName, out FormulaValue result);
-        
+
         protected virtual Task<(bool Result, FormulaValue Value)> TryGetFieldAsync(FormulaType fieldType, string fieldName, CancellationToken cancellationToken)
         {
             var b = TryGetField(fieldType, fieldName, out FormulaValue result);

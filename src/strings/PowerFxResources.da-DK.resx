@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Der kan kun opnås adgang til en brugerdefineret dataegenskab for komponent med parametre inde fra en komponent eller fra egenskaberne for komponentoutput.</value>
+    <value>Der kan kun opnås adgang til komponentfunktionsegenskab eller parameter inde fra en komponent eller fra egenskaberne for komponentoutput.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponentfunktionsegenskab eller parameter kan kun referere til andre funktionsegenskaber.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Denne funktion udfases og understøttes ikke længere.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>I navneområdet {1} er funktionen {0} udfaset.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>I navneområdet {1} understøttes funktionen {0} ikke.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Advarsel: Udskudt type leveret.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Kan ikke uddelegere {0}: Udtrykket sammenligner flere felter.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teksten skal have sine HTML- og XML-koder fjernet.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunktioner tillader ikke funktionsmådefunktioner som prædikater.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Brug operatoren And til at kombinere flere prædikater i det andet argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tabellen kan ikke kopieres. Opret i stedet en indbygget tabel ved hjælp af funktionen ForAll og {...} notation for at kopiere de ønskede individuelle kolonner.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Denne post kan ikke kopieres. Opret i stedet en indbygget post med {...} notation for at kopiere de ønskede individuelle felter.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Det andet argument for funktionen '{0}' understøttes kun for numeriske værdier og dato-/klokkeslætsværdier.</value>
+    
   </data>
 </root>

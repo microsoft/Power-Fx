@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>パラメーターを持つコンポーネント カスタム データ プロパティには、コンポーネント内またはコンポーネント出力プロパティからのみアクセスできます。</value>
+    <value>コンポーネントの関数プロパティまたはパラメーターには、コンポーネント内またはコンポーネント出力プロパティからのみアクセスできます。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>コンポーネントの関数プロパティまたはパラメーターは、他の関数プロパティのみを参照できます。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>この機能は廃止されたため、現在はサポートされていません。</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>名前空間 {1}、関数 {0} は廃止されています。</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>名前空間 {1}、関数 {0} はサポートされていません。</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>警告: 未定の型が指定されています。</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} をデリゲートできません: 式が複数のフィールドを比較しています。</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>HTML タグと XML タグを削除するテキストです。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>フィルター関数が予測を行う関数として動作することはできません。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>複数の予測を第 2 引数に結合するには、And 演算子を使用します。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>このレコードはコピーできません。ForAll 関数および {...} の表記を使用してインライン テーブルを作成し、必要な列を個別にコピーしてください。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>このレコードはコピーできません。{...} の表記を使用してインライン レコードを作成し、必要なフィールドを個別にコピーしてください。</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 関数の第 2 引数に指定できるのは、数値と日付/時刻の値のみです。</value>
+    
   </data>
 </root>

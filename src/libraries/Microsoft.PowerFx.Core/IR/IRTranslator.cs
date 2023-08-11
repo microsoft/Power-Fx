@@ -768,7 +768,7 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                if (node.Children.Length == 1)
+                if (node.Children.Count == 1)
                 {
                     return MaybeInjectCoercion(node, node.Children[0].Accept(this, context), context);
                 }
@@ -787,7 +787,12 @@ namespace Microsoft.PowerFx.Core.IR
                 Contracts.AssertValue(node);
                 Contracts.AssertValue(context);
 
-                if (node.Children.Length == 1)
+                if (node.Children.Count == 0)
+                {
+                    return new TextLiteralNode(IRContext.NotInSource(FormulaType.String), string.Empty);
+                }
+
+                if (node.Children.Count == 1)
                 {
                     return MaybeInjectCoercion(node, node.Children[0].Accept(this, context), context);
                 }

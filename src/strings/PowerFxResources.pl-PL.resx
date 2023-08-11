@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Dostęp do niestandardowej właściwości danych składnika z parametrami można uzyskać tylko z poziomu składnika lub właściwości wyjściowych składnika.</value>
+    <value>Dostęp do właściwości lub parametru funkcji składnika można uzyskać tylko z poziomu składnika lub właściwości wyjściowych składnika.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Właściwość lub parametr funkcji składnika może odwoływać się tylko do innych właściwości funkcji.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Ta funkcja jest przestarzała i nie jest już obsługiwana.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Funkcja {0} jest przestarzała w przestrzeni nazw {1}.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Funkcja {0} nie jest obsługiwana w przestrzeni nazw {1}.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Ostrzeżenie: dostarczono odroczony typ.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Nie można wydelegować operacji {0}: wyrażenie porównuje wiele pól.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekst, z którego mają zostać usunięte tagi HTML i XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcje filtru nie zezwalają na używanie funkcji jako predykatów.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Użyj operatora And, aby połączyć wiele predykatów w drugim argumencie.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Nie można skopiować tej tabeli. W zamian utwórz tabelę w tekście, używając funkcji ForAll i notacji {...}, aby skopiować potrzebne kolumny.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Nie można skopiować tego rekordu. W zamian utwórz rekord w tekście, używając notacji {...}, aby skopiować potrzebne pola.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Drugi argument funkcji „{0}” jest obsługiwany tylko w przypadku wartości liczbowych oraz typu data/godzina.</value>
+    
   </data>
 </root>

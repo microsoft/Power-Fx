@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>La proprietà dei dati personalizzati del componente con parametri è accessibile solo dall'interno di un componente o dalle proprietà di output del componente.</value>
+    <value>La proprietà o il parametro della funzione del componente è accessibile solo dall'interno di un componente o dalle proprietà di output del componente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>La proprietà o il parametro della funzione del componente può fare riferimento solo ad altre proprietà di funzione.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Questa funzionalità è deprecata e non è più supportata.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Nello spazio dei nomi {1} la funzione {0} è deprecata.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Nello spazio dei nomi {1} la funzione {0} non è supportata.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Avviso: fornito tipo posticipato.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Impossibile delegare {0}: l'espressione confronta più campi.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Testo per cui rimuovere i tag HTML e XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Le funzioni di filtro non consentono le funzioni di comportamento come predicati.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilizza l'operatore And per unire più predicati nel secondo argomento.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Impossibile copiare la tabella. Crea invece una tabella inline usando la funzione ForAll e la notazione {...} per copiare le singole colonne desiderate.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Impossibile copiare il record. Crea, invece, un record inline con la notazione {...} per copiare i singoli campi desiderati.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Il secondo argomento della funzione "{0}" è supportato solo per valori numerici e di data/ora.</value>
+    
   </data>
 </root>

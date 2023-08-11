@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Sifat data tersuai komponen dengan parameter hanya boleh dicapai dari dalam bahagian dalam komponen atau daripada sifat output komponen.</value>
+    <value>Sifat atau parameter fungsi komponen hanya boleh dicapai daripada bahagian dalam komponen atau daripada sifat output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Sifat atau parameter fungsi komponen hanya boleh merujuk sifat fungsi lain.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Ciri ini ditamatkan dan tidak lagi disokong.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Dalam ruang nama {1}, fungsi {0} ditamatkan.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Dalam ruang nama {1}, fungsi {0} tidak disokong.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Amaran: Jenis tertunda disediakan.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Tidak dapat mewakili {0}: Ungkapan membandingkan berbilang medan.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teks untuk dialih keluar tag HTML dan XMLnya.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Fungsi penapisan tidak membenarkan fungsi tingkah laku sebagaimana yang diramalkan.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gunakan operator And untuk menggabungkan berbilang ramalan ke dalam argumen kedua.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Jadual ini tidak boleh disalin. Sebaliknya, cipta jadual sebaris dengan menggunakan fungsi ForAll dan notasi {...} untuk menyalin lajur individu yang diingini.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Rekod ini tidak boleh disalin. Sebaliknya, cipta rekod sebaris dengan menggunakan notasi {...} untuk menyalin medan individu yang diingini.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Argumen kedua fungsi '{0}' hanya disokong untuk nilai angka dan tarikh/masa.</value>
+    
   </data>
 </root>

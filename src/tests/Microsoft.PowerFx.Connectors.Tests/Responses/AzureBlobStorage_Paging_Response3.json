@@ -1,0 +1,30 @@
+{
+  "value": [
+    {
+      "Id": "JTJmY29udGFpbmVyJTJmOTk5OS50eHQ=",
+      "Name": "9999.txt",
+      "DisplayName": "9999.txt",
+      "Path": "/container/9999.txt",
+      "LastModified": "2023-07-31T13:37:06Z",
+      "Size": 0,
+      "MediaType": "text/plain",
+      "IsFolder": false,
+      "ETag": "\"0x8DB91CB3B8291AD\"",
+      "FileLocator": "JTJmY29udGFpbmVyJTJmOTk5OS50eHQ=",
+      "LastModifiedBy": null
+    },
+    {
+      "Id": "JTJmY29udGFpbmVyJTJmYWJjLnR4dA==",
+      "Name": "abc.txt",
+      "DisplayName": "abc.txt",
+      "Path": "/container/abc.txt",
+      "LastModified": "2023-03-13T18:02:37Z",
+      "Size": 0,
+      "MediaType": "text/plain",
+      "IsFolder": false,
+      "ETag": "\"0x8DB23ED210A22A8\"",
+      "FileLocator": "JTJmY29udGFpbmVyJTJmYWJjLnR4dA==",
+      "LastModifiedBy": null
+    }
+  ]
+}

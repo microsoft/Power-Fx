@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentin mukautetut tieto-ominaisuudet ja parametrit ovat käytettävissä vain komponentin sisällä tai komponentin tulosominaisuuksien kautta.</value>
+    <value>Komponenttifunktio-ominaisuutta tai parametria voi käyttää vain komponentin sisältä tai komponentin tulostusominaisuuksista.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponenttitoiminnon ominaisuus tai parametri voi viitata vain muihin funktion ominaisuuksiin.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Tämä ominaisuus on vanhentunut, eikä sitä enää tueta.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Nimitilan {1} funktio {0} on vanhentunut.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Nimitilan {1} funktiota {0} ei tueta.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Varoitus: lykätty tyyppi annettu.</value>
     
@@ -4859,7 +4871,7 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>Tämä toiminto taulukossa {0}ei ehkä toimi, jos sillä on yli {1} riviä.</value>
+    <value>Tämä toiminto taulukossa {0} ei ehkä toimi, jos sillä on yli {1} riviä.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Ei voi delegoida {0}: Lauseke vertaa useita kenttiä.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teksti, jonka HTML- ja XML-tunnisteet poistetaan.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Suodatustoiminnot eivät salli käyttäytymisfunktioita predikaatteina.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Voit yhdistää useita predikaatteja toiseen argumenttiin And-operaattorin avulla.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä ForAll-funktiota ja {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset sarakkeet.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Tätä tietuetta ei voi kopioida. Luo sen sijaan sisäinen tietue käyttämällä {...} -notaatiota, kun haluat kopioida haluamasi yksittäiset kentät.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>{0}-funktion toista argumenttia tuetaan vain numeerisille ja päivämäärä/aika-arvoille.</value>
+    
   </data>
 </root>

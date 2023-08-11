@@ -1,0 +1,31 @@
+#SETUP: NumberIsFloat,PowerFxV1CompatibilityRules,DecimalSupport
+
+>> "2" <> Decimal("2.000000000000000000000002")
+Errors: Error 4-6: Incompatible types for comparison. These types can't be compared: Text, Decimal.
+
+>> "1e100" <> Decimal("2.000000000000000000000002")
+Errors: Error 8-10: Incompatible types for comparison. These types can't be compared: Text, Decimal.
+
+>> true <> Decimal("1.000000000000000000000002")
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> true <> Decimal(1)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> true <> Decimal(0)
+Errors: Error 5-7: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> false <> Decimal("1.000000000000000000000002")
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> false <> Decimal(1)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> false <> Decimal(0)
+Errors: Error 6-8: Incompatible types for comparison. These types can't be compared: Boolean, Decimal.
+
+>> Decimal("16.000000000000000000000001") <> "16"
+Errors: Error 39-41: Incompatible types for comparison. These types can't be compared: Decimal, Text.
+
+>> Decimal("1.000000000000000000000001") <> true
+Errors: Error 38-40: Incompatible types for comparison. These types can't be compared: Decimal, Boolean.

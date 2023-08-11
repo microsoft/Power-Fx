@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponentens anpassade dataegenskap med parametrar kan endast användas inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    <value>Egenskap eller parameter för komponentfunktion kan endast nås inifrån en komponent eller från komponentens utdataegenskaper.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Egenskap eller parameter för komponentfunktion kan endast referera till andra funktionsegenskaper.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Den här funktionen är inaktuell och stöds inte längre.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Varning! En senarelagd typ har angetts.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Det går inte att delegera {0}: Uttrycket jämför flera fält.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -4886,10 +4898,10 @@
     <value>Texten att jämföra mot formatet.</value>
   </data>
   <data name="AboutIsMatch_format" xml:space="preserve">
-    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräknaren eller ett reguljärt uttryck.</value>
+    <value>Formatet att kontrollera texten mot. Det kan vara ett värde för TextFormat-uppräkningen eller ett reguljärt uttryck.</value>
   </data>
   <data name="AboutIsMatch_extent" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="IsMatchArg1" xml:space="preserve">
@@ -4921,7 +4933,7 @@
     
   </data>
   <data name="AboutMatch_options" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="AboutMatchAll_text" xml:space="preserve">
@@ -4933,7 +4945,7 @@
     
   </data>
   <data name="AboutMatchAll_options" xml:space="preserve">
-    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräknaren.</value>
+    <value>Det här fastställer vilken del av texten som vi vill matcha. Det kan vara ett värde av MatchOptions-uppräkningen.</value>
     
   </data>
   <data name="MatchArg1" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Texten för att ta bort HTML- och XML-taggar.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfunktioner tillåter inte beteendefunktioner som predikat.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Använd operatorn And för att kombinera flera predikat i det andra argumentet.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Det går inte att kopiera den här tabellen. Skapa i stället en infogad tabell med ForAll-funktionen och {...}-format för att kopiera de enskilda kolumner som du vill använda.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Det går inte att kopiera den här posten. Skapa i stället en infogad post med {...}-format för att kopiera de enskilda fält som du vill använda.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

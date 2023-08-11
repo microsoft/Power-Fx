@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Свойството на компонент за персонализирани данни с параметри може да бъде използвано само в рамките на компонент или от изходни свойства на компонент.</value>
+    <value>Параметърът или свойството на функция за компонента могат да бъдат използвани само в рамките на компонент или от изходни свойства на компонент.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Параметърът или свойството на функция за компонента могат да препращат само към други свойства на функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Тази функция е отхвърлена и вече не се поддържа.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>В пространството на имената {1} функцията {0} е отхвърлена.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>В пространството на имената {1} функцията {0} не се поддържа.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Предупреждение: Предоставен е отложен тип.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Не може да се делегира {0}: Изразът сравнява няколко полета.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текстът, от който да се премахнат HTML и XML етикетите.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функциите за филтриране не допускат функции за поведението като предикати.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Използвайте оператора And, за да комбинирате няколко предиката във втория аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Тази таблица не може да бъде копирана. Вместо това създайте вградена таблица чрез функцията ForAll и нотацията {...}, за да копирате желаните отделни колони.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Този запис не може да бъде копиран. Вместо това създайте вграден запис чрез нотацията {...}, за да копирате желаните отделни полета.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Вторият аргумент на функцията „{0}“ се поддържа само за числови стойности и стойности за дата/час.</value>
+    
   </data>
 </root>

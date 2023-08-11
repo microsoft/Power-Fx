@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Својству прилагођених података компоненте са параметрима може се приступити само из компоненте или из излазних својстава компоненте.</value>
+    <value>Својству функције компоненте или параметрима може се приступити само из компоненте или из излазних својстава компоненте.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Својство или параметар функције компоненте могу да упућују само на друга својства функције.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Ова функција је застарела и више није подржана.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Упозорење: Наведен је одложени тип.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Није могуће делегирати {0}: израз пореди више поља.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -4992,7 +5004,7 @@
       
   </data>
   <data name="AboutPlainText" xml:space="preserve">
-    <value>Уклања сва обликовања и даје вредност чистог текста.</value>
+    <value>Уклања сво обликовање и враћа вредност чистог текста.</value>
     
   </data>
   <data name="PlainTextArg1" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текст из ког треба уклонити HTML и XML ознаке.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функције филтера не дозвољавају функције понашања као исказе.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Користите оператор And да бисте комбиновали више исказа у други аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Није могуће копирати ову табелу. Уместо тога, креирајте уметнуту табелу користећи функцију ForAll и анотацију {...} за копирање жељених појединачних колона.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Није могуће копирати овај запис. Уместо тога, креирајте уметнути запис користећи анотацију {...} да бисте копирали жељена појединачна поља.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

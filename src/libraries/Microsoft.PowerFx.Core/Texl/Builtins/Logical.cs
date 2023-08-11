@@ -99,7 +99,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             }
 
             var args = callNode.Args.Children.VerifyValue();
-            Contracts.Assert(args.Length >= MinArity);
+            Contracts.Assert(args.Count >= MinArity);
 
             var funcDelegationCapability = FunctionDelegationCapability | (_isAnd ? DelegationCapability.And : DelegationCapability.Or);
             if (!metadata.IsDelegationSupportedByTable(funcDelegationCapability))

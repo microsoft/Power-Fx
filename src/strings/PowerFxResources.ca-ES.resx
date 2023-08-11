@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Només es pot accedir a la propietat de dades personalitzada del component amb paràmetres des d'un component o des de les propietats de sortida del component.</value>
+    <value>Només es pot accedir a la propietat o al paràmetre de la funció del component des d'un component o des de les propietats de sortida del component.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>La propietat o el paràmetre de la funció del component només poden fer referència a altres propietats de la funció.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4085,7 +4089,7 @@
   <data name="ErrGeneralError" xml:space="preserve">
     <value>{0}</value>
     
-  </data>  
+  </data>
   <data name="ErrorResource_ErrOperandExpected_ShortMessage" xml:space="preserve">
     <value>S'espera un operand. La fórmula o l'expressió espera un operand vàlid. Per exemple, podeu afegir l'operand "2" a l'expressió "1 + _" per tal que el resultat sigui "3". També podeu afegir l'operand "com esteu?" a l'expressió ""Hola, "&amp; _ " per tal que el resultat sigui "Hola, com esteu?".</value>
     
@@ -4809,6 +4813,14 @@
     <value>Aquesta característica és obsoleta i ja no s'admet.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Advertiment: s'ha proporcionat el tipus ajornat.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>No es pot delegar {0}: l'expressió compara diversos camps.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Text del qual se suprimiran les etiquetes HTML i XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Les funcions de filtre no permeten funcions de comportament com a predicats.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilitzeu l'operador And per combinar diversos predicats al segon argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Aquesta taula no es pot copiar. Com a alternativa, creeu una taula en línia amb la funció ForAll i la notació {...} per copiar les columnes individuals desitjades.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Aquest registre no es pot copiar. Com a alternativa, creeu un registre en línia amb la notació {...} per copiar els camps individuals desitjades.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

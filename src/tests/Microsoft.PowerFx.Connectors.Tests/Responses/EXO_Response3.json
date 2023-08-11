@@ -1,0 +1,19 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#drives('b%21kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb')/items('01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO')/workbook/tables",
+  "value": [
+    {
+      "@odata.id": "/drives('b%21kHbNLXp37U2hyy89eRtZD4Re_7zFnR1MsTMqs1_ocDwJW-sB0ZfqQ5NCc9L-sxKb')/items('01UNLFRNUJPD7RJTFEMVBZZVLQIXHAKAOO')/workbook/tables(%27%7B00000000-000C-0000-FFFF-FFFF00000000%7D%27)",
+      "style": "TableStyleLight9",
+      "name": "Table1",
+      "showFilterButton": true,
+      "id": "{00000000-000C-0000-FFFF-FFFF00000000}",
+      "highlightLastColumn": false,
+      "highlightFirstColumn": false,
+      "legacyId": "1",
+      "showBandedColumns": false,
+      "showBandedRows": true,
+      "showHeaders": true,
+      "showTotals": false
+    }
+  ]
+}

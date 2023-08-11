@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parameetritega komponendi kohandatud andmeatribuudile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    <value>Komponendi funktsiooniatribuudile või -parameetrile pääsete juurde ainult komponendi sees või komponendi väljundatribuutidest.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponendi funktsiooniatribuut või -parameeter saab viidata ainult teistele funktsiooniatribuutidele.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>See funktsioon on iganenud ja seda ei toetata enam.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Hoiatus: esitati edasi lükatud tüüp.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Ei saa delegeerida {0}: avaldis võrdleb mitut välja.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekst, mille HTML- ja XML-sildid eemaldatakse.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtri funktsioonid ei luba predikaatidena käitumisfunktsioone.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Kasutage mitme predikaadi teiseks argumendiks ühendamiseks tehtemärki And.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Seda tabelit ei saa kopeerida. Selle asemel looge tekstisisene tabel, kasutades soovitud üksikute väljade kopeerimiseks funktsiooni ForAll ja märget {...}.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Seda kirjet ei saa kopeerida. Selle asemel looge tekstisisene kirje, kasutades soovitud üksikute väljade kopeerimiseks märget {...}.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

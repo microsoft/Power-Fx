@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Properti data kustom komponen dengan parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    <value>Properti fungsi komponen atau parameter hanya dapat diakses dari dalam komponen atau dari properti output komponen.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Properti fungsi komponen atau parameter hanya dapat mereferensikan properti fungsi lainnya.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Fitur ini tidak digunakan lagi dan sudah tidak didukung.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Di ruang nama {1}, fungsi {0} sudah tidak digunakan lagi.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Di ruang nama {1}, fungsi {0} tidak didukung.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Peringatan: Tipe yang ditangguhkan diberikan.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Tidak dapat mendelegasikan {0}: Ekspresi membandingkan beberapa bidang.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Teks yang akan dihapus tag HTML dan XML-nya.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Fungsi filter tidak mengizinkan fungsi perilaku sebagai predikat.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gunakan operator And untuk menggabungkan beberapa predikat ke dalam argumen kedua.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tabel ini tidak dapat disalin. Sebagai gantinya, buat tabel sebaris menggunakan fungsi ForAll dan notasi {...} untuk menyalin kolom terpisah yang diinginkan.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Rekaman ini tidak dapat disalin. Sebagai gantinya, buat rekaman sebaris menggunakan notasi {...} untuk menyalin bidang terpisah yang diinginkan.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Argumen kedua dari fungsi '{0}' hanya didukung untuk nilai numerik dan tanggal/waktu.</value>
+    
   </data>
 </root>

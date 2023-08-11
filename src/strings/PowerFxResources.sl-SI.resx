@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Do lastnosti podatkov po meri komponente s parametri je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    <value>Do lastnosti funkcije komponente ali parametra je mogoče dostopati samo iz komponente ali iz lastnosti izhoda komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Lastnost funkcije komponente ali parameter lahko vsebuje samo sklice na druge lastnosti funkcije.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Ta funkcija je opuščena in ni več podprta.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Opozorilo: na voljo je odložena vrsta.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Ni mogoče pooblastiti – {0}: izraz primerja več polj.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Besedilo, iz katerega bodo odstranjene oznake HTML in XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcije za filtriranje ne omogočajo funkcij delovanja, kot so predikati.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Uporabite operator »And« in združite več predikatov v drugi argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Tabele ni mogoče kopirati. S funkcijo »ForAll« in zapisom {...} ustvarite tabelo v vrstici, da kopirate posamezne izbrane stolpce.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Zapisa ni mogoče kopirati. Ustvarite zapis v vrstici z oznako {...}, če želite kopirati želena posamezna polja.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

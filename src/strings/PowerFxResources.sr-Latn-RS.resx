@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Svojstvu prilagođenih podataka komponente sa parametrima može se pristupiti samo iz komponente ili iz izlaznih svojstava komponente.</value>
+    <value>Svojstvu funkcije komponente ili parametrima može se pristupiti samo iz komponente ili iz izlaznih svojstava komponente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Svojstvo ili parametar funkcije komponente mogu da upućuju samo na druga svojstva funkcije.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Ova funkcija je zastarela i više nije podržana.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Upozorenje: Naveden je odloženi tip.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Nije moguće delegirati {0}: izraz poredi više polja.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekst iz kog treba ukloniti HTML i XML oznake.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funkcije filtera ne dozvoljavaju funkcije ponašanja kao iskaze.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Koristite operator „And“ da biste kombinovali više iskaza u drugi argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Nije moguće kopirati ovu tabelu. Umesto toga, kreirajte umetnutu tabelu koristeći funkciju ForAll i anotaciju {...} za kopiranje željenih pojedinačnih kolona.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Nije moguće kopirati ovaj zapis. Umesto toga, kreirajte umetnuti zapis koristeći anotaciju {...} da biste kopirali željena pojedinačna polja.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parametrelere sahip bileşen özel veri özelliğine yalnızca bir bileşenin içinden veya bileşen çıktı özelliklerinden erişilebilir.</value>
+    <value>Bileşen işlevi özelliği veya parametresine yalnızca bir bileşenin içinden veya bileşen çıktı özelliklerinden erişilebilir.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Bileşen işlevi özelliği veya parametresi yalnızca diğer işlev özelliklerine başvurabilir.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Bu özellik kullanım dışı bırakıldı ve artık desteklenmiyor.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>{1} ad alanında {0} işlevi kullanım dışı.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>{1} ad alanında {0} işlevi desteklenmiyor.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Uyarı: Ertelenmiş tür sağlandı.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} öğesi atanamıyor: İfade, birden fazla alanı kıyaslıyor.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>HTML ve XML etiketleri kaldırılacak metin.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtre işlevleri, davranış işlevlerinin fonksiyon olarak kullanılmasına izin vermez.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Birden fazla yüklemi ikinci bağımsız değişkende birleştirmek için And işlecini kullanın.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Bu tablo kopyalanamaz. Bunun yerine, istediğiniz sütunları tek tek kopyalamak için ForAll işlevini ve {...} gösterimini kullanarak bir satır içi tablo oluşturun.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Bu kayıt kopyalanamaz. Bunun yerine, istediğiniz alanları tek tek kopyalamak için {...} gösterimini kullanarak bir satır içi kayıt oluşturun.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' işlevinin ikinci bağımsız değişkeni yalnızca sayısal değerler ve tarih/saat değerleri için desteklenir.</value>
+    
   </data>
 </root>

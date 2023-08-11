@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>只能从组件内或从组件输出属性访问包含参数的组件自定义数据属性。</value>
+    <value>只能从组件内或从组件输出属性访问组件功能属性或参数。</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>组件函数属性或参数只能引用其他函数属性。</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>此功能已被弃用并且不再受支持。</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>在 {1} 命名空间中已弃用 {0} 函数。</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>在 {1} 命名空间中不支持 {0} 函数。</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>警告: 提供了延迟类型。</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>无法委托 {0}: 表达式将比较多个字段。</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>要移除其 HTML 和 XML 标记的文本。</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>筛选器函数不允许将行为函数作为谓词。</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>使用 And 运算符将多个谓词组合到第二个参数中。</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>无法复制此表。请改为使用 ForAll 函数和 {...} 表示法创建内联表来复制所需的各个列。</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>无法复制此记录。请改为使用 {...} 表示法创建内联记录来复制所需的各个字段。</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' 函数的第二个参数仅支持数字和日期/时间值。</value>
+    
   </data>
 </root>

@@ -1745,6 +1745,10 @@
     <value>Solo se puede obtener acceso a la propiedad de datos personalizados de componentes con parámetros desde dentro de un componente o desde las propiedades de salida del componente.</value>
     
   </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>La propiedad o parámetro de la función de componente solo puede hacer referencia a otras propiedades de función.</value>
+    
+  </data>
   <data name="ErrBadArity" xml:space="preserve">
     <value>Número de argumentos no válido: se recibieron {0}, se esperaban {1}.</value>
     
@@ -4809,6 +4813,14 @@
     <value>Esta característica está en desuso y ya no se admite.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Advertencia: Tipo diferido proporcionado.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>No se puede delegar {0}: la expresión compara varios campos.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>El texto para tener sus etiquetas HTML y XML eliminadas.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Las funciones de filtro no permiten funciones de comportamiento como predicados.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Use el operador And para combinar varios predicados en el segundo argumento.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>No se puede copiar esta tabla. En su lugar, cree una tabla insertada mediante la función ForAll y la notación {...} para copiar las columnas individuales deseadas.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>No se puede copiar este registro. En su lugar, cree un registro insertado usando la anotación {...} para copiar los campos individuales deseados.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>A propiedade de datos personalizados do compoñente con parámetros só é accesible desde un compoñente ou desde as propiedades de saída do compoñente.</value>
+    <value>A propiedade ou o parámetro de función do compoñente só é accesible desde un compoñente ou desde as propiedades de saída do compoñente.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>A propiedade ou o parámetro de función do compoñente só pode facer referencia a outras propiedades de función.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Esta funcionalidade está obsoleta e xa non é compatible.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>No espazo de nomes {1} a función {0} está obsoleta.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>No espazo de nomes {1} non se admite a función {0}.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Aviso: Forneceuse un tipo aprazado.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Non pode delegar {0}: A expresión compara múltiples campos.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Texto do que se van eliminar as etiquetas HTML e XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>As funcións de filtro non permiten funcións de comportamento como predicados.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Use o operador And para combinar múltiples predicados no segundo argumento.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Esta táboa non se pode copiar. No seu lugar, cree unha táboa en liña usando a función ForAll e a notación {...} para copiar as columnas individuais desexadas.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Este rexistro non se pode copiar. No seu lugar, cree un rexistro en liña usando a notación {...} para copiar os campos individuais desexados.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>O segundo argumento da función '{0}' só se apoia nos valores numéricos e de data/hora.</value>
+    
   </data>
 </root>

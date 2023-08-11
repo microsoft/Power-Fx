@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Властивість настроюваних даних компонента з параметрами доступна лише з компонента або з властивостей вихідних даних компонента.</value>
+    <value>Властивість функції або параметр компонента доступні лише з компонента або з властивостей вихідних даних компонента.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Властивість або параметр функції компонента може посилатися лише на інші властивості функції.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4307,7 +4311,7 @@
     
   </data>
   <data name="ErrorResource_ErrBehaviorPropertyExpected_Link_1" xml:space="preserve">
-    <value>Стаття: "Формули поведінки для компонованих програм у PowerApps"</value>
+    <value>Стаття: "Формули поведінки для компонованих програм у Power Apps"</value>
     
   </data>
   <data name="ErrorResource_ErrTestPropertyExpected_ShortMessage" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Цю функцію вилучено. Вона більше не підтримується.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Попередження! Надано відкладений тип.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Не вдалося делегувати {0}: вираз порівнює кілька полів.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текст, для якого потрібно видалити теги HTML і XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функції фільтра не дають змоги використовувати функції поведінки як предикати.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Використовуйте оператор And для об’єднання кількох предикатів у другий аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Цю таблицю не можна скопіювати. Натомість створіть вбудовану таблицю за допомогою функції ForAll і нотації "{...}", щоб скопіювати окремі потрібні стовпці.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Цей запис не можна скопіювати. Натомість створіть вбудований запис за допомогою нотації "{...}", щоб скопіювати окремі потрібні поля.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

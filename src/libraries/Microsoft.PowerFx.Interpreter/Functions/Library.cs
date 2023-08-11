@@ -44,15 +44,6 @@ namespace Microsoft.PowerFx.Functions
 
         public static readonly IReadOnlyDictionary<TexlFunction, AsyncFunctionPtr> FunctionImplementations;
 
-        public static FormattingInfo CreateFormattingInfo(EvalVisitor runner)
-        {
-            return new FormattingInfo()
-            {
-                CultureInfo = runner.CultureInfo,
-                TimeZoneInfo = runner.TimeZoneInfo
-            };
-        }
-
         static Library()
         {
             var allFunctions = new Dictionary<TexlFunction, AsyncFunctionPtr>();
@@ -1777,7 +1768,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.BooleanW_T,
-                StandardErrorHandlingTabularOverload<NumberValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanN], DoNotReplaceBlank)
+                StandardErrorHandlingTabularOverload<DecimalValue>(BuiltinFunctionsCore.BooleanW_T.Name, SimpleFunctionImplementations[BuiltinFunctionsCore.BooleanW], DoNotReplaceBlank)
             },
 
             // This implementation is not actually used for this as this is handled at IR level. 
@@ -1973,7 +1964,7 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return DValue<RecordValue>.Of(rv);
                 }
-                else if (!forceSingleColumn && arg is BlankValue bv && tableType.FieldNames.Count() > 1)
+                else if (!forceSingleColumn && arg is BlankValue bv && bv.Type._type.IsRecord)
                 {
                     return DValue<RecordValue>.Of(bv);
                 }

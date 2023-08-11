@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Доступ к свойству пользовательских данных компонента с параметрами возможен только из компонента или из выходных свойств компонента.</value>
+    <value>Доступ к свойству или параметру функции компонента возможен только из компонента или из выходных свойств компонента.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Свойство или параметр функции компонента может ссылаться только на другие свойства функции.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Эта функция устарела и больше не поддерживается.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>В пространстве имен "{1}" имен функция "{0}" устарела.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>В пространстве имен "{1}" функция "{0}" не поддерживается.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Предупреждение. Указан тип Deferred.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Невозможно делегировать {0}: выражение сравнивает несколько полей.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -4897,7 +4909,7 @@
     
   </data>
   <data name="IsMatchArg2" xml:space="preserve">
-    <value>Формат</value>
+    <value>формат</value>
     
   </data>
   <data name="IsMatchArg3" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Текст, в котором нужно удалить теги HTML и XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Функции фильтра не позволяют выполнять функции поведения в виде предикатов.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Используйте оператор "And" для объединения нескольких предикатов во второй аргумент.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Не удается скопировать эту таблицу. Вместо этого создайте встроенную таблицу с помощью функции ForAll и нотацию {...} для копирования нужных столбцов.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Эту запись невозможно скопировать. Вместо этого создайте встроенную запись с помощью нотации {...} для копирования нужных полей.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Второй аргумент функции "{0}" поддерживается только для числовых значений и значений даты и времени.</value>
+    
   </data>
 </root>

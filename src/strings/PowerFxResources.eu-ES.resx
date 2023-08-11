@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Parametrodun osagaiaren datu pertsonalizatuen propietatea osagai batetik edo osagaiaren irteerako propietateetatik atzi daiteke soilik.</value>
+    <value>Osagai-funtzioaren propietatea edo parametroa atzi dezakezu osagai batetik edo osagai baten irteerako propietateetatik soilik.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Osagai-funtzioaren propietateak edo parametroak beste funtzio-propietate batzuei soilik egin diezaieke erreferentzia.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Eginbidea zaharkituta dago eta ez da aurrerantzean onartuko.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Abisua: atzeratutako mota bat eman da.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Ezin da eskuordetu {0}: adierazpenak hainbat eremu konparatzen ditu.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Testuari HTML eta XML etiketak kentzea.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Iragazteko funtzioek ez dituzte onartzen portaera-funtzioak predikatu gisa.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Erabili And eragilea hainbat predikatu bigarren argumentuan konbinatzeko.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Ezin da kopiatu taula hau. Horren ordez, sortu txertatutako taula bat ForAll funtzioa eta {...} erabiliz eta kopiatu behar dituzun zutabeak.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Ezin da kopiatu erregistro hau. Horren ordez, sortu txertatutako erregistro bat {...} notazioa erabiliz eta kopiatu behar dituzun eremuak.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

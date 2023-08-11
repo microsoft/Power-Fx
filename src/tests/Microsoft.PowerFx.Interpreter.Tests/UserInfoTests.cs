@@ -25,6 +25,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task UserInfoObjectTest()
         {
             var g1 = Guid.NewGuid();
+            var g2 = Guid.NewGuid();
 
             var userInfo = new BasicUserInfo
             {
@@ -32,6 +33,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 Email = "me@contoso.com",
                 DataverseUserId = g1,
                 TeamsMemberId = "teamsId",
+                EntraObjectId = g2
             };
 
             // Use string literals for properties here to ensure they didn't change. 
@@ -40,7 +42,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 { "FullName", userInfo.FullName },
                 { "Email", userInfo.Email },
                 { "DataverseUserId", userInfo.DataverseUserId },
-                { "TeamsMemberId", userInfo.TeamsMemberId }
+                { "TeamsMemberId", userInfo.TeamsMemberId },
+                { "EntraObjectId", userInfo.EntraObjectId }
             };
 
             foreach (var key in AllUserPropertyNames())

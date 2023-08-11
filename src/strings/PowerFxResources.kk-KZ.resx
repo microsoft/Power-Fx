@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Компоненттің реттемелі деректер сипаты мен параметрлерге компоненттен немесе компонент нәтижесі сипаттарынан ғана өтуге болады.</value>
+    <value>Компонент функциясы сипатына немесе параметріне компоненттен немесе компонент нәтижесі сипаттарынан ғана өтуге болады.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Компонент функциясы сипаты немесе параметрі тек басқа функция сипаттарына білдіруі мүмкін.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Бұл мүмкіндік ұсынылмайды және бұдан былай қолдау көрсетілмейді.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Ескерте: кейінге қалдырылған түр берілген.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} беру мүмкін емес: өрнек бірнеше өрісті салыстырады.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>HTML және XML тегтері бар мәтін жойылды.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Сүзгі функциялары логикалық өрнектер ретінде тәртіп функцияларына мүмкіндік бермейді.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Бірнеше логикалық өрнекті екінші аргументке біріктіру үшін And амалын пайдаланыңыз.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Бұл кестені көшіру мүмкін емес. Оның орнына қажетті жеке бағандарды көшіру үшін ForAll функциясы мен {...} жазбасы арқылы кірістірілген жазба жасаңыз.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Бұл жазбаны көшіру мүмкін емес. Оның орнына қажетті жеке өрістерді көшіру үшін {...} жазбасы арқылы кірістірілген жазба жасаңыз.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

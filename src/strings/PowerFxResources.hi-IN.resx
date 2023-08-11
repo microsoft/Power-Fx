@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>पैरामीटर के साथ घटक कस्टम डेटा संपत्ति केवल एक घटक के भीतर से या घटक उत्पादन गुणों से पहुँचा जा सकता है.</value>
+    <value>घटक फ़ंक्शन प्रॉपर्टी या पैरामीटर को केवल घटक के भीतर से या घटक आउटपुट गुणों से ही एक्सेस किया जा सकता है.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>घटक फ़ंक्शन गुण या पैरामीटर केवल अन्य फ़ंक्शन गुणों को संदर्भित कर सकता है.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>चेतावनी: आस्थगित प्रकार प्रदान किया गया.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} को प्रतिनिधि नहीं कर सकते: एक्सप्रेशन कई तरह के फ़ील्ड की तुलना करती है.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>पाठ में उसके HTML और XML टैग हटा दिए गए हैं.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>फ़िल्टर फ़ंक्शन व्यवहार फ़ंक्शन को प्रेडिकेट के रूप में अनुमति नहीं देते हैं.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>दूसरे तर्क में अनेक प्रेडिकेट्स को संयोजित करने के लिए And ऑपरेटर का उपयोग करें.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>इस तालिका की प्रतिलिपि नहीं बनाई जा सकती. इसके बजाय, वांछित व्यक्तिगत कॉलम की प्रतिलिपि बनाने के लिए ForAll फ़ंक्शन और {...} नोटेशन का उपयोग करके एक इनलाइन तालिका बनाएं.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>इस रिकॉर्ड की प्रतिलिपि नहीं बनाई जा सकती. इसके बजाय, वांछित व्यक्तिगत फ़ील्ड की प्रतिलिपि बनाने के लिए {...} नोटेशन का उपयोग करके एक इनलाइन रिकॉर्ड बनाएं.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>

@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Entities;
@@ -114,14 +115,14 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             var args = callNode.Args.Children.VerifyValue();
 
-            if (args.Length == 0)
+            if (args.Count == 0)
             {
                 return false;
             }
 
-            // Don't delegate 1-N/N-N counts
+            // Don't delegate 1-N/N-N counts, View counts
             // TASK 9966488: Enable CountRows/CountIf delegation for table relationships
-            if (binding.GetType(args[0]).HasExpandInfo)
+            if (binding.GetType(args[0]).HasExpandInfo || ExpressionContainsView(callNode, binding))
             {
                 SuggestDelegationHint(callNode, binding);
                 return false;
@@ -130,13 +131,19 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             var metadata = dataSource.DelegationMetadata.FilterDelegationMetadata;
 
             // Validate for each predicate node.
-            for (var i = 1; i < args.Length; i++)
+            for (var i = 1; i < args.Count; i++)
             {
                 if (!IsValidDelegatableFilterPredicateNode(args[i], binding, metadata))
                 {
                     SuggestDelegationHint(callNode, binding);
                     return false;
                 }
+            }
+
+            // Valiate to see if offline usage hints are applicable.
+            if (binding.DelegationHintProvider?.TryGetWarning(callNode, this, out var warning) ?? false)
+            {
+                SuggestDelegationHint(callNode, binding);
             }
 
             return true;

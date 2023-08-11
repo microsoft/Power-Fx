@@ -6,6 +6,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Configurations>Debug;Release</Configurations>
     <OutputType>Library</OutputType>
+    <DefineConstants>$(DefineConstants);$(CustomConstants)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

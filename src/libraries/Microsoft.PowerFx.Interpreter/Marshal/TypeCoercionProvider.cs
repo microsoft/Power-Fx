@@ -19,19 +19,6 @@ namespace Microsoft.PowerFx
     /// </summary>
     public static class TypeCoercionProvider
     {
-        internal static FormattingInfo CreateFormattingInfo() => new FormattingInfo()
-        {
-            // $$$ can't use current culture
-            CultureInfo = CultureInfo.CurrentCulture,            
-            TimeZoneInfo = TimeZoneInfo.Local
-        };
-
-        internal static FormattingInfo CreateFormattingInfo(IRuntimeConfig runtimeConfig) => new FormattingInfo()
-        {
-            CultureInfo = runtimeConfig.ServiceProvider.GetService<CultureInfo>(),            
-            TimeZoneInfo = runtimeConfig.ServiceProvider.GetService<TimeZoneInfo>()
-        };
-
         /// <summary>
         /// Can convert value to source format to target or not.
         /// </summary>
@@ -54,7 +41,7 @@ namespace Microsoft.PowerFx
 
         public static bool TryCoerceTo(this FormulaValue value, FormulaType targetType, out FormulaValue result)
         {
-            return value.TryCoerceTo(targetType, CreateFormattingInfo(), out result, CancellationToken.None);
+            return value.TryCoerceTo(targetType, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
         }
 
         /// <summary>
@@ -118,7 +105,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to String type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out StringValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result, CancellationToken.None);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
         }
 
         /// <summary>
@@ -144,7 +131,7 @@ namespace Microsoft.PowerFx
         public static bool TryCoerceTo(this FormulaValue value, RuntimeConfig runtimeConfig, CancellationToken cancellationToken, out StringValue result)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return TryCoerceTo(value, CreateFormattingInfo(runtimeConfig), out result, cancellationToken);
+            return TryCoerceTo(value, runtimeConfig.ServiceProvider.GetFormattingInfo(), out result, cancellationToken);
         }
 
         /// <summary>
@@ -178,7 +165,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out NumberValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result);
         }
 
         /// <summary>
@@ -201,7 +188,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to Number type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out DecimalValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result);
         }
         
         /// <summary>
@@ -224,7 +211,7 @@ namespace Microsoft.PowerFx
         /// <returns>True/False based on whether function can convert from original type to DateTime type.</returns> 
         public static bool TryCoerceTo(this FormulaValue value, out DateTimeValue result)
         {
-            return TryCoerceTo(value, CreateFormattingInfo(), out result);
+            return TryCoerceTo(value, FormattingInfoHelper.CreateFormattingInfo(), out result);
         }
 
         /// <summary>
@@ -241,7 +228,7 @@ namespace Microsoft.PowerFx
 
         public static bool TryCoerceToRecord(this RecordValue value, RecordType targetType, out RecordValue result)
         {
-            return value.TryCoerceToRecord(targetType, CreateFormattingInfo(), out result, CancellationToken.None);
+            return value.TryCoerceToRecord(targetType, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
         }
 
         /// <summary>
@@ -298,7 +285,7 @@ namespace Microsoft.PowerFx
 
         public static bool TryCoerceToTable(this TableValue value, TableType targetType, out TableValue result)
         {
-            return value.TryCoerceToTable(targetType, CreateFormattingInfo(), out result, CancellationToken.None);
+            return value.TryCoerceToTable(targetType, FormattingInfoHelper.CreateFormattingInfo(), out result, CancellationToken.None);
         }
 
         /// <summary>
@@ -375,25 +362,25 @@ namespace Microsoft.PowerFx
                 return true;
             }
 
-            if (source == FormulaType.Boolean)
+            if (target == FormulaType.Boolean)
             {
-                return BooleanValue.AllowedListConvertToBoolean.Contains(target);
+                return BooleanValue.AllowedListConvertToBoolean.Contains(source);
             }
-            else if (source == FormulaType.String)
+            else if (target == FormulaType.String)
             {
-                return StringValue.AllowedListConvertToString.Contains(target);
+                return StringValue.AllowedListConvertToString.Contains(source);
             }
-            else if (source == FormulaType.Number)
+            else if (target == FormulaType.Number)
             {
-                return NumberValue.AllowedListConvertToNumber.Contains(target);
+                return NumberValue.AllowedListConvertToNumber.Contains(source);
             }
-            else if (source == FormulaType.Decimal)
+            else if (target == FormulaType.Decimal)
             {
-                return DecimalValue.AllowedListConvertToDecimal.Contains(target);
+                return DecimalValue.AllowedListConvertToDecimal.Contains(source);
             }
-            else if (source == FormulaType.DateTime)
+            else if (target == FormulaType.DateTime)
             {
-                return DateTimeValue.AllowedListConvertToDateTime.Contains(target);
+                return DateTimeValue.AllowedListConvertToDateTime.Contains(source);
             }
 
             return false;

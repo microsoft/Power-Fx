@@ -47,7 +47,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("ACSL", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "aCSL__ConversationAnalysisAnalyzeConversationConversation");
+            Assert.Contains(
+                functionList,
+                func =>
+                    func.Namespace.Name.Value == "ACSL" &&
+                    func.Name == "ConversationAnalysisAnalyzeConversationConversation");
         }
 
 #pragma warning disable SA1118, SA1137
@@ -288,7 +292,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             // We can call the function with a RuntimeConfig parameters (unused here) that can contain TimeZoneInformation or other runtime settings
-            FormulaValue httpResult = await function.InvokeAync(new FormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -476,7 +480,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("LQA", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "lQA__GetAnswersFromText");
+            Assert.Contains(
+                functionList,
+                func =>
+                    func.Namespace.Name.Value == "LQA" &&
+                    func.Name == "GetAnswersFromText");
         }
 
         [Fact]
@@ -484,7 +492,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
             List<ServiceFunction> functionList = OpenApiParser.Parse("SQL", doc);
-            Assert.Contains(functionList, sf => sf.GetUniqueTexlRuntimeName() == "sQL__GetProcedureV2");
+            Assert.Contains(
+                functionList,
+                func =>
+                    func.Namespace.Name.Value == "SQL" &&
+                    func.Name == "GetProcedureV2");
         }
 
         [Fact]

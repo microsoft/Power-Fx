@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Proprietatea de date particularizate a componentelor cu parametri poate fi accesată numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    <value>Proprietatea sau parametrul de funcție a componentelor pot fi accesate numai din interiorul unei componente sau din proprietățile de ieșire ale componentei.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Proprietatea sau parametrul de funcție a componentelor pot face referire numai la alte proprietăți ale funcției.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Această caracteristică este perimată și nu mai este acceptată.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>În spațiul de nume {1} funcția {0} este perimată.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>În spațiul de nume {1} funcția {0} nu este acceptată.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Avertisment: s-a furnizat un tip amânat.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Nu putem delega {0}: Expresia compară mai multe câmpuri.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Textul pentru care se elimină etichetele HTML și XML.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Funcțiile de filtrare nu permit funcții comportamentale ca predicate.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Utilizați operatorul And pentru a combina mai multe predicate în cel de-al doilea argument.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Acest tabel nu se poate copia. Creați în schimb un tabel în linie utilizând funcția ForAll și notația {...} pentru a copia coloanele individuale de care aveți nevoie.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Această înregistrare nu se poate copia. Creați în schimb o înregistrare în linie utilizând notația {...} pentru a copia câmpurile individuale de care aveți nevoie.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Al doilea argument al funcției „{0}” este acceptat doar pentru valorile numerice și dată/oră.</value>
+    
   </data>
 </root>

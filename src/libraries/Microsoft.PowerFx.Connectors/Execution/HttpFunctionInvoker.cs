@@ -24,15 +24,17 @@ namespace Microsoft.PowerFx.Connectors
         private readonly HttpMessageInvoker _httpClient;
         private readonly HttpMethod _method;
         private readonly string _path;
+        private readonly string _server;
         internal readonly FormulaType _returnType;
         private readonly ArgumentMapper _argMapper;
         private readonly ICachingHttpClient _cache;
 
-        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null)
+        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string server, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null)
         {
             _httpClient = httpClient;
             _method = method;
             _path = path;
+            _server = server;
             _argMapper = argMapper;
             _cache = cache ?? NonCachingClient.Instance;
             _returnType = returnType;
@@ -53,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, CancellationToken cancellationToken)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, string server, CancellationToken cancellationToken)
         {
             var path = _path;
             var query = new StringBuilder();
@@ -112,7 +114,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = path + query.ToString();
+            var url = (_server ?? string.Empty) + path + query.ToString();
             var request = new HttpRequestMessage(_method, url);
 
             foreach (var kv in headers)
@@ -197,8 +199,19 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            using HttpRequestMessage request = BuildRequest(args, context, _server, cancellationToken);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
+        }
 
-            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);
+        public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, CancellationToken cancellationToken, bool throwOnError = false)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            using HttpRequestMessage request = new HttpRequestMessage(_method, new Uri(url).PathAndQuery);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, CancellationToken cancellationToken)
+        {
             var key = request.RequestUri.ToString();
 
             if (request.Method != HttpMethod.Get)
@@ -239,8 +252,13 @@ namespace Microsoft.PowerFx.Connectors
         public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
             return _invoker.InvokeAsync(context, _cacheScope, args, cancellationToken, _throwOnError);
+        }
+
+        public Task<FormulaValue> InvokeAsync(string url, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return _invoker.InvokeAsync(url, _cacheScope, cancellationToken, _throwOnError);
         }
     }
 }

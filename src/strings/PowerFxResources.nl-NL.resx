@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Aangepaste gegevenseigenschappen voor onderdelen met parameters zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    <value>Functie-eigenschappen of parameters voor onderdelen zijn alleen toegankelijk vanuit een onderdeel of eigenschappen van de onderdeeluitvoer.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Functie-eigenschappen of parameters voor onderdelen kunnen alleen naar andere functie-eigenschappen verwijzen.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Deze functie is afgeschaft en wordt niet meer ondersteund.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>Functie {0} in naamruimte {1} afgeschaft.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>Functie {0} in naamruimte {1} wordt niet ondersteund.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Waarschuwing: uitgesteld type opgegeven.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Kan {0} niet machtigen: expressie vergelijkt meerdere velden.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>De tekst waarvan de HTML- en XML-codes worden verwijderd.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filterfuncties staan geen gedragsfuncties toe als predicaten.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Gebruik de And-operator om meerdere predicaten in het tweede argument te combineren.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Deze tabel kan niet worden gekopieerd. Maak in plaats daarvan een inlinetabel met de functie ForAll en notatie {...} om de gewenste individuele kolommen te kopiëren.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Deze record kan niet worden gekopieerd. Maak in plaats daarvan een inlinerecord met notatie {...} om de gewenste afzonderlijke velden te kopiëren.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>Het tweede argument van de functie {0} wordt alleen ondersteund voor numerieke waarden en datum-/tijdwaarden.</value>
+    
   </data>
 </root>

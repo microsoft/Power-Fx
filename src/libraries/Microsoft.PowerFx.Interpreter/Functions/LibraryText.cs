@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Value(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Value(CreateFormattingInfo(runner), irContext, args);
+            return Value(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Float(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Float(CreateFormattingInfo(runner), irContext, args);
+            return Float(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -176,11 +176,9 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryFloat(formatInfo, irContext, args[0], out NumberValue result);
+            bool isValue = TryFloat(formatInfo.With(culture), irContext, args[0], out NumberValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -228,7 +226,7 @@ namespace Microsoft.PowerFx.Functions
         // Convert string to number
         public static FormulaValue Decimal(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            return Decimal(CreateFormattingInfo(runner), irContext, args);
+            return Decimal(runner.GetFormattingInfo(), irContext, args);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -251,11 +249,9 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, cultureArg.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
-            bool isValue = TryDecimal(formatInfo, irContext, args[0], out DecimalValue result);
+            bool isValue = TryDecimal(formatInfo.With(culture), irContext, args[0], out DecimalValue result);
 
             return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
         }
@@ -307,22 +303,28 @@ namespace Microsoft.PowerFx.Functions
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-text
         public static FormulaValue Text(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
-            if (args.Length == 1 && args[0].IsBlank())
+            if (args[0].IsBlank())
             {
-                // When used as a pure conversion function (single argument, no format string), this function propagates null values
-                return new BlankValue(irContext);
+                if (args.Length == 1)
+                {
+                    // When used as a pure conversion function (single argument, no format string), this function propagates null values
+                    return new BlankValue(irContext);
+                }
+
+                // Set blank to 0 because we only support numeric and datetime input when we have format string
+                args[0] = new NumberValue(IRContext.NotInSource(FormulaType.Number), 0);
             }
 
-            foreach (var arg in args)
+            for (int i = 1; i < args.Length; i++)
             {
-                if (arg.IsBlank())
+                if (args[i].IsBlank())
                 {
                     return new StringValue(irContext, string.Empty);
                 }
             }
 
             runner.CancellationToken.ThrowIfCancellationRequested();
-            return Text(CreateFormattingInfo(runner), irContext, args, runner.CancellationToken);
+            return Text(runner.GetFormattingInfo(), irContext, args, runner.CancellationToken);
         }
 
         public static FormulaValue Text(FormattingInfo formatInfo, IRContext irContext, FormulaValue[] args, CancellationToken cancellationToken)
@@ -343,6 +345,12 @@ namespace Microsoft.PowerFx.Functions
             if (args.Length > 1 && args[1] is StringValue fs)
             {
                 formatString = fs.Value;
+
+                if (!TextFormatUtils.AllowedListToUseFormatString.Contains(args[0].Type._type))
+                {
+                    var customErrorMessage = StringResources.Get(TexlStrings.ErrNotSupportedFormat_Func, formatInfo.CultureInfo.Name);
+                    return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                }
             }
 
             var culture = formatInfo.CultureInfo;
@@ -352,8 +360,6 @@ namespace Microsoft.PowerFx.Functions
                 {
                     return CommonErrors.BadLanguageCode(irContext, languageCode.Value);
                 }
-
-                formatInfo.CultureInfo = culture;
             }
 
             // We limit the format string size
@@ -363,7 +369,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, formatSize));
             }
 
-            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, formatInfo.CultureInfo, defaultLanguage, out textFormatArgs))
+            if (formatString != null && !TextFormatUtils.IsValidFormatArg(formatString, culture, defaultLanguage, out textFormatArgs))
             {
                 if (formatString.StartsWith("[$-", StringComparison.OrdinalIgnoreCase) && !(textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt))
                 {
@@ -374,7 +380,7 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
-            var isText = TryText(formatInfo, irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
+            var isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
@@ -412,7 +418,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "G", culture));
                     }
 
                     break;
@@ -428,7 +434,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var normalized = dec.Normalize();
-                        result = new StringValue(irContext, normalized.ToString(formatString ?? "g", culture));
+                        result = new StringValue(irContext, normalized.ToString(formatString ?? "G", culture));
                     }
 
                     break;

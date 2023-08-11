@@ -1742,7 +1742,11 @@
     
   </data>
   <data name="ErrUnSupportedComponentDataPropertyAccess" xml:space="preserve">
-    <value>Komponento pasirinktinę duomenų ypatybę su parametrais galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    <value>Komponento funkcijos ypatybę arba parametrą galima pasiekti tik komponente arba iš komponento išvesties ypatybių.</value>
+    
+  </data>
+  <data name="ErrUnSupportedComponentFunctionPropertyReferenceNonFunctionPropertyAccess" xml:space="preserve">
+    <value>Komponento funkcijos ypatybė arba parametras gali nurodyti tik kitas funkcijos ypatybes.</value>
     
   </data>
   <data name="ErrBadArity" xml:space="preserve">
@@ -4809,6 +4813,14 @@
     <value>Ši funkcija nerekomenduojama ir nebepalaikoma.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is deprecated.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>In namespace {1}, function {0} is not supported.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Įspėjimas: pateiktas atidėtas tipas.</value>
     
@@ -4871,7 +4883,7 @@
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Negalima deleguoti {0}: išraiška lygina kelis laukus.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
@@ -5001,5 +5013,23 @@
   </data>
   <data name="AboutPlainText_text" xml:space="preserve">
     <value>Tekstas, kuriame reikia pašalinti HTML ir XML žymes.</value>
+  </data>
+  <data name="ErrFilterFunctionBahaviorAsPredicate" xml:space="preserve">
+    <value>Filtro funkcijos neleidžia veikimo funkcijų kaip taisyklių sąlygų.</value>
+    
+  </data>
+  <data name="ErrFilterFunction_OnlyTwoArgs" xml:space="preserve">
+    <value>Naudodami operatorių And sujunkite kelias taisyklių sąlygas antrajame argumente.</value>
+    
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowTable" xml:space="preserve">
+    <value>Šios lentelės negalima nukopijuoti. Vietoje to sukurkite įdėjimo lentelę naudodami funkciją ForAll ir {...} notaciją, kad galėtumėte kopijuoti atskirus norimus stulpelius.</value>
+  </data>
+  <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
+    <value>Šio įrašo negalima nukopijuoti. Vietoje to sukurkite įdėjimo įrašą naudodami {...} notaciją, kad galėtumėte kopijuoti atskirus norimus laukus.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    
   </data>
 </root>
