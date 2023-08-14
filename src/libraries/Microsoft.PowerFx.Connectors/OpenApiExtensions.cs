@@ -490,6 +490,11 @@ namespace Microsoft.PowerFx.Connectors
             return op.Extensions.TryGetValue("x-ms-visibility", out IOpenApiExtension openExt) && openExt is OpenApiString str ? str.Value : null;
         }
 
+        public static bool IsInternal(this OpenApiOperation op)
+        {
+            return string.Equals(op.GetVisibility(), "internal", StringComparison.OrdinalIgnoreCase);
+        }
+
         public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
         { 
             return op.Extensions.TryGetValue("x-ms-require-user-confirmation", out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;            

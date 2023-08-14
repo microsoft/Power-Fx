@@ -55,6 +55,9 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         // Check will return a warning when used
         private readonly bool _isDeprecated;
 
+        // For functions that have "x-ms-visibility" set to "internal" in swagger file.
+        private readonly bool _isInternal;
+
         // Functions that we do not support for any reason (see _notSupportedReason)
         // Deprecated functions are also marked as not supported but will work fine.
         // We return an error when used
@@ -72,6 +75,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public override bool IsSelfContained => !_isBehaviorOnly;
         public bool IsPageable => !string.IsNullOrEmpty(_pageLink);
         public bool IsDeprecated => _isDeprecated;
+        public bool IsInternal => _isInternal;
         public bool IsNotSupported => !_isSupported;
         public string NotSupportedReason => _notSupportedReason;
 
@@ -80,7 +84,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         public ServiceFunction(IService parentService, DPath theNamespace, string name, string localeSpecificName, string description, DType returnType, BigInteger maskLambdas, int arityMin, int arityMax, bool isBehaviorOnly,
             bool isAutoRefreshable, bool isDynamic, bool isCacheEnabled, int cacheTimeoutMs, bool isHidden, Dictionary<TypedName, List<string>> parameterOptions, ServiceFunctionParameterTemplate[] optionalParamInfo,
-            ServiceFunctionParameterTemplate[] requiredParamInfo, Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated,
+            ServiceFunctionParameterTemplate[] requiredParamInfo, Dictionary<string, Tuple<string, DType>> parameterDefaultValues, string pageLink, bool isSupported, string notSupportedReason, bool isDeprecated, bool isInternal,
             string actionName = "", ConnectorSettings connectorSettings = null, params DType[] paramTypes)
             : base(theNamespace, name, localeSpecificName, (l) => description, FunctionCategories.REST, returnType, maskLambdas, arityMin, arityMax, paramTypes)
         {
@@ -145,6 +149,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             _isSupported = isSupported;
             _notSupportedReason = notSupportedReason;
             _isDeprecated = isDeprecated;
+            _isInternal = isInternal;
             _maxRows = connectorSettings.MaxRows;
 
             if (arityMax > arityMin)

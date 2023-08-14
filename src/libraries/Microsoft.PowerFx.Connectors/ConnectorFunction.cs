@@ -101,6 +101,12 @@ namespace Microsoft.PowerFx.Connectors
         public string Visibility => Operation.GetVisibility();
 
         /// <summary>
+        /// When "x-ms-visibility" is set to "internal".
+        /// https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-visibility.
+        /// </summary>
+        public bool IsInternal => Operation.IsInternal();
+
+        /// <summary>
         /// Defined as "x-ms-require-user-confirmation" boolean content.
         /// </summary>
         public bool RequiresUserConfirmation => Operation.GetRequiresUserConfirmation();
@@ -334,6 +340,7 @@ namespace Microsoft.PowerFx.Connectors
                 isSupported: IsSupported,
                 notSupportedReason: NotSupportedReason,
                 isDeprecated: IsDeprecated,
+                isInternal: IsInternal,
                 actionName: "action",
                 connectorSettings: connectorSettings,
                 paramTypes: ArgumentMapper._parameterTypes)
