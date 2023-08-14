@@ -183,16 +183,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             var engine = new RecalcEngine(config);
 
-            FormulaValue fv1 = engine.Eval(@"Xkcd.comicIdinfo0json(1)");
-            string transcript = ((StringValue)((RecordValue)fv1).GetField("transcript")).Value.Replace("\n", "\r\n");
+            FormulaValue fv1 = engine.Eval(@"Xkcd.comicIdinfo0json(1).transcript");
+            string transcript = ((StringValue)fv1).Value.Replace("\n", "\r\n");
             string expectedTranscript = @"[[A boy sits in a barrel which is floating in an ocean.]]
 Boy: I wonder where I'll float next?
 [[The barrel drifts into the distance. Nothing else can be seen.]]
 {{Alt: Don't we all.}}";
             Assert.Equal(expectedTranscript, transcript);
 
-            FormulaValue fv2 = engine.Eval(@"WorldTime.timezone()");
-            string firstTZ = ((StringValue)((TableValue)fv2).Rows.First().Value.GetField("Value")).Value;
+            FormulaValue fv2 = engine.Eval(@"First(WorldTime.timezone()).Value");
+            string firstTZ = ((StringValue)fv2).Value;
             Assert.Equal("Africa/Abidjan", firstTZ);
         }
 
