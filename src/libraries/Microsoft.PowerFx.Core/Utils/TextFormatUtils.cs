@@ -45,7 +45,7 @@ namespace Microsoft.PowerFx.Core.Utils
         private static readonly Regex _formatWithoutZeroSubsecondsRegex = new Regex(@"[sS]\.?(0+)", RegexOptions.Compiled);
         private static readonly IReadOnlyList<char> _dateTimeCharacters = new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' };
         private static readonly IReadOnlyList<char> _numericCharacters = new char[] { '0', '#' };
-        private static readonly IReadOnlyList<char> _unsupportedCharacters = new char[] { '?', '[', '_', '*', '@' };
+        private static readonly IReadOnlyList<char> _unsupportedCharacters = new char[] { '?', '[', '_', '*', '@', ']' };
 
         /// <summary>
         /// Validate if format string is valid or not and return format string object.

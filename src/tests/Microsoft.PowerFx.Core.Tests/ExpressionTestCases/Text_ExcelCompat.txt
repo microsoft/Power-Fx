@@ -20,9 +20,6 @@
 >> Text(1234.5678, "# ##0,00")
 " 1,235"
 
->> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
-"$-fr-FR]  1.235"
-
 >> Text(1234.5678, "-fr-FR # ##0,00", "vi-VI")
 "-fr-FR  1.235"
 
@@ -1022,3 +1019,73 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 
 >> Text(1234567.1234567, "#,###‰‰‰")
 "1,234,567‰‰‰"
+
+// Format for DateTime
+>> Text(1234, "mmm. dd, yyyy (hh:mm:ss AM/PM)")
+"May. 18, 1903 (12:00:00 AM)"
+
+>> Text(1234, "dddd mmmm d")
+"Monday May 18"
+
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.UTC)
+"2022-03-31T00:30:00.000Z"
+
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "f")
+"f"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:ss.fffutc")
+"02:53:09.fffutc"
+
+>> Text(30470.519531251, "hh:mm:ss.fffutc")
+"12:28:07.fffutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:s.futc")
+"02:53:9.futc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mmutc")
+"02:53utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "mm:ssutc")
+"53:09utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "mm:hhutc")
+"06:02utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:yyyy:mmutc")
+"02:1983:06utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/putc")
+"2autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/putc")
+"02autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hAM/PMutc")
+"2AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hhAM/PMutc")
+"02AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/putc")
+"2:53 autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/putc")
+"02:53 autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PMutc")
+"2:53 AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm AM/PMutc")
+"02:53 AMutc"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "hh:mm:ss AM/PMutc")
+"10:48:38 AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "utchh:mm:ss")
+"utc02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:ssutchh:mm:ss")
+"02:53:09utc02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "Time: utc is in ISO format")
+"Ti53e: utc i9 in I9O for6at"

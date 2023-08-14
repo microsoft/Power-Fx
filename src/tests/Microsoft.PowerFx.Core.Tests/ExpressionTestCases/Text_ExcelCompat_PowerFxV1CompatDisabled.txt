@@ -1,5 +1,12 @@
 #SETUP: disable:PowerFxV1CompatibilityRules
 
+// Block language code
+>> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.89, "[$-fr-FR]# ###,## €", "fr-FR")
+Error({Kind:ErrorKind.InvalidArgument})
+
 // Not support format string for non numeric/datetime/date/time
 >> Text("123.456", "###")
 Error({Kind:ErrorKind.InvalidArgument})
