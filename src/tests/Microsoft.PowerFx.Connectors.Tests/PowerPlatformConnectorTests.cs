@@ -781,21 +781,21 @@ namespace Microsoft.PowerFx.Tests
             string dataset = ((StringValue)((TableValue)((RecordValue)fv1).GetField("value")).Rows.First().Value.GetField("Name")).Value;
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response2.json");
-            FormulaValue fv1a = engine.Eval(@$"SP.GetDataSetsMetadata()");
-            Assert.Equal("double", ((StringValue)((RecordValue)((RecordValue)fv1a).GetField("blob")).GetField("urlEncoding")).Value);
+            FormulaValue fv2 = engine.Eval(@$"SP.GetDataSetsMetadata()");
+            Assert.Equal("double", ((StringValue)((RecordValue)((RecordValue)fv2).GetField("blob")).GetField("urlEncoding")).Value);
 
             // -> 3756de7d-cb20-4014-bab8-6ea7e5264b97
             testConnector.SetResponseFromFile(@"Responses\SPO_Response3.json");
-            FormulaValue fv2 = engine.Eval($@"SP.GetAllTables(""{dataset}"")");
-            string table = ((StringValue)((TableValue)((RecordValue)fv2).GetField("value")).Rows.First().Value.GetField("Name")).Value;
+            FormulaValue fv3 = engine.Eval($@"SP.GetAllTables(""{dataset}"")");
+            string table = ((StringValue)((TableValue)((RecordValue)fv3).GetField("value")).Rows.First().Value.GetField("Name")).Value;
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response4.json");
-            FormulaValue fv2a = engine.Eval($@"SP.GetTableViews(""{dataset}"", ""{table}"")");
-            Assert.Equal("1e54c4b5-2a59-4a2a-9633-cc611a2ff718", ((StringValue)((TableValue)fv2a).Rows.Skip(1).First().Value.GetField("Name")).Value);
+            FormulaValue fv4 = engine.Eval($@"SP.GetTableViews(""{dataset}"", ""{table}"")");
+            Assert.Equal("1e54c4b5-2a59-4a2a-9633-cc611a2ff718", ((StringValue)((TableValue)fv4).Rows.Skip(1).First().Value.GetField("Name")).Value);
 
             testConnector.SetResponseFromFile(@"Responses\SPO_Response5.json");
-            FormulaValue fv3 = engine.Eval($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})");
-            Assert.Equal("Shared Documents/Document.docx", ((StringValue)((RecordValue)((TableValue)((RecordValue)fv3).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Value);
+            FormulaValue fv5 = engine.Eval($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})");
+            Assert.Equal("Shared Documents/Document.docx", ((StringValue)((RecordValue)((TableValue)((RecordValue)fv5).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Value);
 
             string version = PowerPlatformConnectorClient.Version;
             string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
