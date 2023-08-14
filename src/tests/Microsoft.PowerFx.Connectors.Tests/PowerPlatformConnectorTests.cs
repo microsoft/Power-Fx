@@ -758,6 +758,102 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public async Task SharePointOnlineTest()
+        {
+            //string spUri = @"https://auroraprojopsintegration01.sharepoint.com";
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig();
+            string token = @"eyJ0eXA...";
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "2f0cc19d-893e-e765-b15d-2906e3231c09" /* env */, "6fb0a1a8e2f5487eafbe306821d8377e" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc).OrderBy(f => f.Name).ToList();
+            Assert.Equal(101, functions.Count);
+
+            IEnumerable<FunctionInfo> funcInfos = config.AddService("SP", apiDoc, ppClient);
+            RecalcEngine engine = new RecalcEngine(config);
+
+            // -> https://auroraprojopsintegration01.sharepoint.com/sites/Site17
+            testConnector.SetResponseFromFile(@"Responses\SPO_Response1.json");
+            FormulaValue fv1 = engine.Eval(@$"SP.GetDataSets()");
+            string dataset = ((StringValue)((TableValue)((RecordValue)fv1).GetField("value")).Rows.First().Value.GetField("Name")).Value;
+
+            testConnector.SetResponseFromFile(@"Responses\SPO_Response2.json");
+            FormulaValue fv1a = engine.Eval(@$"SP.GetDataSetsMetadata()");
+            Assert.Equal("double", ((StringValue)((RecordValue)((RecordValue)fv1a).GetField("blob")).GetField("urlEncoding")).Value);
+
+            // -> 3756de7d-cb20-4014-bab8-6ea7e5264b97
+            testConnector.SetResponseFromFile(@"Responses\SPO_Response3.json");
+            FormulaValue fv2 = engine.Eval($@"SP.GetAllTables(""{dataset}"")");
+            string table = ((StringValue)((TableValue)((RecordValue)fv2).GetField("value")).Rows.First().Value.GetField("Name")).Value;
+
+            testConnector.SetResponseFromFile(@"Responses\SPO_Response4.json");
+            FormulaValue fv2a = engine.Eval($@"SP.GetTableViews(""{dataset}"", ""{table}"")");
+            Assert.Equal("1e54c4b5-2a59-4a2a-9633-cc611a2ff718", ((StringValue)((TableValue)fv2a).Rows.Skip(1).First().Value.GetField("Name")).Value);
+
+            testConnector.SetResponseFromFile(@"Responses\SPO_Response5.json");
+            FormulaValue fv3 = engine.Eval($@"SP.GetItems(""{dataset}"", ""{table}"", {{'$top': 4}})");
+            Assert.Equal("Shared Documents/Document.docx", ((StringValue)((RecordValue)((TableValue)((RecordValue)fv3).GetField("value")).Rows.First().Value).GetField("{FullPath}")).Value);
+
+            string version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXA...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXA...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/$metadata.json/datasets
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXA...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/alltables
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXA...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/views
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXA...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/2f0cc19d-893e-e765-b15d-2906e3231c09
+ x-ms-client-session-id: 547d471f-c04c-4c4a-b3af-337ab0637a0d
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sharepointonline/6fb0a1a8e2f5487eafbe306821d8377e/datasets/https%253a%252f%252fauroraprojopsintegration01.sharepoint.com%252fsites%252fSite17/tables/3756de7d-cb20-4014-bab8-6ea7e5264b97/items?$top=4
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            Assert.Equal(expected, testConnector._log.ToString());
+        }
+
+        [Fact]
         public async Task ExcelOnlineTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\ExcelOnlineBusiness.swagger.json");

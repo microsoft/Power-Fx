@@ -90,6 +90,11 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
+                    if (ArgumentMapper.GetDoubleEncoding(param))
+                    {
+                        valueStr = HttpUtility.UrlEncode(valueStr);
+                    }
+
                     switch (param.In.Value)
                     {
                         case ParameterLocation.Path:
