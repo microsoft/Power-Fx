@@ -278,7 +278,7 @@ namespace Microsoft.PowerFx.Tests
             CheckResult checkResult = engine.Check("azbs.", symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, 5);
             List<string> suggestedFuncs = suggestions.Suggestions.Select(s => s.DisplayText.Text).ToList();
-            Assert.Equal(33, suggestedFuncs.Count());
+            Assert.Equal(15, suggestedFuncs.Count());
 
             // ListRootFolderV3 is deprecated and should not appear in the list of suggested functions
             Assert.DoesNotContain(suggestedFuncs, str => str == "ListRootFolderV3");

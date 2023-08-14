@@ -468,6 +468,7 @@ namespace Microsoft.PowerFx.Connectors
                         isSupported: connectorIsSupported && isSupported,
                         notSupportedReason: string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason,
                         isDeprecated: op.Deprecated,
+                        isInternal: op.IsInternal(),
                         actionName: "action",
                         connectorSettings: connectorSettings,
                         paramTypes: argMapper._parameterTypes)
