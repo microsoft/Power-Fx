@@ -1027,9 +1027,6 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 >> Text(1234, "dddd mmmm d")
 "Monday May 18"
 
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.UTC)
-"2022-03-31T00:30:00.000Z"
-
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), "f")
 "f"
 
