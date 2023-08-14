@@ -1,0 +1,46 @@
+{
+  "value": [
+    {
+      "@odata.etag": "\"3\"",
+      "ItemInternalId": "1",
+      "ID": 1,
+      "Modified": "2023-08-11T09:43:01Z",
+      "Editor": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|aurorauser01@auroraprojopsintegration01.onmicrosoft.com",
+        "DisplayName": "aurorauser01",
+        "Email": "",
+        "Picture": null,
+        "Department": "",
+        "JobTitle": ""
+      },
+      "Editor#Claims": "i:0#.f|membership|aurorauser01@auroraprojopsintegration01.onmicrosoft.com",
+      "Created": "2023-08-11T09:42:12Z",
+      "Author": {
+        "@odata.type": "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+        "Claims": "i:0#.f|membership|aurorauser01@auroraprojopsintegration01.onmicrosoft.com",
+        "DisplayName": "aurorauser01",
+        "Email": null,
+        "Picture": null,
+        "Department": null,
+        "JobTitle": null
+      },
+      "Author#Claims": "i:0#.f|membership|aurorauser01@auroraprojopsintegration01.onmicrosoft.com",
+      "OData__DisplayName": "",
+      "{Identifier}": "Shared%2bDocuments%252fDocument.docx",
+      "{IsFolder}": false,
+      "{Thumbnail}": {
+        "Large": "https://southcentralus1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=docx&cs=fFNQTw&docid=https%3a%2f%2fauroraprojopsintegration01.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!cf2UAH9_BEOuf5hTZliEFiK0uu_czHNFpySMOJHmKrx93lY3IMsUQLq4bqflJkuX%2fitems%2f01O7IZCROPWHFLZ3VYP5EIGD7M57WP5CCU%3fversion%3dPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXVyb3JhcHJvam9wc2ludGVncmF0aW9uMDEuc2hhcmVwb2ludC5jb21AZTFjYmZkYmItYTc4Ni00ZDcxLWE2NjEtNDdkYjliY2VjYjZhIiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTY5MTk5MjgwMCIsImV4cCI6IjE2OTIwMTQ0MDAiLCJlbmRwb2ludHVybCI6IkJOMUtnMFZqM2xHRTQ3VmJXbHpibEVwMEhsZ0VVN0dpSUJDTVJkNlBNNTA9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMzMiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJNREE1Tkdaa056RXROMlkzWmkwME16QTBMV0ZsTjJZdE9UZzFNelkyTlRnNE5ERTIiLCJhcHBfZGlzcGxheW5hbWUiOiJBcHAgU2VydmljZSIsImdpdmVuX25hbWUiOiJ1c2VyMDEiLCJmYW1pbHlfbmFtZSI6ImF1cm9yYSIsIm5hbWVpZCI6IjAjLmZ8bWVtYmVyc2hpcHxhdXJvcmF1c2VyMDFAYXVyb3JhcHJvam9wc2ludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8MTAwMzIwMDJiYTExOGNjZUBsaXZlLmNvbSIsInNoYXJpbmdpZCI6IjkyM2UwZGU3LTFjNmQtNDA5Zi04Njg0LWM1M2YyNjE4YWQyMCIsInV0aSI6IkVSSW4xaWwxTzBlR01XYWREdlU2QUEiLCJ0dCI6IjAiLCJpcGFkZHIiOiIyMC4yNDEuMTc5LjEwMCJ9.hIhOQUBgGPiWvjNRP-yWE7jFUKCwtYcXu4muB-0NK4c&width=800&height=800",
+        "Medium": "https://southcentralus1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=docx&cs=fFNQTw&docid=https%3a%2f%2fauroraprojopsintegration01.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!cf2UAH9_BEOuf5hTZliEFiK0uu_czHNFpySMOJHmKrx93lY3IMsUQLq4bqflJkuX%2fitems%2f01O7IZCROPWHFLZ3VYP5EIGD7M57WP5CCU%3fversion%3dPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXVyb3JhcHJvam9wc2ludGVncmF0aW9uMDEuc2hhcmVwb2ludC5jb21AZTFjYmZkYmItYTc4Ni00ZDcxLWE2NjEtNDdkYjliY2VjYjZhIiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTY5MTk5MjgwMCIsImV4cCI6IjE2OTIwMTQ0MDAiLCJlbmRwb2ludHVybCI6IkJOMUtnMFZqM2xHRTQ3VmJXbHpibEVwMEhsZ0VVN0dpSUJDTVJkNlBNNTA9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMzMiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJNREE1Tkdaa056RXROMlkzWmkwME16QTBMV0ZsTjJZdE9UZzFNelkyTlRnNE5ERTIiLCJhcHBfZGlzcGxheW5hbWUiOiJBcHAgU2VydmljZSIsImdpdmVuX25hbWUiOiJ1c2VyMDEiLCJmYW1pbHlfbmFtZSI6ImF1cm9yYSIsIm5hbWVpZCI6IjAjLmZ8bWVtYmVyc2hpcHxhdXJvcmF1c2VyMDFAYXVyb3JhcHJvam9wc2ludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8MTAwMzIwMDJiYTExOGNjZUBsaXZlLmNvbSIsInNoYXJpbmdpZCI6IjkyM2UwZGU3LTFjNmQtNDA5Zi04Njg0LWM1M2YyNjE4YWQyMCIsInV0aSI6IkVSSW4xaWwxTzBlR01XYWREdlU2QUEiLCJ0dCI6IjAiLCJpcGFkZHIiOiIyMC4yNDEuMTc5LjEwMCJ9.hIhOQUBgGPiWvjNRP-yWE7jFUKCwtYcXu4muB-0NK4c&width=176&height=176",
+        "Small": "https://southcentralus1-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=docx&cs=fFNQTw&docid=https%3a%2f%2fauroraprojopsintegration01.sharepoint.com%3a443%2f_api%2fv2.0%2fdrives%2fb!cf2UAH9_BEOuf5hTZliEFiK0uu_czHNFpySMOJHmKrx93lY3IMsUQLq4bqflJkuX%2fitems%2f01O7IZCROPWHFLZ3VYP5EIGD7M57WP5CCU%3fversion%3dPublished&access_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvYXVyb3JhcHJvam9wc2ludGVncmF0aW9uMDEuc2hhcmVwb2ludC5jb21AZTFjYmZkYmItYTc4Ni00ZDcxLWE2NjEtNDdkYjliY2VjYjZhIiwiaXNzIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwIiwibmJmIjoiMTY5MTk5MjgwMCIsImV4cCI6IjE2OTIwMTQ0MDAiLCJlbmRwb2ludHVybCI6IkJOMUtnMFZqM2xHRTQ3VmJXbHpibEVwMEhsZ0VVN0dpSUJDTVJkNlBNNTA9IiwiZW5kcG9pbnR1cmxMZW5ndGgiOiIxMzMiLCJpc2xvb3BiYWNrIjoiVHJ1ZSIsInZlciI6Imhhc2hlZHByb29mdG9rZW4iLCJzaXRlaWQiOiJNREE1Tkdaa056RXROMlkzWmkwME16QTBMV0ZsTjJZdE9UZzFNelkyTlRnNE5ERTIiLCJhcHBfZGlzcGxheW5hbWUiOiJBcHAgU2VydmljZSIsImdpdmVuX25hbWUiOiJ1c2VyMDEiLCJmYW1pbHlfbmFtZSI6ImF1cm9yYSIsIm5hbWVpZCI6IjAjLmZ8bWVtYmVyc2hpcHxhdXJvcmF1c2VyMDFAYXVyb3JhcHJvam9wc2ludGVncmF0aW9uMDEub25taWNyb3NvZnQuY29tIiwibmlpIjoibWljcm9zb2Z0LnNoYXJlcG9pbnQiLCJpc3VzZXIiOiJ0cnVlIiwiY2FjaGVrZXkiOiIwaC5mfG1lbWJlcnNoaXB8MTAwMzIwMDJiYTExOGNjZUBsaXZlLmNvbSIsInNoYXJpbmdpZCI6IjkyM2UwZGU3LTFjNmQtNDA5Zi04Njg0LWM1M2YyNjE4YWQyMCIsInV0aSI6IkVSSW4xaWwxTzBlR01XYWREdlU2QUEiLCJ0dCI6IjAiLCJpcGFkZHIiOiIyMC4yNDEuMTc5LjEwMCJ9.hIhOQUBgGPiWvjNRP-yWE7jFUKCwtYcXu4muB-0NK4c&width=96&height=96"
+      },
+      "{Link}": "https://auroraprojopsintegration01.sharepoint.com/sites/Site17/Shared%20Documents/Document.docx?d=wbccab1cfb8ee487f830fecefecfe8854",
+      "{Name}": "Document",
+      "{FilenameWithExtension}": "Document.docx",
+      "{Path}": "Shared Documents/",
+      "{FullPath}": "Shared Documents/Document.docx",
+      "{IsCheckedOut}": false,
+      "{VersionNumber}": "2.0"
+    }
+  ]
+}

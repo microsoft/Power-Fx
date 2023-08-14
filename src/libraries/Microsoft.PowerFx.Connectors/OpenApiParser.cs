@@ -41,8 +41,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
         {
+            bool connectorIsSupported = true;
+            string connectorNotSupportedReason = string.Empty;
             connectorSettings ??= new ConnectorSettings();
-            ValidateSupportedOpenApiDocument(openApiDocument, connectorSettings.IgnoreUnknownExtensions);
+
+            ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions);
 
             List<ConnectorFunction> functions = new ();
             List<ServiceFunction> sFunctions = new ();
@@ -79,6 +82,10 @@ namespace Microsoft.PowerFx.Connectors
 
                     string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
                     string opPath = basePath != null ? basePath + path : path;
+
+                    isSupported = isSupported && connectorIsSupported;
+                    notSupportedReason = string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason;
+
                     ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, connectorSettings) { Document = openApiDocument };
 
                     functions.Add(connectorFunction);
@@ -109,7 +116,7 @@ namespace Microsoft.PowerFx.Connectors
             return functions;
         }
 
-        private static void ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, bool ignoreUnknownExtensions)
+        private static void ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions)
         {
             // OpenApiDocument - https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapidocument?view=openapi-dotnet
             // AutoRest Extensions for OpenAPI 2.0 - https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md
@@ -155,38 +162,43 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (infoExtensions.Any())
                 {
-                    throw new NotImplementedException($"OpenApiDocument Info contains unsupported extensions {string.Join(", ", infoExtensions)}");
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Info contains unsupported extensions {string.Join(", ", infoExtensions)}";
                 }
             }
 
             // openApiDocument.ExternalDocs - may contain URL pointing to doc
             if (openApiDocument.Components != null)
             {
-                if (openApiDocument.Components.Callbacks.Any())
+                if (isSupported && openApiDocument.Components.Callbacks.Any())
                 {
                     // Callback Object: A map of possible out-of band callbacks related to the parent operation.
                     // https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapicallback
-                    throw new NotImplementedException($"OpenApiDocument Components contains Callbacks");
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Components contains Callbacks";                    
                 }
 
                 // openApiDocument.Examples can be ignored
 
-                if (!ignoreUnknownExtensions)
+                if (isSupported && !ignoreUnknownExtensions)
                 {
                     if (openApiDocument.Components.Extensions.Any())
                     {
-                        throw new NotImplementedException($"OpenApiDocument Components contains Extensions");
+                        isSupported = false;
+                        notSupportedReason = $"OpenApiDocument Components contains Extensions {string.Join(", ", openApiDocument.Components.Extensions.Keys)}";
                     }
                 }
 
-                if (openApiDocument.Components.Headers.Any())
+                if (isSupported && openApiDocument.Components.Headers.Any())
                 {
-                    throw new NotImplementedException($"OpenApiDocument Components contains Headers");
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Components contains Headers";
                 }
 
-                if (openApiDocument.Components.Links.Any())
+                if (isSupported && openApiDocument.Components.Links.Any())
                 {
-                    throw new NotImplementedException($"OpenApiDocument Components contains Links");
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument Components contains Links";
                 }
 
                 // openApiDocument.Components.Parameters is ok                
@@ -196,7 +208,7 @@ namespace Microsoft.PowerFx.Connectors
                 // openApiDocument.Components.SecuritySchemes are critical but as we don't manage them at all, we'll ignore this parameter                
             }
 
-            if (!ignoreUnknownExtensions)
+            if (isSupported && !ignoreUnknownExtensions)
             {
                 List<string> extensions = openApiDocument.Extensions.Where(e => !((e.Value is OpenApiArray oaa && oaa.Count == 0) || (e.Value is OpenApiObject oao && oao.Count == 0))).Select(e => e.Key).ToList();
 
@@ -212,7 +224,8 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (extensions.Any())
                 {
-                    throw new NotImplementedException($"OpenApiDocument contains unsupported Extensions {string.Join(", ", extensions)}");
+                    isSupported = false;
+                    notSupportedReason = $"OpenApiDocument contains unsupported Extensions {string.Join(", ", extensions)}";
                 }
             }
 
@@ -220,9 +233,10 @@ namespace Microsoft.PowerFx.Connectors
             // openApiDocument.SecurityRequirements - can be ignored as we don't manage this part        
             // openApiDocument.Tags - can be ignored
 
-            if (openApiDocument.Workspace != null)
+            if (isSupported && openApiDocument.Workspace != null)
             {
-                throw new NotImplementedException($"OpenApiDocument contains unsupported Workspace");
+                isSupported = false;
+                notSupportedReason = $"OpenApiDocument contains unsupported Workspace";
             }
         }
 
@@ -265,7 +279,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (isSupported && op.Deprecated)
             {
-                isSupported = false;
+                isSupported = false;                
                 notSupportedReason = $"OpenApiOperation is deprecated";
             }
 
@@ -359,13 +373,22 @@ namespace Microsoft.PowerFx.Connectors
                 throw new ArgumentException(nameof(functionNamespace));
             }
 
+            bool connectorIsSupported = true;
+            string connectorNotSupportedReason = string.Empty;
+
             connectorSettings ??= new ConnectorSettings();
-            ValidateSupportedOpenApiDocument(openApiDocument, connectorSettings.IgnoreUnknownExtensions);
+            ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions);
 
             List<ServiceFunction> functions = new List<ServiceFunction>();
             string basePath = openApiDocument.GetBasePath();
-            string server = GetServer(openApiDocument, httpClient);            
-            DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));            
+            string server = GetServer(openApiDocument, httpClient);
+            string absolutePath = httpClient is HttpClient hc ? (hc.BaseAddress?.AbsolutePath ?? string.Empty) : string.Empty;
+            DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));         
+            
+            if (absolutePath.EndsWith("/", StringComparison.Ordinal))
+            { 
+                absolutePath = absolutePath.Substring(0, absolutePath.Length - 1);
+            }
 
             foreach (var kv in openApiDocument.Paths)
             {
@@ -408,10 +431,10 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     // We need to remove invalid chars to be consistent with Power Apps
-                    string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
+                    string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace(".", string.Empty);
 
                     FormulaType returnType = op.GetReturnType(connectorSettings.NumberIsFloat);
-                    string opPath = basePath != null && basePath != "/" ? basePath + path : path;
+                    string opPath = absolutePath + (basePath != null && basePath != "/" ? basePath + path : path);
                     ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, connectorSettings.NumberIsFloat);
                     ScopedHttpFunctionInvoker invoker = null;
 
@@ -442,8 +465,8 @@ namespace Microsoft.PowerFx.Connectors
                         requiredParamInfo: argMapper.RequiredParamInfo,
                         parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
                         pageLink: op.PageLink(),
-                        isSupported: isSupported,
-                        notSupportedReason: notSupportedReason,
+                        isSupported: connectorIsSupported && isSupported,
+                        notSupportedReason: string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason,
                         isDeprecated: op.Deprecated,
                         isInternal: op.IsInternal(),
                         actionName: "action",
@@ -482,7 +505,7 @@ namespace Microsoft.PowerFx.Connectors
             if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiDocument != null && openApiDocument.Servers.Any())
             {
                 // descending order to prefer https
-                return openApiDocument.Servers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault().OriginalString;
+                return openApiDocument.Servers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
             }
 
             return null;

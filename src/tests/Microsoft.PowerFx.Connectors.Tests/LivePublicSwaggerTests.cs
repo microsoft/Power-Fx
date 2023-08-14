@@ -169,6 +169,33 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("New Year's Day", ((StringValue)result).Value);
         }
 
+        [Fact(Skip = "Live Test")]
+        public async Task RealTest4()
+        {
+            var config = new PowerFxConfig();                        
+            OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json").ConfigureAwait(false);
+            OpenApiDocument docWorldTime = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/worldtimeapi.org/20210108/openapi.json").ConfigureAwait(false);
+
+            using var clientXkcd = new HttpClient() { BaseAddress = new Uri(@"http://xkcd.com/") };
+            using var clientWorldTime = new HttpClient() { BaseAddress = new Uri(@"http://worldtimeapi.org/api/") };
+            var funcsXkcd = config.AddService("Xkcd", docXkcd, clientXkcd, new ConnectorSettings() { IgnoreUnknownExtensions = true });
+            var funcsWorldTime = config.AddService("WorldTime", docWorldTime, clientWorldTime, new ConnectorSettings() { IgnoreUnknownExtensions = true });
+
+            var engine = new RecalcEngine(config);
+
+            FormulaValue fv1 = engine.Eval(@"Xkcd.comicIdinfo0json(1).transcript");
+            string transcript = ((StringValue)fv1).Value.Replace("\n", "\r\n");
+            string expectedTranscript = @"[[A boy sits in a barrel which is floating in an ocean.]]
+Boy: I wonder where I'll float next?
+[[The barrel drifts into the distance. Nothing else can be seen.]]
+{{Alt: Don't we all.}}";
+            Assert.Equal(expectedTranscript, transcript);
+
+            FormulaValue fv2 = engine.Eval(@"First(WorldTime.timezone()).Value");
+            string firstTZ = ((StringValue)fv2).Value;
+            Assert.Equal("Africa/Abidjan", firstTZ);
+        }
+
         // Get a swagger file from the embedded resources. 
         private static async Task<OpenApiDocument> ReadSwaggerFromUrl(string url)
         {
