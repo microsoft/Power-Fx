@@ -3,10 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
-using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core
@@ -49,14 +46,14 @@ namespace Microsoft.PowerFx.Core
                 };
             }
 
-            if (type._type.AggregateHasExpandedType())
+            var logicalName = aggregateType.TableSymbolName;
+            if (type._type.AggregateHasExpandedType() && logicalName != null)
             {
-                var logicalName = type._type.AssociatedDataSources.First().EntityName.Value;
-                var schemaTypeName = type._type.IsTable ? SchemaTypeName.ExpandableTableTypeName : SchemaTypeName.ExpandableRecordTypeName;
+                var schemaTypeName = type._type.IsTable ? SchemaTypeName.CustomTableTypeName : SchemaTypeName.CustomRecordTypeName;
                 return new FormulaTypeSchema()
                 {
                     Type = schemaTypeName,
-                    Description = logicalName
+                    CustomTypeName = logicalName,
                 };
             }
             

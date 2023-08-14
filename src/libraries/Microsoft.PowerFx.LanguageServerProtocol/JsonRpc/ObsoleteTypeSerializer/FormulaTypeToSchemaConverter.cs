@@ -88,7 +88,10 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.UntypedObject };
             }
 
-            public void Visit(UnsupportedType type) => throw new NotImplementedException();
+            public void Visit(UnsupportedType type)
+            {
+                Result = new FormulaTypeSchema() { Type = FormulaTypeSchema.ParamType.Unsupported };
+            }
 
             public void Visit(UnknownType type)
             {

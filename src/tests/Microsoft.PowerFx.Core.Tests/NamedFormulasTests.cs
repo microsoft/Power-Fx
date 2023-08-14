@@ -14,6 +14,63 @@ namespace Microsoft.PowerFx.Core.Tests
     public class NamedFormulasTests : PowerFxTest
     {
         [Theory]
+        [InlineData("Foo = Type(Number);")]
+        public void DefSimpleTypeTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
+            Assert.Equal("Number", parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsFirstName().Ident.Name.ToString());
+            Assert.Equal("Foo", parsedNamedFormulasAndUDFs.DefinedTypes.First().Ident.Name.ToString());
+        }
+
+        [Theory]
+        [InlineData("Foo = Type({ Age: Number });")]
+        public void DefRecordTypeTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
+            var record = parsedNamedFormulasAndUDFs.DefinedTypes.First().Type.TypeRoot.AsRecord();
+            Assert.Equal("Age", record.Ids.First().Name.ToString());
+            Assert.Equal("Number", record.ChildNodes.First().AsFirstName().ToString());
+        }
+
+        [Theory]
+        [InlineData("bar = AsType(foo, Type({Age: Number}));")]
+        public void AsTypeTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            Assert.False(parsedNamedFormulasAndUDFs.HasErrors);
+        }
+
+        [Theory]
+        [InlineData("Foo = Type({Age: Number}; Bar(x: Number): Number = Abs(x);")]
+        public void FailParsingTest(string script)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var result = UserDefinitions.Parse(script, parserOptions);
+            Assert.True(result.HasErrors);
+            var udf = result.UDFs.First();
+            Assert.Equal("Bar", udf.Ident.ToString());
+        }
+
+        [Theory]
         [InlineData("Foo(x: Number): Number = Abs(x);")]
         public void DefFuncTest(string script)
         {

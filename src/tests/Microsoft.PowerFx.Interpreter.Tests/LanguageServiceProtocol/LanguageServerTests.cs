@@ -15,6 +15,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
@@ -1881,6 +1882,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
             Assert.Null(result.ToObject());
+        }
+
+        [Fact]
+        public void SerializeUnsupportedType()
+        {
+            var unsupportedType = FormulaType.Build(DType.Polymorphic);
+            var serialized = JsonSerializer.Serialize<FormulaType>(unsupportedType, _jsonSerializerOptions);
+            Assert.Equal("{\"Type\":\"Unsupported\"}", serialized);
+
+            Assert.Throws<NotImplementedException>(() => JsonSerializer.Deserialize<FormulaType>(serialized, _jsonSerializerOptions));
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)
