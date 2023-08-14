@@ -2,9 +2,11 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
@@ -166,7 +168,24 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
     }
-}
+
+    [Fact]
+    public async Task ConnectorIntellisenseTest3()
+    {
+        using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json");
+        OpenApiDocument apiDoc = testConnector._apiDocument;
+        PowerFxConfig config = new PowerFxConfig();
+        string token = @"eyJ0eXA...";
+
+        using HttpClient httpClient = new HttpClient(testConnector);
+        using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "2f0cc19d-893e-e765-b15d-2906e3231c09" /* env */, "6fb0a1a8e2f5487eafbe306821d8377e" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+
+        List<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc).OrderBy(f => f.Name).ToList();
+        Assert.Equal(101, functions.Count);
+
+        IEnumerable<FunctionInfo> funcInfos = config.AddService("SP", apiDoc, ppClient);
+        RecalcEngine engine = new RecalcEngine(config);
+    }
 
 #pragma warning restore SA1515 // Single-line comment should be preceded by blank line
 #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
