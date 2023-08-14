@@ -759,8 +759,7 @@ namespace Microsoft.PowerFx.Tests
 
         [Fact]
         public async Task SharePointOnlineTest()
-        {
-            //string spUri = @"https://auroraprojopsintegration01.sharepoint.com";
+        {            
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SharePoint.json");
             OpenApiDocument apiDoc = testConnector._apiDocument;
             PowerFxConfig config = new PowerFxConfig();
