@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
@@ -143,7 +142,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 }
 
                 return true;
-            }            
+            }
         }
 
         /// <summary>
