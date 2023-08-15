@@ -4814,11 +4814,11 @@
     
   </data>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>{0} funtzioa zaharkituta dago {1} izen-lekuan.</value>
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
+    <value>{0} funtzioa ez da onartzen {1} izen-lekuan.</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5029,7 +5029,7 @@
     <value>Ezin da kopiatu erregistro hau. Horren ordez, sortu txertatutako erregistro bat {...} notazioa erabiliz eta kopiatu behar dituzun eremuak.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <value>"{0}" funtzioaren bigarren argumentua zenbakizko balioetan eta dataren eta orduaren balioetan soilik onartzen da.</value>
     
   </data>
 </root>

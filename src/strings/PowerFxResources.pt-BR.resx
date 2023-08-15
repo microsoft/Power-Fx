@@ -4814,11 +4814,11 @@
     
   </data>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>No namespace {1}, a função {0} foi preterida.</value>
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
+    <value>No namespace {1}, a função {0} não tem suporte.</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5029,7 +5029,7 @@
     <value>Este registro não pode ser copiado. Em vez disso, crie um registro em linha usando a notação {...} para copiar os campos individuais desejados.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <value>O segundo argumento da função "{0}" só tem suporte para valores numéricos e de data/hora.</value>
     
   </data>
 </root>

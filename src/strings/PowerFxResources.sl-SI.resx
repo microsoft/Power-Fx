@@ -4814,11 +4814,11 @@
     
   </data>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>Funkcija {0} je zastarela v imenskem prostoru {1}.</value>
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
+    <value>Funkcija {0} ni podprta v imenskem prostoru {1}.</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5029,7 +5029,7 @@
     <value>Zapisa ni mogoče kopirati. Ustvarite zapis v vrstici z oznako {...}, če želite kopirati želena posamezna polja.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <value>Drugi argument funkcije »{0}« je podprt le za številske vrednosti in vrednosti datuma/časa.</value>
     
   </data>
 </root>
