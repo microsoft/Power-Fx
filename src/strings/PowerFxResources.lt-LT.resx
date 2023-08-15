@@ -4814,11 +4814,11 @@
     
   </data>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>Vardų srities {1} funkcija {0} nerekomenduojama.</value>
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
+    <value>Vardų srityje {1} funkcija {0} nepalaikoma.</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5029,7 +5029,7 @@
     <value>Šio įrašo negalima nukopijuoti. Vietoje to sukurkite įdėjimo įrašą naudodami {...} notaciją, kad galėtumėte kopijuoti atskirus norimus laukus.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <value>Antrasis funkcijos „{0}“ argumentas palaiko tik skaitinėse ir datos / laiko reikšmėse.</value>
     
   </data>
 </root>

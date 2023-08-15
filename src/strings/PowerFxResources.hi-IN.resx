@@ -4814,11 +4814,11 @@
     
   </data>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>namespace {1} में, फ़ंक्शन {0} अप्रचलित है.</value>
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
+    <value>namespace {1} में, फ़ंक्शन {0} समर्थित नहीं है.</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5029,7 +5029,7 @@
     <value>इस रिकॉर्ड की प्रतिलिपि नहीं बनाई जा सकती. इसके बजाय, वांछित व्यक्तिगत फ़ील्ड की प्रतिलिपि बनाने के लिए {...} नोटेशन का उपयोग करके एक इनलाइन रिकॉर्ड बनाएं.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <value>'{0}' फ़ंक्शन का दूसरा तर्क केवल संख्यात्मक और दिनांक/समय मानों के लिए समर्थित है.</value>
     
   </data>
 </root>
