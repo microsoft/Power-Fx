@@ -164,5 +164,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             result = new PadUntypedObject(cell);
             return true;
         }
+
+        public bool TryGetPropertyNames(out IEnumerable<string> result)
+        {
+            result = null;
+            return false;
+        }
     }
 }

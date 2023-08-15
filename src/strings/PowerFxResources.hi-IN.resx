@@ -4813,6 +4813,14 @@
     <value>यह सुविधा अप्रचलित कर दी गई है और यह अब समर्थित नहीं है.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>namespace {1} में, फ़ंक्शन {0} अप्रचलित है.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>namespace {1} में, फ़ंक्शन {0} समर्थित नहीं है.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>चेतावनी: आस्थगित प्रकार प्रदान किया गया.</value>
     
@@ -4863,23 +4871,23 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
+    <value>अगर इसमें {1} से अधिक पंक्तियाँ हैं, तो तालिका '{0}' पर यह कार्रवाई काम नहीं कर सकती है.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <value>यह पुष्टि हमेशा सच होगी. क्या आप ThisRecord या [@ ] का इस्तेमाल करना चाहते थे?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
+    <value>{0} को प्रतिनिधि नहीं कर सकते हैं: केवल प्राथमिक कुंजी फ़ील्ड '{1}' पर लुकअप के लिए प्रत्यायोजन का समर्थन करते हैं.</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>{0} को प्रतिनिधि नहीं कर सकते: एक्सप्रेशन कई तरह के फ़ील्ड की तुलना करती है.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
+    <value>{0} को प्रतिनिधि नहीं कर सकते हैं: एक व्यवहार फ़ंक्‍शन '{1}' शामिल है.</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5019,5 +5027,9 @@
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
     <value>इस रिकॉर्ड की प्रतिलिपि नहीं बनाई जा सकती. इसके बजाय, वांछित व्यक्तिगत फ़ील्ड की प्रतिलिपि बनाने के लिए {...} नोटेशन का उपयोग करके एक इनलाइन रिकॉर्ड बनाएं.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>'{0}' फ़ंक्शन का दूसरा तर्क केवल संख्यात्मक और दिनांक/समय मानों के लिए समर्थित है.</value>
+    
   </data>
 </root>

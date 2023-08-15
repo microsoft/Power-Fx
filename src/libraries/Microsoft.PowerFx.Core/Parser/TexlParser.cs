@@ -165,6 +165,23 @@ namespace Microsoft.PowerFx.Core.Parser
             return true;
         }
 
+        private TypeLiteralNode ParseTypeLiteral()
+        {
+            var lefterTrivia = ParseTrivia();
+            var parenOpen = TokEat(TokKind.ParenOpen);
+            var leftTrivia = ParseTrivia();
+            var sourceList = new List<ITexlSource>
+            {
+                lefterTrivia,
+                leftTrivia
+            };
+            
+            var expr = ParseExpr(Precedence.None);
+            sourceList.Add(ParseTrivia());
+            TokEat(TokKind.ParenClose);
+            return new TypeLiteralNode(ref _idNext, parenOpen, expr, new SourceList(sourceList));
+        }
+
         private bool ParseUDF(List<UDF> udfs)
         {
             // <udf> ::= IDENT '(' <args> ')' ':' IDENT ('=' EXP | <bracs-exp>)
@@ -239,6 +256,7 @@ namespace Microsoft.PowerFx.Core.Parser
         {
             var udfs = new List<UDF>();
             var namedFormulas = new List<NamedFormula>();
+            var definedTypes = new List<DefinedType>();
 
             ParseTrivia();
 
@@ -280,6 +298,12 @@ namespace Microsoft.PowerFx.Core.Parser
 
                         // Parse expression
                         var result = ParseExpr(Precedence.None);
+                        if (result is TypeLiteralNode typeLiteralNode)
+                        {
+                            definedTypes.Add(new DefinedType(thisIdentifier.As<IdentToken>(), typeLiteralNode));
+                            continue;
+                        }
+
                         namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result)));
                     }
 
@@ -359,7 +383,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, _errors);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors);
         }
 
         // Parse the script
@@ -1017,7 +1041,13 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     if (AfterSpaceTokenId() == TokKind.ParenOpen)
                     {
+                        if (ident.Token.As<IdentToken>().Name.Value == "Type")
+                        {
+                            return ParseTypeLiteral();
+                        }
+
                         trivia = ParseTrivia();
+
                         return ParseInvocation(ident, trivia, null);
                     }
 

@@ -504,7 +504,7 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static StringGetter AboutEncodeUrl = (b) => StringResources.Get("AboutEncodeUrl", b);
         public static StringGetter EncodeUrlArg1 = (b) => StringResources.Get("EncodeUrlArg1", b);
-        
+
         public static StringGetter AboutPlainText = (b) => StringResources.Get("AboutPlainText", b);
         public static StringGetter PlainTextArg1 = (b) => StringResources.Get("PlainTextArg1", b);
 
@@ -631,6 +631,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrInvalidStringInterpolation = new ErrorResourceKey("ErrInvalidStringInterpolation");
         public static ErrorResourceKey ErrEmptyIsland = new ErrorResourceKey("ErrEmptyIsland");
         public static ErrorResourceKey ErrDeprecated = new ErrorResourceKey("ErrDeprecated");
+        public static ErrorResourceKey WarnDeprecatedFunction = new ErrorResourceKey("WarnDeprecatedFunction");
+        public static ErrorResourceKey ErrUnsupportedFunction = new ErrorResourceKey("ErrUnsupportedFunction");
         public static ErrorResourceKey ErrInvalidFunction = new ErrorResourceKey("ErrInvalidFunction");
         public static ErrorResourceKey ErrUntypedObjectScope = new ErrorResourceKey("ErrUntypedObjectScope");
         public static ErrorResourceKey ErrDataSourceCannotBeRefreshed = new ErrorResourceKey("ErrDataSourceCannotBeRefreshed");
@@ -692,5 +694,7 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnDelegationOnlyPrimaryKeyField = new ErrorResourceKey("WrnDelegationOnlyPrimaryKeyField");
         public static ErrorResourceKey WrnDelegationRefersThisRecord = new ErrorResourceKey("WrnDelegationRefersThisRecord");
         public static ErrorResourceKey WrnDelegationBehaviorFunction = new ErrorResourceKey("WrnDelegationBehaviorFunction");
+
+        public static ErrorResourceKey ErrNotSupportedFormat_Func = new ErrorResourceKey("ErrNotSupportedFormat_Func");
     }
 }

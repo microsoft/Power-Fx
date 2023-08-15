@@ -4813,6 +4813,14 @@
     <value>Esta funcionalidade foi preterida e já não é suportada.</value>
     
   </data>
+  <data name="WarnDeprecatedFunction" xml:space="preserve">
+    <value>A função {0} foi preterida no espaço de nomes {1}.</value>
+    
+  </data>
+  <data name="ErrUnsupportedFunction" xml:space="preserve">
+    <value>A função {0} não é suportada no espaço de nomes {1}.</value>
+    
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Aviso: tipo adiado fornecido.</value>
     
@@ -4863,23 +4871,23 @@
     
   </data>
   <data name="WrnDelegationTableNotSupported" xml:space="preserve">
-    <value>This operation on table '{0}' may not work if it has more than {1} rows.</value>
+    <value>Esta operação na tabela "{0}" tabela pode não funcionar se tiver mais de {1} linhas.</value>
     
   </data>
   <data name="WrnDelegationPredicate" xml:space="preserve">
-    <value>This predicate will always be true. Did you mean to use ThisRecord or [@ ]?</value>
+    <value>Esta predição será sempre verdadeira. Pretendia utilizar ThisRecord ou [@ ]?</value>
     
   </data>
   <data name="WrnDelegationOnlyPrimaryKeyField" xml:space="preserve">
-    <value>Can't delegate {0}: only support delegation for lookup on primary key field '{1}'.</value>
+    <value>Não é possível delegar {0}: só existe suporte para delegação na pesquisa em campos de chave primária "{1}".</value>
     
   </data>
   <data name="WrnDelegationRefersThisRecord" xml:space="preserve">
-    <value>Can't delegate {0}: Expression compares multiple fields.</value>
+    <value>Não é possível delegar {0}: a expressão compara vários campos.</value>
     
   </data>
   <data name="WrnDelegationBehaviorFunction" xml:space="preserve">
-    <value>Can't delegate {0}: contains a behavior function '{1}'.</value>
+    <value>Não é possível delegar {0}: contém uma função de comportamento "{1}".</value>
     
   </data>
   <data name="AboutIsMatch" xml:space="preserve">
@@ -5019,5 +5027,9 @@
   </data>
   <data name="ErrSetVariableWithRelationshipNotAllowRecord" xml:space="preserve">
     <value>Não é possível copiar este registo. Em vez disso, crie um registo inline utilizando a notação {...} para copiar os campos individuais pretendidos.</value>
+  </data>
+  <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
+    <value>O segundo argumento da função "{0}" só é suportado para valores numéricos e de data/hora.</value>
+    
   </data>
 </root>

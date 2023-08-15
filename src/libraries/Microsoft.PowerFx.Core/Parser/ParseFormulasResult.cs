@@ -91,6 +91,19 @@ namespace Microsoft.PowerFx.Core.Parser
         }
     }
 
+    internal class DefinedType
+    {
+        internal IdentToken Ident { get; }
+
+        internal TypeLiteralNode Type { get; }
+
+        public DefinedType(IdentToken ident, TypeLiteralNode type)
+        {
+            Ident = ident;
+            Type = type;
+        }
+    }
+
     internal class UDFArg
     {
         internal IdentToken NameIdent;

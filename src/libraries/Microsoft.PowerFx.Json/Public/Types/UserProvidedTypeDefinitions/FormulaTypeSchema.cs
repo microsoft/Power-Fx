@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Public.Types;
@@ -20,6 +21,12 @@ namespace Microsoft.PowerFx.Core
         /// </summary>
         public SchemaTypeName Type { get; set; }
 
+        /// <summary>
+        /// Name for the custom type.<see cref="SchemaTypeName.CustomRecordTypeName"/> or <see cref="SchemaTypeName.CustomTableTypeName"/>.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string CustomTypeName { get; set; }
+
         // Optional, description for the type
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Description { get; set; }
@@ -34,7 +41,7 @@ namespace Microsoft.PowerFx.Core
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Dictionary<string, FormulaTypeSchema> Fields { get; set; }
 
-        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols)
+        public FormulaType ToFormulaType(DefinedTypeSymbolTable definedTypeSymbols, FormulaTypeSerializerSettings settings)
         {
             var typeName = Type.Name;
 
@@ -54,18 +61,29 @@ namespace Microsoft.PowerFx.Core
                 return actualType;
             }
 
-            if (typeName != SchemaTypeName.RecordTypeName.Name)
+            var logicalNameToRecordType = settings.LogicalNameToRecordType;
+            if ((typeName == SchemaTypeName.CustomTableTypeName.Name || typeName == SchemaTypeName.CustomRecordTypeName.Name) && logicalNameToRecordType != null)
             {
-                return FormulaType.BindingError;
+                if (Type.IsTable)
+                {
+                    return logicalNameToRecordType.Invoke(this.CustomTypeName).ToTable();
+                }
+
+                return logicalNameToRecordType.Invoke(this.CustomTypeName);
+            }
+            else if (typeName == SchemaTypeName.RecordTypeName.Name || typeName == SchemaTypeName.TableTypeName.Name)
+            {
+                if (Fields == null || !Fields.Any())
+                {
+                    FormulaType emptyAggregateType = Type.IsTable ? TableType.Empty() : RecordType.Empty();
+                    return emptyAggregateType;
+                }
+
+                var result = new UserDefinedRecordType(this, definedTypeSymbols, settings);
+                return Type.IsTable ? result.ToTable() : result;
             }
 
-            if (Fields == null || !Fields.Any())
-            {
-                return FormulaType.BindingError;
-            }
-
-            var result = new UserDefinedRecordType(this, definedTypeSymbols);
-            return Type.IsTable ? result.ToTable() : result;
+            return FormulaType.BindingError;
         }
 
         private static bool TryLookupType(string typeName, DefinedTypeSymbolTable definedTypeSymbols, out FormulaType type)
@@ -119,6 +137,10 @@ namespace Microsoft.PowerFx.Core
         public bool IsTable { get; init; }
 
         public static SchemaTypeName RecordTypeName => new () { Name = "Record", IsTable = false };
+
+        public static SchemaTypeName CustomRecordTypeName => new () { Name = "CustomType", IsTable = false };
+
+        public static SchemaTypeName CustomTableTypeName => new () { Name = "CustomType", IsTable = true };
 
         public static SchemaTypeName TableTypeName => new () { Name = "Record", IsTable = true };
     }

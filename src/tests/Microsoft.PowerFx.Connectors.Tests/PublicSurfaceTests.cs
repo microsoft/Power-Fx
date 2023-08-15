@@ -26,22 +26,23 @@ namespace Microsoft.PowerFx.Connector.Tests
             var allowed = new HashSet<string>()
             {
               "Microsoft.PowerFx.ConfigExtensions",
-              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
+              "Microsoft.PowerFx.Connectors.CachingHttpClient",
+              "Microsoft.PowerFx.Connectors.ConnectorFunction",
+              "Microsoft.PowerFx.Connectors.ConnectorParameter",
+              "Microsoft.PowerFx.Connectors.ConnectorParameters",
+              "Microsoft.PowerFx.Connectors.ConnectorParameterType",
+              "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
+              "Microsoft.PowerFx.Connectors.ConnectorSettings",
+              "Microsoft.PowerFx.Connectors.ConnectorType",
               "Microsoft.PowerFx.Connectors.ICachingHttpClient",
               "Microsoft.PowerFx.Connectors.NonCachingClient",
-              "Microsoft.PowerFx.Connectors.CachingHttpClient",
+              "Microsoft.PowerFx.Connectors.ODataParameters",
+              "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",
               "Microsoft.PowerFx.Connectors.OpenApiHelperFunctions",
               "Microsoft.PowerFx.Connectors.OpenApiParser",
-              "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
-              "Microsoft.PowerFx.Connectors.ODataParameters",
-              "Microsoft.PowerFx.Connectors.ConnectorParameter",
-              "Microsoft.PowerFx.Connectors.ConnectorFunction",
-              "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
-              "Microsoft.PowerFx.Connectors.ConnectorParameters",
-              "Microsoft.PowerFx.Connectors.ConnectorParameterType",
-              "Microsoft.PowerFx.Connectors.ConnectorType",
-              "Microsoft.PowerFx.Connectors.PowerFxConnectorException"
+              "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
+              "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient"
             };
 
             var sb = new StringBuilder();

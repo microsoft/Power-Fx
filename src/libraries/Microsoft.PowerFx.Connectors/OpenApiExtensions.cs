@@ -271,8 +271,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     switch (schema.Format)
                     {                        
-                        case "date":
-                            return new ConnectorParameterType(schema, FormulaType.Date);
+                        case "date":                            
                         case "date-time":
                             return new ConnectorParameterType(schema, FormulaType.DateTime);
                         case "date-no-tz":
@@ -326,6 +325,7 @@ namespace Microsoft.PowerFx.Connectors
                     switch (schema.Format)
                     {
                         case null:
+                        case "integer":
                         case "int32":
                             return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
 
@@ -475,12 +475,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public static ConnectorType GetConnectorReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
-            return GetConnectorParameterReturnType(op, numberIsFloat).ConnectorType;
+            (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(numberIsFloat);
+            return ct?.ConnectorType;
         }
 
         public static FormulaType GetReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
-            return GetConnectorParameterReturnType(op, numberIsFloat).Type;
+            (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(numberIsFloat);
+            return ct?.Type ?? new BlankType();
         }
 
         public static string GetVisibility(this OpenApiOperation op)
@@ -488,12 +490,17 @@ namespace Microsoft.PowerFx.Connectors
             return op.Extensions.TryGetValue("x-ms-visibility", out IOpenApiExtension openExt) && openExt is OpenApiString str ? str.Value : null;
         }
 
-        public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
-        { 
-            return op.Extensions.TryGetValue("x-ms-require-user-confirmation", out IOpenApiExtension openExt) && openExt is OpenApiBoolean b ? b.Value : false;            
+        public static bool IsInternal(this OpenApiOperation op)
+        {
+            return string.Equals(op.GetVisibility(), "internal", StringComparison.OrdinalIgnoreCase);
         }
 
-        private static ConnectorParameterType GetConnectorParameterReturnType(OpenApiOperation op, bool numberIsFloat)
+        public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
+        { 
+            return op.Extensions.TryGetValue("x-ms-require-user-confirmation", out IOpenApiExtension openExt) && openExt is OpenApiBoolean b && b.Value;            
+        }
+
+        internal static (ConnectorParameterType, string) GetConnectorParameterReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
             var responses = op.Responses;
             if (!responses.TryGetValue("200", out OpenApiResponse response))
@@ -509,7 +516,7 @@ namespace Microsoft.PowerFx.Connectors
             if (response == null || response.Content.Count == 0)
             {
                 // No return type. Void() method. 
-                return new ConnectorParameterType();
+                return (new ConnectorParameterType(), null);
             }
 
             // Responses is a list by content-type. Find "application/json"
@@ -526,18 +533,18 @@ namespace Microsoft.PowerFx.Connectors
                     if (openApiMediaType.Schema == null)
                     {
                         // Treat as void. 
-                        return new ConnectorParameterType();
+                        return (new ConnectorParameterType(), null);
                     }
 
                     ConnectorParameterType connectorParameterType = openApiMediaType.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
                     connectorParameterType.SetProperties("response", true);
 
-                    return connectorParameterType;
+                    return (connectorParameterType, null);
                 }               
             }
 
             // Returns something, but not json. 
-            throw new InvalidOperationException($"Unsupported return type - found {string.Join(", ", response.Content.Select(kv4 => kv4.Key))}");
+            return (null, $"Unsupported return type - found {string.Join(", ", response.Content.Select(kv4 => kv4.Key))}");
         }
 
         // Keep these constants all lower case

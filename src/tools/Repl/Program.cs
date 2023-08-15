@@ -48,6 +48,7 @@ namespace Microsoft.PowerFx
             Email = "susan@contoso.com",
             DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
             TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
+            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
         };
 
         private static readonly Features _features = Features.PowerFxV1;
