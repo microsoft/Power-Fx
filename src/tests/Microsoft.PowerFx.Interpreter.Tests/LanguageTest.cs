@@ -88,5 +88,20 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal("en-US", result.ToObject());
         }
+
+
+        [Fact]
+        public void TestTextInFrench()
+        {
+            var parserOptions = new ParserOptions(new CultureInfo("fr-FR"));
+
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.SetCulture(new CultureInfo("fr-FR"));
+
+            var engine = new RecalcEngine(new PowerFxConfig());
+            FormulaValue result = engine.EvalAsync("Text(5/2)", CancellationToken.None, options: parserOptions, runtimeConfig: runtimeConfig).ConfigureAwait(false).GetAwaiter().GetResult();
+
+            Assert.IsNotType<ErrorValue>(result);
+        }
     }
 }
