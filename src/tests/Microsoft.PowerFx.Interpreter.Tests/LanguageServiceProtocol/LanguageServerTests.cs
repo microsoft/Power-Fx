@@ -15,6 +15,8 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
@@ -105,7 +107,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InternalError, errorResponse.Error.Code);
-            Assert.Equal(list[0].Message, errorResponse.Error.Message);
+            Assert.Equal(list[0].GetDetailedExceptionMessage(), errorResponse.Error.Message);
         }
 
         // Scope facotry that throws. simulate server crashes.
@@ -153,7 +155,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InternalError, errorResponse.Error.Code);
-            Assert.Equal(list[0].Message, errorResponse.Error.Message);
+            Assert.Equal(list[0].GetDetailedExceptionMessage(), errorResponse.Error.Message);
         }
 
         [Fact]
@@ -1881,6 +1883,16 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var result = await run.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
             Assert.Null(result.ToObject());
+        }
+
+        [Fact]
+        public void SerializeUnsupportedType()
+        {
+            var unsupportedType = FormulaType.Build(DType.Polymorphic);
+            var serialized = JsonSerializer.Serialize<FormulaType>(unsupportedType, _jsonSerializerOptions);
+            Assert.Equal("{\"Type\":\"Unsupported\"}", serialized);
+
+            Assert.Throws<NotImplementedException>(() => JsonSerializer.Deserialize<FormulaType>(serialized, _jsonSerializerOptions));
         }
 
         private EditorContextScope TestCreateEditorScope(string documentUri)

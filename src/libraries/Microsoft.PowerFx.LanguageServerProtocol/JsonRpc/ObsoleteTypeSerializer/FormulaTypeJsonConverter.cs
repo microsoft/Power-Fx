@@ -61,6 +61,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 FormulaTypeSchema.ParamType.Record => GetAggregateType(schema.Fields, isTable: false),
                 FormulaTypeSchema.ParamType.Table => GetAggregateType(schema.Fields, isTable: true),
 
+                FormulaTypeSchema.ParamType.Unsupported => throw new NotImplementedException(),
                 FormulaTypeSchema.ParamType.OptionSetValue => throw new NotImplementedException(),
                 FormulaTypeSchema.ParamType.EntityRecord => throw new NotSupportedException(),
                 FormulaTypeSchema.ParamType.EntityTable => throw new NotSupportedException(),

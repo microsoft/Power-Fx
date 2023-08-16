@@ -14,6 +14,32 @@ namespace Microsoft.PowerFx.Core.Tests
     public class TestRunnerTests : PowerFxTest
     {
         [Fact]
+        public void Directive()
+        {
+            var setup = TestRunner.ParseSetupString("PowerFxV1CompatibilityRules,disable:NumberIsFloat");
+            Assert.True(setup["PowerFxV1CompatibilityRules"]);
+            Assert.False(setup["NumberIsFloat"]);
+            Assert.Equal(2, setup.Count);
+        }
+
+        [Fact]
+        public void Directive2()
+        {
+            var setup = TestRunner.ParseSetupString("PowerFxV1CompatibilityRules");
+            Assert.True(setup["PowerFxV1CompatibilityRules"]);
+            Assert.Single(setup);
+        }
+
+        [Fact]
+        public void Directive3()
+        {
+            var setup = TestRunner.ParseSetupString("PowerFxV1CompatibilityRules,NumberIsFloat");
+            Assert.True(setup["PowerFxV1CompatibilityRules"]);
+            Assert.True(setup["NumberIsFloat"]);
+            Assert.Equal(2, setup.Count);
+        }
+
+        [Fact]
         public void Test1()
         {
             var runner = new TestRunner();

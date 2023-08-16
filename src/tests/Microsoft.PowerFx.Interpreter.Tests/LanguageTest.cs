@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.IR;
@@ -87,6 +88,25 @@ namespace Microsoft.PowerFx.Tests
             var result = engine.Eval("Language()", options: new ParserOptions(culture));
 
             Assert.Equal("en-US", result.ToObject());
+        }
+
+        [Fact]
+        public void TestTextInFrench()
+        {
+            var fr = new CultureInfo("fr-FR");
+            fr.NumberFormat.NumberGroupSeparator = "\u00A0";
+            fr = CultureInfo.ReadOnly(fr);
+
+            var parserOptions = new ParserOptions(fr);
+            var runtimeConfig = new RuntimeConfig();
+            runtimeConfig.SetCulture(fr);
+
+            var engine = new RecalcEngine(new PowerFxConfig());
+            FormulaValue result = engine.EvalAsync("Text(5/2)", CancellationToken.None, options: parserOptions, runtimeConfig: runtimeConfig).ConfigureAwait(false).GetAwaiter().GetResult();
+
+            Assert.IsNotType<ErrorValue>(result);
+            Assert.IsType<StringValue>(result);
+            Assert.Equal("2,5", result.ToObject());
         }
     }
 }
