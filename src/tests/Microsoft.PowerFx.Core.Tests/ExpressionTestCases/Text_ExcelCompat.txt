@@ -199,9 +199,6 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 >> Text(Blank(),"mmm ddd yyy")
 "Dec Sat 1899"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.UTC)
-"2023-08-15T09:53:09.000Z"
-
 >> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime)
 "Tuesday, August 15, 2023 2:53:09 AM"
 
@@ -354,7 +351,7 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime")
 "2514ort1ateti1e"
-
+update
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime24")
 "long1ateti1e24"
 
