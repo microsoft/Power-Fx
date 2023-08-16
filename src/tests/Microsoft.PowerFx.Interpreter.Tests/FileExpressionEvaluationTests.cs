@@ -39,8 +39,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var features = new Features()
             {
                 TableSyntaxDoesntWrapRecords = true,
-                ConsistentOneColumnTableResult = true,
-                StronglyTypedBuiltinEnums = true,
+                ConsistentOneColumnTableResult = true
             };
 
             RunExpressionTestCase(testCase, features, numberIsFloat: true);
