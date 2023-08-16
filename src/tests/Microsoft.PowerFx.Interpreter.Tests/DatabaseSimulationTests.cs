@@ -108,7 +108,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             symbols.EnableMutationFunctions();
 
             // Temporary feature to unblock Cards team
+#pragma warning disable CS0612 // Type or member is obsolete
             var config = new PowerFxConfig(Features.PowerFxV1AllowSetExpandedTypes);
+#pragma warning restore CS0612 // Type or member is obsolete
             var engine = new RecalcEngine(config);
             var runtimeConfig = new SymbolValues(symbols);
 

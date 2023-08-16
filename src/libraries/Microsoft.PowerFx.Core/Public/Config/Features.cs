@@ -70,6 +70,7 @@ namespace Microsoft.PowerFx
         /// This is specific for Cards team and it is a temporary feature.
         /// It will be soon deleted.
         /// </summary>
+        [Obsolete]
         internal static Features PowerFxV1AllowSetExpandedTypes
         {
             get 
