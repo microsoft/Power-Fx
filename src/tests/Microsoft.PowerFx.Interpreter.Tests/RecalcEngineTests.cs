@@ -336,6 +336,21 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DefTypeAndFunc()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+            recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("getAge(p: Person): Number = p.Age;").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Equal(1.0, recalcEngine.Eval("getAge({Age: Float(1)})").ToObject());
+        }
+
+        [Fact]
         public void DefFuncDecimal()
         {
             var config = new PowerFxConfig();
