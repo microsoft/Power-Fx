@@ -30,7 +30,7 @@ namespace Microsoft.PowerFx.Core.Tests
             catch (Exception ex)
             {
                 var result = ex.GetDetailedExceptionMessage();
-                Assert.Contains(@"Exception System.DivideByZeroException: Message='Attempted to divide by zero.', HResult=0x80020012, StackTrace='   at Microsoft.PowerFx.Core.Tests.CoreUtilExtensionTests.GetDetailedExceptionMessage_DivisionByZero() in C:\Data\2\Power-Fx\src\tests\Microsoft.PowerFx.Core.Tests\CoreUtilExtensionTests.cs", result);
+                Assert.Contains(@"Exception System.DivideByZeroException: Message='Attempted to divide by zero.', HResult=0x80020012, StackTrace='   at Microsoft.PowerFx.Core.Tests.CoreUtilExtensionTests.GetDetailedExceptionMessage_DivisionByZero()", result);
                 return;
             }
 
