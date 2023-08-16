@@ -16,6 +16,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
@@ -106,7 +107,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InternalError, errorResponse.Error.Code);
-            Assert.Equal(list[0].Message, errorResponse.Error.Message);
+            Assert.Equal(list[0].GetDetailedExceptionMessage(), errorResponse.Error.Message);
         }
 
         // Scope facotry that throws. simulate server crashes.
@@ -154,7 +155,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal("2.0", errorResponse.Jsonrpc);
             Assert.Null(errorResponse.Id);
             Assert.Equal(InternalError, errorResponse.Error.Code);
-            Assert.Equal(list[0].Message, errorResponse.Error.Message);
+            Assert.Equal(list[0].GetDetailedExceptionMessage(), errorResponse.Error.Message);
         }
 
         [Fact]
