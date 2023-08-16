@@ -935,7 +935,7 @@ namespace Microsoft.PowerFx.Core.IR
                     case CoercionKind.DateToText:
                     case CoercionKind.TimeToText:
                     case CoercionKind.DateTimeToText:
-                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text, child, GetDateTimeToTextLiteralNode(context, coercionKind));
+                        return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.Text, child);
 
                     case CoercionKind.TextToDateTime:
                         return new CallNode(IRContext.NotInSource(FormulaType.Build(toType)), BuiltinFunctionsCore.DateTimeValue, child);

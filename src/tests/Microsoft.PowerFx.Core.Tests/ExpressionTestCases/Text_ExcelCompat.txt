@@ -198,3 +198,238 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 
 >> Text(Blank(),"mmm ddd yyy")
 "Dec Sat 1899"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.UTC)
+"2023-08-15T09:53:09.000Z"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime)
+"Tuesday, August 15, 2023 2:53:09 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDate)
+"Tuesday, August 15, 2023"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime24)
+"Tuesday, August 15, 2023 2:53:09"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime)
+"2:53:09 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime24)
+"2:53:09"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDate)
+"8/15/2023"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime)
+"2:53 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime24)
+"2:53"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime)
+"8/15/2023 2:53 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime24)
+"8/15/2023 2:53"
+
+>> Text(44928, DateTimeFormat.LongDate)
+"Monday, January 2, 2023"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "DateTimeFormat.LongDateTime")
+"15ateTi8eFor8at.Long15ateTi8e"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'DateTimeFormat.LongDateTime'")
+"'15ateTi8eFor8at.Long15ateTi8e'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "High'there")
+"2ig2't2ere"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "ZZZ 'longdatetime' ZZZ")
+"ZZZ 'long15ateti8e' ZZZ"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'longdatetime'")
+"'long15ateti8e'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'longdatetime' ZZZ")
+"'long15ateti8e' ZZZ"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "LongDateTime")
+"Long15ateTi8e"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "longdatetime")
+"long15ateti8e"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'utc'")
+"'utc'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "utc")
+"utc"
+
+>> Text(30470.519531251, "utc")
+"utc"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "Utc")
+"Utc"
+
+>> Text(30470.519531251, "Utc")
+"Utc"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "utC")
+"utC"
+
+>> Text(30470.769531251, "utC")
+"utC"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "uTc")
+"uTc"
+
+>> Text(30470.519531251, "uTc")
+"uTc"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "UTC")
+"UTC"
+
+>> Text(30470.269531251, "UTC")
+"UTC"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), " utc ")
+" utc "
+
+>> Text(30470.519531251, " utc ")
+" utc "
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "utc utc")
+"utc utc"
+
+>> Text(30470.019531251, "utc utc")
+"utc utc"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longdatetime'")
+"'long1ateti1e'"
+
+>> Text(33333.75, "'longdatetime'")
+"'long5ateti4e'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shortdatetime'")
+"'2514ort1ateti1e'"
+
+>> Text(33333.75, "'shortdatetime'")
+"'018ort5ateti4e'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longdatetime24'")
+"'long1ateti1e24'"
+
+>> Text(33333.75, "'longdatetime24'")
+"'long5ateti4e24'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shortdatetime24'")
+"'2514ort1ateti1e24'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longtime24'")
+"'longti1e24'"
+
+>> Text(0.6875, "'longtime24'")
+"'longti12e24'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shorttime24'")
+"'2514ortti32e24'"
+
+>> Text(0.6875, "'shorttime24'")
+"'016ortti30e24'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longtime'")
+"'longti1e'"
+
+>> Text(12345.6875, "'longtime'")
+"'longti10e'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shorttime'")
+"'2514ortti32e'"
+
+>> Text(33333.6875, "'shorttime'")
+"'016ortti30e'"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime")
+"long1ateti1e"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime")
+"2514ort1ateti1e"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime24")
+"long1ateti1e24"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime24")
+"2514ort1ateti1e24"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime24")
+"longti1e24"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime24")
+"2514ortti32e24"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime")
+"longti1e"
+
+>> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime")
+"2514ortti32e"
+
+>> Text(Time(14, 32, 25, 678), "'shorttime24'")
+"'2514ortti32e24'"
+
+>> Text(Time(14, 32, 25, 678), "'shorttime'")
+"'2514ortti32e'"
+
+>> Text(Date(1970, 1, 1), "'shortdate'")
+"'00ort1ate'"
+
+>> Text(Date(1970, 1, 1), "'shortdatetime'")
+"'00ort1ateti1e'"
+
+>> Text(Date(1970, 1, 1), "'shortdatetime24'")
+"'00ort1ateti1e24'"
+
+>> Text(Date(1970, 1, 1), "'longdate'")
+"'long1ate'"
+
+>> Text(Date(1970, 1, 1), "'longdatetime'")
+"'long1ateti1e'"
+
+>> Text(Date(1970, 1, 1), "'longdatetime24'")
+"'long1ateti1e24'"
+
+>> Text(0, "'longdate'")
+"'long30ate'"
+
+>> Text(0, "'shortdate'")
+"'00ort30ate'"
+
+>> With({d:DateTimeValue("March 10, 2023 5:30 PM")}, DateTimeValue(Text(d, DateTimeFormat.UTC)) = d)
+true
+
+// DateTime format end with e or e+
+>> Text(0, "longdate")
+"long30ate"
+
+>> Text(0, "shortdate")
+"00ort30ate"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "shortdatetime")
+"92ort15ateti8e"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "longtime")
+"longti8e"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "shorttime")
+"92ortti53e"
+
+>> Text(1234567.1234567, "mmm ddd yyye")
+"Feb Thu 5280e"
+
+>> Text(1234567.1234567, "mmm ddd yyy e")
+"Feb Thu 5280 e"
+
+>> Text(1234567.1234567, "mmm ddd yyy date")
+"Feb Thu 5280 15ate"
+
+>> Text(1234567.1234567, "mmm ddd yyye+")
+"Feb Thu 5280e+"

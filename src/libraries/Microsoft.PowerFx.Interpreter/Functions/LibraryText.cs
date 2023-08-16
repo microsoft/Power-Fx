@@ -338,18 +338,22 @@ namespace Microsoft.PowerFx.Functions
             {
                 FormatCultureName = null,
                 FormatArg = null,
+                HasDateTimeFormatEnum = false,
                 HasDateTimeFmt = false,
                 HasNumericFmt = false
             };
 
-            if (args.Length > 1 && args[1] is StringValue fs)
+            if (args.Length > 1)
             {
-                formatString = fs.Value;
-
                 if (!TextFormatUtils.AllowedListToUseFormatString.Contains(args[0].Type._type))
                 {
                     var customErrorMessage = StringResources.Get(TexlStrings.ErrNotSupportedFormat_Func, formatInfo.CultureInfo.Name);
                     return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+                }
+
+                if (args[1] is StringValue fs)
+                {
+                    formatString = fs.Value;
                 }
             }
 
@@ -378,6 +382,12 @@ namespace Microsoft.PowerFx.Functions
 
                 var customErrorMessage = StringResources.Get(TexlStrings.ErrIncorrectFormat_Func, culture.Name);
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
+            }
+
+            if (args.Length > 1 && args[1] is OptionSetValue ops)
+            {
+                textFormatArgs.FormatArg = ops.ExecutionValue.ToString();
+                textFormatArgs.HasDateTimeFormatEnum = true;
             }
 
             var isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
@@ -409,12 +419,12 @@ namespace Microsoft.PowerFx.Functions
                     result = sv;
                     break;
                 case NumberValue num:
-                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
+                    if (formatString != null && (textFormatArgs.HasDateTimeFmt || textFormatArgs.HasDateTimeFormatEnum))
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
 
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
                     else
                     {
@@ -424,12 +434,12 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 case DecimalValue dec:
-                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
+                    if (formatString != null && (textFormatArgs.HasDateTimeFmt || textFormatArgs.HasDateTimeFormatEnum))
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var decNum = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)dec.Value);
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), decNum);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
                     else
                     {
@@ -447,7 +457,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
@@ -459,7 +469,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
@@ -472,7 +482,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var dtValue = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
                     }
 
                     break;
@@ -487,11 +497,13 @@ namespace Microsoft.PowerFx.Functions
             return result != null;
         }
 
-        internal static bool TryExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, string format, string defaultFormat, DateTime dateTime, TimeZoneInfo timeZoneInfo, CultureInfo culture, CancellationToken cancellationToken, out StringValue result)
+        internal static bool TryExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, TextFormatArgs textFormatArgs, string defaultFormat, DateTime dateTime, TimeZoneInfo timeZoneInfo, CultureInfo culture, CancellationToken cancellationToken, out StringValue result)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             result = null;
+            var format = textFormatArgs.FormatArg;
+
             if (format == null)
             {
                 result = new StringValue(irContext, dateTime.ToString(defaultFormat, culture));
@@ -499,38 +511,41 @@ namespace Microsoft.PowerFx.Functions
             }
 
             // DateTime format
-            switch (format.ToLowerInvariant())
+            if (textFormatArgs.HasDateTimeFormatEnum)
             {
-                case "'shortdatetime24'":
-                case "'shortdatetime'":
-                case "'shorttime24'":
-                case "'shorttime'":
-                case "'shortdate'":
-                case "'longdatetime24'":
-                case "'longdatetime'":
-                case "'longtime24'":
-                case "'longtime'":
-                case "'longdate'":
-                    var formatStr = ExpandDateTimeFormatSpecifiers(format, culture);
-                    result = new StringValue(irContext, dateTime.ToString(formatStr, culture));
-                    break;
-                case "'utc'":
-                case "utc":
-                    var formatUtcStr = ExpandDateTimeFormatSpecifiers(format, culture);
-                    result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString(formatUtcStr, culture));
-                    break;
-                default:
-                    try
-                    {
-                        var stringResult = ResolveDateTimeFormatAmbiguities(format, dateTime, culture, cancellationToken);
-                        result = new StringValue(irContext, stringResult);
-                    }
-                    catch (FormatException)
-                    {
-                        return false;
-                    }
-
-                    break;
+                switch (format.ToLowerInvariant())
+                {
+                    case "'shortdatetime24'":
+                    case "'shortdatetime'":
+                    case "'shorttime24'":
+                    case "'shorttime'":
+                    case "'shortdate'":
+                    case "'longdatetime24'":
+                    case "'longdatetime'":
+                    case "'longtime24'":
+                    case "'longtime'":
+                    case "'longdate'":
+                        var formatStr = ExpandDateTimeFormatSpecifiers(format, culture);
+                        result = new StringValue(irContext, dateTime.ToString(formatStr, culture));
+                        break;
+                    case "'utc'":
+                    case "utc":
+                        var formatUtcStr = ExpandDateTimeFormatSpecifiers(format, culture);
+                        result = new StringValue(irContext, ConvertToUTC(dateTime, timeZoneInfo).ToString(formatUtcStr, culture));
+                        break;
+                }
+            }
+            else
+            {
+                try
+                {
+                    var stringResult = ResolveDateTimeFormatAmbiguities(format, dateTime, culture, cancellationToken);
+                    result = new StringValue(irContext, stringResult);
+                }
+                catch (FormatException)
+                {
+                    return false;
+                }
             }
 
             return result != null;
@@ -969,7 +984,7 @@ namespace Microsoft.PowerFx.Functions
                     maxLenChars = sourceLen - matchLen + replacementLen;
                 }
             }
-            
+
             // If not match found, will still be source length 
             return Math.Max(sourceLen, maxLenChars);
         }
