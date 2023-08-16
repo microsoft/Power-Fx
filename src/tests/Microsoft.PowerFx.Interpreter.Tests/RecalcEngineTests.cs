@@ -351,6 +351,36 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DefComplexTypeWithFunc()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+            recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: Complex): Number = p.A.B;").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Equal(1.0, recalcEngine.Eval("foo({A: {B: Float(1.0)}})").ToObject());
+        }
+
+        [Fact]
+        public void DefManyType()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+            recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A }); C = Type({ b: B, a: A});", parserOptions);
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: C): Number = p.b.a.num + p.a.num;").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Equal(1.5, recalcEngine.Eval("foo({b: {a: {num: Float(0.5)}}, a: {num: Float(1.0)}})").ToObject());
+        }
+
+        [Fact]
         public void DefFuncDecimal()
         {
             var config = new PowerFxConfig();
