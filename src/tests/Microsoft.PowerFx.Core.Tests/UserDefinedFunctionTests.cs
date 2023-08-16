@@ -19,7 +19,7 @@ namespace Microsoft.PowerFx.Core.Tests
     {
         private bool ProcessUserDefinitions(string script, out UserDefinitionResult userDefinitionResult)
         {
-            return UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, new Functions.UserDefinedFunctionLibrary(), parserOptions: new ParserOptions(), out userDefinitionResult);
+            return UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions: new ParserOptions(), out userDefinitionResult);
         }
 
         [Theory]
@@ -54,7 +54,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, new Functions.UserDefinedFunctionLibrary(), parserOptions, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions, out var userDefinitionResult);
 
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
