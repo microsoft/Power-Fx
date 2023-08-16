@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -121,6 +122,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // This will be success due to SkipExpandableSetSemantics feature that loosens some Set semantics conditions.
             Assert.True(check.IsSuccess);
+            Assert.Contains(check.Errors, err => err.IsWarning && err.MessageKey == "WrnSetExpandableType");
 
             var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues()).ConfigureAwait(false);
             Assert.IsType<BooleanValue>(result);
@@ -144,6 +146,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
             Assert.False(check.IsSuccess);
+            Assert.Contains(check.Errors, err => !err.IsWarning && (err.MessageKey == "ErrSetVariableWithRelationshipNotAllowTable" || err.MessageKey == "ErrSetVariableWithRelationshipNotAllowRecord"));
         }
 
         internal class DatabaseTable : InMemoryTableValue
