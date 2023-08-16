@@ -351,7 +351,7 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime")
 "2514ort1ateti1e"
-update
+
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime24")
 "long1ateti1e24"
 
