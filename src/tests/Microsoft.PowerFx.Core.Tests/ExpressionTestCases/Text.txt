@@ -142,26 +142,6 @@ Blank()
 
 // ******** DATE/TIME PARAMETERS ********
 
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDate)
-"Wednesday, March 30, 2022"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime)
-"Wednesday, March 30, 2022 5:30:00 PM"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongTime)
-"5:30:00 PM"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortDate)
-"3/30/2022"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime)
-"5:30 PM"
-
 //Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), "dd")
 "30"
@@ -214,15 +194,6 @@ Blank()
 >> Text(TimeValue("15:06"))
 "3:06 PM"
 
->> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
-"5:02:03 CH"
-
->> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
-"27 Tháng Hai 2023"
-
->> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
-"27 Tháng Hai 2023 12:00:00 SA"
-
 >> Text(1.2, "", "vi-Vn")
 "1,2"
 
@@ -239,22 +210,6 @@ Blank()
 //Error message: Language code not supported
 >> Text(Date(2016,1,31), "dddd mmmm d", "fsdff")
 Error({Kind:ErrorKind.BadLanguageCode})
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime24)
-"Wednesday, March 30, 2022 17:30:00"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongTime24)
-"17:30:00"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortDateTime24)
-"3/30/2022 17:30"
-
-//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime24)
-"17:30"
 
 //Excel doesn't support DateTimeValue function. Hence replaced it with DateValue function to compare the behavior
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), "m")
@@ -320,12 +275,6 @@ Error({Kind:ErrorKind.BadLanguageCode})
 //Excel doesn't support three arguments
 >> Text(Date(2016,1,31), "dddd mmmm d", "es-ES")
 "domingo enero 31"
-
->> Text(DateTimeValue("2023-02-03 04:05:06Z"), DateTimeFormat.UTC)
-"2023-02-03T04:05:06.000Z"
-
->> Text(DateTimeValue("2023-12-21T12:34:56.789Z"), DateTimeFormat.UTC)
-"2023-12-21T12:34:56.789Z"
 
 >> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
 "1899-12-30 12:34:56"

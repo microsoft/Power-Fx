@@ -458,35 +458,11 @@ Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26
 >> Text(Time(18, 0, 0), "0.00")
 "0.75"
 
->> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime24)
-"14:32"
-
->> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime) 
-"2:32 PM"
-
 >> Text(Date(1983, 6, 3), "dddd, mmm dd, yyy") 
 "Friday, Jun 03, 1983"
 
 >> Text(Date(1983, 6, 3), "dddd, mmm "" dd, yyy") 
 "Friday, Jun "" 03, 1983"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.ShortDate) 
-"1/1/1970"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime) 
-"1/1/1970 12:00 AM"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime24) 
-"1/1/1970 0:00"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
-"Thursday, January 1, 1970"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime) 
-"Thursday, January 1, 1970 12:00:00 AM"
-
->> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
-"Thursday, January 1, 1970 0:00:00"
 
 >> With({format:"0.00 dd/mm/yyyy"},Text(123, format))
 Error({Kind:ErrorKind.InvalidArgument})
@@ -522,10 +498,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 "1983-06-03 00:28:07.5000000"
 
 >> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.00000000") 
-Error({Kind:ErrorKind.InvalidArgument})
-
-// Number 4492800 exceeds the max days that DateTime.AddDays can take.
->> Text(4492800,DateTimeFormat.LongDate)
 Error({Kind:ErrorKind.InvalidArgument})
 
 // C# interpreter can handle up to 7 decimals after the second

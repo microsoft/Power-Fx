@@ -175,12 +175,6 @@ Table({Value:"2011-01-15"},{Value:"1899-12-30"})
 >> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisRecord), "HH:mm:ss"))
 Table({Value:"08:03:05"},{Value:"00:00:00"})
 
->> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
-"Saturday, December 30, 1899"
-
->> Text(DateTimeValue(""), DateTimeFormat.ShortDate)
-"12/30/1899"
-
 >> Text(If(1 < 0, 123), "mmm ddd yyy")
 "Dec Sat 1899"
 
@@ -199,39 +193,19 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 >> Text(Blank(),"mmm ddd yyy")
 "Dec Sat 1899"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime)
-"Tuesday, August 15, 2023 2:53:09 AM"
+>> Text(1234567.1234567, "mmm ddd yyye")
+"Feb Thu 5280e"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDate)
-"Tuesday, August 15, 2023"
+>> Text(1234567.1234567, "mmm ddd yyy e")
+"Feb Thu 5280 e"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime24)
-"Tuesday, August 15, 2023 2:53:09"
+>> Text(1234567.1234567, "mmm ddd yyy date")
+"Feb Thu 5280 15ate"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime)
-"2:53:09 AM"
+>> Text(1234567.1234567, "mmm ddd yyye+")
+"Feb Thu 5280e+"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime24)
-"2:53:09"
-
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDate)
-"8/15/2023"
-
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime)
-"2:53 AM"
-
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime24)
-"2:53"
-
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime)
-"8/15/2023 2:53 AM"
-
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime24)
-"8/15/2023 2:53"
-
->> Text(44928, DateTimeFormat.LongDate)
-"Monday, January 2, 2023"
-
+// DateTimeFormat Enum
 >> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "DateTimeFormat.LongDateTime")
 "15ateTi8eFor8at.Long15ateTi8e"
 
@@ -400,10 +374,6 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 >> Text(0, "'shortdate'")
 "'00ort30ate'"
 
->> With({d:DateTimeValue("March 10, 2023 5:30 PM")}, DateTimeValue(Text(d, DateTimeFormat.UTC)) = d)
-true
-
-// DateTime format end with e or e+
 >> Text(0, "longdate")
 "long30ate"
 
@@ -419,14 +389,6 @@ true
 >> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "shorttime")
 "92ortti53e"
 
->> Text(1234567.1234567, "mmm ddd yyye")
-"Feb Thu 5280e"
-
->> Text(1234567.1234567, "mmm ddd yyy e")
-"Feb Thu 5280 e"
-
->> Text(1234567.1234567, "mmm ddd yyy date")
-"Feb Thu 5280 15ate"
-
->> Text(1234567.1234567, "mmm ddd yyye+")
-"Feb Thu 5280e+"
+// Number 4492800 exceeds the max days that DateTime.AddDays can take.
+>> Text(4492800,DateTimeFormat.LongDate)
+Error({Kind:ErrorKind.InvalidArgument})

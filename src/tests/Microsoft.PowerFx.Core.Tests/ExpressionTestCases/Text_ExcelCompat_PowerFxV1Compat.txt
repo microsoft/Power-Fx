@@ -1,4 +1,4 @@
-#SETUP: PowerFxV1CompatibilityRules
+﻿#SETUP: PowerFxV1CompatibilityRules, StronglyTypedBuiltinEnums
 
 >> Text(Color.Red, "###")
 Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 16-21: The second argument of the 'Text' function is only supported for numeric and date/time values.
@@ -117,3 +117,121 @@ Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 22-2
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "", "vi-Vn")
 Errors: Error 0-59: The function 'Text' has some invalid arguments.|Warning 47-49: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
+// DateTimeFormat Enum
+>> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
+"Saturday, December 30, 1899"
+
+>> Text(DateTimeValue(""), DateTimeFormat.ShortDate)
+"12/30/1899"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime)
+"Tuesday, August 15, 2023 2:53:09 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDate)
+"Tuesday, August 15, 2023"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime24)
+"Tuesday, August 15, 2023 2:53:09"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime)
+"2:53:09 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime24)
+"2:53:09"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDate)
+"8/15/2023"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime)
+"2:53 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime24)
+"2:53"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime)
+"8/15/2023 2:53 AM"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime24)
+"8/15/2023 2:53"
+
+>> Text(44928, DateTimeFormat.LongDate)
+"Monday, January 2, 2023"
+
+>> With({d:DateTimeValue("March 10, 2023 5:30 PM")}, DateTimeValue(Text(d, DateTimeFormat.UTC)) = d)
+true
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDate)
+"Wednesday, March 30, 2022"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime)
+"Wednesday, March 30, 2022 5:30:00 PM"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongTime)
+"5:30:00 PM"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortDate)
+"3/30/2022"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime)
+"5:30 PM"
+
+>> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
+"5:02:03 CH"
+
+>> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
+"27 Tháng Hai 2023"
+
+>> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
+"27 Tháng Hai 2023 12:00:00 SA"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime24)
+"Wednesday, March 30, 2022 17:30:00"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongTime24)
+"17:30:00"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortDateTime24)
+"3/30/2022 17:30"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime24)
+"17:30"
+
+>> Text(DateTimeValue("2023-02-03 04:05:06Z"), DateTimeFormat.UTC)
+"2023-02-03T04:05:06.000Z"
+
+>> Text(DateTimeValue("2023-12-21T12:34:56.789Z"), DateTimeFormat.UTC)
+"2023-12-21T12:34:56.789Z"
+
+>> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime24)
+"14:32"
+
+>> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime) 
+"2:32 PM"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.ShortDate) 
+"1/1/1970"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime) 
+"1/1/1970 12:00 AM"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime24) 
+"1/1/1970 0:00"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
+"Thursday, January 1, 1970"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime) 
+"Thursday, January 1, 1970 12:00:00 AM"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
+"Thursday, January 1, 1970 0:00:00"
