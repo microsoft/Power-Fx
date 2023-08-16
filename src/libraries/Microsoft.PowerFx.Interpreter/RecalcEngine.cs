@@ -197,10 +197,10 @@ namespace Microsoft.PowerFx
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
                 new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script),
-                udf.ReturnType.GetFormulaType(),
+                GetFormulaTypeFromName(udf.ReturnType._value),
                 udf.IsImperative,
                 udf.NumberIsFloat,
-                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), arg.TypeIdent.GetFormulaType())).ToArray())).ToArray();
+                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), GetFormulaTypeFromName(arg.TypeIdent._value))).ToArray())).ToArray();
 
             return DefineFunctions(udfDefinitions);
         }
@@ -214,6 +214,7 @@ namespace Microsoft.PowerFx
             {
                 var name = defType.Ident.Name.Value;
                 var res = DTypeFromTexlNode(defType.Type.TypeRoot) ?? throw new Exception("Failed defining type");
+                _definedTypeSymbolTable.RegisterType(name, new KnownRecordType(res));
             }
         }
 
@@ -246,6 +247,11 @@ namespace Microsoft.PowerFx
             }
 
             return DType.CreateRecord(list);
+        }
+
+        internal FormulaType GetFormulaTypeFromName(string name)
+        {
+            return FormulaType.Build(GetTypeFromName(name));
         }
 
         internal DType GetTypeFromName(string name)
