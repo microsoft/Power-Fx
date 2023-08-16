@@ -90,7 +90,6 @@ namespace Microsoft.PowerFx.Tests
             Assert.Equal("en-US", result.ToObject());
         }
 
-
         [Fact]
         public void TestTextInFrench()
         {
