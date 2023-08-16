@@ -13,19 +13,19 @@ namespace Microsoft.PowerFx.Core.Utils
     {
         public static string GetDetailedExceptionMessage(this Exception ex, int maxDepth = 10)
         {
-            return GetDetailedExceptionMessageInternal(string.Empty, ex, 0, maxDepth);
+            StringBuilder sb = new StringBuilder();
+            GetDetailedExceptionMessageInternal(sb, string.Empty, ex, 0, maxDepth);
+            return sb.ToString();
         }
 
-        private static string GetDetailedExceptionMessageInternal(string prefix, Exception ex, int depth, int maxDepth)
+        private static void GetDetailedExceptionMessageInternal(StringBuilder sb, string prefix, Exception ex, int depth, int maxDepth)
         {
             depth++;
 
             if (depth > maxDepth)
             {
-                return string.Empty;
-            }
-
-            var sb = new StringBuilder();
+                return;
+            }            
 
             if (depth > 1)
             {
@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Core.Utils
             if (ex == null)
             {
                 sb.Append("Exception is null");
-                return sb.ToString();
+                return;
             }
 
             sb.Append(new string(' ', (depth - 1) * 3));
@@ -72,19 +72,17 @@ namespace Microsoft.PowerFx.Core.Utils
                 int i = 0;
                 foreach (Exception ie in ae.InnerExceptions)
                 {                    
-                    sb.Append(GetDetailedExceptionMessageInternal($"Inner#{i++}", ie, depth, maxDepth));
+                    GetDetailedExceptionMessageInternal(sb, $"Inner#{i++}", ie, depth, maxDepth);
                 }
 
-                return sb.ToString();
+                return;
             }
 
             PropertyInfo pi = ex.GetType().GetProperty("InnerException");
             if (pi?.GetValue(ex) is Exception iex)
             {                
-                sb.Append(GetDetailedExceptionMessageInternal("Inner", iex, depth, maxDepth));
-            }
-
-            return sb.ToString();
+                GetDetailedExceptionMessageInternal(sb, "Inner", iex, depth, maxDepth);
+            }           
         }
 
         private static void AddSeparator(StringBuilder sb, int depth)
