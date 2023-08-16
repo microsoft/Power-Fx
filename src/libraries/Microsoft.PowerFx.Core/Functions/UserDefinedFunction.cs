@@ -30,33 +30,18 @@ namespace Microsoft.PowerFx.Core.Functions
     {
         private readonly bool _isImperative;
         private readonly IEnumerable<UDFArg> _args;
-        private readonly UserDefinedFunctionLibrary _library;
-
-        public override bool IsAsync
-        {
-            get
-            {
-                if (_library.TryGetBinding(Name, out var binding))
-                {
-                    return binding.IsAsync(UdfBody);
-                }
-
-                return false;
-            }
-        }
 
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
 
-        public UserDefinedFunction(string name, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args, UserDefinedFunctionLibrary library)
+        public UserDefinedFunction(string name, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
         : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
         {
             this._args = args;
             this._isImperative = isImperative;
 
             this.UdfBody = body;
-            _library = library;
         }
 
         public bool TryGetArgIndex(string argName, out int argIndex)
@@ -95,8 +80,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
             var binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features, rule: rule);
-
-            _library.TryAdd(this, binding);
 
             CheckTypesOnDeclaration(binding.CheckTypesContext, binding.ResultType, binding.ErrorContainer);
 
