@@ -143,11 +143,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
             catch (Exception ex)
             {
-                _logger?.Invoke($"[PFX] OnDataReceived Exception: {ex.GetType().FullName} - {ex.Message} - {ex.StackTrace}");
+                _logger?.Invoke($"[PFX] OnDataReceived Exception: {ex.GetDetailedExceptionMessage()}");
 
                 LogUnhandledExceptionHandler?.Invoke(ex);
 
-                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InternalError, ex.Message));
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InternalError, ex.GetDetailedExceptionMessage()));
                 return;
             }
         }
