@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Enable Identifier support for describing column names.
         /// </summary>
-        internal bool SupportColumnNamesAsIdentifiers { get; set; }        
+        internal bool SupportColumnNamesAsIdentifiers { get; set; }
 
         /// <summary>
         /// Enforces strong-typing for builtin enums, rather than treating
@@ -63,6 +63,24 @@ namespace Microsoft.PowerFx
         internal bool FirstLastNRequiresSecondArguments { get; set; }
 
         internal bool PowerFxV1CompatibilityRules { get; set; }
+
+        internal bool SkipExpandableSetSemantics { get; set; }
+
+        /// <summary>
+        /// This is specific for Cards team and it is a temporary feature.
+        /// It will be soon deleted.
+        /// </summary>
+        internal static Features PowerFxV1AllowSetExpandedTypes
+        {
+            get 
+            {
+                var ret = PowerFxV1;
+
+                ret.SkipExpandableSetSemantics = true;
+
+                return ret;
+            }
+        }
 
         internal static Features None => new Features();
 

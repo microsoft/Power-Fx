@@ -97,6 +97,53 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(anonymized, check.ApplyGetLogging());
         }
 
+        [Theory]
+        [InlineData("Set(x, Table)")]
+        public async Task SkipExpandableSetSemanticsFeatureTest(string expr)
+        {
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
+            var symbols = new SymbolTable();
+
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
+            symbols.EnableMutationFunctions();
+
+            // Temporary feature to unblock Cards team
+            var config = new PowerFxConfig(Features.PowerFxV1AllowSetExpandedTypes);
+            var engine = new RecalcEngine(config);
+            var runtimeConfig = new SymbolValues(symbols);
+
+            engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
+            runtimeConfig.Set(slot, databaseTable);
+
+            var check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+
+            // This will be success due to SkipExpandableSetSemantics feature that loosens some Set semantics conditions.
+            Assert.True(check.IsSuccess);
+
+            var result = await check.GetEvaluator().EvalAsync(CancellationToken.None, symbolValues: symbols.CreateValues()).ConfigureAwait(false);
+            Assert.IsType<BooleanValue>(result);
+        }
+
+        [Theory]
+        [InlineData("Set(x, Table)")]
+        public async Task BlockSetExpandableTest(string expr)
+        {
+            var databaseTable = DatabaseTable.CreateTestTable(patchDelay: 0);
+            var symbols = new SymbolTable();
+
+            var slot = symbols.AddVariable("Table", DatabaseTable.TestTableType, mutable: true);
+            symbols.EnableMutationFunctions();
+
+            var engine = new RecalcEngine();
+            var runtimeConfig = new SymbolValues(symbols);
+
+            engine.UpdateVariable("x", TableValue.NewTable(RecordType.Empty()));
+            runtimeConfig.Set(slot, databaseTable);
+
+            var check = engine.Check(expr, symbolTable: symbols, options: new ParserOptions() { AllowsSideEffects = true });
+            Assert.False(check.IsSuccess);
+        }
+
         internal class DatabaseTable : InMemoryTableValue
         {
             internal static TableType TestTableType => DatabaseRecord.TestRecordType.ToTable();

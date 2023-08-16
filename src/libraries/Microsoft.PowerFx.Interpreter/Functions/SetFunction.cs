@@ -89,7 +89,7 @@ namespace Microsoft.PowerFx.Interpreter
                         return;
                     }
 
-                    if (arg1.AggregateHasExpandedType())
+                    if (!binding.Features.SkipExpandableSetSemantics && arg1.AggregateHasExpandedType())
                     {
                         if (arg1.IsTable)
                         {
