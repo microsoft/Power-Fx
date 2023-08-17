@@ -100,7 +100,7 @@ namespace Microsoft.PowerFx.Core.Functions.Delegation.DelegationStrategies
             // Set(Names, ["Foo", Bar"]); Filter(Accounts, 'Account Name' in Names) - Using variable of type table
             // ClearCollect(Names, Accounts); Filter(Accounts, 'Account Name' in Names.'Account Name') - using column from collection.
             // This won't be delegated if the AllowAsyncDelegation- Filter(Accounts, 'Account Name' in Accounts.'Account Name') as Accounts.'Account Name' is async.
-            if (isRHSNode && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled
+            if (isRHSNode
                 && opDelStrategy is BinaryOpDelegationStrategy { Op: BinaryOp.In }
                 && !binding.IsRowScope(node)
                 && binding.GetType(node).IsTable 

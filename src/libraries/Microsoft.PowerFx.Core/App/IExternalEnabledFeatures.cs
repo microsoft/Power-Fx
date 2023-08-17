@@ -11,8 +11,6 @@ namespace Microsoft.PowerFx.Core.App
     /// </summary>
     internal interface IExternalEnabledFeatures
     {
-        bool IsEnhancedDelegationEnabled { get; }
-
         bool IsProjectionMappingEnabled { get; }
 
         bool IsEnableRowScopeOneToNExpandEnabled { get; }
@@ -28,8 +26,6 @@ namespace Microsoft.PowerFx.Core.App
 
     internal sealed class DefaultEnabledFeatures : IExternalEnabledFeatures
     {
-        public bool IsEnhancedDelegationEnabled => true;
-
         public bool IsProjectionMappingEnabled => true;
 
         public bool IsEnableRowScopeOneToNExpandEnabled => true;

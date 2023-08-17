@@ -102,8 +102,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             IExternalDataSource dataSource = null;
 
-            // We ensure Document is available because some tests run with a null Document.
-            if ((binding.Document != null && !binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled) || !TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+            if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
             {
                 if (dataSource != null && dataSource.IsDelegatable)
                 {

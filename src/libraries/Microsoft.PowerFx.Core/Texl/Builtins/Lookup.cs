@@ -83,8 +83,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             FilterOpMetadata metadata = null;
             if (TryGetEntityMetadata(callNode, binding, out IDelegationMetadata delegationMetadata))
             {
-                if (!binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled ||
-                    !TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, DelegationCapability.ArrayLookup, out _))
                 {
                     SuggestDelegationHint(callNode, binding);
                     return false;

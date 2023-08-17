@@ -376,7 +376,7 @@ namespace Microsoft.PowerFx.Core.Binding
         }
 
         // Performs type checking for the arguments passed to the membership "in"/"exactin" operators.
-        private static BinderCheckTypeResult CheckInArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool isEnhancedDelegationEnabled, bool usePowerFxV1CompatibilityRules)
+        private static BinderCheckTypeResult CheckInArgTypesCore(IErrorContainer errorContainer, TexlNode left, TexlNode right, DType typeLeft, DType typeRight, bool usePowerFxV1CompatibilityRules)
         {
             Contracts.AssertValue(left);
             Contracts.AssertValue(right);
@@ -500,7 +500,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 return new BinderCheckTypeResult() { Coercions = coercions };
             }
 
-            if (isEnhancedDelegationEnabled && typeLeft.IsTable)
+            if (typeLeft.IsTable)
             {
                 // Table in table: RHS must be a single column table with a compatible schema. No coercion is allowed.
                 if (typeRight.IsTable)
@@ -1231,7 +1231,7 @@ namespace Microsoft.PowerFx.Core.Binding
         // REVIEW ragru: Introduce a TexlOperator abstract base plus various subclasses
         // for handling operators and their overloads. That will offload the burden of dealing with
         // operator special cases to the various operator classes.
-        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, bool usePowerFxV1CompatibilityRules, DType leftType, DType rightType, bool isEnhancedDelegationEnabled, bool numberIsFloat)
+        public static BinderCheckTypeResult CheckBinaryOpCore(IErrorContainer errorContainer, BinaryOpNode node, bool usePowerFxV1CompatibilityRules, DType leftType, DType rightType, bool numberIsFloat)
         {
             Contracts.AssertValue(node);
 
@@ -1295,7 +1295,7 @@ namespace Microsoft.PowerFx.Core.Binding
 
                 case BinaryOp.In:
                 case BinaryOp.Exactin:
-                    var resIn = CheckInArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, isEnhancedDelegationEnabled, usePowerFxV1CompatibilityRules);
+                    var resIn = CheckInArgTypesCore(errorContainer, leftNode, rightNode, leftType, rightType, usePowerFxV1CompatibilityRules);
                     return new BinderCheckTypeResult() { Node = node, NodeType = DType.Boolean, Coercions = resIn.Coercions };
 
                 default:
