@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
@@ -9,6 +10,7 @@ using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Intellisense.IntellisenseData
@@ -312,7 +314,10 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
-            foreach (var global in _powerFxConfig.GetSuggestableSymbolName())
+            // Do not suggest the user info symbol.
+            var symbols = _powerFxConfig.GetSuggestableSymbolName().Where(symbol => symbol != SymbolTable.UserInfoSymbolName);
+
+            foreach (var global in symbols)
             {
                 DType type = default;
                 if (_powerFxConfig.GetSymbols(global, out var nameInfo))
@@ -492,6 +497,29 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             MatchingStr = TexlLexer.UnescapeName(Script.Substring(startIndex, MatchingLength));
 
             return true;
+        }
+
+        internal void AddSuggestionsForGlobals()
+        {
+            if (Binding.NameResolver is IGlobalSymbolNameResolver nr2)
+            {
+                //NOTE: suggesting the user info symbol here is fine.
+                var globalSymbols = nr2.GlobalSymbols;
+
+                if (globalSymbols != null)
+                {
+                    foreach (var symbol in globalSymbols)
+                    {
+                        var suggestableName = symbol.Key;
+                        if (symbol.Value.DisplayName.IsValid)
+                        {
+                            suggestableName = symbol.Value.DisplayName.Value;
+                        }
+
+                        IntellisenseHelper.AddSuggestion(this, suggestableName, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, true);
+                    }
+                }
+            }
         }
     }
 }

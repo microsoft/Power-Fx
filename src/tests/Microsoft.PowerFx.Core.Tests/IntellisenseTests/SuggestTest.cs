@@ -473,6 +473,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expected, actualSuggestions);
         }
 
+        [Theory]
+        [InlineData("Use|", "Color.Chartreuse", "User")]
+
+        //Should Not Suggest User here.
+        [InlineData("Power(|")]
+        public void SuggestUser(string expression, params string[] expected)
+        {
+            var config = SuggestTests.Default;
+
+            config.SymbolTable.AddUserInfoObject();
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expected, actualSuggestions);
+        }
+
         private class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
