@@ -5228,4 +5228,8 @@
     <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
     <comment>Error message when function use the second argument for non numeric or date/time value.</comment>
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Set a variable with an online datasource value (table or record) can cause multiple requests to the server. Soon this will be blocked.</value>
+    <comment>Warning for makers that a certain capability should be avoided.</comment>
+  </data>
 </root>

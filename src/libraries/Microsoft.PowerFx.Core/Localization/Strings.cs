@@ -695,6 +695,8 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnDelegationRefersThisRecord = new ErrorResourceKey("WrnDelegationRefersThisRecord");
         public static ErrorResourceKey WrnDelegationBehaviorFunction = new ErrorResourceKey("WrnDelegationBehaviorFunction");
 
+        public static ErrorResourceKey WrnSetExpandableType = new ErrorResourceKey("WrnSetExpandableType");
+
         public static ErrorResourceKey ErrNotSupportedFormat_Func = new ErrorResourceKey("ErrNotSupportedFormat_Func");
     }
 }
