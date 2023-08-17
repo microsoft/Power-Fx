@@ -314,19 +314,6 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
-            // Do not suggest the user info symbol.
-            var symbols = _powerFxConfig.GetSuggestableSymbolName().Where(symbol => symbol != SymbolTable.UserInfoSymbolName);
-
-            foreach (var global in symbols)
-            {
-                DType type = default;
-                if (_powerFxConfig.GetSymbols(global, out var nameInfo))
-                {
-                    type = nameInfo.Type;
-                }
-
-                IntellisenseHelper.AddSuggestion(this, global, SuggestionKind.Global, SuggestionIconKind.Other, type, requiresSuggestionEscaping: true);
-            }
         }
 
         /// <summary>
