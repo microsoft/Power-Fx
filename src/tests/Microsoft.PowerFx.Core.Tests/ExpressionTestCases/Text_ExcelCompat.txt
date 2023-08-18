@@ -647,6 +647,7 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 >> Text(1234567.1234567, "\m\mm # ddd yyy")
 Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
 
+// Literal characters conflicting with date/time format specifiers.
 >> Text(72, "# y")
 Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
 
@@ -767,6 +768,12 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 >> Text(2, "###:")
 "2:"
 
+>> Text(2, "::")
+"::"
+
+>> Text(2, ":::")
+":::"
+
 >> Text(2, "0:z")
 "2:z"
 
@@ -832,6 +839,12 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 // Excel: "7/8"
 >> Text(4.34, "7/8")
 "7/8"
+
+>> Text(1/0, "###")
+Error({Kind:ErrorKind.Div0})
+
+>> Text(1/0, "####")
+Error({Kind:ErrorKind.Div0})
 
 // Color specifications, ignored by Excel's Text function, but supported for cell formatting.  We should error for now.
 // Excel: "$1.00"
@@ -1086,3 +1099,45 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "Time: utc is in ISO format")
 "Ti53e: utc i9 in I9O for6at"
+
+// Oddball case from Excel, returns "Z5280ro", which appears to be undocumented behavior.  We don't interpret the 'e'.
+>> Text(1234567.1234567, "Zero")
+"Zero"
+
+>> Text(1234567.1234567, "ero")
+"ero"
+
+>> Text(1234567.1234567, "e")
+"1.234567e+006"
+
+// Literal characters.
+// Literal characters, passed through unmodified.
+>> Text(72, "# °")
+"72 °"
+
+>> Text(72, "# ft")
+"72 ft"
+
+>> Text(123456789, "# ° # ° # ° # ° # ° # °")
+"1234 ° 5 ° 6 ° 7 ° 8 ° 9 °"
+
+>> Text(1234567898, "(###) ###-####")
+"(123) 456-7898"
+
+>> Text(123456789, "###-##-####")
+"123-45-6789"
+
+>> Text(123456789, "00000")
+"123456789"
+
+>> Text(123456789, "00000-0000")
+"12345-6789"
+
+>> Text(123456789, "000-00-0000")
+"123-45-6789"
+
+>> Text(123456, "12° 34' 56''")
+"12° 34 56"
+
+>> Text(123456, "##0° 00' 00''")
+"12° 34' 56''"

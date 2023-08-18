@@ -685,3 +685,10 @@ Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-2
 
 >> Text(123.456, "mmm ddd yyy""")
 Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 14-29: Incorrect format specifier for 'Text'.
+
+// Literal characters conflicting with date/time format specifiers.
+>> Text(72, "# \m")
+"72 m"
+
+>> Text(72, "# \y")
+"72 y"

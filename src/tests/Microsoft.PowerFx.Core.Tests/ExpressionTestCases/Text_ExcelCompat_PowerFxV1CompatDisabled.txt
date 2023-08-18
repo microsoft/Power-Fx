@@ -620,3 +620,11 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(123.456, "mmm ddd yyy""")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// Literal characters conflicting with date/time format specifiers.
+// Failure here due to legacy check at compile time when v1 flag disable.
+>> Text(72, "# \m")
+Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# \y")
+Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
