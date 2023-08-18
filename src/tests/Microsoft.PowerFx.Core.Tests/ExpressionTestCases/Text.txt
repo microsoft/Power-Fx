@@ -329,3 +329,13 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
 "1899-12-30 12:34:56"
+
+// Errors pass through Text
+>> Text(1/0,"###")
+Error({Kind:ErrorKind.Div0})
+
+>> Text(1/0,"000")
+Error({Kind:ErrorKind.Div0})
+
+
+

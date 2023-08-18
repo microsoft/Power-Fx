@@ -580,6 +580,9 @@ Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 13-3
 >> Text("asdf", "##;(##);ZZZ;""AAA ""@")
 Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 13-36: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
+>> Text("asdf", "##;(##);ZZZ")
+Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 13-26: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
 // Output localization. We will cover this with the third argumnet for now.
 // Excel: "1,234,567.1235"
 >> Text(1234567.1234567, "[$-en-US]#,####.0000")
@@ -715,3 +718,51 @@ Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-2
 
 >> Text(123.456, "mmm ddd yyy""")
 Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 14-29: Incorrect format specifier for 'Text'.
+
+>> Text(123.456, "@")
+Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 14-17: Incorrect format specifier for 'Text'.
+
+>> Text(12.34567,"Foo @")
+Errors: Error 0-22: The function 'Text' has some invalid arguments.|Warning 14-21: Incorrect format specifier for 'Text'.
+
+// C# supports E without a '+' or '-' after it.  Consitent with Excel, we do not.
+>> Text(1234567.123,"0.00E+")
+Error
+
+>> Text(1234567.123,"0.00E")
+Error
+
+>> Text(1234567.123,"0.00e+")
+Error
+
+>> Text(1234567.123,"0.00e")
+Error
+
+>> Text( 1234567.1234567, "e" )
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 23-26: Incorrect format specifier for 'Text'.
+
+// Reserved [@...] notation
+>> Text(1234567.123,"[@-en-US]#,###.0000")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.123,"[@-fr-Fr]#.###,0000")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.123,"[@]#,###.0000")
+Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 17-32: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.123,"[@]#.###,0000")
+Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 17-32: Incorrect format specifier for 'Text'.
+
+// Literal characters conflicting with date/time format specifiers.
+>> Text( 72, "# \m" )
+"72 m"
+
+>> Text( 72, "# \y" )
+"72 y"
+
+>> Text( 72, "# y" )
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 10-15: Incorrect format specifier for 'Text'.
+
+>> Text( 72, "# m" )
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 10-15: Incorrect format specifier for 'Text'.
