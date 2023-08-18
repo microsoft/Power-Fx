@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             {
                 var tableDsInfo = tableArgType.AssociatedDataSources.Single();
 
-                if (context.IsEnhancedDelegationEnabled && (tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
+                if ((tableDsInfo is IExternalCdsDataSource) && argTypes[0].HasPolymorphicInfo)
                 {
                     var expandInfo = argTypes[0].PolymorphicInfo.TryGetExpandInfo(tableDsInfo.TableMetadata.Name);
                     if (expandInfo != null)
@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsRowScopedServerDelegatable(CallNode callNode, TexlBinding binding, OperationCapabilityMetadata metadata)
         {
-            return binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled && metadata.IsDelegationSupportedByTable(DelegationCapability.AsType);
+            return metadata.IsDelegationSupportedByTable(DelegationCapability.AsType);
         }
 
         protected override bool RequiresPagedDataForParamCore(TexlNode[] args, int paramIndex, TexlBinding binding)
