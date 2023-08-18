@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using Microsoft.PowerFx.Types;
@@ -14,6 +15,22 @@ namespace Microsoft.PowerFx
         internal string Name { get; }
 
         internal MethodInfo Method { get; }
+
+        internal string[] ArgNames
+        {
+            get
+            {
+                var paramNames = Method.GetParameters().Select(p => p.Name);
+
+                // Config is always First arg, and user doesn't provide it.
+                if (ConfigType != null)
+                {
+                    paramNames = paramNames.Skip(1);
+                }
+
+                return paramNames.ToArray();
+            }
+        }
 
         internal FormulaType RetType { get; }
 

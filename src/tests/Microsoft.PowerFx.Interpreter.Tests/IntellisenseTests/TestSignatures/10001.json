@@ -1,25 +1,25 @@
 {
   "Signatures": [
     {
-      "Label": "Overload(Arg1 : Number, Arg2 : Text)",
+      "Label": "Overload(input1 : Number, input2 : Text)",
       "Documentation": "Custom func Overload",
       "Parameters": [
         {
-          "Label": "Arg1 : Number",
+          "Label": "input1 : Number",
           "Documentation": ""
         },
         {
-          "Label": "Arg2 : Text",
+          "Label": "input2 : Text",
           "Documentation": ""
         }
       ]
     },
     {
-      "Label": "Overload(Arg1 : Text)",
+      "Label": "Overload(input : Text)",
       "Documentation": "Custom func Overload",
       "Parameters": [
         {
-          "Label": "Arg1 : Text",
+          "Label": "input : Text",
           "Documentation": ""
         }
       ]

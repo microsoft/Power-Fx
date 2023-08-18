@@ -28,24 +28,27 @@ namespace Microsoft.PowerFx
 
         internal BigInteger LamdaParamMask;
 
+        private readonly string[] _argNames;
+
         public override bool IsSelfContained => !_isBehavior;
 
         private readonly bool _isBehavior;
 
-        public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, params FormulaType[] paramTypes)
-            : this(name, functionCategory, returnType._type, Array.ConvertAll(paramTypes, x => x._type))
+        public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, string[] argNames, params FormulaType[] paramTypes)
+            : this(name, functionCategory, returnType._type, argNames, Array.ConvertAll(paramTypes, x => x._type))
         {
         }
 
-        public CustomTexlFunction(string name, FunctionCategories functionCategory, DType returnType, params DType[] paramTypes)
+        public CustomTexlFunction(string name, FunctionCategories functionCategory, DType returnType, string[] argNames, params DType[] paramTypes)
             : base(DPath.Root, name, name, CustomFunctionUtility.SG("Custom func " + name), functionCategory, returnType, 0, paramTypes.Length, paramTypes.Length, paramTypes)
         {
             _isBehavior = functionCategory == FunctionCategories.Behavior;
+            _argNames = argNames;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return CustomFunctionUtility.GenerateArgSignature(ParamTypes);
+            yield return CustomFunctionUtility.GenerateArgSignature(_argNames, ParamTypes);
         }
 
         public virtual Task<FormulaValue> InvokeAsync(IServiceProvider serviceProvider, FormulaValue[] args, CancellationToken cancellationToken)
