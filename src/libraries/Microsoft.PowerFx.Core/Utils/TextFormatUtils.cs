@@ -76,12 +76,8 @@ namespace Microsoft.PowerFx.Core.Utils
                 return false;
             }
 
-            bool hasNumericCharacters = false;
-            int decimalPointIndex = -1;
-            int sectionCount = 0;
             var formatStr = textFormatArgs.FormatArg;
-            bool hasColonWithNum = false;
-
+            
             //Block "general"
             if (formatStr.IndexOf("general", StringComparison.OrdinalIgnoreCase) >= 0)
             {
@@ -93,6 +89,12 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 return false;
             }
+
+            bool hasNumericCharacters = false;
+            int decimalPointIndex = -1;
+            int sectionCount = 0;
+            bool hasColonWithNum = false;
+            List<int> commaIdxList = new List<int>();
 
             for (int i = 0; i < formatStr.Length; i++)
             {
@@ -124,6 +126,18 @@ namespace Microsoft.PowerFx.Core.Utils
                     // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
                     decimalPointIndex = i;
                     hasNumericCharacters = false;
+
+                    // Add escaping character for any group separator character ',' before decimal point.
+                    if (commaIdxList.Count > 0)
+                    {
+                        for (int j = commaIdxList.Count - 1; j >= 0; j--)
+                        {
+                            formatStr = formatStr.Insert(commaIdxList[j], "\\");
+                        }
+
+                        // Reset comma index list if it has any index because comma before numeric character is not used for scaling factor.
+                        commaIdxList.Clear();
+                    }
                 }
                 else if (_unsupportedCharacters.Contains(formatStr[i]))
                 {
@@ -143,6 +157,14 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
                 }
+                else if (textFormatArgs.HasNumericFmt && formatStr[i] == ',')
+                {
+                    if (i == formatStr.Length - 1 || !_numericCharacters.Contains(formatStr[i + 1]) || (i > 0 && !_numericCharacters.Contains(formatStr[i - 1])))
+                    {
+                        // Record each comma index after decimal point and numeric character to do scaling factor process in the end of format.
+                        commaIdxList.Add(i);
+                    }
+                }
                 else if (i == formatStr.Length - 1)
                 {
                     // If format string ends with backsplash but no following character or opening double quote then format is invalid.
@@ -152,7 +174,8 @@ namespace Microsoft.PowerFx.Core.Utils
                     }
 
                     // If format string of numeric ends with e or e+ (not escaping character) then format is invalid.
-                    if (textFormatArgs.HasNumericFmt && (formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+')))
+                    if (!textFormatArgs.HasDateTimeFmt && (formatStr[i] == 'e' || formatStr[i] == 'E' || 
+                        (i > 2 && formatStr[i - 2] != '\\' && (formatStr[i - 1] == 'e' || formatStr[i - 1] == 'E') && formatStr[i] == '+')))
                     {
                         return false;
                     }
@@ -186,6 +209,18 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
             }
 
+            // Each comma after the decimal point and numeric character divides the number by 1,000.
+            // Move all commas after the decimal point and numeric character of format string to right before decimal point if it has.
+            if (commaIdxList.Count > 0 && decimalPointIndex != -1)
+            {
+                for (int j = commaIdxList.Count - 1; j >= 0; j--)
+                {
+                    formatStr = formatStr.Remove(commaIdxList[j], 1);
+                }
+
+                formatStr = formatStr.Insert(decimalPointIndex, new string(',', commaIdxList.Count));
+            }
+
             if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
             {
                 // Check if the date time format contains '0's after the seconds specifier, which
@@ -213,13 +248,16 @@ namespace Microsoft.PowerFx.Core.Utils
                     formatStr = formatStr.Insert(decimalPointIndex, "\\");
                 }
 
+                // Update '‰' to '\‰' to escape '‰' in c# to match with excel.
+                formatStr = formatStr.Replace("‰", "\\‰");
+            }
+
+            if (!textFormatArgs.HasDateTimeFmt)
+            {
                 // Update \' or "'" to escaping character ' to match with C# then update any \' to ' to match with Excel (ex: \'' to \'\').
                 formatStr = formatStr.Replace("\"\'\"", "\'");
                 formatStr = formatStr.Replace("\\'", "\'");
                 formatStr = formatStr.Replace("\'", "\\'");
-
-                // Update '‰' to '\‰' to escape '‰' in c# to match with excel.
-                formatStr = formatStr.Replace("‰", "\\‰");
             }
 
             textFormatArgs.FormatArg = formatStr;

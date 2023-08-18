@@ -632,10 +632,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // C# supports E without a '+' or '-' after it.  Consitent with Excel, we do not.
 >> Text(1234567.123,"0.00E+")
-"1234567.12E+"
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1234567.123,"0.00E")
-"1234567.12E"
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1234567.123,"0.00e+")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -643,8 +643,8 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234567.123,"0.00e")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 1234567.1234567, "e" )
-"1.234567e+006"
+>> Text(1234567.1234567, "e")
+Error({Kind:ErrorKind.InvalidArgument})
 
 // Reserved [@...] notation
 >> Text(1234567.123,"[@-en-US]#,###.0000")
@@ -660,14 +660,51 @@ Error({Kind:ErrorKind.InvalidArgument})
 Error({Kind:ErrorKind.InvalidArgument})
 
 // Literal characters conflicting with date/time format specifiers.
->> Text( 72, "# \m" )
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 10-16: Incorrect format specifier for 'Text'.
+>> Text(72, "# \m")
+Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
 
->> Text( 72, "# \y" )
-Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 10-16: Incorrect format specifier for 'Text'.
+>> Text(72, "# \y")
+Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
 
->> Text( 72, "# y" )
-Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 10-15: Incorrect format specifier for 'Text'.
+>> Text(72, "# y")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
 
->> Text( 72, "# m" )
-Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 10-15: Incorrect format specifier for 'Text'.
+>> Text(72, "# m")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+// Scaling factor.  Each comma on the end divides the number by 1,000.
+>> Text(1234567891234, "0,0,,,""dollar""\z\M")
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "0,0,""dollar"",\z,\M")
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "0,0,""dollar"",\z,z""P""\M")
+Errors: Error 0-49: The function 'Text' has some invalid arguments.|Warning 20-48: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "\K#\M,,,z'""TH""")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "\K#\M,,z'""TH"",")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,,,z'\k\m")
+Errors: Error 0-56: The function 'Text' has some invalid arguments.|Warning 22-55: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.###,###,###,###,###,###,,,z'\k\m")
+Errors: Error 0-61: The function 'Text' has some invalid arguments.|Warning 22-60: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,,,z'\k\m""am""")
+Errors: Error 0-62: The function 'Text' has some invalid arguments.|Warning 22-61: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,,,z'\k\m\d\y""am""")
+Errors: Error 0-66: The function 'Text' has some invalid arguments.|Warning 22-65: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,z'\k\m,\d\y,""am"",")
+Errors: Error 0-67: The function 'Text' has some invalid arguments.|Warning 22-66: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.###############,###,z'\k\m,\d\y,""am"",")
+Errors: Error 0-68: The function 'Text' has some invalid arguments.|Warning 22-67: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.###,###,###,###,###,###,z'\k\m,\d\y,""am"",")
+Errors: Error 0-72: The function 'Text' has some invalid arguments.|Warning 22-71: Incorrect format specifier for 'Text'.

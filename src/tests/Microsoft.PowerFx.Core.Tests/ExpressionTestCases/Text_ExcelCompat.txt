@@ -275,10 +275,10 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 "'1234'567.123"
 
 >> Text(1234567.1234567, "'#,'###.###")
-"'1,234,'567.123"
+"'1234,'567.123"
 
 >> Text(1234567.1234567, "'##,'###.###")
-"'1,234,'567.123"
+"'1234,'567.123"
 
 >> Text(1234567.1234567, "'0#,#0'0")
 "'1,234,56'7"
@@ -311,24 +311,14 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 "May''Wed'1900"
 
 // Excel: "0123.46E+04"
->> Text( 1234567.1234567, "0000.00E+00" )
+>> Text(1234567.1234567, "0000.00E+00")
 "1234.57E+03"
 
->> Text( 1234567.1234567, "0E+00" )
+>> Text(1234567.1234567, "0E+00")
 "1E+06"
 
->> Text( 1234567.1234567, "#.00E+00" )
+>> Text(1234567.1234567, "#.00E+00")
 "1.23E+06"
-
-// Excel: "123.46E+04"
->> Text( 1234567.1234567, "####.00E+00" )
-"1234.57E+03"
-
->> Text( 1234567.1234567, "#E+00" )
-"1E+06"
-
->> Text( 1234567.1234567, "#E+00000" )
-"1E+00006"
 
 // Lower case 'e' notation is not supported in Excel and instead results in an error when used in this manner.  
 // As it is an error in Excel, but it is documented in Excel, C# supports it, and it is generally useful, we will support it. 
@@ -428,13 +418,13 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 >> Text(1234567.1234567, "#e-00000")
 "1e00006"
 
->> Text( 1234567.1234567, "#.##################,,," )
+>> Text(1234567.1234567, "#.##################,,,")
 ".0012345671234567"
 
->> Text( 1234567.1234567, "#.000000000000000000,,," )
+>> Text(1234567.1234567, "#.000000000000000000,,,")
 ".001234567123456700"
 
->> Text( 1234567.1234567, "0.0000000,,,," )
+>> Text(1234567.1234567, "0.0000000,,,,")
 "0.0000012"
 
 // Number of digits.  Without exponent, this should fully expand even for floating point.
@@ -801,17 +791,8 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 "* 1234567"
 
 // Colon, interpreted as a time seperator, not allowed between numbers
->> Text(2, ":")
-":"
-
 >> Text(2, "###:")
 "2:"
-
->> Text(2, "::")
-"::"
-
->> Text(2, ":::")
-":::"
 
 >> Text(2, "0:z")
 "2:z"
@@ -1140,55 +1121,55 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 "Ti53e: utc i9 in I9O for6at"
 
 // Dynamic format strings, ensure we are checking this at runtime
->> Text( 123, Lower( "[" ) )
+>> Text(123, Lower("["))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Lower( "asdf]" ) )
+>> Text(123, Lower("asdf]"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Lower( "[$-en-us]" ) & Trim( "##" ) )
+>> Text(123, Lower("[$-en-us]") & Trim("##"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Upper( "#/#" ) )
+>> Text(123, Upper("#/#"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Upper( "0/#" ) )
+>> Text(123, Upper("0/#"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Lower( "????" ) )
+>> Text(123, Lower("????"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Upper( "_( " ) & Lower( "## _)" ) )
+>> Text(123, Upper("_(") & Lower("## _)"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Lower( "*" ) )
+>> Text(123, Lower("*"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Lower( "#;#;#;#") )
+>> Text(123, Lower("#;#;#;#"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Proper( "General" ) )
+>> Text(123, Proper("General"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Upper( "general" ) )
+>> Text(123, Upper("general"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Trim( "GENERAL" ) )
+>> Text(123, Trim("GENERAL"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Trim( "GENERLA" ) )
+>> Text(123, Trim("GENERLA"))
 "GENERLA"
 
->> Text( 123, Trim( "@" ) )
+>> Text(123, Trim("@"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Trim( "#:#") )
+>> Text(123, Trim("#:#"))
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text( 123, Trim( "#\:#") )
+>> Text(123, Trim("#\:#"))
 "12:3"
 
->> Text( 123, Trim( "#"":""#") )
+>> Text(123, Trim("#"":""#"))
 "12:3"
 
 // Original tests
@@ -1250,10 +1231,10 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(70.00027795138888888888,":mm")
 ":03"
 
->> Text( 70, "mm/dd/yyy")
+>> Text(70, "mm/dd/yyy")
 "03/10/1900"
 
->> Text( 70, "dd/mm/yyy")
+>> Text(70, "dd/mm/yyy")
 "10/03/1900"
 
 >> Text(1234567.123,"#',###.###")
@@ -1268,60 +1249,84 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234567.123,"'##',###.###")
 "'1234',567.123"
 
->> Text( 123456, "12° 34' 56''" )
+>> Text(1234567.123,"#'#,###.###")
+"1,23'4,567.123"
+
+>> Text(1234567.123,"#'\z,###.###")
+"1234'z,567.123"
+
+>> Text(1234567.123,"#'\z#,###.###")
+"1,23'z4,567.123"
+
+>> Text(1234567.123,"#'""z""#,###.###")
+"1,23'z4,567.123"
+
+>> Text(1234567.123,"#,\z'###.###")
+"1234,z'567.123"
+
+>> Text(1234567.123,"#,""z""'###.###")
+"1234,z'567.123"
+
+>> Text(1234567.123,"#,#\z'##.###")
+"1,234,5z'67.123"
+
+>> Text(1234567.123,"#,##""z""'#.###")
+"1,234,56z'7.123"
+
+>> Text(123456, "12° 34' 56''")
 "12° 34' 56''"
 
->> Text( 123456, "##0° 00' 00''" )
+>> Text(123456, "##0° 00' 00''")
 "12° 34' 56''"
 
->> Text( 123456, "12° 34' 56\""" )
-"12° 34' 56""
-
->> Text( 123456, "12° 34' 56\""###\""" )
-"12° 34' 56""123456"""
-
->> Text( 123456, "12° 34' 56""###""" )
-"12° 34' 56""###"""
-
->> Text( 123456, "##0° 00' 00\""" )
+>> Text(123456, "12° 34' 56\""")
 "12° 34' 56"""
 
->> Text( 123456789, "# ° # ° # ° # ° # ° # °" )
+>> Text(123456, "12° 34' 56\""###\""")
+"12° 34' 56""123456"""
+
+>> Text(123456, "12° 34' 56""###""")
+"12° 34' 56###"
+
+>> Text(123456, "##0° 00' 00\""")
+"12° 34' 56"""
+
+>> Text(123456789, "# ° # ° # ° # ° # ° # °")
 "1234 ° 5 ° 6 ° 7 ° 8 ° 9 °"
 
->> Text( 1234567898, "(###) ###-####" )
+>> Text(1234567898, "(###) ###-####")
 "(123) 456-7898"
 
->> Text( 123456789, "###-##-####" )
+>> Text(123456789, "###-##-####")
 "123-45-6789"
 
->> Text( 123456789, "00000" )
+>> Text(123456789, "00000")
 "123456789"
 
->> Text( 123456789, "00000-0000" )
+>> Text(123456789, "00000-0000")
 "12345-6789"
 
->> Text( 123456789, "000-00-0000" )
+>> Text(123456789, "000-00-0000")
 "123-45-6789"
 
 // Scaling with ,
->> Text( 123456789.12345, "#,###.000" )
+>> Text(123456789.12345, "#,###.000")
 "123,456,789.123"
 
->> Text( 123456789.12345, "#,###.000,\K" )
+>> Text(123456789.12345, "#,###.000,\K")
 "123,456.789K"
 
->> Text( 123456789.12345, "#,###.000,,\M" )
+>> Text(123456789.12345, "#,###.000,,\M")
 "123.457M"
 
 // Literal characters, passed through unmodified.
->> Text( 72, "# °" )
+>> Text(72, "# °")
 "72 °"
 
->> Text( 72, "# ft" )
+>> Text(72, "# ft")
 "72 ft"
 
->> Text(1234567.1234567,"#,0,," )
+>> Text(1234567.1234567,"#,0,,")
 "1"
 
 >> Text(12.34567,"Foo ####")
@@ -1329,38 +1334,38 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 // Oddball case from Excel, returns "Z5280ro", which appears to be undocumented behavior.  
 // We don't interpret the 'e'.  
->> Text( 1234567.1234567, "Zero" )
+>> Text(1234567.1234567, "Zero")
 "Zero"
 
->> Text( 1234567.1234567, "ero" )
+>> Text(1234567.1234567, "ero")
 "ero"
 
 // Scaling factor.  Each comma on the end divides the number by 1,000.
->> Text( 1234567891234, "0," )
+>> Text(1234567891234, "0,")
 "1234567891"
 
->> Text( 1234567891234, "0,," )
+>> Text(1234567891234, "0,,")
 "1234568"
 
->> Text( 1234567891234, "0,,," )
+>> Text(1234567891234, "0,,,")
 "1235"
 
 // Colon, interpreted as a time seperator, not allowed between numbers.
 // Excel: ":"
->> Text( 2, ":" )
+>> Text(2, ":")
 ":"
 
 // Excel: ":"
->> Text( 2, "::" )
+>> Text(2, "::")
 "::"
 
 // Excel: ":"
->> Text( 2, ":::" )
+>> Text(2, ":::")
 ":::"
 
 // Text of Blank, without a format, is blank.  Text of Blank, with a format, is empty string.
->> Text( If(1<0,1,Blank()) )
+>> Text(If(1<0,1,Blank()))
 Blank()
 
->> Text( If(1<0,1,Blank()), "####" )
+>> Text(If(1<0,1,Blank()), "####")
 ""
