@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx
                 HasNumericFmt = false
             };
 
-            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, textFormatArgs, out result, cancellationToken);
+            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, textFormatArgs, cancellationToken, hasEnum: false, out result);
         }
 
         /// <summary>

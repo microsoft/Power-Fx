@@ -338,7 +338,6 @@ namespace Microsoft.PowerFx.Functions
             {
                 FormatCultureName = null,
                 FormatArg = null,
-                HasDateTimeFormatEnum = false,
                 HasDateTimeFmt = false,
                 HasNumericFmt = false
             };
@@ -384,18 +383,23 @@ namespace Microsoft.PowerFx.Functions
                 return CommonErrors.GenericInvalidArgument(irContext, string.Format(CultureInfo.InvariantCulture, customErrorMessage, "Text"));
             }
 
+            bool isText = false;
+            StringValue result;
             if (args.Length > 1 && args[1] is OptionSetValue ops)
             {
                 textFormatArgs.FormatArg = ops.ExecutionValue.ToString();
-                textFormatArgs.HasDateTimeFormatEnum = true;
+                textFormatArgs.HasDateTimeFmt = true;
+                isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, cancellationToken, hasEnum: true, out result);
             }
-
-            var isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, out StringValue result, cancellationToken);
+            else
+            {
+                isText = TryText(formatInfo.With(culture), irContext, args[0], textFormatArgs, cancellationToken, hasEnum: false, out result);
+            }            
 
             return isText ? result : CommonErrors.GenericInvalidArgument(irContext, StringResources.Get(TexlStrings.ErrTextInvalidFormat, culture.Name));
         }
 
-        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, out StringValue result, CancellationToken cancellationToken)
+        public static bool TryText(FormattingInfo formatInfo, IRContext irContext, FormulaValue value, TextFormatArgs textFormatArgs, CancellationToken cancellationToken, bool hasEnum, out StringValue result)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -419,12 +423,12 @@ namespace Microsoft.PowerFx.Functions
                     result = sv;
                     break;
                 case NumberValue num:
-                    if (formatString != null && (textFormatArgs.HasDateTimeFmt || textFormatArgs.HasDateTimeFormatEnum))
+                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), num);
 
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, hasEnum, out result);
                     }
                     else
                     {
@@ -434,12 +438,12 @@ namespace Microsoft.PowerFx.Functions
                     break;
 
                 case DecimalValue dec:
-                    if (formatString != null && (textFormatArgs.HasDateTimeFmt || textFormatArgs.HasDateTimeFormatEnum))
+                    if (formatString != null && textFormatArgs.HasDateTimeFmt)
                     {
                         // It's a number, formatted as date/time. Let's convert it to a date/time value first
                         var decNum = new NumberValue(IRContext.NotInSource(FormulaType.Number), (double)dec.Value);
                         var newDateTime = Library.NumberToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), decNum);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", newDateTime.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, hasEnum, out result);
                     }
                     else
                     {
@@ -457,7 +461,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "g", dateTimeValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, hasEnum, out result);
                     }
 
                     break;
@@ -469,7 +473,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "d", dateValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, hasEnum, out result);
                     }
 
                     break;
@@ -482,7 +486,7 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var dtValue = Library.TimeToDateTime(formatInfo, IRContext.NotInSource(FormulaType.DateTime), timeValue);
-                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, textFormatArgs, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, out result);
+                        return TryExpandDateTimeExcelFormatSpecifiersToStringValue(irContext, formatString, "t", dtValue.GetConvertedValue(timeZoneInfo), timeZoneInfo, culture, cancellationToken, hasEnum, out result);
                     }
 
                     break;
@@ -497,12 +501,11 @@ namespace Microsoft.PowerFx.Functions
             return result != null;
         }
 
-        internal static bool TryExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, TextFormatArgs textFormatArgs, string defaultFormat, DateTime dateTime, TimeZoneInfo timeZoneInfo, CultureInfo culture, CancellationToken cancellationToken, out StringValue result)
+        internal static bool TryExpandDateTimeExcelFormatSpecifiersToStringValue(IRContext irContext, string format, string defaultFormat, DateTime dateTime, TimeZoneInfo timeZoneInfo, CultureInfo culture, CancellationToken cancellationToken, bool hasEnum, out StringValue result)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             result = null;
-            var format = textFormatArgs.FormatArg;
 
             if (format == null)
             {
@@ -510,8 +513,8 @@ namespace Microsoft.PowerFx.Functions
                 return true;
             }
 
-            // DateTime format
-            if (textFormatArgs.HasDateTimeFormatEnum)
+            // DateTime format has enum
+            if (hasEnum)
             {
                 switch (format.ToLowerInvariant())
                 {
