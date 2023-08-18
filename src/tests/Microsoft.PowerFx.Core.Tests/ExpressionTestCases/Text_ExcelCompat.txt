@@ -686,6 +686,7 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 >> Text(1234567.1234567, "\m\mm # ddd yyy")
 Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
 
+// Literal characters conflicting with date/time format specifiers.
 >> Text(72, "# y")
 Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
 
@@ -806,6 +807,12 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 >> Text(2, "###:")
 "2:"
 
+>> Text(2, "::")
+"::"
+
+>> Text(2, ":::")
+":::"
+
 >> Text(2, "0:z")
 "2:z"
 
@@ -871,6 +878,12 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 // Excel: "7/8"
 >> Text(4.34, "7/8")
 "7/8"
+
+>> Text(1/0, "###")
+Error({Kind:ErrorKind.Div0})
+
+>> Text(1/0, "####")
+Error({Kind:ErrorKind.Div0})
 
 // Color specifications, ignored by Excel's Text function, but supported for cell formatting.  We should error for now.
 // Excel: "$1.00"

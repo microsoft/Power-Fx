@@ -151,8 +151,8 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
 
-                    // If format string ends with e or e+ (not escaping character) then format is invalid.
-                    if (formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+'))
+                    // If format string of numeric ends with e or e+ (not escaping character) then format is invalid.
+                    if (textFormatArgs.HasNumericFmt && (formatStr[i] == 'e' || (i > 2 && formatStr[i - 2] != '\\' && formatStr[i - 1] == 'e' && formatStr[i] == '+')))
                     {
                         return false;
                     }
