@@ -30,16 +30,19 @@ namespace Microsoft.PowerFx
 
         public override bool SupportsParamCoercion => false;
 
+        private readonly string[] _argNames;
+
         public Func<FormulaValue[], Task<FormulaValue>> _impl;
 
-        public CustomSetPropertyFunction(string name)
+        public CustomSetPropertyFunction(string name, string[] argNames)
             : base(DPath.Root, name, name, CustomFunctionUtility.SG(name), FunctionCategories.Behavior, DType.Boolean, 0, 2, 2)
         {
+            _argNames = argNames;
         }
 
         public override IEnumerable<TexlStrings.StringGetter[]> GetSignatures()
         {
-            yield return CustomFunctionUtility.GenerateArgSignature(ParamTypes);
+            yield return CustomFunctionUtility.GenerateArgSignature(_argNames, ParamTypes);
         }
 
         // 2nd argument should be same type as 1st argument. 

@@ -1,0 +1,16 @@
+{
+  "Signatures": [
+    {
+      "Label": "UserAsync(x : Number)",
+      "Documentation": "Custom func UserAsync",
+      "Parameters": [
+        {
+          "Label": "x : Number",
+          "Documentation": ""
+        }
+      ]
+    }
+  ],
+  "ActiveSignature": 0,
+  "ActiveParameter": 0
+}

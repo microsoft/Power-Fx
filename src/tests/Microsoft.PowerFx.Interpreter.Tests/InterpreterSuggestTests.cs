@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
-        [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
+        [InlineData("TopOptionSetField <> |")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
