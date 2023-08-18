@@ -12,14 +12,15 @@ namespace Microsoft.PowerFx
 {
     internal class CustomFunctionUtility
     {
-        public static TexlStrings.StringGetter[] GenerateArgSignature(DType[] paramTypes)
+        public static TexlStrings.StringGetter[] GenerateArgSignature(string[] argNames, DType[] paramTypes)
         {
-            var count = paramTypes.Length;
+            var count = paramTypes?.Length ?? 0;
             var signature = new StringGetter[count];
 
             for (var i = 0; i < count; i++)
             {
-                signature[i] = SG($"Arg{i + 1} : {paramTypes[i].GetKindString()}");
+                var argName = i < argNames.Length ? argNames[i] : $"Arg{i + 1}";
+                signature[i] = SG($"{argName} : {paramTypes[i].GetKindString()}");
             }
 
             return signature;

@@ -755,7 +755,7 @@ namespace Microsoft.PowerFx.Tests
             }
         }
 
-        private class UserAsyncFunction : ReflectionFunction
+        internal class UserAsyncFunction : ReflectionFunction
         {
             public UserAsyncFunction()
             {
