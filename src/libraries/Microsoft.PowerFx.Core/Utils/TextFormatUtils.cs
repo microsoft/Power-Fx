@@ -27,11 +27,6 @@ namespace Microsoft.PowerFx.Core.Utils
         public string FormatArg { get; set; }
 
         /// <summary>
-        /// True/False if has date time format enum.
-        /// </summary>
-        public bool HasDateTimeFormatEnum { get; set; }
-
-        /// <summary>
         /// True/False if format string has DateTime format or not.
         /// </summary>
         public bool HasDateTimeFmt { get; set; }
