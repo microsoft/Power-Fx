@@ -826,7 +826,7 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 "7:47 AM"
 
 >> Text(0.324305555555556, "h:mm:ss A/P")
-"7:47:00 a"
+"7:47:00 A"
 
 >> Text(0.324305555555556, "h:mm:ss.00")
 "7:47:00.00"
@@ -1084,23 +1084,23 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:yyyy:mmutc")
 "02:1983:06utc"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/putc")
-"2autc"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/putc")
-"02autc"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hAM/PMutc")
 "2AMutc"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hhAM/PMutc")
 "02AMutc"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/putc")
-"2:53 autc"
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hA/Putc")
+"2Autc"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/putc")
-"02:53 autc"
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hhA/Putc")
+"02Autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm A/Putc")
+"6:02 Autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm A/Putc")
+"06:02 Autc"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PMutc")
 "2:53 AMutc"
@@ -1196,26 +1196,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(70.32430555555555555555555,"h:mm:ss A/P")
 "7:47:00 A"
 
->> Text(70.32430555555555555555555,"h:mm:ss a/p")
-"7:47:00 a"
-
 >> Text(70.32430555555555555555555,"h:mm:ss AM/PM")
 "7:47:00 AM"
-
->> Text(70.32430555555555555555555,"h:mm:ss am/pm")
-"7:47:00 am"
 
 >> Text(70.82430555555555555555555,"h:mm:ss A/P")
 "7:47:00 P"
 
->> Text(70.82430555555555555555555,"h:mm:ss a/p")
-"7:47:00 p"
-
 >> Text(70.82430555555555555555555,"h:mm:ss AM/PM")
 "7:47:00 PM"
-
->> Text(70.82430555555555555555555,"h:mm:ss am/pm")
-"7:47:00 pm"
 
 >> Text(70.00027795138888888888,"ss.000")
 "24.015"
@@ -1369,3 +1357,197 @@ Blank()
 
 >> Text(If(1<0,1,Blank()), "####")
 ""
+
+// Text format is largely case insensitive, with exceptions for "e", "a/p", and "am/pm"
+>> Text(70.125, "MM DD YYY")
+"03 10 1900"
+
+>> Text(70.125, "MMM DD YYY")
+"Mar 10 1900"
+
+>> Text(70.125, "MMMM DD YYY")
+"March 10 1900"
+
+>> Text(70.125, "mm dd yyy")
+"03 10 1900"
+
+>> Text(70.125, "mmm dd yyy")
+"Mar 10 1900"
+
+>> Text(70.125, "mmmm dd yyy")
+"March 10 1900"
+
+>> Text(70.125, "MM DDD YYY")
+"03 Sat 1900"
+
+>> Text(70.125, "MMM DDD YYY")
+"Mar Sat 1900"
+
+>> Text(70.125, "MMMM DDD YYY")
+"March Sat 1900"
+
+>> Text(70.125, "mm ddd yyy")
+"03 Sat 1900"
+
+>> Text(70.125, "mmm ddd yyy")
+"Mar Sat 1900"
+
+>> Text(70.125, "mmmm ddd yyy")
+"March Sat 1900"
+
+>> Text(70.125, "MM DDD YY")
+"03 Sat 00"
+
+>> Text(70.125, "MMM DDD YY")
+"Mar Sat 00"
+
+>> Text(70.125, "MMMM DDD YY")
+"March Sat 00"
+
+>> Text(70.125, "mm ddd yy")
+"03 Sat 00"
+
+>> Text(70.125, "mmm ddd yy")
+"Mar Sat 00"
+
+>> Text(70.125, "mmmm ddd yy")
+"March Sat 00"
+
+>> Text(70.125, "MM DDD YYYY")
+"03 Sat 1900"
+
+>> Text(70.125, "MMM DDD YYYY")
+"Mar Sat 1900"
+
+>> Text(70.125, "MMMM DDD YYYY")
+"March Sat 1900"
+
+>> Text(70.125, "mm ddd yyyy")
+"03 Sat 1900"
+
+>> Text(70.125, "mmm ddd yyyy")
+"Mar Sat 1900"
+
+>> Text(70.125, "mmmm ddd yyyy")
+"March Sat 1900"
+
+>> Text(70.125, "MM DDDD YYYY")
+"03 Saturday 1900"
+
+>> Text(70.125, "MMM DDDD YYYY")
+"Mar Saturday 1900"
+
+>> Text(70.125, "MMMM DDDD YYYY")
+"March Saturday 1900"
+
+>> Text(70.125, "mm dddd yyyy")
+"03 Saturday 1900"
+
+>> Text(70.125, "mmm dddd yyyy")
+"Mar Saturday 1900"
+
+>> Text(70.125, "mmmm dddd yyyy")
+"March Saturday 1900"
+
+>> Text(70.125, "MM D YYYY")
+"03 10 1900"
+
+>> Text(70.125, "MMM D YYYY")
+"Mar 10 1900"
+
+>> Text(70.125, "MMMM D YYYY")
+"March 10 1900"
+
+>> Text(70.125, "mm d yyyy")
+"03 10 1900"
+
+>> Text(70.125, "mmm d yyyy")
+"Mar 10 1900"
+
+>> Text(70.125, "mmmm d yyyy")
+"March 10 1900"
+
+>> Text(68.125, "MM D YYYY")
+"03 8 1900"
+
+>> Text(68.125, "MMM D YYYY")
+"Mar 8 1900"
+
+>> Text(68.125, "MMMM D YYYY")
+"March 8 1900"
+
+>> Text(68.125, "mm d yyyy")
+"03 8 1900"
+
+>> Text(68.125, "mmm d yyyy")
+"Mar 8 1900"
+
+>> Text(68.125, "mmmm d yyyy")
+"March 8 1900"
+
+>> Text(If(1 < 0, 123), "MMMM DDD YYY")
+"December Sat 1899"
+
+>> Text(Blank(), "mmm DDD yyy")
+"Dec Sat 1899"
+
+>> Text(0, "yyyy-MM-dd")
+"1899-12-30"
+
+>> Text(If(1 < 0, 0),"YYYY-mm-dd")
+"1899-12-30"
+
+>> Text(Blank(),"YYYY-MM-DD")
+"1899-12-30"
+
+>> Text(Blank(),"mmm ddd YYY")
+"Dec Sat 1899"
+
+>> Text(0.324305555555556, "H:MM:SS.00")
+"7:47:00.00"
+
+>> Text(0.324305555555556, "H:mm:SS.00")
+"7:47:00.00"
+
+>> Text(0.324305555555556, "HH:mm:SS.00")
+"07:47:00.00"
+
+>> Text(0.324305555555556, "HH:mm:SS.ff")
+"07:47:00.ff"
+
+>> Text(0.324305555555556, "HH:mm:SS.FF")
+"07:47:00.FF"
+
+>> Text(0.043125, "H:M:S.00")
+"1:2:6.00"
+
+>> Text(0.043125, "h:m:s.00")
+"1:2:6.00"
+
+>> Text(0.043125, "HH:MM:SS.00")
+"01:02:06.00"
+
+>> Text(0.043125, "hh:mm:ss.00")
+"01:02:06.00"
+
+>> Text( 0.0431251736111111, "h:m:s.000" )
+"1:2:6.015"
+
+// months is favored over minutes if ambiguous
+>> Text( 70.0431251736111111, "mmm" )
+"Mar"
+
+>> Text( 70.0431251736111111, "mm" )
+"03"
+
+>> Text( 70.0431251736111111, "m" )
+"3"
+
+>> Text( 70.0431251736111111, "MMM" )
+"Mar"
+
+>> Text( 70.0431251736111111, "MM" )
+"03"
+
+>> Text( 70.0431251736111111, "M" )
+"3"
