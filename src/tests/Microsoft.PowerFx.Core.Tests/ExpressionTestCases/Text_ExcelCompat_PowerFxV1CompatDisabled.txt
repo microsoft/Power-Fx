@@ -752,6 +752,12 @@ Error
 >> Text(68.125, "mmmmm d yyyy")
 Error
 
+>> Text(68.125, "MMMMMM D YYYY")
+Error
+
+>> Text(68.125, "mmmmmm d yyyy")
+Error
+
 // lowercase am/pm and a/p are not supported, C# has no lowercase representation
 >> Text(70.82430555555555555555555,"h:mm:ss a/p")
 Error
