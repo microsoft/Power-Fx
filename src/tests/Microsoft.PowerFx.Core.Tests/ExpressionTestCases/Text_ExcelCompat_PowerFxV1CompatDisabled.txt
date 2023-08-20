@@ -552,6 +552,14 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1234567.1234567, "gEnErAl")
 Error({Kind:ErrorKind.InvalidArgument})
 
+// Excel: ""
+>> Text(1234567.1234567, "g")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: ""
+>> Text(1234567.1234567, "G")
+Error({Kind:ErrorKind.InvalidArgument})
+
 // Excel: "Foo asdf"
 >> Text("asdf", "Foo @")
 Error({Kind:ErrorKind.InvalidArgument})
