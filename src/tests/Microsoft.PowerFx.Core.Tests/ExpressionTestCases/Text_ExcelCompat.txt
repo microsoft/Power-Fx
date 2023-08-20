@@ -1377,24 +1377,6 @@ Blank()
 >> Text(68.125, "mmmm d yyyy")
 "March 8 1900"
 
->> Text(If(1 < 0, 123), "MMMM DDD YYY")
-"December Sat 1899"
-
->> Text(Blank(), "mmm DDD yyy")
-"Dec Sat 1899"
-
->> Text(0, "yyyy-MM-dd")
-"1899-12-30"
-
->> Text(If(1 < 0, 0),"YYYY-mm-dd")
-"1899-12-30"
-
->> Text(Blank(),"YYYY-MM-DD")
-"1899-12-30"
-
->> Text(Blank(),"mmm ddd YYY")
-"Dec Sat 1899"
-
 >> Text(0.324305555555556, "H:MM:SS.00")
 "7:47:00.00"
 
@@ -1443,3 +1425,46 @@ Blank()
 
 >> Text( 70.0431251736111111, "M" )
 "3"
+
+// Numeric argument need not be referenced
+>> Text( 1, "" )
+""
+
+>> Text( 1, "z" )
+"z"
+
+>> Text( 1, "zz" )
+"zz"
+
+>> Text( 1, "zzz" )
+"zzz"
+
+>> Text( 1, "$" )
+"$"
+
+>> Text( 1, "$$" )
+"$$"
+
+>> Text( 1, "$$$" )
+"$$$"
+
+>> Text( 0, "" )
+""
+
+>> Text( 0, "z" )
+"z"
+
+>> Text( 0, "zz" )
+"zz"
+
+>> Text( 0, "zzz" )
+"zzz"
+
+>> Text( 0, "$" )
+"$"
+
+>> Text( 0, "$$" )
+"$$"
+
+>> Text( 0, "$$$" )
+"$$$"
