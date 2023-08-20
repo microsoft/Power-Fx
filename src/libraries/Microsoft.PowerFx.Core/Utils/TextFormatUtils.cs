@@ -8,9 +8,17 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
+    internal enum DateTimeFmtType
+    {
+        NoDateTimeFormat = 0,
+        GeneralDateTimeFormat = 1,
+        EnumDateTimeFormat = 2
+    }
+
     /// <summary>
     /// Definition for format string object ([$-FormatCultureName]FormatArg).
     /// </summary>
@@ -22,14 +30,14 @@ namespace Microsoft.PowerFx.Core.Utils
         public string FormatCultureName { get; set; }
 
         /// <summary>
-        /// numeric/date time format string.
+        /// Numeric/date time format string.
         /// </summary>
         public string FormatArg { get; set; }
 
         /// <summary>
-        /// True/False if format string has DateTime format or not.
+        /// Type of date time format.
         /// </summary>
-        public bool HasDateTimeFmt { get; set; }
+        public DateTimeFmtType DateTimeFmt { get; set; }
 
         /// <summary>
         /// True/False if format string has numeric format or not.
@@ -60,7 +68,7 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 FormatCultureName = null,
                 FormatArg = formatString,
-                HasDateTimeFmt = false,
+                DateTimeFmt = DateTimeFmtType.NoDateTimeFormat,
                 HasNumericFmt = false
             };
 
@@ -89,9 +97,9 @@ namespace Microsoft.PowerFx.Core.Utils
                 return false;
             }
 
-            textFormatArgs.HasDateTimeFmt = textFormatArgs.FormatArg.IndexOfAny(new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' }) >= 0;
+            textFormatArgs.DateTimeFmt = textFormatArgs.FormatArg.IndexOfAny(new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' }) >= 0 ? DateTimeFmtType.GeneralDateTimeFormat : DateTimeFmtType.NoDateTimeFormat;
             textFormatArgs.HasNumericFmt = textFormatArgs.FormatArg.IndexOfAny(new char[] { '0', '#' }) >= 0;
-            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            if (textFormatArgs.DateTimeFmt == DateTimeFmtType.GeneralDateTimeFormat && textFormatArgs.HasNumericFmt)
             {
                 // Check if the date time format contains '0's after the seconds specifier, which
                 // is used for fractional seconds - in which case it is valid
@@ -99,7 +107,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 textFormatArgs.HasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(new char[] { '0', '#' }) >= 0;
             }
 
-            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            if (textFormatArgs.DateTimeFmt == DateTimeFmtType.GeneralDateTimeFormat && textFormatArgs.HasNumericFmt)
             {
                 return false;
             }
