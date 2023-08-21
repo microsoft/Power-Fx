@@ -1,16 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Intellisense.IntellisenseData
@@ -314,6 +313,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddCustomSuggestionsForGlobals()
         {
+            AddSuggestionForCurrentFunction();
         }
 
         /// <summary>
@@ -505,6 +505,60 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
                         IntellisenseHelper.AddSuggestion(this, suggestableName, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, true);
                     }
+                }
+            }
+        }
+
+        internal void AddSuggestionForCurrentFunction()
+        {
+            var function = CurFunc;
+            var argIndex = ArgIndex;
+
+            if (this.Binding.NameResolver is not IGlobalSymbolNameResolver globalResolver
+                || function == null
+                || argIndex < 0)
+            {
+                return;
+            }
+
+            var maxArgIndex = (function?.ParamTypes?.Count() ?? 0) - 1;
+
+            var argType = maxArgIndex >= argIndex
+                ? function.ParamTypes.ElementAt(argIndex)
+                : DType.Unknown;
+
+            var symbols = globalResolver.GlobalSymbols;
+
+            var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
+            foreach (var symbol in symbols)
+            {
+                bool suggestable = false;
+                var symbolType = symbol.Value.Type;
+                if (argType.IsAggregate && argType.ChildCount != 0)
+                {
+                    suggestable = argType.Kind == symbolType.Kind &&
+                        argType.CheckAggregateNames(symbolType, CurNode, new ErrorContainer(), false, usePowerFxV1CompatibilityRules);
+                }
+                else
+                {
+                    suggestable = (function.SupportCoercionForArg(argIndex) || argType.IsAggregate)
+                    ? symbolType.CoercesTo(argType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
+                    : symbolType == argType;
+                }
+
+                if (suggestable)
+                {
+                    string suggestionName;
+                    if (symbol.Value.DisplayName != default)
+                    {
+                        suggestionName = symbol.Value.DisplayName.Value;
+                    }
+                    else
+                    {
+                        suggestionName = symbol.Key;
+                    }
+
+                    IntellisenseHelper.AddSuggestion(this, suggestionName, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
                 }
             }
         }
