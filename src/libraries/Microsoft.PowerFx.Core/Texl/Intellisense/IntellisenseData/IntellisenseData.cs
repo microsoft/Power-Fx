@@ -548,7 +548,17 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
                 if (suggestable)
                 {
-                    IntellisenseHelper.AddSuggestion(this, symbol.Key, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
+                    string suggestionName;
+                    if (symbol.Value.DisplayName != default)
+                    {
+                        suggestionName = symbol.Value.DisplayName.Value;
+                    }
+                    else
+                    {
+                        suggestionName = symbol.Key;
+                    }
+
+                    IntellisenseHelper.AddSuggestion(this, suggestionName, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
                 }
             }
         }

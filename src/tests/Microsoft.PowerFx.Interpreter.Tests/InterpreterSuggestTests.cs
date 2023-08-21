@@ -191,9 +191,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Collect(|", "table1", "table2")]
+        [InlineData("Collect(|", "Table1", "table2")]
         [InlineData("Collect(t1,|", "record1", "record2")]
-        [InlineData("Collect(|, record1", "table1", "table2")]
+        [InlineData("Collect(|, record1", "Table1", "table2")]
         [InlineData("Sum(|", "num", "str")]
         [InlineData("Text(|", "num", "str")]
         [InlineData("Language(|")]
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var tableType1 = TableType.Empty();
             var tableType2 = TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String));
             config.SymbolTable.EnableMutationFunctions();
-            config.SymbolTable.AddVariable("table1", tableType1);
+            config.SymbolTable.AddVariable("table1", tableType1, displayName: "Table1");
             config.SymbolTable.AddVariable("table2", tableType2);
 
             config.SymbolTable.AddVariable("record1", tableType1.ToRecord());
