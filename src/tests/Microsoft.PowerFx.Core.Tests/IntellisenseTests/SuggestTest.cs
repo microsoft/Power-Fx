@@ -531,6 +531,20 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             Assert.Equal(expected, suggestion);
         }
 
+        [Theory]
+        [InlineData("a|", "a", "\'a test\'", "b", "\'b test\'")]
+        public void TestSuggestionSorting(string expression, params string[] expected)
+        {
+            var config = SuggestTests.Default;
+            config.SymbolTable.AddVariable("\'a test\'", FormulaType.Number);
+            config.SymbolTable.AddVariable("a", FormulaType.Number);
+            config.SymbolTable.AddVariable("\'b test\'", FormulaType.Number);
+            config.SymbolTable.AddVariable("b", FormulaType.Number);
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expected, expected);
+        }
+
         private class LazyRecursiveRecordType : RecordType
         {
             public override IEnumerable<string> FieldNames => GetFieldNames();
