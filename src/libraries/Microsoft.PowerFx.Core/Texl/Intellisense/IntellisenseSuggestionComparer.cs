@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -34,8 +35,11 @@ namespace Microsoft.PowerFx.Intellisense
                 return -1;
             }
 
-            var thisIsExactMatch = IsExactMatch(x.Text, x.ExactMatch);
-            var otherIsExactMatch = IsExactMatch(y.Text, y.ExactMatch);
+            var xText = MaybeRemoveDelimiter(x.Text, _culture);
+            var yText = MaybeRemoveDelimiter(y.Text, _culture);
+
+            var thisIsExactMatch = IsExactMatch(xText, MaybeRemoveDelimiter(x.ExactMatch, _culture));
+            var otherIsExactMatch = IsExactMatch(yText, MaybeRemoveDelimiter(y.ExactMatch, _culture));
 
             if (thisIsExactMatch && !otherIsExactMatch)
             {
@@ -54,11 +58,11 @@ namespace Microsoft.PowerFx.Intellisense
             if (_culture == null)
             {
 #pragma warning disable CA1310 // Specify StringComparison for correctness
-                return x.Text.CompareTo(y.Text);
+                return xText.CompareTo(yText);
 #pragma warning restore CA1310 // Specify StringComparison for correctness
             }
-            
-            return _culture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase).Compare(x.Text, y.Text);            
+
+            return _culture.CompareInfo.GetStringComparer(CompareOptions.IgnoreCase).Compare(xText, yText);            
         }
 
         private bool IsExactMatch(string input, string match)
@@ -67,6 +71,18 @@ namespace Microsoft.PowerFx.Intellisense
             Contracts.AssertValue(match);
 
             return input.Equals(match, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string MaybeRemoveDelimiter(string input, CultureInfo culture)
+        {
+            Contracts.AssertValue(input);
+            if (input.StartsWith(TexlLexer.IdentifierDelimiter.ToString(), true, culture ?? CultureInfo.CurrentCulture) 
+                && input.EndsWith(TexlLexer.IdentifierDelimiter.ToString(), true, culture ?? CultureInfo.CurrentCulture))
+            {
+                return input.Substring(1, input.Length - 2);
+            }
+
+            return input;
         }
     }
 }
