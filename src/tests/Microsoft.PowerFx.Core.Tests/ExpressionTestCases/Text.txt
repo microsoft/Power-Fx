@@ -38,10 +38,6 @@
 >> Text(123456789, "0,00.0")
 "123,456,789.0"
 
-//Excel returns "123457"
->> Text(123456789, "0,")
-"123457"
-
 >> Text(1234.59, "####.#")
 "1234.6"
 
@@ -68,10 +64,6 @@
 
 >> Text(123456789, "#,###")
 "123,456,789"
-
-//Excel throws error: "Value used in the formula is of the wrong data type"
->> Text(100, "#%‰'eE:")
-"10000%‰'eE:"
 
 >> Text(567, "!#!#!#!#!")
 "!!5!6!7!"
@@ -329,13 +321,3 @@ Error({Kind:ErrorKind.BadLanguageCode})
 
 >> Text(DateTimeValue("12:34:56"),"yyyy-mm-dd hh:mm:ss")
 "1899-12-30 12:34:56"
-
-// Errors pass through Text
->> Text(1/0,"###")
-Error({Kind:ErrorKind.Div0})
-
->> Text(1/0,"000")
-Error({Kind:ErrorKind.Div0})
-
-
-

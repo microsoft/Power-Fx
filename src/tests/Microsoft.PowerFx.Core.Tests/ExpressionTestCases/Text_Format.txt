@@ -145,15 +145,6 @@
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:YYYY:MM") 
 "02:1983:06"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p") 
-"2a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HA/P") 
-"2a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p") 
-"02a"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHA/P") 
 "02a"
 
@@ -168,18 +159,6 @@
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHAM/PM") 
 "02AM"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p") 
-"2:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p") 
-"2:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p") 
-"02:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p") 
-"02:53 a"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PM") 
 "2:53 AM"

@@ -413,7 +413,7 @@ namespace Microsoft.PowerFx.Functions
                     }
                     else
                     {
-                        result = new StringValue(irContext, num.Value.ToString(formatString ?? "G", culture));
+                        result = new StringValue(irContext, formatString == string.Empty ? string.Empty : num.Value.ToString(formatString ?? "G", culture));
                     }
 
                     break;
@@ -429,7 +429,8 @@ namespace Microsoft.PowerFx.Functions
                     else
                     {
                         var normalized = dec.Normalize();
-                        result = new StringValue(irContext, normalized.ToString(formatString ?? "G", culture));
+                        
+                        result = new StringValue(irContext, formatString == string.Empty ? string.Empty : normalized.ToString(formatString ?? "G", culture));
                     }
 
                     break;
@@ -664,7 +665,7 @@ namespace Microsoft.PowerFx.Functions
 
             // AM/PM component
             format = format.Replace("\u0001", dateTime.ToString("tt", culture))
-                           .Replace("\u0002", dateTime.ToString("%t", culture).ToLowerInvariant());
+                           .Replace("\u0002", dateTime.ToString("%t", culture));
 
             return format;
         }

@@ -619,11 +619,11 @@ Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 22-3
 
 // Excel: ""
 >> Text(1234567.1234567, "g")
-Error
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
 
 // Excel: ""
 >> Text(1234567.1234567, "G")
-Error
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 22-25: Incorrect format specifier for 'Text'.
 
 // Excel: "Foo asdf"
 >> Text("asdf", "Foo @")
@@ -788,75 +788,131 @@ Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14
 
 // 5 digit month not supported yet
 >> Text(70.125, "MMMMM DD YYY")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm dd yyy")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDD YYY")
-Error
+Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm ddd yyy")
-Error
+Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDD YY")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm ddd yy")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDD YYYY")
-Error
+Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 13-29: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm ddd yyyy")
-Error
+Errors: Error 0-30: The function 'Text' has some invalid arguments.|Warning 13-29: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM DDDD YYYY")
-Error
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm dddd yyyy")
-Error
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "MMMMM D YYYY")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(70.125, "mmmmm d yyyy")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "MMMMM D YYYY")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "mmmmm d yyyy")
-Error
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "MMMMMM D YYYY")
-Error
+Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
 >> Text(68.125, "mmmmmm d yyyy")
-Error
+Errors: Error 0-29: The function 'Text' has some invalid arguments.|Warning 13-28: Incorrect format specifier for 'Text'.
 
-// lowercase am/pm and a/p are not supported, C# has no lowercase representation
+>> Text(68.125, "mMmMmmMM d yyyy")
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 13-30: Incorrect format specifier for 'Text'.
+
+>> Text(68.125, "MMMmm d yyyy")
+Errors: Error 0-28: The function 'Text' has some invalid arguments.|Warning 13-27: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMMM dd, yyyy hh:mm:ss")
+Errors: Error 0-71: The function 'Text' has some invalid arguments.|Warning 39-70: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:mmmmm:ss")
+Errors: Error 0-73: The function 'Text' has some invalid arguments.|Warning 39-72: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmmm-dd hh:mm:ss")
+Errors: Error 0-64: The function 'Text' has some invalid arguments.|Warning 39-63: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmm-dd hh:mmmmmm:ss")
+Errors: Error 0-67: The function 'Text' has some invalid arguments.|Warning 39-66: Incorrect format specifier for 'Text'.
+
+// Lowercase am/pm and a/p are not supported, C# has no lowercase representation
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 40-46: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 40-47: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p")
+Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p")
+Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p")
+Errors: Error 0-52: The function 'Text' has some invalid arguments.|Warning 40-51: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p")
+Errors: Error 0-52: The function 'Text' has some invalid arguments.|Warning 40-51: Incorrect format specifier for 'Text'.
+
 >> Text(70.82430555555555555555555,"h:mm:ss a/p")
-Error
-
->> Text(70.82430555555555555555555,"h:mm:ss am/pm")
-Error
-
->> Text(70.32430555555555555555555,"h:mm:ss am/pm")
-Error
+Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
 
 >> Text(70.32430555555555555555555,"h:mm:ss a/p")
-Error
+Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
+
+>> Text(70.82430555555555555555555,"h:mm:ss am/pm")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+
+>> Text(70.32430555555555555555555,"h:mm:ss am/pm")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+
+>> Text(70.32430555555555555555555,"h:mm:ss Am/Pm")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+
+>> Text(70.32430555555555555555555,"h:mm:ss aM/pM")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
+
+>> Text(70.32430555555555555555555,"h:mm:ss a/p", "vi-VN")
+Errors: Error 0-55: The function 'Text' has some invalid arguments.|Warning 32-45: Incorrect format specifier for 'Text'.
+
+>> Text(70.32430555555555555555555,"h:mm:ss am/pm", "vi-VN")
+Errors: Error 0-57: The function 'Text' has some invalid arguments.|Warning 32-47: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/putc")
-Error
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 40-49: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/putc")
-Error
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/putc")
-Error
+Errors: Error 0-51: The function 'Text' has some invalid arguments.|Warning 40-50: Incorrect format specifier for 'Text'.
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/putc")
-Error
+Errors: Error 0-55: The function 'Text' has some invalid arguments.|Warning 40-54: Incorrect format specifier for 'Text'.
 
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss a/p")
+Errors: Error 0-74: The function 'Text' has some invalid arguments.|Warning 39-73: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss am/pm")
+Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss aM/pM")
+Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss Am/Pm")
+Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.

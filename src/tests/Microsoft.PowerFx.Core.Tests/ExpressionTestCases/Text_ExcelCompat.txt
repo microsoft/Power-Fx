@@ -720,6 +720,15 @@ Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-4
 >> Text(0.324305555555556, "h:mm:ss A/P")
 "7:47:00 A"
 
+>> Text(70.32430555555555555555555,"h:mm:ss A/P", "vi-VN")
+"7:47:00 S"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss A/P")
+"Friday, June 03, 1983 02:53:09 A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss AM/PM")
+"Friday, June 03, 1983 02:53:09 AM"
+
 >> Text(0.324305555555556, "h:mm:ss.00")
 "7:47:00.00"
 
@@ -921,6 +930,7 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 "1,234,567,123,457%%%"
 
 // Permille signs.  These have a meaning in C# but do not in Excel/Power Fx, they should be treated like any other character.
+
 >> Text(1234567.1234567, "0000‰")
 "1234567‰"
 
@@ -944,6 +954,10 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 
 >> Text(1234567.1234567, "#,###‰‰‰")
 "1,234,567‰‰‰"
+
+//Excel throws error: "Value used in the formula is of the wrong data type"
+>> Text(100, "#%‰'eE:")
+"10000%‰'eE:"
 
 // Format for DateTime
 >> Text(1234, "mmm. dd, yyyy (hh:mm:ss AM/PM)")
@@ -989,10 +1003,10 @@ Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16
 "02Autc"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm A/Putc")
-"6:02 Autc"
+"2:53 Autc"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm A/Putc")
-"06:02 Autc"
+"02:53 Autc"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PMutc")
 "2:53 AMutc"
@@ -1084,18 +1098,6 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.32430555555555555555555,"mm")
 "03"
-
->> Text(70.32430555555555555555555,"h:mm:ss A/P")
-"7:47:00 A"
-
->> Text(70.32430555555555555555555,"h:mm:ss AM/PM")
-"7:47:00 AM"
-
->> Text(70.82430555555555555555555,"h:mm:ss A/P")
-"7:47:00 P"
-
->> Text(70.82430555555555555555555,"h:mm:ss AM/PM")
-"7:47:00 PM"
 
 >> Text(70.00027795138888888888,"ss.000")
 "24.015"
@@ -1190,6 +1192,11 @@ Error({Kind:ErrorKind.InvalidArgument})
 "123-45-6789"
 
 // Scaling with ,
+
+//Excel returns "123457"
+>> Text(123456789, "0,")
+"123457"
+
 >> Text(123456789.12345, "#,###.000")
 "123,456,789.123"
 
@@ -1392,7 +1399,7 @@ Blank()
 >> Text(0.324305555555556, "HH:mm:SS.FF")
 "07:47:00.FF"
 
->> Text( 0.7931251736111111, "h:m:s.000" )
+>> Text(0.7931251736111111, "h:m:s.000")
 "19:2:6.015"
 
 >> Text(0.7931251736111111, "H:MM:SS.000")
@@ -1422,7 +1429,7 @@ Blank()
 >> Text(0.043125, "hh:mm:ss.00")
 "01:02:06.00"
 
->> Text( 0.0431251736111111, "h:m:s.000" )
+>> Text(0.0431251736111111, "h:m:s.000")
 "1:2:6.015"
 
 >> Text(0.793125, "H:M:S.00")
@@ -1437,100 +1444,149 @@ Blank()
 >> Text(0.793125, "hh:mm:ss.00")
 "19:02:06.00"
 
-// months is favored over minutes if ambiguous
->> Text( 70.0431251736111111, "mmm" )
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MM dd, yyyy hh:mm:ss")
+"Friday, 06 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMM dd, yyyy hh:mm:ss")
+"Friday, Jun 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:mm:ss")
+"Friday, June 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:m:ss")
+"Friday, June 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-m-dd hh:mm:ss")
+"1983-6-03 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mm-dd hh:mm:ss")
+"1983-06-03 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmm-dd hh:mm:ss")
+"1983-Jun-03 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmm-dd hh:mm:ss")
+"1983-June-03 02:53:09"
+
+// Months is favored over minutes if ambiguous
+>> Text(70.0431251736111111, "mmm")
 "Mar"
 
->> Text( 70.0431251736111111, "mm" )
+>> Text(70.0431251736111111, "mm")
 "03"
 
->> Text( 70.0431251736111111, "m" )
+>> Text(70.0431251736111111, "m")
 "3"
 
->> Text( 70.0431251736111111, "MMM" )
+>> Text(70.0431251736111111, "MMM")
 "Mar"
 
->> Text( 70.0431251736111111, "MM" )
+>> Text(70.0431251736111111, "MM")
 "03"
 
->> Text( 70.0431251736111111, "M" )
+>> Text(70.0431251736111111, "M")
 "3"
 
 // Numeric argument need not be referenced
->> Text( 1, "" )
+>> Text(1, "")
 ""
 
->> Text( 1, "z" )
+>> Text(1, "z")
 "z"
 
->> Text( 1, "zz" )
+>> Text(1, "zz")
 "zz"
 
->> Text( 1, "zzz" )
+>> Text(1, "zzz")
 "zzz"
 
->> Text( 1, "$" )
+>> Text(1, "$")
 "$"
 
->> Text( 1, "$$" )
+>> Text(1, "$$")
 "$$"
 
->> Text( 1, "$$$" )
+>> Text(1, "$$$")
 "$$$"
 
->> Text( 0, "" )
+>> Text(0, "")
 ""
 
->> Text( 0, "z" )
+>> Text(0, "z")
 "z"
 
->> Text( 0, "zz" )
+>> Text(0, "zz")
 "zz"
 
->> Text( 0, "zzz" )
+>> Text(0, "zzz")
 "zzz"
 
->> Text( 0, "$" )
+>> Text(0, "$")
 "$"
 
->> Text( 0, "$$" )
+>> Text(0, "$$")
 "$$"
 
->> Text( 0, "$$$" )
+>> Text(0, "$$$")
 "$$$"
 
->> Text( 1, "b" )
+>> Text(1, "b")
 "b"
 
->> Text( 1, "c" )
+>> Text(1, "c")
 "c"
 
->> Text( 1, "f" )
+>> Text(1, "f")
 "f"
 
->> Text( 1, "n" )
+>> Text(1, "n")
 "n"
 
->> Text( 1, "p" )
+>> Text(1, "p")
 "p"
 
->> Text( 1, "x" )
+>> Text(1, "x")
 "x"
 
->> Text( 1, "B" )
+>> Text(1, "B")
 "B"
 
->> Text( 1, "C" )
+>> Text(1, "C")
 "C"
 
->> Text( 1, "F" )
+>> Text(1, "F")
 "F"
 
->> Text( 1, "N" )
+>> Text(1, "N")
 "N"
 
->> Text( 1, "P" )
+>> Text(1, "P")
 "P"
 
->> Text( 1, "X" )
+>> Text(1, "X")
 "X"
+
+>> Text(123.456, "$0.0b")
+"$123.5b"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HA/P")
+"2A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h""a/p""")
+"2a/p"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h\a/p")
+"2a/p"
+
+>> Text(70.82430555555555555555555,"h:mm:ss \am/pm")
+"19:47:00 a47/p47"
+
+>> Text(70.82430555555555555555555,"h:mm:ss ""am/pm""")
+"19:47:00 am/pm"
+
+// Errors pass through Text
+>> Text(1/0,"###")
+Error({Kind:ErrorKind.Div0})
+
+>> Text(1/0,"000")
+Error({Kind:ErrorKind.Div0})

@@ -46,6 +46,7 @@ namespace Microsoft.PowerFx.Core.Utils
         private static readonly IReadOnlyList<char> _dateTimeCharacters = new char[] { 'm', 'M', 'd', 'D', 'y', 'Y', 'h', 'H', 's', 'S', 'a', 'A', 'p', 'P' };
         private static readonly IReadOnlyList<char> _numericCharacters = new char[] { '0', '#' };
         private static readonly IReadOnlyList<char> _unsupportedCharacters = new char[] { '?', '[', '_', '*', '@', ']' };
+        private static readonly IReadOnlyList<char> _specialCharacters = new char[] { 'z', '$', 'b', 'c', 'f', 'n', 'p', 'x', 'B', 'C', 'F', 'N', 'P', 'X' };
 
         /// <summary>
         /// Validate if format string is valid or not and return format string object.
@@ -77,9 +78,10 @@ namespace Microsoft.PowerFx.Core.Utils
             }
 
             var formatStr = textFormatArgs.FormatArg;
-            
-            //Block "general"
-            if (formatStr.IndexOf("general", StringComparison.OrdinalIgnoreCase) >= 0)
+
+            //Block "general", "g", "G"
+            if (formatStr == "g" || formatStr == "G" ||
+                formatStr.IndexOf("general", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return false;
             }
@@ -93,12 +95,43 @@ namespace Microsoft.PowerFx.Core.Utils
             bool hasNumericCharacters = false;
             int decimalPointIndex = -1;
             int sectionCount = 0;
+            int mCount = 0;
             bool hasColonWithNum = false;
             List<int> commaIdxList = new List<int>();
 
             for (int i = 0; i < formatStr.Length; i++)
             {
-                if (_numericCharacters.Contains(formatStr[i]))
+                if (formatStr[i] == 'm' || formatStr[i] == 'M')
+                {
+                    mCount++;
+                    if (mCount > 4)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    mCount = 0;
+                }
+
+                if (formatStr[i] == 'a' || formatStr[i] == 'A')
+                {
+                    // Block lower or mix cases of A/P or AM/PM
+                    if ((i < formatStr.Length - 2 && formatStr[i] == 'a' && formatStr[i + 1] == '/' && (formatStr[i + 2] == 'p' || formatStr[i + 2] == 'P')) ||
+                        (i < formatStr.Length - 2 && formatStr[i] == 'A' && formatStr[i + 1] == '/' && formatStr[i + 2] == 'p') ||
+                        (i < formatStr.Length - 4 && formatStr[i] == 'a' && (formatStr[i + 1] == 'm' || formatStr[i + 1] == 'M') && formatStr[i + 2] == '/' && formatStr[i + 3] == 'p' && (formatStr[i + 4] == 'm' || formatStr[i + 4] == 'M')) ||
+                        (i < formatStr.Length - 4 && formatStr[i] == 'A' && formatStr[i + 1] == 'm' && formatStr[i + 2] == '/' && formatStr[i + 3] == 'P' && formatStr[i + 4] == 'm'))
+                    {
+                        return false;
+                    }
+                }
+
+                if ((i == 0 || textFormatArgs.HasNumericFmt) && _specialCharacters.Contains(formatStr[i]))
+                {
+                    formatStr = formatStr.Insert(i, "\\");
+                    i++;
+                }
+                else if (_numericCharacters.Contains(formatStr[i]))
                 {
                     // ':' is not allowed between # or 0 (numeric)
                     if (!textFormatArgs.HasDateTimeFmt && hasColonWithNum)
@@ -106,10 +139,9 @@ namespace Microsoft.PowerFx.Core.Utils
                         return false;
                     }
 
-                    textFormatArgs.HasNumericFmt = true;
-
                     // Use hasNumericCharacters to check if format string has numeric character before group separator or after decimal point.
                     hasNumericCharacters = true;
+                    textFormatArgs.HasNumericFmt = true;
                 }
                 else if (_dateTimeCharacters.Contains(formatStr[i]))
                 {
@@ -126,10 +158,9 @@ namespace Microsoft.PowerFx.Core.Utils
                     // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
                     decimalPointIndex = i;
                     hasNumericCharacters = false;
-
-                    // Add escaping character for any group separator character ',' before decimal point.
                     if (commaIdxList.Count > 0)
                     {
+                        // Add escaping character for any group separator character ',' before decimal point.
                         for (int j = commaIdxList.Count - 1; j >= 0; j--)
                         {
                             formatStr = formatStr.Insert(commaIdxList[j], "\\");
@@ -189,7 +220,7 @@ namespace Microsoft.PowerFx.Core.Utils
                     }
                     else
                     {
-                        // Update \c to "c" to match with                       
+                        // Update \c to "c" to match with Excel                       
                         formatStr = formatStr.Insert(i + 2, "\"");
                         formatStr = formatStr.Insert(i + 1, "\"");
                         formatStr = formatStr.Remove(i, 1);

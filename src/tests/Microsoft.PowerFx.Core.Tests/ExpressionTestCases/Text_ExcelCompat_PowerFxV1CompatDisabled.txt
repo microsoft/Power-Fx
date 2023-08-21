@@ -719,74 +719,131 @@ Errors: Error 0-72: The function 'Text' has some invalid arguments.|Warning 22-7
 
 // 5 digit month not supported yet
 >> Text(70.125, "MMMMM DD YYY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "mmmmm dd yyy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "MMMMM DDD YYY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "mmmmm ddd yyy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "MMMMM DDD YY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "mmmmm ddd yy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "MMMMM DDD YYYY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "mmmmm ddd yyyy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "MMMMM DDDD YYYY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "mmmmm dddd yyyy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "MMMMM D YYYY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.125, "mmmmm d yyyy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(68.125, "MMMMM D YYYY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(68.125, "mmmmm d yyyy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(68.125, "MMMMMM D YYYY")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(68.125, "mmmmmm d yyyy")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
-// lowercase am/pm and a/p are not supported, C# has no lowercase representation
+>> Text(68.125, "mMmMmmMM d yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(68.125, "MMMmm d yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMMM dd, yyyy hh:mm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:mmmmm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmmm-dd hh:mm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmm-dd hh:mmmmmm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Lowercase am/pm and a/p are not supported, C# has no lowercase representation
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> Text(70.82430555555555555555555,"h:mm:ss a/p")
-Error
-
->> Text(70.82430555555555555555555,"h:mm:ss am/pm")
-Error
-
->> Text(70.32430555555555555555555,"h:mm:ss am/pm")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(70.32430555555555555555555,"h:mm:ss a/p")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.82430555555555555555555,"h:mm:ss am/pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss am/pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss Am/Pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss aM/pM")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss a/p", "vi-VN")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss am/pm", "vi-VN")
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/putc")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/putc")
-Error
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/putc")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/putc")
-Error
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss am/pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss aM/pM")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss Am/Pm")
+Error({Kind:ErrorKind.InvalidArgument})
