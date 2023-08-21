@@ -35,6 +35,8 @@ namespace Microsoft.PowerFx
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
+        internal const string UserInfoSymbolName = "User";
+
         /// <summary>
         /// Does this SymbolTable require a corresponding SymbolValue?
         /// True if we have AddVariables, but not needed if we just have constants or functions.
