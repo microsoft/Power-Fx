@@ -50,7 +50,6 @@
 
   <ItemGroup>
     <None Remove="expressiontestcases\README.md" />
-    <None Remove="expressiontestcases\Text_ExcelCompat_Decimal.txt" />
   </ItemGroup>
   
   <ItemGroup>
