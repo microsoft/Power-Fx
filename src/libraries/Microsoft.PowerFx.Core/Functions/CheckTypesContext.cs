@@ -18,19 +18,16 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public string PropertyName { get; }
 
-        public bool IsEnhancedDelegationEnabled { get; }
-
         public bool AllowsSideEffects { get; }
 
         public bool NumberIsFloat { get; }
 
-        public CheckTypesContext(Features features, INameResolver nameResolver, string entityName, string propertyName, bool isEnhancedDelegationEnabled, bool allowsSideEffects, bool numberIsFloat)
+        public CheckTypesContext(Features features, INameResolver nameResolver, string entityName, string propertyName, bool allowsSideEffects, bool numberIsFloat)
         {
             Features = features;
             NameResolver = nameResolver;
             EntityName = entityName;
             PropertyName = propertyName;
-            IsEnhancedDelegationEnabled = isEnhancedDelegationEnabled;
             AllowsSideEffects = allowsSideEffects;
             NumberIsFloat = numberIsFloat;
         }

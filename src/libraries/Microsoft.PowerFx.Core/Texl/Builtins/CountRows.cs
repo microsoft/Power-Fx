@@ -76,10 +76,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
             preferredFunctionDelegationCapability = FunctionDelegationCapability;
 
-            // We ensure Document is available because some tests run with a null Document.
-            if ((binding.Document != null
-                && binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled)
-                && TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource)
+            if (TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource)
                 && !ExpressionContainsView(callNode, binding))
             {
                 // Check that target table is not an expanded entity (1-N/N-N relationships)

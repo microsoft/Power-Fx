@@ -24,15 +24,17 @@ namespace Microsoft.PowerFx.Connectors
         private readonly HttpMessageInvoker _httpClient;
         private readonly HttpMethod _method;
         private readonly string _path;
+        private readonly string _server;
         internal readonly FormulaType _returnType;
         private readonly ArgumentMapper _argMapper;
         private readonly ICachingHttpClient _cache;
 
-        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null)
+        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string server, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null)
         {
             _httpClient = httpClient;
             _method = method;
             _path = path;
+            _server = server;
             _argMapper = argMapper;
             _cache = cache ?? NonCachingClient.Instance;
             _returnType = returnType;
@@ -53,7 +55,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, CancellationToken cancellationToken)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, string server, CancellationToken cancellationToken)
         {
             var path = _path;
             var query = new StringBuilder();
@@ -88,6 +90,11 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
+                    if (ArgumentMapper.GetDoubleEncoding(param))
+                    {
+                        valueStr = HttpUtility.UrlEncode(valueStr);
+                    }
+
                     switch (param.In.Value)
                     {
                         case ParameterLocation.Path:
@@ -112,7 +119,7 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = path + query.ToString();
+            var url = (_server ?? string.Empty) + path + query.ToString();
             var request = new HttpRequestMessage(_method, url);
 
             foreach (var kv in headers)
@@ -197,7 +204,7 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);
+            using HttpRequestMessage request = BuildRequest(args, context, _server, cancellationToken);
             return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
         }
 

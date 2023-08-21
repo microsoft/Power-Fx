@@ -13,7 +13,16 @@ namespace Microsoft.PowerFx.Core
         /// <summary>
         /// Functions which takes in a logical name of <see cref="AggregateType"/> and returns its <see cref="RecordType"/>.
         /// </summary>
-        public readonly Func<string, RecordType> LogicalNameToRecordType;
+        public Func<string, RecordType> LogicalNameToRecordType { get; init; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormulaTypeSerializerSettings"/> class.
+        /// </summary>
+        public FormulaTypeSerializerSettings()
+        {
+            Func<string, RecordType> debugHelper = (dummy) => throw new InvalidOperationException("Lazy type converter not registered");
+            this.LogicalNameToRecordType = debugHelper;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormulaTypeSerializerSettings"/> class.
@@ -21,9 +30,9 @@ namespace Microsoft.PowerFx.Core
         /// <param name="logicalNameToRecordType">Functions which takes in a logical name of <see cref="AggregateType"/> and returns its <see cref="RecordType"/>.
         /// This is needed only for de-serialization of Dataverse or Lazy Aggregate types.</param>
         public FormulaTypeSerializerSettings(Func<string, RecordType> logicalNameToRecordType)
+            : this()
         {
-            Func<string, RecordType> debugHelper = (dummy) => throw new InvalidOperationException("Lazy type converter not registered");
-            this.LogicalNameToRecordType = logicalNameToRecordType ?? debugHelper;
+            this.LogicalNameToRecordType = logicalNameToRecordType ?? this.LogicalNameToRecordType;
         }
     }
 }

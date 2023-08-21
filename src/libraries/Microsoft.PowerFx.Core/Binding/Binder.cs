@@ -345,7 +345,6 @@ namespace Microsoft.PowerFx.Core.Binding
                 resolver,
                 entityName: EntityName,
                 propertyName: Property?.InvariantName ?? string.Empty,
-                isEnhancedDelegationEnabled: Document?.Properties?.EnabledFeatures?.IsEnhancedDelegationEnabled ?? false,
                 allowsSideEffects: bindingConfig.AllowsSideEffects,
                 numberIsFloat: bindingConfig.NumberIsFloat);
         }
@@ -3850,7 +3849,7 @@ namespace Microsoft.PowerFx.Core.Binding
                 var leftType = _txb.GetType(node.Left);
                 var rightType = _txb.GetType(node.Right);
 
-                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, _txb.Features.PowerFxV1CompatibilityRules, leftType, rightType, _txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled, _txb.BindingConfig.NumberIsFloat);
+                var res = CheckBinaryOpCore(_txb.ErrorContainer, node, _txb.Features.PowerFxV1CompatibilityRules, leftType, rightType, _txb.BindingConfig.NumberIsFloat);
 
                 foreach (var coercion in res.Coercions)
                 {

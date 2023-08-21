@@ -153,17 +153,17 @@ namespace Microsoft.PowerFx
         internal TexlFunction GetTexlFunction()
         {
             var info = Scan();
-
+            
             // Special case SetProperty. Use reference equality to opt into special casing.
             if (object.ReferenceEquals(info.Name, SetPropertyName))
             {
-                return new CustomSetPropertyFunction(info.Name)
+                return new CustomSetPropertyFunction(info.Name, info.ArgNames)
                 {
                     _impl = args => InvokeAsync(null, args, CancellationToken.None)
                 };
             }
 
-            return new CustomTexlFunction(info.Name, FunctionCategories.UserDefined, info.RetType, info.ParamTypes)
+            return new CustomTexlFunction(info.Name, FunctionCategories.UserDefined, info.RetType, info.ArgNames, info.ParamTypes)
             {
                 _impl = (runtimeConfig, args, cancellationToken) => InvokeAsync(runtimeConfig, args, cancellationToken),
                 LamdaParamMask = info.LamdaParamMask,

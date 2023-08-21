@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using static Microsoft.PowerFx.Tests.CustomFunctions;
 
 namespace Microsoft.PowerFx.Interpreter.Tests.CustomFunction
 {
@@ -14,15 +15,23 @@ namespace Microsoft.PowerFx.Interpreter.Tests.CustomFunction
     {
         [Theory]
         [InlineData("Overload(|", 10001)]
+        [InlineData("UserAsync(|", 10002)]
         public void TestCustomFunctionSignature(string expression, int helpId)
         {
             var config = new PowerFxConfig();
+
+            // Overloads
             config.AddFunction(new TestOverload1());
             config.AddFunction(new TestOverload2());
+
+            // With Config Param
+            config.AddFunction(new UserAsyncFunction());
+
             var engine = new RecalcEngine(config);
 
             var signatureHelper = new SignatureHelpTest();
             (_, var cursorPosition) = IntellisenseTestBase.Decode(expression);
+            
             signatureHelper.CheckSignatureHelpTest(engine.Suggest(expression, RecordType.Empty(), cursorPosition).SignatureHelp, helpId);          
         }
 

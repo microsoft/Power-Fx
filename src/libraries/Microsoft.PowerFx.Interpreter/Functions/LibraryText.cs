@@ -393,6 +393,7 @@ namespace Microsoft.PowerFx.Functions
             // We fix the thousand separator here to be consistent 
             if (culture.Name.Equals("fr-FR", StringComparison.OrdinalIgnoreCase) && culture.NumberFormat.NumberGroupSeparator == "\u00A0")
             {
+                culture = (CultureInfo)culture.Clone();
                 culture.NumberFormat.NumberGroupSeparator = "\u202F";
             }
 

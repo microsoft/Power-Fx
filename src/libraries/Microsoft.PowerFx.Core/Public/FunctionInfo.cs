@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Diagnostics;
 using Microsoft.PowerFx.Core.Functions;
 
 namespace Microsoft.PowerFx
@@ -10,6 +11,7 @@ namespace Microsoft.PowerFx
     /// Information about a built-in function.
     /// </summary>
     [ThreadSafeImmutable]
+    [DebuggerDisplay("{Name}")]
     public class FunctionInfo
     {
         internal readonly TexlFunction _fnc;

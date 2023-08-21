@@ -420,6 +420,13 @@ namespace Microsoft.PowerFx.Connectors
             return param.Extensions != null && param.Extensions.TryGetValue("x-ms-explicit-input", out IOpenApiExtension ext) && ext is OpenApiBoolean apiBool && apiBool.Value;            
         }
 
+        // Get string content of x-ms-url-encoding parameter extension
+        // Values can be "double" or "single" - https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-url-encoding
+        internal static bool GetDoubleEncoding(IOpenApiExtensible param)
+        {
+            return param.Extensions != null && param.Extensions.TryGetValue("x-ms-url-encoding", out IOpenApiExtension ext) && ext is OpenApiString apiStr && apiStr.Value.Equals("double", StringComparison.OrdinalIgnoreCase);
+        }
+
         private static ConnectorDynamicValue GetDynamicValue(IOpenApiExtensible param, bool numberIsFloat)
         {
             // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values

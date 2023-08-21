@@ -10,5 +10,7 @@ namespace Microsoft.PowerFx.Connectors
         public bool NumberIsFloat { get; set; } = false;
 
         public int MaxRows { get; set; } = 1000;
+
+        public bool IgnoreUnknownExtensions { get; set; } = false;
     }
 }

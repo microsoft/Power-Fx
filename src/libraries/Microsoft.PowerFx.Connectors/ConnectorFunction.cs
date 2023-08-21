@@ -91,9 +91,20 @@ namespace Microsoft.PowerFx.Connectors
         internal OpenApiOperation Operation { get; }
 
         /// <summary>
+        /// OpenApiDocuemnt containing the operation.
+        /// </summary>
+        internal OpenApiDocument Document { get; init; }
+
+        /// <summary>
         /// Visibility defined as "x-ms-visibility" string content.
         /// </summary>
         public string Visibility => Operation.GetVisibility();
+
+        /// <summary>
+        /// When "x-ms-visibility" is set to "internal".
+        /// https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#x-ms-visibility.
+        /// </summary>
+        public bool IsInternal => Operation.IsInternal();
 
         /// <summary>
         /// Defined as "x-ms-require-user-confirmation" boolean content.
@@ -206,6 +217,18 @@ namespace Microsoft.PowerFx.Connectors
             {
                 _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError, connectorSettings);
             }
+
+            if (isSupported)
+            {
+                // validate return type
+                (ConnectorParameterType ct, string unsupportedReason) = openApiOperation.GetConnectorParameterReturnType(connectorSettings.NumberIsFloat);
+
+                if (!string.IsNullOrEmpty(unsupportedReason))
+                {
+                    IsSupported = false;
+                    NotSupportedReason = unsupportedReason;
+                }
+            }
         }
 
         public ConnectorParameters GetParameters(FormulaValue[] knownParameters)
@@ -289,7 +312,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (httpClient != null)
             {
-                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache);
+                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OpenApiParser.GetServer(Document, httpClient), OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache);
                 invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
             }
 
@@ -316,7 +339,8 @@ namespace Microsoft.PowerFx.Connectors
                 pageLink: PageLink,
                 isSupported: IsSupported,
                 notSupportedReason: NotSupportedReason,
-                isDeprecated: IsDeprecated,                
+                isDeprecated: IsDeprecated,
+                isInternal: IsInternal,
                 actionName: "action",
                 connectorSettings: connectorSettings,
                 paramTypes: ArgumentMapper._parameterTypes)
