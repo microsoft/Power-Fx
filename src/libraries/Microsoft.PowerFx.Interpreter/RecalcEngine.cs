@@ -205,6 +205,7 @@ namespace Microsoft.PowerFx
             return DefineFunctions(udfDefinitions);
         }
 
+        [Obsolete("preview")]
         public void DefineType(string script, ParserOptions parserOptions)
         {
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
