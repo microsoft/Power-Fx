@@ -1078,12 +1078,24 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(123, Trim("#"":""#"))
 "12:3"
 
-// Original tests
+// Always a decimal separator in Excel
 >> Text(0,"###.###")
 "."
 
 >> Text(0,"#,###.###")
 "."
+
+>> Text(12, "###.###")
+"12."
+
+>> Text(12,"#,###.###")
+"12."
+
+>> Text(.34, "###.###")
+".34"
+
+>> Text(.34, "#,###.###")
+".34"
 
 // Excel: ":"
 >> Text(0,"::")
