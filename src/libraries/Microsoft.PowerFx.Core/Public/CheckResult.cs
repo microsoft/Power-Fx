@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx
             {
                 if (_binding == null)
                 {
-                    throw new InvalidOperationException($"Must call {nameof(ApplyBinding)} before accessing combined Sybmols.");
+                    throw new InvalidOperationException($"Must call {nameof(ApplyBinding)} before accessing combined Symbols.");
                 }
 
                 return this._allSymbols;
