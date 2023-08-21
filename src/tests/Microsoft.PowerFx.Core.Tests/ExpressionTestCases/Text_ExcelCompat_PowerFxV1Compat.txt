@@ -916,3 +916,7 @@ Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-7
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss Am/Pm")
 Errors: Error 0-76: The function 'Text' has some invalid arguments.|Warning 39-75: Incorrect format specifier for 'Text'.
+
+>> Text(1, 
+  "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+Errors: Error 0-124: The function 'Text' has some invalid arguments.|Warning 11-123: Incorrect format specifier for 'Text'.

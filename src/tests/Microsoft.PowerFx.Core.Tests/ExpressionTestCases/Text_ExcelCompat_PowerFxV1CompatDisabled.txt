@@ -847,3 +847,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss Am/Pm")
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1, 
+  "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+Error({Kind:ErrorKind.InvalidArgument})

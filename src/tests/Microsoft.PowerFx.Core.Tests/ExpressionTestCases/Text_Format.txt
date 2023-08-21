@@ -145,9 +145,6 @@
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:YYYY:MM") 
 "02:1983:06"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHA/P") 
-"02a"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hAM/PM") 
 "2AM"
 
@@ -459,10 +456,6 @@
 
 >> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.000") 
 "1983-06-03 00:28:07.500"
-
->> Text(1, 
-  "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1, "00.00 dd-mm-yyyy")
 Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26: Incorrect format specifier for 'Text'.

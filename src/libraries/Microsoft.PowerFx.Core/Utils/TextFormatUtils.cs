@@ -98,7 +98,6 @@ namespace Microsoft.PowerFx.Core.Utils
             int mCount = 0;
             bool hasColonWithNum = false;
             List<int> commaIdxList = new List<int>();
-
             for (int i = 0; i < formatStr.Length; i++)
             {
                 if (formatStr[i] == 'm' || formatStr[i] == 'M')
@@ -128,8 +127,9 @@ namespace Microsoft.PowerFx.Core.Utils
 
                 if ((i == 0 || textFormatArgs.HasNumericFmt) && _specialCharacters.Contains(formatStr[i]))
                 {
-                    formatStr = formatStr.Insert(i, "\\");
-                    i++;
+                    formatStr = formatStr.Insert(i + 1, "\"");
+                    formatStr = formatStr.Insert(i, "\"");
+                    i += 2;
                 }
                 else if (_numericCharacters.Contains(formatStr[i]))
                 {
@@ -196,6 +196,12 @@ namespace Microsoft.PowerFx.Core.Utils
                         commaIdxList.Add(i);
                     }
                 }
+                else if (formatStr[i] == '\'' && (i == 0 || formatStr[i - 1] != '\\'))
+                {
+                    // Add escaping character to '
+                    formatStr = formatStr.Insert(i, "\\");
+                    i++;
+                }
                 else if (i == formatStr.Length - 1)
                 {
                     // If format string ends with backsplash but no following character or opening double quote then format is invalid.
@@ -218,7 +224,7 @@ namespace Microsoft.PowerFx.Core.Utils
                         // Skip next character if seeing escaping character \.
                         i++;
                     }
-                    else
+                    else if (i < formatStr.Length - 1)
                     {
                         // Update \c to "c" to match with Excel                       
                         formatStr = formatStr.Insert(i + 2, "\"");
@@ -283,12 +289,10 @@ namespace Microsoft.PowerFx.Core.Utils
                 formatStr = formatStr.Replace("‰", "\\‰");
             }
 
-            if (!textFormatArgs.HasDateTimeFmt)
+            if (textFormatArgs.HasDateTimeFmt)
             {
-                // Update \' or "'" to escaping character ' to match with C# then update any \' to ' to match with Excel (ex: \'' to \'\').
-                formatStr = formatStr.Replace("\"\'\"", "\'");
+                // Convert \' in DateTime format to '
                 formatStr = formatStr.Replace("\\'", "\'");
-                formatStr = formatStr.Replace("\'", "\\'");
             }
 
             textFormatArgs.FormatArg = formatStr;
