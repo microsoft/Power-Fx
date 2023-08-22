@@ -90,11 +90,17 @@ namespace Microsoft.PowerFx
             // Suggestions just need the binding, not other things like Dependency Info or errors. 
             var check = _getCheckResult(expression);
 
-            return check.Engine.Suggest(check, cursorPosition);
+            return check.Engine.Suggest(check, cursorPosition, this.Services);
         }
 
         #endregion
 
+        /// <summary>
+        /// Services that can be used within intellisense, like http factory for Dynamic intellisense.
+        /// Optional, can be null.
+        /// </summary>
+        public IServiceProvider Services { get; set; }
+         
         public void AddQuickFixHandlers(params CodeFixHandler[] codeFixHandlers)
         {
             this.AddQuickFixHandlers((IEnumerable<CodeFixHandler>)codeFixHandlers);

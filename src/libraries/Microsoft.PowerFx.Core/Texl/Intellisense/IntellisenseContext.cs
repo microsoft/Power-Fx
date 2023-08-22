@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
 
@@ -17,6 +18,8 @@ namespace Microsoft.PowerFx.Intellisense
         /// Cursor position for the intellisense input string.
         /// </summary>
         public int CursorPosition { get; private set; }
+
+        public IServiceProvider Services { get; init; }
 
         public IntellisenseContext(string inputText, int cursorPosition)
         {
