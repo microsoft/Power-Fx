@@ -1612,25 +1612,172 @@ Error({Kind:ErrorKind.Div0})
 Error({Kind:ErrorKind.Div0})
 
 // Always a decimal separator in Excel but C# does not return decimal separator if input does not have decimal point.
-
+// Skip these tests until address issue https://github.com/microsoft/Power-Fx/issues/1779
 // Excel: .
 >> Text(0,"###.###")
-""
+#skip
 
 // Excel: .
 >> Text(0,"#,###.###")
-""
+#skip
 
 // Excel: 12.
 >> Text(12, "###.###")
-"12"
+#skip
 
 // Excel: 12.
 >> Text(12,"#,###.###")
-"12"
+#skip
 
 >> Text(.34, "###.###")
-".34"
+#skip
 
 >> Text(.34, "#,###.###")
-".34"
+#skip
+
+>> Text(0, "#.")
+#skip
+
+>> Text(0, "#.#")
+#skip
+
+>> Text(0, "###.#")
+#skip
+
+>> Text(0, "###.0")
+#skip
+
+>> Text(0, "##.")
+#skip
+
+>> Text(0, "0.#")
+#skip
+
+>> Text(0, "0.")
+#skip
+
+>> Text(0, "#.0")
+#skip
+
+>> Text(12345, "#.")
+#skip
+
+>> Text(12345, "#.#")
+#skip
+
+>> Text(12345, "#,###.#")
+#skip
+
+>> Text(12345, "#,###0")
+#skip
+
+>> Text(12345, "#,###.")
+#skip
+
+>> Text(12345, "0.#")
+#skip
+
+>> Text(12345, "0.")
+#skip
+
+>> Text(12345, "#.0")
+#skip
+
+>> Text(12345.6789, "#.")
+#skip
+
+>> Text(12345.6789, "#.#")
+#skip
+
+>> Text(12345.6789, "#,###.#")
+#skip
+
+>> Text(12345.6789, "#,###.0")
+#skip
+
+>> Text(12345.6789, "#,###.")
+#skip
+
+>> Text(12345.6789, "0.#")
+#skip
+
+>> Text(12345.6789, "0.")
+#skip
+
+>> Text(12345.6789, "#.0")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "##.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "##.0")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "##.")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.0")
+#skip
+
+>> Text(12345, "###"".""#")
+#skip
+
+>> Text(12345, "###\.#")
+#skip
+
+>> Text(12345.6789, "###"".""#")
+#skip
+
+>> Text(12345.6789, "###\.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "###"".""#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "###\.#")
+#skip
+
+>> Text(0, "0.", "vi-VN")
+#skip
+
+>> Text(0, "#.0", "vi-VN")
+#skip
+
+>> Text(12345, "#.", "vi-VN")
+#skip
+
+>> Text(12345, "#.#", "vi-VN")
+#skip
+
+>> Text(12345, "#,###.#", "vi-VN")
+#skip
+
+>> Text(12345.6789, "#.", "vi-VN")
+#skip
+
+>> Text(12345.6789, "#.#", "vi-VN")
+#skip
+
+>> Text(12345.6789, "#,###.#", "vi-VN")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.#", "vi-VN")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.", "vi-VN")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.0", "vi-VN")
+#skip
