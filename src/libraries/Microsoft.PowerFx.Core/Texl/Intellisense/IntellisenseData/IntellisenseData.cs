@@ -534,6 +534,13 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             {
                 bool suggestable = false;
                 var symbolType = symbol.Value.Type;
+
+                // Do not suggest deferred symbols.
+                if (symbolType.IsDeferred)
+                {
+                    continue;
+                }
+
                 if (argType.IsAggregate && argType.ChildCount != 0)
                 {
                     suggestable = argType.Kind == symbolType.Kind &&
@@ -541,7 +548,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                 }
                 else
                 {
-                    suggestable = (function.SupportCoercionForArg(argIndex) || argType.IsAggregate)
+                    suggestable = (function.SupportCoercionForArg(argIndex) || argType.IsAggregate) 
                     ? symbolType.CoercesTo(argType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
                     : symbolType == argType;
                 }
