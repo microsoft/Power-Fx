@@ -481,12 +481,6 @@ namespace Microsoft.PowerFx.Functions
                     break;
             }
 
-            // Post processing to always have decimal point if format string has it
-            if (formatString != null && formatString.Contains('.') && !result.Value.Contains(culture.NumberFormat.NumberDecimalSeparator))
-            {
-                result = new StringValue(irContext, result.Value.TrimEnd('.') + culture.NumberFormat.NumberDecimalSeparator);
-            }
-
             return result != null;
         }
 
