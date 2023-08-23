@@ -12,6 +12,13 @@ using Microsoft.PowerFx.Core.Types;
 
 namespace Microsoft.PowerFx.Core.Utils
 {
+    internal enum DateTimeFmtType
+    {
+        NoDateTimeFormat = 0,
+        GeneralDateTimeFormat = 1,
+        EnumDateTimeFormat = 2
+    }
+
     /// <summary>
     /// Definition for format string object ([$-FormatCultureName]FormatArg).
     /// </summary>
@@ -23,14 +30,14 @@ namespace Microsoft.PowerFx.Core.Utils
         public string FormatCultureName { get; set; }
 
         /// <summary>
-        /// numeric/date time format string.
+        /// Numeric/date time format string.
         /// </summary>
         public string FormatArg { get; set; }
 
         /// <summary>
-        /// True/False if format string has DateTime format or not.
+        /// Type of date time format.
         /// </summary>
-        public bool HasDateTimeFmt { get; set; }
+        public DateTimeFmtType DateTimeFmt { get; set; }
 
         /// <summary>
         /// True/False if format string has numeric format or not.
@@ -64,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Utils
             {
                 FormatCultureName = null,
                 FormatArg = formatString,
-                HasDateTimeFmt = false,
+                DateTimeFmt = DateTimeFmtType.NoDateTimeFormat,
                 HasNumericFmt = false
             };
 
@@ -134,7 +141,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 else if (_numericCharacters.Contains(formatStr[i]))
                 {
                     // ':' is not allowed between # or 0 (numeric)
-                    if (!textFormatArgs.HasDateTimeFmt && hasColonWithNum)
+                    if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && hasColonWithNum)
                     {
                         return false;
                     }
@@ -145,15 +152,15 @@ namespace Microsoft.PowerFx.Core.Utils
                 }
                 else if (_dateTimeCharacters.Contains(formatStr[i]))
                 {
-                    textFormatArgs.HasDateTimeFmt = true;
+                    textFormatArgs.DateTimeFmt = DateTimeFmtType.GeneralDateTimeFormat;
                 }
-                else if (!textFormatArgs.HasDateTimeFmt && formatStr[i] == ',' && !hasNumericCharacters)
+                else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == ',' && !hasNumericCharacters)
                 {
                     // If there is no numeric format character before group separator character, then treat it as an escaping character.
                     formatStr = formatStr.Insert(i, "\\");
                     i++;
                 }
-                else if (!textFormatArgs.HasDateTimeFmt && formatStr[i] == '.')
+                else if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && formatStr[i] == '.')
                 {
                     // Reset hasNumericCharacters to false to later check if any numeric character after decimal point.
                     decimalPointIndex = i;
@@ -211,7 +218,7 @@ namespace Microsoft.PowerFx.Core.Utils
                     }
 
                     // If format string of numeric ends with e or e+ (not escaping character) then format is invalid.
-                    if (!textFormatArgs.HasDateTimeFmt && (formatStr[i] == 'e' || formatStr[i] == 'E' || 
+                    if (textFormatArgs.DateTimeFmt != DateTimeFmtType.GeneralDateTimeFormat && (formatStr[i] == 'e' || formatStr[i] == 'E' || 
                         (i > 2 && formatStr[i - 2] != '\\' && (formatStr[i - 1] == 'e' || formatStr[i - 1] == 'E') && formatStr[i] == '+')))
                     {
                         return false;
@@ -258,7 +265,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 formatStr = formatStr.Insert(decimalPointIndex, new string(',', commaIdxList.Count));
             }
 
-            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            if (textFormatArgs.DateTimeFmt == DateTimeFmtType.GeneralDateTimeFormat && textFormatArgs.HasNumericFmt)
             {
                 // Check if the date time format contains '0's after the seconds specifier, which
                 // is used for fractional seconds - in which case it is valid
@@ -266,7 +273,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 textFormatArgs.HasNumericFmt = formatWithoutZeroSubseconds.IndexOfAny(_numericCharacters.ToArray()) >= 0;
             }
 
-            if (textFormatArgs.HasDateTimeFmt && textFormatArgs.HasNumericFmt)
+            if (textFormatArgs.DateTimeFmt == DateTimeFmtType.GeneralDateTimeFormat && textFormatArgs.HasNumericFmt)
             {
                 return false;
             }
@@ -289,7 +296,7 @@ namespace Microsoft.PowerFx.Core.Utils
                 formatStr = formatStr.Replace("‰", "\\‰");
             }
 
-            if (textFormatArgs.HasDateTimeFmt)
+            if (textFormatArgs.DateTimeFmt == DateTimeFmtType.GeneralDateTimeFormat)
             {
                 // Convert \' in DateTime format to '
                 formatStr = formatStr.Replace("\\'", "\'");
