@@ -1,78 +1,24 @@
-﻿// Language code for numeric Format String
+﻿﻿// Text function consistency with Excel
+//  
+// We do not support all the formats that Excel does.  For the moment, we are blocking several patterns that 
+// we may want to support in the future:
+//   1. ? - Whitespace padding digit (same as 0 with a space instead of a 0)
+//   2. #/ 0/ ?/ - Fractions (/ is too common to ban outright, only blocked if after a number placeholder)
+//   3. [] - Conditionals, currency symbols, input locale, elapsed time
+//   4. _ - Whitespace padding
+//   5. * - Alignment
+//   6. third ; - Fourth string based optional section
+//   7. "General" - General keyword (case insensitive)
+//   8. @ - Embeddable version of "General"
+//   9. : with anything other than time placeholders - Colon
+// All of these patterns can be embedded with escaping (backslash or double quotes)
 
->> Text(1234.5678, "[$-fr-FR]# ##0,00", "en-US")
-"1,234.57"
-
->> Text(1234.5678, "[$-fr-FR]# ##0,00", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-en-US]#,##0.00", "en-US")
-"1,234.57"
-
->> Text(1234.5678, "[$-pt-BR]#.##0,00", "en-US")
-"1,234.57"
-
->> Text(1234.5678, "[$-pt-BR]#.##0,00", "fr-FR")
-"1 234,57"
-
->> Text(1234.5678, "[$-en-US]#,##0.00", "pt-BR")
-"1.234,57"
-
->> Text(1234.5678,"[$-en-US]0 # # # !!!", "en-US")
-"1 2 3 5 !!!"
-
-// The thousands separator in the fi-FI locale is the no-break space (U+00A0)
->> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "en-US")
-"12,345.68"
-
->> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "fi-FI")
-"12 345,68"
-
-// The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
->> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "en-US")
-"12,345.68"
-
->> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "fr-FR")
-"12 345,68"
-
->> Text(1234.5678, "[$-en-US]", "en-US")
-"1234.5678"
-
->> Text(1234.5678, "[$-fr-FR]", "fr-FR")
-"1234,5678"
-
->> Text(1234.5678, "[$-fr-FR]", "en-US")
-"1234.5678"
-
+// Block language code
 >> Text(1234.5678, "# ##0,00", "fr-FR")
 " 1 235"
 
 >> Text(1234.5678, "# ##0,00")
 " 1,235"
-
->> Text(1234.5678, "[$-  fr-FR  ]    # ##0,00   ", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-fr-FR  ]    # ##0,00   ", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-  fr-FR]    # ##0,00", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-fr-FR]    # ##0,00", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-fr-FR]    # ##0,00    ", "vi-VI")
-"1.234,57"
-
->> Text(1234.5678, "[$-fr-FR][# ##0,00]", "vi-VI")
-"[1.234,57]"
-
->> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
-"$-fr-FR]  1.235"
-
->> Text(1234.5678, "$-fr-FR][ # ##0,00", "vi-VI")
-"$-fr-FR][  1.235"
 
 >> Text(1234.5678, "-fr-FR # ##0,00", "vi-VI")
 "-fr-FR  1.235"
@@ -80,56 +26,16 @@
 >> Text(1234.5678, "fr-FR # ##0,00", "vi-VI")
 "fr-FR  1.235"
 
->> Text(1234.5678, "$[-fr-FR] # ##0,00", "vi-VI")
-"$[-fr-FR]  1.235"
-
->> Text(1234.5678, "$-[fr-FR] # ##0,00", "vi-VI")
-"$-[fr-FR]  1.235"
-
->> Text(1234.5678, "[$-fr-FR][$-fr-FR# ##0,00]", "vi-VI")
-"[$-fr-FR1.234,57]"
-
->> Text(1234.5678, "]$-fr-FR[ # ##0,00", "vi-VI")
-"]$-fr-FR[  1.235"
-
 >> Text(1234.5678, "{$-fr-FR} # ##0,00", "vi-VI")
 "{$-fr-FR}  1.235"
 
->> Text(1234.5678, "[$ # ##0,00", "vi-VI")
-"[$  1.235"
-
->> Text(1234.5678, "[$] # ##0,00", "vi-VI")
-"[$]  1.235"
-
->> Text(1234.5678, "][-$ # ##0,00", "vi-VI")
-"][-$  1.235"
-
-// If have wrong format string, throw error
 >> Text(1234.5678,"abc[$-en-US]0 # # # !!!", "en-US")
 Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 15-40: Incorrect format specifier for 'Text'.
 
 >> Text(1234.5678, "mnk  [$-fr-FR] # ##0,00"   , "vi-VI")
 Errors: Error 0-54: The function 'Text' has some invalid arguments.|Warning 16-41: Incorrect format specifier for 'Text'.
 
-// If does not have valid language code, throw error
->> Text(1234.5678, "[$-a]0,0", "en-US")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr - FR]# ##0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR #] ##0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR # ##0,00]", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR,en-US] # ##0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
->> Text(1234.5678, "[$-fr-FR # ##]0,00", "vi-VI")
-Error({Kind:ErrorKind.BadLanguageCode})
-
+// Basic usage
 >> Text(ParseJSON("""\u202F"""), "##")
 Error({Kind:ErrorKind.InvalidArgument})
 
@@ -175,6 +81,12 @@ Table({Value:"2011-01-15"},{Value:"1899-12-30"})
 >> ForAll(ParseJSON("[""08:03:05.000"", null]"), Text(TimeValue(ThisRecord), "HH:mm:ss"))
 Table({Value:"08:03:05"},{Value:"00:00:00"})
 
+>> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
+"Saturday, December 30, 1899"
+
+>> Text(DateTimeValue(""), DateTimeFormat.ShortDate)
+"12/30/1899"
+
 >> Text(If(1 < 0, 123), "mmm ddd yyy")
 "Dec Sat 1899"
 
@@ -193,202 +105,1679 @@ Table({Value:"08:03:05"},{Value:"00:00:00"})
 >> Text(Blank(),"mmm ddd yyy")
 "Dec Sat 1899"
 
->> Text(1234567.1234567, "mmm ddd yyye")
+>> Text(1234567.1234567, "###")
+"1234567"
+
+>> Text(1234567.1234567, "000")
+"1234567"
+
+>> Text(1234567.1234567, "###.###")
+"1234567.123"
+
+>> Text(1234567.1234567, "#,###.###")
+"1,234,567.123"
+
+>> Text(1234567.1234567, "000,000,000")
+"001,234,567"
+
+>> Text(-1234567.1234567, "###")
+"-1234567"
+
+>> Text(-1234567.1234567, "000")
+"-1234567"
+
+>> Text(-1234567.1234567, "###.###")
+"-1234567.123"
+
+>> Text(-1234567.1234567, "#,###.###")
+"-1,234,567.123"
+
+>> Text(-1234567.1234567, "000,000,000")
+"-001,234,567"
+
+>> Text(0, "###")
+""
+
+>> Text(0, "000")
+"000"
+
+>> Text(0, "000,000,000")
+"000,000,000"
+
+>> Text(1234.567, "#,##0.00")
+"1,234.57"
+
+>> Text(1, "00000")
+"00001"
+
+>> Text(12, "00000")
+"00012"
+
+>> Text(123, "00000")
+"00123"
+
+>> Text(1234, "00000")
+"01234"
+
+>> Text(12345, "00000")
+"12345"
+
+>> Text(1234567.1234567, "0000000000")
+"0001234567"
+
+>> Text(1234567.1234567, "##########")
+"1234567"
+
+// Escape with backslash.
+>> Text(1234567.1234567, "\#,###.###")
+"#,1234567.123"
+
+>> Text(1234567.1234567, "\\#,###.###")
+"\1,234,567.123"
+
+>> Text(1234567.1234567, "\##,###.###")
+"#1,234,567.123"
+
+>> Text(1234567.1234567, "##\,###.###")
+"1234,567.123"
+
+>> Text(1234567.1234567, "\""#\""")
+"""1234567"""
+
+>> Text(123.456, "\m\m\m ddd yyy")
+"mmm Wed 1900"
+
+>> Text(123.456, "mm\m ddd yyy")
+"05m Wed 1900"
+
+>> Text(123.456, "mmm d\dd yyy")
+"May 2d2 1900"
+
+>> Text(123.456, "mm\m ddd \y\yy")
+"05m Wed yy00"
+
+>> Text(123.456, "\m\m\m\-ddd\-yyy")
+"mmm-Wed-1900"
+
+// Escape with double quoted string.
+>> Text(1234567.1234567, """0000""")
+"0000"
+
+>> Text(1234567.1234567, "0""00""0")
+"123456007"
+
+>> Text(1234567.1234567, """#"",###.###")
+"#,1234567.123"
+
+>> Text(1234567.1234567, ",###.###")
+",1234567.123"
+
+>> Text(1234567.1234567, """#""#,###.###")
+"#1,234,567.123"
+
+>> Text(1234567.1234567, """0#,#0""0")
+"0#,#01234567"
+
+// Can't insert a double quote in this manner, must use backslash.
+>> Text(1234567.1234567, """""""""#")
+"1234567"
+
+>> Text(1234567.1234567, "\""0.0\""")
+"""1234567.1"""
+
+>> Text(123.456, "mmm ddd yyy")
+"May Wed 1900"
+
+>> Text(123.456, """mmm"" ddd yyy")
+"mmm Wed 1900"
+
+>> Text(123.456, "mmm ""ddd"" ""yyy""")
+"May ddd yyy"
+
+>> Text(123.456, "mm""m"" ddd yyy")
+"05m Wed 1900"
+
+>> Text(123.456, "mmm ddd yyy ""year""")
+"May Wed 1900 year"
+
+>> Text(123.456, "mmm ddd yyy ""date""")
+"May Wed 1900 date"
+
+>> Text(123.456, "mmm ""-"" ddd ""-"" yyy")
+"May - Wed - 1900"
+
+>> Text(123.456, "mmm""/""ddd""/""yyy")
+"May/Wed/1900"
+
+// Single quote.  Has a meaning in C# (alternative to double quotes) but does not in Excel/Power Fx, treated as a normal character.
+>> Text(1234567.1234567, "'0000")
+"'1234567"
+
+>> Text(1234567.1234567, "000'00")
+"12345'67"
+
+>> Text(1234567.1234567, "000'00.00'000")
+"12345'67.12'346"
+
+>> Text(1234567.1234567, "'0000'")
+"'1234567'"
+
+>> Text(1234567.1234567, "0'00'0")
+"1234'56'7"
+
+>> Text(1234567.1234567, "'#'###.###")
+"'1234'567.123"
+
+>> Text(1234567.1234567, "'#,'###.###")
+"'1234,'567.123"
+
+>> Text(1234567.1234567, "'##,'###.###")
+"'1234,'567.123"
+
+>> Text(1234567.1234567, "'0#,#0'0")
+"'1,234,56'7"
+
+>> Text(1234567.1234567, "'''#")
+"'''1234567"
+
+>> Text(1234567.1234567, "'''''#")
+"'''''1234567"
+
+>> Text(1234567.1234567, "\''#")
+"''1234567"
+
+>> Text(1234567.1234567, "\'0.0\'")
+"'1234567.1'"
+
+>> Text(123.456, "'mmm' ddd yyy")
+"'May' Wed 1900"
+
+>> Text(123.456, "'mmm ddd yyy'")
+"'May Wed 1900'"
+
+>> Text(123.456, "'mmm ddd yyy")
+"'May Wed 1900"
+
+>> Text(123.456, "mmm'ddd'yyy")
+"May'Wed'1900"
+
+>> Text(123.456, "mmm''ddd'yyy")
+"May''Wed'1900"
+
+// Excel: "0123.46E+04"
+>> Text(1234567.1234567, "0000.00E+00")
+"1234.57E+03"
+
+>> Text(1234567.1234567, "0E+00")
+"1E+06"
+
+>> Text(1234567.1234567, "#.00E+00")
+"1.23E+06"
+
+// Lower case 'e' notation is not supported in Excel and instead results in an error when used in this manner.  
+// As it is an error in Excel, but it is documented in Excel, C# supports it, and it is generally useful, we will support it. 
+>> Text(1234567.1234567, "0.00e+00")
+"1.23e+06"
+
+>> Text(1234567.1234567, "0.00e+0")
+"1.23e+6"
+
+>> Text(1234567.1234567, "0.00\e")
+"1234567.12e"
+
+>> Text(1234567.1234567, "0.00\e+")
+"1234567.12e+"
+
+>> Text(1234567.1234567, "0.00""e""")
+"1234567.12e"
+
+>> Text(1234567.1234567, "mmm ddd yyy\e")
 "Feb Thu 5280e"
 
->> Text(1234567.1234567, "mmm ddd yyy e")
-"Feb Thu 5280 e"
-
->> Text(1234567.1234567, "mmm ddd yyy date")
-"Feb Thu 5280 15ate"
-
->> Text(1234567.1234567, "mmm ddd yyye+")
+>> Text(1234567.1234567, "mmm ddd yyy\e+")
 "Feb Thu 5280e+"
 
-// DateTimeFormat Enum
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "DateTimeFormat.LongDateTime")
-"15ateTi8eFor8at.Long15ateTi8e"
+>> Text(1234567.1234567, "mmm ddd yyy""e""")
+"Feb Thu 5280e"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'DateTimeFormat.LongDateTime'")
-"'15ateTi8eFor8at.Long15ateTi8e'"
+>> Text(1234567.1234567, "0.00""e+""")
+"1234567.12e+"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "High'there")
-"2ig2't2ere"
+>> Text(1234567.1234567, "0000.00e+00")
+"1234.57e+03"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "ZZZ 'longdatetime' ZZZ")
-"ZZZ 'long15ateti8e' ZZZ"
+>> Text(1234567.1234567, "0e+00")
+"1e+06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'longdatetime'")
-"'long15ateti8e'"
+>> Text(1234567.1234567, "#.00e+00")
+"1.23e+06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'longdatetime' ZZZ")
-"'long15ateti8e' ZZZ"
+>> Text(1234567.1234567, "####.00e+00")
+"1234.57e+03"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "LongDateTime")
-"Long15ateTi8e"
+>> Text(1234567.1234567, "####.00E+00")
+"1234.57E+03"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "longdatetime")
-"long15ateti8e"
+>> Text(1234567.1234567, "#e+00")
+"1e+06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "'utc'")
-"'utc'"
+>> Text(1234567.1234567, "#E+00")
+"1E+06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "utc")
-"utc"
+>> Text(1234567.1234567, "#e+00000")
+"1e+00006"
 
->> Text(30470.519531251, "utc")
-"utc"
+>> Text(1234567.1234567, "#E+00000")
+"1E+00006"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "Utc")
-"Utc"
+>> Text(1234567.1234567, "0.00E-00")
+"1.23E06"
 
->> Text(30470.519531251, "Utc")
-"Utc"
+>> Text(1234567.1234567, "0000.00E-00")
+"1234.57E03"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "utC")
-"utC"
+>> Text(1234567.1234567, "0E-00")
+"1E06"
 
->> Text(30470.769531251, "utC")
-"utC"
+>> Text(1234567.1234567, "#.00E-00")
+"1.23E06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "uTc")
-"uTc"
+>> Text(1234567.1234567, "####.00E-00")
+"1234.57E03"
 
->> Text(30470.519531251, "uTc")
-"uTc"
+>> Text(1234567.1234567, "#E-00")
+"1E06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "UTC")
-"UTC"
+>> Text(1234567.1234567, "#E-00000")
+"1E00006"
 
->> Text(30470.269531251, "UTC")
-"UTC"
+>> Text(1234567.1234567, "0.00e-00")
+"1.23e06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), " utc ")
-" utc "
+>> Text(1234567.1234567, "0000.00e-00")
+"1234.57e03"
 
->> Text(30470.519531251, " utc ")
-" utc "
+>> Text(1234567.1234567, "0e-00")
+"1e06"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "utc utc")
-"utc utc"
+>> Text(1234567.1234567, "#.00e-00")
+"1.23e06"
 
->> Text(30470.019531251, "utc utc")
-"utc utc"
+>> Text(1234567.1234567, "####.00e-00")
+"1234.57e03"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longdatetime'")
-"'long1ateti1e'"
+>> Text(1234567.1234567, "#e-00")
+"1e06"
 
->> Text(33333.75, "'longdatetime'")
-"'long5ateti4e'"
+>> Text(1234567.1234567, "#e-00000")
+"1e00006"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shortdatetime'")
-"'2514ort1ateti1e'"
+>> Text(1234567.1234567, "#.##################,,,")
+".0012345671234567"
 
->> Text(33333.75, "'shortdatetime'")
-"'018ort5ateti4e'"
+>> Text(1234567.1234567, "#.000000000000000000,,,")
+".001234567123456700"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longdatetime24'")
-"'long1ateti1e24'"
+>> Text(1234567.1234567, "0.0000000,,,,")
+"0.0000012"
 
->> Text(33333.75, "'longdatetime24'")
-"'long5ateti4e24'"
+// Number of digits.  Without exponent, this should fully expand even for floating point.
+>> Text(1, "0")
+"1"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shortdatetime24'")
-"'2514ort1ateti1e24'"
+>> Text(10, "0")
+"10"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longtime24'")
-"'longti1e24'"
+>> Text(100, "0")
+"100"
 
->> Text(0.6875, "'longtime24'")
-"'longti12e24'"
+>> Text(1000, "0")
+"1000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shorttime24'")
-"'2514ortti32e24'"
+>> Text(10000, "0")
+"10000"
 
->> Text(0.6875, "'shorttime24'")
-"'016ortti30e24'"
+>> Text(100000, "0")
+"100000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'longtime'")
-"'longti1e'"
+>> Text(1000000, "0")
+"1000000"
 
->> Text(12345.6875, "'longtime'")
-"'longti10e'"
+>> Text(10000000, "0")
+"10000000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "'shorttime'")
-"'2514ortti32e'"
+>> Text(100000000, "0")
+"100000000"
 
->> Text(33333.6875, "'shorttime'")
-"'016ortti30e'"
+>> Text(1000000000, "0")
+"1000000000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime")
-"long1ateti1e"
+>> Text(10000000000, "0")
+"10000000000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime")
-"2514ort1ateti1e"
+>> Text(1, "#")
+"1"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime24")
-"long1ateti1e24"
+>> Text(10, "#")
+"10"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime24")
-"2514ort1ateti1e24"
+>> Text(100, "#")
+"100"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime24")
-"longti1e24"
+>> Text(1000, "#")
+"1000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime24")
-"2514ortti32e24"
+>> Text(10000, "#")
+"10000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime")
-"longti1e"
+>> Text(100000, "#")
+"100000"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime")
-"2514ortti32e"
+>> Text(1000000, "#")
+"1000000"
 
->> Text(Time(14, 32, 25, 678), "'shorttime24'")
-"'2514ortti32e24'"
+>> Text(10000000, "#")
+"10000000"
 
->> Text(Time(14, 32, 25, 678), "'shorttime'")
-"'2514ortti32e'"
+>> Text(100000000, "#")
+"100000000"
 
->> Text(Date(1970, 1, 1), "'shortdate'")
-"'00ort1ate'"
+>> Text(1000000000, "#")
+"1000000000"
 
->> Text(Date(1970, 1, 1), "'shortdatetime'")
-"'00ort1ateti1e'"
+>> Text(10000000000, "#")
+"10000000000"
 
->> Text(Date(1970, 1, 1), "'shortdatetime24'")
-"'00ort1ateti1e24'"
+// Text format string has decimal point
+>> Text(123.456, "#.\#\#")
+"123.##"
 
->> Text(Date(1970, 1, 1), "'longdate'")
-"'long1ate'"
+>> Text(123.456, "#.\#\##")
+"123.##5"
 
->> Text(Date(1970, 1, 1), "'longdatetime'")
-"'long1ateti1e'"
+>> Text(123.456, "#.\#\##\fz")
+"123.##5fz"
 
->> Text(Date(1970, 1, 1), "'longdatetime24'")
-"'long1ateti1e24'"
+>> Text(123.456, "#.f\#\##\fz")
+"123.f##5fz"
 
->> Text(0, "'longdate'")
-"'long30ate'"
+>> Text(123.456, "#.##\#\##\fz")
+"123.45##6fz"
 
->> Text(0, "'shortdate'")
-"'00ort30ate'"
+>> Text(123.456, "#.'##'")
+"123.'46'"
 
->> Text(0, "longdate")
-"long30ate"
+>> Text(123.456, "#.'#''#'")
+"123.'4''6'"
 
->> Text(0, "shortdate")
-"00ort30ate"
+>> Text(123.456, "#.#'#''#'")
+"123.4'5''6'"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "shortdatetime")
-"92ort15ateti8e"
+>> Text(123.456, "#.#'#'\z#'f'")
+"123.4'5'z6'f'"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "longtime")
-"longti8e"
+>> Text(123.456, "'#.##'")
+"'123.46'"
 
->> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), "shorttime")
-"92ortti53e"
+>> Text(123.456, "'q#.##'")
+"'q123.46'"
 
-// Number 4492800 exceeds the max days that DateTime.AddDays can take.
->> Text(4492800,DateTimeFormat.LongDate)
+>> Text(123.456, "#.##'")
+"123.46'"
+
+>> Text(123.456, "#.""##""")
+"123.##"
+
+>> Text(123.456, "#.#""##""")
+"123.5##"
+
+>> Text(123.456, "#.""##""#")
+"123.##5"
+
+>> Text(123.456, "#.""##""0")
+"123.##5"
+
+>> Text(123.456, "#.")
+"123."
+
+>> Text(123.456, "#.'f'")
+"123.'f'"
+
+>> Text(123.456, "#.""\""")
+"123.\"
+
+>> Text(123.456, "#.0""##""")
+"123.5##"
+
+>> Text(123.456, "#.00""##""")
+"123.46##"
+
+>> Text(123.456, "#.#0""##""")
+"123.46##"
+
+>> Text(123.456, "#.#0""##""0")
+"123.45##6"
+
+// Format has mixed datetime and number
+>> Text(1234567.1234567, "\m\mm # ddd yyy")
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
+
+// Literal characters conflicting with date/time format specifiers.
+>> Text(72, "# y")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# m")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+// Sections.  Three sections are supported, for positive, negative, and zero.
+>> Text(1234567.1234567, "##;(##);ZZZ")
+"1234567"
+
+>> Text(-1234567.1234567, "##;(##);ZZZ")
+"(1234567)"
+
+>> Text(0, "##;(##);ZZZ")
+"ZZZ"
+
+>> Text(1234567.1234567, "##;(##)")
+"1234567"
+
+>> Text(-1234567.1234567, "##;(##)")
+"(1234567)"
+
+>> Text(0, "##;(##)")
+""
+
+>> Text(1234567.1234567, "00.00;(00.00)")
+"1234567.12"
+
+>> Text(-1234567.1234567, "00.00;(00.00)")
+"(1234567.12)"
+
+// Excel supports a fourth section that is a string, for the case where the input is text.  We are strongly typed so less ipmortant.  We will error for now.
+>> Text(1234567.1234567, "##;(##);ZZZ;AAA")
+Errors: Error 0-40: The function 'Text' has some invalid arguments.|Warning 22-39: Incorrect format specifier for 'Text'.
+
+>> Text(-1234567.1234567, "##;(##);ZZZ;AAA")
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 23-40: Incorrect format specifier for 'Text'.
+
+>> Text(0, "##;(##);ZZZ;AAA")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 8-25: Incorrect format specifier for 'Text'.
+
+>> Text(1, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 8-30: Incorrect format specifier for 'Text'.
+
+>> Text(-1, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-32: The function 'Text' has some invalid arguments.|Warning 9-31: Incorrect format specifier for 'Text'.
+
+>> Text(0, "##;(##);ZZZ;""AAA """)
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 8-30: Incorrect format specifier for 'Text'.
+
+// If only two sections, first format used for Zero.
+>> Text(0, "00.00;(00.00)")
+"00.00"
+
+>> Text(12345.6789,"0.00000;#.######")
+"12345.67890"
+
+>> Text(12345.6789,"#.######;0.00000")
+"12345.6789"
+
+// Excel: "€ 1,234,567.1235"
+>> Text(1234567.1234567, "[$€-de-DE] #,####.0000")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+
+// Excel: "$ 1,234,567.1235"
+>> Text(1234567.1234567, "[$$-de-DE] #,####.0000")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 22-46: Incorrect format specifier for 'Text'.
+
+// Excel: "€€€€ 1,234,567.1235"
+>> Text(1234567.1234567, "[$€€€€-de-DE] #,####.0000")
+Errors: Error 0-50: The function 'Text' has some invalid arguments.|Warning 22-49: Incorrect format specifier for 'Text'.
+
+// Sections can be skipped.
+>> Text(1234567.1234567, ";(##)")
+""
+
+>> Text(-1234567.1234567, ";(##)")
+"(1234567)"
+
+>> Text(0, ";(##)")
+""
+
+>> Text(1234567.1234567, ";;ZZZ")
+""
+
+>> Text(0, ";;ZZZ")
+"ZZZ"
+
+>> Text(1234567.1234567, "##")
+"1234567"
+
+>> Text(-1234567.1234567, "##")
+"-1234567"
+
+>> Text(0, "##")
+""
+
+// Note that there are two spaces here.  The space after the * above was eaten.
+>> Text(1, "$  0.00")
+"$  1.00"
+
+>> Text(-1, "$  0.00")
+"-$  1.00"
+
+>> Text(0, "$  0.00")
+"$  0.00"
+
+>> Text(1234567.1234567, "\* #")
+"* 1234567"
+
+>> Text(1234567.1234567, """*"" #")
+"* 1234567"
+
+// Colon, interpreted as a time seperator, not allowed between numbers
+>> Text(2, "###:")
+"2:"
+
+>> Text(2, "0:z")
+"2:z"
+
+>> Text(2, "0:""#""z")
+"2:#z"
+
+// Time
+>> Text(0.324305555555556, "h")
+"7"
+
+>> Text(0.324305555555556, "hh")
+"07"
+
+>> Text(0.324305555555556, "m")
+"12"
+
+>> Text(0.324305555555556, "mm")
+"12"
+
+>> Text(0.324305555555556, "s")
+"0"
+
+>> Text(0.324305555555556, "ss")
+"00"
+
+>> Text(0.324305555555556, "h AM/PM")
+"7 AM"
+
+>> Text(0.324305555555556, "h:mm AM/PM")
+"7:47 AM"
+
+>> Text(0.324305555555556, "h:mm:ss A/P")
+"7:47:00 A"
+
+>> Text(70.32430555555555555555555,"h:mm:ss A/P", "vi-VN")
+"7:47:00 S"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss A/P")
+"Friday, June 03, 1983 02:53:09 A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss AM/PM")
+"Friday, June 03, 1983 02:53:09 AM"
+
+>> Text(0.324305555555556, "h:mm:ss.00")
+"7:47:00.00"
+
+>> Text(1.010101, "h:mm")
+"0:14"
+
+>> Text(1.010101, "mm:ss")
+"14:32"
+
+>> Text(1.010101, "ss.00")
+"32.72"
+
+>> Text(1.010101, "mm:")
+"12:"
+
+>> Text(1.010101, ":mm")
+":12"
+
+// Dates
+>> Text(3, "mm/dd/yyy")
+"01/02/1900"
+
+>> Text(3, "dd/mm/yyy")
+"02/01/1900"
+
+>> Text(3, "m/")
+"1/"
+
+// Excel: "7/8"
+>> Text(4.34, "7/8")
+"7/8"
+
+>> Text(1/0, "###")
+Error({Kind:ErrorKind.Div0})
+
+>> Text(1/0, "####")
+Error({Kind:ErrorKind.Div0})
+
+// Color specifications, ignored by Excel's Text function, but supported for cell formatting.  We should error for now.
+// Excel: "$1.00"
+>> Text(1, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+
+// Excel: "($1.00)"
+>> Text(-1, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 9-37: Incorrect format specifier for 'Text'.
+
+// Excel: "$0.00"
+>> Text(0, "$#,##0.00;[Red]($#,##0.00)")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 8-36: Incorrect format specifier for 'Text'.
+
+// Excel: "5"
+>> Text(5, "[Blue][<10]General;[Red][>=10]General")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 8-47: Incorrect format specifier for 'Text'.
+
+// Excel: "15"
+>> Text(15, "[Blue][<10]General;[Red][>=10]General")
+Errors: Error 0-49: The function 'Text' has some invalid arguments.|Warning 9-48: Incorrect format specifier for 'Text'.
+
+// Excel: "5"
+>> Text(5, "[Blue][<10]#;[Red][>=10](#)")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 8-37: Incorrect format specifier for 'Text'.
+
+// Excel: "(15)"
+>> Text(15, "[Blue][<10]#;[Red][>=10](#)")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 9-38: Incorrect format specifier for 'Text'.
+
+// Excel: "25.00"
+>> Text(25, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 9-42: Incorrect format specifier for 'Text'.
+
+// Excel: "7.0000"
+>> Text(7, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-42: The function 'Text' has some invalid arguments.|Warning 8-41: Incorrect format specifier for 'Text'.
+
+// Value not hit by either condition
+>> Text(3, "[Blue][>10]0.00;[Red][>5]0.0000")
+Errors: Error 0-42: The function 'Text' has some invalid arguments.|Warning 8-41: Incorrect format specifier for 'Text'.
+
+// Excel: "3.0000"
+>> Text(3, "[Blue][>10]0.00;[Red]0.0000")
+Errors: Error 0-38: The function 'Text' has some invalid arguments.|Warning 8-37: Incorrect format specifier for 'Text'.
+
+// More than two conditions not suported by Excel
+>> Text(3, "[Blue][>10]0.00;[Red][>5]0.0000;[Yellow][>0]0000.0")
+Errors: Error 0-61: The function 'Text' has some invalid arguments.|Warning 8-60: Incorrect format specifier for 'Text'.
+
+// Excel: "0000.0"
+>> Text(0, "[Blue][>10]0.00;[Red][>5]0.0000;[Yellow]0000.0")
+Errors: Error 0-57: The function 'Text' has some invalid arguments.|Warning 8-56: Incorrect format specifier for 'Text'.
+
+// Excel: "10.00"
+>> Text(10, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-46: The function 'Text' has some invalid arguments.|Warning 9-45: Incorrect format specifier for 'Text'.
+
+// Excel: "5.0000"
+>> Text(5, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "12"
+>> Text(3, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "12"
+>> Text(0, "[Blue][=10]0.00;[Red][=5]0.0000;12")
+Errors: Error 0-45: The function 'Text' has some invalid arguments.|Warning 8-44: Incorrect format specifier for 'Text'.
+
+// Excel: "7.00"
+>> Text(7, "[Blue][<>10]0.00;[Red][<>5]0.0000;12")
+Errors: Error 0-47: The function 'Text' has some invalid arguments.|Warning 8-46: Incorrect format specifier for 'Text'.
+
+// Excel: "10.0000"
+>> Text(10, "[Blue][<>10]0.00;[Red][<>5]0.0000;12")
+Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 9-47: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP 1,234,567.123"
+>> Text(1234567.1234567, "[$GBP] #,###.000")
+Errors: Error 0-41: The function 'Text' has some invalid arguments.|Warning 22-40: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP 3"
+>> Text(3, "[$GBP-000000] #")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 8-25: Incorrect format specifier for 'Text'.
+
+// Excel: "GBP"
+>> Text(3, "[$GBP-809]")
+Errors: Error 0-21: The function 'Text' has some invalid arguments.|Warning 8-20: Incorrect format specifier for 'Text'.
+
+>> Text(45, "###: number of foos")
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 9-30: Incorrect format specifier for 'Text'.
+
+>> Text(45, "000: number of foos")
+Errors: Error 0-31: The function 'Text' has some invalid arguments.|Warning 9-30: Incorrect format specifier for 'Text'.
+
+// Excel: #VALUE!
+>> Text(1E+23, "General ###")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 12-25: Incorrect format specifier for 'Text'.
+
+// Can't mix time parts and numbers
+>> Text(1.010101, "hh:00")
+Errors: Error 0-23: The function 'Text' has some invalid arguments.|Warning 15-22: Incorrect format specifier for 'Text'.
+
+>> Text(1.010101, "hh:mm:00")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 15-25: Incorrect format specifier for 'Text'.
+
+>> Text(1.010101, "00:mm:ss")
+Errors: Error 0-26: The function 'Text' has some invalid arguments.|Warning 15-25: Incorrect format specifier for 'Text'.
+
+// Excel: "00.00"
+>> Text(0, "[ss].00")
+Errors: Error 0-18: The function 'Text' has some invalid arguments.|Warning 8-17: Incorrect format specifier for 'Text'.
+
+// Excel: "28020.00"
+>> Text(0.324305555555556, "[ss].00")
+Errors: Error 0-34: The function 'Text' has some invalid arguments.|Warning 24-33: Incorrect format specifier for 'Text'.
+
+// Excel: "87272.73"
+>> Text(1.010101, "[ss].00")
+Errors: Error 0-25: The function 'Text' has some invalid arguments.|Warning 15-24: Incorrect format specifier for 'Text'.
+
+// Can't mix date parts and numbers
+>> Text(3, "m/2001")
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
+
+>> Text(3, "2001/y")
+Errors: Error 0-17: The function 'Text' has some invalid arguments.|Warning 8-16: Incorrect format specifier for 'Text'.
+
+// Percent signs.  Multiplies the number by 100 before displaying and can be stacked.
+>> Text(0.244740088392962, "0%")
+"24%"
+
+>> Text(0.244740088392962, "0.0%")
+"24.5%"
+
+>> Text(0.244740088392962, "0.00%")
+"24.47%"
+
+>> Text(1234567.1234567, "0000%")
+"123456712%"
+
+>> Text(1234567.1234567, "0000%%")
+"12345671235%%"
+
+>> Text(1234567.1234567, "0000%%%")
+"1234567123457%%%"
+
+>> Text(1234567.1234567, "0,000%%%")
+"1,234,567,123,457%%%"
+
+>> Text(1234567.1234567, "####%")
+"123456712%"
+
+>> Text(1234567.1234567, "####%%")
+"12345671235%%"
+
+>> Text(1234567.1234567, "####%%%")
+"1234567123457%%%"
+
+>> Text(1234567.1234567, "#,###%%%")
+"1,234,567,123,457%%%"
+
+// Permille signs.  These have a meaning in C# but do not in Excel/Power Fx, they should be treated like any other character.
+
+>> Text(1234567.1234567, "0000‰")
+"1234567‰"
+
+>> Text(1234567.1234567, "0000‰‰")
+"1234567‰‰"
+
+>> Text(1234567.1234567, "0000‰%‰")
+"123456712‰%‰"
+
+>> Text(1234567.1234567, "0,000%‰%")
+"12,345,671,235%‰%"
+
+>> Text(1234567.1234567, "####‰")
+"1234567‰"
+
+>> Text(1234567.1234567, "####‰‰")
+"1234567‰‰"
+
+>> Text(1234567.1234567, "####‰%‰")
+"123456712‰%‰"
+
+>> Text(1234567.1234567, "#,###‰‰‰")
+"1,234,567‰‰‰"
+
+//Excel throws error: "Value used in the formula is of the wrong data type"
+>> Text(100, "#%‰'eE:")
+"10000%‰'eE:"
+
+// Format for DateTime
+>> Text(1234, "mmm. dd, yyyy (hh:mm:ss AM/PM)")
+"May. 18, 1903 (12:00:00 AM)"
+
+>> Text(1234, "dddd mmmm d")
+"Monday May 18"
+
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), "f")
+"f"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:ss.fffutc")
+"02:53:09.fffutc"
+
+>> Text(30470.519531251, "hh:mm:ss.fffutc")
+"12:28:07.fffutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:s.futc")
+"02:53:9.futc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mmutc")
+"02:53utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "mm:ssutc")
+"53:09utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "mm:hhutc")
+"06:02utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:yyyy:mmutc")
+"02:1983:06utc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hAM/PMutc")
+"2AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hhAM/PMutc")
+"02AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hA/Putc")
+"2Autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hhA/Putc")
+"02Autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm A/Putc")
+"2:53 Autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm A/Putc")
+"02:53 Autc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PMutc")
+"2:53 AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm AM/PMutc")
+"02:53 AMutc"
+
+>> Text(DateTime(2013, 6, 19, 10, 48, 38, 100), "hh:mm:ss AM/PMutc")
+"10:48:38 AMutc"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "utchh:mm:ss")
+"utc02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm:ssutchh:mm:ss")
+"02:53:09utc02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "Time: utc is in ISO format")
+"Ti53e: utc i9 in I9O for6at"
+
+// Dynamic format strings, ensure we are checking this at runtime
+>> Text(123, Lower("["))
 Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Lower("asdf]"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Lower("[$-en-us]") & Trim("##"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Upper("#/#"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Upper("0/#"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Lower("????"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Upper("_(") & Lower("## _)"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Lower("*"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Lower("#;#;#;#"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Proper("General"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Upper("general"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Trim("GENERAL"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Trim("GENERLA"))
+"GENERLA"
+
+>> Text(123, Trim("@"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Trim("#:#"))
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123, Trim("#\:#"))
+"12:3"
+
+>> Text(123, Trim("#"":""#"))
+"12:3"
+
+// Excel: ":"
+>> Text(0,"::")
+"::"
+
+// Excel: ":"
+>> Text(0,":::")
+":::"
+
+>> Text(70.32430555555555555555555,"m")
+"3"
+
+>> Text(70.32430555555555555555555,"mm")
+"03"
+
+>> Text(70.00027795138888888888,"ss.000")
+"24.015"
+
+>> Text(70.00027795138888888888,"hh:mm:ss.000")
+"00:00:24.015"
+
+// month number, not minutes, as per Excel
+>> Text(70.00027795138888888888,"mm:")
+"03:"
+
+// month number, not minutes, as per Excel
+>> Text(70.00027795138888888888,":mm")
+":03"
+
+>> Text(70, "mm/dd/yyy")
+"03/10/1900"
+
+>> Text(70, "dd/mm/yyy")
+"10/03/1900"
+
+>> Text(1234567.123,"#',###.###")
+"1234',567.123"
+
+>> Text(1234567.123,"##',###.###")
+"1234',567.123"
+
+>> Text(1234567.123,"'#',###.###")
+"'1234',567.123"
+
+>> Text(1234567.123,"'##',###.###")
+"'1234',567.123"
+
+>> Text(1234567.123,"#'#,###.###")
+"1,23'4,567.123"
+
+>> Text(1234567.123,"#'\z,###.###")
+"1234'z,567.123"
+
+>> Text(1234567.123,"#'\z#,###.###")
+"1,23'z4,567.123"
+
+>> Text(1234567.123,"#'""z""#,###.###")
+"1,23'z4,567.123"
+
+>> Text(1234567.123,"#,\z'###.###")
+"1234,z'567.123"
+
+>> Text(1234567.123,"#,""z""'###.###")
+"1234,z'567.123"
+
+>> Text(1234567.123,"#,#\z'##.###")
+"1,234,5z'67.123"
+
+>> Text(1234567.123,"#,##""z""'#.###")
+"1,234,56z'7.123"
+
+>> Text(123456, "12° 34' 56''")
+"12° 34' 56''"
+
+>> Text(123456, "##0° 00' 00''")
+"12° 34' 56''"
+
+>> Text(123456, "12° 34' 56\""")
+"12° 34' 56"""
+
+>> Text(123456, "12° 34' 56\""###\""")
+"12° 34' 56""123456"""
+
+>> Text(123456, "12° 34' 56""###""")
+"12° 34' 56###"
+
+>> Text(123456, "##0° 00' 00\""")
+"12° 34' 56"""
+
+>> Text(123456789, "# ° # ° # ° # ° # ° # °")
+"1234 ° 5 ° 6 ° 7 ° 8 ° 9 °"
+
+>> Text(1234567898, "(###) ###-####")
+"(123) 456-7898"
+
+>> Text(123456789, "###-##-####")
+"123-45-6789"
+
+>> Text(123456789, "00000")
+"123456789"
+
+>> Text(123456789, "00000-0000")
+"12345-6789"
+
+>> Text(123456789, "000-00-0000")
+"123-45-6789"
+
+// Scaling with ,
+
+//Excel returns "123457"
+>> Text(123456789, "0,")
+"123457"
+
+>> Text(123456789.12345, "#,###.000")
+"123,456,789.123"
+
+>> Text(123456789.12345, "#,###.000,\K")
+"123,456.789K"
+
+>> Text(123456789.12345, "#,###.000,,\M")
+"123.457M"
+
+// Literal characters, passed through unmodified.
+>> Text(72, "# °")
+"72 °"
+
+>> Text(72, "# ft")
+"72 ft"
+
+>> Text(1234567.1234567,"#,0,,")
+"1"
+
+>> Text(12.34567,"Foo ####")
+"Foo 12"
+
+// Oddball case from Excel, returns "Z5280ro", which appears to be undocumented behavior.  
+// We don't interpret the 'e'.  
+>> Text(1234567.1234567, "Zero")
+"Zero"
+
+>> Text(1234567.1234567, "ero")
+"ero"
+
+// Scaling factor.  Each comma on the end divides the number by 1,000.
+>> Text(1234567891234, "0,")
+"1234567891"
+
+>> Text(1234567891234, "0,,")
+"1234568"
+
+>> Text(1234567891234, "0,,,")
+"1235"
+
+// Colon, interpreted as a time seperator, not allowed between numbers.
+// Excel: ":"
+>> Text(2, ":")
+":"
+
+// Excel: ":"
+>> Text(2, "::")
+"::"
+
+// Excel: ":"
+>> Text(2, ":::")
+":::"
+
+// Text of Blank, without a format, is blank.  Text of Blank, with a format, is empty string.
+>> Text(If(1<0,1,Blank()))
+Blank()
+
+>> Text(If(1<0,1,Blank()), "####")
+""
+
+// Text format is largely case insensitive, with exceptions for "e", "a/p", and "am/pm"
+>> Text(70.125, "MM DD YYY")
+"03 10 1900"
+
+>> Text(70.125, "MMM DD YYY")
+"Mar 10 1900"
+
+>> Text(70.125, "MMMM DD YYY")
+"March 10 1900"
+
+>> Text(70.125, "mm dd yyy")
+"03 10 1900"
+
+>> Text(70.125, "mmm dd yyy")
+"Mar 10 1900"
+
+>> Text(70.125, "mmmm dd yyy")
+"March 10 1900"
+
+>> Text(70.125, "MM DDD YYY")
+"03 Sat 1900"
+
+>> Text(70.125, "MMM DDD YYY")
+"Mar Sat 1900"
+
+>> Text(70.125, "MMMM DDD YYY")
+"March Sat 1900"
+
+>> Text(70.125, "mm ddd yyy")
+"03 Sat 1900"
+
+>> Text(70.125, "mmm ddd yyy")
+"Mar Sat 1900"
+
+>> Text(70.125, "mmmm ddd yyy")
+"March Sat 1900"
+
+>> Text(70.125, "MM DDD YY")
+"03 Sat 00"
+
+>> Text(70.125, "MMM DDD YY")
+"Mar Sat 00"
+
+>> Text(70.125, "MMMM DDD YY")
+"March Sat 00"
+
+>> Text(70.125, "mm ddd yy")
+"03 Sat 00"
+
+>> Text(70.125, "mmm ddd yy")
+"Mar Sat 00"
+
+>> Text(70.125, "mmmm ddd yy")
+"March Sat 00"
+
+>> Text(70.125, "MM DDD YYYY")
+"03 Sat 1900"
+
+>> Text(70.125, "MMM DDD YYYY")
+"Mar Sat 1900"
+
+>> Text(70.125, "MMMM DDD YYYY")
+"March Sat 1900"
+
+>> Text(70.125, "mm ddd yyyy")
+"03 Sat 1900"
+
+>> Text(70.125, "mmm ddd yyyy")
+"Mar Sat 1900"
+
+>> Text(70.125, "mmmm ddd yyyy")
+"March Sat 1900"
+
+>> Text(70.125, "MM DDDD YYYY")
+"03 Saturday 1900"
+
+>> Text(70.125, "MMM DDDD YYYY")
+"Mar Saturday 1900"
+
+>> Text(70.125, "MMMM DDDD YYYY")
+"March Saturday 1900"
+
+>> Text(70.125, "mm dddd yyyy")
+"03 Saturday 1900"
+
+>> Text(70.125, "mmm dddd yyyy")
+"Mar Saturday 1900"
+
+>> Text(70.125, "mmmm dddd yyyy")
+"March Saturday 1900"
+
+>> Text(70.125, "MM D YYYY")
+"03 10 1900"
+
+>> Text(70.125, "MMM D YYYY")
+"Mar 10 1900"
+
+>> Text(70.125, "MMMM D YYYY")
+"March 10 1900"
+
+>> Text(70.125, "mm d yyyy")
+"03 10 1900"
+
+>> Text(70.125, "mmm d yyyy")
+"Mar 10 1900"
+
+>> Text(70.125, "mmmm d yyyy")
+"March 10 1900"
+
+>> Text(68.125, "MM D YYYY")
+"03 8 1900"
+
+>> Text(68.125, "MMM D YYYY")
+"Mar 8 1900"
+
+>> Text(68.125, "MMMM D YYYY")
+"March 8 1900"
+
+>> Text(68.125, "mm d yyyy")
+"03 8 1900"
+
+>> Text(68.125, "mmm d yyyy")
+"Mar 8 1900"
+
+>> Text(68.125, "mmmm d yyyy")
+"March 8 1900"
+
+>> Text(0.324305555555556, "H:MM:SS.00")
+"7:47:00.00"
+
+>> Text(0.324305555555556, "H:mm:SS.00")
+"7:47:00.00"
+
+>> Text(0.324305555555556, "HH:mm:SS.00")
+"07:47:00.00"
+
+>> Text(0.324305555555556, "HH:mm:SS.ff")
+"07:47:00.ff"
+
+>> Text(0.324305555555556, "HH:mm:SS.FF")
+"07:47:00.FF"
+
+>> Text(0.7931251736111111, "h:m:s.000")
+"19:2:6.015"
+
+>> Text(0.7931251736111111, "H:MM:SS.000")
+"19:02:06.015"
+
+>> Text(0.7931251736111111, "H:mm:SS.000")
+"19:02:06.015"
+
+>> Text(0.7931251736111111, "HH:mm:SS.000")
+"19:02:06.015"
+
+>> Text(0.7931251736111111, "HH:mm:SS.fff")
+"19:02:06.fff"
+
+>> Text(0.7931251736111111, "HH:mm:SS.FFF")
+"19:02:06.FFF"
+
+>> Text(0.043125, "H:M:S.00")
+"1:2:6.00"
+
+>> Text(0.043125, "h:m:s.00")
+"1:2:6.00"
+
+>> Text(0.043125, "HH:MM:SS.00")
+"01:02:06.00"
+
+>> Text(0.043125, "hh:mm:ss.00")
+"01:02:06.00"
+
+>> Text(0.0431251736111111, "h:m:s.000")
+"1:2:6.015"
+
+>> Text(0.793125, "H:M:S.00")
+"19:2:6.00"
+
+>> Text(0.793125, "h:m:s.00")
+"19:2:6.00"
+
+>> Text(0.793125, "HH:MM:SS.00")
+"19:02:06.00"
+
+>> Text(0.793125, "hh:mm:ss.00")
+"19:02:06.00"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MM dd, yyyy hh:mm:ss")
+"Friday, 06 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMM dd, yyyy hh:mm:ss")
+"Friday, Jun 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:mm:ss")
+"Friday, June 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:m:ss")
+"Friday, June 03, 1983 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-m-dd hh:mm:ss")
+"1983-6-03 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mm-dd hh:mm:ss")
+"1983-06-03 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmm-dd hh:mm:ss")
+"1983-Jun-03 02:53:09"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmm-dd hh:mm:ss")
+"1983-June-03 02:53:09"
+
+// Months is favored over minutes if ambiguous
+>> Text(70.0431251736111111, "mmm")
+"Mar"
+
+>> Text(70.0431251736111111, "mm")
+"03"
+
+>> Text(70.0431251736111111, "m")
+"3"
+
+>> Text(70.0431251736111111, "MMM")
+"Mar"
+
+>> Text(70.0431251736111111, "MM")
+"03"
+
+>> Text(70.0431251736111111, "M")
+"3"
+
+// Numeric argument need not be referenced
+>> Text(1, "")
+""
+
+>> Text(1.2, "", "vi-Vn")
+""
+
+>> Text(1, "z")
+"z"
+
+>> Text(1, "zz")
+"zz"
+
+>> Text(1, "zzz")
+"zzz"
+
+>> Text(1, "$")
+"$"
+
+>> Text(1, "$$")
+"$$"
+
+>> Text(1, "$$$")
+"$$$"
+
+>> Text(0, "")
+""
+
+>> Text(0, "z")
+"z"
+
+>> Text(0, "zz")
+"zz"
+
+>> Text(0, "zzz")
+"zzz"
+
+>> Text(0, "$")
+"$"
+
+>> Text(0, "$$")
+"$$"
+
+>> Text(0, "$$$")
+"$$$"
+
+>> Text(1, "b")
+"b"
+
+>> Text(1, "c")
+"c"
+
+>> Text(1, "f")
+"f"
+
+>> Text(1, "n")
+"n"
+
+>> Text(1, "p")
+"p"
+
+>> Text(1, "x")
+"x"
+
+>> Text(1, "B")
+"B"
+
+>> Text(1, "C")
+"C"
+
+>> Text(1, "F")
+"F"
+
+>> Text(1, "N")
+"N"
+
+>> Text(1, "P")
+"P"
+
+>> Text(1, "X")
+"X"
+
+>> Text(1234567891234, "z'")
+"z'"
+
+>> Text(1234567891234, "z'""T""")
+"z'T"
+
+>> Text(1234567891234, "''z'")
+"''z'"
+
+>> Text(1234567891234, "'""'""z'")
+"''z'"
+
+>> Text(1234567891234, "\''z'")
+"''z'"
+
+>> Text(1234567891234, "\'""'""z'")
+"''z'"
+
+>> Text(123.456, "\''dddd'")
+"''Wednesday'"
+
+>> Text(123.456, "\m\m\m 'ddd' ''yyy'\'")
+"mmm 'Wed' ''1900''"
+
+>> Text(123.456, "\m\m\m ""'""'ddd' ''yyy'\'")
+"mmm ''Wed' ''1900''"
+
+>> Text(123.456, "$0.0b")
+"$123.5b"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHA/P") 
+"02A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HA/P")
+"2A"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h""a/p""")
+"2a/p"
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h\a/p")
+"2a/p"
+
+>> Text(70.82430555555555555555555,"h:mm:ss \am/pm")
+"19:47:00 a47/p47"
+
+>> Text(70.82430555555555555555555,"h:mm:ss ""am/pm""")
+"19:47:00 am/pm"
+
+// Errors pass through Text
+>> Text(1/0,"###")
+Error({Kind:ErrorKind.Div0})
+
+>> Text(1/0,"000")
+Error({Kind:ErrorKind.Div0})
+
+// Always a decimal separator in Excel but C# does not return decimal separator if input does not have decimal point.
+// Skip these tests until address issue https://github.com/microsoft/Power-Fx/issues/1779
+// Excel: .
+>> Text(0,"###.###")
+#skip
+
+// Excel: .
+>> Text(0,"#,###.###")
+#skip
+
+// Excel: 12.
+>> Text(12, "###.###")
+#skip
+
+// Excel: 12.
+>> Text(12,"#,###.###")
+#skip
+
+>> Text(.34, "###.###")
+#skip
+
+>> Text(.34, "#,###.###")
+#skip
+
+>> Text(0, "#.")
+#skip
+
+>> Text(0, "#.#")
+#skip
+
+>> Text(0, "###.#")
+#skip
+
+>> Text(0, "###.0")
+#skip
+
+>> Text(0, "##.")
+#skip
+
+>> Text(0, "0.#")
+#skip
+
+>> Text(0, "0.")
+#skip
+
+>> Text(0, "#.0")
+#skip
+
+>> Text(12345, "#.")
+#skip
+
+>> Text(12345, "#.#")
+#skip
+
+>> Text(12345, "#,###.#")
+#skip
+
+>> Text(12345, "#,###0")
+#skip
+
+>> Text(12345, "#,###.")
+#skip
+
+>> Text(12345, "0.#")
+#skip
+
+>> Text(12345, "0.")
+#skip
+
+>> Text(12345, "#.0")
+#skip
+
+>> Text(12345.6789, "#.")
+#skip
+
+>> Text(12345.6789, "#.#")
+#skip
+
+>> Text(12345.6789, "#,###.#")
+#skip
+
+>> Text(12345.6789, "#,###.0")
+#skip
+
+>> Text(12345.6789, "#,###.")
+#skip
+
+>> Text(12345.6789, "0.#")
+#skip
+
+>> Text(12345.6789, "0.")
+#skip
+
+>> Text(12345.6789, "#.0")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "##.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "##.0")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "##.")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.0")
+#skip
+
+>> Text(12345, "###"".""#")
+#skip
+
+>> Text(12345, "###\.#")
+#skip
+
+>> Text(12345.6789, "###"".""#")
+#skip
+
+>> Text(12345.6789, "###\.#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "###"".""#")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "###\.#")
+#skip
+
+>> Text(0, "0.", "vi-VN")
+#skip
+
+>> Text(0, "#.0", "vi-VN")
+#skip
+
+>> Text(12345, "#.", "vi-VN")
+#skip
+
+>> Text(12345, "#.#", "vi-VN")
+#skip
+
+>> Text(12345, "#,###.#", "vi-VN")
+#skip
+
+>> Text(12345.6789, "#.", "vi-VN")
+#skip
+
+>> Text(12345.6789, "#.#", "vi-VN")
+#skip
+
+>> Text(12345.6789, "#,###.#", "vi-VN")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.#", "vi-VN")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "0.", "vi-VN")
+#skip
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "#.0", "vi-VN")
+#skip
