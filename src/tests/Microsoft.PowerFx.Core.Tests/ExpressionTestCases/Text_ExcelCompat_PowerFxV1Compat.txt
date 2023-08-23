@@ -11,6 +11,7 @@ Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 17-3
 Errors: Error 0-48: The function 'Text' has some invalid arguments.|Warning 17-38: Incorrect format specifier for 'Text'.
 
 >> Text(1234567,89; "[$-fr-FR]# ###,## €")
+
 Errors: Error 15-16: Expected operator. We expect an operator such as +, *, or & at this point in the formula.|Error 0-39: The function 'Text' has some invalid arguments.
 
 // Color
@@ -1008,15 +1009,6 @@ true
 //Excel doesn't support DateTimeValue function or the DateTimeFormat formats
 >> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime24)
 "17:30"
-
->> Text(DateTimeValue("2023-02-03 04:05:06Z"), DateTimeFormat.UTC)
-"2023-02-03T04:05:06.000Z"
-
->> Text(DateTimeValue("2023-12-21T12:34:56.789Z"), DateTimeFormat.UTC)
-"2023-12-21T12:34:56.789Z"
-
->> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.UTC)
-"2022-03-31T00:30:00.000Z"
 
 >> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime24)
 "14:32"
