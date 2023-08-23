@@ -3,10 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using Microsoft.PowerFx.Core;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using static Microsoft.PowerFx.LanguageServerProtocol.LanguageServer;
@@ -159,7 +157,7 @@ namespace Microsoft.PowerFx
                 }
                 catch (Exception e)
                 {
-                    var e2 = new Exception($"Handler {handler.Key} threw {e.Message}", e);
+                    var e2 = new Exception($"Handler {handler.Key} threw {e.GetDetailedExceptionMessage()}", e);
                     
                         // Dont' let exceptions from a handler block other handlers. 
                     logUnhandledExceptionHandler?.Invoke(e2);

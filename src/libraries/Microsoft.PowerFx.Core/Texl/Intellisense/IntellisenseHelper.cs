@@ -809,23 +809,7 @@ namespace Microsoft.PowerFx.Intellisense
                 AddSuggestion(intellisenseData, funcNamespace.Name, SuggestionKind.Global, SuggestionIconKind.Other, DType.Unknown, requiresSuggestionEscaping: true);
             }
 
-            if (intellisenseData.Binding.NameResolver is IGlobalSymbolNameResolver nr2)
-            {
-                var globalSymbols = nr2.GlobalSymbols;
-                if (globalSymbols != null)
-                {
-                    foreach (var symbol in globalSymbols)
-                    {
-                        var suggestableName = symbol.Key;
-                        if (symbol.Value.DisplayName.IsValid)
-                        {
-                            suggestableName = symbol.Value.DisplayName.Value;
-                        }
-
-                        AddSuggestion(intellisenseData, suggestableName, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, true);
-                    }
-                }
-            }
+            intellisenseData.AddSuggestionsForGlobals();
         }
 
         public static void AddSuggestionsForUnaryOperatorKeyWords(IntellisenseData.IntellisenseData intellisenseData)

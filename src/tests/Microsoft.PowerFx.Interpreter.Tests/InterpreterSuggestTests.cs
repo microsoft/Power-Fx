@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
@@ -13,6 +14,7 @@ using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using static Microsoft.PowerFx.Tests.CustomFunctions;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -44,7 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
-        [InlineData("TopOptionSetField <> |", "OptionSet", "OtherOptionSet")]
+        [InlineData("TopOptionSetField <> |")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
@@ -183,8 +185,52 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var config = SuggestTests.Default;
             config.SymbolTable.EnableMutationFunctions();
+
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expectedSuggestions.OrderBy(x => x), actualSuggestions.OrderBy(x => x));
+        }
+
+        [Theory]
+        [InlineData("Collect(|", "Table1", "table2")]
+        [InlineData("Collect(t1,|", "record1", "record2")]
+        [InlineData("Collect(|, record1", "Table1", "table2")]
+        [InlineData("Sum(|", "num", "str")]
+        [InlineData("Text(|", "num", "str")]
+        [InlineData("Language(|")]
+        [InlineData("Filter([1,2], |", "ThisRecord", "Value")]
+
+        // Suggests Enum.
+        [InlineData("Text(Now(), |", "DateTimeFormat.LongDate", "DateTimeFormat.LongDateTime", "DateTimeFormat.LongDateTime24", "DateTimeFormat.LongTime", "DateTimeFormat.LongTime24", "DateTimeFormat.ShortDate", "DateTimeFormat.ShortDateTime", "DateTimeFormat.ShortDateTime24", "DateTimeFormat.ShortTime", "DateTimeFormat.ShortTime24", "DateTimeFormat.UTC", "num", "str")]
+
+        // Custom Function has arg with signature of tableType2, So only suggest table2
+        [InlineData("RecordsTest(|", "table2")]
+
+        // No suggestion if function is not in binder.
+        [InlineData("InvalidFunction(|")]
+        public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
+        {
+            var config = SuggestTests.Default;
+
+            var tableType1 = TableType.Empty();
+            var tableType2 = TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String));
+            config.SymbolTable.EnableMutationFunctions();
+            config.SymbolTable.AddVariable("table1", tableType1, displayName: "Table1");
+            config.SymbolTable.AddVariable("table2", tableType2);
+
+            // Do not suggest Deferred.
+            config.SymbolTable.AddVariable("deferred", FormulaType.Deferred);
+
+            config.SymbolTable.AddVariable("record1", tableType1.ToRecord());
+            config.SymbolTable.AddVariable("record2", tableType2.ToRecord());
+
+            config.SymbolTable.AddVariable("num", FormulaType.Number);
+            config.SymbolTable.AddVariable("str", FormulaType.String);
+
+            var customFunction = new TestAggregateIdentityCustomFunction<TableType, TableValue>(tableType2);
+            config.AddFunction(customFunction);
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
         }
     }
 }

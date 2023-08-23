@@ -4814,11 +4814,11 @@
     
   </data>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>{1} атау кеңістігінде {0} функциясы ұсынылмайды.</value>
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
+    <value>{1} атау кеңістігінде {0} функциясына қолдау көрсетілмейді.</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5029,7 +5029,7 @@
     <value>Бұл жазбаны көшіру мүмкін емес. Оның орнына қажетті жеке өрістерді көшіру үшін {...} жазбасы арқылы кірістірілген жазба жасаңыз.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <value>"{0}" функциясының екінші аргументіне тек сандық және күн/уақыт мәндері үшін ғана қолдау көрсетіледі.</value>
     
   </data>
 </root>

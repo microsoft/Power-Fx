@@ -4814,11 +4814,11 @@
     
   </data>
   <data name="WarnDeprecatedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is deprecated.</value>
+    <value>Im Namespace {1} ist die Funktion {0} veraltet.</value>
     
   </data>
   <data name="ErrUnsupportedFunction" xml:space="preserve">
-    <value>In namespace {1}, function {0} is not supported.</value>
+    <value>Im Namespace {1} wird die Funktion {0} nicht unterstützt.</value>
     
   </data>
   <data name="WarnDeferredType" xml:space="preserve">
@@ -5029,7 +5029,7 @@
     <value>Dieser Datensatz kann nicht kopiert werden. Erstellen Sie stattdessen einen Inline-Datensatz mithilfe der Notation {...}, um die einzelnen gewünschten Felder zu kopieren.</value>
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
-    <value>The second argument of the '{0}' function is only supported for numeric and date/time values.</value>
+    <value>Das zweite Argument der „{0}“-Funktion wird nur für numerische und Datums-/Uhrzeitwerte unterstützt.</value>
     
   </data>
 </root>

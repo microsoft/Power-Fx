@@ -282,7 +282,7 @@ namespace Microsoft.PowerFx.Core.Tests.Helpers
             {
                 IExternalDataSource dataSource = null;
 
-                if ((binding.Document != null && !binding.Document.Properties.EnabledFeatures.IsEnhancedDelegationEnabled) || !TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
+                if (!TryGetValidDataSourceForDelegation(callNode, binding, FunctionDelegationCapability, out dataSource))
                 {
                     if (dataSource != null && !dataSource.IsDelegatable)
                     {

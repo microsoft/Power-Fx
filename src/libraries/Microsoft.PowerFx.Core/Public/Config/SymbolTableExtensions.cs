@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx
                 .Add("Email", FormulaType.String)
                 .Add("Id", FormulaType.String);
 
-            symbolTable.AddHostObject("User", userInfoType, GetUserInfoObject);
+            symbolTable.AddHostObject(SymbolTable.UserInfoSymbolName, userInfoType, GetUserInfoObject);
         }
 
         private static FormulaValue GetUserInfoObject(IServiceProvider serviceProvider)
