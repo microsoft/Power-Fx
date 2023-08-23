@@ -217,6 +217,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             config.SymbolTable.AddVariable("table1", tableType1, displayName: "Table1");
             config.SymbolTable.AddVariable("table2", tableType2);
 
+            // Do not suggest Deferred.
+            config.SymbolTable.AddVariable("deferred", FormulaType.Deferred);
+
             config.SymbolTable.AddVariable("record1", tableType1.ToRecord());
             config.SymbolTable.AddVariable("record2", tableType2.ToRecord());
 

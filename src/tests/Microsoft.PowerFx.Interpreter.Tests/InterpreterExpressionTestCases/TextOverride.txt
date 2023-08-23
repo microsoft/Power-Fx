@@ -1,5 +1,0 @@
-﻿#OVERRIDE: Text.txt
-
-// should be: "100%‰'eE:"
->> Text(100, "#%‰'eE:")
-#Skip waiting on https://github.com/microsoft/Power-Fx/issues/1705, here we are incorrectly interpreting the single tick as something special, because the underling C# format routine supports single tick for escaping when we do not.

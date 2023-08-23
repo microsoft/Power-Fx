@@ -145,14 +145,15 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         internal static void ValidateFormatArgs(string name, CheckTypesContext checkTypesContext, TexlNode[] args, DType[] argTypes, IErrorContainer errors, ref Dictionary<TexlNode, DType> nodeToCoercedTypeMap, ref bool isValid)
         {
+            bool hasDateTimeFormatEnum = BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules);
             if (checkTypesContext.Features.PowerFxV1CompatibilityRules && argTypes[0] != DType.UntypedObject && !TextFormatUtils.AllowedListToUseFormatString.Contains(argTypes[0]))
             {
                 errors.EnsureError(DocumentErrorSeverity.Moderate, args[1], TexlStrings.ErrNotSupportedFormat_Func, name);
                 isValid = false;
             }
-            else
+            else if (!checkTypesContext.Features.StronglyTypedBuiltinEnums || !hasDateTimeFormatEnum)
             {
-                if (BuiltInEnums.DateTimeFormatEnum.FormulaType._type.Accepts(argTypes[1], exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: checkTypesContext.Features.PowerFxV1CompatibilityRules))
+                if (hasDateTimeFormatEnum)
                 {
                     // Coerce enum values to string
                     CollectionUtils.Add(ref nodeToCoercedTypeMap, args[1], DType.String);

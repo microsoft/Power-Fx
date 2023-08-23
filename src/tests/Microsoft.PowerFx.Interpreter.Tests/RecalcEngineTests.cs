@@ -336,6 +336,74 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DefTypeAndFunc()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618 // Type or member is obsolete
+            recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("getAge(p: Person): Number = p.Age;").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Equal(1.0, recalcEngine.Eval("getAge({Age: Float(1)})").ToObject());
+        }
+
+        [Fact]
+        public void DefComplexTypeWithFunc()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618 // Type or member is obsolete
+            recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: Complex): Number = p.A.B;").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Equal(1.0, recalcEngine.Eval("foo({A: {B: Float(1.0)}})").ToObject());
+        }
+
+        [Fact]
+        public void IncorrectType()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618 // Type or member is obsolete
+            recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: Complex): Number = Float(1.0);").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Throws<System.AggregateException>(() => recalcEngine.Eval("foo({A: \"hi\"})"));
+        }
+
+        [Fact]
+        public void DefManyType()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618 // Type or member is obsolete
+            recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: C): Number = p.b.a.num + p.a.num;").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Equal(1.5, recalcEngine.Eval("foo({b: {a: {num: Float(0.5)}}, a: {num: Float(1.0)}})").ToObject());
+        }
+
+        [Fact]
         public void DefFuncDecimal()
         {
             var config = new PowerFxConfig();
