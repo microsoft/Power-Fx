@@ -1,5 +1,12 @@
 #SETUP: disable:PowerFxV1CompatibilityRules
 
+// Block language code
+>> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.89, "[$-fr-FR]# ###,## €", "fr-FR")
+Error({Kind:ErrorKind.InvalidArgument})
+
 // Not support format string for non numeric/datetime/date/time
 >> Text("123.456", "###")
 Error({Kind:ErrorKind.InvalidArgument})
@@ -64,14 +71,783 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"), "b", "vi-Vn")
 Error({Kind:ErrorKind.InvalidArgument})
 
+>> Text("", "0,00.0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("", "####.#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// end with e or e+ in numeric is invalid
+>> Text(1234567.1234567, "0.00e+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "0.00e")
+Error({Kind:ErrorKind.InvalidArgument})
+
 >> Text("ss", "true")
 Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text("ss", "false")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text("", "0,00.0")
+>> Text(1234567.1234567, "\""#\""\")
 Error({Kind:ErrorKind.InvalidArgument})
 
->> Text("", "####.#")
+>> Text(123.456, "\m\m\m\-ddd\-yyy\")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, """""""#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, """\""""#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm "" dd, yyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470, "DDDD, MMM "" DD, YYY") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Format does not have close double quote
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ([""][^""]*[""]) dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470, "mmm ([""][^""]*[""]) dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""])"" dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470, "mmm ""([""][^""]*[""])"" dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(Date(1983, 6, 3), "dddd, mmm "" dd, yyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Block locale until we will support for datetime as well
+>> Text(1234.5678, "[$-fr-FR]# ##0,00", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR]# ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-en-US]#,##0.00", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-pt-BR]#.##0,00", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-pt-BR]#.##0,00", "fr-FR")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-en-US]#,##0.00", "pt-BR")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678,"[$-en-US]0 # # # !!!", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// The thousands separator in the fi-FI locale is the no-break space (U+00A0)
+>> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(12345.6789, $"[$-fi-FI]#{Char(160)}##0.00", "fi-FI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// The thousands separator in the fr-FR locale is the narrow no-break space (U+202F)
+>> Text(12345.6789, $"[$-fr-FR]#{ParseJSON("""\u202F""")}##0.00", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-en-US]", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR]", "fr-FR")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR]", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-  fr-FR  ]# ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR  ]# ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-  fr-FR]# ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR][# ##0,00]", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "$-fr-FR][ # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "$[-fr-FR] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR][$-fr-FR# ##0,00]", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "]$-fr-FR[ # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$ # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "][-$ # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// If does not have valid language code, throw error
+>> Text(1234.5678, "[$-a]0,0", "en-US")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr - FR]# ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR #] ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR # ##0,00]", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR,en-US] # ##0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234.5678, "[$-fr-FR # ##]0,00", "vi-VI")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Format contains block characters
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""]) dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(30470, "mmm ""([""][^""]*[""]) dd yyyy") 
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123456789, "???????????????????")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Fractions with forward slash.  We should reserve the slash character for now and produce an error.
+// Excel: "5/4"
+>> Text(1.25, "#/#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1 1/4"
+>> Text(1.25, "# #/#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1 1/2"
+>> Text(1.5, "# #/##")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "32 1/800"
+>> Text(32.00125, "# #/#####")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "3/5"
+>> Text(0.59375, "0/0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "19/32"
+>> Text(0.59375, "00/00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "19/32"
+>> Text(0.59375, "0/#0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/8"
+>> Text(0.125, "0/0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "01/08"
+>> Text(0.125, "00/00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/8"
+>> Text(0.125, "0/#0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 1/3"
+>> Text(4.34, "# ?/?")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/3"
+>> Text(0.34, "# ?/?")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 17/50"
+>> Text(4.34, "# ??/??")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4  17/50", note extra space
+>> Text(4.34, "# ???/???")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 1/2"
+>> Text(4.34, "# ?/2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 1/4"
+>> Text(4.34, "# ?/4")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4  5/16", note extra space
+>> Text(4.34, "# ??/16")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 3/10"
+>> Text(4.34, "# ?/10")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 34/100"
+>> Text(4.34, "# ?/100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 1/3"
+>> Text(4.34, "# #/#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/3"
+>> Text(0.34, "# #/#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 17/50"
+>> Text(4.34, "# ##/##")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 17/50"
+>> Text(4.34, "# ###/###")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 1/2"
+>> Text(4.34, "# #/2")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 1/4"
+>> Text(4.34, "# #/4")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 5/16"
+>> Text(4.34, "# ##/16")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 3/10"
+>> Text(4.34, "# #/10")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "4 34/100"
+>> Text(4.34, "# #/100")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/1"
+>> Text(1, "0/0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/1"
+>> Text(1, "#/#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/1"
+>> Text(1, "?/?")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "  1/1  "
+>> Text(1, "???/???")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1/1"
+>> Text(1, "###/###")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "001/001"
+>> Text(1, "000/000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "494/4"
+>> Text(123.456, "#/4")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// block conditional sections.
+// Excel: "(123) 456-7898"
+>> Text(1234567898, "[<=9999999]###-####;(###) ###-####")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "123-4567"
+>> Text(1234567, "[<=9999999]###-####;(###) ###-####")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Indent with _(and _) around cell contents. Excel Text function replaces with a space. We should repalce with a space in time, error for now.
+// Excel: " 3"
+>> Text(3, "_(#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " 3 "
+>> Text(3, "_(#_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "3 "
+>> Text(3, "#_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "   3"
+>> Text(3, "_(_(_(#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "   3   "
+>> Text(3, "_(_(_(#_)_)_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "3   "
+>> Text(3, "#_)_)_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " 3 "
+>> Text(3, "_-#_-")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " $1.00* "
+>> Text(1, "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " $(1.00)"
+>> Text(-1, "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " $-   "
+>> Text(0, "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " asdf "
+>> Text("asdf", "_($* #,##0.00""*""_);_($* (#,##0.00);_($* ""-""??_);_(@_)")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Asterisk is used for alignment in cell formatting, repeating character after the *. Ignored by Excel text function. We should ignore long term, error for now.
+// Excel: "$ 1.00"
+>> Text(1, "$ * 0.00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "-$ 1.00"
+>> Text(-1, "$ * 0.00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "$ 0.00"
+>> Text(0, "$ * 0.00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "3"
+>> Text(3, "#,###* ; -#,###* ; 0* ;* @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " -3"
+>> Text(-3, "#,###* ; -#,###* ; 0* ;* @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " 0"
+>> Text(0, "#,###* ; -#,###* ; 0* ;* @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "asdf"
+>> Text("asdf", "#,###* ; -#,###* ; 0* ;* @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1"
+>> Text(1, "*0#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1"
+>> Text(1, "#*=")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1"
+>> Text(1, "*(#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "$ 1,234,567"
+>> Text(1234567.1234567, "$ * #,##0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// * by itself is an error, it needs a character to either side
+>> Text(1234567.1234567, "*")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: ""
+>> Text(1234567.1234567, "*=")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "=*")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text("asdf", "##;(##);ZZZ;""AAA """)
+Errors: Error 0-36: The function 'Text' has some invalid arguments.|Warning 13-35: Incorrect format specifier for 'Text'.
+
+>> Text("asdf", "##;(##);ZZZ;""AAA ""@")
+Errors: Error 0-37: The function 'Text' has some invalid arguments.|Warning 13-36: Incorrect format specifier for 'Text'.
+
+>> Text("asdf", "##;(##);ZZZ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Output localization. We will cover this with the third argumnet for now.
+// Excel: "1,234,567.1235"
+>> Text(1234567.1234567, "[$-en-US]#,####.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "$ 1,234,567.1235"
+>> Text(1234567.1234567, "[$-en-US]$ #,####.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "$ 1,234,567.1235"
+>> Text(1234567.1234567, "[$-fr-FR]$ #,####.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "$ 1,234,567.1235"
+>> Text(1234567.1234567, "[$-de-DE]$ #,####.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "€ 1,234,567.1235"
+>> Text(1234567.1234567, "[$€-fr-FR] #,####.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: " 3"
+>> Text(3, "[$-000000] #")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "$$$$ 1,234,567.1235"
+>> Text(1234567.1234567, "[$$$$-en-US]$ #,####.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Colon, interpreted as a time seperator, not allowed between numbers
+>> Text(2, ":#:")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(2, "#:#")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(2, "?:?")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(2, "z:0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(45, "foo: ####")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(45, "foo: 000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(2, "0:""#""0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Block General (case insensitive) and @ - Reserved word for "default" formatting
+// Excel: "1234567.123"
+>> Text(1234567.1234567, "General")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1234567.123"
+>> Text(1234567.1234567, "general")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1234567.123"
+>> Text(1234567.1234567, "gEnErAl")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: ""
+>> Text(1234567.1234567, "g")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: ""
+>> Text(1234567.1234567, "G")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "Foo asdf"
+>> Text("asdf", "Foo @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: #VALUE!
+>> Text(1E+23, "@ ###")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: #VALUE!
+>> Text("asdf", "@ ###")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "asdf"
+>> Text("asdf", "@")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "asdf asdf"
+>> Text("asdf", "@ @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Elapsed time
+// Excel: "0:00"
+>> Text(0, "[h]:mm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "00:00"
+>> Text(0, "[mm]:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "7:47"
+>> Text(0.324305555555556, "[h]:mm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "467:00"
+>> Text(0.324305555555556, "[mm]:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "24:14"
+>> Text(1.010101, "[h]:mm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "1454:33"
+>> Text(1.010101, "[mm]:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "Jan Tuesday 1900 "
+>> Text(3, "[$-en-US]mmm dddd yyyy ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "janv. mardi 1900 "
+>> Text(3, "[$-fr-FR]mmm dddd yyyy ")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(3, "/m")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Excel: "0003.0"
+>> Text(3, "[Blue][>10]0.00;[Yellow][>0]0000.0")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Expanding elapsed time to include days
+// Excel: #VALUE!, Desired: 32.07:47:00.00
+>> Text(32.324305555, "[d].hh:mm:ss.00")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Not allow the last character is opening quote (missing close quote).
+>> Text(123.456, "0.0""")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123.456, "mmm ddd yyy""")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(123.456, "@")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(12.34567,"Foo @")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// C# supports E without a '+' or '-' after it.  Consitent with Excel, we do not.
+>> Text(1234567.123,"0.00E+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.123,"0.00E")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.123,"0.00e+")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.123,"0.00e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.1234567, "e")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Reserved [@...] notation
+>> Text(1234567.123,"[@-en-US]#,###.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.123,"[@-fr-Fr]#.###,0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.123,"[@]#,###.0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1234567.123,"[@]#.###,0000")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Literal characters conflicting with date/time format specifiers.
+>> Text(72, "# \m")
+Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# \y")
+Errors: Error 0-16: The function 'Text' has some invalid arguments.|Warning 9-15: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# y")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+>> Text(72, "# m")
+Errors: Error 0-15: The function 'Text' has some invalid arguments.|Warning 9-14: Incorrect format specifier for 'Text'.
+
+// Scaling factor.  Each comma on the end divides the number by 1,000.
+>> Text(1234567891234, "0,0,,,""dollar""\z\M")
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "0,0,""dollar"",\z,\M")
+Errors: Error 0-43: The function 'Text' has some invalid arguments.|Warning 20-42: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "0,0,""dollar"",\z,z""P""\M")
+Errors: Error 0-49: The function 'Text' has some invalid arguments.|Warning 20-48: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "\K#\M,,,z'""TH""")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
+
+>> Text(1234567891234, "\K#\M,,z'""TH"",")
+Errors: Error 0-39: The function 'Text' has some invalid arguments.|Warning 20-38: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,,,z'\k\m")
+Errors: Error 0-56: The function 'Text' has some invalid arguments.|Warning 22-55: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.###,###,###,###,###,###,,,z'\k\m")
+Errors: Error 0-61: The function 'Text' has some invalid arguments.|Warning 22-60: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,,,z'\k\m""am""")
+Errors: Error 0-62: The function 'Text' has some invalid arguments.|Warning 22-61: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,,,z'\k\m\d\y""am""")
+Errors: Error 0-66: The function 'Text' has some invalid arguments.|Warning 22-65: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.##################,z'\k\m,\d\y,""am"",")
+Errors: Error 0-67: The function 'Text' has some invalid arguments.|Warning 22-66: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.###############,###,z'\k\m,\d\y,""am"",")
+Errors: Error 0-68: The function 'Text' has some invalid arguments.|Warning 22-67: Incorrect format specifier for 'Text'.
+
+>> Text(1234567.1234567, "#,#.###,###,###,###,###,###,z'\k\m,\d\y,""am"",")
+Errors: Error 0-72: The function 'Text' has some invalid arguments.|Warning 22-71: Incorrect format specifier for 'Text'.
+
+// 5 digit month not supported yet
+>> Text(70.125, "MMMMM DD YYY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "mmmmm dd yyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "MMMMM DDD YYY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "mmmmm ddd yyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "MMMMM DDD YY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "mmmmm ddd yy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "MMMMM DDD YYYY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "mmmmm ddd yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "MMMMM DDDD YYYY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "mmmmm dddd yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "MMMMM D YYYY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.125, "mmmmm d yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(68.125, "MMMMM D YYYY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(68.125, "mmmmm d yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(68.125, "MMMMMM D YYYY")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(68.125, "mmmmmm d yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(68.125, "mMmMmmMM d yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(68.125, "MMMmm d yyyy")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMMM dd, yyyy hh:mm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, MMMM dd, yyyy hh:mmmmm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmmm-dd hh:mm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"yyyy-mmmm-dd hh:mmmmmm:ss")
+Error({Kind:ErrorKind.InvalidArgument})
+
+// Lowercase am/pm and a/p are not supported, C# has no lowercase representation
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.82430555555555555555555,"h:mm:ss a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.82430555555555555555555,"h:mm:ss am/pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss am/pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss Am/Pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss aM/pM")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss a/p", "vi-VN")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(70.32430555555555555555555,"h:mm:ss am/pm", "vi-VN")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/putc")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/putc")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/putc")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss a/p")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss am/pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss aM/pM")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(DateTime(1983, 6, 3, 2, 53, 9, 0),"dddd, mmmm dd, yyyy hh:mm:ss Am/Pm")
+Error({Kind:ErrorKind.InvalidArgument})
+
+>> Text(1, 
+  "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
 Error({Kind:ErrorKind.InvalidArgument})

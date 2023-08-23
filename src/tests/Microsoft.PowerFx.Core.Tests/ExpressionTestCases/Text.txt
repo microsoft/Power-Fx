@@ -38,10 +38,6 @@
 >> Text(123456789, "0,00.0")
 "123,456,789.0"
 
-//Excel returns "123457"
->> Text(123456789, "0,")
-"123457"
-
 >> Text(1234.59, "####.#")
 "1234.6"
 
@@ -68,10 +64,6 @@
 
 >> Text(123456789, "#,###")
 "123,456,789"
-
-//Excel throws error: "Value used in the formula is of the wrong data type"
->> Text(100, "#%‰'eE:")
-"100%‰'eE:"
 
 >> Text(567, "!#!#!#!#!")
 "!!5!6!7!"
@@ -222,9 +214,6 @@ Blank()
 
 >> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
 "27 Tháng Hai 2023 12:00:00 SA"
-
->> Text(1.2, "", "vi-Vn")
-"1,2"
 
 >> Text(GUID("0f8fad5bd9cb469fa16570867728950e"))
 "0f8fad5b-d9cb-469f-a165-70867728950e"

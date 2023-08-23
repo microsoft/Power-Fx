@@ -34,20 +34,8 @@
 >> Text(0, "'shortdate'") 
 "12/30/1899"
 
->> Text(0, "longdate") 
-"long30ate"
-
->> Text(0, "shortdate") 
-"00ort30ate"
-
 >> Text(0, "short day") 
 "00ort 30a99"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm "" dd, yyy") 
-"Friday, Jun "" 03, 1983"
-
->> Text(30470, "DDDD, MMM "" DD, YYY") 
-"Friday, Jun "" 03, 1983"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "dddd, mmm """" dd, yyy") 
 "Friday, Jun  03, 1983"
@@ -157,18 +145,6 @@
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:YYYY:MM") 
 "02:1983:06"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "ha/p") 
-"2a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HA/P") 
-"2a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hha/p") 
-"02a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHA/P") 
-"02a"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hAM/PM") 
 "2AM"
 
@@ -180,18 +156,6 @@
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HHAM/PM") 
 "02AM"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm a/p") 
-"2:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "H:MM a/p") 
-"2:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "hh:mm a/p") 
-"02:53 a"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "HH:MM a/p") 
-"02:53 a"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 0), "h:mm AM/PM") 
 "2:53 AM"
@@ -400,12 +364,6 @@
 >> Text(33333.6875, "'shorttime'") 
 "4:30 PM"
 
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime") 
-"long1ateti1e"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shortdatetime") 
-"2514ort1ateti1e"
-
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longdatetime24") 
 "long1ateti1e24"
 
@@ -417,12 +375,6 @@
 
 >> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime24") 
 "2514ortti32e24"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "longtime") 
-"longti1e"
-
->> Text(DateTime(1970, 1, 1, 14, 32, 25, 678), "shorttime") 
-"2514ortti32e"
 
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), """h"" dddd, mmm dd, yyy") 
 "h Friday, Jun 03, 1983"
@@ -484,24 +436,6 @@
 >> Text(30470, "mmm ""[some*]"" dd ""(de)+"" yyyy") 
 "Jun [some*] 03 (de)+ 1983"
 
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[""]) 03 1983"
-
->> Text(30470, "mmm ([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[""]) 03 1983"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[]) 03 1983"
-
->> Text(30470, "mmm ""([""][^""]*[""]) dd yyyy") 
-"Jun ([][^]*[]) 03 1983"
-
->> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""([""][^""]*[""])"" dd yyyy") 
-"Jun ([][^]*[])"" 03 1983"
-
->> Text(30470, "mmm ""([""][^""]*[""])"" dd yyyy") 
-"Jun ([][^]*[])"" 03 1983"
-
 >> Text(DateTime(1983, 6, 3, 2, 53, 9, 123), "mmm ""[de]+de"" dd yyyy") 
 "Jun [de]+de 03 1983"
 
@@ -522,10 +456,6 @@
 
 >> Text(30470.01953125, "YYYY-MM-DD HH:MM:SS.000") 
 "1983-06-03 00:28:07.500"
-
->> Text(1, 
-  "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-Error({Kind:ErrorKind.InvalidArgument})
 
 >> Text(1, "00.00 dd-mm-yyyy")
 Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26: Incorrect format specifier for 'Text'.
@@ -553,9 +483,6 @@ Errors: Error 0-27: The function 'Text' has some invalid arguments.|Warning 8-26
 
 >> Text(Date(1983, 6, 3), "dddd, mmm dd, yyy") 
 "Friday, Jun 03, 1983"
-
->> Text(Date(1983, 6, 3), "dddd, mmm "" dd, yyy") 
-"Friday, Jun "" 03, 1983"
 
 >> Text(Date(1970, 1, 1), "'shortdate'") 
 "1/1/1970"
