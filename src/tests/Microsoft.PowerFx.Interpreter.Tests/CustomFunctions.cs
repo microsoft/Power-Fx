@@ -333,7 +333,7 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Must have "Function" suffix. 
-        private class TestAggregateIdentityCustomFunction<TType, TValue> : ReflectionFunction
+        internal class TestAggregateIdentityCustomFunction<TType, TValue> : ReflectionFunction
             where TType : AggregateType
             where TValue : FormulaValue
         {
