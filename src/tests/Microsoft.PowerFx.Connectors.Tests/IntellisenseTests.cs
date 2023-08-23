@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
-using Newtonsoft.Json.Serialization;
 using Xunit;
 
 #pragma warning disable SA1515 // Single-line comment should be preceded by blank line
