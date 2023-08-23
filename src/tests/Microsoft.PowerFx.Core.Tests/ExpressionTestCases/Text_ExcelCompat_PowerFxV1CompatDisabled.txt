@@ -1,4 +1,4 @@
-#SETUP: disable:PowerFxV1CompatibilityRules
+#SETUP: disable:PowerFxV1CompatibilityRules, disable:StronglyTypedBuiltinEnums
 
 // Block language code
 >> Text(1234.5678, "$-fr-FR] # ##0,00", "vi-VI")
@@ -851,3 +851,118 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text(1, 
   "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
 Error({Kind:ErrorKind.InvalidArgument})
+
+// DateTimeFormat Enum
+>> Text(DateTimeValue(Blank()), DateTimeFormat.LongDate)
+"'long30ate'"
+
+>> Text(DateTimeValue(""), DateTimeFormat.ShortDate)
+"'00ort30ate'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime)
+"'long15ateti8e'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDate)
+"'long15ate'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongDateTime24)
+"'long15ateti8e24'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime)
+"'longti8e'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.LongTime24)
+"'longti8e24'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDate)
+"'92ort15ate'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime)
+"'92ortti53e'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortTime24)
+"'92ortti53e24'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime)
+"'92ort15ateti8e'"
+
+>> Text(DateTime(2023, 8, 15, 2, 53, 9, 0), DateTimeFormat.ShortDateTime24)
+"'92ort15ateti8e24'"
+
+>> Text(44928, DateTimeFormat.LongDate)
+"'long2ate'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDate)
+"'long30ate'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime)
+"'long30ateti3e'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongTime)
+"'longti3e'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortDate)
+"'017ort30ate'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime)
+"'017ortti30e'"
+
+>> Text(Time(17,2,3), DateTimeFormat.LongTime, "vi-VN")
+"'longti12e'"
+
+>> Text(DateValue("02/27/2023"), DateTimeFormat.LongDate, "vi-VN")
+"'long27ate'"
+
+>> Text(DateTimeValue("02/27/2023"), DateTimeFormat.LongDateTime, "vi-VN")
+"'long27ateti2e'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongDateTime24)
+"'long30ateti3e24'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.LongTime24)
+"'longti3e24'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortDateTime24)
+"'017ort30ateti3e24'"
+
+//Excel doesn't support DateTimeValue function or the DateTimeFormat formats
+>> Text(DateTimeValue("March 30, 2022 5:30 PM"), DateTimeFormat.ShortTime24)
+"'017ortti30e24'"
+
+>> Text(DateTimeValue("2023-02-03 04:05:06Z"), DateTimeFormat.UTC)
+"utc"
+
+>> Text(DateTimeValue("2023-12-21T12:34:56.789Z"), DateTimeFormat.UTC)
+"utc"
+
+>> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime24)
+"'2514ortti32e24'"
+
+>> Text(Time(14, 32, 25, 678), DateTimeFormat.ShortTime) 
+"'2514ortti32e'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.ShortDate) 
+"'00ort1ate'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime) 
+"'00ort1ateti1e'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.ShortDateTime24) 
+"'00ort1ateti1e24'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDate) 
+"'long1ate'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime) 
+"'long1ateti1e'"
+
+>> Text(Date(1970, 1, 1), DateTimeFormat.LongDateTime24)
+"'long1ateti1e24'"

@@ -150,11 +150,11 @@ namespace Microsoft.PowerFx
             {
                 FormatCultureName = null,
                 FormatArg = null,
-                HasDateTimeFmt = false,
+                DateTimeFmt = DateTimeFmtType.NoDateTimeFormat,
                 HasNumericFmt = false
             };
 
-            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, textFormatArgs, out result, cancellationToken);
+            return TryText(formatInfo, IRContext.NotInSource(FormulaType.String), value, textFormatArgs, cancellationToken, out result);
         }
 
         /// <summary>

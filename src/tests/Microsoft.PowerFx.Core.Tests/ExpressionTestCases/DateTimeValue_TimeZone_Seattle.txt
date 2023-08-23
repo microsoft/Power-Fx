@@ -1,5 +1,5 @@
 ﻿// (UTC-08:00) Pacific Time (US & Canada)
-#SETUP: TimeZoneInfo("Pacific Standard Time")
+#SETUP: TimeZoneInfo("Pacific Standard Time"), StronglyTypedBuiltinEnums
 
 >> DateTimeValue("2022-08-23T12:00:00Z") 
 DateTime(2022,8,23,5,0,0,0)
