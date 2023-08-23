@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -55,7 +56,11 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             MissingTypes = missingTypes;
             BoundTo = string.Empty;
             CleanupHandlers = new List<ISpecialCaseHandler>();
+            Services = (context as IntellisenseContext)?.Services;
         }
+
+        // can be null
+        internal IServiceProvider Services { get; set; }
 
         internal DType ExpectedType { get; }
 

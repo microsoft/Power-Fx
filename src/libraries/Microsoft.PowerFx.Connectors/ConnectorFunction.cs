@@ -230,8 +230,13 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
         }
-
+                
         public ConnectorParameters GetParameters(FormulaValue[] knownParameters)
+        {
+            return this.GetParameters(knownParameters, null);
+        }
+
+        public ConnectorParameters GetParameters(FormulaValue[] knownParameters, IServiceProvider services)
         {
             ConnectorParameterWithSuggestions[] parametersWithSuggestions = RequiredParameters.Select((rp, i) => i < ArityMax - 1
                                                                                                             ? new ConnectorParameterWithSuggestions(rp, i < knownParameters.Length ? knownParameters[i] : null)
@@ -242,7 +247,7 @@ namespace Microsoft.PowerFx.Connectors
             if (HasServiceFunction)
             {
                 int index = Math.Min(knownParameters.Length, _defaultServiceFunction.MaxArity - 1);
-                ConnectorSuggestions suggestions = _defaultServiceFunction.GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                ConnectorSuggestions suggestions = _defaultServiceFunction.GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 error = suggestions == null || suggestions.Error != null;
 

@@ -260,15 +260,17 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return fArgsValid;
         }
 
-        public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, CancellationToken cts)
+        public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider services, CancellationToken cts)
         {
+            var connectorCtx = services?.GetService<RuntimeConnectorContext>() ?? new RuntimeConnectorContext();
+
             if (argPosition >= 0 && MaxArity > 0 && _requiredParameters.Length > MaxArity - 1)
             {
                 ConnectorDynamicValue cdv = _requiredParameters[Math.Min(argPosition, MaxArity - 1)].ConnectorDynamicValue;
 
                 if (cdv != null && cdv.ServiceFunction != null)
                 {
-                    FormulaValue result = await ConnectorDynamicCallAsync(cdv, knownParameters, cts).ConfigureAwait(false);
+                    FormulaValue result = await ConnectorDynamicCallAsync(cdv, knownParameters, connectorCtx, cts).ConfigureAwait(false);
                     List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
                     if (result is ErrorValue ev)
@@ -310,7 +312,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
                 if (cds != null && cds.ServiceFunction != null && !string.IsNullOrEmpty(cds.ValuePath))
                 {
-                    FormulaValue result = await ConnectorDynamicCallAsync(cds, knownParameters.Take(Math.Min(argPosition, MaxArity - 1)).ToArray(), cts).ConfigureAwait(false);
+                    FormulaValue result = await ConnectorDynamicCallAsync(cds, knownParameters.Take(Math.Min(argPosition, MaxArity - 1)).ToArray(), connectorCtx, cts).ConfigureAwait(false);
                     List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
                     if (result is ErrorValue ev)
@@ -369,10 +371,10 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
             return arguments.ToArray();
         }
 
-        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, CancellationToken cts)
+        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, RuntimeConnectorContext connectorCtx, CancellationToken cts)
         {
             cts.ThrowIfCancellationRequested();
-            return await dynamicApi.ServiceFunction.InvokeAsync(FormattingInfoHelper.CreateFormattingInfo(), arguments, cts).ConfigureAwait(false);
+            return await dynamicApi.ServiceFunction.InvokeAsync(FormattingInfoHelper.CreateFormattingInfo(), arguments, connectorCtx, cts).ConfigureAwait(false);
         }
 
         // This method returns true if there are special suggestions for a particular parameter of the function.
@@ -456,11 +458,21 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         }
 
 
+        // Inoke from interpreter.
+        // $$$ - this could pull a RuntimeConnectorContext from the runtime's service provider. 
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
+        {
+            RuntimeConnectorContext connectorCtx = new RuntimeConnectorContext();
+            return await this.InvokeAsync(context, args, connectorCtx, cancellationToken);
+        }
+
+        // Invoke from intellisense. 
+        // Use RuntimeConnectorContext to allow unique http client (auth token) per-request.
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, RuntimeConnectorContext connectorCtx, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            FormulaValue result = await (_invoker ?? throw new InvalidOperationException($"Function {Name} can't be invoked.")).InvokeAsync(context, args, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await (_invoker ?? throw new InvalidOperationException($"Function {Name} can't be invoked.")).InvokeAsync(context, args, connectorCtx, cancellationToken).ConfigureAwait(false);
             result = await PostProcessResultAsync(result, cancellationToken).ConfigureAwait(false);
 
             return result;
@@ -472,9 +484,11 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         // - ErrorValue
         private async Task<FormulaValue> GetNextPageAsync(string nextLink, CancellationToken cancellationToken)
         {
+            var connectorCtx = new RuntimeConnectorContext();
+
             cancellationToken.ThrowIfCancellationRequested();
 
-            FormulaValue result = await _invoker.InvokeAsync(nextLink, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await _invoker.InvokeAsync(nextLink, connectorCtx, cancellationToken).ConfigureAwait(false);
             result = await PostProcessResultAsync(result, cancellationToken).ConfigureAwait(false);
 
             return result;

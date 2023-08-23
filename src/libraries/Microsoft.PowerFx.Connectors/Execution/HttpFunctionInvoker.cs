@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -201,21 +202,21 @@ namespace Microsoft.PowerFx.Connectors
                     _returnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using HttpRequestMessage request = BuildRequest(args, context, _server, cancellationToken);
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
             using HttpRequestMessage request = new HttpRequestMessage(_method, new Uri(url).PathAndQuery);
-            return await ExecuteHttpRequest(cacheScope, throwOnError, request, cancellationToken).ConfigureAwait(false);
+            return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, CancellationToken cancellationToken)
+        private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
         {
             var key = request.RequestUri.ToString();
 
@@ -227,14 +228,15 @@ namespace Microsoft.PowerFx.Connectors
 
             return await _cache.TryGetAsync(cacheScope, key, async () =>
             {
-                var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                var client = localInvoker ?? _httpClient;
+                var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
     }
 
     // Closure over a HttpFunctionInvoker, but scoped to a cacheScope.
-    internal class ScopedHttpFunctionInvoker : IAsyncTexlFunction2
+    internal class ScopedHttpFunctionInvoker
     {
         private readonly string _cacheScope;
         private readonly HttpFunctionInvoker _invoker;
@@ -254,16 +256,37 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Name { get; }
 
-        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, RuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
+
             cancellationToken.ThrowIfCancellationRequested();
-            return _invoker.InvokeAsync(context, _cacheScope, args, cancellationToken, _throwOnError);
+            return _invoker.InvokeAsync(context, _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
-        public Task<FormulaValue> InvokeAsync(string url, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(string url, RuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
+            var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
+
             cancellationToken.ThrowIfCancellationRequested();
-            return _invoker.InvokeAsync(url, _cacheScope, cancellationToken, _throwOnError);
+            return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
+        }
+    }
+
+    // Base class to customize connection invocation at runtime. 
+    // This is useful when the http channel is short lived and we need a new one per invoke. 
+    public class RuntimeConnectorContext
+    {
+        public RuntimeConnectorContext()
+        {
+        }
+
+        // get invoke for function in the given namespace. 
+        // Invoker here must have same base address as the one passed to config.AddService.
+        public virtual HttpMessageInvoker GetInvoker(string @namespace)
+        {
+            // null means we must use the global invoker from config.AddService.
+            return null;
         }
     }
 }

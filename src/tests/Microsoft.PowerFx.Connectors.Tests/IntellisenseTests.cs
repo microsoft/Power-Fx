@@ -167,6 +167,89 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
+        [Theory]
+        [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", ", @"{ p1:")]        // stored proc with 1 param, out of record
+        public void ConnectorIntellisenseTestLSP(int responseIndex, int networkCall, string expression, string expectedSuggestions)
+        {
+            // These tests are exercising 'x-ms-dynamic-schema' extension property
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
+                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
+                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    () => "eyJ0eXA...",
+                    httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            // Real client comes at per-intellisense time. 
+            // - Must still pass in some non-null client to initialize the invoker
+            // - client must have same base address as what we pass in at intellisense. 
+            using var ignoreHttpClient = new HttpClient
+            {
+                BaseAddress = client.BaseAddress
+            };
+            const string cxNamespace = "SQL";
+            config.AddService(cxNamespace, apiDoc, ignoreHttpClient);
+            if (networkCall > 0)
+            {
+                testConnector.SetResponseFromFile(responseIndex switch
+                {
+                    1 => @"Responses\SQL Server Intellisense Response2 1.json",
+                    2 => @"Responses\SQL Server Intellisense Response2 2.json",
+                    _ => null
+                });
+            }
+
+            RecalcEngine engine = new RecalcEngine(config);
+
+            var ctx = new TestRuntimeConnectorContext();
+            ctx._clients[cxNamespace] = client;
+            BasicServiceProvider services = new BasicServiceProvider();
+            services.AddService<RuntimeConnectorContext>(ctx);
+                        
+            IPowerFxScope scope = new EditorContextScope(
+                (expr) => engine.Check(expression, symbolTable: null))
+            {
+                Services = services
+            };
+            IIntellisenseResult suggestions = scope.Suggest(expression, expression.Length);
+
+            string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
+            Assert.Equal(expectedSuggestions, list);
+
+            string networkTrace = testConnector._log.ToString();
+            string expectedNetwork = networkCall == 0 ? string.Empty :
+$@"POST https://tip1-shared-002.azure-apim.net/invoke
+ authority: tip1-shared-002.azure-apim.net
+ Authorization: Bearer eyJ0eXA...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46
+ x-ms-client-session-id: 8e67ebdc-d402-455a-b33a-304820832383
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sql/5f57ec83acef477b8ccc769e52fa22cc/v2/$metadata.json/datasets/default,default/procedures/sp_{responseIndex}
+ x-ms-user-agent: PowerFx/{PowerPlatformConnectorClient.Version}
+";
+
+            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
+        }
+
+        private class TestRuntimeConnectorContext : RuntimeConnectorContext
+        {
+            public Dictionary<string, HttpMessageInvoker> _clients = new Dictionary<string, HttpMessageInvoker>();
+
+            public override HttpMessageInvoker GetInvoker(string @namespace)
+            {
+                return _clients[@namespace];
+            }
+        }
+
         [Fact]
         public async Task ConnectorIntellisenseTest3()
         {
