@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx
         }
 
         [Obsolete("preview")]
-        public void DefineType(string script, ParserOptions parserOptions)
+        internal void DefineType(string script, ParserOptions parserOptions)
         {
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
             var definedTypes = parsedNamedFormulasAndUDFs.DefinedTypes.ToList();
