@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Texl;
@@ -482,7 +483,7 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         {
             var config = SuggestTests.Default;
 
-            config.SymbolTable.AddUserInfoObject();
+            config.SymbolTable.AddHostObject("User", RecordType.Empty(), (sp) => RecordValue.NewRecordFromFields());
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expected, actualSuggestions);
