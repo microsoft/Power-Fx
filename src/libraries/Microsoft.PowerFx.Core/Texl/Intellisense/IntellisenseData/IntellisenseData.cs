@@ -319,6 +319,7 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         internal virtual void AddCustomSuggestionsForGlobals()
         {
             AddSuggestionForCurrentFunction();
+            AddSuggestionForCurrentBinaryOp();
         }
 
         /// <summary>
@@ -560,17 +561,34 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
                 if (suggestable)
                 {
-                    string suggestionName;
-                    if (symbol.Value.DisplayName != default)
-                    {
-                        suggestionName = symbol.Value.DisplayName.Value;
-                    }
-                    else
-                    {
-                        suggestionName = symbol.Key;
-                    }
+                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
+                }
+            }
+        }
 
-                    IntellisenseHelper.AddSuggestion(this, suggestionName, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
+        private void AddSuggestionForCurrentBinaryOp()
+        {
+            var binaryOp = CurNode?.Parent?.AsBinaryOp();
+            if (binaryOp == null || this.Binding.NameResolver is not IGlobalSymbolNameResolver globalResolver)
+            {
+                return;
+            }
+
+            var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
+
+            var symbols = globalResolver.GlobalSymbols;
+
+            var nonErrorNode = binaryOp.Right.AsError() == null ? binaryOp.Right : binaryOp.Left;
+            var nonErrorNodeType = Binding.GetType(nonErrorNode);
+
+            foreach (var symbol in symbols)
+            {
+                var errors = new ErrorContainer();
+                BinderUtils.CheckBinaryOpCore(errors, binaryOp, usePowerFxV1CompatibilityRules, nonErrorNodeType, symbol.Value.Type, true);
+
+                if (!errors.HasErrors())
+                {
+                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, requiresSuggestionEscaping: true);
                 }
             }
         }
