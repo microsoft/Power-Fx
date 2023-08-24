@@ -583,12 +583,20 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
             foreach (var symbol in symbols)
             {
+                var symbolType = symbol.Value.Type;
+
+                // Do not suggest deferred symbols.
+                if (symbolType.IsDeferred)
+                {
+                    continue;
+                }
+
                 var errors = new ErrorContainer();
-                BinderUtils.CheckBinaryOpCore(errors, binaryOp, usePowerFxV1CompatibilityRules, nonErrorNodeType, symbol.Value.Type, true);
+                BinderUtils.CheckBinaryOpCore(errors, binaryOp, usePowerFxV1CompatibilityRules, nonErrorNodeType, symbolType, true);
 
                 if (!errors.HasErrors())
                 {
-                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, symbol.Value.Type, requiresSuggestionEscaping: true);
+                    IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, symbolType, requiresSuggestionEscaping: true);
                 }
             }
         }
