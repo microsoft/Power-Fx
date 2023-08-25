@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("Option|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opt|", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
         [InlineData("Opti|on", "OptionSet", "OtherOptionSet", "TopOptionSetField")]
-        [InlineData("TopOptionSetField <> |")]
+        [InlineData("TopOptionSetField <> |", "TopOptionSetField", "XXX")]
         [InlineData("TopOptionSetField <> Opt|", "OptionSet", "TopOptionSetField", "OtherOptionSet")]
         public void TestSuggestOptionSets(string expression, params string[] expectedSuggestions)
         {
@@ -207,6 +207,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // No suggestion if function is not in binder.
         [InlineData("InvalidFunction(|")]
+
+        // Binary Op Suggestions.
+        [InlineData("1 = |", "num")]
+        [InlineData("1 + |", "num", "str")]
         public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;

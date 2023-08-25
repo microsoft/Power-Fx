@@ -146,6 +146,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             private Dictionary<string, FormulaTypeSchema> GetChildren(AggregateType type)
             {
                 var fields = new Dictionary<string, FormulaTypeSchema>(StringComparer.Ordinal);
+
+                if (type.TableSymbolName != null)
+                {
+                    // Doesn't support cycles. Just terminate. 
+                    return fields;
+                }
+
                 foreach (var child in type.GetFieldTypes())
                 {
                     child.Type.Visit(this);
