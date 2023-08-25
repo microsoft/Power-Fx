@@ -102,8 +102,22 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     return type;
                 }
+                else if (func.IsInputColumnSuggestionArg0)
+                {
+                    return intellisenseData.Binding.GetType(callNode.Args.Children[0]);
+                }
+                else
+                {
+                    var argIndex = intellisenseData.ArgIndex;
+                    var maxArgIndex = (func?.ParamTypes?.Count() ?? 0) - 1;
 
-                return intellisenseData.Binding.GetType(callNode.Args.Children[0]);
+                    if (argIndex <= maxArgIndex)
+                    {
+                        return func.ParamTypes.ElementAt(argIndex);
+                    }
+                }
+
+                return DType.Error;
             }
 
             private static bool TryGetParentRecordNode(TexlNode node, out RecordNode recordNode)

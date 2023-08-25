@@ -156,6 +156,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function uses an input's column names to inform Intellisense's suggestions.
         public virtual bool CanSuggestInputColumns => false;
 
+        public virtual bool IsInputColumnSuggestionArg0 => false;
+
         // Return true if the function expects a screen's context variables to be suggested within a record argument.
         public virtual bool CanSuggestContextVariables => false;
 

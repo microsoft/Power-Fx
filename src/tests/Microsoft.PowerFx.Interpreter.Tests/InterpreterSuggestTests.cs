@@ -255,5 +255,21 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             Assert.Equal(expectedSuggestions, result.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray());
         }
+
+        [Theory]
+        [InlineData("RecordInputTest( {|", "id:")]
+        [InlineData("RecordInputTest( {num : 1}, \"test\", {|", "id:", "name:")]
+        public void TestCustomFunctionSuggestion(string expression, params string[] expectedSuggestions)
+        {
+            var config = SuggestTests.Default;
+
+            config.SymbolTable.EnableMutationFunctions();
+
+            // With Input record type param
+            config.AddFunction(new TestRecordInputCustomFunction());
+
+            var actualSuggestions = SuggestStrings(expression, config, null);
+            Assert.Equal(expectedSuggestions, actualSuggestions);
+        }
     }
 }

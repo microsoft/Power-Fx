@@ -251,6 +251,26 @@ namespace Microsoft.PowerFx.Tests
         }
 
         // Must have "Function" suffix. 
+        internal class TestRecordInputCustomFunction : ReflectionFunction
+        {
+            public TestRecordInputCustomFunction()
+                : base(
+                      "RecordInputTest",
+                      FormulaType.Number,
+                      RecordType.Empty().Add(new NamedFormulaType("id", FormulaType.Number)),
+                      FormulaType.String,
+                      RecordType.Empty().Add(new NamedFormulaType("id", FormulaType.Number)).Add(new NamedFormulaType("name", FormulaType.String)))
+            {
+            }
+
+            // Must have "Execute" method. 
+            public static NumberValue Execute(NumberValue number, RecordValue record1, StringValue str, RecordValue record2)
+            {
+                return FormulaValue.New(1);
+            }
+        }
+
+        // Must have "Function" suffix. 
         private class TestInvalidRecordCustomFunction : ReflectionFunction
         {
             public TestInvalidRecordCustomFunction()

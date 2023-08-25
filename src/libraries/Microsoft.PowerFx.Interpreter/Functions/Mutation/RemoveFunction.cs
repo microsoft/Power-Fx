@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Functions
 
         public override bool CanSuggestInputColumns => true;
 
+        public override bool IsInputColumnSuggestionArg0 => true;
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
