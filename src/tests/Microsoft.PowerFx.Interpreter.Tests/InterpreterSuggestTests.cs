@@ -257,8 +257,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("RecordInputTest( {|", "id:")]
+
+        [InlineData("RecordInputTest( {|", "field1:")]
         [InlineData("RecordInputTest( {num : 1}, \"test\", {|", "id:", "name:")]
+        [InlineData("RecordInputTest( {num : 1}, \"test\", { id: 1, name: \"test\"}, {|", "nested:")]
+        [InlineData("RecordInputTest( {num : 1}, \"test\", { id: 1, name: \"test\"}, { nested:{|", "field1:")]
+        [InlineData("RecordInputTest( {num : 1}, \"test\", { id: 1, name: \"test\"}, { nested2:{|", "id:", "name:")]
         public void TestCustomFunctionSuggestion(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;

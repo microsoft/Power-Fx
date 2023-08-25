@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
@@ -74,6 +76,17 @@ namespace Microsoft.PowerFx.Intellisense
                         }
                     }
 
+                    var parentRecord = recordNode.Parent?.AsRecord(); 
+
+                    if (parentRecord != null)
+                    {
+                        var fieldName = parentRecord.Ids.FirstOrDefault()?.Name;
+
+                        aggregateType = fieldName.HasValue && aggregateType.TryGetType(fieldName.Value, out var type) 
+                            ? type 
+                            : aggregateType;
+                    }
+
                     foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
                     {
                         var usedName = tName.Name;
@@ -90,6 +103,36 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 return intellisenseData.TryAddFunctionRecordSuggestions(func, callNode, columnName);
+            }
+
+            private DType GetFieldTypeFromAggregate(DType aggregateType, string fieldName)
+            {
+                if (fieldName == null || aggregateType == null)
+                {
+                    return null;
+                }
+
+                // BFS to find the field's type.
+                Queue<DType> queue = new Queue<DType>();
+                queue.Enqueue(aggregateType);
+
+                while (queue.Count > 0)
+                {
+                    var currentType = queue.Dequeue();
+                    var fields = currentType.GetAllNames(DPath.Root);
+
+                    foreach (var field in fields)
+                    {
+                        if (field.Name == fieldName)
+                        {
+                            return field.Type; // Return the corresponding DType
+                        }
+
+                        queue.Enqueue(field.Type);  // Enqueue the nested type for exploration
+                    }
+                }
+
+                return null; // Field not found.
             }
 
             private DType GetAggregateType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
