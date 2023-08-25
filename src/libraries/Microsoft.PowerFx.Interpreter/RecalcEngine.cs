@@ -215,7 +215,14 @@ namespace Microsoft.PowerFx
             {
                 var name = defType.Ident.Name.Value;
                 var res = DTypeFromTexlNode(defType.Type.TypeRoot) ?? throw new Exception("Failed defining type");
-                _definedTypeSymbolTable.RegisterType(name, new KnownRecordType(res));
+                if (res.IsRecord)
+                {
+                    _definedTypeSymbolTable.RegisterType(name, new KnownRecordType(res));
+                }
+                else
+                {
+                    _definedTypeSymbolTable.RegisterType(name, new TableType(res));
+                }
             }
         }
 
@@ -229,8 +236,24 @@ namespace Microsoft.PowerFx
             {
                 return GetTypeFromName(nameNode.Ident.Name.Value);
             }
+            else if (node is TableNode tableNode)
+            {
+                return DTypeFromTableNode(tableNode);           
+            }
 
             return null;
+        }
+
+        internal DType DTypeFromTableNode(TableNode tableNode)
+        {
+            var childNode = tableNode.ChildNodes.First();
+            var ty = DTypeFromTexlNode(childNode);
+            if (ty == null)
+            {
+                return null;
+            }
+
+            return ty.ToTable();
         }
 
         internal DType DTypeFromRecordNode(RecordNode recordNode)

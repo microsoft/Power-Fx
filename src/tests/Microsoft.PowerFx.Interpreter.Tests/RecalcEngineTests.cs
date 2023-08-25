@@ -353,6 +353,23 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void DefTableType()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618
+            recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
+#pragma warning restore CS0618
+            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age < 18)));").Errors;
+            Assert.False(enumberable.Any());
+            Assert.Equal(2.0, recalcEngine.Eval("countMinors([{Age: Float(1)}, {Age: Float(18)}, { Age: Float(4) }])").ToObject());
+        }
+
+        [Fact]
         public void DefComplexTypeWithFunc()
         {
             var config = new PowerFxConfig();
