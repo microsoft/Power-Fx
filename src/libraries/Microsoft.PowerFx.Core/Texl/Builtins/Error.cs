@@ -24,6 +24,8 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool CanSuggestInputColumns => true;
 
+        public override bool IsInputColumnSuggestionArg0 => true;
+
         public override bool IsSelfContained => true;
 
         public ErrorFunction()
