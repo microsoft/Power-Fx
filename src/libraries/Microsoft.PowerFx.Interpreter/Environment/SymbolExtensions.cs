@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -32,6 +33,28 @@ namespace Microsoft.PowerFx
         public static void SetCulture(this RuntimeConfig symbols, CultureInfo culture)
         {
             symbols.AddService(culture ?? throw new ArgumentNullException(nameof(culture)));
+        }
+
+        /// <summary>
+        /// Set clock service for use with Today(), IsToday(), Now(). 
+        /// </summary>
+        /// <param name="symbols">SymbolValues where to set the CultureInfo.</param>
+        /// <param name="clock">service to provide current time.</param>
+        /// <exception cref="ArgumentNullException">When clock is null.</exception>
+        public static void SetClock(this RuntimeConfig symbols, IClockService clock)
+        {
+            symbols.AddService<IClockService>(clock ?? throw new ArgumentNullException(nameof(clock)));
+        }
+
+        /// <summary>
+        /// Set random service to override generating random numbers with Rand(), RandBetween().
+        /// </summary>
+        /// <param name="symbols">SymbolValues where to set the CultureInfo.</param>
+        /// <param name="random">servce to generate random numbers.</param>
+        /// <exception cref="ArgumentNullException">When random is null.</exception>
+        public static void SetRandom(this RuntimeConfig symbols, IRandomService random)
+        {
+            symbols.AddService<IRandomService>(random ?? throw new ArgumentNullException(nameof(random)));
         }
 
         /// <summary>
