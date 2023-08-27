@@ -15,10 +15,32 @@ namespace Microsoft.PowerFx.Functions
 {
     internal static partial class Library
     {
+        private static readonly IClockService _defaultClockService = new DefaultClockService();
+
+        private static DateTime SafeUtcNow(this EvalVisitor runner)
+        {
+            return runner.FunctionServices.SafeUtcNow();
+        }
+
+        private static DateTime SafeUtcNow(this IServiceProvider services)
+        {
+            var clock = services.GetService<IClockService>(_defaultClockService);
+            
+            var now = clock.UtcNow;
+            if (now.Kind != DateTimeKind.Utc)
+            {
+                throw new InvalidOperationException($"Clock service returned non-utc time: {clock.GetType().FullName}");
+            }
+
+            return now;
+        }
+
         public static async ValueTask<FormulaValue> Today(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
         {
+            var utcNow = runner.SafeUtcNow();
+
             var timeZoneInfo = runner.TimeZoneInfo;
-            var date = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo).Date;
+            var date = TimeZoneInfo.ConvertTimeFromUtc(utcNow, timeZoneInfo).Date;
             return new DateValue(irContext, date);
         }
 
@@ -28,11 +50,11 @@ namespace Microsoft.PowerFx.Functions
             var timeZoneInfo = runner.TimeZoneInfo;
             var arg0 = runner.GetNormalizedDateTime(args[0]);
 
-            var now = DateTime.UtcNow;
+            var now = runner.SafeUtcNow();
 
             if (timeZoneInfo.BaseUtcOffset != TimeSpan.Zero)
             {
-                now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneInfo);
+                now = TimeZoneInfo.ConvertTimeFromUtc(now, timeZoneInfo);
             }
 
             var same = (arg0.Year == now.Year) && (arg0.Month == now.Month) && (arg0.Day == now.Day);
@@ -520,7 +542,9 @@ namespace Microsoft.PowerFx.Functions
         {
             var tzInfo = runner.TimeZoneInfo;
 
-            var datetime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tzInfo);
+            var utcNow = runner.SafeUtcNow();
+
+            var datetime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, tzInfo);
             return new DateTimeValue(irContext, datetime);
         }
 

@@ -66,7 +66,8 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
-                $"{ns}.Functions.IRandomService"
+                $"{ns}.Functions.IRandomService",
+                $"{ns}.Functions.IClockService"
             };
 
             var sb = new StringBuilder();
@@ -1134,7 +1135,7 @@ namespace Microsoft.PowerFx.Tests
         {
             var engine = new RecalcEngine();
             var values = new RuntimeConfig();
-            values.AddService<IRandomService>(new TestRandService());
+            values.SetRandom(new TestRandService());
 
             // Rand 
             var result = engine.EvalAsync("Rand()", CancellationToken.None, runtimeConfig: values).Result;
