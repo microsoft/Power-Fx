@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -51,12 +52,24 @@ namespace Microsoft.PowerFx
         // Assume it can be invoked multiple times; host must protect
         private readonly Func<string, string, DeferredSymbolPlaceholder> _fetchTypeInfo;
 
+        /// <summary>
+        /// Placeholder type to use for symbols that we don't have type information for yet.
+        /// Useful in intellisense context.
+        /// </summary>
+        private readonly DType _placeHolderType; 
+
         // Full universe of possible symbols
         // All other symbols are missing. 
         public DeferredSymbolTable(DisplayNameProvider map, Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo)
+            : this(map, fetchTypeInfo, DType.Deferred)
+        {
+        }
+
+        public DeferredSymbolTable(DisplayNameProvider map, Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo, DType placeHolderType)
         {
             _displayNameLookup = map ?? throw new ArgumentNullException(nameof(map));
             _fetchTypeInfo = fetchTypeInfo ?? throw new ArgumentNullException(nameof(fetchTypeInfo));
+            _placeHolderType = placeHolderType ?? DType.Deferred;
         }
 
         // SymbolTable is conceptually constant. 
@@ -170,13 +183,11 @@ namespace Microsoft.PowerFx
 
                     if (!_variables.TryGetValue(logical.Value, out var nameInfo))
                     {
-                        // We don't have type yet, make a placeholder. 
-                        var placeholder = Core.Types.DType.ObjNull;
                         var display = kv.Value;
 
                         nameInfo = new NameLookupInfo(
                             BindKind.PowerFxResolvedObject,
-                            placeholder,
+                            _placeHolderType,
                             DPath.Root,
                             0,
                             data: null,
