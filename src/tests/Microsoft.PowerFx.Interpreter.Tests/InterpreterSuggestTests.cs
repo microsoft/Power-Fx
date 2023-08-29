@@ -191,9 +191,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Collect(|", "Table1", "table2")]
+        [InlineData("Collect(|", "Entity1", "Entity2", "Table1", "table2")]
         [InlineData("Collect(t1,|", "record1", "record2")]
-        [InlineData("Collect(|, record1", "Table1", "table2")]
+        [InlineData("Collect(|, record1", "Entity1", "Entity2", "Table1", "table2")]
         [InlineData("Sum(|", "num", "str")]
         [InlineData("Text(|", "num", "str")]
         [InlineData("Language(|")]
@@ -213,12 +213,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [InlineData("1 + |", "num", "str")]
         public void TestArgSuggestion(string expression, params string[] expectedSuggestions)
         {
-            var config = SuggestTests.Default;
+            var map = new SingleSourceDisplayNameProvider(new Dictionary<DName, DName>
+            {
+                { new DName("dv_entity1"), new DName("Entity1") },
+                { new DName("dv_entity2"), new DName("Entity2") }
+            });
+
+            // It is important to put TableType as Place Holder for intellisense to work.
+            var dataverseMock = ReadOnlySymbolTable.NewFromDeferred(
+                map, 
+                (disp, logical) => TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String)), 
+                TableType.Empty());
+
+            var config = PowerFxConfig.BuildWithEnumStore(new EnumStoreBuilder().WithDefaultEnums(), new TexlFunctionSet());
+
+            config.SymbolTable.EnableMutationFunctions();
 
             var tableType1 = TableType.Empty();
-            var tableType2 = TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String));
-            config.SymbolTable.EnableMutationFunctions();
             config.SymbolTable.AddVariable("table1", tableType1, displayName: "Table1");
+
+            var tableType2 = TableType.Empty().Add(new NamedFormulaType("f1", FormulaType.String));
             config.SymbolTable.AddVariable("table2", tableType2);
 
             // Do not suggest Deferred.
@@ -233,8 +247,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var customFunction = new TestAggregateIdentityCustomFunction<TableType, TableValue>(tableType2);
             config.AddFunction(customFunction);
 
-            var actualSuggestions = SuggestStrings(expression, config, null);
-            Assert.Equal(expectedSuggestions, actualSuggestions);
+            var engine = new RecalcEngine(config);
+            var check = engine.Check(expression, null, dataverseMock);
+
+            var cursorPos = expression.IndexOf('|');
+            var result = engine.Suggest(check, cursorPos);
+
+            Assert.Equal(expectedSuggestions, result.Suggestions.Select(suggestion => suggestion.DisplayText.Text).ToArray());
         }
     }
 }

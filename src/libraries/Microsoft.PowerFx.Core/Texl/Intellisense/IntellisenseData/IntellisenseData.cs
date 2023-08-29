@@ -538,32 +538,53 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
             foreach (var symbol in symbols)
             {
-                bool suggestable = false;
                 var symbolType = symbol.Value.Type;
 
-                // Do not suggest deferred symbols.
-                if (symbolType.IsDeferred)
-                {
-                    continue;
-                }
-
-                if (argType.IsAggregate && argType.ChildCount != 0)
-                {
-                    suggestable = argType.Kind == symbolType.Kind &&
-                        argType.CheckAggregateNames(symbolType, CurNode, new ErrorContainer(), false, usePowerFxV1CompatibilityRules);
-                }
-                else
-                {
-                    suggestable = (function.SupportCoercionForArg(argIndex) || argType.IsAggregate) 
-                    ? symbolType.CoercesTo(argType, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules)
-                    : symbolType == argType;
-                }
+                var suggestable = IsSymbolSuggestableForFunctionArg(function, argIndex, argType, symbolType, usePowerFxV1CompatibilityRules);
 
                 if (suggestable)
                 {
                     IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, argType, requiresSuggestionEscaping: true);
                 }
             }
+        }
+
+        private bool IsSymbolSuggestableForFunctionArg(TexlFunction function, int argIndex, DType argType, DType symbolType, bool usePowerFxV1CompatibilityRules)
+        {
+            // Check for invalid symbol types and return false if found.
+            if (IsSuggestionTypeInvalid(symbolType))
+            {
+                return false;
+            }
+
+            bool isSuggestable;
+            if (argType.IsAggregate && argType.ChildCount != 0)
+            {
+                // Case 1: Aggregate type with non-zero children.
+                isSuggestable = argType.Kind == symbolType.Kind &&
+                    argType.CheckAggregateNames(symbolType, CurNode, new ErrorContainer(), false, usePowerFxV1CompatibilityRules);
+            }
+            else if (argType.IsAggregate && (function.ManipulatesCollections || function.ScopeInfo != null))
+            {
+                // Case 2: Aggregate type with function manipulations or scope info.
+                isSuggestable = symbolType.CoercesTo(argType, false, false, usePowerFxV1CompatibilityRules);
+            }
+            else if (!argType.IsAggregate && function.SupportCoercionForArg(argIndex))
+            {
+                // Case 3: Non-aggregate type with support for coercion.
+                isSuggestable = symbolType.CoercesTo(argType, false, false, usePowerFxV1CompatibilityRules);
+            }
+            else if (!argType.IsAggregate)
+            {
+                // Case 4: Non-aggregate type without support for coercion.
+                isSuggestable = symbolType == argType;
+            }
+            else
+            {
+                isSuggestable = false;
+            }
+
+            return isSuggestable;
         }
 
         private void AddSuggestionForCurrentBinaryOp()
@@ -585,8 +606,8 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             {
                 var symbolType = symbol.Value.Type;
 
-                // Do not suggest deferred symbols.
-                if (symbolType.IsDeferred)
+                // Check for invalid symbol types and skip if found.
+                if (IsSuggestionTypeInvalid(symbolType))
                 {
                     continue;
                 }
@@ -599,6 +620,16 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
                     IntellisenseHelper.AddSuggestion(this, symbol, SuggestionKind.Global, SuggestionIconKind.Other, symbolType, requiresSuggestionEscaping: true);
                 }
             }
+        }
+
+        private static bool IsSuggestionTypeInvalid(DType symbolType)
+        {
+            if (symbolType.IsError || symbolType.IsDeferred || symbolType.IsVoid || symbolType.IsUnknown || symbolType.Kind == DKind.ObjNull)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
