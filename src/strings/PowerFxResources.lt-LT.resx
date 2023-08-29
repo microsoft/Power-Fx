@@ -5032,4 +5032,8 @@
     <value>Antrasis funkcijos „{0}“ argumentas palaiko tik skaitinėse ir datos / laiko reikšmėse.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Nustačius kintamąjį su internetinio duomenų šaltinio reikšme (lentele arba įrašu), į serverį gali būti pateikiamos kelios užklausos. Ši funkcija greitai bus užblokuota.</value>
+    
+  </data>
 </root>

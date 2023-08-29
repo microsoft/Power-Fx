@@ -5032,4 +5032,8 @@
     <value>O segundo argumento da función '{0}' só se apoia nos valores numéricos e de data/hora.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Se se establece unha variable cun valor de orixe de datos en liña (táboa ou rexistro), pode que se realicen múltiples solicitudes ao servidor. Isto impedirase en breve.</value>
+    
+  </data>
 </root>
