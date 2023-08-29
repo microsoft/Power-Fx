@@ -626,10 +626,10 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         {
             if (symbolType.IsError || symbolType.IsDeferred || symbolType.IsVoid || symbolType.IsUnknown || symbolType.Kind == DKind.ObjNull)
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }
