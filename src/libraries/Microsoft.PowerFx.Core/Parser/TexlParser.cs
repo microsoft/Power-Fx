@@ -132,15 +132,22 @@ namespace Microsoft.PowerFx.Core.Parser
                 ParseTrivia();
                 var varIdent = TokEat(TokKind.Ident);
                 ParseTrivia();
-                if (TokEat(TokKind.Colon) == null)
+                if (TokEat(TokKind.Colon, addError: false) == null)
                 {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
                     break;
                 }
 
                 ParseTrivia();
 
-                var varType = TokEat(TokKind.Ident);
-                if (varType == null || varIdent == null)
+                var varType = TokEat(TokKind.Ident, addError: false);
+                if (varType == null)
+                {
+                    CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
+                    return false;
+                }
+
+                if (varIdent == null)
                 {
                     return false;
                 }
@@ -319,16 +326,18 @@ namespace Microsoft.PowerFx.Core.Parser
 
                     ParseTrivia();
 
-                    if (TokEat(TokKind.Colon) == null)
+                    if (TokEat(TokKind.Colon, addError: false) == null)
                     {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
                         break;
                     }
 
                     ParseTrivia();
 
-                    var returnType = TokEat(TokKind.Ident);
+                    var returnType = TokEat(TokKind.Ident, addError: false);
                     if (returnType == null)
                     {
+                        CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
                         break;
                     }
 
@@ -1720,14 +1729,18 @@ namespace Microsoft.PowerFx.Core.Parser
 
         // Returns the current token if it's of the given kind and moves to the next token.
         // If the token is not the right kind, reports an error, leaves the token, and returns null.
-        private Token TokEat(TokKind tid)
+        private Token TokEat(TokKind tid, bool addError = true)
         {
             if (_curs.TidCur == tid)
             {
                 return _curs.TokMove();
             }
 
-            ErrorTid(_curs.TokCur, tid);
+            if (addError)
+            {
+                ErrorTid(_curs.TokCur, tid);
+            }
+
             return null;
         }
 
