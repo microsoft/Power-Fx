@@ -155,6 +155,25 @@ namespace Microsoft.PowerFx
             Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo,
             string debugName = null)
         {
+            return NewFromDeferred(map, fetchTypeInfo, FormulaType.Deferred, debugName);
+        }
+
+        /// <summary>
+        /// Create a symbol table around the DisplayNameProvider. 
+        /// The set of symbols is fixed and determined by the DisplayNameProvider, 
+        /// but their type info is lazily hydrated. 
+        /// </summary>
+        /// <param name="map">Set of all possible symbol names. Callback will be invoked lazily to compute the type. </param>
+        /// <param name="fetchTypeInfo">Callback invoked with (logical,display) name for the symbol. Allow lazily computing the type and getting the slot for setting values.</param>
+        /// <param name="placeHolderType">Place holder symbol type till full type is lazily loaded. Useful for Intellisense context.</param>
+        /// <param name="debugName">Optional debug name for this symbol table.</param>
+        /// <returns></returns>
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo,
+            FormulaType placeHolderType,
+            string debugName = null)
+        {
             if (map == null)
             {
                 throw new ArgumentNullException(nameof(map));
@@ -165,7 +184,12 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(fetchTypeInfo));
             }
 
-            return new DeferredSymbolTable(map, fetchTypeInfo)
+            if (placeHolderType == null)
+            {
+                throw new ArgumentNullException(nameof(placeHolderType));
+            }
+
+            return new DeferredSymbolTable(map, fetchTypeInfo, placeHolderType._type)
             {
                 DebugName = debugName
             };
@@ -176,9 +200,18 @@ namespace Microsoft.PowerFx
             Func<string, string, FormulaType> fetchTypeInfo,
             string debugName = null)
         {
+            return NewFromDeferred(map, fetchTypeInfo, FormulaType.Deferred, debugName);
+        }
+
+        public static ReadOnlySymbolTable NewFromDeferred(
+            DisplayNameProvider map,
+            Func<string, string, FormulaType> fetchTypeInfo,
+            FormulaType placeHolderType,
+            string debugName = null)
+        {
             Func<string, string, DeferredSymbolPlaceholder> fetchTypeInfo2 =
                 (logical, display) => new DeferredSymbolPlaceholder(fetchTypeInfo(logical, display));
-            return NewFromDeferred(map, fetchTypeInfo2, debugName);
+            return NewFromDeferred(map, fetchTypeInfo2, placeHolderType, debugName);
         }
 
         public static ReadOnlySymbolTable NewFromRecord(
