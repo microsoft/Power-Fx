@@ -48,14 +48,14 @@ namespace Microsoft.PowerFx.Syntax
             return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 
-        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
+        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, bool shouldBindBody = false)
         {
             var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, features);
 
             return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
         }
 
-        public bool ProcessUserDefnitions(out UserDefinitionResult userDefinitionResult)
+        public bool ProcessUserDefnitions(out UserDefinitionResult userDefinitionResult, bool shouldBindBody = false)
         {
             var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
 
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
                
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors);
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors, shouldBindBody);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             userDefinitionResult = new UserDefinitionResult(functions, errors, parseResult.NamedFormulas);
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Syntax
             return true;
         }
 
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
+        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors, bool shouldBindBody = false)
         {
             Contracts.AssertValue(uDFs);
 
@@ -103,7 +103,10 @@ namespace Microsoft.PowerFx.Syntax
                 userDefinedFunctions.Add(func);
             }
 
-            BindUserDefinedFunctions(userDefinedFunctions, ReadOnlySymbolTable.NewDefault(texlFunctionSet) as INameResolver, errors);
+            if (shouldBindBody)
+            {
+                BindUserDefinedFunctions(userDefinedFunctions, ReadOnlySymbolTable.NewDefault(texlFunctionSet) as INameResolver, errors);
+            }
 
             return userDefinedFunctions;
         }

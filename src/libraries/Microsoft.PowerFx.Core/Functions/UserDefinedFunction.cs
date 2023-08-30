@@ -98,9 +98,19 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(errorContainer);
 
-            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind) && !actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
+            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind))
             {
-                errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
+                {
+                    if (!_binding.CoercedToplevelType.IsValid)
+                    {
+                        _binding.SetCoercedToplevelType(ReturnType);
+                    }
+                }
+                else
+                {
+                    errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                }
             }
         }
 
