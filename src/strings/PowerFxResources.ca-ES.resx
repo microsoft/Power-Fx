@@ -5032,4 +5032,8 @@
     <value>El segon argument de la funció "{0}" només s'admet per als valors numèrics i de data i hora.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Definir una variable amb un valor de font de dades en línia (taula o registre) pot provocar diverses sol·licituds al servidor. Aviat es bloquejarà.</value>
+    
+  </data>
 </root>

@@ -5032,4 +5032,8 @@
     <value>Drugi argument funkcije „{0}” podržan je samo za numeričke vrijednosti i vrijednosti datuma/vremena.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Postavljanje varijable s vrijednošću online izvora podataka (tablica ili zapis) može uzrokovati više zahtjeva poslužitelju. To će se uskoro blokirati.</value>
+    
+  </data>
 </root>

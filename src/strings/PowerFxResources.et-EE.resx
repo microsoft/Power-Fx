@@ -5032,4 +5032,8 @@
     <value>Funktsiooni „{0}“ teist argumenti toetatakse ainult numbriliste ja kuupäeva/kellaaja väärtuste puhul.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Veebiandmeallika väärtusega (tabel või kirje) muutuja määramine võib põhjustada serverisse mitme taotluse esitamise. Varsti see blokeeritakse.</value>
+    
+  </data>
 </root>

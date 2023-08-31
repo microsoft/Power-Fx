@@ -5032,4 +5032,8 @@
     <value>Druhý argument funkce '{0}' je podporován pouze pro číselné hodnoty a hodnoty data a času.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Nastavení proměnné s hodnotou online zdroje dat (tabulky nebo záznamu) může způsobit vícenásobné požadavky na server. Brzy to bude zablokováno.</value>
+    
+  </data>
 </root>

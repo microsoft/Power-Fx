@@ -5032,4 +5032,8 @@
     <value>Det andra argumentet för funktionen "{0}" stöds endast för numeriska värden och datum/tid-värden.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Om du anger en variabel med ett datakällavärde online (tabell eller post) kan det orsaka flera begäranden till servern. Detta kommer snart att blockeras.</value>
+    
+  </data>
 </root>

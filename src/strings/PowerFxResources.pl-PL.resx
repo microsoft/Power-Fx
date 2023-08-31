@@ -5032,4 +5032,8 @@
     <value>Drugi argument funkcji „{0}” jest obsługiwany tylko w przypadku wartości liczbowych oraz typu data/godzina.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Ustawienie zmiennej z wartością źródła danych online (tabelą lub rekordem) może spowodować wysłanie wielu żądań do serwera. Wkrótce to zostanie zablokowane.</value>
+    
+  </data>
 </root>

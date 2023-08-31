@@ -5032,4 +5032,8 @@
     <value>Đối số thứ hai của hàm "{0}" chỉ được hỗ trợ cho các giá trị số và ngày/giờ.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Việc đặt một biến có giá trị nguồn dữ liệu trực tuyến (bảng hoặc bản ghi) có thể gây ra nhiều yêu cầu đến máy chủ. Tính năng này sẽ sớm bị chặn.</value>
+    
+  </data>
 </root>
