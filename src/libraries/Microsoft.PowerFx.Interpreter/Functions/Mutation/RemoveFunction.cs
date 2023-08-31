@@ -28,7 +28,16 @@ namespace Microsoft.PowerFx.Functions
 
         public override bool CanSuggestInputColumns => true;
 
-        public override bool IsInputColumnSuggestionArg0 => true;
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex == 1)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
 
         public override bool ArgMatchesDatasourceType(int argNum)
         {

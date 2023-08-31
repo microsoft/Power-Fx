@@ -8,7 +8,10 @@ using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Intellisense.IntellisenseData;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Intellisense
 {
@@ -76,28 +79,7 @@ namespace Microsoft.PowerFx.Intellisense
                         }
                     }
 
-                    var parentRecord = recordNode.Parent?.AsRecord(); 
-
-                    if (parentRecord != null)
-                    {
-                        var fieldName = parentRecord.Ids.FirstOrDefault()?.Name;
-
-                        aggregateType = fieldName.HasValue && aggregateType.TryGetType(fieldName.Value, out var type) 
-                            ? type 
-                            : aggregateType;
-                    }
-
-                    foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
-                    {
-                        var usedName = tName.Name;
-                        if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
-                        {
-                            usedName = new DName(maybeDisplayName);
-                        }
-
-                        var suggestion = TexlLexer.EscapeName(usedName.Value) + (IntellisenseHelper.IsPunctuatorColonNextToCursor(cursorPos, intellisenseData.Script) ? string.Empty : TexlLexer.PunctuatorColon);
-                        suggestionsAdded |= IntellisenseHelper.AddSuggestion(intellisenseData, suggestion, SuggestionKind.Field, SuggestionIconKind.Other, DType.String, requiresSuggestionEscaping: false);
-                    }
+                    suggestionsAdded = AddSuggestionForAggregateAndParentRecord(recordNode, aggregateType, intellisenseData);
 
                     return suggestionsAdded && columnName != null;
                 }
@@ -105,69 +87,87 @@ namespace Microsoft.PowerFx.Intellisense
                 return intellisenseData.TryAddFunctionRecordSuggestions(func, callNode, columnName);
             }
 
-            private DType GetFieldTypeFromAggregate(DType aggregateType, string fieldName)
+            /// <summary>
+            /// Adds suggestions for the field type obtained from parent record <paramref name="recordNode"/> if found.
+            /// else adds fields suggestion from <paramref name="aggregateType"/>.
+            /// </summary>
+            /// <param name="recordNode">Parent Texl node that maybe RecordNode.</param>
+            /// <param name="aggregateType">Aggregate type that will be added, if the field type for <paramref name="recordNode"/> is not found in <paramref name="aggregateType"/>. </param>
+            /// <param name="intellisenseData"></param>
+            /// <returns></returns>
+            internal static bool AddSuggestionForAggregateAndParentRecord(TexlNode recordNode, DType aggregateType, IntellisenseData.IntellisenseData intellisenseData)
             {
-                if (fieldName == null || aggregateType == null)
+                if (TryGetParentRecordNode(recordNode, out var parentRecord))
                 {
-                    return null;
+                    var fieldName = parentRecord.Ids.FirstOrDefault()?.Name;
+
+                    aggregateType = fieldName.HasValue && aggregateType.TryGetType(fieldName.Value, out var type)
+                        ? type
+                        : aggregateType;
                 }
 
-                // BFS to find the field's type.
-                Queue<DType> queue = new Queue<DType>();
-                queue.Enqueue(aggregateType);
-
-                while (queue.Count > 0)
-                {
-                    var currentType = queue.Dequeue();
-                    var fields = currentType.GetAllNames(DPath.Root);
-
-                    foreach (var field in fields)
-                    {
-                        if (field.Name == fieldName)
-                        {
-                            return field.Type; // Return the corresponding DType
-                        }
-
-                        queue.Enqueue(field.Type);  // Enqueue the nested type for exploration
-                    }
-                }
-
-                return null; // Field not found.
+                var suggestionsAdded = AddAggregateSuggestions(aggregateType, intellisenseData, intellisenseData.CursorPos);
+                return suggestionsAdded;
             }
 
-            private DType GetAggregateType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
+            internal static bool AddAggregateSuggestions(DType aggregateType, IntellisenseData.IntellisenseData intellisenseData, int cursorPos)
+            {
+                var suggestionsAdded = false;
+                foreach (var tName in aggregateType.GetNames(DPath.Root).Where(param => !param.Type.IsError))
+                {
+                    var usedName = tName.Name;
+                    if (DType.TryGetDisplayNameForColumn(aggregateType, usedName, out var maybeDisplayName))
+                    {
+                        usedName = new DName(maybeDisplayName);
+                    }
+
+                    var suggestion = TexlLexer.EscapeName(usedName.Value) + (IntellisenseHelper.IsPunctuatorColonNextToCursor(cursorPos, intellisenseData.Script) ? string.Empty : TexlLexer.PunctuatorColon);
+                    suggestionsAdded |= IntellisenseHelper.AddSuggestion(intellisenseData, suggestion, SuggestionKind.Field, SuggestionIconKind.Other, DType.String, requiresSuggestionEscaping: false);
+                }
+
+                return suggestionsAdded;
+            }
+
+            internal static DType GetAggregateType(TexlFunction func, CallNode callNode, IntellisenseData.IntellisenseData intellisenseData)
             {
                 Contracts.AssertValue(func);
                 Contracts.AssertValue(callNode);
                 Contracts.AssertValue(intellisenseData);
 
+                if (func == null || callNode == null || intellisenseData == null)
+                {
+                    return DType.Error;
+                }
+
                 if (intellisenseData.TryGetSpecialFunctionType(func, callNode, out var type))
                 {
                     return type;
                 }
-                else if (func.IsInputColumnSuggestionArg0)
+                else if (func.TryGetTypeForArgSuggestionAt(intellisenseData.ArgIndex, out type))
                 {
-                    return intellisenseData.Binding.GetType(callNode.Args.Children[0]);
+                    return type;
                 }
                 else
                 {
-                    var argIndex = intellisenseData.ArgIndex;
-                    var maxArgIndex = (func?.ParamTypes?.Count() ?? 0) - 1;
-
-                    if (argIndex <= maxArgIndex)
+                    type = intellisenseData.Binding.GetType(callNode.Args.Children[0]);
+                    if (type.IsTableNonObjNull)
                     {
-                        return func.ParamTypes.ElementAt(argIndex);
+                        return type.ToRecord();
+                    }
+                    else if (type.IsRecord)
+                    {
+                        return type;
                     }
                 }
 
-                return DType.Error;
+                return DType.Unknown;
             }
 
             private static bool TryGetParentRecordNode(TexlNode node, out RecordNode recordNode)
             {
                 Contracts.AssertValue(node);
 
-                var parentNode = node;
+                var parentNode = node.Parent;
                 while (parentNode != null)
                 {
                     if (parentNode.Kind == NodeKind.Record)

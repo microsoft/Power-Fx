@@ -192,7 +192,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
         [InlineData("Collect(|", "Entity1", "Entity2", "Table1", "table2")]
-        [InlineData("Collect(t1,|", "record1", "record2")]
+
+        // doesn't suggest Irrelevant global variables if type1 is non empty aggregate.
+        [InlineData("Collect(table2,|", "record2")]
         [InlineData("Collect(|, record1", "Entity1", "Entity2", "Table1", "table2")]
         [InlineData("Sum(|", "num", "str")]
         [InlineData("Text(|", "num", "str")]
@@ -229,6 +231,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             config.SymbolTable.EnableMutationFunctions();
 
+            config.SymbolTable.AddHostObject("User", RecordType.Empty(), (sp) => RecordValue.NewRecordFromFields());
+            
             var tableType1 = TableType.Empty();
             config.SymbolTable.AddVariable("table1", tableType1, displayName: "Table1");
 
@@ -258,11 +262,43 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         [Theory]
 
-        [InlineData("RecordInputTest( {|", "field1:")]
-        [InlineData("RecordInputTest( {num : 1}, \"test\", {|", "id:", "name:")]
-        [InlineData("RecordInputTest( {num : 1}, \"test\", { id: 1, name: \"test\"}, {|", "nested:")]
-        [InlineData("RecordInputTest( {num : 1}, \"test\", { id: 1, name: \"test\"}, { nested:{|", "field1:")]
-        [InlineData("RecordInputTest( {num : 1}, \"test\", { id: 1, name: \"test\"}, { nested2:{|", "id:", "name:")]
+        // record fields.
+        [InlineData(
+            "RecordInputTest( {|",
+            "field1:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 1}, \"test\", {|",
+            "id:", 
+            "name:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 2}, \"test\", { id: 1, name: \"test\"}, {|", 
+            "nested:",
+            "nested2:")]
+
+        // nested record field.
+        [InlineData(
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{|", 
+            "field1:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{|", 
+            "id:", 
+            "name:")]
+
+        // table type arg.
+        [InlineData(
+            "RecordInputTest( {field1 : 5}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [{|",
+            "nested:",
+            "nested2:")]
+
+        // table type arg with nested record field.
+        [InlineData(
+            "RecordInputTest( {field1 : 6}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested: |",
+            "field1:")]
+
+        [InlineData(
+            "RecordInputTest( {field1 : 7}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested2: |",
+            "id:",
+            "name:")]
         public void TestCustomFunctionSuggestion(string expression, params string[] expectedSuggestions)
         {
             var config = SuggestTests.Default;
