@@ -5032,4 +5032,8 @@
     <value>Le deuxième argument de la fonction '{0}' est pris en charge uniquement pour les valeurs numériques et de date/heure.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Définir une variable avec une valeur de source de données en ligne (table ou enregistrement) peut entraîner plusieurs demandes sur le serveur. Cette option sera bientôt bloquée.</value>
+    
+  </data>
 </root>

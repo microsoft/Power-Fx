@@ -5032,4 +5032,8 @@
     <value>'{0}' işlevinin ikinci bağımsız değişkeni yalnızca sayısal değerler ve tarih/saat değerleri için desteklenir.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Çevrimiçi bir veri kaynağı değerine (tablo veya kayıt) değişken ayarlamak, sunucuya birden fazla istek gönderilmesine neden olabilir. Bu, yakında engellenecektir.</value>
+    
+  </data>
 </root>

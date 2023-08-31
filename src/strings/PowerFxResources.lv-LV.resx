@@ -5032,4 +5032,8 @@
     <value>Funkcijas '{0}' otrais arguments tiek atbalstīts tikai skaitliskām un datuma/laika vērtībām.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Iestatīt mainīgo ar tiešsaistes datu avota vērtību (tabula vai ieraksts) var izraisīt vairākus pieprasījumus serverim. Drīz tas tiks bloķēts.</value>
+    
+  </data>
 </root>

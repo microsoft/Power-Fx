@@ -5032,4 +5032,8 @@
     <value>Argumen kedua fungsi '{0}' hanya disokong untuk nilai angka dan tarikh/masa.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Penetapan pemboleh ubah dengan nilai sumber data dalam talian (jadual atau rekod) boleh menyebabkan berbilang permintaan kepada pelayan. Ini akan disekat tidak lama lagi.</value>
+    
+  </data>
 </root>

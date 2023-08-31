@@ -5032,4 +5032,8 @@
     <value>El segundo argumento de la función "{0}" solo se admite para valores numéricos y de fecha y hora.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Establecer una variable con un valor de origen de datos en línea (tabla o registro) puede provocar varias solicitudes al servidor. Pronto se bloqueará.</value>
+    
+  </data>
 </root>

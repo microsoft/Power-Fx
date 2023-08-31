@@ -5032,4 +5032,8 @@
     <value>'{0}' 函数的第二个参数仅支持数字和日期/时间值。</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>使用在线数据源值(表或记录)设置变量可能会导致对服务器提出多个请求。这很快将被阻止。</value>
+    
+  </data>
 </root>
