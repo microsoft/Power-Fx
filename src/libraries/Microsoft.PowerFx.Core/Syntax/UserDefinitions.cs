@@ -5,17 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
-using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Syntax
 {
@@ -99,6 +96,7 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     continue;
                 }
+
                 var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
 
                 texlFunctionSet.Add(func);
