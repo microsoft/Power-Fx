@@ -201,5 +201,15 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.InvalidArgument
             });
         }
+
+        internal static FormulaValue CanNotConvertToNumber(IRContext irContext, FormulaValue arg)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"The value '{arg.ToObject()}' cannot be converted to a number.",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
     }
 }
