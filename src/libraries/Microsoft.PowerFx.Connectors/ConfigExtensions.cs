@@ -57,6 +57,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(openApiDocument));
             }
 
+            connectorSettings.Namespace = functionNamespace;
             List<ServiceFunction> functions = OpenApiParser.Parse(functionNamespace, openApiDocument, httpClient, connectorSettings);
             foreach (ServiceFunction function in functions)
             {
@@ -99,7 +100,7 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(function));
             }
 
-            config.AddFunction(function.GetServiceFunction(functionNamespace, httpClient, connectorSettings: connectorSettings));
+            config.AddFunction(function.GetServiceFunction(httpClient, connectorSettings));
         }
 
         public static void Add(this Dictionary<string, FormulaValue> map, string fieldName, FormulaValue value)

@@ -33,6 +33,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [InlineData(3, 4, @"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]
         [InlineData(3, 5, @"SQL.ExecuteProcedureV2(""default"", ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]       // testing with "default" server
         [InlineData(3, 6, @"SQL.ExecuteProcedureV2(""default"", ""default"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]             // testing with "default" server & database
+        // Using fake function
+        [InlineData(3, 4, @"SQL.ExecuteProcedureV2z(true, 17, ""connectortest"",", @"""[dbo].[sp_1]""|""[dbo].[sp_2]""")]
         public void ConnectorIntellisenseTest(int responseIndex, int queryIndex, string expression, string expectedSuggestions)
         {
             // These tests are exercising 'x-ms-dynamic-values' extension property
@@ -66,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length);
 
             string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
-            Assert.Equal(expectedSuggestions, list);
+            Assert.Equal(expectedSuggestions, list);            
             Assert.True((responseIndex == 0) ^ testConnector.SendAsyncCalled);
 
             string networkTrace = testConnector._log.ToString();
@@ -99,7 +101,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 "
             };
 
-            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
+            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));            
         }
 
         [Theory]
@@ -212,12 +214,8 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             ctx._clients[cxNamespace] = client;
             BasicServiceProvider services = new BasicServiceProvider();
             services.AddService<RuntimeConnectorContext>(ctx);
-                        
-            IPowerFxScope scope = new EditorContextScope(
-                (expr) => engine.Check(expression, symbolTable: null))
-            {
-                Services = services
-            };
+
+            IPowerFxScope scope = new EditorContextScope((expr) => engine.Check(expression, symbolTable: null)) { Services = services };
             IIntellisenseResult suggestions = scope.Suggest(expression, expression.Length);
 
             string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
@@ -240,7 +238,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
-        private class TestRuntimeConnectorContext : RuntimeConnectorContext
+        internal class TestRuntimeConnectorContext : RuntimeConnectorContext
         {
             public Dictionary<string, HttpMessageInvoker> _clients = new Dictionary<string, HttpMessageInvoker>();
 

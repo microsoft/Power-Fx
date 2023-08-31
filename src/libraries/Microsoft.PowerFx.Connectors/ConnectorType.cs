@@ -5,12 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
@@ -53,6 +51,8 @@ namespace Microsoft.PowerFx.Connectors
         // Option Set, only defined when IsEnum is true and EnumValues is not empty
         public OptionSet OptionSet => GetOptionSet();
 
+        public Visibility Visibility { get; internal set; }
+
         public ConnectorType(OpenApiSchema schema, FormulaType formulaType)
         {
             FormulaType = formulaType;
@@ -77,6 +77,18 @@ namespace Microsoft.PowerFx.Connectors
 
             IsRequired = false;
             Name = null;
+            
+            SetVisibility(schema);
+        }
+
+        internal void SetVisibility(OpenApiSchema schema)
+        {
+            SetVisibility(schema.GetVisibility());
+        }
+
+        internal void SetVisibility(string visibility)
+        {
+            Visibility = visibility.ToVisibility();
         }
 
         private OptionSet GetOptionSet()

@@ -366,8 +366,10 @@ namespace Microsoft.PowerFx.Intellisense
                 FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => NoErrorInTexlNode(texlNode))
                                                                   .Select(texlNode => texlNode switch
                 {
-                    StrLitNode strNode => FormulaValue.New(strNode.Value),
+                    BoolLitNode boolLitNode => FormulaValue.New(boolLitNode.Value),
+                    DecLitNode decNode => FormulaValue.New(decNode.ActualDecValue),
                     NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
+                    StrLitNode strNode => FormulaValue.New(strNode.Value),
                     _ => null as FormulaValue
                 }).ToArray();
 
@@ -378,7 +380,7 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 // If connector function has some suggestions, let's add them here
-                var services = intellisenseData.Services;
+                var services = intellisenseData.Services;                
                 ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (suggestions != null && suggestions.Error == null && suggestions.Suggestions != null)
