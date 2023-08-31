@@ -5032,4 +5032,8 @@
     <value>O segundo argumento da função "{0}" só é suportado para valores numéricos e de data/hora.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Definir uma variável com um valor de origem de dados online (tabela ou registo) pode causar vários pedidos ao servidor. Esta ação será bloqueada brevemente.</value>
+    
+  </data>
 </root>

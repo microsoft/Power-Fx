@@ -5032,4 +5032,8 @@
     <value>Argumen kedua dari fungsi '{0}' hanya didukung untuk nilai numerik dan tanggal/waktu.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Mengatur variabel dengan nilai sumber data online (tabel atau data) dapat menyebabkan banyak permintaan ke server. Hal ini akan segera diblokir.</value>
+    
+  </data>
 </root>

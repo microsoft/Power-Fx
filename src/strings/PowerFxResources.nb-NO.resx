@@ -5032,4 +5032,8 @@
     <value>Det andre argumentet for funksjonen {0} støttes bare for numeriske verdier og dato-/klokkeslettverdier.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Hvis du angir en variabel med en nettbasert datakildeverdi (tabell eller oppføring), kan det føre til flere forespørsler til serveren. Snart blir dette blokkert.</value>
+    
+  </data>
 </root>

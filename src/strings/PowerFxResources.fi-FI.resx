@@ -5032,4 +5032,8 @@
     <value>{0}-funktion toista argumenttia tuetaan vain numeerisille ja päivämäärä/aika-arvoille.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Muutujan, jolla on online-tietolähteen arvo (taulukko tai tietue), määrittäminen voi aiheuttaa useita pyyntöjä palvelimelle. Tämä estetään pian.</value>
+    
+  </data>
 </root>
