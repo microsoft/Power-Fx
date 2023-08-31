@@ -127,12 +127,6 @@ namespace Microsoft.PowerFx.Core.Functions
         // Returns true if the function is disabled for component.
         public virtual bool DisableForComponent => false;
 
-        // Returns true if the function is disabled for data component.
-        public virtual bool DisableForDataComponent => false;
-
-        // Returns true if the function is disabled for Commmanding
-        public virtual bool DisableForCommanding => false;
-
         // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
         public virtual bool MutatesArg0 => false;
 
