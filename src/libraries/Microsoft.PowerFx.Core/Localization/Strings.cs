@@ -700,5 +700,6 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnSetExpandableType = new ErrorResourceKey("WrnSetExpandableType");
 
         public static ErrorResourceKey ErrNotSupportedFormat_Func = new ErrorResourceKey("ErrNotSupportedFormat_Func");
+        public static ErrorResourceKey ErrInvalidRelationshipEntity = new ErrorResourceKey("ErrInvalidRelationshipEntity");
     }
 }

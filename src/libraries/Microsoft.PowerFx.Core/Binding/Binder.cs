@@ -3569,11 +3569,17 @@ namespace Microsoft.PowerFx.Core.Binding
                 }
                 else if (typeRhs.IsExpandEntity)
                 {
-                    typeRhs = GetEntitySchema(typeRhs, node);
-                    value = typeRhs.ExpandInfo;
-                    Contracts.Assert(typeRhs == DType.Error || typeRhs.ExpandInfo != null);
+                    var entitySchema = GetEntitySchema(typeRhs, node);
+                    Contracts.Assert(entitySchema == DType.Error || entitySchema.ExpandInfo != null);
 
-                    if (_txb.IsRowScope(node.Left) && (typeRhs.ExpandInfo != null && typeRhs.ExpandInfo.IsTable))
+                    // Entity can be private or black listed.
+                    if (entitySchema == DType.Error)
+                    {
+                        SetDottedNameError(node, TexlStrings.ErrInvalidRelationshipEntity);
+                        return;
+                    }
+
+                    if (_txb.IsRowScope(node.Left) && (entitySchema.ExpandInfo != null && entitySchema.ExpandInfo.IsTable))
                     {
                         if (_txb.Document != null && _txb.Document.Properties.EnabledFeatures.IsEnableRowScopeOneToNExpandEnabled)
                         {
