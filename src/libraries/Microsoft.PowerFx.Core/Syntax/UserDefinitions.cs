@@ -99,7 +99,6 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     continue;
                 }
-
                 var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
 
                 texlFunctionSet.Add(func);
