@@ -5,14 +5,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Public.Types;
 using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Syntax
 {
@@ -96,8 +99,14 @@ namespace Microsoft.PowerFx.Syntax
                 {
                     continue;
                 }
-                
-                var func = new UserDefinedFunction(udfName.Value, udf.ReturnType.GetFormulaType()._type, udf.Body, udf.IsImperative, udf.Args);
+
+                var formulaType = FormulaType.Unknown;
+                if (PrimitiveTypesSymbolTable.Instance.TryLookup(udf.ReturnType.Name, out NameLookupInfo lookupInfo) && lookupInfo.Data is FormulaType ft)
+                {
+                    formulaType = ft;
+                }
+
+                var func = new UserDefinedFunction(udfName.Value, formulaType._type, udf.Body, udf.IsImperative, udf.Args);
 
                 texlFunctionSet.Add(func);
                 userDefinedFunctions.Add(func);
@@ -133,8 +142,7 @@ namespace Microsoft.PowerFx.Syntax
                 else
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
-
-                    if (arg.TypeIdent.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
+                    if (!PrimitiveTypesSymbolTable.Instance.TryLookup(arg.TypeIdent.Name, out _))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
                         isParamCheckSuccessful = false;
@@ -150,7 +158,7 @@ namespace Microsoft.PowerFx.Syntax
             var returnTypeFormulaType = returnType.GetFormulaType()._type;
             var isReturnTypeCheckSuccessful = true;
 
-            if (returnTypeFormulaType.Kind.Equals(DType.Unknown.Kind))
+            if (!PrimitiveTypesSymbolTable.Instance.TryLookup(returnType.Name, out _))
             {
                 errors.Add(new TexlError(returnType, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, returnType.Name));
                 isReturnTypeCheckSuccessful = false;
