@@ -5032,4 +5032,8 @@
     <value>'{0}' 函式的第二個引數僅支援數字與日期/時間值。</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>使用線上資料來源值 (資料表或記錄) 來設定變數可能導致向伺服器提出多個要求。這很快就會被封鎖。</value>
+    
+  </data>
 </root>

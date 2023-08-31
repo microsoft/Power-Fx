@@ -5032,4 +5032,8 @@
     <value>'{0}' 関数の第 2 引数に指定できるのは、数値と日付/時刻の値のみです。</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>変数をオンラインのデータ ソース値 (テーブルまたはレコード) に設定すると、サーバーへの要求が複数発生する可能性があります。これはすぐにブロックされます。</value>
+    
+  </data>
 </root>

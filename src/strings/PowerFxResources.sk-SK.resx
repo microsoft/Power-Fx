@@ -5032,4 +5032,8 @@
     <value>Druhý argument funkcie {0} je podporovaný len pre číselné hodnoty a hodnoty dátumu a času.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Nastavenie premennej s hodnotou online zdroja údajov (tabuľky alebo záznamu) môže spôsobiť viacero požiadaviek na server. Čoskoro to bude zablokované.</value>
+    
+  </data>
 </root>

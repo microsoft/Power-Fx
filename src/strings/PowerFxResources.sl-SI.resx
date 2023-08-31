@@ -5032,4 +5032,8 @@
     <value>Drugi argument funkcije »{0}« je podprt le za številske vrednosti in vrednosti datuma/časa.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Nastavitev spremenljivke z vrednostjo spletnega vira podatkov (tabela ali zapis) lahko povzroči več zahtev strežniku. Ta nastavitev bo kmalu blokirana.</value>
+    
+  </data>
 </root>

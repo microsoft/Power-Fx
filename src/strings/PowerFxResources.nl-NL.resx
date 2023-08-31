@@ -5032,4 +5032,8 @@
     <value>Het tweede argument van de functie {0} wordt alleen ondersteund voor numerieke waarden en datum-/tijdwaarden.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Het instellen van een variabele met een onlinegegevensbronwaarde (tabel of record) kan meerdere aanvragen bij de server veroorzaken. Dit wordt binnenkort geblokkeerd.</value>
+    
+  </data>
 </root>
