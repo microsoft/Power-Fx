@@ -133,6 +133,7 @@ namespace Microsoft.PowerFx.Syntax
                 else
                 {
                     argsAlreadySeen.Add(arg.NameIdent.Name);
+
                     if (arg.TypeIdent.GetFormulaType()._type.Kind.Equals(DType.Unknown.Kind))
                     {
                         errors.Add(new TexlError(arg.TypeIdent, DocumentErrorSeverity.Severe, TexlStrings.ErrUDF_UnknownType, arg.TypeIdent.Name));
