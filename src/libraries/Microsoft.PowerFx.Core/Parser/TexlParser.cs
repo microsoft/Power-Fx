@@ -1713,8 +1713,12 @@ namespace Microsoft.PowerFx.Core.Parser
             return err;
         }
 
-        // Eats a token of the given kind.
-        // If the token is not the right kind, reports an error and leaves it.
+        /// <summary>
+        /// Eats a token of the given kind.
+        /// If the token is not the right kind, reports an error and leaves it.
+        /// </summary>
+        /// <param name="tid">TokenKind.</param>
+        /// <returns>True if the token is of given kind.</returns>
         private bool EatTid(TokKind tid)
         {
             if (_curs.TidCur == tid)
@@ -1727,8 +1731,13 @@ namespace Microsoft.PowerFx.Core.Parser
             return false;
         }
 
-        // Returns the current token if it's of the given kind and moves to the next token.
-        // If the token is not the right kind, reports an error, leaves the token, and returns null.
+        /// <summary>
+        /// Returns the current token if it's of the given kind and moves to the next token.
+        /// If the token is not the right kind, reports an error, leaves the token, and returns null.
+        /// </summary>
+        /// <param name="tid">TokenKind.</param>
+        /// <param name="addError">Will not add token mis-match error when true.</param>
+        /// <returns>Returns the current token or null.</returns>
         private Token TokEat(TokKind tid, bool addError = true)
         {
             if (_curs.TidCur == tid)
