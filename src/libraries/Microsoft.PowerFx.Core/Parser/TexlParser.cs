@@ -1736,7 +1736,7 @@ namespace Microsoft.PowerFx.Core.Parser
         /// If the token is not the right kind, reports an error, leaves the token, and returns null.
         /// </summary>
         /// <param name="tid">TokenKind.</param>
-        /// <param name="addError">Will not add token mis-match error when true.</param>
+        /// <param name="addError">Will not add token mis-match error when false.</param>
         /// <returns>Returns the current token or null.</returns>
         private Token TokEat(TokKind tid, bool addError = true)
         {
