@@ -52,10 +52,10 @@ namespace Microsoft.PowerFx.Syntax
         {
             var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, features);
 
-            return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
+            return userDefinitions.ProcessUserDefinitions(shouldBindBody, out userDefinitionResult);
         }
 
-        public bool ProcessUserDefnitions(out UserDefinitionResult userDefinitionResult, bool shouldBindBody = false)
+        private bool ProcessUserDefinitions(bool shouldBindBody, out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
 
@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
                
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors, shouldBindBody);
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs, shouldBindBody, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             userDefinitionResult = new UserDefinitionResult(functions, errors, parseResult.NamedFormulas);
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Syntax
             return true;
         }
 
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors, bool shouldBindBody = false)
+        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, bool shouldBindBody, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
 
