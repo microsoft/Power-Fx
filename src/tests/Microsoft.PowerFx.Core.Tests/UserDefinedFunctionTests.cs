@@ -17,11 +17,6 @@ namespace Microsoft.PowerFx.Core.Tests
 {
     public class UserDefinedFunctionTests : PowerFxTest
     {
-        private bool ProcessUserDefinitions(string script, out UserDefinitionResult userDefinitionResult)
-        {
-            return UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions: new ParserOptions(), out userDefinitionResult);
-        }
-
         [Theory]
         [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
         [InlineData("IsType(x: Number): Number = Abs(x);", 0, 0, true)]
@@ -54,7 +49,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions, out var userDefinitionResult, shouldBindBody: true);
 
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
