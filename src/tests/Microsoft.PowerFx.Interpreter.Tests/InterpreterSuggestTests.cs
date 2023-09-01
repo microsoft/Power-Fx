@@ -289,6 +289,19 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             "RecordInputTest( {field1 : 4}, \"test\", { id: 1, name: \"test\"}, { nested2:{|", 
             "id:", 
             "name:")]
+        [InlineData(
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{ field1: 1}, nested2: {|",
+            "id:",
+            "name:")]
+
+        [InlineData(
+            "RecordInputTest({field1:1}, \"test\", {id:1,name:\"test\"}, {nested2:{id:1,name:\"test\"}},[{nested:{field1:1}}], {topNested:{nested2:{|",
+            "id:",
+            "name:")]
+
+        // No suggestion, if there is no curly brace open.
+        [InlineData(
+            "RecordInputTest( {field1 : 3}, \"test\", { id: 1, name: \"test\"}, { nested:{ field1: 1}, nested2: |")]
 
         // table type arg.
         [InlineData(
@@ -298,11 +311,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
         // table type arg with nested record field.
         [InlineData(
-            "RecordInputTest( {field1 : 6}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested: |",
+            "RecordInputTest( {field1 : 6}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested: {|",
             "field1:")]
 
         [InlineData(
-            "RecordInputTest( {field1 : 7}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested2: |",
+            "RecordInputTest( {field1 : 7}, \"test\", { id: 1, name: \"test\"}, { nested2:{ id: 1, name: \"test\"} }, [ { nested2: {|",
             "id:",
             "name:")]
         public void TestCustomFunctionSuggestion(string expression, params string[] expectedSuggestions)

@@ -97,17 +97,49 @@ namespace Microsoft.PowerFx.Intellisense
             /// <returns></returns>
             internal static bool AddSuggestionForAggregateAndParentRecord(TexlNode recordNode, DType aggregateType, IntellisenseData.IntellisenseData intellisenseData)
             {
-                if (TryGetParentRecordNode(recordNode, out var parentRecord))
+                if (recordNode.Token.Kind != TokKind.CurlyOpen)
                 {
-                    var fieldName = parentRecord.Ids.FirstOrDefault()?.Name;
+                    return false;
+                }
 
-                    aggregateType = fieldName.HasValue && aggregateType.TryGetType(fieldName.Value, out var type)
-                        ? type
-                        : aggregateType;
+                if (TryGetParentRecordFieldType(aggregateType, recordNode, out var lastFieldType))
+                {
+                    aggregateType = lastFieldType;
                 }
 
                 var suggestionsAdded = AddAggregateSuggestions(aggregateType, intellisenseData, intellisenseData.CursorPos);
                 return suggestionsAdded;
+            }
+
+            /// <summary>
+            /// Recursively finds field type of parent record node's last field.
+            /// e.g. *[field1: {field2: { field3: "test", field4: currentNode}}] => field3's type is returned.
+            /// </summary>
+            private static bool TryGetParentRecordFieldType(DType aggregateType, TexlNode currentNode, out DType fieldType)
+            {
+                if (currentNode == null || aggregateType == null)
+                {
+                    fieldType = default;
+                    return false;
+                }
+
+                if (TryGetParentRecordNode(currentNode, out var parentRecord))
+                {
+                    var fieldName = parentRecord.Ids.LastOrDefault()?.Name;
+                    if (fieldName.HasValue && aggregateType.TryGetType(fieldName.Value, out var type))
+                    {
+                        fieldType = type;
+                        return true;
+                    }
+
+                    if (TryGetParentRecordFieldType(aggregateType, parentRecord, out var parentFieldType))
+                    {
+                        return parentFieldType.TryGetType(fieldName.Value, out fieldType);
+                    }
+                }
+
+                fieldType = default;
+                return false;
             }
 
             internal static bool AddAggregateSuggestions(DType aggregateType, IntellisenseData.IntellisenseData intellisenseData, int cursorPos)

@@ -263,6 +263,8 @@ namespace Microsoft.PowerFx.Tests
 
             private static TableType Arg5 => Arg4.ToTable();
 
+            private static FormulaType Arg6 => RecordType.Empty().Add(new NamedFormulaType("topNested", Arg4));
+
             public TestRecordInputCustomFunction()
                 : base(
                       "RecordInputTest",
@@ -271,12 +273,13 @@ namespace Microsoft.PowerFx.Tests
                       Arg2,
                       Arg3,
                       Arg4,
-                      Arg5)
+                      Arg5,
+                      Arg6)
             {
             }
 
             // Must have "Execute" method. 
-            public static NumberValue Execute(NumberValue number, RecordValue record1, StringValue str, RecordValue record2)
+            public static NumberValue Execute(NumberValue number, RecordValue record1, StringValue str, RecordValue record2, TableValue table, RecordValue record)
             {
                 return FormulaValue.New(1);
             }
