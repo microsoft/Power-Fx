@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    [Obsolete("preview")]
     public abstract class ODataQueryableTableValue : QueryableTableValue
     {
         public readonly ODataParameters ODataParams;

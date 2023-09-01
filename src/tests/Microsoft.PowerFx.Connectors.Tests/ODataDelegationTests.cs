@@ -11,6 +11,9 @@ using Xunit;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
+    // This whole file is testing an obsolete feature, so we disable the warning.
+#pragma warning disable CS0618 // Type or member is obsolete
+
     public class ODataDelegationTests : PowerFxTest
     {
         private static readonly Uri _uriBase = new Uri("https://contoso.com/api/list");
