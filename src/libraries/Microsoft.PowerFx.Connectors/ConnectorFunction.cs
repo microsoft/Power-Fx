@@ -98,12 +98,12 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Dynamic schema extension on return type (response).
         /// </summary>
-        internal ConnectorDynamicSchema DynamicReturnSchema => ReturnParameterType.DynamicReturnSchema;
+        internal ConnectorDynamicSchema DynamicReturnSchema => ReturnParameterType?.DynamicReturnSchema;
 
         /// <summary>
         /// Dynamic schema extension on return type (response).
         /// </summary>
-        internal ConnectorDynamicProperty DynamicReturnProperty => ReturnParameterType.DynamicReturnProperty;
+        internal ConnectorDynamicProperty DynamicReturnProperty => ReturnParameterType?.DynamicReturnProperty;
 
         internal ConnectorParameterType ReturnParameterType { get; init; }
 

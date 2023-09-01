@@ -329,10 +329,11 @@ namespace Microsoft.PowerFx.Connectors
                         case "byte":
                         case "number":
                         case "int32":
-                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);                                                    
 
                         case null:
                         case "decimal":
+                        case "currency":
                             return new ConnectorParameterType(schema, FormulaType.Decimal);
 
                         default:

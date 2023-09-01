@@ -673,10 +673,103 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(suggestions2.Suggestions);
             Assert.Single(suggestions2.Suggestions);
 
+            Assert.True(executeProcedureV2.ReturnParameterType.SupportsSuggestions);
+
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
             FormulaType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(client, new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, services, CancellationToken.None).ConfigureAwait(false);
             Assert.NotNull(returnType);
             Assert.True(returnType is RecordType);
+
+            string input = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            string expected = $@"POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAi...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAi...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAi...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            Assert.Equal(expected, input);
+        }
+
+        [Fact]
+        public async Task DataverseTest()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            RuntimeConnectorContext ctx = new TestRuntimeConnectorContext2(client);
+            BasicServiceProvider services = new BasicServiceProvider();
+            services.AddService(ctx);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions(testConnector._apiDocument).ToArray();
+            ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
+
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");
+            ConnectorSuggestions suggestions1 = await createRecord.GetConnectorSuggestionsAsync(client, new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com") }, services, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal(651, suggestions1.Suggestions.Count);
+            Assert.Equal("AAD Users", suggestions1.Suggestions[0].DisplayName);
+            Assert.Equal("aadusers", ((StringValue)suggestions1.Suggestions[0].Suggestion).Value);
+
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_2.json");
+            ConnectorSuggestions suggestions2 = await createRecord.GetConnectorSuggestionsAsync(client, new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com"), FormulaValue.New("accounts") }, services, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal(119, suggestions2.Suggestions.Count);
+            Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);
+            Assert.Equal("Decimal", suggestions2.Suggestions[0].Suggestion.Type.ToString());
+
+            string input = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared.azure-apim.net/invoke
+ authority: tip1-shared.azure-apim.net
+ Authorization: Bearer eyJ0eXAiO...
+ organization: https://org283e9949.crm10.dynamics.com
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/Default-9f6be790-4a16-4dd6-9850-44a0d2649aef
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/commondataserviceforapps/461a30624723445c9ba87313d8bbefa3/v1.0/$metadata.json/GetEntityListEnum/GetEntitiesWithOrganization
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1-shared.azure-apim.net/invoke
+ authority: tip1-shared.azure-apim.net
+ Authorization: Bearer eyJ0eXAiO...
+ organization: https://org283e9949.crm10.dynamics.com
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/Default-9f6be790-4a16-4dd6-9850-44a0d2649aef
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/commondataserviceforapps/461a30624723445c9ba87313d8bbefa3/v1.0/$metadata.json/entities/accounts/postitem
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            Assert.Equal(expected, input);
         }
     }
 

@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public ConnectorType HiddenConnectorType { get; }
 
-        public bool SupportsSuggestions => false;
+        public bool SupportsSuggestions => DynamicReturnSchema != null || DynamicReturnProperty != null;
 
         internal ConnectorDynamicSchema DynamicReturnSchema { get; private set; }
 
