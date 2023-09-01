@@ -1,0 +1,1378 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "stageid": {
+        "type": "string",
+        "title": "(Deprecated) Process Stage",
+        "format": "guid",
+        "description": "Shows the ID of the stage.",
+        "x-ms-visibility": "advanced"
+      },
+      "traversedpath": {
+        "type": "string",
+        "title": "(Deprecated) Traversed Path",
+        "description": "For internal use only.",
+        "maxLength": 1250,
+        "x-ms-visibility": "advanced"
+      },
+      "accountid": {
+        "type": "string",
+        "title": "Account",
+        "format": "guid",
+        "description": "Unique identifier of the account.",
+        "x-ms-visibility": "advanced"
+      },
+      "name": {
+        "type": "string",
+        "title": "Account Name",
+        "description": "Type the company or business name.",
+        "maxLength": 160,
+        "x-ms-visibility": "important"
+      },
+      "accountnumber": {
+        "type": "string",
+        "title": "Account Number",
+        "description": "Type an ID number or code for the account to quickly search and identify the account in system views.",
+        "maxLength": 20,
+        "x-ms-visibility": "advanced"
+      },
+      "accountratingcode": {
+        "type": "integer",
+        "title": "Account Rating",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "28ef681e-b91f-4988-9647-10eea2f33bd0",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "28ef681e-b91f-4988-9647-10eea2f33bd0" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select a rating to indicate the value of the customer account.",
+        "x-ms-visibility": "advanced"
+      },
+      "address1_addresstypecode": {
+        "type": "integer",
+        "title": "Address 1: Address Type",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "4e51f924-e47d-4f69-811a-cd387c9750d4",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "4e51f924-e47d-4f69-811a-cd387c9750d4" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the primary address type.",
+        "x-ms-visibility": "advanced"
+      },
+      "address1_city": {
+        "type": "string",
+        "title": "Address 1: City",
+        "description": "Type the city for the primary address.",
+        "maxLength": 80,
+        "x-ms-visibility": "important"
+      },
+      "address1_country": {
+        "type": "string",
+        "title": "Address 1: Country/Region",
+        "description": "Type the country or region for the primary address.",
+        "maxLength": 80,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_county": {
+        "type": "string",
+        "title": "Address 1: County",
+        "description": "Type the county for the primary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_fax": {
+        "type": "string",
+        "title": "Address 1: Fax",
+        "description": "Type the fax number associated with the primary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_freighttermscode": {
+        "type": "integer",
+        "title": "Address 1: Freight Terms",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "e7c8f2bf-c314-4d3d-bb8e-83726acf99e8",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "e7c8f2bf-c314-4d3d-bb8e-83726acf99e8" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the freight terms for the primary address to make sure shipping orders are processed correctly.",
+        "x-ms-visibility": "advanced"
+      },
+      "address1_addressid": {
+        "type": "string",
+        "title": "Address 1: ID",
+        "format": "guid",
+        "description": "Unique identifier for address 1.",
+        "x-ms-visibility": "advanced"
+      },
+      "address1_latitude": {
+        "type": "number",
+        "title": "Address 1: Latitude",
+        "format": "double",
+        "description": "Type the latitude value for the primary address for use in mapping and other applications.",
+        "maximum": 90.0,
+        "minimum": -90.0,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_longitude": {
+        "type": "number",
+        "title": "Address 1: Longitude",
+        "format": "double",
+        "description": "Type the longitude value for the primary address for use in mapping and other applications.",
+        "maximum": 180.0,
+        "minimum": -180.0,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_name": {
+        "type": "string",
+        "title": "Address 1: Name",
+        "description": "Type a descriptive name for the primary address, such as Corporate Headquarters.",
+        "maxLength": 200,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_postofficebox": {
+        "type": "string",
+        "title": "Address 1: Post Office Box",
+        "description": "Type the post office box number of the primary address.",
+        "maxLength": 20,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_primarycontactname": {
+        "type": "string",
+        "title": "Address 1: Primary Contact Name",
+        "description": "Type the name of the main contact at the account's primary address.",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_shippingmethodcode": {
+        "type": "integer",
+        "title": "Address 1: Shipping Method",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "064a6cf1-ec3d-4e57-bfb7-011e168cf35f",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "064a6cf1-ec3d-4e57-bfb7-011e168cf35f" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select a shipping method for deliveries sent to this address.",
+        "x-ms-visibility": "advanced"
+      },
+      "address1_stateorprovince": {
+        "type": "string",
+        "title": "Address 1: State/Province",
+        "description": "Type the state or province of the primary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_line1": {
+        "type": "string",
+        "title": "Address 1: Street 1",
+        "description": "Type the first line of the primary address.",
+        "maxLength": 250,
+        "x-ms-visibility": "important"
+      },
+      "address1_line2": {
+        "type": "string",
+        "title": "Address 1: Street 2",
+        "description": "Type the second line of the primary address.",
+        "maxLength": 250,
+        "x-ms-visibility": "important"
+      },
+      "address1_line3": {
+        "type": "string",
+        "title": "Address 1: Street 3",
+        "description": "Type the third line of the primary address.",
+        "maxLength": 250,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_telephone2": {
+        "type": "string",
+        "title": "Address 1: Telephone 2",
+        "description": "Type a second phone number associated with the primary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_telephone3": {
+        "type": "string",
+        "title": "Address 1: Telephone 3",
+        "description": "Type a third phone number associated with the primary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_upszone": {
+        "type": "string",
+        "title": "Address 1: UPS Zone",
+        "description": "Type the UPS zone of the primary address to make sure shipping charges are calculated correctly and deliveries are made promptly, if shipped by UPS.",
+        "maxLength": 4,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_utcoffset": {
+        "type": "integer",
+        "title": "Address 1: UTC Offset",
+        "format": "int32",
+        "description": "Select the time zone, or UTC offset, for this address so that other people can reference it when they contact someone at this address.",
+        "maximum": 1500.0,
+        "minimum": -1500.0,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_postalcode": {
+        "type": "string",
+        "title": "Address 1: ZIP/Postal Code",
+        "description": "Type the ZIP Code or postal code for the primary address.",
+        "maxLength": 20,
+        "x-ms-visibility": "important"
+      },
+      "address2_addresstypecode": {
+        "type": "integer",
+        "title": "Address 2: Address Type",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "e0007867-4731-4d30-8efe-dea46640c1bb",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "e0007867-4731-4d30-8efe-dea46640c1bb" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the secondary address type.",
+        "x-ms-visibility": "advanced"
+      },
+      "address2_city": {
+        "type": "string",
+        "title": "Address 2: City",
+        "description": "Type the city for the secondary address.",
+        "maxLength": 80,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_country": {
+        "type": "string",
+        "title": "Address 2: Country/Region",
+        "description": "Type the country or region for the secondary address.",
+        "maxLength": 80,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_county": {
+        "type": "string",
+        "title": "Address 2: County",
+        "description": "Type the county for the secondary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_fax": {
+        "type": "string",
+        "title": "Address 2: Fax",
+        "description": "Type the fax number associated with the secondary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_freighttermscode": {
+        "type": "integer",
+        "title": "Address 2: Freight Terms",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "d4bde505-3332-439a-9cff-98074e8dd32e",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "d4bde505-3332-439a-9cff-98074e8dd32e" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the freight terms for the secondary address to make sure shipping orders are processed correctly.",
+        "x-ms-visibility": "advanced"
+      },
+      "address2_addressid": {
+        "type": "string",
+        "title": "Address 2: ID",
+        "format": "guid",
+        "description": "Unique identifier for address 2.",
+        "x-ms-visibility": "advanced"
+      },
+      "address2_latitude": {
+        "type": "number",
+        "title": "Address 2: Latitude",
+        "format": "double",
+        "description": "Type the latitude value for the secondary address for use in mapping and other applications.",
+        "maximum": 90.0,
+        "minimum": -90.0,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_longitude": {
+        "type": "number",
+        "title": "Address 2: Longitude",
+        "format": "double",
+        "description": "Type the longitude value for the secondary address for use in mapping and other applications.",
+        "maximum": 180.0,
+        "minimum": -180.0,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_name": {
+        "type": "string",
+        "title": "Address 2: Name",
+        "description": "Type a descriptive name for the secondary address, such as Corporate Headquarters.",
+        "maxLength": 200,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_postofficebox": {
+        "type": "string",
+        "title": "Address 2: Post Office Box",
+        "description": "Type the post office box number of the secondary address.",
+        "maxLength": 20,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_primarycontactname": {
+        "type": "string",
+        "title": "Address 2: Primary Contact Name",
+        "description": "Type the name of the main contact at the account's secondary address.",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_shippingmethodcode": {
+        "type": "integer",
+        "title": "Address 2: Shipping Method",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "042dbe8b-f24d-450e-8b36-d75421012a3f",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "042dbe8b-f24d-450e-8b36-d75421012a3f" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select a shipping method for deliveries sent to this address.",
+        "x-ms-visibility": "advanced"
+      },
+      "address2_stateorprovince": {
+        "type": "string",
+        "title": "Address 2: State/Province",
+        "description": "Type the state or province of the secondary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_line1": {
+        "type": "string",
+        "title": "Address 2: Street 1",
+        "description": "Type the first line of the secondary address.",
+        "maxLength": 250,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_line2": {
+        "type": "string",
+        "title": "Address 2: Street 2",
+        "description": "Type the second line of the secondary address.",
+        "maxLength": 250,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_line3": {
+        "type": "string",
+        "title": "Address 2: Street 3",
+        "description": "Type the third line of the secondary address.",
+        "maxLength": 250,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_telephone1": {
+        "type": "string",
+        "title": "Address 2: Telephone 1",
+        "description": "Type the main phone number associated with the secondary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_telephone2": {
+        "type": "string",
+        "title": "Address 2: Telephone 2",
+        "description": "Type a second phone number associated with the secondary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_telephone3": {
+        "type": "string",
+        "title": "Address 2: Telephone 3",
+        "description": "Type a third phone number associated with the secondary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_upszone": {
+        "type": "string",
+        "title": "Address 2: UPS Zone",
+        "description": "Type the UPS zone of the secondary address to make sure shipping charges are calculated correctly and deliveries are made promptly, if shipped by UPS.",
+        "maxLength": 4,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_utcoffset": {
+        "type": "integer",
+        "title": "Address 2: UTC Offset",
+        "format": "int32",
+        "description": "Select the time zone, or UTC offset, for this address so that other people can reference it when they contact someone at this address.",
+        "maximum": 1500.0,
+        "minimum": -1500.0,
+        "x-ms-visibility": "advanced"
+      },
+      "address2_postalcode": {
+        "type": "string",
+        "title": "Address 2: ZIP/Postal Code",
+        "description": "Type the ZIP Code or postal code for the secondary address.",
+        "maxLength": 20,
+        "x-ms-visibility": "advanced"
+      },
+      "address1_telephone1": {
+        "type": "string",
+        "title": "Address Phone",
+        "description": "Type the main phone number associated with the primary address.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "revenue": {
+        "type": "number",
+        "title": "Annual Revenue",
+        "format": "currency",
+        "description": "Type the annual revenue for the account, used as an indicator in financial performance analysis.",
+        "maximum": 100000000000000.0,
+        "minimum": 0.0,
+        "x-ms-visibility": "important"
+      },
+      "businesstypecode": {
+        "type": "integer",
+        "title": "Business Type",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "088101ce-83c4-40cd-9b8b-97bdb52bdcfa",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "088101ce-83c4-40cd-9b8b-97bdb52bdcfa" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the legal designation or other business type of the account for contracts or reporting purposes.",
+        "x-ms-visibility": "advanced"
+      },
+      "accountcategorycode": {
+        "type": "integer",
+        "title": "Category",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "118771ca-6fb9-4f60-8fd4-99b6124b63ad",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "118771ca-6fb9-4f60-8fd4-99b6124b63ad" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select a category to indicate whether the customer account is standard or preferred.",
+        "x-ms-visibility": "advanced"
+      },
+      "accountclassificationcode": {
+        "type": "integer",
+        "title": "Classification",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "1344497c-e863-48d4-ab7c-2c068aacd5c6",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "1344497c-e863-48d4-ab7c-2c068aacd5c6" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select a classification code to indicate the potential value of the customer account based on the projected return on investment, cooperation level, sales cycle length or other criteria.",
+        "x-ms-visibility": "advanced"
+      },
+      "adx_createdbyipaddress": {
+        "type": "string",
+        "title": "Created By (IP Address)",
+        "description": "",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "adx_createdbyusername": {
+        "type": "string",
+        "title": "Created By (User Name)",
+        "description": "",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "creditonhold": {
+        "type": "boolean",
+        "title": "Credit Hold",
+        "description": "Select whether the credit for the account is on hold. This is a useful reference while addressing the invoice and accounting issues with the customer.",
+        "x-ms-visibility": "advanced"
+      },
+      "creditlimit": {
+        "type": "number",
+        "title": "Credit Limit",
+        "format": "currency",
+        "description": "Type the credit limit of the account. This is a useful reference when you address invoice and accounting issues with the customer.",
+        "maximum": 100000000000000.0,
+        "minimum": 0.0,
+        "x-ms-visibility": "advanced"
+      },
+      "transactioncurrencyid@odata.bind": {
+        "type": "string",
+        "title": "Currency (Currencies)",
+        "description": "Choose the local currency for the record to make sure budgets are reported in the correct currency.",
+        "x-ms-visibility": "advanced"
+      },
+      "customersizecode": {
+        "type": "integer",
+        "title": "Customer Size",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "9c6b1499-24b3-4f63-a8c2-4b263ae49ac9",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "9c6b1499-24b3-4f63-a8c2-4b263ae49ac9" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the size category or range of the account for segmentation and reporting purposes.",
+        "x-ms-visibility": "advanced"
+      },
+      "entityimage": {
+        "type": "string",
+        "title": "Default Image",
+        "description": "Shows the default image for the record.",
+        "x-ms-visibility": "advanced"
+      },
+      "description": {
+        "type": "string",
+        "title": "Description",
+        "description": "Type additional information to describe the account, such as an excerpt from the company's website.",
+        "maxLength": 2000,
+        "x-ms-visibility": "important"
+      },
+      "donotbulkemail": {
+        "type": "boolean",
+        "title": "Do not allow Bulk Emails",
+        "description": "Select whether the account allows bulk email sent through campaigns. If Do Not Allow is selected, the account can be added to marketing lists, but is excluded from email.",
+        "x-ms-visibility": "advanced"
+      },
+      "donotbulkpostalmail": {
+        "type": "boolean",
+        "title": "Do not allow Bulk Mails",
+        "description": "Select whether the account allows bulk postal mail sent through marketing campaigns or quick campaigns. If Do Not Allow is selected, the account can be added to marketing lists, but will be excluded from the postal mail.",
+        "x-ms-visibility": "advanced"
+      },
+      "donotemail": {
+        "type": "boolean",
+        "title": "Do not allow Emails",
+        "description": "Select whether the account allows direct email sent from Microsoft Dynamics 365.",
+        "x-ms-visibility": "advanced"
+      },
+      "donotfax": {
+        "type": "boolean",
+        "title": "Do not allow Faxes",
+        "description": "Select whether the account allows faxes. If Do Not Allow is selected, the account will be excluded from fax activities distributed in marketing campaigns.",
+        "x-ms-visibility": "advanced"
+      },
+      "donotpostalmail": {
+        "type": "boolean",
+        "title": "Do not allow Mails",
+        "description": "Select whether the account allows direct mail. If Do Not Allow is selected, the account will be excluded from letter activities distributed in marketing campaigns.",
+        "x-ms-visibility": "advanced"
+      },
+      "donotphone": {
+        "type": "boolean",
+        "title": "Do not allow Phone Calls",
+        "description": "Select whether the account allows phone calls. If Do Not Allow is selected, the account will be excluded from phone call activities distributed in marketing campaigns.",
+        "x-ms-visibility": "advanced"
+      },
+      "emailaddress1": {
+        "type": "string",
+        "title": "Email",
+        "description": "Type the primary email address for the account.",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "emailaddress2": {
+        "type": "string",
+        "title": "Email Address 2",
+        "description": "Type the secondary email address for the account.",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "emailaddress3": {
+        "type": "string",
+        "title": "Email Address 3",
+        "description": "Type an alternate email address for the account.",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "fax": {
+        "type": "string",
+        "title": "Fax",
+        "description": "Type the fax number for the account.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "followemail": {
+        "type": "boolean",
+        "title": "Follow Email Activity",
+        "description": "Information about whether to allow following email activity like opens, attachment views and link clicks for emails sent to the account.",
+        "x-ms-visibility": "advanced"
+      },
+      "ftpsiteurl": {
+        "type": "string",
+        "title": "FTP Site",
+        "description": "Type the URL for the account's FTP site to enable users to access data and share documents.",
+        "maxLength": 200,
+        "x-ms-visibility": "advanced"
+      },
+      "cr17b_hello_world": {
+        "type": "string",
+        "title": "hello_world",
+        "description": "",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "importsequencenumber": {
+        "type": "integer",
+        "title": "Import Sequence Number",
+        "format": "int32",
+        "description": "Unique identifier of the data import or data migration that created this record.",
+        "maximum": 2147483647.0,
+        "minimum": -2147483648.0,
+        "x-ms-visibility": "advanced"
+      },
+      "industrycode": {
+        "type": "integer",
+        "title": "Industry",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "ae00233e-70c0-4a1f-803f-03ff723e5440",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "ae00233e-70c0-4a1f-803f-03ff723e5440" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the account's primary industry for use in marketing segmentation and demographic analysis.",
+        "x-ms-visibility": "advanced"
+      },
+      "lastonholdtime": {
+        "type": "string",
+        "title": "Last On Hold Time",
+        "format": "date-time",
+        "description": "Contains the date and time stamp of the last on hold time.",
+        "x-ms-visibility": "advanced"
+      },
+      "telephone1": {
+        "type": "string",
+        "title": "Main Phone",
+        "description": "Type the main phone number for this account.",
+        "maxLength": 50,
+        "x-ms-visibility": "important"
+      },
+      "msa_managingpartnerid@odata.bind": {
+        "type": "string",
+        "title": "Managing Partner (Accounts)",
+        "description": "Unique identifier for Account associated with Account.",
+        "x-ms-visibility": "advanced"
+      },
+      "marketcap": {
+        "type": "number",
+        "title": "Market Capitalization",
+        "format": "currency",
+        "description": "Type the market capitalization of the account to identify the company's equity, used as an indicator in financial performance analysis.",
+        "maximum": 100000000000000.0,
+        "minimum": 0.0,
+        "x-ms-visibility": "advanced"
+      },
+      "marketingonly": {
+        "type": "boolean",
+        "title": "Marketing Only",
+        "description": "Whether is only for marketing",
+        "x-ms-visibility": "advanced"
+      },
+      "adx_modifiedbyipaddress": {
+        "type": "string",
+        "title": "Modified By (IP Address)",
+        "description": "",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "adx_modifiedbyusername": {
+        "type": "string",
+        "title": "Modified By (User Name)",
+        "description": "",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "cr17b_new_test": {
+        "type": "string",
+        "title": "new_test",
+        "description": "",
+        "maxLength": 100,
+        "x-ms-visibility": "advanced"
+      },
+      "numberofemployees": {
+        "type": "integer",
+        "title": "Number of Employees",
+        "format": "int32",
+        "description": "Type the number of employees that work at the account for use in marketing segmentation and demographic analysis.",
+        "maximum": 1000000000.0,
+        "minimum": 0.0,
+        "x-ms-visibility": "important"
+      },
+      "telephone2": {
+        "type": "string",
+        "title": "Other Phone",
+        "description": "Type a second phone number for this account.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "ownerid@odata.bind": {
+        "type": "string",
+        "title": "Owner (Owners)",
+        "description": "Enter the user or team who is assigned to manage the record. This field is updated every time the record is assigned to a different user.",
+        "x-ms-visibility": "advanced"
+      },
+      "ownershipcode": {
+        "type": "integer",
+        "title": "Ownership",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "7be79e9c-1a22-45b2-b09f-1e37cba95bfa",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "7be79e9c-1a22-45b2-b09f-1e37cba95bfa" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the account's ownership structure, such as public or private.",
+        "x-ms-visibility": "advanced"
+      },
+      "parentaccountid@odata.bind": {
+        "type": "string",
+        "title": "Parent Account (Accounts)",
+        "description": "Choose the parent account associated with this account to show parent and child businesses in reporting and analytics.",
+        "x-ms-visibility": "advanced"
+      },
+      "participatesinworkflow": {
+        "type": "boolean",
+        "title": "Participates in Workflow",
+        "description": "For system use only. Legacy Microsoft Dynamics CRM 3.0 workflow data.",
+        "x-ms-visibility": "advanced"
+      },
+      "paymenttermscode": {
+        "type": "integer",
+        "title": "Payment Terms",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "94afe94b-4ca6-4d62-9585-ab4670012dfb",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "94afe94b-4ca6-4d62-9585-ab4670012dfb" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the payment terms to indicate when the customer needs to pay the total amount.",
+        "x-ms-visibility": "advanced"
+      },
+      "preferredappointmentdaycode": {
+        "type": "integer",
+        "title": "Preferred Day",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "5967e7cc-afbb-4c10-bf7e-e7ef430c52be",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "5967e7cc-afbb-4c10-bf7e-e7ef430c52be" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the preferred day of the week for service appointments.",
+        "x-ms-visibility": "advanced"
+      },
+      "preferredcontactmethodcode": {
+        "type": "integer",
+        "title": "Preferred Method of Contact",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "cc5719c0-4fcd-44d3-b1ff-ad77073344e2",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "cc5719c0-4fcd-44d3-b1ff-ad77073344e2" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the preferred method of contact.",
+        "x-ms-visibility": "advanced"
+      },
+      "preferredappointmenttimecode": {
+        "type": "integer",
+        "title": "Preferred Time",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "80ed630f-d6f9-4fa4-96b1-e1b17522015d",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "80ed630f-d6f9-4fa4-96b1-e1b17522015d" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the preferred time of day for service appointments.",
+        "x-ms-visibility": "advanced"
+      },
+      "preferredsystemuserid@odata.bind": {
+        "type": "string",
+        "title": "Preferred User (Users)",
+        "description": "Choose the preferred service representative for reference when you schedule service activities for the account.",
+        "x-ms-visibility": "advanced"
+      },
+      "primarycontactid@odata.bind": {
+        "type": "string",
+        "title": "Primary Contact (Contacts)",
+        "description": "Choose the primary contact for the account to provide quick access to contact details.",
+        "x-ms-visibility": "important"
+      },
+      "primarysatoriid": {
+        "type": "string",
+        "title": "Primary Satori ID",
+        "description": "Primary Satori ID for Account",
+        "maxLength": 200,
+        "x-ms-visibility": "advanced"
+      },
+      "primarytwitterid": {
+        "type": "string",
+        "title": "Primary Twitter ID",
+        "description": "Primary Twitter ID for Account",
+        "maxLength": 128,
+        "x-ms-visibility": "advanced"
+      },
+      "processid": {
+        "type": "string",
+        "title": "Process",
+        "format": "guid",
+        "description": "Shows the ID of the process.",
+        "x-ms-visibility": "advanced"
+      },
+      "overriddencreatedon": {
+        "type": "string",
+        "title": "Record Created On",
+        "format": "date-time",
+        "description": "Date and time that the record was migrated.",
+        "x-ms-visibility": "advanced"
+      },
+      "customertypecode": {
+        "type": "integer",
+        "title": "Relationship Type",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "4e33af09-ba43-4365-a747-c7e4f9992172",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "4e33af09-ba43-4365-a747-c7e4f9992172" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the category that best describes the relationship between the account and your organization.",
+        "x-ms-visibility": "advanced"
+      },
+      "donotsendmm": {
+        "type": "boolean",
+        "title": "Send Marketing Materials",
+        "description": "Select whether the account accepts marketing materials, such as brochures or catalogs.",
+        "x-ms-visibility": "advanced"
+      },
+      "sharesoutstanding": {
+        "type": "integer",
+        "title": "Shares Outstanding",
+        "format": "int32",
+        "description": "Type the number of shares available to the public for the account. This number is used as an indicator in financial performance analysis.",
+        "maximum": 1000000000.0,
+        "minimum": 0.0,
+        "x-ms-visibility": "advanced"
+      },
+      "shippingmethodcode": {
+        "type": "integer",
+        "title": "Shipping Method",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "cf1bf1d3-9c27-4f72-af83-7f96f56ecd14",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "cf1bf1d3-9c27-4f72-af83-7f96f56ecd14" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select a shipping method for deliveries sent to the account's address to designate the preferred carrier or other delivery option.",
+        "x-ms-visibility": "advanced"
+      },
+      "sic": {
+        "type": "string",
+        "title": "SIC Code",
+        "description": "Type the Standard Industrial Classification (SIC) code that indicates the account's primary industry of business, for use in marketing segmentation and demographic analysis.",
+        "maxLength": 20,
+        "x-ms-visibility": "advanced"
+      },
+      "sla_account_sla@odata.bind": {
+        "type": "string",
+        "title": "SLA (SLAs)",
+        "description": "Choose the service level agreement (SLA) that you want to apply to the Account record.",
+        "x-ms-visibility": "advanced"
+      },
+      "statuscode": {
+        "type": "integer",
+        "title": "Status Reason",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "f99371c3-b1e1-4645-b2c3-c3db0f59ecf0",
+            "type": "Status"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "f99371c3-b1e1-4645-b2c3-c3db0f59ecf0" },
+            "body/type": { "value": "Status" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select the account's status.",
+        "x-ms-visibility": "advanced"
+      },
+      "stockexchange": {
+        "type": "string",
+        "title": "Stock Exchange",
+        "description": "Type the stock exchange at which the account is listed to track their stock and financial performance of the company.",
+        "maxLength": 20,
+        "x-ms-visibility": "advanced"
+      },
+      "telephone3": {
+        "type": "string",
+        "title": "Telephone 3",
+        "description": "Type a third phone number for this account.",
+        "maxLength": 50,
+        "x-ms-visibility": "advanced"
+      },
+      "territorycode": {
+        "type": "integer",
+        "title": "Territory Code",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "204767ee-9219-458d-a78e-c0295e724fab",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "204767ee-9219-458d-a78e-c0295e724fab" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "Select a region or territory for the account for use in segmentation and analysis.",
+        "x-ms-visibility": "advanced"
+      },
+      "cr17b_test": {
+        "type": "integer",
+        "title": "test",
+        "x-ms-dynamic-values": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": "https://org283e9949.crm10.dynamics.com",
+            "entityName": { "parameter": "entityName" },
+            "attributeMetadataId": "2a8f5c92-8aa6-ec11-9840-002248286db3",
+            "type": "Picklist"
+          },
+          "value-collection": "value",
+          "value-path": "value",
+          "value-title": "Label/UserLocalizedLabel/Label"
+        },
+        "x-ms-dynamic-list": {
+          "operationId": "GetOptionSetMetadataWithEntitySetNameWithOrganization",
+          "parameters": {
+            "organization": { "parameterReference": "organization" },
+            "body/entityName": { "parameterReference": "entityName" },
+            "body/attributeMetadataId": { "value": "2a8f5c92-8aa6-ec11-9840-002248286db3" },
+            "body/type": { "value": "Picklist" }
+          },
+          "itemsPath": "value",
+          "itemValuePath": "value",
+          "itemTitlePath": "Label/UserLocalizedLabel/Label"
+        },
+        "format": "int32",
+        "description": "",
+        "x-ms-visibility": "advanced"
+      },
+      "tickersymbol": {
+        "type": "string",
+        "title": "Ticker Symbol",
+        "description": "Type the stock exchange symbol for the account to track financial performance of the company. You can click the code entered in this field to access the latest trading information from MSN Money.",
+        "maxLength": 10,
+        "x-ms-visibility": "advanced"
+      },
+      "timezoneruleversionnumber": {
+        "type": "integer",
+        "title": "Time Zone Rule Version Number",
+        "format": "int32",
+        "description": "For internal use only.",
+        "maximum": 2147483647.0,
+        "minimum": -1.0,
+        "x-ms-visibility": "advanced"
+      },
+      "utcconversiontimezonecode": {
+        "type": "integer",
+        "title": "UTC Conversion Time Zone Code",
+        "format": "int32",
+        "description": "Time zone code that was in use when the record was created.",
+        "maximum": 2147483647.0,
+        "minimum": -1.0,
+        "x-ms-visibility": "advanced"
+      },
+      "websiteurl": {
+        "type": "string",
+        "title": "Website",
+        "description": "Type the account's website URL to get quick details about the company profile.",
+        "maxLength": 200,
+        "x-ms-visibility": "advanced"
+      },
+      "yominame": {
+        "type": "string",
+        "title": "Yomi Account Name",
+        "description": "Type the phonetic spelling of the company name, if specified in Japanese, to make sure the name is pronounced correctly in phone calls and other communications.",
+        "maxLength": 160,
+        "x-ms-visibility": "advanced"
+      }
+    },
+    "required": [ "name" ]
+  }
+}

@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Namespace of the function (not contained in swagger file).
         /// </summary>
-        public string Namespace { get; private set; }
+        public string Namespace => ConnectorSettings.Namespace;
 
         /// <summary>
         /// Defines if the function is supported or contains unsupported elements.
@@ -96,6 +96,18 @@ namespace Microsoft.PowerFx.Connectors
         internal OpenApiDocument Document { get; init; }
 
         /// <summary>
+        /// Dynamic schema extension on return type (response).
+        /// </summary>
+        internal ConnectorDynamicSchema DynamicReturnSchema => ReturnParameterType?.DynamicReturnSchema;
+
+        /// <summary>
+        /// Dynamic schema extension on return type (response).
+        /// </summary>
+        internal ConnectorDynamicProperty DynamicReturnProperty => ReturnParameterType?.DynamicReturnProperty;
+
+        internal ConnectorParameterType ReturnParameterType { get; init; }
+
+        /// <summary>
         /// Visibility defined as "x-ms-visibility" string content.
         /// </summary>
         public string Visibility => Operation.GetVisibility();
@@ -129,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Required parameters.
         /// </summary>
-        public ConnectorParameter[] RequiredParameters => _requiredParameters ??= ArgumentMapper.RequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
+        public ConnectorParameter[] RequiredParameters => _requiredParameters ??= ArgumentMapper.RequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue, sfpt.SupportsDynamicIntellisense)).ToArray();
 
         /// <summary>
         /// Hidden required parameters.
@@ -138,12 +150,12 @@ namespace Microsoft.PowerFx.Connectors
         /// - "x-ms-visibility" string set to "internal" 
         /// - has a default value.
         /// </summary>
-        internal ConnectorParameter[] HiddenRequiredParameters => _hiddenRequiredParameters ??= ArgumentMapper.HiddenRequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
+        internal ConnectorParameter[] HiddenRequiredParameters => _hiddenRequiredParameters ??= ArgumentMapper.HiddenRequiredParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue, sfpt.SupportsDynamicIntellisense)).ToArray();
 
         /// <summary>
         /// Optional parameters.
         /// </summary>
-        public ConnectorParameter[] OptionalParameters => _optionalParameters ??= ArgumentMapper.OptionalParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue)).ToArray();
+        public ConnectorParameter[] OptionalParameters => _optionalParameters ??= ArgumentMapper.OptionalParamInfo.Select(sfpt => new ConnectorParameter(sfpt.TypedName.Name, sfpt.FormulaType, sfpt.ConnectorType, sfpt.Description, sfpt.Summary, sfpt.DefaultValue, sfpt.SupportsDynamicIntellisense)).ToArray();
 
         /// <summary>
         /// Minimum number of arguments.
@@ -165,45 +177,14 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// ArgumentMapper class.
         /// </summary>
-        internal ArgumentMapper ArgumentMapper => _argumentMapper ??= new ArgumentMapper(Operation.Parameters, Operation, NumberIsFloat);
-
-        /// <summary>
-        /// True if the function has a service function.
-        /// </summary>
-        internal bool HasServiceFunction => _defaultServiceFunction != null;
+        internal ArgumentMapper ArgumentMapper => _argumentMapper ??= new ArgumentMapper(Operation, NumberIsFloat);
 
         private ArgumentMapper _argumentMapper;
         private ConnectorParameter[] _requiredParameters;
         private ConnectorParameter[] _hiddenRequiredParameters;
         private ConnectorParameter[] _optionalParameters;
-        internal readonly ServiceFunction _defaultServiceFunction;
 
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, null, null, false, new ConnectorSettings())
-        {
-        }
-
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, null, false, new ConnectorSettings())
-        {
-        }
-
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, false, new ConnectorSettings())
-        {
-        }
-
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, new ConnectorSettings())
-        {
-        }
-
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
-            : this(openApiOperation, isSupported, notSupportedReason, name, operationPath, httpMethod, @namespace, httpClient, throwOnError, new ConnectorSettings() { NumberIsFloat = numberIsFloat })
-        {
-        }
-
-        public ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, string @namespace, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
+        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -213,54 +194,41 @@ namespace Microsoft.PowerFx.Connectors
             IsSupported = isSupported;
             NotSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new ArgumentNullException(nameof(notSupportedReason)));
 
-            if (httpClient != null)
-            {
-                _defaultServiceFunction = GetServiceFunction(@namespace, httpClient, throwOnError: throwOnError, connectorSettings);
-            }
+            // validate return type
+            (ConnectorParameterType ct, string unsupportedReason) = openApiOperation.GetConnectorParameterReturnType(connectorSettings.NumberIsFloat);
+            ReturnParameterType = ct;
 
-            if (isSupported)
+            if (!string.IsNullOrEmpty(unsupportedReason))
             {
-                // validate return type
-                (ConnectorParameterType ct, string unsupportedReason) = openApiOperation.GetConnectorParameterReturnType(connectorSettings.NumberIsFloat);
-
-                if (!string.IsNullOrEmpty(unsupportedReason))
-                {
-                    IsSupported = false;
-                    NotSupportedReason = unsupportedReason;
-                }
+                IsSupported = false;
+                NotSupportedReason = unsupportedReason;
             }
         }
-                
-        public ConnectorParameters GetParameters(FormulaValue[] knownParameters)
-        {
-            return this.GetParameters(knownParameters, null);
-        }
 
-        public ConnectorParameters GetParameters(FormulaValue[] knownParameters, IServiceProvider services)
+        public ConnectorParameters GetParameters(FormulaValue[] knownParameters, IServiceProvider services, ConnectorSettings connectorSettings = null)
         {
             ConnectorParameterWithSuggestions[] parametersWithSuggestions = RequiredParameters.Select((rp, i) => i < ArityMax - 1
                                                                                                             ? new ConnectorParameterWithSuggestions(rp, i < knownParameters.Length ? knownParameters[i] : null)
                                                                                                             : new ConnectorParameterWithSuggestions(rp, knownParameters.Skip(ArityMax - 1).ToArray())).ToArray();
 
-            bool error = true;
+            connectorSettings ??= new ConnectorSettings();
+            RuntimeConnectorContext context = services?.GetService<RuntimeConnectorContext>();
+            ServiceFunction serviceFunction = GetServiceFunction(httpClient: context?.GetInvoker(Namespace), connectorSettings: connectorSettings);
 
-            if (HasServiceFunction)
+            int index = Math.Min(knownParameters.Length, serviceFunction.MaxArity - 1);
+            ConnectorSuggestions suggestions = serviceFunction.GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+
+            bool error = suggestions == null || suggestions.Error != null;
+
+            if (!error)
             {
-                int index = Math.Min(knownParameters.Length, _defaultServiceFunction.MaxArity - 1);
-                ConnectorSuggestions suggestions = _defaultServiceFunction.GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                error = suggestions == null || suggestions.Error != null;
-
-                if (!error)
+                if (knownParameters.Length >= ArityMax - 1)
                 {
-                    if (knownParameters.Length >= ArityMax - 1)
-                    {
-                        parametersWithSuggestions[index].ParameterNames = suggestions.Suggestions.Select(s => s.DisplayName).ToArray();
-                        suggestions.Suggestions = suggestions.Suggestions.Skip(knownParameters.Length - ArityMax + 1).ToList();
-                    }
-
-                    parametersWithSuggestions[index].Suggestions = suggestions.Suggestions;
+                    parametersWithSuggestions[index].ParameterNames = suggestions.Suggestions.Select(s => s.DisplayName).ToArray();
+                    suggestions.Suggestions = suggestions.Suggestions.Skip(knownParameters.Length - ArityMax + 1).ToList();
                 }
+
+                parametersWithSuggestions[index].Suggestions = suggestions.Suggestions;
             }
 
             return new ConnectorParameters()
@@ -307,18 +275,17 @@ namespace Microsoft.PowerFx.Connectors
             return sb.ToString();
         }
 
-        internal ServiceFunction GetServiceFunction(string ns = null, HttpMessageInvoker httpClient = null, bool throwOnError = false, ConnectorSettings connectorSettings = null)
+        internal ServiceFunction GetServiceFunction(HttpMessageInvoker httpClient = null, ConnectorSettings connectorSettings = null)
         {
             ScopedHttpFunctionInvoker invoker = null;
-            string func_ns = string.IsNullOrEmpty(ns) ? "Internal_Function" : ns;
-            DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
-            Namespace = func_ns;
             connectorSettings ??= new ConnectorSettings();
+            string func_ns = string.IsNullOrEmpty(connectorSettings.Namespace) ? "Internal_Function" : connectorSettings.Namespace;
+            DPath functionNamespace = DPath.Root.Append(new DName(func_ns));
 
             if (httpClient != null)
             {
-                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OpenApiParser.GetServer(Document, httpClient), OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache);
-                invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, throwOnError);
+                var httpInvoker = new HttpFunctionInvoker(httpClient, HttpMethod, OpenApiParser.GetServer(Document, httpClient), OperationPath, ReturnType, ArgumentMapper, connectorSettings.Cache, connectorSettings.ReturnRawResult);
+                invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(func_ns, out _)), Name, func_ns, httpInvoker, connectorSettings.ThrowOnError);
             }
 
             ServiceFunction serviceFunction = new ServiceFunction(
@@ -340,6 +307,7 @@ namespace Microsoft.PowerFx.Connectors
                 parameterOptions: new Dictionary<TypedName, List<string>>(),
                 optionalParamInfo: ArgumentMapper.OptionalParamInfo,
                 requiredParamInfo: ArgumentMapper.RequiredParamInfo,
+                returnTypeInfo: ReturnParameterType,
                 parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
                 pageLink: PageLink,
                 isSupported: IsSupported,
@@ -359,19 +327,37 @@ namespace Microsoft.PowerFx.Connectors
         internal async Task<FormulaValue> InvokeAync(FormattingInfo context, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await GetServiceFunction(null, httpClient).InvokeAsync(context, values, cancellationToken).ConfigureAwait(false);
-        }
-
-        public Task<FormulaValue> InvokeAync(IRuntimeConfig config, HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            return InvokeAync(config.ServiceProvider.GetFormattingInfo(), httpClient, values, cancellationToken);
-        }
+            return await GetServiceFunction(httpClient, ConnectorSettings).InvokeAsync(context, values, cancellationToken).ConfigureAwait(false);
+        }    
 
         public Task<FormulaValue> InvokeAync(HttpClient httpClient, FormulaValue[] values, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             return InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), httpClient, values, cancellationToken);
+        }
+
+        // For future implementation, we want to support the capability to run intellisense on optional parameters and need to use the parameter name to get the suggestions.
+        // An example is Office 365 Outlook connector, with GetEmails function, where folderPath is optional and defines x-ms-dynamic-values
+        // Also on SharePoint action SearchForUser (Resolve User)
+        //public async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(HttpClient httpClient, NamedFormulaType[] inputParams, string suggestedParamName, CancellationToken cancellationToken)
+
+        // This API only works on required paramaters and assumes we interrogate param number N+1 if N parameters are provided.
+        public async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(HttpClient httpClient, FormulaValue[] knownParameters, IServiceProvider services, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ConnectorSettings connectorSettings = ConnectorSettings.Clone(throwOnError: false);            
+
+            ServiceFunction serviceFunction = GetServiceFunction(httpClient, connectorSettings);
+            return await serviceFunction.GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<FormulaType> GetConnectorReturnSchemaAsync(HttpClient httpClient, FormulaValue[] knownParameters, IServiceProvider services, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ConnectorSettings connectorSettings = ConnectorSettings.Clone(throwOnError: false, returnRawResult: true);
+            
+            ServiceFunction serviceFunction = GetServiceFunction(httpClient, connectorSettings);
+            return await serviceFunction.GetConnectorReturnSchemaAsync(knownParameters, services, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -408,7 +394,12 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         public FormulaValue DefaultValue { get; }
 
-        public ConnectorParameter(string name, FormulaType type, ConnectorType connectorType, string description, string summary, FormulaValue defaultValue)
+        /// <summary>
+        /// Supports dynamic Intellisense.
+        /// </summary>
+        public bool SupportsDynamicIntellisense { get; }
+
+        public ConnectorParameter(string name, FormulaType type, ConnectorType connectorType, string description, string summary, FormulaValue defaultValue, bool supportsDynamicIntellisense)
         {
             Name = name;
             FormulaType = type;
@@ -416,6 +407,7 @@ namespace Microsoft.PowerFx.Connectors
             Description = description;
             Summary = summary;
             DefaultValue = defaultValue;
+            SupportsDynamicIntellisense = supportsDynamicIntellisense;
         }
     }
 
@@ -429,14 +421,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public string[] ParameterNames { get; internal set; }
 
-        public ConnectorParameterWithSuggestions(string name, FormulaType type, ConnectorType connectorType, string description, string summary, FormulaValue defaultValue)
-            : base(name, type, connectorType, description, summary, defaultValue)
-        {
-            Suggestions = new List<ConnectorSuggestion>();
-        }
-
         public ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue value)
-            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.ConnectorType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue)
+            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.ConnectorType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue, connectorParameter.SupportsDynamicIntellisense)
         {
             Suggestions = new List<ConnectorSuggestion>();
             Value = value;
@@ -444,7 +430,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         public ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue[] values)
-            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.ConnectorType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue)
+            : base(connectorParameter.Name, connectorParameter.FormulaType, connectorParameter.ConnectorType, connectorParameter.Description, connectorParameter.Summary, connectorParameter.DefaultValue, connectorParameter.SupportsDynamicIntellisense)
         {
             Suggestions = new List<ConnectorSuggestion>();
             Value = null;

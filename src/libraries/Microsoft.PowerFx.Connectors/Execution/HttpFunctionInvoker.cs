@@ -29,8 +29,11 @@ namespace Microsoft.PowerFx.Connectors
         internal readonly FormulaType _returnType;
         private readonly ArgumentMapper _argMapper;
         private readonly ICachingHttpClient _cache;
+        private readonly bool _returnRawResults;
 
-        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string server, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null)
+        internal HttpMessageInvoker HttpMessageInvoker => _httpClient;
+
+        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string server, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null, bool? returnRawResults = null)
         {
             _httpClient = httpClient;
             _method = method;
@@ -39,6 +42,7 @@ namespace Microsoft.PowerFx.Connectors
             _argMapper = argMapper;
             _cache = cache ?? NonCachingClient.Instance;
             _returnType = returnType;
+            _returnRawResults = returnRawResults ?? false;
         }
 
         internal static void VerifyCanHandle(ParameterLocation? location)
@@ -184,6 +188,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 return string.IsNullOrWhiteSpace(text)
                     ? FormulaValue.NewBlank(_returnType)
+                    : _returnRawResults
+                    ? FormulaValue.New(text)
                     : FormulaValueJSON.FromJson(text, _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
@@ -255,6 +261,8 @@ namespace Microsoft.PowerFx.Connectors
         public DPath Namespace { get; }
 
         public string Name { get; }
+
+        internal HttpFunctionInvoker Invoker => _invoker;
 
         public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, RuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
