@@ -4928,6 +4928,14 @@
     <value>The stated function return type does not match the return type of the function body.</value>
     <comment>This error message shows up when expected return type does not match with actual return type</comment>
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Missing function return type, for example the ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    <comment>This error message shows up when return type is not provided for user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    <comment>This error message shows up when argument type is not provided for the parameters in user defined function, the term FindMonth is a function name, and if translated it should remain a single word {Locked=Number} {Locked=Text} {Locked=Month} {Locked=DateParse}</comment>
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' already exists.</value>
   </data>
