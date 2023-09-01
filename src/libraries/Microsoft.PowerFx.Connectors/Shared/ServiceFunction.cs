@@ -269,81 +269,67 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         {
             cancellationToken.ThrowIfCancellationRequested();
             var connectorCtx = services?.GetService<RuntimeConnectorContext>() ?? new RuntimeConnectorContext();
+            
+            ConnectorDynamicSchema cds = ReturnTypeInfo.DynamicReturnSchema;
+            ConnectorDynamicProperty cdp = ReturnTypeInfo.DynamicReturnProperty;
 
-            try
+            if (cdp != null && !string.IsNullOrEmpty(cdp.ItemValuePath))
             {
-                ConnectorDynamicSchema cds = ReturnTypeInfo.DynamicReturnSchema;
-                ConnectorDynamicProperty cdp = ReturnTypeInfo.DynamicReturnProperty;
-
-                if (cdp != null && !string.IsNullOrEmpty(cdp.ItemValuePath))
-                {
-                    return await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, knownParameters.Length, connectorCtx, cdp, cancellationToken).ConfigureAwait(false);
-                }
-                else if (cds != null && !string.IsNullOrEmpty(cds.ValuePath))
-                {
-                    return await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, knownParameters.Length, connectorCtx, cds, cancellationToken).ConfigureAwait(false);
-                }
-
-                return null;
+                return await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, knownParameters.Length, connectorCtx, cdp, cancellationToken).ConfigureAwait(false);
             }
-            catch (Exception)
+            else if (cds != null && !string.IsNullOrEmpty(cds.ValuePath))
             {
-                return null;
+                return await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, knownParameters.Length, connectorCtx, cds, cancellationToken).ConfigureAwait(false);
             }
+
+            return null;           
         }
 
         public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider services, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             var connectorCtx = services?.GetService<RuntimeConnectorContext>() ?? new RuntimeConnectorContext();
-
-            try
+            
+            if (argPosition >= 0 && MaxArity > 0 && _requiredParameters.Length > MaxArity - 1)
             {
-                if (argPosition >= 0 && MaxArity > 0 && _requiredParameters.Length > MaxArity - 1)
+                ServiceFunctionParameterTemplate currentParam = _requiredParameters[Math.Min(argPosition, MaxArity - 1)];
+
+                ConnectorDynamicList cdl = currentParam.ConnectorDynamicList;
+                ConnectorDynamicValue cdv = currentParam.ConnectorDynamicValue;
+                ConnectorDynamicSchema cds = currentParam.ConnectorDynamicSchema;
+                ConnectorDynamicProperty cdp = currentParam.ConnectorDynamicProperty;
+
+                if (cdl != null)
                 {
-                    ServiceFunctionParameterTemplate currentParam = _requiredParameters[Math.Min(argPosition, MaxArity - 1)];
+                    return await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, connectorCtx, cdl, cancellationToken).ConfigureAwait(false);
+                }
 
-                    ConnectorDynamicList cdl = currentParam.ConnectorDynamicList;
-                    ConnectorDynamicValue cdv = currentParam.ConnectorDynamicValue;
-                    ConnectorDynamicSchema cds = currentParam.ConnectorDynamicSchema;
-                    ConnectorDynamicProperty cdp = currentParam.ConnectorDynamicProperty;
+                if (cdv != null && string.IsNullOrEmpty(cdv.Capability))
+                {
+                    return await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, connectorCtx, cdv, cancellationToken).ConfigureAwait(false);
+                }
 
-                    if (cdl != null)
-                    {
-                        return await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, connectorCtx, cdl, cancellationToken).ConfigureAwait(false);
-                    }
+                FormulaType ft = null;
 
-                    if (cdv != null && string.IsNullOrEmpty(cdv.Capability))
-                    {
-                        return await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, connectorCtx, cdv, cancellationToken).ConfigureAwait(false);
-                    }
+                if (cdp != null && !string.IsNullOrEmpty(cdp.ItemValuePath))
+                {
+                    ft = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, argPosition, connectorCtx, cdp, cancellationToken).ConfigureAwait(false);
+                }
+                else
+                if (cds != null && !string.IsNullOrEmpty(cds.ValuePath))
+                {
+                    ft = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, argPosition, connectorCtx, cds, cancellationToken).ConfigureAwait(false);
+                }
 
-                    FormulaType ft = null;
-
-                    if (cdp != null && !string.IsNullOrEmpty(cdp.ItemValuePath))
-                    {
-                        ft = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, argPosition, connectorCtx, cdp, cancellationToken).ConfigureAwait(false);
-                    }
-                    else
-                    if (cds != null && !string.IsNullOrEmpty(cds.ValuePath))
-                    {
-                        ft = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, argPosition, connectorCtx, cds, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    if (ft != null && ft is RecordType rt)
-                    {
-                        return new ConnectorSuggestions(rt.FieldNames.Select(fn => new ConnectorSuggestion(FormulaValue.NewBlank(rt.GetFieldType(fn)), fn)).ToList());
-                    }
-
-                    return null;
+                if (ft != null && ft is RecordType rt)
+                {
+                    return new ConnectorSuggestions(rt.FieldNames.Select(fn => new ConnectorSuggestion(FormulaValue.NewBlank(rt.GetFieldType(fn)), fn)).ToList());
                 }
 
                 return null;
             }
-            catch (Exception)
-            {
-                return null;
-            }
+
+            return null;            
         }
         private static JsonElement ExtractFromJson(StringValue sv, string location)
         {
@@ -466,14 +452,14 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
                 string paramName = sfpt.TypedName.Name;
                 DType paramType = sfpt.TypedName.Type;
 
-                StaticValue sValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticValue && kvp.Key == paramName).Value as StaticValue;
+                StaticConnectorExtensionValue sValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && kvp.Key == paramName).Value as StaticConnectorExtensionValue;
                 if (sValue != null)
                 {
                     arguments.Add(sValue.Value);
                     continue;
                 }
 
-                KeyValuePair<string, IValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicValue dv && dv.Reference == paramName);
+                KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && dv.Reference == paramName);
                 if (!string.IsNullOrEmpty(dValue.Key))
                 {
                     int currentFunctionParamIndex = _requiredParameters.FindIndex(st => st.TypedName.Name == dValue.Key);

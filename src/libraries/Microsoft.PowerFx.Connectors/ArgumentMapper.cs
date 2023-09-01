@@ -498,9 +498,9 @@ namespace Microsoft.PowerFx.Connectors
             return null;
         }
 
-        private static Dictionary<string, IValue> GetOpenApiObject(OpenApiObject opPrms, bool numberIsFloat)
+        private static Dictionary<string, IConnectorExtensionValue> GetOpenApiObject(OpenApiObject opPrms, bool numberIsFloat)
         {
-            Dictionary<string, IValue> dvParams = new ();
+            Dictionary<string, IConnectorExtensionValue> dvParams = new ();
 
             foreach (KeyValuePair<string, IOpenApiAny> prm in opPrms)
             {                
@@ -511,7 +511,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (fv is not RecordValue rv)
                 {
-                    dvParams.Add(prm.Key, new StaticValue() { Value = fv });
+                    dvParams.Add(prm.Key, new StaticConnectorExtensionValue() { Value = fv });
                 }                
                 else 
                 {
@@ -519,7 +519,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (staticValue is not BlankValue)
                     {
-                        dvParams.Add(prm.Key, new StaticValue() { Value = staticValue });
+                        dvParams.Add(prm.Key, new StaticConnectorExtensionValue() { Value = staticValue });
                         continue;
                     }                    
 
@@ -532,7 +532,7 @@ namespace Microsoft.PowerFx.Connectors
 
                     if (dynamicValue is StringValue sv2)
                     {
-                        dvParams.Add(prm.Key, new DynamicValue() { Reference = sv2.Value });
+                        dvParams.Add(prm.Key, new DynamicConnectorExtensionValue() { Reference = sv2.Value });
                     }                    
                     else
                     {

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System.Xml.Linq;
+
 namespace Microsoft.PowerFx.Connectors
 {
     public class ConnectorSettings 
@@ -19,7 +21,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Namespace { get; set; } = null;
 
-        public ConnectorSettings Clone(bool? throwOnError = null, bool? returnRawResult = null)
+        public ConnectorSettings Clone(string @namespace = null, bool? throwOnError = null, bool? returnRawResult = null)
         {
             return new ConnectorSettings()
             {
@@ -29,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors
                 IgnoreUnknownExtensions = IgnoreUnknownExtensions,
                 ThrowOnError = throwOnError ?? ThrowOnError,
                 ReturnRawResult = returnRawResult ?? ReturnRawResult,
-                Namespace = Namespace
+                Namespace = @namespace ?? Namespace
             };
         }
     }

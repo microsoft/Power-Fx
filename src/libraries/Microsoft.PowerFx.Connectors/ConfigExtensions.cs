@@ -56,9 +56,8 @@ namespace Microsoft.PowerFx
             {
                 throw new ArgumentNullException(nameof(openApiDocument));
             }
-
-            connectorSettings.Namespace = functionNamespace;
-            List<ServiceFunction> functions = OpenApiParser.Parse(functionNamespace, openApiDocument, httpClient, connectorSettings);
+            
+            List<ServiceFunction> functions = OpenApiParser.Parse(functionNamespace, openApiDocument, httpClient, connectorSettings.Clone(@namespace: functionNamespace));
             foreach (ServiceFunction function in functions)
             {
                 config.AddFunction(function);

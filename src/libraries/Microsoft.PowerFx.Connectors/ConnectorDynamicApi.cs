@@ -13,7 +13,7 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         public string OperationId;
 
         // param name to be called, param name of current function
-        public Dictionary<string, IValue> ParameterMap;
+        public Dictionary<string, IConnectorExtensionValue> ParameterMap;
 
         //public ServiceFunction ServiceFunction;
 
@@ -21,18 +21,18 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
     }
 
     [DebuggerDisplay("Static: {Value}")]
-    internal class StaticValue : IValue
+    internal class StaticConnectorExtensionValue : IConnectorExtensionValue
     {
         public FormulaValue Value;
     }
 
     [DebuggerDisplay("Dynamic: {Reference}")]
-    internal class DynamicValue : IValue
+    internal class DynamicConnectorExtensionValue : IConnectorExtensionValue
     {
         public string Reference;
     }
 
-    internal interface IValue
+    internal interface IConnectorExtensionValue
     {
     }
 }

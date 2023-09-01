@@ -599,9 +599,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("schema/procedureresultschema", createFileV2.DynamicReturnSchema.ValuePath);
             Assert.Equal(3, createFileV2.DynamicReturnSchema.ParameterMap.Count);
 
-            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["server"] is DynamicValue dv1 && dv1.Reference == "server");
-            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["database"] is DynamicValue dv2 && dv2.Reference == "database");
-            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["procedure"] is DynamicValue dv3 && dv3.Reference == "procedure");
+            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["server"] is DynamicConnectorExtensionValue dv1 && dv1.Reference == "server");
+            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["database"] is DynamicConnectorExtensionValue dv2 && dv2.Reference == "database");
+            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["procedure"] is DynamicConnectorExtensionValue dv3 && dv3.Reference == "procedure");
 
             ConnectorFunction executePassThroughNativeQueryV2 = functions.First(f => f.Name == "ExecutePassThroughNativeQueryV2");
 
@@ -617,20 +617,20 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("GetPassThroughNativeQueryMetadataV2", executePassThroughNativeQueryV2.DynamicReturnSchema.ConnectorFunction.Name);
             Assert.Equal("schema/queryresults", executePassThroughNativeQueryV2.DynamicReturnSchema.ValuePath);
             Assert.Equal(4, executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap.Count);
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["server"] is DynamicValue dv4 && dv4.Reference == "server");
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["database"] is DynamicValue dv5 && dv5.Reference == "database");
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["query"] is DynamicValue dv6 && dv6.Reference == "query");
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["formalParameters"] is DynamicValue dv7 && dv7.Reference == "formalParameters");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["server"] is DynamicConnectorExtensionValue dv4 && dv4.Reference == "server");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["database"] is DynamicConnectorExtensionValue dv5 && dv5.Reference == "database");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["query"] is DynamicConnectorExtensionValue dv6 && dv6.Reference == "query");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["formalParameters"] is DynamicConnectorExtensionValue dv7 && dv7.Reference == "formalParameters");
             
             Assert.Equal("GetPassThroughNativeQueryMetadataV2", executePassThroughNativeQueryV2.DynamicReturnProperty.OperationId);
             Assert.NotNull(executePassThroughNativeQueryV2.DynamicReturnProperty.ConnectorFunction);
             Assert.Equal("GetPassThroughNativeQueryMetadataV2", executePassThroughNativeQueryV2.DynamicReturnProperty.ConnectorFunction.Name);
             Assert.Equal("schema/queryresults", executePassThroughNativeQueryV2.DynamicReturnProperty.ItemValuePath);
             Assert.Equal(4, executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap.Count);
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["server"] is DynamicValue dv8 && dv8.Reference == "server");
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["database"] is DynamicValue dv9 && dv9.Reference == "database");
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["query/query"] is DynamicValue dv10 && dv10.Reference == "query/query");
-            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["query/formalParameters"] is DynamicValue dv11 && dv11.Reference == "query/formalParameters");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["server"] is DynamicConnectorExtensionValue dv8 && dv8.Reference == "server");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["database"] is DynamicConnectorExtensionValue dv9 && dv9.Reference == "database");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["query/query"] is DynamicConnectorExtensionValue dv10 && dv10.Reference == "query/query");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["query/formalParameters"] is DynamicConnectorExtensionValue dv11 && dv11.Reference == "query/formalParameters");
         }
 
         [Fact]
