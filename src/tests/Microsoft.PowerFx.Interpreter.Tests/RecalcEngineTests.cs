@@ -58,11 +58,12 @@ namespace Microsoft.PowerFx.Tests
                 $"{ns}.{nameof(TypeMarshallerCacheExtensions)}",
                 $"{ns}.{nameof(SymbolExtensions)}",
                 $"{nsType}.{nameof(ObjectRecordValue)}",
+#pragma warning disable CS0618 // Type or member is obsolete
                 $"{nsType}.{nameof(QueryableTableValue)}",
+#pragma warning restore CS0618 // Type or member is obsolete
                 $"{ns}.InterpreterConfigException",
                 $"{ns}.Interpreter.{nameof(NotDelegableException)}",
                 $"{ns}.Interpreter.{nameof(CustomFunctionErrorException)}",
-                $"{ns}.Interpreter.UDF.{nameof(DefineFunctionsResult)}",
                 $"{ns}.{nameof(TypeCoercionProvider)}",             
 
                 // Services for functions. 
