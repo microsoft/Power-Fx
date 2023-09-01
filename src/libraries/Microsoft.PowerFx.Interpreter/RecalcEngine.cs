@@ -187,7 +187,8 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        public DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
+        // Preview functionality 
+        internal DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script, numberIsFloat: numberIsFloat);
             var result = parsedUDFS.GetParsed();
