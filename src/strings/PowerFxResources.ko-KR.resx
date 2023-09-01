@@ -5032,4 +5032,8 @@
     <value>'{0}' 함수의 두 번째 인수는 숫자 및 날짜/시간 값에 대해서만 지원됩니다.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>온라인 데이터 소스 값(테이블 또는 레코드)으로 변수를 설정하면 서버에 여러 요청이 발생할 수 있습니다. 이 기능은 곧 차단될 예정입니다.</value>
+    
+  </data>
 </root>

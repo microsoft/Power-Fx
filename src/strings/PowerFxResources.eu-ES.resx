@@ -5032,4 +5032,8 @@
     <value>"{0}" funtzioaren bigarren argumentua zenbakizko balioetan eta dataren eta orduaren balioetan soilik onartzen da.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Lineako datu-iturburuaren balio bat (taula edo erregistro bat) duen aldagai bat ezartzen baduzu, hainbat eskaera sortuko dira zerbitzarian. Laster blokeatuko da aukera hau.</value>
+    
+  </data>
 </root>

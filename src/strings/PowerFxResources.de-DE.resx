@@ -5032,4 +5032,8 @@
     <value>Das zweite Argument der „{0}“-Funktion wird nur für numerische und Datums-/Uhrzeitwerte unterstützt.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Das Festlegen einer Variablen mit einem Onlinedatenquellenwert (Tabelle oder Datensatz) kann mehrere Anfragen an den Server verursachen. Dies wird demnächst blockiert.</value>
+    
+  </data>
 </root>

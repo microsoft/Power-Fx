@@ -5032,4 +5032,8 @@
     <value>Al doilea argument al funcției „{0}” este acceptat doar pentru valorile numerice și dată/oră.</value>
     
   </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Setarea unei variabile cu o valoare sursă de date online (tabel sau înregistrare) poate provoca mai multe solicitări către server. În curând acesta va fi blocat.</value>
+    
+  </data>
 </root>
