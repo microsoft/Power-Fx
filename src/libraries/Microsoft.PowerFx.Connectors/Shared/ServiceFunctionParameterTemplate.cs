@@ -18,7 +18,9 @@ namespace Microsoft.AppMagic.Authoring
         private readonly FormulaType _formulaType;
         private readonly ConnectorType _connectorType;
         private readonly ConnectorDynamicValue _dynamicValue;
+        private readonly ConnectorDynamicList _dynamicList;
         private readonly ConnectorDynamicSchema _dynamicSchema;
+        private readonly ConnectorDynamicProperty _dynamicProperty;
 
         public TypedName TypedName => _typedName;
 
@@ -33,10 +35,16 @@ namespace Microsoft.AppMagic.Authoring
         public FormulaValue DefaultValue => _defaultValue;
 
         public ConnectorDynamicValue ConnectorDynamicValue => _dynamicValue;
+
+        public ConnectorDynamicList ConnectorDynamicList => _dynamicList;
         
         public ConnectorDynamicSchema ConnectorDynamicSchema => _dynamicSchema;
+        
+        public ConnectorDynamicProperty ConnectorDynamicProperty => _dynamicProperty;
 
-        public ServiceFunctionParameterTemplate(FormulaType formulaType, ConnectorType connectorType, TypedName typedName, string description, string summary, FormulaValue defaultValue, ConnectorDynamicValue dynamicValue, ConnectorDynamicSchema dynamicSchema)
+        public bool SupportsDynamicIntellisense => (_dynamicValue != null && string.IsNullOrEmpty(_dynamicValue.Capability)) || _dynamicList != null || _dynamicSchema != null || _dynamicProperty != null;
+
+        public ServiceFunctionParameterTemplate(FormulaType formulaType, ConnectorType connectorType, TypedName typedName, string description, string summary, FormulaValue defaultValue, ConnectorDynamicValue dynamicValue, ConnectorDynamicList dynamicList, ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
         {
             Contracts.Assert(typedName.IsValid);
             Contracts.AssertValueOrNull(description);
@@ -49,7 +57,9 @@ namespace Microsoft.AppMagic.Authoring
             _summary = summary;
             _defaultValue = defaultValue;
             _dynamicValue = dynamicValue;
+            _dynamicList = dynamicList;
             _dynamicSchema = dynamicSchema;
+            _dynamicProperty = dynamicProperty;
         }
     }
 }

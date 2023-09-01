@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
+using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
@@ -20,6 +21,12 @@ namespace Microsoft.PowerFx.Connectors
         public ConnectorType ConnectorType { get; }
 
         public ConnectorType HiddenConnectorType { get; }
+
+        public bool SupportsSuggestions => DynamicReturnSchema != null || DynamicReturnProperty != null;
+
+        internal ConnectorDynamicSchema DynamicReturnSchema { get; private set; }
+
+        internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
 
         public ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)
             : this(type)
@@ -59,16 +66,29 @@ namespace Microsoft.PowerFx.Connectors
             HiddenConnectorType = new ConnectorType(schema, hiddenRecordType, hiddenFields);
         }
 
-        public void SetProperties(string name, bool isRequired)
+        internal void SetProperties(OpenApiParameter param)
         {
+            SetProperties(param.Name, param.Required, param.GetVisibility());
+        }
+
+        internal void SetProperties(string name, bool required, string visibility)
+        { 
             ConnectorType.Name = name;
-            ConnectorType.IsRequired = isRequired;
+            ConnectorType.IsRequired = required;
+            ConnectorType.SetVisibility(visibility);
 
             if (HiddenConnectorType != null)
             {
                 HiddenConnectorType.Name = name;
-                HiddenConnectorType.IsRequired = isRequired;
+                HiddenConnectorType.IsRequired = required;
+                HiddenConnectorType.SetVisibility(visibility);
             }
+        }
+
+        internal void SetDynamicReturnSchemaAndProperty(ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
+        {
+            DynamicReturnSchema = dynamicSchema;
+            DynamicReturnProperty = dynamicProperty;
         }
     }
 }

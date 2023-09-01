@@ -6,10 +6,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -37,13 +34,16 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
+            RuntimeConnectorContext ctx = new TestRuntimeConnectorContext2(client);
+            BasicServiceProvider services = new BasicServiceProvider();
+            services.AddService(ctx);
 
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
             // Default behavior: no exception and no suggestion in case of error
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc, client);
 
-            Assert.Equal(63, functions.Count());
+            Assert.Equal(64, functions.Count());
 
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Get list of parameters for ExecuteProcedureV2 function, without knowing any parameter
             // Notice that GetParameters does NOT validate parameter types
-            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>());
+            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services);
 
             // We'll always get 4 parameters and some fields are constant (see CheckParameters)
             CheckParameters(parameters.Parameters);
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 2.json");
 
             // With first parameter defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default") });
+            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default") }, services);
 
             CheckParameters(parameters.Parameters);
 
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
 
             // With two parameters defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default") });
+            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default") }, services);
 
             CheckParameters(parameters.Parameters);
 
@@ -101,15 +101,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With three parameters defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2") });
+            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2") }, services);
 
             CheckParameters(parameters.Parameters);
             (0..2).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
 
             // Now the stored procedure name has been provided, we are getting the list of parameters, with their 'title' (display name) and 'type' (= SQL type)
-            Assert.Equal(@"p1, p2", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => s.DisplayName))); // 4th parameter proposals
-            Assert.Equal(@"p1, p2", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => ((RecordValue)s.Suggestion).GetField("title").ToObject().ToString())));
-            Assert.Equal(@"integer, string", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => ((RecordValue)s.Suggestion).GetField("type").ToObject().ToString())));
+            Assert.Equal(@"p1, p2", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => s.DisplayName))); // 4th parameter proposals            ;
+            Assert.Equal(@"Decimal, String", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => ((BlankValue)s.Suggestion).Type.ToString())));            
             Assert.Equal(@"p1, p2", string.Join(", ", parameters.Parameters[3].ParameterNames));
             Assert.False(parameters.IsCompleted);
 
@@ -117,7 +116,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // With 4 parameters defined (and valid)
             // p1 type is not validated
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */ });
+            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */ }, services);
 
             CheckParameters(parameters.Parameters);
             (0..2).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
@@ -131,7 +130,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With 5 parameters defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */, FormulaValue.New("abc") /* p2 */ });
+            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */, FormulaValue.New("abc") /* p2 */ }, services);
 
             CheckParameters(parameters.Parameters);
             (0..3).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
@@ -159,20 +158,24 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc, client); //, throwOnError: true);
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
+
+            RuntimeConnectorContext ctx = new TestRuntimeConnectorContext2(client);
+            BasicServiceProvider services = new BasicServiceProvider();
+            services.AddService(ctx);
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            Assert.Throws<HttpRequestException>(() => function.GetParameters(Array.Empty<FormulaValue>()));
+            Assert.Throws<HttpRequestException>(() => function.GetParameters(Array.Empty<FormulaValue>(), services));
 
             // now let's try with throwOnError false
             functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: false);
             function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             // Same invalid token
-            testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);            
-            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>());
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
+            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services, new ConnectorSettings() { ThrowOnError = false });
 
             CheckParameters(parameters.Parameters);
 
@@ -201,10 +204,29 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
             testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
 
+            RuntimeConnectorContext ctx = new TestRuntimeConnectorContext2(client);            
+            BasicServiceProvider services = new BasicServiceProvider();
+            services.AddService(ctx);
+
             foreach (ConnectorFunction function in functions)
             {
-                ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>());
+                ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services);
                 Assert.NotNull(parameters);
+            }
+        }
+
+        internal class TestRuntimeConnectorContext2 : RuntimeConnectorContext
+        {
+            public TestRuntimeConnectorContext2(HttpMessageInvoker client)
+            {
+                _client = client;
+            }
+
+            private readonly HttpMessageInvoker _client;
+
+            public override HttpMessageInvoker GetInvoker(string ns)
+            {
+                return _client;
             }
         }
 
