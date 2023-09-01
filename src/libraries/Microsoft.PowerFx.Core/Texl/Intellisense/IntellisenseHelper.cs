@@ -364,14 +364,14 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => NoErrorInTexlNode(texlNode))
-                                                                  .Select(texlNode => texlNode switch
-                {
-                    BoolLitNode boolLitNode => FormulaValue.New(boolLitNode.Value),
-                    DecLitNode decNode => FormulaValue.New(decNode.ActualDecValue),
-                    NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
-                    StrLitNode strNode => FormulaValue.New(strNode.Value),
-                    _ => null as FormulaValue
-                }).ToArray();
+                    .Select(texlNode => texlNode switch
+                    {
+                        BoolLitNode boolLitNode => FormulaValue.New(boolLitNode.Value),
+                        DecLitNode decNode => FormulaValue.New(decNode.ActualDecValue),
+                        NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
+                        StrLitNode strNode => FormulaValue.New(strNode.Value),
+                        _ => null as FormulaValue
+                    }).ToArray();
 
                 if (parameters.Any(p => p == null))
                 {
