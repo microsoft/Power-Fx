@@ -3572,10 +3572,10 @@ namespace Microsoft.PowerFx.Core.Binding
                     var entitySchema = GetEntitySchema(typeRhs, node);
                     Contracts.Assert(entitySchema == DType.Error || entitySchema.ExpandInfo != null);
 
-                    // Entity can be private or black listed.
                     if (entitySchema == DType.Error)
                     {
-                        SetDottedNameError(node, TexlStrings.ErrInvalidRelationshipEntity);
+                        // Entity can be private or black listed.
+                        SetDottedNameError(node, TexlStrings.ErrInvalidName, node.Right.Name.Value);
                         return;
                     }
 

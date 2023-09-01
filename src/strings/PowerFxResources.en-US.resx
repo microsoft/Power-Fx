@@ -5240,8 +5240,4 @@
     <value>Set a variable with an online datasource value (table or record) can cause multiple requests to the server. Soon this will be blocked.</value>
     <comment>Warning for makers that a certain capability should be avoided.</comment>
   </data>
-  <data name="ErrInvalidRelationshipEntity" xml:space="preserve">
-    <value>It was not possible to get the schema for a relationship entity. It might be a private one.</value>
-    <comment>Warning Message.</comment>
-  </data>
 </root>
