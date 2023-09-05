@@ -245,11 +245,6 @@ namespace Microsoft.PowerFx.Connectors
             return true;
         }
 
-        public static bool HasDefaultValue(this OpenApiParameter param)
-        {
-            return param.Schema.Default != null;
-        }
-
         // Internal parameters are not showen to the user. 
         // They can have a default value or be special cased by the infrastructure (like "connectionId").
         public static bool IsInternal(this IOpenApiExtensible schema) => string.Equals(schema.GetVisibility(), "internal", StringComparison.OrdinalIgnoreCase);
