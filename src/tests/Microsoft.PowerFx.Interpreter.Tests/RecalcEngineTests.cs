@@ -433,7 +433,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
+            Assert.False(recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions).Any());
 #pragma warning restore CS0618 // Type or member is obsolete
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("getAge(p: Person): Number = p.Age;").Errors;
             Assert.False(enumerable.Any());
@@ -450,7 +450,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
+            Assert.False(recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions).Any());
 #pragma warning restore CS0618 // Type or member is obsolete
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = p.A.B;").Errors;
             Assert.False(enumerable.Any());
@@ -467,7 +467,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618
-            recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
+            Assert.False(recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions).Any());
 #pragma warning restore CS0618
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age < 18)));").Errors;
             Assert.False(enumerable.Any());
@@ -484,7 +484,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
+            Assert.False(recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions).Any());
 #pragma warning restore CS0618 // Type or member is obsolete
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = Float(1.0);").Errors;
             Assert.False(enumerable.Any());
@@ -501,7 +501,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions);
+            Assert.False(recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions).Any());
 #pragma warning restore CS0618 // Type or member is obsolete
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: C): Number = p.b.a.num + p.a.num;").Errors;
             Assert.False(enumerable.Any());
@@ -518,7 +518,7 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("Weight = Type(Number);", parserOptions);
+            Assert.False(recalcEngine.DefineType("Weight = Type(Number);", parserOptions).Any());
 #pragma warning restore CS0618 // Type or member is obsolete
             IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("over50Pounds(weight: Weight): Boolean = weight > 50;").Errors;
             Assert.False(enumerable.Any());

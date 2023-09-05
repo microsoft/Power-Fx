@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
@@ -233,18 +234,27 @@ namespace Microsoft.PowerFx
         }
 
         [Obsolete("preview")]
-        internal void DefineType(string script, ParserOptions parserOptions)
+        internal IEnumerable<TexlError> DefineType(string script, ParserOptions parserOptions)
         {
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
             var definedTypes = parsedNamedFormulasAndUDFs.DefinedTypes.ToList();
 
+            var errors = new List<TexlError>();
+
             foreach (var defType in definedTypes)
             {
                 var name = defType.Ident.Name.Value;
-                var res = defType.Type.TypeRoot.Accept(new DTypeVisitor(), _definedTypeSymbolTable) ?? throw new Exception("Failed defining type");
+                var res = defType.Type.TypeRoot.Accept(new DTypeVisitor(), _definedTypeSymbolTable);
+                if (res == null)
+                {
+                    errors.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    continue;
+                }
 
                 _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
             }
+
+            return errors;
         }
 
         internal FormulaType GetFormulaTypeFromName(string name)
