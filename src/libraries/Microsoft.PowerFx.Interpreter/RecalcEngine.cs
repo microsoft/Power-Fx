@@ -242,14 +242,8 @@ namespace Microsoft.PowerFx
             {
                 var name = defType.Ident.Name.Value;
                 var res = defType.Type.TypeRoot.Accept(new DTypeVisitor(), _definedTypeSymbolTable) ?? throw new Exception("Failed defining type");
-                if (res.IsRecord)
-                {
-                    _definedTypeSymbolTable.RegisterType(name, new KnownRecordType(res));
-                }
-                else
-                {
-                    _definedTypeSymbolTable.RegisterType(name, new TableType(res));
-                }
+
+                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
             }
         }
 
