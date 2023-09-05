@@ -57,9 +57,10 @@ namespace Microsoft.PowerFx.Connectors
         {
             FormulaType = formulaType;
             Description = schema.Description;
-            DisplayName = ArgumentMapper.GetSummary(schema);
+            DisplayName = schema.GetSummary();
+            ExplicitInput = schema.GetExplicitInput();
+
             Fields = Array.Empty<ConnectorType>();
-            ExplicitInput = ArgumentMapper.GetExplicitInput(schema);
             IsEnum = schema.Enum != null && schema.Enum.Any();
 
             if (IsEnum)
@@ -67,7 +68,7 @@ namespace Microsoft.PowerFx.Connectors
                 EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
                 EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue("x-ms-enum-display-name", out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
                                     ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
-                                    : Array.Empty<string>();                
+                                    : Array.Empty<string>();
             }
             else
             {
@@ -77,7 +78,7 @@ namespace Microsoft.PowerFx.Connectors
 
             IsRequired = false;
             Name = null;
-            
+
             SetVisibility(schema);
         }
 

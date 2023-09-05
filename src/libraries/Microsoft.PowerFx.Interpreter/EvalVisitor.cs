@@ -257,9 +257,16 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc.InvokeAsync(args, _cancellationToken).ConfigureAwait(false);
             }
+#pragma warning disable CS0618 // Type or member is obsolete
             else if (func is IAsyncTexlFunction2 asyncFunc2)
+#pragma warning restore CS0618 // Type or member is obsolete
             {
                 result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
+            }
+            else if (func is IAsyncTexlFunction3 asyncFunc3)
+            {
+                BasicServiceProvider serviceProvider = new BasicServiceProvider(_services).AddService(this.GetFormattingInfo());
+                return await asyncFunc3.InvokeAsync(args, serviceProvider, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {

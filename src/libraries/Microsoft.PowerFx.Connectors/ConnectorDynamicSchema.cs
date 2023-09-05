@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.AppMagic.Authoring.Texl.Builtins
+namespace Microsoft.PowerFx.Connectors
 {
     internal class ConnectorDynamicSchema : ConnectionDynamicApi
     {
         /// <summary>
         /// "value-path" in "x-ms-dynamic-schema".
         /// </summary>
-        public string ValuePath = null;      
+        public string ValuePath = null;
     }
 }

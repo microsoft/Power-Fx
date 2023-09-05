@@ -2,18 +2,13 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
-using Microsoft.PowerFx.Connectors;
-using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
 
@@ -37,7 +32,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // No BaseAdress specified, we'll use the 1st HTTPS one found in the swagger file
             using var client = new HttpClient(); // public auth             
-            var funcs = config.AddService("Math", doc, client);
+            var funcs = config.AddService(new ConnectorSettings("Math"), doc);
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numberscardinal({number: 1791941})";
@@ -80,7 +75,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var client = new HttpClient() { BaseAddress = new Uri("https://api.math.tools") };
 
             // Set IgnoreUnknownExtensions to true as this swagger uses some extensions we don't honnor like x-apisguru-categories, x-origin, x-providerName
-            var funcs = config.AddService("Math", doc, client, new ConnectorSettings() { IgnoreUnknownExtensions = true });
+            var funcs = config.AddService(new ConnectorSettings("Math") { IgnoreUnknownExtensions = true }, doc); //, client, new ConnectorSettings() { IgnoreUnknownExtensions = true });
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numbersbasebinary(632506623)";
@@ -132,7 +127,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
             using var client = new HttpClient() { BaseAddress = new Uri("https://date.nager.at") };
-            var funcs = config.AddService("Holiday", doc, client);
+            var funcs = config.AddService(new ConnectorSettings("Holiday"), doc);
 
             var engine = new RecalcEngine(config);
             var expr = @"Index(Holiday.PublicHolidayPublicHolidaysV3(2023, ""US""), 8)";
@@ -172,14 +167,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact(Skip = "Live Test")]
         public async Task RealTest4()
         {
-            var config = new PowerFxConfig();                        
+            var config = new PowerFxConfig();
             OpenApiDocument docXkcd = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/xkcd.com/1.0.0/openapi.json").ConfigureAwait(false);
             OpenApiDocument docWorldTime = await ReadSwaggerFromUrl(@"https://api.apis.guru/v2/specs/worldtimeapi.org/20210108/openapi.json").ConfigureAwait(false);
 
             using var clientXkcd = new HttpClient() { BaseAddress = new Uri(@"http://xkcd.com/") };
             using var clientWorldTime = new HttpClient() { BaseAddress = new Uri(@"http://worldtimeapi.org/api/") };
-            var funcsXkcd = config.AddService("Xkcd", docXkcd, clientXkcd, new ConnectorSettings() { IgnoreUnknownExtensions = true });
-            var funcsWorldTime = config.AddService("WorldTime", docWorldTime, clientWorldTime, new ConnectorSettings() { IgnoreUnknownExtensions = true });
+            var funcsXkcd = config.AddService(new ConnectorSettings("Xkcd") { IgnoreUnknownExtensions = true }, docXkcd);
+            var funcsWorldTime = config.AddService(new ConnectorSettings("WorldTime") { IgnoreUnknownExtensions = true }, docWorldTime);
 
             var engine = new RecalcEngine(config);
 

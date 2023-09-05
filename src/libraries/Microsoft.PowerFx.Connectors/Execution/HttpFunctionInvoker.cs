@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -12,7 +11,8 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors.Execution;
-using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -23,26 +23,14 @@ namespace Microsoft.PowerFx.Connectors
     internal class HttpFunctionInvoker
     {
         private readonly HttpMessageInvoker _httpClient;
-        private readonly HttpMethod _method;
-        private readonly string _path;
-        private readonly string _server;
-        internal readonly FormulaType _returnType;
-        private readonly ArgumentMapper _argMapper;
-        private readonly ICachingHttpClient _cache;
+        private readonly ConnectorFunction _function;
         private readonly bool _returnRawResults;
 
-        internal HttpMessageInvoker HttpMessageInvoker => _httpClient;
-
-        public HttpFunctionInvoker(HttpMessageInvoker httpClient, HttpMethod method, string server, string path, FormulaType returnType, ArgumentMapper argMapper, ICachingHttpClient cache = null, bool? returnRawResults = null)
+        public HttpFunctionInvoker(HttpMessageInvoker httpClient, ConnectorFunction function, bool returnRawResults)
         {
             _httpClient = httpClient;
-            _method = method;
-            _path = path;
-            _server = server;
-            _argMapper = argMapper;
-            _cache = cache ?? NonCachingClient.Instance;
-            _returnType = returnType;
-            _returnRawResults = returnRawResults ?? false;
+            _function = function;
+            _returnRawResults = returnRawResults;
         }
 
         internal static void VerifyCanHandle(ParameterLocation? location)
@@ -60,9 +48,9 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, string server, CancellationToken cancellationToken)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, CancellationToken cancellationToken)
         {
-            var path = _path;
+            var path = _function.OperationPath;
             var query = new StringBuilder();
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -74,9 +62,9 @@ namespace Microsoft.PowerFx.Connectors
             HttpContent body = null;
             Dictionary<string, (OpenApiSchema, FormulaValue)> bodyParts = new ();
 
-            Dictionary<string, FormulaValue> map = _argMapper.ConvertToNamedParameters(args);
+            Dictionary<string, FormulaValue> map = ConvertToNamedParameters(args);
 
-            foreach (var param in _argMapper.OpenApiBodyParameters)
+            foreach (OpenApiParameter param in _function._internals.OpenApiBodyParameters)
             {
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
@@ -86,16 +74,16 @@ namespace Microsoft.PowerFx.Connectors
 
             if (bodyParts.Any())
             {
-                body = GetBody(_argMapper.ReferenceId, _argMapper.SchemaLessBody, bodyParts, context, cancellationToken);
+                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, context, cancellationToken);
             }
 
-            foreach (var param in _argMapper.OpenApiParameters)
+            foreach (OpenApiParameter param in _function.Operation.Parameters)
             {
                 if (map.TryGetValue(param.Name, out var paramValue))
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
-                    if (ArgumentMapper.GetDoubleEncoding(param))
+                    if (param.GetDoubleEncoding())
                     {
                         valueStr = HttpUtility.UrlEncode(valueStr);
                     }
@@ -124,8 +112,8 @@ namespace Microsoft.PowerFx.Connectors
                 }
             }
 
-            var url = (_server ?? string.Empty) + path + query.ToString();
-            var request = new HttpRequestMessage(_method, url);
+            var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+            var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
             {
@@ -140,6 +128,134 @@ namespace Microsoft.PowerFx.Connectors
             return request;
         }
 
+        public Dictionary<string, FormulaValue> ConvertToNamedParameters(FormulaValue[] args)
+        {
+            // First N are required params. 
+            // Last param is a record with each field being an optional.
+
+            Dictionary<string, FormulaValue> map = new (StringComparer.OrdinalIgnoreCase);
+
+            // Seed with default values. This will get over written if provided. 
+            foreach (KeyValuePair<string, (bool required, FormulaValue fValue, DType dType)> kv in _function._internals.ParameterDefaultValues)
+            {
+                if (kv.Value.required)
+                {
+                    map[kv.Key] = kv.Value.fValue;
+                }
+            }
+
+            foreach (ConnectorParameter param in _function.HiddenRequiredParameters)
+            {
+                map[param.Name] = param.DefaultValue;
+            }
+
+            // Required parameters are always first
+            for (int i = 0; i < _function.RequiredParameters.Length; i++)
+            {
+                string parameterName = _function.RequiredParameters[i].Name;
+                FormulaValue value = args[i];
+
+                // Objects are always flattenned                
+                if (value is RecordValue record && !(_function.RequiredParameters[i].Description == "Body"))
+                {
+                    foreach (NamedValue field in record.Fields)
+                    {
+                        map.Add(field.Name, field.Value);
+                    }
+                }
+                else if (!map.ContainsKey(parameterName))
+                {
+                    map.Add(parameterName, value);
+                }
+                else if (value is RecordValue r)
+                {
+                    map[parameterName] = MergeRecords(map[parameterName] as RecordValue, r);
+                }
+            }
+
+            // Optional parameters are next and stored in a Record
+            if (_function.OptionalParameters.Length > 0 && args.Length > _function.RequiredParameters.Length)
+            {
+                FormulaValue optionalArg = args[args.Length - 1];
+
+                // Objects are always flattenned
+                if (optionalArg is RecordValue record)
+                {
+                    foreach (NamedValue field in record.Fields)
+                    {
+                        if (map.ContainsKey(field.Name))
+                        {
+                            // if optional parameters are defined and a default value is already present
+                            map[field.Name] = field.Value;
+                        }
+                        else
+                        {
+                            map.Add(field.Name, field.Value);
+                        }
+                    }
+                }
+                else
+                {
+                    // Type check should have caught this. 
+                    throw new InvalidOperationException($"Optional arg must be the last arg and a record");
+                }
+            }
+
+            return map;
+        }
+
+        internal static RecordValue MergeRecords(RecordValue rv1, RecordValue rv2)
+        {
+            if (rv1 == null)
+            {
+                throw new ArgumentNullException(nameof(rv1));
+            }
+
+            if (rv2 == null)
+            {
+                throw new ArgumentNullException(nameof(rv2));
+            }
+
+            List<NamedValue> lst = rv1.Fields.ToList();
+
+            foreach (NamedValue field2 in rv2.Fields)
+            {
+                NamedValue field1 = lst.FirstOrDefault(f1 => f1.Name == field2.Name);
+
+                if (field1 == null)
+                {
+                    lst.Add(field2);
+                }
+                else
+                {
+                    if (field1.Value is RecordValue r1 && field2.Value is RecordValue r2)
+                    {
+                        RecordValue rv3 = MergeRecords(r1, r2);
+                        lst.Remove(field1);
+                        lst.Add(new NamedValue(field1.Name, rv3));
+                    }
+                    else if (field1.Value.GetType() == field2.Value.GetType())
+                    {
+                        lst.Remove(field1);
+                        lst.Add(field2);
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Cannot merge {field1.Name} of type {field1.Value.GetType().Name} with {field2.Name} of type {field2.Value.GetType().Name}");
+                    }
+                }
+            }
+
+            RecordType rt = RecordType.Empty();
+
+            foreach (NamedValue nv in lst)
+            {
+                rt = rt.Add(nv.Name, nv.Value.Type);
+            }
+
+            return new InMemoryRecordValue(IRContext.NotInSource(rt), lst);
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
         private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, FormattingInfo context, CancellationToken cancellationToken)
         {
@@ -149,7 +265,7 @@ namespace Microsoft.PowerFx.Connectors
 
             try
             {
-                serializer = _argMapper.ContentType.ToLowerInvariant() switch
+                serializer = _function._internals.ContentType.ToLowerInvariant() switch
                 {
                     OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(context, schemaLessBody),
                     OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(context, schemaLessBody),
@@ -165,7 +281,7 @@ namespace Microsoft.PowerFx.Connectors
                 serializer.EndSerialization();
 
                 string body = serializer.GetResult();
-                return new StringContent(body, Encoding.Default, _argMapper.ContentType);
+                return new StringContent(body, Encoding.Default, _function._internals.ContentType);
             }
             finally
             {
@@ -187,10 +303,10 @@ namespace Microsoft.PowerFx.Connectors
             if (statusCode < 300)
             {
                 return string.IsNullOrWhiteSpace(text)
-                    ? FormulaValue.NewBlank(_returnType)
+                    ? FormulaValue.NewBlank(_function.ReturnType)
                     : _returnRawResults
                     ? FormulaValue.New(text)
-                    : FormulaValueJSON.FromJson(text, _returnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
+                    : FormulaValueJSON.FromJson(text, _function.ReturnType); // $$$ Do we need to check response media type to confirm that the content is indeed json?
             }
 
             if (throwOnError)
@@ -205,39 +321,28 @@ namespace Microsoft.PowerFx.Connectors
                         Severity = ErrorSeverity.Critical,
                         Message = $"The server returned an HTTP error with code {statusCode}. Response: {text}"
                     },
-                    _returnType);
+                    _function.ReturnType);
         }
 
         public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using HttpRequestMessage request = BuildRequest(args, context, _server, cancellationToken);
+            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);
             return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<FormulaValue> InvokeAsync(string url, string cacheScope, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using HttpRequestMessage request = new HttpRequestMessage(_method, new Uri(url).PathAndQuery);
+            using HttpRequestMessage request = new HttpRequestMessage(_function.HttpMethod, new Uri(url).PathAndQuery);
             return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
         {
-            var key = request.RequestUri.ToString();
-
-            if (request.Method != HttpMethod.Get)
-            {
-                _cache.Reset(cacheScope);
-                key = null; // don't bother caching
-            }
-
-            return await _cache.TryGetAsync(cacheScope, key, async () =>
-            {
-                var client = localInvoker ?? _httpClient;
-                var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
-            }).ConfigureAwait(false);
+            var client = localInvoker ?? _httpClient;
+            var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
         }
     }
 
@@ -281,8 +386,8 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
-    // Base class to customize connection invocation at runtime. 
-    // This is useful when the http channel is short lived and we need a new one per invoke. 
+    // Base class to customize connection invocation at runtime.
+    // This is useful when the http channel is short lived and we need a new one per invoke.
     public class RuntimeConnectorContext
     {
         public RuntimeConnectorContext()

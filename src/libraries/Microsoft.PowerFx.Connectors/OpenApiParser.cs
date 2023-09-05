@@ -5,40 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Numerics;
-using Microsoft.AppMagic.Authoring;
-using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
+using Microsoft.PowerFx.Core.Functions;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
-        {
-            return GetFunctions(openApiDocument, new ConnectorSettings());
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient)
-        {
-            return GetFunctions(openApiDocument, new ConnectorSettings());
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError)
-        {
-            return GetFunctions(openApiDocument, new ConnectorSettings() { ThrowOnError = throwOnError });
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, ConnectorSettings connectorSettings)
+        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
-            connectorSettings ??= new ConnectorSettings();
 
             ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions);
 
@@ -80,48 +59,8 @@ namespace Microsoft.PowerFx.Connectors
                     isSupported = isSupported && connectorIsSupported;
                     notSupportedReason = string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason;
 
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings) { Document = openApiDocument };
-
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions) { Servers = openApiDocument.Servers };
                     functions.Add(connectorFunction);
-                }
-            }
-
-            // post processing for ConnectorDynamicValue, identify service functions
-            foreach (ConnectorFunction cf in functions)
-            {
-                var serviceFunction = cf.GetServiceFunction(connectorSettings: connectorSettings);
-
-                foreach (ServiceFunctionParameterTemplate sfpt in serviceFunction._requiredParameters)
-                {
-                    if (sfpt.ConnectorDynamicValue != null)
-                    {
-                        sfpt.ConnectorDynamicValue.ConnectorFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
-                    }
-
-                    if (sfpt.ConnectorDynamicList != null)
-                    {
-                        sfpt.ConnectorDynamicList.ConnectorFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicList.OperationId);
-                    }
-
-                    if (sfpt.ConnectorDynamicSchema != null)
-                    {
-                        sfpt.ConnectorDynamicSchema.ConnectorFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicSchema.OperationId);
-                    }
-
-                    if (sfpt.ConnectorDynamicProperty != null)
-                    {
-                        sfpt.ConnectorDynamicProperty.ConnectorFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicProperty.OperationId);
-                    }
-                }
-
-                if (cf.DynamicReturnSchema != null)
-                {
-                    cf.DynamicReturnSchema.ConnectorFunction = functions.FirstOrDefault(f => f.Name == cf.DynamicReturnSchema.OperationId);
-                }
-
-                if (cf.DynamicReturnProperty != null)
-                {
-                    cf.DynamicReturnProperty.ConnectorFunction = functions.FirstOrDefault(f => f.Name == cf.DynamicReturnProperty.OperationId);
                 }
             }
 
@@ -187,7 +126,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Callback Object: A map of possible out-of band callbacks related to the parent operation.
                     // https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapicallback
                     isSupported = false;
-                    notSupportedReason = $"OpenApiDocument Components contains Callbacks";                    
+                    notSupportedReason = $"OpenApiDocument Components contains Callbacks";
                 }
 
                 // openApiDocument.Examples can be ignored
@@ -291,7 +230,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (isSupported && op.Deprecated)
             {
-                isSupported = false;                
+                isSupported = false;
                 notSupportedReason = $"OpenApiOperation is deprecated";
             }
 
@@ -378,88 +317,20 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ConnectorSettings connectorSettings = null)
+        internal static List<TexlFunction> Parse(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
-            List<ServiceFunction> functions = new List<ServiceFunction>();
-
-            string basePath = openApiDocument.GetBasePath();
-            string server = GetServer(openApiDocument, httpClient);
-            string absolutePath = httpClient is HttpClient hc ? (hc.BaseAddress?.AbsolutePath ?? string.Empty) : string.Empty;
-            DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));
-
-            if (absolutePath.EndsWith("/", StringComparison.Ordinal))
-            {
-                absolutePath = absolutePath.Substring(0, absolutePath.Length - 1);
-            }
-
-            connectorSettings ??= new ConnectorSettings() { Namespace = functionNamespace };
-
-            // GetFunctions is where all OpenApi validation and parsing occurs
-            foreach (ConnectorFunction function in GetFunctions(openApiDocument, connectorSettings))
-            {
-                ScopedHttpFunctionInvoker invoker = null;
-
-                if (httpClient != null)
-                {                    
-                    var httpInvoker = new HttpFunctionInvoker(httpClient, function.HttpMethod, server, function.OperationPath, function.ReturnType, function.ArgumentMapper, connectorSettings.Cache);
-                    invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), function.Name, functionNamespace, httpInvoker);
-                }
-
-                ServiceFunction sfunc = new ServiceFunction(
-                        parentService: null,
-                        theNamespace: theNamespace,
-                        name: function.Name,
-                        localeSpecificName: function.Name,
-                        description: function.Description ?? $"Invoke {function.Name}",
-                        returnType: function.ReturnType._type,
-                        maskLambdas: BigInteger.Zero,
-                        arityMin: function.ArgumentMapper.ArityMin,
-                        arityMax: function.ArgumentMapper.ArityMax,
-                        isBehaviorOnly: !IsSafeHttpMethod(function.HttpMethod),
-                        isAutoRefreshable: false,
-                        isDynamic: false,
-                        isCacheEnabled: false,
-                        cacheTimeoutMs: 10000,
-                        isHidden: false,
-                        parameterOptions: new Dictionary<TypedName, List<string>>(),
-                        optionalParamInfo: function.ArgumentMapper.OptionalParamInfo,
-                        requiredParamInfo: function.ArgumentMapper.RequiredParamInfo,
-                        returnTypeInfo: function.ReturnParameterType,
-                        parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
-                        pageLink: function.PageLink,
-                        isSupported: function.IsSupported,
-                        notSupportedReason: function.NotSupportedReason,
-                        isDeprecated: function.IsDeprecated,
-                        isInternal: function.IsInternal,
-                        actionName: "action",
-                        connectorSettings: connectorSettings,
-                        paramTypes: function.ArgumentMapper._parameterTypes)
-                {
-                    _invoker = invoker
-                };
-
-                functions.Add(sfunc);
-            }
-
-            return functions;
+            return GetFunctions(connectorSettings, openApiDocument).Select<ConnectorFunction, TexlFunction>(f => new ConnectorTexlFunction(f)).ToList();
         }
 
-        internal static string GetServer(OpenApiDocument openApiDocument, HttpMessageInvoker httpClient)
+        internal static string GetServer(IList<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)
         {
-            if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiDocument != null && openApiDocument.Servers.Any())
+            if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiServers.Any())
             {
                 // descending order to prefer https
-                return openApiDocument.Servers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
             }
 
             return null;
-        }
-
-        internal static bool IsSafeHttpMethod(HttpMethod httpMethod)
-        {
-            // HTTP/1.1 spec states that only GET and HEAD requests are 'safe' by default.
-            // https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-            return httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Head;
         }
     }
 }

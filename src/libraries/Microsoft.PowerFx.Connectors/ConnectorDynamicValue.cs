@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.AppMagic.Authoring.Texl.Builtins
+namespace Microsoft.PowerFx.Connectors
 {
     internal class ConnectorDynamicValue : ConnectionDynamicApi
     {

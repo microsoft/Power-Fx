@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 using System.Diagnostics;
-using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Types;
 
@@ -72,7 +71,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal void SetProperties(string name, bool required, string visibility)
-        { 
+        {
             ConnectorType.Name = name;
             ConnectorType.IsRequired = required;
             ConnectorType.SetVisibility(visibility);

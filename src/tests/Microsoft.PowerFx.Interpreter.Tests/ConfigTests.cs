@@ -3,24 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
@@ -37,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var locals = new SymbolValues()
                 .Add("local", FormulaValue.New(3));
 
-            var result = await engine.EvalAsync("local+global", CancellationToken.None, runtimeConfig: locals).ConfigureAwait(false);
+            var result = await engine.EvalAsync("local+global", CancellationToken.None, symbolTable: locals).ConfigureAwait(false);
 
             Assert.Equal(5.0, result.ToObject());
         }
@@ -92,7 +84,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
-            var eval = await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: r1).ConfigureAwait(false);
+            var eval = await engine.EvalAsync(expression, CancellationToken.None, symbolTable: r1).ConfigureAwait(false);
             Assert.Equal(expected, eval.ToObject());
 
             var actualInvariantExpression = engine.GetInvariantExpression(expression, null);

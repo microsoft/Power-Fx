@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.AppMagic.Authoring.Texl.Builtins
+namespace Microsoft.PowerFx.Connectors
 {
     internal class ConnectionDynamicApi
     {
@@ -14,8 +13,6 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
 
         // param name to be called, param name of current function
         public Dictionary<string, IConnectorExtensionValue> ParameterMap;
-
-        //public ServiceFunction ServiceFunction;
 
         public ConnectorFunction ConnectorFunction;
     }

@@ -34,14 +34,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            RuntimeConnectorContext ctx = new TestRuntimeConnectorContext2(client);
-            BasicServiceProvider services = new BasicServiceProvider();
-            services.AddService(ctx);
+            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
             // Default behavior: no exception and no suggestion in case of error
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc, client);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL"), apiDoc);
 
             Assert.Equal(64, functions.Count());
 
@@ -158,24 +156,23 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc, client); //, throwOnError: true);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc); //, throwOnError: true);
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
-
-            RuntimeConnectorContext ctx = new TestRuntimeConnectorContext2(client);
-            BasicServiceProvider services = new BasicServiceProvider();
-            services.AddService(ctx);
+            
+            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
             Assert.Throws<HttpRequestException>(() => function.GetParameters(Array.Empty<FormulaValue>(), services));
 
             // now let's try with throwOnError false
-            functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: false);
+            functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = false }, apiDoc);
             function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             // Same invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services, new ConnectorSettings() { ThrowOnError = false });
+            
+            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services);
 
             CheckParameters(parameters.Parameters);
 
@@ -201,32 +198,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            var functions = OpenApiParser.GetFunctions(apiDoc, client, throwOnError: true);
+            var functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc);
             testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
-
-            RuntimeConnectorContext ctx = new TestRuntimeConnectorContext2(client);            
-            BasicServiceProvider services = new BasicServiceProvider();
-            services.AddService(ctx);
+            
+            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             foreach (ConnectorFunction function in functions)
             {
                 ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services);
                 Assert.NotNull(parameters);
-            }
-        }
-
-        internal class TestRuntimeConnectorContext2 : RuntimeConnectorContext
-        {
-            public TestRuntimeConnectorContext2(HttpMessageInvoker client)
-            {
-                _client = client;
-            }
-
-            private readonly HttpMessageInvoker _client;
-
-            public override HttpMessageInvoker GetInvoker(string ns)
-            {
-                return _client;
             }
         }
 
