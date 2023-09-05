@@ -4732,6 +4732,14 @@
     <value>명시된 함수 반환 형식이 함수 본문의 반환 형식과 일치하지 않습니다.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>함수 반환 유형이 누락되었습니다(예: "FindMonth( d:Text ):Number = Month( DateParse( d ));"의 ":Number").</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>함수 인수 유형이 누락되었습니다(예: "FindMonth( d:Text ):Number = Month( DateParse( d ))"의 ":Text").</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'이(가) 이미 있습니다.</value>
   </data>
