@@ -8,7 +8,8 @@ using System.Text;
 
 namespace Microsoft.PowerFx.Interpreter.UDF
 {
-    public class DefineFunctionsResult : IOperationStatus
+    // Preview 
+    internal class DefineFunctionsResult : IOperationStatus
     {
         private readonly IEnumerable<ExpressionError> _expressionErrors;
         private readonly IEnumerable<FunctionInfo> _functionInfos;

@@ -8,6 +8,7 @@ using Microsoft.PowerFx.Core.IR;
 
 namespace Microsoft.PowerFx.Types
 {
+    [Obsolete("Preview")]
     public abstract class QueryableTableValue : TableValue
     {
         private Lazy<Task<List<DValue<RecordValue>>>> _lazyTaskRows;
