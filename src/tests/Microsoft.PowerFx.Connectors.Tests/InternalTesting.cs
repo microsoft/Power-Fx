@@ -437,7 +437,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             }
         }
 
-        [Fact] //(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
+        [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
         public void TestConnector1()
         {
             string swaggerFile = @"c:\data\AAPT-connectors\src\ConnectorPlatform\build-system\SharedTestAssets\Assets\BaselineBuild\locPublish\Connectors\AzureAD\apidefinition.swagger.json";
