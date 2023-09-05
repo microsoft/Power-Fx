@@ -10,6 +10,7 @@ using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -240,40 +241,16 @@ namespace Microsoft.PowerFx
             foreach (var defType in definedTypes)
             {
                 var name = defType.Ident.Name.Value;
-                var res = DTypeFromTexlNode(defType.Type.TypeRoot) ?? throw new Exception("Failed defining type");
-                _definedTypeSymbolTable.RegisterType(name, new KnownRecordType(res));
-            }
-        }
-
-        internal DType DTypeFromTexlNode(TexlNode node)
-        {
-            if (node is RecordNode recordNode)
-            {
-                return DTypeFromRecordNode(recordNode);
-            }
-            else if (node is FirstNameNode nameNode)
-            {
-                return GetTypeFromName(nameNode.Ident.Name.Value);
-            }
-
-            return null;
-        }
-
-        internal DType DTypeFromRecordNode(RecordNode recordNode)
-        {
-            var list = new List<TypedName>();
-            foreach (var (node, ident) in recordNode.ChildNodes.Zip(recordNode.Ids, (a, b) => (a, b)))
-            {
-                var ty = DTypeFromTexlNode(node);
-                if (ty == null)
+                var res = defType.Type.TypeRoot.Accept(new DTypeVisitor(), _definedTypeSymbolTable) ?? throw new Exception("Failed defining type");
+                if (res.IsRecord)
                 {
-                    return null;
+                    _definedTypeSymbolTable.RegisterType(name, new KnownRecordType(res));
                 }
-
-                list.Add(new TypedName(ty, new DName(ident.Name.Value)));
+                else
+                {
+                    _definedTypeSymbolTable.RegisterType(name, new TableType(res));
+                }
             }
-
-            return DType.CreateRecord(list);
         }
 
         internal FormulaType GetFormulaTypeFromName(string name)
