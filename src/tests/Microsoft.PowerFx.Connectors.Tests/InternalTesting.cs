@@ -345,7 +345,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     title = $"{doc.Info.Title} [{swaggerFile}]";
 
                     // Check we can get the functions
-                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("C"), doc);
+                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc);
 
                     allFunctions.Add(title, functions);
                     var config = new PowerFxConfig();
@@ -442,7 +442,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             string swaggerFile = @"c:\data\AAPT-connectors\src\ConnectorPlatform\build-system\SharedTestAssets\Assets\BaselineBuild\locPublish\Connectors\AzureAD\apidefinition.swagger.json";
             OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("C"), doc);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc);
 
             var config = new PowerFxConfig();
             using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token") { SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f" };

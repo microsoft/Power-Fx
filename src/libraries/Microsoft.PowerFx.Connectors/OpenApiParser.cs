@@ -14,6 +14,11 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
+        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument)
+        {
+            return GetFunctions(new ConnectorSettings(@namespace), openApiDocument);
+        }
+
         public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
             bool connectorIsSupported = true;

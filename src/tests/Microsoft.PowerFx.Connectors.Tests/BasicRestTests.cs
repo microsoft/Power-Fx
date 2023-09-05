@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector = new LoggingTestServer(swaggerFile);
             testConnector.SetResponseFromFile(@"Responses\HttpCall_1.json");
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("Test"), testConnector._apiDocument).OrderBy(cf => cf.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("Test", testConnector._apiDocument).OrderBy(cf => cf.Name).ToList();
             string funcName = new Regex(@"Test.([^(]+)").Match(fxQuery).Groups[1].Value;
             Assert.Equal("*[date:d, index:w, summary:s, temperatureC:w, temperatureF:w]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
 

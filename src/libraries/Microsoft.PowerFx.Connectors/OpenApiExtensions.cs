@@ -474,7 +474,7 @@ namespace Microsoft.PowerFx.Connectors
                         return new ConnectorParameterType(schema, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
                     }
 
-                default:                    
+                default:
                     throw new NotImplementedException($"Unsupported schema type {schema.Type}");
             }
         }

@@ -247,7 +247,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "2f0cc19d-893e-e765-b15d-2906e3231c09" /* env */, "6fb0a1a8e2f5487eafbe306821d8377e" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SP"), apiDoc).OrderBy(f => f.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc).OrderBy(f => f.Name).ToList();
 
             // Total 101 functions, including 1 deprecated & 50 internal functions (and no deprecated+internal functions)
             Assert.Equal(101, functions.Count);
