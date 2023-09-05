@@ -61,7 +61,7 @@ namespace Microsoft.PowerFx.Tests
                     SessionId = "MySessionId"
                 };
 
-            var funcs = config.AddService(new ConnectorSettings("MSNWeather"), apiDoc);
+            var funcs = config.AddService("MSNWeather", apiDoc);
 
             // Function we added where specified in MSNWeather.json
             var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
@@ -122,7 +122,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "4851caf7-23ec-43fc-9a56-e1628655a6bd" // from x-ms-request-url
             };
 
-            var funcs = config.AddService(new ConnectorSettings("TestConnector12"), apiDoc);
+            var funcs = config.AddService("TestConnector12", apiDoc);
 
             // Now execute it...
             var engine = new RecalcEngine(config);
@@ -225,7 +225,7 @@ namespace Microsoft.PowerFx.Tests
                     SessionId = "ccccbff3-9d2c-44b2-bee6-cf24aab10b7e"
                 };
 
-            var funcs = config.AddService(new ConnectorSettings("AzureBlobStorage"), apiDoc);
+            var funcs = config.AddService("AzureBlobStorage", apiDoc);
             var funcNames = funcs.Select(func => func.Name).OrderBy(x => x).ToArray();
             Assert.Equal(funcNames, new string[] { "AppendFile", "AppendFileV2", "CopyFile", "CopyFileOld", "CopyFileV2", "CreateBlockBlob", "CreateBlockBlobV2", "CreateFile", "CreateFileOld", "CreateFileV2", "CreateFolder", "CreateFolderV2", "CreateShareLinkByPath", "CreateShareLinkByPathV2", "DeleteFile", "DeleteFileOld", "DeleteFileV2", "ExtractFolderOld", "ExtractFolderV2", "ExtractFolderV3", "GetAccessPolicies", "GetAccessPoliciesV2", "GetDataSets", "GetDataSetsMetadata", "GetFileContent", "GetFileContentByPath", "GetFileContentByPathOld", "GetFileContentByPathV2", "GetFileContentOld", "GetFileContentV2", "GetFileMetadata", "GetFileMetadataByPath", "GetFileMetadataByPathOld", "GetFileMetadataByPathV2", "GetFileMetadataOld", "GetFileMetadataV2", "ListAllRootFolders", "ListAllRootFoldersV2", "ListAllRootFoldersV3", "ListAllRootFoldersV4", "ListFolder", "ListFolderOld", "ListFolderV2", "ListFolderV3", "ListFolderV4", "ListRootFolder", "ListRootFolderOld", "ListRootFolderV2", "ListRootFolderV3", "ListRootFolderV4", "RenameFile", "RenameFileV2", "SetBlobTierByPath", "SetBlobTierByPathV2", "TestConnection", "UpdateFile", "UpdateFileOld", "UpdateFileV2" });
 
@@ -277,7 +277,7 @@ namespace Microsoft.PowerFx.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService(new ConnectorSettings("azbs"), apiDoc);
+            IEnumerable<FunctionInfo> funcInfos = config.AddService("azbs", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("azbs", ppClient));
 
@@ -317,7 +317,7 @@ namespace Microsoft.PowerFx.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            config.AddService(new ConnectorSettings("azbs"), apiDoc);
+            config.AddService("azbs", apiDoc);
             config.AddService(new ConnectorSettings("azbs2") { MaxRows = 7 }, apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("azbs", ppClient).Add("azbs2", ppClient));
@@ -344,7 +344,7 @@ namespace Microsoft.PowerFx.Tests
             var apiDoc = Helpers.ReadSwagger(@"Swagger\MSNWeather.json");
 
             var config = new PowerFxConfig();
-            config.AddService(new ConnectorSettings("MSNWeather"), apiDoc);
+            config.AddService("MSNWeather", apiDoc);
             config.AddBehaviorFunction();
 
             var engine = new Engine(config);
@@ -461,7 +461,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "02199f4f-8306-4996-b1c3-1b6094c2b7f8"
             };
 
-            config.AddService(new ConnectorSettings("Office365Users"), apiDoc);
+            config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
 
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
@@ -492,7 +492,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            config.AddService(new ConnectorSettings("Office365Users"), apiDoc);
+            config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
 
@@ -522,7 +522,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            config.AddService(new ConnectorSettings("Office365Users"), apiDoc);
+            config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
 
@@ -552,7 +552,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            config.AddService(new ConnectorSettings("Office365Users"), apiDoc);
+            config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
 
@@ -582,7 +582,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            config.AddService(new ConnectorSettings("Office365Outlook"), apiDoc);
+            config.AddService("Office365Outlook", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Outlook", client));
 
@@ -616,7 +616,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            IReadOnlyList<FunctionInfo> fi = config.AddService(new ConnectorSettings("Office365Outlook"), apiDoc);
+            IReadOnlyList<FunctionInfo> fi = config.AddService("Office365Outlook", apiDoc);
             Assert.Equal(97, fi.Count());
 
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("Office365Outlook"), apiDoc);
@@ -650,7 +650,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService(new ConnectorSettings("Office365Outlook") { AllowUnsupportedFunctions  = true }, apiDoc);
+            config.AddService(new ConnectorSettings("Office365Outlook") { AllowUnsupportedFunctions = true }, apiDoc);
             var engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Outlook", client));
 
@@ -699,7 +699,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService(new ConnectorSettings("SQL"), apiDoc);
+            config.AddService("SQL", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
@@ -748,7 +748,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService(new ConnectorSettings("SQL"), apiDoc);
+            config.AddService("SQL", apiDoc);
             var engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
@@ -792,7 +792,7 @@ namespace Microsoft.PowerFx.Tests
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SP"), apiDoc).OrderBy(f => f.Name).ToList();
             Assert.Equal(101, functions.Count);
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService(new ConnectorSettings("SP"), apiDoc);
+            IEnumerable<FunctionInfo> funcInfos = config.AddService("SP", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SP", ppClient));
 

@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService(new ConnectorSettings("SQL"), apiDoc);
+            config.AddService("SQL", apiDoc);
             testConnector.SetResponseFromFile(responseIndex switch
             {
                 0 => null,
@@ -134,7 +134,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService(new ConnectorSettings("SQL"), apiDoc);
+            config.AddService("SQL", apiDoc);
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -255,7 +255,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(50, functions.Where(f => f.IsInternal).Count());
             Assert.Empty(functions.Where(f => f.IsDeprecated && f.IsInternal));
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService(new ConnectorSettings("SP"), apiDoc);
+            IEnumerable<FunctionInfo> funcInfos = config.AddService("SP", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
 
             CheckResult checkResult = engine.Check("SP.", symbolTable: null);

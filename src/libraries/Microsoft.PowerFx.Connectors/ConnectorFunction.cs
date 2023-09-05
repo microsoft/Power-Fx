@@ -791,7 +791,6 @@ namespace Microsoft.PowerFx.Connectors
                     }
                 }
 
-
                 // Required params are first N params in the final list. 
                 // Optional params are fields on a single record argument at the end.
                 // Hidden required parameters do not count here            

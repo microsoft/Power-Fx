@@ -32,7 +32,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // No BaseAdress specified, we'll use the 1st HTTPS one found in the swagger file
             using var client = new HttpClient(); // public auth             
-            var funcs = config.AddService(new ConnectorSettings("Math"), doc);
+            var funcs = config.AddService("Math", doc);
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numberscardinal({number: 1791941})";
@@ -127,7 +127,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             OpenApiDocument doc = await ReadSwaggerFromUrl(swaggerUrl).ConfigureAwait(false);
             using var client = new HttpClient() { BaseAddress = new Uri("https://date.nager.at") };
-            var funcs = config.AddService(new ConnectorSettings("Holiday"), doc);
+            var funcs = config.AddService("Holiday", doc);
 
             var engine = new RecalcEngine(config);
             var expr = @"Index(Holiday.PublicHolidayPublicHolidaysV3(2023, ""US""), 8)";

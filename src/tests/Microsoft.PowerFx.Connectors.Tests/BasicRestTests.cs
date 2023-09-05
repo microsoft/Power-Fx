@@ -66,7 +66,7 @@ namespace Microsoft.PowerFx.Tests
 
             var config = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
-            config.AddService(new ConnectorSettings("Test"), testConnector._apiDocument);
+            config.AddService("Test", testConnector._apiDocument);
 
             var engine = new RecalcEngine(config);
 
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             var apiDoc = testConnector._apiDocument;
 
-            config.AddService(new ConnectorSettings("Test"), apiDoc);
+            config.AddService("Test", apiDoc);
 
             var engine = new RecalcEngine(config);
 
@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Tests
             var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI.json");
 
             // If we don't pass httpClient, we can still bind, we just can't invoke.
-            config.AddService(new ConnectorSettings("Test"), apiDoc);
+            config.AddService("Test", apiDoc);
 
             var engine = new Engine(config);
 
@@ -135,7 +135,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             // Verify we can load the service
-            config.AddService(new ConnectorSettings("PetStore"), apiDoc);
+            config.AddService("PetStore", apiDoc);
 
             // Ensure we use HTTPS protocol
             Assert.Equal("https", apiDoc.GetScheme().Substring(0, 5));

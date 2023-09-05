@@ -49,14 +49,9 @@ namespace Microsoft.PowerFx
             return functionInfos;
         }
 
-        public static void Add(this Dictionary<string, FormulaValue> map, string fieldName, FormulaValue value)
+        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument)
         {
-            if (map.ContainsKey(fieldName))
-            {
-                throw new InvalidOperationException($"Invalid schema, two parameters have the same name {fieldName}");
-            }
-
-            map[fieldName] = value;
+            return config.AddService(new ConnectorSettings(@namespace), openApiDocument);
         }
     }
 }
