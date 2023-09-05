@@ -4732,6 +4732,14 @@
     <value>Uvedený návratový typ funkce neodpovídá návratovému typu těla funkce.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Chybějící funkce vrací typ, například ":Number" v "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Chybějící typ argumentu funkce, například ":Text" v "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' již existuje.</value>
   </data>
