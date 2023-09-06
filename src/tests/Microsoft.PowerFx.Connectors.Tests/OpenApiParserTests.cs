@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             BasicServiceProvider serviceProvider = new BasicServiceProvider();            
-            serviceProvider.AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("ACSL", client));
+            serviceProvider.AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("ACSL", client));
 
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, serviceProvider, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
@@ -202,7 +202,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             BasicServiceProvider serviceProvider2 = new BasicServiceProvider();
-            RuntimeConnectorContext connectorContext2 = new TestConnectorRuntimeContext("ACSL", client2);
+            IRuntimeConnectorContext connectorContext2 = new TestConnectorRuntimeContext("ACSL", client2);
             serviceProvider2.AddService(connectorContext2);
 
             FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, serviceProvider2, CancellationToken.None).ConfigureAwait(false);
@@ -289,7 +289,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue parametersParam = engine.Eval(parameters);
 
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("ACSL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("ACSL", client));
             
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, serviceProvider, CancellationToken.None).ConfigureAwait(false);
 
@@ -642,7 +642,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);            
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, "4bf9a87fc9054b6db3a4d07a1c1f5a5b" /* connectionId */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
-            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument).ToArray();
             ConnectorFunction executeProcedureV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
@@ -726,7 +726,7 @@ POST https://tip1002-002.azure-apihub.net/invoke
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
             
-            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("DV", client));
+            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("DV", client));
 
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", testConnector._apiDocument).ToArray();
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");

@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _ => null
             });
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
@@ -146,7 +146,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
@@ -211,7 +211,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext(cxNamespace, client));
+            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext(cxNamespace, client));
 
             IPowerFxScope scope = new EditorContextScope((expr) => engine.Check(expression, symbolTable: null)) { Services = services };
             IIntellisenseResult suggestions = scope.Suggest(expression, expression.Length);

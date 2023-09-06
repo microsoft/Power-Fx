@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(ok);
 
-            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Math", client));
+            var runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Math", client));
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev)
@@ -86,7 +86,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(ok, string.Join(", ", check.Errors.Select(er => er.Message)));
 
-            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Math", client));
+            var runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Math", client));
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev)
@@ -141,7 +141,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ok = check.IsSuccess;
             Assert.True(ok, string.Join(", ", check.Errors.Select(er => er.Message)));
 
-            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Holiday", client));
+            var runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Holiday", client));
             FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);            
 
             if (result is ErrorValue ev)
@@ -181,7 +181,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var funcsWorldTime = config.AddService(new ConnectorSettings("WorldTime") { IgnoreUnknownExtensions = true }, docWorldTime);
 
             var engine = new RecalcEngine(config);
-            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Xkcd", clientXkcd).Add("WorldTime", clientWorldTime));                                                   
+            var runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Xkcd", clientXkcd).Add("WorldTime", clientWorldTime));                                                   
 
             FormulaValue fv1 = await engine.EvalAsync(@"Xkcd.comicIdinfo0json(1).transcript", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             string transcript = ((StringValue)fv1).Value.Replace("\n", "\r\n");

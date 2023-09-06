@@ -310,22 +310,39 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
             return await InvokeInternalAsync(args, serviceProvider, ConnectorSettings.ReturnRawResult, cancellationToken).ConfigureAwait(false);
-        }
+        }        
 
         internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IServiceProvider serviceProvider, bool rawResult, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            
-            EnsureInitialized();
-            RuntimeConnectorContext context = serviceProvider.GetService<RuntimeConnectorContext>() ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
-            FormattingInfo formattingInfo = serviceProvider.GetService<FormattingInfo>() ?? FormattingInfoHelper.CreateFormattingInfo();
-            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(context.GetInvoker(Namespace), this, rawResult), ConnectorSettings.ThrowOnError);
+            cancellationToken.ThrowIfCancellationRequested();            
+            IRuntimeConnectorContext context = serviceProvider.GetService<IRuntimeConnectorContext>() ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");            
+            return await InvokeInternalAsync(args, context, serviceProvider, rawResult, cancellationToken).ConfigureAwait(false);
+        }
 
-            FormulaValue result = await invoker.InvokeAsync(formattingInfo, args, context, cancellationToken).ConfigureAwait(false);
+        /// <summary>
+        /// Call connector function.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        /// <param name="context">RuntimeConnectorContext.</param>
+        /// <param name="serviceProvider">Service Provider, optional.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Function result.</returns>
+        public async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IRuntimeConnectorContext context, IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            return await InvokeInternalAsync(args, context, serviceProvider, ConnectorSettings.ReturnRawResult, cancellationToken).ConfigureAwait(false);
+        }
+
+        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IRuntimeConnectorContext context, IServiceProvider serviceProvider, bool rawResult, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            EnsureInitialized();
+            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(context.GetInvoker(Namespace), this, rawResult), ConnectorSettings.ThrowOnError);            
+            FormulaValue result = await invoker.InvokeAsync(new FormattingInfo(context.CultureInfo, context.TimeZoneInfo), args, context, cancellationToken).ConfigureAwait(false);
             return await PostProcessResultAsync(result, context, invoker, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, RuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, IRuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
         {
             ExpressionError er = null;
 
@@ -353,7 +370,7 @@ namespace Microsoft.PowerFx.Connectors
         // - PagesRecordValue if the next page has a next link
         // - RecordValue if there is no next link
         // - ErrorValue
-        private async Task<FormulaValue> GetNextPageAsync(string nextLink, RuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> GetNextPageAsync(string nextLink, IRuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 

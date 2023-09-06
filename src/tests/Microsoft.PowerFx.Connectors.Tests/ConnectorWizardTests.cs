@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
@@ -161,7 +161,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc); 
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
             
-            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
@@ -203,7 +203,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc);
             testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
             
-            BasicServiceProvider services = new BasicServiceProvider().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
 
             foreach (ConnectorFunction function in functions)
             {

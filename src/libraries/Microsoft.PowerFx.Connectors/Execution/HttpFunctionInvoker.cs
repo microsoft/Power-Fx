@@ -369,7 +369,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, RuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, IRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
 
@@ -377,29 +377,12 @@ namespace Microsoft.PowerFx.Connectors
             return _invoker.InvokeAsync(context, _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
-        public Task<FormulaValue> InvokeAsync(string url, RuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(string url, IRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
 
             cancellationToken.ThrowIfCancellationRequested();
             return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
-        }
-    }
-
-    // Base class to customize connection invocation at runtime.
-    // This is useful when the http channel is short lived and we need a new one per invoke.
-    public class RuntimeConnectorContext
-    {
-        public RuntimeConnectorContext()
-        {
-        }
-
-        // get invoke for function in the given namespace. 
-        // Invoker here must have same base address as the one passed to config.AddService.
-        public virtual HttpMessageInvoker GetInvoker(string @namespace)
-        {
-            // null means we must use the global invoker from config.AddService.
-            return null;
         }
     }
 }

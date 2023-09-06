@@ -3,11 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
-    internal class TestConnectorRuntimeContext : RuntimeConnectorContext
+    internal class TestConnectorRuntimeContext : IRuntimeConnectorContext
     {
         private readonly Dictionary<string, HttpMessageInvoker> _clients = new ();
 
@@ -16,13 +17,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Add(@namespace, client);
         }
 
+        public TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Local;
+
+        public CultureInfo CultureInfo => CultureInfo.InvariantCulture;
+
         public TestConnectorRuntimeContext Add(string @namespace, HttpMessageInvoker client)
         {
             _clients[string.IsNullOrEmpty(@namespace) ? throw new ArgumentException("Invalid namespace", nameof(@namespace)) : @namespace] = client ?? throw new ArgumentNullException(nameof(@namespace), "Invalid HttpMessageInvoker");
             return this;
         }
 
-        public override HttpMessageInvoker GetInvoker(string @namespace)
+        public HttpMessageInvoker GetInvoker(string @namespace)
         {
             if (string.IsNullOrEmpty(@namespace) || !_clients.ContainsKey(@namespace))
             {

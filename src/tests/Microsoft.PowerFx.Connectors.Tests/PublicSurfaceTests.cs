@@ -41,7 +41,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
-              "Microsoft.PowerFx.Connectors.RuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.IRuntimeConnectorContext",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 
