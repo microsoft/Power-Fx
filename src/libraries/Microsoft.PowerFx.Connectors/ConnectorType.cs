@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public Visibility Visibility { get; internal set; }
 
-        public ConnectorType(OpenApiSchema schema, FormulaType formulaType)
+        internal ConnectorType(OpenApiSchema schema, FormulaType formulaType)
         {
             FormulaType = formulaType;
             Description = schema.Description;
@@ -82,6 +82,18 @@ namespace Microsoft.PowerFx.Connectors
             SetVisibility(schema);
         }
 
+        internal ConnectorType(OpenApiSchema schema, RecordType recordType, ConnectorType[] fields)
+            : this(schema, recordType)
+        {
+            Fields = fields;
+        }
+
+        internal ConnectorType(OpenApiSchema schema, TableType recordType, ConnectorType field)
+            : this(schema, recordType)
+        {
+            Fields = new ConnectorType[] { field };
+        }
+
         internal void SetVisibility(OpenApiSchema schema)
         {
             SetVisibility(schema.GetVisibility());
@@ -100,18 +112,6 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return new OptionSet(Name, EnumValues.Select(ev => ev.ToObject().ToString()).Zip(EnumDisplayNames, (ev, dn) => new KeyValuePair<string, string>(ev, dn)).ToDictionary(kvp => new DName(kvp.Key), kvp => new DName(kvp.Value)).ToImmutableDictionary());
-        }
-
-        public ConnectorType(OpenApiSchema schema, RecordType recordType, ConnectorType[] fields)
-            : this(schema, recordType)
-        {
-            Fields = fields;
-        }
-
-        public ConnectorType(OpenApiSchema schema, TableType recordType, ConnectorType field)
-            : this(schema, recordType)
-        {
-            Fields = new ConnectorType[] { field };
         }
     }
 }

@@ -662,13 +662,15 @@ namespace Microsoft.PowerFx.Connectors.Tests
             //}, CancellationToken.None).ConfigureAwait(false);                        
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
-            ConnectorSuggestions suggestions1 = await executeProcedureV2.GetConnectorSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters1 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[2];
             Assert.NotNull(suggestions1);
             Assert.NotNull(suggestions1.Suggestions);
             Assert.Equal(2, suggestions1.Suggestions.Count());
             
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
-            ConnectorSuggestions suggestions2 = await executeProcedureV2.GetConnectorSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters2 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[3];
             Assert.NotNull(suggestions2);
             Assert.NotNull(suggestions2.Suggestions);
             Assert.Single(suggestions2.Suggestions);
@@ -730,13 +732,15 @@ POST https://tip1002-002.azure-apihub.net/invoke
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");
-            ConnectorSuggestions suggestions1 = await createRecord.GetConnectorSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
             Assert.Equal(651, suggestions1.Suggestions.Count);
             Assert.Equal("AAD Users", suggestions1.Suggestions[0].DisplayName);
             Assert.Equal("aadusers", ((StringValue)suggestions1.Suggestions[0].Suggestion).Value);
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_2.json");
-            ConnectorSuggestions suggestions2 = await createRecord.GetConnectorSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com"), FormulaValue.New("accounts") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com"), FormulaValue.New("accounts") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[2];
             Assert.Equal(119, suggestions2.Suggestions.Count);
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);
             Assert.Equal("Decimal", suggestions2.Suggestions[0].Suggestion.Type.ToString());

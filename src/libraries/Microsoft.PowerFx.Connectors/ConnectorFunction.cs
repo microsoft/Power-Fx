@@ -20,11 +20,14 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Represents a connector function.
+    /// </summary>
     [DebuggerDisplay("{Name}")]
     public class ConnectorFunction
     {
         /// <summary>
-        /// Normlalized name of the function.
+        /// Normalized name of the function.
         /// </summary>
         public string Name { get; }
 
@@ -216,14 +219,23 @@ namespace Microsoft.PowerFx.Connectors
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new ArgumentNullException(nameof(notSupportedReason)));
         }
 
-        public ConnectorParameters GetParameters(FormulaValue[] knownParameters, IServiceProvider services)
+        // This API (GetParameterSuggestionsAsync) only works on required paramaters and assumes we interrogate param number N+1 if N parameters are provided.
+
+        /// <summary>
+        /// Get connector function parameter suggestions.
+        /// </summary>
+        /// <param name="knownParameters">Known parameters.</param>
+        /// <param name="services">Service Provider.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>ConnectorParameters class with suggestions.</returns>
+        public async Task<ConnectorParameters> GetParameterSuggestionsAsync(FormulaValue[] knownParameters, IServiceProvider services, CancellationToken cancellationToken)
         {
-            ConnectorParameterWithSuggestions[] parametersWithSuggestions = RequiredParameters.Select((rp, i) => i < ArityMax - 1
-                                                                                                            ? new ConnectorParameterWithSuggestions(rp, i < knownParameters.Length ? knownParameters[i] : null)
-                                                                                                            : new ConnectorParameterWithSuggestions(rp, knownParameters.Skip(ArityMax - 1).ToArray())).ToArray();
+            cancellationToken.ThrowIfCancellationRequested();
 
             int index = Math.Min(knownParameters.Length, ArityMax - 1);
-            ConnectorSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+            ConnectorParameterWithSuggestions[] parametersWithSuggestions = RequiredParameters.Select((rp, i) => i < ArityMax - 1 ? new ConnectorParameterWithSuggestions(rp, i < knownParameters.Length ? knownParameters[i] : null) : new ConnectorParameterWithSuggestions(rp, knownParameters.Skip(ArityMax - 1).ToArray())).ToArray();            
+            
+            ConnectorSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 
             bool error = suggestions == null || suggestions.Error != null;
 
@@ -241,22 +253,27 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorParameters()
             {
                 IsCompleted = !error && parametersWithSuggestions.All(p => !p.Suggestions.Any()),
-                Parameters = parametersWithSuggestions
+                ParametersWithSuggestions = parametersWithSuggestions
             };
         }
 
-        public string GetExpression(string @namespace, ConnectorParameters parameters)
+        /// <summary>
+        /// Get Power Fx expression from function and set of parameters.
+        /// </summary>
+        /// <param name="parameters">Parameters.</param>
+        /// <returns>Power Fx expression.</returns>
+        public string GetExpression(ConnectorParameters parameters)
         {
             if (!parameters.IsCompleted)
             {
                 return null;
             }
 
-            StringBuilder sb = new StringBuilder($@"{@namespace}.{Name}({string.Join(", ", parameters.Parameters.Take(Math.Min(parameters.Parameters.Length, ArityMax - 1)).Select(p => p.Value.ToExpression()))}");
+            StringBuilder sb = new StringBuilder($@"{Namespace}.{Name}({string.Join(", ", parameters.ParametersWithSuggestions.Take(Math.Min(parameters.ParametersWithSuggestions.Length, ArityMax - 1)).Select(p => p.Value.ToExpression()))}");
 
-            if (parameters.Parameters.Length > ArityMax - 1)
+            if (parameters.ParametersWithSuggestions.Length > ArityMax - 1)
             {
-                ConnectorParameterWithSuggestions lastParam = parameters.Parameters.Last();
+                ConnectorParameterWithSuggestions lastParam = parameters.ParametersWithSuggestions.Last();
                 sb.Append($@", {{ ");
 
                 List<(string name, FormulaValue fv)> nameValueAssociations = lastParam.ParameterNames.Zip(lastParam.Values, (name, fv) => (name, fv)).ToList();
@@ -282,6 +299,13 @@ namespace Microsoft.PowerFx.Connectors
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Call connector function.
+        /// </summary>
+        /// <param name="args">Arguments.</param>
+        /// <param name="serviceProvider">Service Provider, containining RuntimeConnectorContext.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Function result.</returns>
         public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -344,13 +368,6 @@ namespace Microsoft.PowerFx.Connectors
         // Also on SharePoint action SearchForUser (Resolve User)
         //public async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(HttpClient httpClient, NamedFormulaType[] inputParams, string suggestedParamName, CancellationToken cancellationToken)
 
-        // This API only works on required paramaters and assumes we interrogate param number N+1 if N parameters are provided.
-        public async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, IServiceProvider services, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            return await GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, cancellationToken).ConfigureAwait(false);
-        }
-
         internal async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider services, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -397,6 +414,13 @@ namespace Microsoft.PowerFx.Connectors
             return null;
         }
 
+        /// <summary>
+        /// Dynamic intellisense on return value.
+        /// </summary>
+        /// <param name="knownParameters">Known parameters.</param>
+        /// <param name="services">Service provider.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Formula Type determined by dynamic Intellisense.</returns>
         public async Task<FormulaType> GetConnectorReturnSchemaAsync(FormulaValue[] knownParameters, IServiceProvider services, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

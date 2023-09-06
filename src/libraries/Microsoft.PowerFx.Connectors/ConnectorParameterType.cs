@@ -27,14 +27,14 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
 
-        public ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)
+        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)
             : this(type)
         {
             HiddenRecordType = hiddenRecordType;
             ConnectorType = new ConnectorType(schema, type);
         }
 
-        public ConnectorParameterType(OpenApiSchema schema, FormulaType type)
+        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type)
             : this(schema, type, null)
         {
         }
@@ -44,12 +44,12 @@ namespace Microsoft.PowerFx.Connectors
             Type = type;
         }
 
-        public ConnectorParameterType()
+        internal ConnectorParameterType()
         {
             Type = FormulaType.Blank;
         }
 
-        public ConnectorParameterType(OpenApiSchema schema, TableType tableType, ConnectorType tableConnectorType)
+        internal ConnectorParameterType(OpenApiSchema schema, TableType tableType, ConnectorType tableConnectorType)
             : this(tableType)
         {
             HiddenRecordType = null;
@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorType = new ConnectorType(schema, tableType, tableConnectorType);
         }
 
-        public ConnectorParameterType(OpenApiSchema schema, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
+        internal ConnectorParameterType(OpenApiSchema schema, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
             : this(recordType)
         {
             HiddenRecordType = hiddenRecordType;

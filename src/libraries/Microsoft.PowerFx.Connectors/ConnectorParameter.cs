@@ -9,6 +9,9 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Represents a parameter of a connector function.
+    /// </summary>
     public class ConnectorParameter : ConnectorSchema
     {
         public string Name { get; internal set; }
@@ -36,18 +39,30 @@ namespace Microsoft.PowerFx.Connectors
 
     public class ConnectorParameterWithSuggestions : ConnectorParameter
     {
-        public IReadOnlyList<ConnectorSuggestion> Suggestions { get; internal set; }
+        /// <summary>
+        /// List of suggestions.
+        /// </summary>
+        public IReadOnlyList<ConnectorSuggestion> Suggestions { get; internal set; }        
 
+        /// <summary>
+        /// Parameter value.
+        /// </summary>
         public FormulaValue Value { get; private set; }
 
+        /// <summary>
+        /// Parameter values for optional parameters.
+        /// </summary>
         public FormulaValue[] Values { get; private set; }
 
+        /// <summary>
+        /// List of parameter names for optional parameters.
+        /// </summary>
         public string[] ParameterNames { get; internal set; }
 
         internal ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue value)
             : base(connectorParameter)
         {
-            Suggestions = new List<ConnectorSuggestion>();
+            Suggestions = new List<ConnectorSuggestion>();         
             Value = value;
             Values = null;
         }
@@ -57,14 +72,17 @@ namespace Microsoft.PowerFx.Connectors
         {
             Suggestions = new List<ConnectorSuggestion>();
             Value = null;
-            Values = values.ToArray();
+            Values = values;
         }
     }
 
     public class ConnectorParameters
     {
+        /// <summary>
+        /// Indicates that all parameters are having a defined value and we can generate/execute an expression with this parameter set.
+        /// </summary>
         public bool IsCompleted { get; internal set; }
 
-        public ConnectorParameterWithSuggestions[] Parameters { get; internal set; }
+        public ConnectorParameterWithSuggestions[] ParametersWithSuggestions { get; internal set; }
     }
 }

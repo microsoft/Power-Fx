@@ -3,6 +3,10 @@
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Internal class supporting "x-ms-dynamic-values" extension.
+    /// https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values.
+    /// </summary>
     internal class ConnectorDynamicValue : ConnectionDynamicApi
     {
         /// <summary>

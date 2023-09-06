@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
@@ -19,7 +21,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
     public class ConnectorWizardTests
     {
         [Fact]
-        public void ConnectorWizardTest()
+        public async Task ConnectorWizardTest()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             using HttpClient httpClient = new HttpClient(testConnector);
@@ -56,92 +58,92 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Get list of parameters for ExecuteProcedureV2 function, without knowing any parameter
             // Notice that GetParameters does NOT validate parameter types
-            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services);
+            ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false);
 
             // We'll always get 4 parameters and some fields are constant (see CheckParameters)
-            CheckParameters(parameters.Parameters);
+            CheckParameters(parameters.ParametersWithSuggestions);
 
             // GetParameters will retrieve the list of available SQL servers
             // We get the logical and display names
             // Notice that the display name isn't valid for an expression but pfxdev-sql.database.windows.net is working
-            Assert.Equal(@"default|Use connection settings (pfxdev-sql.database.windows.net)", string.Join(", ", parameters.Parameters[0].Suggestions.Select(rv => $"{rv.Suggestion.ToObject()}|{rv.DisplayName}"))); // First parameter proposals            
-            (1..3).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
-            (0..3).ForAll(i => Assert.Null(parameters.Parameters[i].ParameterNames));
+            Assert.Equal(@"default|Use connection settings (pfxdev-sql.database.windows.net)", string.Join(", ", parameters.ParametersWithSuggestions[0].Suggestions.Select(rv => $"{rv.Suggestion.ToObject()}|{rv.DisplayName}"))); // First parameter proposals            
+            (1..3).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
+            (0..3).ForAll(i => Assert.Null(parameters.ParametersWithSuggestions[i].ParameterNames));
             Assert.False(parameters.IsCompleted);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 2.json");
 
             // With first parameter defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default") }, services);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default") }, services, CancellationToken.None).ConfigureAwait(false);
 
-            CheckParameters(parameters.Parameters);
+            CheckParameters(parameters.ParametersWithSuggestions);
 
             // Now get the list of databases
-            Assert.Equal(@"default|Use connection settings (connectortest)", string.Join(", ", parameters.Parameters[1].Suggestions.Select(rv => $"{rv.Suggestion.ToObject()}|{rv.DisplayName}"))); // Second parameter proposals
-            (0, 2..3).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
-            (0..3).ForAll(i => Assert.Null(parameters.Parameters[i].ParameterNames));
+            Assert.Equal(@"default|Use connection settings (connectortest)", string.Join(", ", parameters.ParametersWithSuggestions[1].Suggestions.Select(rv => $"{rv.Suggestion.ToObject()}|{rv.DisplayName}"))); // Second parameter proposals
+            (0, 2..3).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
+            (0..3).ForAll(i => Assert.Null(parameters.ParametersWithSuggestions[i].ParameterNames));
             Assert.False(parameters.IsCompleted);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
 
             // With two parameters defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default") }, services);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default") }, services, CancellationToken.None).ConfigureAwait(false);
 
-            CheckParameters(parameters.Parameters);
+            CheckParameters(parameters.ParametersWithSuggestions);
 
             // Get the list of stored procedures
-            Assert.Equal(@"[dbo].[sp_1]|[dbo].[sp_1], [dbo].[sp_2]|[dbo].[sp_2]", string.Join(", ", parameters.Parameters[2].Suggestions.Select(rv => $"{rv.Suggestion.ToObject()}|{rv.DisplayName}"))); // Third parameter proposals
-            Assert.Empty(parameters.Parameters[3].Suggestions);
-            (0..1, 3).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
-            (0..3).ForAll(i => Assert.Null(parameters.Parameters[i].ParameterNames));
+            Assert.Equal(@"[dbo].[sp_1]|[dbo].[sp_1], [dbo].[sp_2]|[dbo].[sp_2]", string.Join(", ", parameters.ParametersWithSuggestions[2].Suggestions.Select(rv => $"{rv.Suggestion.ToObject()}|{rv.DisplayName}"))); // Third parameter proposals
+            Assert.Empty(parameters.ParametersWithSuggestions[3].Suggestions);
+            (0..1, 3).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
+            (0..3).ForAll(i => Assert.Null(parameters.ParametersWithSuggestions[i].ParameterNames));
             Assert.False(parameters.IsCompleted);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With three parameters defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2") }, services);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2") }, services, CancellationToken.None).ConfigureAwait(false);
 
-            CheckParameters(parameters.Parameters);
-            (0..2).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
+            CheckParameters(parameters.ParametersWithSuggestions);
+            (0..2).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
 
             // Now the stored procedure name has been provided, we are getting the list of parameters, with their 'title' (display name) and 'type' (= SQL type)
-            Assert.Equal(@"p1, p2", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => s.DisplayName))); // 4th parameter proposals            ;
-            Assert.Equal(@"Decimal, String", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => ((BlankValue)s.Suggestion).Type.ToString())));            
-            Assert.Equal(@"p1, p2", string.Join(", ", parameters.Parameters[3].ParameterNames));
+            Assert.Equal(@"p1, p2", string.Join(", ", parameters.ParametersWithSuggestions[3].Suggestions.Select(s => s.DisplayName))); // 4th parameter proposals            ;
+            Assert.Equal(@"Decimal, String", string.Join(", ", parameters.ParametersWithSuggestions[3].Suggestions.Select(s => ((BlankValue)s.Suggestion).Type.ToString())));            
+            Assert.Equal(@"p1, p2", string.Join(", ", parameters.ParametersWithSuggestions[3].ParameterNames));
             Assert.False(parameters.IsCompleted);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With 4 parameters defined (and valid)
             // p1 type is not validated
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */ }, services);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */ }, services, CancellationToken.None).ConfigureAwait(false);
 
-            CheckParameters(parameters.Parameters);
-            (0..2).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
+            CheckParameters(parameters.ParametersWithSuggestions);
+            (0..2).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
 
             // As 'p1' is provided, the only suggestion if 'p2'
             // Anyhow, the list of ParameterNames is still p1 and p2
-            Assert.Equal(@"p2", string.Join(", ", parameters.Parameters[3].Suggestions.Select(s => s.DisplayName)));
-            Assert.Equal(@"p1, p2", string.Join(", ", parameters.Parameters[3].ParameterNames));
+            Assert.Equal(@"p2", string.Join(", ", parameters.ParametersWithSuggestions[3].Suggestions.Select(s => s.DisplayName)));
+            Assert.Equal(@"p1, p2", string.Join(", ", parameters.ParametersWithSuggestions[3].ParameterNames));
             Assert.False(parameters.IsCompleted);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With 5 parameters defined (and valid)
-            parameters = function.GetParameters(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */, FormulaValue.New("abc") /* p2 */ }, services);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */, FormulaValue.New("abc") /* p2 */ }, services, CancellationToken.None).ConfigureAwait(false);
 
-            CheckParameters(parameters.Parameters);
-            (0..3).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
+            CheckParameters(parameters.ParametersWithSuggestions);
+            (0..3).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
             Assert.True(parameters.IsCompleted);
 
             // Finally contruct the expression
-            string expression = function.GetExpression("SQL", parameters);
+            string expression = function.GetExpression(parameters);
 
             Assert.Equal(@"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { p1: Float(50), p2: ""abc"" })", expression);
         }
 
         [Fact]
-        public void ConnectorWizardTest_InvalidToken()
+        public async Task ConnectorWizardTest_InvalidToken()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             using HttpClient httpClient = new HttpClient(testConnector);
@@ -163,7 +165,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            Assert.Throws<HttpRequestException>(() => function.GetParameters(Array.Empty<FormulaValue>(), services));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
 
             // now let's try with throwOnError false
             functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = false }, apiDoc);
@@ -172,18 +174,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Same invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
             
-            ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services);
+            ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false);
 
-            CheckParameters(parameters.Parameters);
+            CheckParameters(parameters.ParametersWithSuggestions);
 
             // No suggestion           
-            (0..3).ForAll(i => Assert.Empty(parameters.Parameters[i].Suggestions));
-            (0..3).ForAll(i => Assert.Null(parameters.Parameters[i].ParameterNames));
+            (0..3).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
+            (0..3).ForAll(i => Assert.Null(parameters.ParametersWithSuggestions[i].ParameterNames));
             Assert.False(parameters.IsCompleted);
         }
 
         [Fact]
-        public void ConnectorWizardTest_TestAllFunctions()
+        public async Task ConnectorWizardTest_TestAllFunctions()
         {
             using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             using HttpClient httpClient = new HttpClient(testConnector);
@@ -205,7 +207,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             foreach (ConnectorFunction function in functions)
             {
-                ConnectorParameters parameters = function.GetParameters(Array.Empty<FormulaValue>(), services);
+                ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false);
                 Assert.NotNull(parameters);
             }
         }

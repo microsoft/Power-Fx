@@ -19,9 +19,9 @@ namespace Microsoft.PowerFx.Connectors
 {
     internal class ConnectorTexlFunction : TexlFunction, IAsyncTexlFunction3, IHasUnsupportedFunctions
     {
-        internal ConnectorFunction ConnectorFunction { get; init; }
+        public ConnectorFunction ConnectorFunction { get; }
 
-        public ConnectorTexlFunction(ConnectorFunction function)
+        internal ConnectorTexlFunction(ConnectorFunction function)
             : base(DPath.Root.Append(new DName(function.Namespace)), function.Name, function.Name, (locale) => function.Description, FunctionCategories.REST, function.ReturnType._type, BigInteger.Zero, function.ArityMin, function.ArityMax, function.ParameterTypes)
         {
             ConnectorFunction = function;

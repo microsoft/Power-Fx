@@ -19,9 +19,10 @@ namespace Microsoft.PowerFx
         /// Functions names will be 'functionNamespace.operationName'.
         /// Functions are invoked via rest via the httpClient. The client must handle authentication. 
         /// </summary>
+        /// 
         /// <param name="config">Config to add the functions to.</param>
+        /// <param name="connectorSettings">Connector settings containing Namespace, NumberIsFloat and MaxRows to be returned.</param>        
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        /// <param name="connectorSettings">Connector settings containing cache, numberIsFloat and MaxRows to be returned.</param>        
         public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
             if (connectorSettings.Namespace == null)
@@ -49,6 +50,15 @@ namespace Microsoft.PowerFx
             return functionInfos;
         }
 
+        /// <summary>
+        /// Add functions for each operation in the <see cref="OpenApiDocument"/>. 
+        /// Functions names will be 'functionNamespace.operationName'.
+        /// Functions are invoked via rest via the httpClient. The client must handle authentication. 
+        /// </summary>
+        /// <param name="config">Config to add the functions to.</param>
+        /// <param name="namespace">Namespace name.</param>
+        /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
+        /// <returns></returns>
         public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument)
         {
             return config.AddService(new ConnectorSettings(@namespace), openApiDocument);
