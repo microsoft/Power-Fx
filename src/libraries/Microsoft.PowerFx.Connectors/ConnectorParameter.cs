@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public string[] ParameterNames { get; internal set; }
 
-        public ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue value)
+        internal ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue value)
             : base(connectorParameter)
         {
             Suggestions = new List<ConnectorSuggestion>();
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Connectors
             Values = null;
         }
 
-        public ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue[] values)
+        internal ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue[] values)
             : base(connectorParameter)
         {
             Suggestions = new List<ConnectorSuggestion>();
