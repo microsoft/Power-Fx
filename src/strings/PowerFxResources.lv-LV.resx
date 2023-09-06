@@ -4732,6 +4732,14 @@
     <value>Norādītais funkcijas atgriešanas tips neatbilst funkcijas pamatteksta atgriešanas tipam.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Trūkst funkcijas atgriešanas tipa, piemēram, “:Number” sadaļā “FindMonth( d:Text ):Number = Month( DateParse( d ));”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Trūkst funkcijas argumenta tipa, piemēram, “:Text” sadaļā “FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Formula ar nosaukumu “{0}” jau pastāv.</value>
   </data>

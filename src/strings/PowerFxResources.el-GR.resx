@@ -4732,6 +4732,14 @@
     <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Λείπει ο τύπος επιστροφής συνάρτησης, για παράδειγμα το ":Number" στο στοιχείο "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Λείπει ο τύπος ορίσματος συνάρτησης, για παράδειγμα το ":Text" στο στοιχείο "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Το όνομα NamedFormula '{0}' υπάρχει ήδη.</value>
   </data>

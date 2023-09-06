@@ -4732,6 +4732,14 @@
     <value>Loại trả về hàm đã nêu không khớp với kiểu trả về của nội dung hàm.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Thiếu kiểu trả về hàm, ví dụ ":Number" trong "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Thiếu kiểu đối số hàm, ví dụ ":Text" trong "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" đã tồn tại.</value>
   </data>

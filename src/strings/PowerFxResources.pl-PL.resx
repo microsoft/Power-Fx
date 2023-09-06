@@ -4732,6 +4732,14 @@
     <value>Deklarowany zwracany typ funkcji nie pasuje do zwracanego typu treści funkcji.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Brak zwracanego typu funkcji, na przykład typu „:Number” w wyrażeniu „FindMonth( d:Text ):Number = Month( DateParse( d ));”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Brak typu argumentu funkcji, na przykład typu „:Text” w wyrażeniu „FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Nazwana formuła „{0}” już istnieje.</value>
   </data>
