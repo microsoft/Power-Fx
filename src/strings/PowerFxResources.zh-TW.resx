@@ -4732,6 +4732,14 @@
     <value>指定的函式傳回類型與函式主體的傳回類型不相符。</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>缺少函式傳回類型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ));" 中的 ":Number"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>缺少函式引數類型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ))" 中的 ":Text"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>

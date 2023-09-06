@@ -4732,6 +4732,14 @@
     <value>O tipo de devolución da función indicada non coincide co tipo de devolución do corpo da función.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Falta o tipo de devolución da función, por exemplo o ":Number" en "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Falta o tipo de argumento da función, por exemplo o ":Text" en "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A fórmula denominada "{0}" xa existe.</value>
   </data>

@@ -4732,6 +4732,14 @@
     <value>所说明的函数返回类型与函数正文的返回类型不匹配。</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>缺少函数返回类型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ));" 中的 ":Number"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>缺少函数参数类型，例如 "FindMonth( d:Text ):Number = Month( DateParse( d ))" 中的 ":Text"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' 已存在。</value>
   </data>

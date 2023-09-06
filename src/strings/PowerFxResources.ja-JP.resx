@@ -4732,6 +4732,14 @@
     <value>宣言した関数の戻り値タイプが、関数本文の戻り値タイプと一致しません。</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>関数の戻り値の型 (例: "FindMonth( d:Text ):Number = Month( DateParse( d ));" の ":Number") が見つかりません</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>関数の引数の型 (例: "FindMonth( d:Text ):Number = Month( DateParse( d ))" の ":Text") が見つかりません</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'は既に存在します。</value>
   </data>

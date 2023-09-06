@@ -4732,6 +4732,14 @@
     <value>कथित फ़ंक्शन, रिटर्न प्रकार फ़ंक्शन बॉडी के रिटर्न प्रकार से मेल नहीं खाता है.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Missing function return type, for example the ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' पहले से मौजूद है.</value>
   </data>
