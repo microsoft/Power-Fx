@@ -124,14 +124,8 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool HasPreciseErrors => false;
 
-        // Returns true if the function is disabled for component.
-        public virtual bool DisableForComponent => false;
-
         // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
         public virtual bool MutatesArg0 => false;
-
-        // Returns true if the function should be suppressed in Intellisense for component.
-        public virtual bool SuppressIntellisenseForComponent => DisableForComponent;
 
         public virtual RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.None;
 
