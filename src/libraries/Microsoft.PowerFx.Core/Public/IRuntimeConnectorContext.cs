@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Text;
 
-namespace Microsoft.PowerFx.Connectors
+namespace Microsoft.PowerFx
 {
     public interface IRuntimeConnectorContext
     {

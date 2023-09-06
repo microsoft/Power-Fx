@@ -185,10 +185,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            BasicServiceProvider serviceProvider = new BasicServiceProvider();            
-            serviceProvider.AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("ACSL", client));
+            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
 
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, serviceProvider, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
             client.Dispose();
             testConnector.Dispose();
@@ -201,11 +200,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            BasicServiceProvider serviceProvider2 = new BasicServiceProvider();
-            IRuntimeConnectorContext connectorContext2 = new TestConnectorRuntimeContext("ACSL", client2);
-            serviceProvider2.AddService(connectorContext2);
+            IRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2);
 
-            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, serviceProvider2, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult2);
             Assert.True(httpResult2 is RecordValue);
@@ -289,9 +286,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue parametersParam = engine.Eval(parameters);
 
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("ACSL", client));
+            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
             
-            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, serviceProvider, CancellationToken.None).ConfigureAwait(false);
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -642,7 +639,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);            
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, "4bf9a87fc9054b6db3a4d07a1c1f5a5b" /* connectionId */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
-            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
 
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument).ToArray();
             ConnectorFunction executeProcedureV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
@@ -662,14 +659,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             //}, CancellationToken.None).ConfigureAwait(false);                        
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
-            ConnectorParameters parameters1 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters1 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest") }, context, CancellationToken.None).ConfigureAwait(false);
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[2];
             Assert.NotNull(suggestions1);
             Assert.NotNull(suggestions1.Suggestions);
             Assert.Equal(2, suggestions1.Suggestions.Count());
             
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
-            ConnectorParameters parameters2 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters2 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, context, CancellationToken.None).ConfigureAwait(false);
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[3];
             Assert.NotNull(suggestions2);
             Assert.NotNull(suggestions2.Suggestions);
@@ -678,7 +675,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(executeProcedureV2.ReturnParameterType.SupportsSuggestions);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
-            FormulaType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, services, CancellationToken.None).ConfigureAwait(false);
+            FormulaType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, context, CancellationToken.None).ConfigureAwait(false);
             Assert.NotNull(returnType);
             Assert.True(returnType is RecordType);
 
@@ -725,21 +722,21 @@ POST https://tip1002-002.azure-apihub.net/invoke
             using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
             using var httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
-            
-            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("DV", client));
+
+            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("DV", client);
 
             ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", testConnector._apiDocument).ToArray();
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");
-            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com") }, context, CancellationToken.None).ConfigureAwait(false);
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
             Assert.Equal(651, suggestions1.Suggestions.Count);
             Assert.Equal("AAD Users", suggestions1.Suggestions[0].DisplayName);
             Assert.Equal("aadusers", ((StringValue)suggestions1.Suggestions[0].Suggestion).Value);
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_2.json");
-            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com"), FormulaValue.New("accounts") }, services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com"), FormulaValue.New("accounts") }, context, CancellationToken.None).ConfigureAwait(false);
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[2];
             Assert.Equal(119, suggestions2.Suggestions.Count);
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);

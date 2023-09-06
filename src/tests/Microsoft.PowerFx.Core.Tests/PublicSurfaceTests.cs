@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
-                "Microsoft.PowerFx.Intellisense.SuggestionKind",                
+                "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
 
@@ -178,7 +178,8 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable",                
+                "Microsoft.PowerFx.Core.Utils.ICheckable",
+                "Microsoft.PowerFx.IRuntimeConnectorContext",
                 "Microsoft.PowerFx.UserInfo"
             };
 

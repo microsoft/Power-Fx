@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
 
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
@@ -58,7 +58,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Get list of parameters for ExecuteProcedureV2 function, without knowing any parameter
             // Notice that GetParameters does NOT validate parameter types
-            ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), context, CancellationToken.None).ConfigureAwait(false);
 
             // We'll always get 4 parameters and some fields are constant (see CheckParameters)
             CheckParameters(parameters.ParametersWithSuggestions);
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 2.json");
 
             // With first parameter defined (and valid)
-            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default") }, services, CancellationToken.None).ConfigureAwait(false);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default") }, context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);
 
@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
 
             // With two parameters defined (and valid)
-            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default") }, services, CancellationToken.None).ConfigureAwait(false);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default") }, context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);
 
@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With three parameters defined (and valid)
-            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2") }, services, CancellationToken.None).ConfigureAwait(false);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2") }, context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);
             (0..2).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
@@ -116,7 +116,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // With 4 parameters defined (and valid)
             // p1 type is not validated
-            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */ }, services, CancellationToken.None).ConfigureAwait(false);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */ }, context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);
             (0..2).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 2.json");
 
             // With 5 parameters defined (and valid)
-            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */, FormulaValue.New("abc") /* p2 */ }, services, CancellationToken.None).ConfigureAwait(false);
+            parameters = await function.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New(@"default"), FormulaValue.New(@"default"), FormulaValue.New(@"sp_2"), FormulaValue.New(50) /* p1 */, FormulaValue.New("abc") /* p2 */ }, context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);
             (0..3).ForAll(i => Assert.Empty(parameters.ParametersWithSuggestions[i].Suggestions));
@@ -160,12 +160,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc); 
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
-            
-            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+
+            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            await Assert.ThrowsAsync<HttpRequestException>(async () => await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), context, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
 
             // now let's try with throwOnError false
             functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = false }, apiDoc);
@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Same invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
             
-            ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);
 
@@ -202,12 +202,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
             var functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc);
             testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
-            
-            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+
+            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
 
             foreach (ConnectorFunction function in functions)
             {
-                ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), services, CancellationToken.None).ConfigureAwait(false);
+                ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), context, CancellationToken.None).ConfigureAwait(false);
                 Assert.NotNull(parameters);
             }
         }

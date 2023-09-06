@@ -380,7 +380,8 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 // If connector function has some suggestions, let's add them here
-                var services = intellisenseData.Services;
+                IRuntimeConnectorContext services = intellisenseData?.Services?.GetService(typeof(IRuntimeConnectorContext)) as IRuntimeConnectorContext;
+
                 ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (suggestions != null && suggestions.Error == null && suggestions.Suggestions != null)

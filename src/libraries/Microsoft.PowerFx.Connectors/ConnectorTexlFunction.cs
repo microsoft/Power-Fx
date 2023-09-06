@@ -17,7 +17,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    internal class ConnectorTexlFunction : TexlFunction, IAsyncTexlFunction3, IHasUnsupportedFunctions
+    internal class ConnectorTexlFunction : TexlFunction, IAsyncConnectorTexlFunction, IHasUnsupportedFunctions
     {
         public ConnectorFunction ConnectorFunction { get; }
 
@@ -66,16 +66,16 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool HasSuggestionsForParam(int argumentIndex) => argumentIndex <= MaxArity;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await ConnectorFunction.InvokeAsync(args, serviceProvider, cancellationToken).ConfigureAwait(false);
+            return await ConnectorFunction.InvokeAsync(args, context, cancellationToken).ConfigureAwait(false);
         }
 
-        public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider services, CancellationToken cancellationToken)
+        public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await ConnectorFunction.GetConnectorSuggestionsAsync(knownParameters, argPosition, services, cancellationToken).ConfigureAwait(false);
+            return await ConnectorFunction.GetConnectorSuggestionsAsync(knownParameters, argPosition, context, cancellationToken).ConfigureAwait(false);
         }
     }
 }

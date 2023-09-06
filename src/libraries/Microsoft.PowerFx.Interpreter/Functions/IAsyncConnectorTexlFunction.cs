@@ -9,8 +9,8 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Core.Functions
 {
     // A Texl function capable of async invokes.     
-    internal interface IAsyncTexlFunction3
+    internal interface IAsyncConnectorTexlFunction
     {
-        Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken);
+        Task<FormulaValue> InvokeAsync(FormulaValue[] args, IRuntimeConnectorContext context, CancellationToken cancellationToken);
     }
 }

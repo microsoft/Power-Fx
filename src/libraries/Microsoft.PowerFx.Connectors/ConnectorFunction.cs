@@ -225,17 +225,17 @@ namespace Microsoft.PowerFx.Connectors
         /// Get connector function parameter suggestions.
         /// </summary>
         /// <param name="knownParameters">Known parameters.</param>
-        /// <param name="services">Service Provider.</param>
+        /// <param name="context">Runtime connector context.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>ConnectorParameters class with suggestions.</returns>
-        public async Task<ConnectorParameters> GetParameterSuggestionsAsync(FormulaValue[] knownParameters, IServiceProvider services, CancellationToken cancellationToken)
+        public async Task<ConnectorParameters> GetParameterSuggestionsAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             int index = Math.Min(knownParameters.Length, ArityMax - 1);
             ConnectorParameterWithSuggestions[] parametersWithSuggestions = RequiredParameters.Select((rp, i) => i < ArityMax - 1 ? new ConnectorParameterWithSuggestions(rp, i < knownParameters.Length ? knownParameters[i] : null) : new ConnectorParameterWithSuggestions(rp, knownParameters.Skip(ArityMax - 1).ToArray())).ToArray();            
             
-            ConnectorSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, services, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            ConnectorSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, context, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 
             bool error = suggestions == null || suggestions.Error != null;
 
@@ -303,42 +303,21 @@ namespace Microsoft.PowerFx.Connectors
         /// Call connector function.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        /// <param name="serviceProvider">Service Provider, containining RuntimeConnectorContext.</param>
+        /// <param name="context">RuntimeConnectorContext.</param>        
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Function result.</returns>
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await InvokeInternalAsync(args, serviceProvider, ConnectorSettings.ReturnRawResult, cancellationToken).ConfigureAwait(false);
-        }        
-
-        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IServiceProvider serviceProvider, bool rawResult, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();            
-            IRuntimeConnectorContext context = serviceProvider.GetService<IRuntimeConnectorContext>() ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");            
-            return await InvokeInternalAsync(args, context, serviceProvider, rawResult, cancellationToken).ConfigureAwait(false);
+            return await InvokeInternalAsync(args, context, ConnectorSettings.ReturnRawResult, cancellationToken).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Call connector function.
-        /// </summary>
-        /// <param name="args">Arguments.</param>
-        /// <param name="context">RuntimeConnectorContext.</param>
-        /// <param name="serviceProvider">Service Provider, optional.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>Function result.</returns>
-        public async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IRuntimeConnectorContext context, IServiceProvider serviceProvider, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            return await InvokeInternalAsync(args, context, serviceProvider, ConnectorSettings.ReturnRawResult, cancellationToken).ConfigureAwait(false);
-        }
-
-        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IRuntimeConnectorContext context, IServiceProvider serviceProvider, bool rawResult, CancellationToken cancellationToken)
+        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IRuntimeConnectorContext context, bool rawResult, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             EnsureInitialized();
             ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(context.GetInvoker(Namespace), this, rawResult), ConnectorSettings.ThrowOnError);            
-            FormulaValue result = await invoker.InvokeAsync(new FormattingInfo(context.CultureInfo, context.TimeZoneInfo), args, context, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await invoker.InvokeAsync(new FormattingInfo(context?.CultureInfo, context?.TimeZoneInfo), args, context, cancellationToken).ConfigureAwait(false);
             return await PostProcessResultAsync(result, context, invoker, cancellationToken).ConfigureAwait(false);
         }
 
@@ -385,7 +364,7 @@ namespace Microsoft.PowerFx.Connectors
         // Also on SharePoint action SearchForUser (Resolve User)
         //public async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(HttpClient httpClient, NamedFormulaType[] inputParams, string suggestedParamName, CancellationToken cancellationToken)
 
-        internal async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider services, CancellationToken cancellationToken)
+        internal async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -400,24 +379,24 @@ namespace Microsoft.PowerFx.Connectors
 
                 if (cdl != null)
                 {
-                    return await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, services, cdl, cancellationToken).ConfigureAwait(false);
+                    return await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, context, cdl, cancellationToken).ConfigureAwait(false);
                 }
 
                 if (cdv != null && string.IsNullOrEmpty(cdv.Capability))
                 {
-                    return await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, services, cdv, cancellationToken).ConfigureAwait(false);
+                    return await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, context, cdv, cancellationToken).ConfigureAwait(false);
                 }
 
                 FormulaType ft = null;
 
                 if (cdp != null && !string.IsNullOrEmpty(cdp.ItemValuePath))
                 {
-                    ft = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, argPosition, services, cdp, cancellationToken).ConfigureAwait(false);
+                    ft = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, argPosition, context, cdp, cancellationToken).ConfigureAwait(false);
                 }
                 else
                 if (cds != null && !string.IsNullOrEmpty(cds.ValuePath))
                 {
-                    ft = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, argPosition, services, cds, cancellationToken).ConfigureAwait(false);
+                    ft = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, argPosition, context, cds, cancellationToken).ConfigureAwait(false);
                 }
 
                 if (ft != null && ft is RecordType rt)
@@ -435,10 +414,10 @@ namespace Microsoft.PowerFx.Connectors
         /// Dynamic intellisense on return value.
         /// </summary>
         /// <param name="knownParameters">Known parameters.</param>
-        /// <param name="services">Service provider.</param>
+        /// <param name="context">Connector context.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Formula Type determined by dynamic Intellisense.</returns>
-        public async Task<FormulaType> GetConnectorReturnSchemaAsync(FormulaValue[] knownParameters, IServiceProvider services, CancellationToken cancellationToken)
+        public async Task<FormulaType> GetConnectorReturnSchemaAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -447,11 +426,11 @@ namespace Microsoft.PowerFx.Connectors
 
             if (cdp != null && !string.IsNullOrEmpty(cdp.ItemValuePath))
             {
-                return await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, knownParameters.Length, services, cdp, cancellationToken).ConfigureAwait(false);
+                return await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, knownParameters.Length, context, cdp, cancellationToken).ConfigureAwait(false);
             }
             else if (cds != null && !string.IsNullOrEmpty(cds.ValuePath))
             {
-                return await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, knownParameters.Length, services, cds, cancellationToken).ConfigureAwait(false);
+                return await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, knownParameters.Length, context, cds, cancellationToken).ConfigureAwait(false);
             }
 
             return null;
@@ -482,11 +461,11 @@ namespace Microsoft.PowerFx.Connectors
             return je;
         }
 
-        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicSchemaAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider serviceProvider, ConnectorDynamicSchema cds, CancellationToken cancellationToken)
+        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicSchemaAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, ConnectorDynamicSchema cds, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cds, knownParameters.Take(Math.Min(argPosition, ArityMax - 1)).ToArray());
-            FormulaValue result = await ConnectorDynamicCallAsync(cds, newParameters, serviceProvider, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await ConnectorDynamicCallAsync(cds, newParameters, context, cancellationToken).ConfigureAwait(false);
             List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
             if (result is not StringValue sv)
@@ -501,11 +480,11 @@ namespace Microsoft.PowerFx.Connectors
             return cpt.Type;
         }
 
-        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicPropertyAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider serviceProvider, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
+        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicPropertyAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdp, knownParameters.Take(Math.Min(argPosition, ArityMax - 1)).ToArray());
-            FormulaValue result = await ConnectorDynamicCallAsync(cdp, newParameters, serviceProvider, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await ConnectorDynamicCallAsync(cdp, newParameters, context, cancellationToken).ConfigureAwait(false);
             List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
             if (result is not StringValue sv)
@@ -520,11 +499,11 @@ namespace Microsoft.PowerFx.Connectors
             return cpt.Type;
         }
 
-        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(FormulaValue[] knownParameters, IServiceProvider serviceProvider, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
+        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdv, knownParameters);
-            FormulaValue result = await ConnectorDynamicCallAsync(cdv, newParameters, serviceProvider, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await ConnectorDynamicCallAsync(cdv, newParameters, context, cancellationToken).ConfigureAwait(false);
             List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
             if (result is not StringValue sv)
@@ -545,11 +524,11 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorSuggestions(suggestions);
         }
 
-        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicListAsync(FormulaValue[] knownParameters, IServiceProvider serviceProvider, ConnectorDynamicList cdl, CancellationToken cancellationToken)
+        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicListAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, ConnectorDynamicList cdl, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdl, knownParameters);
-            FormulaValue result = await ConnectorDynamicCallAsync(cdl, newParameters, serviceProvider, cancellationToken).ConfigureAwait(false);
+            FormulaValue result = await ConnectorDynamicCallAsync(cdl, newParameters, context, cancellationToken).ConfigureAwait(false);
             List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
             if (result is not StringValue sv)
@@ -570,10 +549,10 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorSuggestions(suggestions);
         }
 
-        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, IServiceProvider serviceProvider, CancellationToken cancellationToken)
+        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, IRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction.InvokeInternalAsync(arguments, serviceProvider, true, cancellationToken).ConfigureAwait(false);
+            return await EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction.InvokeInternalAsync(arguments, context, true, cancellationToken).ConfigureAwait(false);
         }
 
         private T EnsureConnectorFunction<T>(T dynamicApi, List<ConnectorFunction> functionList)
