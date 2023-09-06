@@ -4732,6 +4732,14 @@
     <value>Nurodytas funkcijos grąžinimo tipas neatitinka funkcijos teksto grąžinimo tipo.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Trūksta funkcijos grąžinimo tipo, pvz., „:Number“ funkcijoje „FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Trūksta funkcijos argumento tipo, pvz., „:Text“ funkcijoje „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ jau yra.</value>
   </data>

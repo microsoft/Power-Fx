@@ -4732,6 +4732,14 @@
     <value>A funkció visszaadott típusa nem egyezik meg a függvénytest visszaküldési típusával.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Hiányzó függvény-visszaküldési típus, például ":Number" itt: "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Hiányzó függvény argumentumtípus, például ":Text" itt: "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A(z) '{0}' NamedFormula már létezik.</value>
   </data>

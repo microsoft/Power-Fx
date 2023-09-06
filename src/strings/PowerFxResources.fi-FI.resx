@@ -4732,6 +4732,14 @@
     <value>Ilmoitettu toiminnon palautustyyppi ei vastaa toiminnon rungon palautustyyppiä.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Puuttuva funktion palautustyyppi, esimerkiksi ":Number" funktiossa "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Puuttuva funktion argumenttityyppi, esimerkiksi ":Text" funktiossa "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on jo olemassa.</value>
   </data>

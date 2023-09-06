@@ -4732,6 +4732,14 @@
     <value>Het vermelde retourtype van de werkfunctie komt niet overeen met het retourtype van de functiehoofdtekst.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Ontbrekend retourtype van functie, bijvoorbeeld het ':Number' in 'FindMonth( d:Text ):Number = Month( DateParse( d ));'</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Ontbrekend argumenttype van functie, bijvoorbeeld de ':Text' in 'FindMonth( d:Text ):Number = Month( DateParse( d ))'</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} bestaat al.</value>
   </data>

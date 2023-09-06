@@ -4732,6 +4732,14 @@
     <value>ประเภทการส่งคืนฟังก์ชันที่ระบุไม่ตรงกับประเภทการส่งคืนของตัวฟังก์ชัน</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>ชนิดค่าส่งกลับของฟังก์ชันขาดหายไป เช่น ":Number" ใน "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>ชนิดอาร์กิวเมนต์ของฟังก์ชันขาดหายไป ตัวอย่างเช่น ":Text" ใน "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>มี NamedFormula '{0}' อยู่แล้ว</value>
   </data>

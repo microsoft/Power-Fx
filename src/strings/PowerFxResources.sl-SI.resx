@@ -4732,6 +4732,14 @@
     <value>Vrnjena vrsta navedene funkcije se ne ujema z vrnjeno vrsto telesa funkcije.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Manjka vrsta vrnitve funkcije, na primer »:Number« v »FindMonth( d:Text ):Number = Month( DateParse( d ));«</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Manjka vrsta argumenta funkcije, na primer »:Text« v »FindMonth( d:Text ):Number = Month( DateParse( d ))«</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula »{0}« že obstaja.</value>
   </data>
