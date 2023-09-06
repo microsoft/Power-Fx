@@ -58,8 +58,8 @@ namespace Microsoft.PowerFx.Connectors
                     ValidateSupportedOpenApiOperation(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
                     ValidateSupportedOpenApiParameters(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
 
-                    string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
-                    string opPath = basePath != null ? basePath + path : path;
+                    string operationName = NormalizeOperationId(op.OperationId ?? path);
+                    string opPath = basePath != null && basePath != "/" ? basePath + path : path;
 
                     isSupported = isSupported && connectorIsSupported;
                     notSupportedReason = string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason;
@@ -329,10 +329,25 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static string GetServer(IList<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)
         {
-            if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiServers.Any())
+            if (httpClient != null && httpClient is HttpClient hc)
             {
-                // descending order to prefer https
-                return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                if (hc.BaseAddress != null)
+                {
+                    string path = hc.BaseAddress.AbsolutePath;
+
+                    if (path.EndsWith("/", StringComparison.Ordinal))
+                    {
+                        path = path.Substring(0, path.Length - 1);
+                    }
+
+                    return path;
+                }
+
+                if (hc.BaseAddress == null && openApiServers.Any())
+                {
+                    // descending order to prefer https
+                    return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                }
             }
 
             return null;

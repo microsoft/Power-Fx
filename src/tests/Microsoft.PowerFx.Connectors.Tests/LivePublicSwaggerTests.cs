@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
@@ -41,7 +42,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(ok);
 
-            FormulaValue result = engine.Eval(expr);
+            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Math", client));
+            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev)
             {
@@ -75,7 +77,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var client = new HttpClient() { BaseAddress = new Uri("https://api.math.tools") };
 
             // Set IgnoreUnknownExtensions to true as this swagger uses some extensions we don't honnor like x-apisguru-categories, x-origin, x-providerName
-            var funcs = config.AddService(new ConnectorSettings("Math") { IgnoreUnknownExtensions = true }, doc); //, client, new ConnectorSettings() { IgnoreUnknownExtensions = true });
+            var funcs = config.AddService(new ConnectorSettings("Math") { IgnoreUnknownExtensions = true }, doc); 
 
             var engine = new RecalcEngine(config);
             var expr = "Math.numbersbasebinary(632506623)";
@@ -84,7 +86,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             Assert.True(ok, string.Join(", ", check.Errors.Select(er => er.Message)));
 
-            FormulaValue result = engine.Eval(expr);
+            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Math", client));
+            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev)
             {
@@ -104,7 +107,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             // Try same number but in base 5 (why not??)
             var expr2 = @"Math.numbersbasebinary(2243410202443, {from: 35})";
-            result = engine.Eval(expr2);
+            result = await engine.EvalAsync(expr2, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             if (result is ErrorValue ev2)
             {
@@ -138,7 +141,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var ok = check.IsSuccess;
             Assert.True(ok, string.Join(", ", check.Errors.Select(er => er.Message)));
 
-            FormulaValue result = engine.Eval(expr);
+            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Holiday", client));
+            FormulaValue result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);            
 
             if (result is ErrorValue ev)
             {
@@ -159,7 +163,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(new DateTime(2023, 7, 4), independanceDay);
 
             expr = @"First(Holiday.PublicHolidayPublicHolidaysV3(2023, ""US"")).localName";
-            result = engine.Eval(expr);
+            result = await engine.EvalAsync(expr, CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
 
             Assert.Equal("New Year's Day", ((StringValue)result).Value);
         }
@@ -177,8 +181,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var funcsWorldTime = config.AddService(new ConnectorSettings("WorldTime") { IgnoreUnknownExtensions = true }, docWorldTime);
 
             var engine = new RecalcEngine(config);
+            var runtimeConfig = new RuntimeConfig().AddService<RuntimeConnectorContext>(new TestConnectorRuntimeContext("Xkcd", clientXkcd).Add("WorldTime", clientWorldTime));                                                   
 
-            FormulaValue fv1 = engine.Eval(@"Xkcd.comicIdinfo0json(1).transcript");
+            FormulaValue fv1 = await engine.EvalAsync(@"Xkcd.comicIdinfo0json(1).transcript", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             string transcript = ((StringValue)fv1).Value.Replace("\n", "\r\n");
             string expectedTranscript = @"[[A boy sits in a barrel which is floating in an ocean.]]
 Boy: I wonder where I'll float next?
@@ -186,7 +191,7 @@ Boy: I wonder where I'll float next?
 {{Alt: Don't we all.}}";
             Assert.Equal(expectedTranscript, transcript);
 
-            FormulaValue fv2 = engine.Eval(@"First(WorldTime.timezone()).Value");
+            FormulaValue fv2 = await engine.EvalAsync(@"First(WorldTime.timezone()).Value", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
             string firstTZ = ((StringValue)fv2).Value;
             Assert.Equal("Africa/Abidjan", firstTZ);
         }
