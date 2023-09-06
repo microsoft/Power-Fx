@@ -17,7 +17,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Add(@namespace, client);
         }
 
-        public TimeZoneInfo TimeZoneInfo => TimeZoneInfo.Local;
+        public TimeZoneInfo TimeZoneInfo => TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
 
         public CultureInfo CultureInfo => CultureInfo.InvariantCulture;
 
