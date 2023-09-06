@@ -19,6 +19,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
     internal static class Tokenization
     {
         /// <summary>
+        /// Collection of all token types that make up interpolated strings.
+        /// </summary>
+        private static readonly IReadOnlyCollection<TokenType> AllStringInterpolationRelatedTokenTypes = new TokenType[] { TokenType.StrInterpStart, TokenType.StrInterpEnd, TokenType.IslandStart, TokenType.IslandEnd };
+
+        /// <summary>
         /// Returns an ordered enumeration of token text spans in a expression rule with their start and end indices and token type. Orders token by default comparer.
         /// </summary>
         /// <param name="expression">Expression which would be tokenized.</param>
@@ -38,11 +43,12 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="comments">Colllection of comment tokens extracted from the given expression.</param>
         /// <param name="comparer">optional comparer to sort tokens.</param>
         /// <param name="allowTokenHiding">Optional: This flag determines whether to compute the value of a CanBeHidden property for tokens generated out of first names present in the expression.</param>
+        /// <param name="tokenTypesToSkip">Options: Collection of token types to potentially skip in the final result. Tokens with these token types may or may not be skipped depending on their types.</param>
         /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
         // allowTokenHiding flag is off by default as we don't want to compute hiddenness of the tokens for the new formula bar as we are not going to support that.
         // However, we want to keep this for old formula bar as long as it exists and once we consume the changes in Canvas App backend,
         // we would update the tokenization logic behind old formula bar to use this one instead and allowTokenHiding would be true for old formula bar.
-        internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false)
+        internal static IEnumerable<ITokenTextSpan> Tokenize(string expression, TexlBinding binding, IEnumerable<CommentToken> comments = null, IComparer<ITokenTextSpan> comparer = null, bool allowTokenHiding = false, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
         {
             var tokens = new List<ITokenTextSpan>();
             if (expression == null || binding == null)
@@ -65,11 +71,11 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 // If the first name can be hidden, Create and Add a token for the dot.
                 if (canHide && expression.Length > span.Lim && (TexlLexer.PunctuatorDot + TexlLexer.PunctuatorBang).IndexOf(expression.Substring(span.Lim, 1), StringComparison.Ordinal) >= 0)
                 {
-                    tokens.Add(new TokenTextSpan(TexlLexer.PunctuatorDot, span.Lim, span.Lim + 1, TokenType.Punctuator, canHide: true));
+                    tokens.AddTokenIfPossible(new TokenTextSpan(TexlLexer.PunctuatorDot, span.Lim, span.Lim + 1, TokenType.Punctuator, canHide: true), tokenTypesToSkip);
                 }
 
                 // Add a token for the first name.
-                tokens.Add(new TokenTextSpan(firstName.Name, span.Min, span.Lim, type, canHide));
+                tokens.AddTokenIfPossible(new TokenTextSpan(firstName.Name, span.Min, span.Lim, type, canHide), tokenTypesToSkip);
             }
 
             foreach (var dottedName in binding.GetDottedNames())
@@ -82,12 +88,17 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                     dottedNameType = TokenType.Control;
                 }
 
+                if (dottedNameType.ShouldBeSkipped(tokenTypesToSkip))
+                {
+                    continue;
+                }
+
                 span = dottedName.Node.GetTextSpan();
                 tokens.Add(new TokenTextSpan(dottedName.Node.Right.Name, span.Min + 1, span.Lim, dottedNameType, /* canHide */ false));
             }
 
             // String interpolations
-            ExtractTokensFromStringInterpolationNodesList(tokens, binding, compilerGeneratedCallNodes);
+            ExtractTokensFromStringInterpolationNodesList(tokens, binding, compilerGeneratedCallNodes, tokenTypesToSkip);
 
             foreach (var call in binding.GetCalls())
             {
@@ -102,10 +113,10 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
                 // Close the Function token at the end of the call word instead of the right closing parenthesis.
                 Contracts.Assert(spanEnd >= spanStart, "The Span End value should be larger than the Span Start.");
-                tokens.Add(new TokenTextSpan(call.Node.Head.Name, spanStart, spanEnd, TokenType.Function, /* canHide */ false));
+                tokens.AddTokenIfPossible(new TokenTextSpan(call.Node.Head.Name, spanStart, spanEnd, TokenType.Function, /* canHide */ false), tokenTypesToSkip, expression);
 
                 // Parse the call arguments delimiters
-                if (call.Node.Args.Delimiters != null)
+                if (call.Node.Args.Delimiters != null && !TokenType.Delimiter.ShouldBeSkipped(tokenTypesToSkip))
                 {
                     string delimiterName = null;
                     foreach (var delimiter in call.Node.Args.Delimiters)
@@ -116,7 +127,8 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 }
             }
 
-            if (comments != null)
+            // If comment token type can be skipped, then no need to process comment tokens
+            if (comments != null && !TokenType.Comment.ShouldBeSkipped(tokenTypesToSkip))
             {
                 foreach (var cm in comments)
                 {
@@ -132,29 +144,29 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 TokenType type = MapNodeKindToTokenType(info.Node.Kind);
 
                 // Add a token for the keyword.
-                tokens.Add(new TokenTextSpan(info.Name, span.Min, span.Lim, type, false));
+                tokens.AddTokenIfPossible(new TokenTextSpan(info.Name, span.Min, span.Lim, type, false), tokenTypesToSkip);
             }
 
             // Binary Operators
-            ExtractTokensFromNodesList(tokens, binding.GetBinaryOperators(), TokenizerConstants.BinaryOp);
+            ExtractTokensFromNodesList(tokens, binding.GetBinaryOperators(), TokenizerConstants.BinaryOp, tokenTypesToSkip);
 
             // Variadic Operators
-            ExtractTokensFromNodesList(tokens, binding.GetVariadicOperators(), TokenizerConstants.VariadicOp);
+            ExtractTokensFromNodesList(tokens, binding.GetVariadicOperators(), TokenizerConstants.VariadicOp, tokenTypesToSkip);
 
             // Boolean Literals
-            ExtractTokensFromNodesList(tokens, binding.GetBooleanLiterals(), TokenizerConstants.BooleanLiteral);
+            ExtractTokensFromNodesList(tokens, binding.GetBooleanLiterals(), TokenizerConstants.BooleanLiteral, tokenTypesToSkip);
 
             // Numeric Literals
-            ExtractTokensFromNodesList(tokens, binding.GetNumericLiterals(), TokenizerConstants.NumericLiteral);
+            ExtractTokensFromNodesList(tokens, binding.GetNumericLiterals(), TokenizerConstants.NumericLiteral, tokenTypesToSkip);
 
             // Decimal Literal Nodes
-            ExtractTokensFromNodesList(tokens, binding.GetDecimalLiterals(), TokenizerConstants.DecimalLiteral);
+            ExtractTokensFromNodesList(tokens, binding.GetDecimalLiterals(), TokenizerConstants.DecimalLiteral, tokenTypesToSkip);
 
             // String Literals
-            ExtractTokensFromNodesList(tokens, binding.GetStringLiterals(), TokenizerConstants.StringLiteral);
+            ExtractTokensFromNodesList(tokens, binding.GetStringLiterals(), TokenizerConstants.StringLiteral, tokenTypesToSkip);
 
             // Unary Operators ie Currently just used for Percentages
-            ExtractTokensFromNodesList(tokens, binding.GetUnaryOperators(), TokenizerConstants.UnaryOp);
+            ExtractTokensFromNodesList(tokens, binding.GetUnaryOperators(), TokenizerConstants.UnaryOp, tokenTypesToSkip);
 
             if (comparer != null)
             {
@@ -188,9 +200,25 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="tokens">Collection in which tokens created from th given nodes would be stored.</param>
         /// <param name="binding">Binding which would be used to tokenize the operation and determine the type of each token.</param>
         /// <param name="compilerGeneratedNodes">Collection that contains ids of compiler generate nodes.</param>
-        private static void ExtractTokensFromStringInterpolationNodesList(ICollection<ITokenTextSpan> tokens, TexlBinding binding, ICollection<int> compilerGeneratedNodes)
+        /// <param name="tokenTypesToSkip">Options: Collection of token types to potentially skip in the final result. Tokens with these token types may or may not be skipped depending on their types.</param>
+        private static void ExtractTokensFromStringInterpolationNodesList(ICollection<ITokenTextSpan> tokens, TexlBinding binding, ICollection<int> compilerGeneratedNodes, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
         {
             Contracts.AssertValue(tokens);
+
+            // When all string interpolation token types should be skipped
+            // There's no point in doing expensive computation towards the end of the function (going through all source tokens)
+            // In this case, just go through string interpolated nodes and rememeber/track the compiler generated nodes for these nodes
+            // We are bailing out early but we still need to track the Concate call nodes generated by compiler for string interpolation
+            // So that these generated call nodes do no show up as Function tokens if TokenType.Function was not skipped
+            if (AllStringInterpolationRelatedTokenTypes.All(tokenType => tokenType.ShouldBeSkipped(tokenTypesToSkip)))
+            {
+                foreach (var stringInterpolationNode in binding.GetStringInterpolations())
+                {
+                    TrackCompilerGeneratedNodes(compilerGeneratedNodes, stringInterpolationNode, binding);
+                }
+
+                return;
+            }
 
             // Nested string interpolated nodes start/end before the outermost string interpolated node (terminated/unterminated)
             // This means that spans of nested string interpolated nodes overlap with the root (outermost) string interpolated node
@@ -226,16 +254,16 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                         switch (token.Kind)
                         {
                             case TokKind.StrInterpStart:
-                                tokens.Add(new TokenTextSpan(TokenizerConstants.StringInterpolationStart, span.Min, span.Lim, TokenType.StrInterpStart, false));
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.StringInterpolationStart, span.Min, span.Lim, TokenType.StrInterpStart, false), tokenTypesToSkip);
                                 break;
                             case TokKind.StrInterpEnd:
-                                tokens.Add(new TokenTextSpan(TokenizerConstants.StringInterpolationEnd, span.Min, span.Lim, TokenType.StrInterpEnd, false));
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.StringInterpolationEnd, span.Min, span.Lim, TokenType.StrInterpEnd, false), tokenTypesToSkip);
                                 break;
                             case TokKind.IslandStart:
-                                tokens.Add(new TokenTextSpan(TokenizerConstants.IslandStart, span.Min, span.Lim, TokenType.IslandStart, false));
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.IslandStart, span.Min, span.Lim, TokenType.IslandStart, false), tokenTypesToSkip);
                                 break;
                             case TokKind.IslandEnd:
-                                tokens.Add(new TokenTextSpan(TokenizerConstants.IslandEnd, span.Min, span.Lim, TokenType.IslandEnd, false));
+                                tokens.AddTokenIfPossible(new TokenTextSpan(TokenizerConstants.IslandEnd, span.Min, span.Lim, TokenType.IslandEnd, false), tokenTypesToSkip);
                                 break;
                             default:
                                 break;
@@ -269,13 +297,24 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <param name="tokens">Collection in which tokens created from th given nodes would be stored.</param>
         /// <param name="nodes">Collection of nodes that would be converted to equivalent tokens.</param>
         /// <param name="name">Name for each generated token.</param>
-        private static void ExtractTokensFromNodesList(ICollection<ITokenTextSpan> tokens, IEnumerable<TexlNode> nodes, string name)
+        /// <param name="tokenTypesToSkip">Optional: Token Types to be skipped.</param>
+        private static void ExtractTokensFromNodesList(ICollection<ITokenTextSpan> tokens, IEnumerable<TexlNode> nodes, string name, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
         {
             Span span;
             foreach (var node in nodes)
             {
+                var tokenType = MapNodeKindToTokenType(node.Kind);
+
+                // All the nodes are of same TokenType and none of them are of type TokenType.Function
+                // It is sufficient to check if the token type should be skipped or not
+                // And if yes then bail out early
+                if (tokenType.ShouldBeSkipped(tokenTypesToSkip))
+                {
+                    return;
+                }
+
                 span = node.GetTextSpan();
-                tokens.Add(new TokenTextSpan(name, span.Min, span.Lim, MapNodeKindToTokenType(node.Kind), false));
+                tokens.Add(new TokenTextSpan(name, span.Min, span.Lim, tokenType, false));
             }
         }
 
@@ -341,6 +380,59 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 default:
                     return TokenType.Unknown;
             }
+        }
+
+        /// <summary>
+        /// Adds token to the given list of tokens if it is feasible (token should not be skipped).
+        /// </summary>
+        /// <param name="tokens">List of tokens to which given token might be added.</param>
+        /// <param name="token">Token to be added if feasible.</param>
+        /// <param name="tokenTypesToSkip">Optional: Token types to be skipped.</param>
+        /// <param name="expression">Optional: Expression.</param>
+        private static void AddTokenIfPossible(this ICollection<ITokenTextSpan> tokens, ITokenTextSpan token, IReadOnlyCollection<TokenType> tokenTypesToSkip = null, string expression = null)
+        {
+            if (token != null && !ShouldBeSkipped(token, tokenTypesToSkip, expression))
+            {
+                tokens.Add(token);
+            }
+        }
+
+        /// <summary>
+        /// Determines where the given token type should be skipped or not.
+        /// </summary>
+        /// <param name="tokenType">Token type to be skipped.</param>
+        /// <param name="tokenTypesToSkip">Optional: Token types to be skipped.</param>
+        /// <returns>True if this token type should be skipped or false otherwise.</returns>
+        private static bool ShouldBeSkipped(this TokenType tokenType, IReadOnlyCollection<TokenType> tokenTypesToSkip = null)
+        {
+            return tokenTypesToSkip != null && tokenTypesToSkip.Contains(tokenType);
+        }
+
+        /// <summary>
+        /// Determines where the given token should be skipped or not.
+        /// </summary>
+        /// <param name="token">Token to be skipped.</param>
+        /// <param name="tokenTypesToSkip">Optional: Token types to be skipped.</param>
+        /// <param name="expression">Optional: Expression.</param>
+        /// <returns>True if this token should be skipped or false otherwise.</returns>
+        private static bool ShouldBeSkipped(ITokenTextSpan token, IReadOnlyCollection<TokenType> tokenTypesToSkip = null, string expression = null)
+        {
+            var shouldBeSkippedBasedOnTokenType = token.TokenType.ShouldBeSkipped(tokenTypesToSkip);
+            
+            // Client requesting to skip function type means that it can successfully recognize function tokens that are immediately 
+            // followed by open paren (
+            // In that case, "only" skip function tokens that are immediately followed by open paren
+            // For example, Max in "Max(1,2,3)" would be skipped while Max in "Max (1,2,3)" would not be skipped as there's a space between 
+            // Max and open paren (
+            // Function name immediately followed by open parent is the most common case
+            // Thus, Doing this drastically reduces the number of tokens we have to send back to client
+            // thus increasing the performance of semantic tokenization
+            if (shouldBeSkippedBasedOnTokenType && token.TokenType == TokenType.Function)
+            {
+                return expression != null && token.EndIndex < expression.Length && expression[token.EndIndex].ToString() == TexlLexer.PunctuatorParenOpen;
+            }
+
+            return shouldBeSkippedBasedOnTokenType;
         }
     }
 }
