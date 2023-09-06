@@ -29,7 +29,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var locals = new SymbolValues()
                 .Add("local", FormulaValue.New(3));
 
-            var result = await engine.EvalAsync("local+global", CancellationToken.None, symbolTable: locals).ConfigureAwait(false);
+            var result = await engine.EvalAsync("local+global", CancellationToken.None, runtimeConfig: locals).ConfigureAwait(false);
 
             Assert.Equal(5.0, result.ToObject());
         }
@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var check = engine.Check(expression);
             Assert.True(check.IsSuccess);
 
-            var eval = await engine.EvalAsync(expression, CancellationToken.None, symbolTable: r1).ConfigureAwait(false);
+            var eval = await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: r1).ConfigureAwait(false);
             Assert.Equal(expected, eval.ToObject());
 
             var actualInvariantExpression = engine.GetInvariantExpression(expression, null);

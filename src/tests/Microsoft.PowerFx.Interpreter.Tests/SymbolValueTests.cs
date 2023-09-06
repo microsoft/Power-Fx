@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // In an expression, becomes blank. 
             var engine = new RecalcEngine();
-            result = engine.EvalAsync("x", CancellationToken.None, symbolTable: symValues).Result;
+            result = engine.EvalAsync("x", CancellationToken.None, runtimeConfig: symValues).Result;
             Assert.IsType<BlankValue>(result);
             Assert.IsType<NumberType>(result.Type);
         }
@@ -152,7 +152,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new RecalcEngine();
 
-            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, symbolTable: r2).Result;
+            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
 
             Assert.Equal(21.0, result.ToObject());
         }
@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new RecalcEngine();
 
-            var result = engine.EvalAsync("ThisRecord.a + a", CancellationToken.None, symbolTable: r2).Result;
+            var result = engine.EvalAsync("ThisRecord.a + a", CancellationToken.None, runtimeConfig: r2).Result;
 
             Assert.Equal(20.0, result.ToObject());
         }
@@ -280,7 +280,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var engine = new RecalcEngine();
 
-            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, symbolTable: r2).Result;
+            var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
 
             Assert.Equal(21.0, result.ToObject());
         }
@@ -385,13 +385,13 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var r2 = ReadOnlySymbolValues.New(dict, r1);
 
             var engine = new RecalcEngine();
-            var result = engine.EvalAsync("a + b + global", CancellationToken.None, symbolTable: r2).Result;
+            var result = engine.EvalAsync("a + b + global", CancellationToken.None, runtimeConfig: r2).Result;
 
             Assert.Equal(111.0, result.ToObject());
 
             // Without a parent
             var r3 = ReadOnlySymbolValues.New(dict);
-            var result3 = engine.EvalAsync("a + b", CancellationToken.None, symbolTable: r2).Result;
+            var result3 = engine.EvalAsync("a + b", CancellationToken.None, runtimeConfig: r2).Result;
             Assert.Equal(11.0, result3.ToObject());
         }
 
@@ -411,7 +411,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Equal(10.0, result.ToObject());
 
             var engine = new RecalcEngine();
-            result = engine.EvalAsync("x+1", CancellationToken.None, symbolTable: values).Result;
+            result = engine.EvalAsync("x+1", CancellationToken.None, runtimeConfig: values).Result;
 
             Assert.Equal(11.0, result.ToObject());
         }
@@ -654,7 +654,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine();
 
             // Succeeds since eval will get the symbol table from values 
-            await engine.EvalAsync("1+2", CancellationToken.None, symbolTable: symValue).ConfigureAwait(false);
+            await engine.EvalAsync("1+2", CancellationToken.None, runtimeConfig: symValue).ConfigureAwait(false);
 
             // Check() without binding to a symbol table
             var check = engine.Check("1+2");

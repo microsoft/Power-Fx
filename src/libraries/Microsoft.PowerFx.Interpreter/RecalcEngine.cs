@@ -160,9 +160,9 @@ namespace Microsoft.PowerFx
             return await EvalAsync(expressionText, cancellationToken, options, null, runtimeConfig).ConfigureAwait(false);
         }
 
-        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ReadOnlySymbolValues symbolTable)
+        public async Task<FormulaValue> EvalAsync(string expressionText, CancellationToken cancellationToken, ReadOnlySymbolValues runtimeConfig)
         {
-            var runtimeConfig2 = new RuntimeConfig(symbolTable);
+            var runtimeConfig2 = new RuntimeConfig(runtimeConfig);
             return await EvalAsync(expressionText, cancellationToken, runtimeConfig: runtimeConfig2).ConfigureAwait(false);
         }
 
