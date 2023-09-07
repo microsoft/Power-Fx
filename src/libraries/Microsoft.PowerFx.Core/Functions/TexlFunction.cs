@@ -156,6 +156,27 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function uses an input's column names to inform Intellisense's suggestions.
         public virtual bool CanSuggestInputColumns => false;
 
+        /// <summary>
+        /// If this returns false, the Intellisense will use Arg[0] type to suggest the type of the argument.
+        /// e.g. Collect(), Remove(), etc.
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public virtual bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            var maxArgIndex = (ParamTypes?.Count() ?? 0) - 1;
+
+            if (argIndex >= 0 && argIndex <= maxArgIndex)
+            {
+                type = ParamTypes.ElementAt(argIndex);
+                return true;
+            }
+
+            type = default;
+            return false;
+        }
+
         // Return true if the function expects a screen's context variables to be suggested within a record argument.
         public virtual bool CanSuggestContextVariables => false;
 
