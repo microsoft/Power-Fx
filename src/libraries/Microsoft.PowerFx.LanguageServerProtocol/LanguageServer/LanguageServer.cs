@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
@@ -53,6 +54,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// This should be used for logging purposes. 
         /// </summary>
         public event OnLogUnhandledExceptionHandler LogUnhandledExceptionHandler;
+
+        /// <summary>
+        /// If set, provides the handler for $/nlSuggestion message.
+        /// $$$ - wire up to include symbols here too. 
+        /// </summary>
+        public Func<string, Task<CustomNLResult>> NL2FxImplementation { get; set; }
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
@@ -127,6 +134,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                             break;
                         case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
+                            break;
+                        case CustomProtocolNames.NL2FX:
+                            HandleNL2FxRequest(id, paramsJson);
                             break;
                         case TextDocumentNames.FullDocumentSemanticTokens:
                             HandleFullDocumentSemanticTokens(id, paramsJson);
@@ -386,6 +396,40 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Uri = documentUri,
                 Text = expression
             }));
+        }
+
+        private void HandleNL2FxRequest(string id, string paramsJson)
+        {
+            _logger?.Invoke($"[PFX] HandleNL2FxRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+            if (id == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return;
+            }
+
+            if (this.NL2FxImplementation == null)
+            {
+                throw new NotImplementedException($"NL2Fx not enabled");
+            }
+
+            Contracts.AssertValue(id);
+            Contracts.AssertValue(paramsJson);
+
+            if (!TryParseParams(paramsJson, out CustomNLParams request))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return;
+            }
+
+            var documentUri = request.TextDocument.Uri;
+            var scope = _scopeFactory.GetOrCreateInstance(documentUri);
+
+            var sentence = request.Sentence;
+
+            var result = this.NL2FxImplementation(sentence).ConfigureAwait(false).GetAwaiter().GetResult();
+            
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
         }
 
         private void HandleCodeActionRequest(string id, string paramsJson)

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
@@ -100,7 +101,7 @@ namespace Microsoft.PowerFx
         /// Optional, can be null.
         /// </summary>
         public IServiceProvider Services { get; set; }
-         
+        
         public void AddQuickFixHandlers(params CodeFixHandler[] codeFixHandlers)
         {
             this.AddQuickFixHandlers((IEnumerable<CodeFixHandler>)codeFixHandlers);

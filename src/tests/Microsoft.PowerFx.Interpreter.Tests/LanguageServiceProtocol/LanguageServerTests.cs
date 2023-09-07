@@ -1339,6 +1339,62 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Empty(exList);
         }
 
+        public class JsonRpcNL2FxResponse
+        {
+            public string Jsonrpc { get; set; } = string.Empty;
+
+            public string Id { get; set; } = string.Empty;
+
+            // LSP wraps in another envelope. 
+            public Payload Result { get; set; }
+
+            public class Payload
+            {
+                public string[] Expressions { get; set; }
+            }
+        }
+
+        [Fact]
+        public void TestNL2FX()
+        {
+            var expectedExpr = "score < 50";
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
+            {
+                // $$$ This should get symbols too. 
+                NL2FxImplementation = (string sentence) => Task.FromResult<CustomNLResult>(new CustomNLResult
+                {
+                    Expressions = new string[]
+                    {
+                         expectedExpr
+                    }
+                })
+            };
+
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+            var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";
+            testServer.OnDataReceived(JsonSerializer.Serialize(new
+            {
+                jsonrpc = "2.0",
+                id = "123",
+                method = "$/nl2fx",
+                @params = new CustomNLParams()
+                {
+                    TextDocument = new TextDocumentItem()
+                    {
+                        Uri = documentUri,
+                        LanguageId = "powerfx",
+                        Version = 1
+                    }
+                }
+            }));
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcNL2FxResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            Assert.Equal("123", response.Id);
+            Assert.Equal(expectedExpr, response.Result.Expressions[0]);
+        }
+
         [Fact]
         public void ErrorIsLocalized()
         {
