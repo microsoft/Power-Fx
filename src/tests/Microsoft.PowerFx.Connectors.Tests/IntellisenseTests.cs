@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _ => null
             });
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
@@ -146,7 +146,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
@@ -199,7 +199,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 BaseAddress = client.BaseAddress
             };
             const string cxNamespace = "SQL";
-            config.AddService(new ConnectorSettings(cxNamespace), apiDoc);
+            config.AddActionConnector(new ConnectorSettings(cxNamespace), apiDoc);
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -211,7 +211,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider services = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext(cxNamespace, client));
+            BasicServiceProvider services = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext(cxNamespace, client));
 
             IPowerFxScope scope = new EditorContextScope((expr) => engine.Check(expression, symbolTable: null)) { Services = services };
             IIntellisenseResult suggestions = scope.Suggest(expression, expression.Length);
@@ -255,7 +255,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(50, functions.Where(f => f.IsInternal).Count());
             Assert.Empty(functions.Where(f => f.IsDeprecated && f.IsInternal));
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService("SP", apiDoc);
+            IEnumerable<ConnectorFunction> funcInfos = config.AddService("SP", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
 
             CheckResult checkResult = engine.Check("SP.", symbolTable: null);

@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Interpreter.Functions;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -36,7 +37,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
 
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
@@ -158,22 +159,22 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc); 
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc); 
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
-            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, throwOnError: true);
 
             // Simulates an invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
             await Assert.ThrowsAsync<HttpRequestException>(async () => await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), context, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
 
             // now let's try with throwOnError false
-            functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = false }, apiDoc);
+            functions = OpenApiParser.GetFunctions("SQL", apiDoc);
             function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             // Same invalid token
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Error.json", System.Net.HttpStatusCode.BadRequest);
-            
+            context = new TestConnectorRuntimeContext("SQL", client, throwOnError: false);
             ConnectorParameters parameters = await function.GetParameterSuggestionsAsync(Array.Empty<FormulaValue>(), context, CancellationToken.None).ConfigureAwait(false);
 
             CheckParameters(parameters.ParametersWithSuggestions);
@@ -200,10 +201,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            var functions = OpenApiParser.GetFunctions(new ConnectorSettings("SQL") { ThrowOnError = true }, apiDoc);
+            var functions = OpenApiParser.GetFunctions("SQL", apiDoc);
             testConnector.SetResponseSet(@"Responses\SQL Server TestAllFunctions.jsonSet");
 
-            IRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, throwOnError: true);
 
             foreach (ConnectorFunction function in functions)
             {

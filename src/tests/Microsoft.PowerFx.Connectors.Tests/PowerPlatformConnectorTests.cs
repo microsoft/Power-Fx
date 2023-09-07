@@ -69,7 +69,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Now execute it...
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("MSNWeather", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("MSNWeather", client));
             testConnector.SetResponseFromFile(@"Responses\MSNWeather_Response.json");
 
             var result = await engine.EvalAsync("MSNWeather.CurrentWeather(\"Redmond\", \"Imperial\").responses.weather.current.temp", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Now execute it...
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("TestConnector12", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("TestConnector12", client));
 
             testConnector.SetResponse($"{statusCode}", (HttpStatusCode)statusCode);
             var result = await engine.EvalAsync($"TestConnector12.GenerateError({{error: {statusCode}}})", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Now execute it...
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("AzureBlobStorage", client)); 
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("AzureBlobStorage", client)); 
             testConnector.SetResponseFromFile(@"Responses\AzureBlobStorage_Response.json");
 
             var result = await engine.EvalAsync(@"AzureBlobStorage.CreateFile(""container"", ""bora4.txt"", ""abc"").Size", CancellationToken.None, options: new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -277,9 +277,9 @@ namespace Microsoft.PowerFx.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService("azbs", apiDoc);
+            IEnumerable<ConnectorFunction> funcInfos = config.AddService("azbs", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("azbs", ppClient));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("azbs", ppClient));
 
             CheckResult checkResult = engine.Check("azbs.", symbolTable: null);
             IIntellisenseResult suggestions = engine.Suggest(checkResult, 5);
@@ -318,9 +318,9 @@ namespace Microsoft.PowerFx.Tests
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "36897fc0-0c0c-eee5-ac94-e12765496c20" /* env */, "d95489a91a5846f4b2c095307d86edd6" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
             config.AddService("azbs", apiDoc);
-            config.AddService(new ConnectorSettings("azbs2") { MaxRows = 7 }, apiDoc);
+            config.AddActionConnector(new ConnectorSettings("azbs2") { MaxRows = 7 }, apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("azbs", ppClient).Add("azbs2", ppClient));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("azbs", ppClient).Add("azbs2", ppClient));
 
             testConnector.SetResponseFromFiles(@"Responses\AzureBlobStorage_Paging_Response1.json", @"Responses\AzureBlobStorage_Paging_Response2.json", @"Responses\AzureBlobStorage_Paging_Response3.json");
             FormulaValue fv = await engine.EvalAsync(@"CountRows(azbs.ListFolderV4(""pfxdevstgaccount1"", ""container"").value)", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -464,7 +464,7 @@ namespace Microsoft.PowerFx.Tests
             config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
 
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
             var result = await engine.EvalAsync(@"Office365Users.UserProfileV2(""johndoe@microsoft.com"").mobilePhone", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -494,7 +494,7 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_UserProfileV2.json");
             var result = await engine.EvalAsync(@"Office365Users.MyProfileV2().mobilePhone", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -524,7 +524,7 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_DirectsV2.json");
             var result = await engine.EvalAsync(@"First(Office365Users.DirectReportsV2(""jmstall@microsoft.com"", {'$top': 4 }).value).city", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -554,7 +554,7 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddService("Office365Users", apiDoc);
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Users", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Users", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office365_SearchV2.json");
             var result = await engine.EvalAsync(@"First(Office365Users.SearchUserV2({searchTerm:""Doe"", top: 3}).value).DisplayName", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -584,7 +584,7 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddService("Office365Outlook", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Outlook", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetEmails.json");
             FormulaValue result = await engine.EvalAsync(@"First(Office365Outlook.GetEmails({ top : 5 })).DateTimeReceived", CancellationToken.None, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -616,7 +616,7 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            IReadOnlyList<FunctionInfo> fi = config.AddService("Office365Outlook", apiDoc);
+            IReadOnlyList<ConnectorFunction> fi = config.AddService("Office365Outlook", apiDoc);
             Assert.Equal(97, fi.Count());
 
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("Office365Outlook", apiDoc);
@@ -650,9 +650,9 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService(new ConnectorSettings("Office365Outlook") { AllowUnsupportedFunctions = true }, apiDoc);
+            config.AddActionConnector(new ConnectorSettings("Office365Outlook") { AllowUnsupportedFunctions = true }, apiDoc);
             var engine = new RecalcEngine(config);
-            RuntimeConfig runtimeConfig = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Office365Outlook", client));
+            RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
             testConnector.SetResponseFromFile(@"Responses\Office 365 Outlook GetRooms.json");
             var result = await engine.EvalAsync(@"Office365Outlook.GetRoomsV2()", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: runtimeConfig).ConfigureAwait(false);
@@ -701,7 +701,7 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddService("SQL", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig rc = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server GetProceduresV2.json");
             var result = await engine.EvalAsync(@"SQL.GetProceduresV2(""pfxdev-sql.database.windows.net"", ""connectortest"")", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
@@ -750,7 +750,7 @@ namespace Microsoft.PowerFx.Tests
 
             config.AddService("SQL", apiDoc);
             var engine = new RecalcEngine(config);
-            RuntimeConfig rc = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SQL", client));
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
             FormulaValue result = await engine.EvalAsync(@"SQL.ExecuteProcedureV2(""pfxdev-sql.database.windows.net"", ""connectortest"", ""sp_1"", { p1: 50 })", CancellationToken.None, new ParserOptions() { AllowsSideEffects = true }, runtimeConfig: rc).ConfigureAwait(false);
@@ -792,9 +792,9 @@ namespace Microsoft.PowerFx.Tests
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc).OrderBy(f => f.Name).ToList();
             Assert.Equal(101, functions.Count);
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService("SP", apiDoc);
+            IEnumerable<ConnectorFunction> funcInfos = config.AddService("SP", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
-            RuntimeConfig rc = new RuntimeConfig().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("SP", ppClient));
+            RuntimeConfig rc = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("SP", ppClient));
 
             // -> https://auroraprojopsintegration01.sharepoint.com/sites/Site17
             testConnector.SetResponseFromFile(@"Responses\SPO_Response1.json");
@@ -888,9 +888,9 @@ POST https://tip1-shared-002.azure-apim.net/invoke
             ConnectorSettings connectorSettings = new ConnectorSettings("exob") { AllowUnsupportedFunctions = true };
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions(connectorSettings, apiDoc).OrderBy(f => f.Name).ToList();
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService(connectorSettings, apiDoc);
+            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector(connectorSettings, apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
-            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("exob", ppClient));
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("exob", ppClient));
             RuntimeConfig runtimeConfig = new RuntimeConfig() { ServiceProvider = serviceProvider };
 
             CheckResult checkResult = engine.Check("exob.", symbolTable: null);

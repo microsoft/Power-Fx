@@ -68,7 +68,8 @@ namespace Microsoft.PowerFx.Tests
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService",
-                $"{ns}.Functions.IClockService"
+                $"{ns}.Functions.IClockService",
+                $"{ns}.Interpreter.Functions.BaseRuntimeConnectorContext"
             };
 
             var sb = new StringBuilder();

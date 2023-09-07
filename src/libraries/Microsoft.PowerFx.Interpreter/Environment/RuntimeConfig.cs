@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using Microsoft.PowerFx.Interpreter.Functions;
 
 namespace Microsoft.PowerFx
 {
@@ -69,6 +70,12 @@ namespace Microsoft.PowerFx
         public T GetService<T>()
         {
             return (T)ServiceProvider.GetService(typeof(T));
+        }
+
+        public RuntimeConfig AddRuntimeContext(BaseRuntimeConnectorContext context)
+        {
+            ServiceProvider.AddService(typeof(BaseRuntimeConnectorContext), context);
+            return this;
         }
     }
 }

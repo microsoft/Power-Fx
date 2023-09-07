@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -17,8 +16,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
         private bool _topPropertyWritten = false;
         private bool _wasDisposed;
 
-        public OpenApiJsonSerializer(FormattingInfo context, bool schemaLessBody)
-            : base(context, schemaLessBody)
+        public OpenApiJsonSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
+            : base(utcConverter, schemaLessBody)
         {
             _stream = new MemoryStream();
             _writer = new Utf8JsonWriter(_stream, new JsonWriterOptions());

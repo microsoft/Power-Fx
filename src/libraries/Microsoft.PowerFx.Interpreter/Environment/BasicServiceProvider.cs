@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Interpreter.Functions;
 
 namespace Microsoft.PowerFx
 {
@@ -54,6 +55,11 @@ namespace Microsoft.PowerFx
             _services[serviceType] = service;
 
             return this;
+        }
+
+        public BasicServiceProvider AddRuntimeContext(BaseRuntimeConnectorContext context)
+        {
+            return AddService(typeof(BaseRuntimeConnectorContext), context);            
         }
 
         // Null if service is missing 

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Functions;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -322,12 +321,15 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static List<TexlFunction> Parse(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
+        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) Parse(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
-            return GetFunctions(connectorSettings, openApiDocument).Select<ConnectorFunction, TexlFunction>(f => new ConnectorTexlFunction(f)).ToList();
+            List<ConnectorFunction> cFunctions = GetFunctions(connectorSettings, openApiDocument).ToList();
+            List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
+
+            return (cFunctions, tFunctions);
         }
 
-        internal static string GetServer(IList<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)
+        internal static string GetServer(IEnumerable<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)
         {
             if (httpClient != null && httpClient is HttpClient hc)
             {

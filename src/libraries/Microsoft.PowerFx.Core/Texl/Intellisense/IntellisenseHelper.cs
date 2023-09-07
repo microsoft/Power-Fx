@@ -378,11 +378,8 @@ namespace Microsoft.PowerFx.Intellisense
                     // If some parameters are not either StrLitNode or NumLitNode, we cannot get suggestions
                     return;
                 }
-
-                // If connector function has some suggestions, let's add them here
-                IRuntimeConnectorContext services = intellisenseData?.Services?.GetService(typeof(IRuntimeConnectorContext)) as IRuntimeConnectorContext;
-
-                ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                
+                ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, intellisenseData.Services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (suggestions != null && suggestions.Error == null && suggestions.Suggestions != null)
                 {                    

@@ -235,7 +235,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // This method is used for managing "x-ms-dynamic-values" and "x-ms-dynamic-schema" OpenApi extensions in connectors
         // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
-        public virtual async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, CancellationToken cts)
+        public virtual async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider context, CancellationToken cts)
         {
             return null;
         }

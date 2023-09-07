@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Tests
 
             var rConfig = new RuntimeConfig();            
             rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-            rConfig.AddService<IRuntimeConnectorContext>(new TestConnectorRuntimeContext("Test", httpClient));
+            rConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Test", httpClient));
 
             var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
             Assert.NotNull(result);

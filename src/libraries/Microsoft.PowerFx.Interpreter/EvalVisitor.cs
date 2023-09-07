@@ -263,10 +263,9 @@ namespace Microsoft.PowerFx
             {
                 result = await asyncFunc2.InvokeAsync(this.GetFormattingInfo(), args, _cancellationToken).ConfigureAwait(false);
             }
-            else if (func is IAsyncConnectorTexlFunction asyncFunc3)
-            {
-                IRuntimeConnectorContext runtimeContext = _services.GetService(typeof(IRuntimeConnectorContext)) as IRuntimeConnectorContext ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
-                return await asyncFunc3.InvokeAsync(args, runtimeContext, _cancellationToken).ConfigureAwait(false);
+            else if (func is IAsyncConnectorTexlFunction asyncConnectorTexlFunction)
+            {                
+                return await asyncConnectorTexlFunction.InvokeAsync(args, _services, _cancellationToken).ConfigureAwait(false);
             }
             else if (func is UserDefinedTexlFunction udtf)
             {

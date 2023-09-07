@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+
 namespace Microsoft.PowerFx.Connectors
 {
     /// <summary>
@@ -21,6 +23,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// NumberIsFloat.
         /// </summary>
+        [Obsolete("This shouldn't be used anymore.")]
         public bool NumberIsFloat { get; init; } = false;
 
         /// <summary>
@@ -37,16 +40,6 @@ namespace Microsoft.PowerFx.Connectors
         /// Allow using functions that are identified as unsupported.
         /// NotSupportedReason property will still be specified.
         /// </summary>
-        public bool AllowUnsupportedFunctions { get; init; } = false;
-
-        /// <summary>
-        /// Throw an exception when an error occurs (HTTP status code >= 300).
-        /// </summary>
-        public bool ThrowOnError { get; init; } = false;
-
-        /// <summary>
-        /// Only used internally for dynamic intellisense.
-        /// </summary>
-        internal bool ReturnRawResult { get; init; } = false;              
+        public bool AllowUnsupportedFunctions { get; init; } = false;            
     }
 }

@@ -178,8 +178,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.RenameDriver",
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
-                "Microsoft.PowerFx.Core.Utils.ICheckable",
-                "Microsoft.PowerFx.IRuntimeConnectorContext",
+                "Microsoft.PowerFx.Core.Utils.ICheckable",                
                 "Microsoft.PowerFx.UserInfo"
             };
 

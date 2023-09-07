@@ -14,7 +14,7 @@ using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
+using Microsoft.PowerFx.Interpreter.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -26,11 +26,11 @@ namespace Microsoft.PowerFx.Connectors
         private readonly ConnectorFunction _function;
         private readonly bool _returnRawResults;
 
-        public HttpFunctionInvoker(HttpMessageInvoker httpClient, ConnectorFunction function, bool returnRawResults)
+        public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext brcc)
         {
-            _httpClient = httpClient;
             _function = function;
-            _returnRawResults = returnRawResults;
+            _httpClient = brcc.GetInvoker(function.Namespace);            
+            _returnRawResults = brcc.ReturnRawResults;
         }
 
         internal static void VerifyCanHandle(ParameterLocation? location)
@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        public HttpRequestMessage BuildRequest(FormulaValue[] args, FormattingInfo context, CancellationToken cancellationToken)
+        public HttpRequestMessage BuildRequest(FormulaValue[] args, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             var path = _function.OperationPath;
             var query = new StringBuilder();
@@ -74,7 +74,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (bodyParts.Any())
             {
-                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, context, cancellationToken);
+                body = GetBody(_function._internals.BodySchemaReferenceId, _function._internals.SchemaLessBody, bodyParts, utcConverter, cancellationToken);
             }
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
@@ -257,7 +257,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "False positive")]
-        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, FormattingInfo context, CancellationToken cancellationToken)
+        private HttpContent GetBody(string referenceId, bool schemaLessBody, Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)> map, IConvertToUTC utcConverter, CancellationToken cancellationToken)
         {
             FormulaValueSerializer serializer = null;
 
@@ -267,9 +267,9 @@ namespace Microsoft.PowerFx.Connectors
             {
                 serializer = _function._internals.ContentType.ToLowerInvariant() switch
                 {
-                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(context, schemaLessBody),
-                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(context, schemaLessBody),
-                    _ => new OpenApiJsonSerializer(context, schemaLessBody)
+                    OpenApiExtensions.ContentType_XWwwFormUrlEncoded => new OpenApiFormUrlEncoder(utcConverter, schemaLessBody),
+                    OpenApiExtensions.ContentType_TextPlain => new OpenApiTextSerializer(utcConverter, schemaLessBody),
+                    _ => new OpenApiJsonSerializer(utcConverter, schemaLessBody)
                 };
 
                 serializer.StartSerialization(referenceId);
@@ -324,10 +324,10 @@ namespace Microsoft.PowerFx.Connectors
                     _function.ReturnType);
         }
 
-        public async Task<FormulaValue> InvokeAsync(FormattingInfo context, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
+        public async Task<FormulaValue> InvokeAsync(IConvertToUTC utcConverter, string cacheScope, FormulaValue[] args, HttpMessageInvoker localInvoker, CancellationToken cancellationToken, bool throwOnError = false)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            using HttpRequestMessage request = BuildRequest(args, context, cancellationToken);
+            using HttpRequestMessage request = BuildRequest(args, utcConverter, cancellationToken);
             return await ExecuteHttpRequest(cacheScope, throwOnError, request, localInvoker, cancellationToken).ConfigureAwait(false);
         }
 
@@ -369,20 +369,40 @@ namespace Microsoft.PowerFx.Connectors
 
         internal HttpFunctionInvoker Invoker => _invoker;
 
-        public Task<FormulaValue> InvokeAsync(FormattingInfo context, FormulaValue[] args, IRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
 
             cancellationToken.ThrowIfCancellationRequested();
-            return _invoker.InvokeAsync(context, _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
+            return _invoker.InvokeAsync(new ConvertToUTC(runtimeContext.TimeZoneInfo), _cacheScope, args, localInvoker, cancellationToken, _throwOnError);
         }
 
-        public Task<FormulaValue> InvokeAsync(string url, IRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        public Task<FormulaValue> InvokeAsync(string url, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             var localInvoker = runtimeContext.GetInvoker(this.Namespace.Name);
 
             cancellationToken.ThrowIfCancellationRequested();
             return _invoker.InvokeAsync(url, _cacheScope, localInvoker, cancellationToken, _throwOnError);
+        }
+    }
+
+    internal interface IConvertToUTC
+    {
+        DateTime ToUTC(DateTimeValue d);
+    }
+
+    internal class ConvertToUTC : IConvertToUTC
+    {
+        private readonly TimeZoneInfo _tzi;
+
+        public ConvertToUTC(TimeZoneInfo tzi)
+        {
+            _tzi = tzi;
+        }
+        
+        public DateTime ToUTC(DateTimeValue dtv)
+        {
+            return dtv.GetConvertedValue(_tzi);
         }
     }
 }

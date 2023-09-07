@@ -13,6 +13,7 @@ using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -66,16 +67,24 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool HasSuggestionsForParam(int argumentIndex) => argumentIndex <= MaxArity;
 
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IRuntimeConnectorContext context, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await ConnectorFunction.InvokeAsync(args, context, cancellationToken).ConfigureAwait(false);
+
+            BaseRuntimeConnectorContext runtimeContext = serviceProvider.GetService(typeof(BaseRuntimeConnectorContext)) as BaseRuntimeConnectorContext ?? throw new InvalidOperationException("RuntimeConnectorContext is missing from service provider");
+            return await ConnectorFunction.InvokeAsync(args, runtimeContext, cancellationToken).ConfigureAwait(false);
         }
 
-        public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, CancellationToken cancellationToken)
+        public override async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IServiceProvider serviceProvider, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await ConnectorFunction.GetConnectorSuggestionsAsync(knownParameters, argPosition, context, cancellationToken).ConfigureAwait(false);
+
+            if (serviceProvider?.GetService(typeof(BaseRuntimeConnectorContext)) is not BaseRuntimeConnectorContext runtimeContext)
+            {
+                return null;
+            }
+
+            return await ConnectorFunction.GetConnectorSuggestionsAsync(knownParameters, argPosition, runtimeContext, cancellationToken).ConfigureAwait(false);
         }
     }
 }

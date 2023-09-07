@@ -14,8 +14,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Intellisense;
+using Microsoft.PowerFx.Interpreter.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
@@ -38,8 +38,10 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// Numbers are defined as "double" type (otherwise "decimal").
-        /// </summary>
+        /// </summary>        
+#pragma warning disable CS0618 // Type or member is obsolete
         public bool NumberIsFloat => ConnectorSettings.NumberIsFloat;
+#pragma warning restore CS0618 // Type or member is obsolete
 
         /// <summary>
         /// ConnectorSettings. Contains the Namespace and other parameters.
@@ -49,12 +51,26 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Defines if the function is supported or contains unsupported elements.
         /// </summary>
-        public bool IsSupported => EnsureInitialized(() => _isSupported);
+        public bool IsSupported
+        {
+            get
+            {
+                EnsureInitialized();
+                return _isSupported;
+            }
+        }
 
         /// <summary>
         /// Reason for which the function isn't supported.
         /// </summary>
-        public string NotSupportedReason => EnsureInitialized(() => _notSupportedReason);
+        public string NotSupportedReason
+        {
+            get
+            {
+                EnsureInitialized();
+                return _notSupportedReason;
+            }
+        }
 
         /// <summary>
         /// Defines if the function is deprecated.
@@ -63,6 +79,7 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// Page Link as defined in the x-ms-pageable extension.
+        /// This is the name of the property that will host the URL, not the URL itself.
         /// </summary>
         public string PageLink => Operation.PageLink();
 
@@ -130,22 +147,50 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Minimum number of arguments.
         /// </summary>
-        public int ArityMin => EnsureInitialized(() => _arityMin);
+        public int ArityMin
+        {
+            get
+            {
+                EnsureInitialized();
+                return _arityMin;
+            }
+        }
 
         /// <summary>
         /// Maximum number of arguments.
         /// </summary>
-        public int ArityMax => EnsureInitialized(() => _arityMax);
+        public int ArityMax
+        {
+            get
+            {
+                EnsureInitialized();
+                return _arityMax;
+            }
+        }
 
         /// <summary>
         /// Required parameters.
         /// </summary>
-        public ConnectorParameter[] RequiredParameters => EnsureInitialized(() => _requiredParameters);
+        public ConnectorParameter[] RequiredParameters
+        {
+            get
+            {
+                EnsureInitialized();
+                return _requiredParameters;
+            }
+        }
 
         /// <summary>
         /// Optional parameters.
         /// </summary>
-        public ConnectorParameter[] OptionalParameters => EnsureInitialized(() => _optionalParameters);
+        public ConnectorParameter[] OptionalParameters
+        {
+            get
+            {
+                EnsureInitialized();
+                return _optionalParameters;
+            }
+        }
 
         /// <summary>
         /// Swagger's operation.
@@ -159,12 +204,19 @@ namespace Microsoft.PowerFx.Connectors
         /// - "x-ms-visibility" string set to "internal" 
         /// - has a default value.
         /// </summary>
-        internal ConnectorParameter[] HiddenRequiredParameters => EnsureInitialized(() => _hiddenRequiredParameters);
+        internal ConnectorParameter[] HiddenRequiredParameters
+        {
+            get
+            {
+                EnsureInitialized();
+                return _hiddenRequiredParameters;
+            }
+        }
 
         /// <summary>
         /// OpenApiServers defined in the document.
         /// </summary>
-        internal IList<OpenApiServer> Servers { get; init; }
+        internal IEnumerable<OpenApiServer> Servers { get; init; }
 
         /// <summary>
         /// Dynamic schema extension on return type (response).
@@ -179,7 +231,14 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Return type when determined at runtime/by dynamic intellisense.
         /// </summary>
-        internal ConnectorParameterType ReturnParameterType => EnsureInitialized(() => _returnParameterType);
+        internal ConnectorParameterType ReturnParameterType
+        {
+            get
+            {
+                EnsureInitialized();
+                return _returnParameterType;
+            }
+        }
 
         /// <summary>
         /// Parameter types used for TexlFunction.
@@ -191,7 +250,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// List of functions in the same swagger file. Used for resolving dynamic schema/property.
         /// </summary>
-        internal List<ConnectorFunction> FunctionList { get; init; }
+        internal IReadOnlyList<ConnectorFunction> FunctionList { get; }
 
         // Those parameters are protected by EnsureInitialized
         private int _arityMin;
@@ -225,17 +284,17 @@ namespace Microsoft.PowerFx.Connectors
         /// Get connector function parameter suggestions.
         /// </summary>
         /// <param name="knownParameters">Known parameters.</param>
-        /// <param name="context">Runtime connector context.</param>
+        /// <param name="runtimeContext">Runtime connector context.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>ConnectorParameters class with suggestions.</returns>
-        public async Task<ConnectorParameters> GetParameterSuggestionsAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, CancellationToken cancellationToken)
+        public async Task<ConnectorParameters> GetParameterSuggestionsAsync(FormulaValue[] knownParameters, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             int index = Math.Min(knownParameters.Length, ArityMax - 1);
-            ConnectorParameterWithSuggestions[] parametersWithSuggestions = RequiredParameters.Select((rp, i) => i < ArityMax - 1 ? new ConnectorParameterWithSuggestions(rp, i < knownParameters.Length ? knownParameters[i] : null) : new ConnectorParameterWithSuggestions(rp, knownParameters.Skip(ArityMax - 1).ToArray())).ToArray();            
-            
-            ConnectorSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, context, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            ConnectorParameterWithSuggestions[] parametersWithSuggestions = RequiredParameters.Select((rp, i) => i < ArityMax - 1 ? new ConnectorParameterWithSuggestions(rp, i < knownParameters.Length ? knownParameters[i] : null) : new ConnectorParameterWithSuggestions(rp, knownParameters.Skip(ArityMax - 1).ToArray())).ToArray();
+
+            ConnectorSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, knownParameters.Length, runtimeContext, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 
             bool error = suggestions == null || suggestions.Error != null;
 
@@ -258,7 +317,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         /// <summary>
-        /// Get Power Fx expression from function and set of parameters.
+        /// Generates a Power Fx expression that will invoke this function with the given parameters. 
         /// </summary>
         /// <param name="parameters">Parameters.</param>
         /// <returns>Power Fx expression.</returns>
@@ -303,25 +362,20 @@ namespace Microsoft.PowerFx.Connectors
         /// Call connector function.
         /// </summary>
         /// <param name="args">Arguments.</param>
-        /// <param name="context">RuntimeConnectorContext.</param>        
+        /// <param name="runtimeContext">RuntimeConnectorContext.</param>        
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Function result.</returns>
-        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, IRuntimeConnectorContext context, CancellationToken cancellationToken)
+        public async Task<FormulaValue> InvokeAsync(FormulaValue[] args, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await InvokeInternalAsync(args, context, ConnectorSettings.ReturnRawResult, cancellationToken).ConfigureAwait(false);
-        }
-
-        internal async Task<FormulaValue> InvokeInternalAsync(FormulaValue[] args, IRuntimeConnectorContext context, bool rawResult, CancellationToken cancellationToken)
-        {
             cancellationToken.ThrowIfCancellationRequested();
             EnsureInitialized();
-            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(context.GetInvoker(Namespace), this, rawResult), ConnectorSettings.ThrowOnError);            
-            FormulaValue result = await invoker.InvokeAsync(new FormattingInfo(context?.CultureInfo, context?.TimeZoneInfo), args, context, cancellationToken).ConfigureAwait(false);
-            return await PostProcessResultAsync(result, context, invoker, cancellationToken).ConfigureAwait(false);
+            ScopedHttpFunctionInvoker invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(Namespace, out _)), Name, Namespace, new HttpFunctionInvoker(this, runtimeContext), runtimeContext.ThrowOnError);
+            FormulaValue result = await invoker.InvokeAsync(args, runtimeContext, cancellationToken).ConfigureAwait(false);
+            return await PostProcessResultAsync(result, runtimeContext, invoker, cancellationToken).ConfigureAwait(false);
         }
 
-        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, IRuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> PostProcessResultAsync(FormulaValue result, BaseRuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
         {
             ExpressionError er = null;
 
@@ -349,7 +403,7 @@ namespace Microsoft.PowerFx.Connectors
         // - PagesRecordValue if the next page has a next link
         // - RecordValue if there is no next link
         // - ErrorValue
-        private async Task<FormulaValue> GetNextPageAsync(string nextLink, IRuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
+        private async Task<FormulaValue> GetNextPageAsync(string nextLink, BaseRuntimeConnectorContext context, ScopedHttpFunctionInvoker invoker, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -364,7 +418,7 @@ namespace Microsoft.PowerFx.Connectors
         // Also on SharePoint action SearchForUser (Resolve User)
         //public async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(HttpClient httpClient, NamedFormulaType[] inputParams, string suggestedParamName, CancellationToken cancellationToken)
 
-        internal async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, CancellationToken cancellationToken)
+        internal async Task<ConnectorSuggestions> GetConnectorSuggestionsAsync(FormulaValue[] knownParameters, int argPosition, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -417,7 +471,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="context">Connector context.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Formula Type determined by dynamic Intellisense.</returns>
-        public async Task<FormulaType> GetConnectorReturnSchemaAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, CancellationToken cancellationToken)
+        public async Task<FormulaType> GetConnectorReturnSchemaAsync(FormulaValue[] knownParameters, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -461,7 +515,7 @@ namespace Microsoft.PowerFx.Connectors
             return je;
         }
 
-        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicSchemaAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, ConnectorDynamicSchema cds, CancellationToken cancellationToken)
+        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicSchemaAsync(FormulaValue[] knownParameters, int argPosition, BaseRuntimeConnectorContext context, ConnectorDynamicSchema cds, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cds, knownParameters.Take(Math.Min(argPosition, ArityMax - 1)).ToArray());
@@ -480,7 +534,7 @@ namespace Microsoft.PowerFx.Connectors
             return cpt.Type;
         }
 
-        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicPropertyAsync(FormulaValue[] knownParameters, int argPosition, IRuntimeConnectorContext context, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
+        private async Task<FormulaType> GetConnectorSuggestionsFromDynamicPropertyAsync(FormulaValue[] knownParameters, int argPosition, BaseRuntimeConnectorContext context, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdp, knownParameters.Take(Math.Min(argPosition, ArityMax - 1)).ToArray());
@@ -499,7 +553,7 @@ namespace Microsoft.PowerFx.Connectors
             return cpt.Type;
         }
 
-        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
+        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(FormulaValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdv, knownParameters);
@@ -524,7 +578,7 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorSuggestions(suggestions);
         }
 
-        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicListAsync(FormulaValue[] knownParameters, IRuntimeConnectorContext context, ConnectorDynamicList cdl, CancellationToken cancellationToken)
+        private async Task<ConnectorSuggestions> GetConnectorSuggestionsFromDynamicListAsync(FormulaValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicList cdl, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             FormulaValue[] newParameters = GetArguments(cdl, knownParameters);
@@ -549,13 +603,13 @@ namespace Microsoft.PowerFx.Connectors
             return new ConnectorSuggestions(suggestions);
         }
 
-        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, IRuntimeConnectorContext context, CancellationToken cancellationToken)
+        private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction.InvokeInternalAsync(arguments, context, true, cancellationToken).ConfigureAwait(false);
+            return await EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction.InvokeAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
         }
 
-        private T EnsureConnectorFunction<T>(T dynamicApi, List<ConnectorFunction> functionList)
+        private T EnsureConnectorFunction<T>(T dynamicApi, IReadOnlyList<ConnectorFunction> functionList)
             where T : ConnectionDynamicApi
         {
             if (dynamicApi == null)
@@ -621,15 +675,9 @@ namespace Microsoft.PowerFx.Connectors
             return httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Head;
         }
 
-        private T EnsureInitialized<T>(Func<T> func)
-        {
-            EnsureInitialized();
-            return func();
-        }
-
         private void EnsureInitialized()
         {
-            _internals ??= Initialize();            
+            _internals ??= Initialize();
         }
 
         private ConnectorParameterInternals Initialize()
@@ -827,7 +875,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     _isSupported = ConnectorSettings.AllowUnsupportedFunctions;
                     _notSupportedReason = unsupportedReason;
-                }            
+                }
             }
             catch (Exception ex)
             {

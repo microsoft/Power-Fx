@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -23,7 +22,7 @@ namespace Microsoft.PowerFx
         /// <param name="config">Config to add the functions to.</param>
         /// <param name="connectorSettings">Connector settings containing Namespace, NumberIsFloat and MaxRows to be returned.</param>        
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
-        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
             if (connectorSettings.Namespace == null)
             {
@@ -40,14 +39,13 @@ namespace Microsoft.PowerFx
                 throw new ArgumentNullException(nameof(openApiDocument));
             }
 
-            List<TexlFunction> functions = OpenApiParser.Parse(connectorSettings, openApiDocument);
-            foreach (TexlFunction function in functions)
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(connectorSettings, openApiDocument);
+            foreach (TexlFunction function in texlFunctions)
             {
                 config.AddFunction(function);
             }
 
-            List<FunctionInfo> functionInfos = functions.ConvertAll(function => new FunctionInfo(function));
-            return functionInfos;
+            return connectorFunctions;
         }
 
         /// <summary>
@@ -59,9 +57,9 @@ namespace Microsoft.PowerFx
         /// <param name="namespace">Namespace name.</param>
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
         /// <returns></returns>
-        public static IReadOnlyList<FunctionInfo> AddService(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument)
+        public static IReadOnlyList<ConnectorFunction> AddService(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument)
         {
-            return config.AddService(new ConnectorSettings(@namespace), openApiDocument);
+            return config.AddActionConnector(new ConnectorSettings(@namespace), openApiDocument);
         }
     }
 }

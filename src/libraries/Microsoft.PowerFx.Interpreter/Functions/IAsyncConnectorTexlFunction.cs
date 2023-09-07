@@ -11,6 +11,6 @@ namespace Microsoft.PowerFx.Core.Functions
     // A Texl function capable of async invokes.     
     internal interface IAsyncConnectorTexlFunction
     {
-        Task<FormulaValue> InvokeAsync(FormulaValue[] args, IRuntimeConnectorContext context, CancellationToken cancellationToken);
+        Task<FormulaValue> InvokeAsync(FormulaValue[] args, IServiceProvider context, CancellationToken cancellationToken);
     }
 }
