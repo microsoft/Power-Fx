@@ -281,7 +281,7 @@ namespace Microsoft.PowerFx.Tests
             // Must have "Execute" method. 
             public static NumberValue Execute(NumberValue number, RecordValue record1, StringValue str, RecordValue record2, TableValue table, RecordValue record)
             {
-                return FormulaValue.New(1);
+                return FormulaValue.New(1.0);
             }
         }
 
