@@ -331,6 +331,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // If the function is in the global namespace, this.QualifiedName is the same as this.Name.
         public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax() + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
 
+        public bool IsDeprecatedOrInternalFunction => this is IHasUnsupportedFunctions sdf && (sdf.IsDeprecated || sdf.IsInternal);
+
         public TexlFunction(
             DPath theNamespace,
             string name,

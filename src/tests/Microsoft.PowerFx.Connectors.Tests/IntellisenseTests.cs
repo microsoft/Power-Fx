@@ -264,6 +264,38 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             // We only suggest 50 functions as we don't include deprecated & internal functions
             Assert.Equal(50, suggestions.Suggestions.Count());
         }
+
+        [Theory]
+        [InlineData(@"SQL.")]
+        [InlineData(@"SQ")]
+        public async Task ConnectorDoNotSuggestDeprecatedEndpoints(string expression)
+        {
+            // This Path can be found in the Swagger file SQL Server.json
+            var deprecatedFunctionExample = "SQL.ExecutePassThroughNativeQuery";
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
+                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
+                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    () => "eyJ0eXA...",
+                    httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc);
+            RecalcEngine engine = new RecalcEngine(config);
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
+
+            CheckResult checkResult = engine.Check(expression, symbolTable: null);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
+
+            Assert.DoesNotContain(suggestions.Suggestions, suggestion => suggestion.DisplayText.Text.Equals(deprecatedFunctionExample));
+        }
     }
 }
 
