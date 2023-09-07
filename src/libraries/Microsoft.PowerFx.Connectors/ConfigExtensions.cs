@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx
         /// <param name="namespace">Namespace name.</param>
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
         /// <returns></returns>
-        public static IReadOnlyList<ConnectorFunction> AddService(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument)
+        public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, string @namespace, OpenApiDocument openApiDocument)
         {
             return config.AddActionConnector(new ConnectorSettings(@namespace), openApiDocument);
         }

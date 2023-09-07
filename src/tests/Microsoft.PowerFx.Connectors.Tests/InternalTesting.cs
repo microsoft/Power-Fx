@@ -355,7 +355,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     };
 
                     // Check we can add the service (more comprehensive test)
-                    config.AddService("Connector", doc);
+                    config.AddActionConnector("Connector", doc);
                 }
                 catch (Exception ex)
                 {
@@ -447,7 +447,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             var config = new PowerFxConfig();
             using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token") { SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f" };
 
-            config.AddService("Connector", doc);
+            config.AddActionConnector("Connector", doc);
         }
     }
 
