@@ -668,7 +668,7 @@ namespace Microsoft.PowerFx.Intellisense
             return false;
         }
 
-        private static CallNode GetNearestCallNode(TexlNode node)
+        internal static CallNode GetNearestCallNode(TexlNode node)
         {
             Contracts.AssertValue(node);
             var parent = node;
