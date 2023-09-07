@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Interpreter.Functions;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Xunit;

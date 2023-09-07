@@ -3,9 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net.Http;
-using Microsoft.PowerFx.Interpreter.Functions;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {

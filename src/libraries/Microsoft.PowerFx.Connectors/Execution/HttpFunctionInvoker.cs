@@ -14,7 +14,6 @@ using Microsoft.PowerFx.Connectors.Execution;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Interpreter.Functions;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors

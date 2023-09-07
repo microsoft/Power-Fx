@@ -4,7 +4,7 @@
 using System;
 using System.Net.Http;
 
-namespace Microsoft.PowerFx.Interpreter.Functions
+namespace Microsoft.PowerFx.Connectors
 {
     public abstract class BaseRuntimeConnectorContext
     {
@@ -38,5 +38,19 @@ namespace Microsoft.PowerFx.Interpreter.Functions
         public override bool ThrowOnError => _brcc.ThrowOnError;
 
         internal override bool ReturnRawResults => true;
+    }
+
+    public static class RuntimeConnectorContextExtensions
+    {
+        public static BasicServiceProvider AddRuntimeContext(this BasicServiceProvider serviceProvider, BaseRuntimeConnectorContext context)
+        {
+            return serviceProvider.AddService(typeof(BaseRuntimeConnectorContext), context);
+        }
+
+        public static RuntimeConfig AddRuntimeContext(this RuntimeConfig runtimeConfig, BaseRuntimeConnectorContext context)
+        {
+            runtimeConfig.ServiceProvider.AddService(typeof(BaseRuntimeConnectorContext), context);
+            return runtimeConfig;
+        }
     }
 }
