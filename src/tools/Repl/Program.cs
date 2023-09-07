@@ -110,6 +110,10 @@ namespace Microsoft.PowerFx
 
             var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
 
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+#pragma warning restore CS0618 // Type or member is obsolete
+
             config.AddOptionSet(optionsSet);
 
             _engine = new RecalcEngine(config);

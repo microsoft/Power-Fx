@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symbol = new SymbolTable();
 
             // Adds display name for a variable.
-            var logicalVariableSlot = symbol.AddVariable("logicalVariable", FormulaType.Number, displayName: "displayVariable");
+            var logicalVariableSlot = symbol.AddVariable("logicalVariable", FormulaType.Decimal, displayName: "displayVariable");
             var r1 = new SymbolValues(symbol);
             r1.Set(logicalVariableSlot, FormulaValue.New(1));
 
@@ -85,7 +85,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.True(check.IsSuccess);
 
             var eval = await engine.EvalAsync(expression, CancellationToken.None, runtimeConfig: r1).ConfigureAwait(false);
-            Assert.Equal(expected, eval.ToObject());
+            Assert.Equal((decimal)expected, eval.ToObject());
 
             var actualInvariantExpression = engine.GetInvariantExpression(expression, null);
             Assert.Equal(expectedInvariantExpression, actualInvariantExpression);
@@ -722,7 +722,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var eval = check.GetEvaluator();
             var result = await eval.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
-            Assert.Equal(12.0, result.ToObject());
+            Assert.Equal(12m, result.ToObject());
         }
 
         // Bind global parameters without running them
@@ -735,7 +735,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new Engine(new PowerFxConfig());
             var check = engine.Check("p1", symbolTable: s1);
             Assert.True(check.IsSuccess);
-            Assert.Equal(FormulaType.Number, check.ReturnType);
+            Assert.Equal(FormulaType.Decimal, check.ReturnType);
         }
 
         // Bind global parameters and ensure lookup works by display name 
@@ -812,7 +812,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var eval = check.GetEvaluator();
             var result = await eval.EvalAsync(CancellationToken.None).ConfigureAwait(false);
 
-            Assert.Equal(33.0, result.ToObject());
+            Assert.Equal(33m, result.ToObject());
         }
 
         [Theory]

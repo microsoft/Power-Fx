@@ -29,9 +29,9 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new RecalcEngine();
             var engineWithoutFlag = new RecalcEngine(new PowerFxConfig(Features.None));
             
-            NumberValue r1 = FormulaValue.New(1);
-            NumberValue r2 = FormulaValue.New(2);
-            NumberValue r3 = FormulaValue.New(3);
+            NumberValue r1 = FormulaValue.New(1.0);
+            NumberValue r2 = FormulaValue.New(2.0);
+            NumberValue r3 = FormulaValue.New(3.0);
             TableValue val = FormulaValue.NewSingleColumnTable(r1, r2, r3);
 
             engine.UpdateVariable("A", val);

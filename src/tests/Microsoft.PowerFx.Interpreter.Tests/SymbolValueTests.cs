@@ -50,7 +50,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var ret = locals.TryGetValue("a", out var v1);
             Assert.True(ret);
-            Assert.Equal(2.0, v1.ToObject());
+            Assert.Equal(2m, v1.ToObject());
 
             ret = locals.TryGetValue("missing", out v1);
             Assert.False(ret);
@@ -67,7 +67,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             INameResolver resolver = symbols;
             ret = resolver.Lookup(a, out info);
             Assert.True(ret);
-            Assert.Equal(Core.Types.DKind.Number, info.Type.Kind);
+            Assert.Equal(Core.Types.DKind.Decimal, info.Type.Kind);
         }
 
         [Fact]
@@ -96,18 +96,18 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symTable = new SymbolTable();
             var symValues = new SymbolValues(symTable);
 
-            var slot = symTable.AddVariable("x", FormulaType.Number);
+            var slot = symTable.AddVariable("x", FormulaType.Decimal);
 
             symValues.Set(slot, FormulaValue.New(10));
             var result = symValues.Get(slot);
-            Assert.Equal(10.0, result.ToObject());
+            Assert.Equal(10m, result.ToObject());
 
             // Set to null will blank
             symValues.Set(slot, null);
 
             result = symValues.Get(slot);
             Assert.IsType<BlankValue>(result);
-            Assert.IsType<NumberType>(result.Type);
+            Assert.IsType<DecimalType>(result.Type);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Shadowed            
             var ret = r1.TryGetValue("x", out var v1);
             Assert.True(ret);
-            Assert.Equal(FormulaType.Number, v1.Type);
+            Assert.Equal(FormulaType.Decimal, v1.Type);
 
             ret = r21.TryGetValue("x", out v1);
             Assert.True(ret);
@@ -134,7 +134,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Inherits
             ret = r21.TryGetValue("y", out v1);
             Assert.True(ret);
-            Assert.Equal(FormulaType.Number, v1.Type);
+            Assert.Equal(FormulaType.Decimal, v1.Type);
         }
 
         [Fact]
@@ -154,7 +154,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
 
-            Assert.Equal(21.0, result.ToObject());
+            Assert.Equal(21m, result.ToObject());
         }
 
         [Theory]
@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Getting values. 
             var value = s2.GetValue(slot1, record);
-            Assert.Equal(10.0, value.ToObject());
+            Assert.Equal(10m, value.ToObject());
 
             // check ThisRecord
             found = symbolTable.TryLookupSlot("ThisRecord", out var slotThisRecord);
@@ -259,7 +259,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = engine.EvalAsync("ThisRecord.a + a", CancellationToken.None, runtimeConfig: r2).Result;
 
-            Assert.Equal(20.0, result.ToObject());
+            Assert.Equal(20m, result.ToObject());
         }
 
         // Ensure the RowScope is lazy and doesn't call fields. 
@@ -282,7 +282,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var result = engine.EvalAsync("ThisRecord.a + a + b", CancellationToken.None, runtimeConfig: r2).Result;
 
-            Assert.Equal(21.0, result.ToObject());
+            Assert.Equal(21m, result.ToObject());
         }
 
         // Type to ensure we don't call Fields. 
@@ -375,8 +375,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var dict = new Dictionary<string, NumberValue>
             {
-                { "a", FormulaValue.New(1) },
-                { "b", FormulaValue.New(10) }
+                { "a", FormulaValue.New(1.0) },
+                { "b", FormulaValue.New(10.0) }
             };
 
             var r1 = new SymbolValues { DebugName = "L1" };
@@ -405,7 +405,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var slot1 = symbolTable.AddVariable("x", FormulaType.Number);
 
             var values = symbolTable.CreateValues();
-            values.Set(slot1, FormulaValue.New(10));
+            values.Set(slot1, FormulaValue.New(10.0));
 
             var result = values.Get(slot1);
             Assert.Equal(10.0, result.ToObject());
@@ -479,7 +479,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             var displayName = "displayNum";
             var recordType = RecordType.Empty()
-                .Add(new NamedFormulaType("num", FormulaType.Number, displayName));
+                .Add(new NamedFormulaType("num", FormulaType.Decimal, displayName));
 
             var record = FormulaValue.NewRecordFromFields(
                 recordType,
@@ -505,8 +505,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var symTable1 = new SymbolTable { DebugName = "L1" };
             var symTable2 = new SymbolTable { DebugName = "L2" };
 
-            var slotX1 = symTable1.AddVariable("x", FormulaType.Number);
-            var slotX2 = symTable2.AddVariable("x", FormulaType.Number);
+            var slotX1 = symTable1.AddVariable("x", FormulaType.Decimal);
+            var slotX2 = symTable2.AddVariable("x", FormulaType.Decimal);
 
             var symValues = symTable1.CreateValues();
             symValues.Set(slotX1, FormulaValue.New(1)); // ok
@@ -520,7 +520,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void TestRemove()
         {
             var symTable1 = new SymbolTable { DebugName = "L1" };
-            var slot = symTable1.AddVariable("x", FormulaType.Number);
+            var slot = symTable1.AddVariable("x", FormulaType.Decimal);
             Assert.False(slot.IsDisposed());
 
             var symValues = symTable1.CreateValues();
@@ -535,7 +535,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Throws<InvalidOperationException>(() => symValues.Set(slot, FormulaValue.New(11)));
 
             // readding (And reusing the slot) shouldn't get the old oprhaned value. 
-            var slot2 = symTable1.AddVariable("y", FormulaType.Number);
+            var slot2 = symTable1.AddVariable("y", FormulaType.Decimal);
             var value2 = symValues.Get(slot2);
 
             // same index, but ensure we're not reusing. 
@@ -549,7 +549,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task TestMismatch1()
         {
             var symTable1 = new SymbolTable { DebugName = "L1" };
-            var slot = symTable1.AddVariable("x", FormulaType.Number);
+            var slot = symTable1.AddVariable("x", FormulaType.Decimal);
 
             var record = FormulaValue.NewRecordFromFields(
                 new NamedValue("x", FormulaValue.New(11)));
@@ -676,12 +676,12 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public async Task ThisItemTest()
         {
             var symTableGlobals = new SymbolTable { DebugName = "Globals" };
-            var slotGlobal = symTableGlobals.AddVariable("globalVar", FormulaType.Number);
+            var slotGlobal = symTableGlobals.AddVariable("globalVar", FormulaType.Decimal);
 
             // Note from PowerFx perspective, there is nothing special about the identifier 'ThisItem'.
             // It's all determined by SymbolTable topology. 
             var symTableThisItem = new SymbolTable { DebugName = "ThisItem" };
-            var slotThisItem = symTableThisItem.AddVariable("ThisItem", FormulaType.Number);
+            var slotThisItem = symTableThisItem.AddVariable("ThisItem", FormulaType.Decimal);
 
             // Combine together
             var symTable = ReadOnlySymbolTable.Compose(symTableThisItem, symTableGlobals);
@@ -712,7 +712,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 // In the loop, just eval.
                 var result = run.Eval(symValues);
-                var expected = 1000D + i; // matches 'expr'
+                var expected = 1000m + i; // matches 'expr'
                 Assert.Equal(expected, result.ToObject());
             });
 
@@ -755,7 +755,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var symTable = ReadOnlySymbolTable.NewFromDeferred(map, (disp, logical) =>
             {
-                return FormulaType.Number;
+                return FormulaType.Decimal;
             });
 
             var values = symTable.CreateValues();
@@ -768,7 +768,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
                 var value = values.Get(slot1);
                 Assert.Same(symTable, slot1.Owner);
-                Assert.Equal(7.0, value.ToObject());
+                Assert.Equal(7m, value.ToObject());
             }
 
             // Compile
@@ -889,7 +889,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
     // Test helpers. 
     internal static class SymTextExtenions
     {
-        public static void UpdateValue(this ReadOnlySymbolValues symValues, string v, NumberValue numberValue)
+        public static void UpdateValue(this ReadOnlySymbolValues symValues, string v, DecimalValue numberValue)
         {
             var table = symValues.SymbolTable;
             if (table.TryLookupSlot(v, out var slot))

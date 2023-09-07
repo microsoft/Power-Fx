@@ -360,7 +360,7 @@ namespace Microsoft.PowerFx.Tests
         // There's no type unification here.
         [Theory]
         [InlineData("{ f1 : x }.f1")]
-        [InlineData("If(false, { field1 : Float(12) }, x)")]
+        [InlineData("If(false, { field1 : Decimal(12) }, x)")]
         [InlineData("Last(Table(y,x))")]
         public void PassThroughRecordValue(string expr)
         {
@@ -422,13 +422,13 @@ namespace Microsoft.PowerFx.Tests
         )).a.field1
 ");
 
-            Assert.Equal(999.0, result.ToObject());
+            Assert.Equal(999m, result.ToObject());
         }
 
         // Example of a host-derived object. 
         private class MyRecordValue : RecordValue
         {
-            private static readonly RecordType _type = RecordType.Empty().Add("field1", FormulaType.Number);
+            private static readonly RecordType _type = RecordType.Empty().Add("field1", FormulaType.Decimal);
 
             // Ctor to let tests override and provide wrong types.
             public MyRecordValue(RecordType type)
@@ -483,7 +483,7 @@ namespace Microsoft.PowerFx.Tests
             {
                 // For comparison, verify we can succeed. 
                 var result = await engine.EvalAsync("x.field1", CancellationToken.None).ConfigureAwait(false);
-                Assert.Equal(999.0, result.ToObject());
+                Assert.Equal(999m, result.ToObject());
             }
             else
             {
