@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Connectors;
 using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Types;
@@ -340,7 +341,7 @@ namespace Microsoft.PowerFx.Tests
             DateTime date = DateTime.Parse(dateString);
             RuntimeConfig rtConfig = new RuntimeConfig();
             rtConfig.SetTimeZone(TimeZoneInfo.Local);
-            string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, FormattingInfoHelper.CreateFormattingInfo());
+            string str = SerializeJson(new Dictionary<string, (OpenApiSchema Schema, FormulaValue Value)>() { ["A"] = (SchemaDateTime, FormulaValue.New(date)) }, new ConvertToUTC(TimeZoneInfo.Local));
 
             DateTimeType obj = JsonSerializer.Deserialize<DateTimeType>(str);
             Assert.Equal(date, obj.A);

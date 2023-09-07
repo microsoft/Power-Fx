@@ -3,24 +3,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
-using Microsoft.PowerFx.Core.Functions;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Tests.IntellisenseTests;
 using Microsoft.PowerFx.Types;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {

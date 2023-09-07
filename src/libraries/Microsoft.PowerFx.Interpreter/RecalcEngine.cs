@@ -56,7 +56,7 @@ namespace Microsoft.PowerFx
         }
 
         // Expose publicly. 
-        public new ReadOnlySymbolTable EngineSymbols => base.EngineSymbols; 
+        public new ReadOnlySymbolTable EngineSymbols => base.EngineSymbols;
 
         // Set of default functions supported by the interpreter. 
         private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);
@@ -165,7 +165,7 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
-        /// <param name="options"></param>
+        /// <param name="options"></param>        
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {

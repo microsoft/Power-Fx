@@ -37,6 +37,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             TokenType = type;
         }
 
+        public override string ToString()
+        {
+            return $"Start: {StartIndex}, EndIndex: {EndIndex}, Type: {TokenType}";
+        }
+
         public static ExpectedToken CreateStringInterpStartToken(int startIdx = SpecialStartIdx)
         {
             return new ExpectedToken(startIdx, 2, TokenType.StrInterpStart);
@@ -82,6 +87,11 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return CreateStrLitToken(str.Length, startIdx);
         }
 
+        public static ExpectedToken CreateBinaryOpToken(int length = 1, int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, length, TokenType.BinaryOp);
+        }
+
         public static ExpectedToken CreateIgnoredPlaceholderToken(int length)
         {
             return new ExpectedToken(SpecialStartIdx, length, TokenType.Lim);
@@ -89,7 +99,52 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
         public static ExpectedToken CreateUnaryOpToken(int length = 1, int startIdx = SpecialStartIdx)
         {
-            return new ExpectedToken(SpecialStartIdx, length, TokenType.UnaryOp);
+            return new ExpectedToken(startIdx, length, TokenType.UnaryOp);
+        }
+
+        public static ExpectedToken CreateDelimeterToken(int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, 1, TokenType.Delimiter);
+        }
+
+        public static ExpectedToken CreateFunctionToken(int length = 1, int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, length, TokenType.Function);
+        }
+
+        public static ExpectedToken CreateDottedNamePartToken(int length, int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, length, TokenType.DottedNamePart);
+        }
+
+        public static ExpectedToken CreateControlToken(int length, int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, length, TokenType.Control);
+        }
+
+        public static ExpectedToken CreateEnumToken(int length, int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, length, TokenType.Enum);
+        }
+
+        public static ExpectedToken CreateColorEnumToken(int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, 5, TokenType.Enum);
+        }
+
+        public static ExpectedToken CreateDataToken(int length, int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, length, TokenType.Data);
+        }
+
+        public static ExpectedToken CreateThisItemToken(int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, "ThisItem".Length, TokenType.ThisItem);
+        }
+
+        public static ExpectedToken CreateAliasToken(int length, int startIdx = SpecialStartIdx)
+        {
+            return new ExpectedToken(startIdx, length, TokenType.Alias);
         }
     }
 }
