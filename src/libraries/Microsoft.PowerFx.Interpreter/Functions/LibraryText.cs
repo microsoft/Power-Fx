@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
@@ -180,7 +181,7 @@ namespace Microsoft.PowerFx.Functions
 
             bool isValue = TryFloat(formatInfo.With(culture), irContext, args[0], out NumberValue result);
 
-            return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
+            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0]);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value
@@ -253,7 +254,7 @@ namespace Microsoft.PowerFx.Functions
 
             bool isValue = TryDecimal(formatInfo.With(culture), irContext, args[0], out DecimalValue result);
 
-            return isValue ? result : CommonErrors.ArgumentOutOfRange(irContext);
+            return isValue ? result : CommonErrors.CanNotConvertToNumber(irContext, args[0]);
         }
 
         // https://docs.microsoft.com/en-us/powerapps/maker/canvas-apps/functions/function-value

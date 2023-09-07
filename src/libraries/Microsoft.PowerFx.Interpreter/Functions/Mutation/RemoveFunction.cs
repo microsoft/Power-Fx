@@ -28,6 +28,8 @@ namespace Microsoft.PowerFx.Functions
 
         public override bool CanSuggestInputColumns => true;
 
+        public override bool ManipulatesCollections => true;
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -74,6 +76,17 @@ namespace Microsoft.PowerFx.Functions
     internal class RemoveFunction : RemoveFunctionBase, IAsyncTexlFunction
     {
         public override bool IsSelfContained => false;
+
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex == 1)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
 
         public RemoveFunction()
         : base("Remove", AboutRemove, FunctionCategories.Table | FunctionCategories.Behavior, DType.Unknown, 0, 2, int.MaxValue, DType.EmptyTable, DType.EmptyRecord)

@@ -26,16 +26,15 @@ namespace Microsoft.PowerFx.Connector.Tests
             var allowed = new HashSet<string>()
             {
               "Microsoft.PowerFx.ConfigExtensions",
-              "Microsoft.PowerFx.Connectors.CachingHttpClient",
+              "Microsoft.PowerFx.Connectors.BaseRuntimeConnectorContext",
               "Microsoft.PowerFx.Connectors.ConnectorFunction",
               "Microsoft.PowerFx.Connectors.ConnectorParameter",
               "Microsoft.PowerFx.Connectors.ConnectorParameters",
               "Microsoft.PowerFx.Connectors.ConnectorParameterType",
               "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
+              "Microsoft.PowerFx.Connectors.ConnectorSchema",
               "Microsoft.PowerFx.Connectors.ConnectorSettings",
               "Microsoft.PowerFx.Connectors.ConnectorType",
-              "Microsoft.PowerFx.Connectors.ICachingHttpClient",
-              "Microsoft.PowerFx.Connectors.NonCachingClient",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",
@@ -43,7 +42,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
-              "Microsoft.PowerFx.Connectors.RuntimeConnectorContext",
+              "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.Visibility"
             };
 
