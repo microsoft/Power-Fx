@@ -113,7 +113,7 @@ namespace Microsoft.PowerFx.Tests
         public void EvalWithoutParse()
         {
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", 2);
+            engine.UpdateVariable("x", 2.0);
 
             var check = new CheckResult(engine)
                 .SetText("x*3")
@@ -149,11 +149,11 @@ namespace Microsoft.PowerFx.Tests
         public void BasicRecalc()
         {
             var engine = new RecalcEngine();
-            engine.UpdateVariable("A", 15);
+            engine.UpdateVariable("A", 15.0);
             engine.SetFormula("B", "A*2", OnUpdate);
             AssertUpdate("B-->30;");
 
-            engine.UpdateVariable("A", 20);
+            engine.UpdateVariable("A", 20.0);
             AssertUpdate("B-->40;");
 
             // Ensure we can update to null. 
@@ -175,6 +175,92 @@ namespace Microsoft.PowerFx.Tests
             // Ensure we can update to null. 
             engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Decimal));
             AssertUpdate("B-->0;");
+        }
+
+        [Fact]
+        public void BasicRecalcString()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", "abcdef");
+            engine.SetFormula("B", "Mid(A,3,2)", OnUpdate);
+            engine.SetFormula("C", "Len(A)", OnUpdate);
+            AssertUpdate("B-->cd;C-->6;");
+
+            engine.UpdateVariable("A", "hello");
+            AssertUpdate("B-->ll;C-->5;");
+
+            // Ensure we can update to null. 
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.String));
+            AssertUpdate("B-->;C-->0;");
+        }
+
+        [Fact]
+        public void BasicRecalcBoolean()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", true);
+            engine.SetFormula("B", "Not(A)", OnUpdate);
+            engine.SetFormula("C", "A Or false", OnUpdate);
+            AssertUpdate("B-->False;C-->True;");
+
+            engine.UpdateVariable("A", false);
+            AssertUpdate("B-->True;C-->False;");
+
+            // Ensure we can update to null.
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Boolean));
+            AssertUpdate("B-->True;C-->False;");
+        }
+
+        [Fact]
+        public void BasicRecalcGuid()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", new Guid("0f8fad5b-D9CB-469f-a165-70867728950E"));
+            engine.SetFormula("B", "A", OnUpdate);
+            AssertUpdate("B-->0f8fad5b-d9cb-469f-a165-70867728950e;");
+
+            engine.UpdateVariable("A", new Guid("f9168c5e-CEB2-4FAA-b6bf-329bf39fa1e4"));
+            AssertUpdate("B-->f9168c5e-ceb2-4faa-b6bf-329bf39fa1e4;");
+
+            // Ensure we can update to null. 
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Guid));
+            AssertUpdate("B-->;");
+        }
+
+        [Fact]
+        public void BasicRecalcDateTime()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", new DateTime(2023, 09, 06, 03, 12, 45));
+            engine.SetFormula("B", "Hour(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            engine.SetFormula("C", "Minute(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            AssertUpdate("B-->3;C-->32;");
+
+            engine.UpdateVariable("A", new DateTime(2023, 09, 06, 12, 45, 45));
+            AssertUpdate("B-->13;C-->5;");
+
+            // Ensure we can update to null. 
+            // null is treated as 0 or DateTime(1899,12,30,0,0,0,0)
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.DateTime));
+            AssertUpdate("B-->0;C-->20;");
+        }
+
+        [Fact]
+        public void BasicRecalcTime()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", new TimeSpan(03, 12, 45));
+            engine.SetFormula("B", "Hour(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            engine.SetFormula("C", "Minute(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            AssertUpdate("B-->3;C-->32;");
+
+            engine.UpdateVariable("A", new TimeSpan(12, 45, 45));
+            AssertUpdate("B-->13;C-->5;");
+
+            // Ensure we can update to null. 
+            // null is treated as 0 or Time(0,0,0,0)
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Time));
+            AssertUpdate("B-->0;C-->20;");
         }
 
         // depend on grand child directly 

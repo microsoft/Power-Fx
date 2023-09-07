@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Tests
         public void Rewrite100x(string expr, string expectedIR, object expected)
         {
             var engine = new RecalcEngine();
-            engine.UpdateVariable("N200", 200);
+            engine.UpdateVariable("N200", 200.0);
             engine.IRTransformList.Add(new Rewrite100Transform());
 
             var opts = new ParserOptions { AllowsSideEffects = true };
