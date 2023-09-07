@@ -15,6 +15,15 @@ namespace Microsoft.PowerFx.Core.Syntax.Visitors
 {
     internal class DTypeVisitor : TexlFunctionalVisitor<DType, DefinedTypeSymbolTable>
     {
+        private DTypeVisitor()
+        {
+        }
+
+        public static DType Run(TexlNode node, DefinedTypeSymbolTable context)
+        {
+            return node.Accept(new DTypeVisitor(), context);
+        }
+
         public override DType Visit(ErrorNode node, DefinedTypeSymbolTable context)
         {
             throw new NotImplementedException();

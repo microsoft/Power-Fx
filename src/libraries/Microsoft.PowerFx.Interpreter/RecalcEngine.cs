@@ -244,7 +244,7 @@ namespace Microsoft.PowerFx
             foreach (var defType in definedTypes)
             {
                 var name = defType.Ident.Name.Value;
-                var res = defType.Type.TypeRoot.Accept(new DTypeVisitor(), _definedTypeSymbolTable);
+                var res = DTypeVisitor.Run(defType.Type.TypeRoot, _definedTypeSymbolTable);
                 if (res == null)
                 {
                     errors.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
