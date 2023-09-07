@@ -38,12 +38,15 @@ namespace Microsoft.PowerFx.Types
 
         public static DecimalValue New(long number)
         {
-            // it is safe to convert 64-bit Long to Decimal
+            // it is safe to convert 64-bit Long to Decimal, but not to Float
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)number);
         }
 
         public static DecimalValue New(int number)
         {
+            // Since decimal is a lower type precedence than floating point, if a calculation includes
+            // an int through this mechanism, that is treated as a float, then the entire calculation
+            // is tainted. For example, this is why the CountRows function returns a decimal.
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
