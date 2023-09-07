@@ -82,6 +82,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
 
         Type, 
 
+        Record,
         Lim
     }
 }

@@ -63,7 +63,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
             {
                 var textSpan = firstName.Node.GetCompleteSpan();
                 span = new Span(textSpan.Min, textSpan.Lim);
-                TokenType type = MapBindKindToTokenType(firstName.Kind);
+                TokenType type = MapBindKindToTokenType(firstName, binding);
 
                 // Try to set the canHide flag if the FirstName type is Enum
                 var canHide = allowTokenHiding && type == TokenType.Enum && CanHideLeftHandSideOfDottedName(firstName, binding);
@@ -346,6 +346,21 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
                 default:
                     return TokenType.Unknown;
             }
+        }
+
+        private static TokenType MapBindKindToTokenType(NameInfo nameInfo, TexlBinding binding)
+        {
+            var dType = binding.GetType(nameInfo.Node);
+            if (dType?.IsRecord ?? false)
+            {
+                return TokenType.Record;
+            }
+            else if (dType?.IsTable ?? false)
+            {
+                return TokenType.Data;
+            }
+
+            return MapBindKindToTokenType(nameInfo.Kind);
         }
 
         /// <summary>
