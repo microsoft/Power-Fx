@@ -36,7 +36,7 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// Callback to get the auth token.
-        /// Invoke as a callback since token may need to be refreshed. 
+        /// Invoke as a callback since token may need to be refreshed.
         /// </summary>
         public Func<Task<string>> GetAuthToken { get; }
 

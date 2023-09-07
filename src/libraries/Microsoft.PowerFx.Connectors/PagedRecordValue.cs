@@ -54,8 +54,6 @@ namespace Microsoft.PowerFx.Connectors
 
             public int MaxRows => PagedRecordValue.MaxRows;
 
-            public CancellationToken CancellationToken => PagedRecordValue.CancellationToken;
-
             public PagedTableValue(PagedRecordValue prv)
                 : base(prv.CurrentTable.Type)
             {
