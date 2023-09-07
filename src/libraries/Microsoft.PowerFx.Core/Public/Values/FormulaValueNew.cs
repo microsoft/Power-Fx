@@ -42,9 +42,9 @@ namespace Microsoft.PowerFx.Types
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)number);
         }
 
-        public static NumberValue New(int number)
+        public static DecimalValue New(int number)
         {
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
         public static NumberValue New(float number)

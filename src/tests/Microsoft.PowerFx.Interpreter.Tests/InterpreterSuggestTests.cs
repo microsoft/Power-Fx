@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             Assert.Null(s.FunctionName);
             Assert.Equal(SuggestionIconKind.Other, s.IconKind);
             Assert.Equal(SuggestionKind.Global, s.Kind);
-            Assert.Equal(DType.Number, s.Type);
+            Assert.Equal(DType.Decimal, s.Type);
 
             var resolver = (IGlobalSymbolNameResolver)recalcEngine.TestCreateResolver();
 

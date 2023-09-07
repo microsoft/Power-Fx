@@ -667,6 +667,24 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.NewBlank(FormulaType.Number)),
+                new NamedValue("F2", FormulaValue.New(6.0))));
+
+            engine.SetFormula("A", "R.F2 + 3 + R.F1", OnUpdate);
+            AssertUpdate("A-->9;");
+
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
+                new NamedValue("F1", FormulaValue.New(2.0)),
+                new NamedValue("F2", FormulaValue.New(7.0))));
+            AssertUpdate("A-->12;");
+        }
+
+        [Fact]
+        public void ChangeRecord_Decimal()
+        {
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
+                new NamedValue("F1", FormulaValue.NewBlank(FormulaType.Decimal)),
                 new NamedValue("F2", FormulaValue.New(6))));
 
             engine.SetFormula("A", "R.F2 + 3 + R.F1", OnUpdate);
@@ -843,7 +861,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Test evaluation of parsed expression
             var recordValue = FormulaValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(5)));
+                new NamedValue("x", FormulaValue.New(5.0)));
             var formulaValue = result.GetEvaluator().Eval(recordValue);
             Assert.Equal(11.0, (double)formulaValue.ToObject());
         }
@@ -866,7 +884,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Test evaluation of parsed expression
             var recordValue = FormulaValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(5)));
+                new NamedValue("x", FormulaValue.New(5.0)));
 
             var formulaValue = result.GetEvaluator().Eval(recordValue);
 
@@ -1272,7 +1290,7 @@ namespace Microsoft.PowerFx.Tests
 
             var eval = result.GetEvaluator();
             var symValues = symTable.CreateValues();
-            symValues.Set(slot, FormulaValue.New(10));
+            symValues.Set(slot, FormulaValue.New(10.0));
 
             var result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
@@ -1289,7 +1307,7 @@ namespace Microsoft.PowerFx.Tests
             // Even re-adding with same type still fails. 
             // (somebody could have re-added with a different type)
             var slot2 = symTable.AddVariable("x", FormulaType.Number, null);
-            symValues.Set(slot2, FormulaValue.New(20));
+            symValues.Set(slot2, FormulaValue.New(20.0));
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
         }
@@ -1308,15 +1326,15 @@ namespace Microsoft.PowerFx.Tests
             var eval = result.GetEvaluator();
 
             var recordXY = RecordValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(10)),
-                new NamedValue("y", FormulaValue.New(100)));
+                new NamedValue("x", FormulaValue.New(10.0)),
+                new NamedValue("y", FormulaValue.New(100.0)));
 
             var result2 = eval.Eval(recordXY);
             Assert.Equal(110.0, result2.ToObject());
 
             // Missing y , treated as blank (0)
             var recordX = RecordValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(10)));
+                new NamedValue("x", FormulaValue.New(10.0)));
             result2 = eval.Eval(recordX);
             Assert.Equal(10.0, result2.ToObject());
         }
@@ -1384,7 +1402,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             var engine = new RecalcEngine(config);
-            engine.UpdateVariable("A", FormulaValue.New(0));
+            engine.UpdateVariable("A", FormulaValue.New(0.0));
 
             Assert.True(engine.TryGetVariableType("A", out var type));
             Assert.Equal(FormulaType.Number, type);

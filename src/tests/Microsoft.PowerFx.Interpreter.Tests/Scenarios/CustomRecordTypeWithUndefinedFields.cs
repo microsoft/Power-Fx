@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                     }
                     else if (value is int i)
                     {
-                        result = FormulaValue.New(i);
+                        result = FormulaValue.New((double)i);
                     }
 
                     if (!fieldType.Equals(result.Type))

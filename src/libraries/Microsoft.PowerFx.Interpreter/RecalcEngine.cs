@@ -83,47 +83,47 @@ namespace Microsoft.PowerFx
 
         public void UpdateVariable(string name, double value)
         {
-            UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, decimal value)
         {
-            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, int value)
         {
-            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, long value)
         {
-            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, string value)
         {
-            UpdateVariable(name, new StringValue(IRContext.NotInSource(FormulaType.String), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, bool value)
         {
-            UpdateVariable(name, new BooleanValue(IRContext.NotInSource(FormulaType.Boolean), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, Guid value)
         {
-            UpdateVariable(name, new GuidValue(IRContext.NotInSource(FormulaType.Guid), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, DateTime value)
         {
-            UpdateVariable(name, new DateTimeValue(IRContext.NotInSource(FormulaType.DateTime), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, TimeSpan value)
         {
-            UpdateVariable(name, new TimeValue(IRContext.NotInSource(FormulaType.Time), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         /// <summary>

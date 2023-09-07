@@ -162,7 +162,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
                 if (!startMatchHidden)
                 {
-                    propertyNames.Add(new TypedName(DType.Number, ColumnName_StartMatch));
+                    propertyNames.Add(new TypedName(DType.Decimal, ColumnName_StartMatch));
                 }
 
                 returnType = returnType.IsRecord

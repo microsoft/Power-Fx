@@ -53,11 +53,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Match(\"LiteralText\", \"LiteralRegEx\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:n]")]
-        [InlineData("Match(VariableText, \"([A-Z][a-z]+)\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:n]")]
-        [InlineData("Match(VariableText, \"(?<Word>[A-Z][a-z]+)\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:n, Word:s]")]
-        [InlineData("Match(VariableText, \"(?<hour>[0-9]{2})\\:(?<minute>[0-9]{2})\\:(?<second>[0-9]{2})\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:n, hour:s, minute:s, second:s]")]
-        [InlineData("Match(NotText, \"LiteralRegEx\")", "![FullMatch:s, StartMatch:n, SubMatches:*[Value:s]]")]
+        [InlineData("Match(\"LiteralText\", \"LiteralRegEx\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:w]")]
+        [InlineData("Match(VariableText, \"([A-Z][a-z]+)\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:w]")]
+        [InlineData("Match(VariableText, \"(?<Word>[A-Z][a-z]+)\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:w, Word:s]")]
+        [InlineData("Match(VariableText, \"(?<hour>[0-9]{2})\\:(?<minute>[0-9]{2})\\:(?<second>[0-9]{2})\")", "![FullMatch:s, SubMatches:*[Value:s], StartMatch:w, hour:s, minute:s, second:s]")]
+        [InlineData("Match(NotText, \"LiteralRegEx\")", "![FullMatch:s, StartMatch:w, SubMatches:*[Value:s]]")]
         public void TexlFunctionTypeSemanticsMatch(string script, string expectedDType)
         {
             foreach (var matchAll in new[] { false, true })
@@ -84,9 +84,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Match(\"An e-mail johndoe@contoso.com\", Match.Email)", "![FullMatch: s, SubMatches: *[Value: s], StartMatch:n]")]
-        [InlineData("Match(\"John Doe <john@doe.com>\", \"\\<(?<email>\" & Match.Email & \")\\>\")", "![FullMatch: s, SubMatches: *[Value: s], StartMatch:n, email:s]")]
-        [InlineData("Match(\"Hello world\", Concatenate(Match.MultipleNonSpaces, Match.MultipleSpaces, Match.MultipleNonSpaces))", "![FullMatch: s, SubMatches: *[Value: s], StartMatch:n]")]
+        [InlineData("Match(\"An e-mail johndoe@contoso.com\", Match.Email)", "![FullMatch: s, SubMatches: *[Value: s], StartMatch:w]")]
+        [InlineData("Match(\"John Doe <john@doe.com>\", \"\\<(?<email>\" & Match.Email & \")\\>\")", "![FullMatch: s, SubMatches: *[Value: s], StartMatch:w, email:s]")]
+        [InlineData("Match(\"Hello world\", Concatenate(Match.MultipleNonSpaces, Match.MultipleSpaces, Match.MultipleNonSpaces))", "![FullMatch: s, SubMatches: *[Value: s], StartMatch:w]")]
         public void TexlFunctionTypeSemanticsMatch_MatchEnumeration(string script, string expectedDType)
         {
             foreach (var matchAll in new[] { false, true })

@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Functions
             Dictionary<string, NamedValue> fields = new ()
             {
                 { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
-                { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(m.Index + 1)) }
+                { STARTMATCH, new NamedValue(STARTMATCH, DecimalValue.New(m.Index + 1)) }
             };
 
             List<string> subMatches = new List<string>();
@@ -174,7 +174,7 @@ namespace Microsoft.PowerFx.Functions
             Regex rex = new Regex(regularExpression);
 
             propertyNames.Add(FULLMATCH, new TypedName(DType.String, new DName(FULLMATCH)));
-            propertyNames.Add(STARTMATCH, new TypedName(DType.Number, new DName(STARTMATCH)));
+            propertyNames.Add(STARTMATCH, new TypedName(DType.Decimal, new DName(STARTMATCH)));
             propertyNames.Add(SUBMATCHES, new TypedName(DType.CreateTable(new TypedName(DType.String, new DName(TexlFunction.ColumnName_ValueStr))), new DName(SUBMATCHES)));
 
             foreach (string groupName in rex.GetGroupNames())

@@ -198,7 +198,7 @@ namespace Microsoft.PowerFx.Tests
         private class TestCustomFunction : ReflectionFunction
         {
             // Must have "Execute" method. 
-            public static StringValue Execute(NumberValue x, BooleanValue b, StringValue s)
+            public static StringValue Execute(DecimalValue x, BooleanValue b, StringValue s)
             {
                 var val = x.Value.ToString() + "," + b.Value.ToString() + "," + s.Value.ToString();
                 return FormulaValue.New(val);
@@ -363,20 +363,20 @@ namespace Microsoft.PowerFx.Tests
 
             // Can be invoked. 
             var result = engine.Eval("TableArgTest( [1, 2, 3, 4, 5] )");
-            Assert.IsType<NumberValue>(result);
+            Assert.IsType<DecimalValue>(result);
 
-            var resultNumber = (NumberValue)result;
-            Assert.Equal(5, resultNumber.Value);
+            var resultNumber = (DecimalValue)result;
+            Assert.Equal(5m, resultNumber.Value);
         }
 
         private class TableArgCustomFunction : ReflectionFunction
         {
             public TableArgCustomFunction()
-                : base("TableArgTest", FormulaType.Number, TableType.Empty().Add("Value", FormulaType.Number))
+                : base("TableArgTest", FormulaType.Decimal, TableType.Empty().Add("Value", FormulaType.Number))
             {
             }
 
-            public NumberValue Execute(TableValue table)
+            public DecimalValue Execute(TableValue table)
             {
                 return FormulaValue.New(table.Count());
             }
@@ -483,7 +483,7 @@ namespace Microsoft.PowerFx.Tests
             public HelperFunction(Func<NumberValue, NumberValue> func)
             {
                 _func = func;
-                _counter = FormulaValue.New(0);
+                _counter = FormulaValue.New(0.0);
             }
 
             public NumberValue Execute()
@@ -593,7 +593,7 @@ namespace Microsoft.PowerFx.Tests
 
             var result = await task.ConfigureAwait(false);
 
-            Assert.Equal(30.0, result.ToObject());
+            Assert.Equal(30m, result.ToObject());
         }
 
         [Fact]
@@ -738,12 +738,12 @@ namespace Microsoft.PowerFx.Tests
 
             // Must have "Execute" method. 
             // Cancellation Token must be the last argument for custom async function.
-            public async Task<NumberValue> Execute(CancellationToken cancellationToken)
+            public async Task<DecimalValue> Execute(CancellationToken cancellationToken)
             {
                 await Task.Yield();
                 var result = await _waiter.Task.ConfigureAwait(false);
 
-                var n = ((NumberValue)result).Value;
+                var n = ((DecimalValue)result).Value;
                 var x = FormulaValue.New(n * 2);
 
                 return x;

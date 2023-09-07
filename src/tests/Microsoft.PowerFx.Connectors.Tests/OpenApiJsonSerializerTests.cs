@@ -108,7 +108,7 @@ namespace Microsoft.PowerFx.Tests
                 ["a"] = (SchemaString, FormulaValue.New(11))
             }));
 
-            Assert.Equal("Expected StringValue and got NumberValue value, for property a", ex.Message);
+            Assert.Equal("Expected StringValue and got DecimalValue value, for property a", ex.Message);
         }
 
         [Fact]
