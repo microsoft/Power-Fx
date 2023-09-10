@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
@@ -59,7 +60,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// If set, provides the handler for $/nlSuggestion message.
         /// $$$ - wire up to include symbols here too. 
         /// </summary>
-        public Func<string, Task<CustomNLResult>> NL2FxImplementation { get; set; }
+        public Func<CustomNLRequest, CancellationToken, Task<CustomNLResult>> NL2FxImplementation { get; set; }
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
@@ -425,9 +426,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var documentUri = request.TextDocument.Uri;
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
-            var sentence = request.Sentence;
+            var check = scope.Check("1"); // just need to get the symbols 
 
-            var result = this.NL2FxImplementation(sentence).ConfigureAwait(false).GetAwaiter().GetResult();
+            var req = new CustomNLRequest
+            {
+                Sentence = request.Sentence,
+                Symbols = check.Symbols
+            };
+
+            CancellationToken cancel = default;
+            var result = this.NL2FxImplementation(req, cancel)
+                .ConfigureAwait(false).GetAwaiter().GetResult();
             
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
         }

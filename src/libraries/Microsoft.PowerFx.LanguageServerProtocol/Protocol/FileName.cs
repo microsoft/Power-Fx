@@ -27,4 +27,12 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// </summary>
         public string[] Expressions { get; set; }
     }
+
+    public class CustomNLRequest
+    {
+        public string Sentence { get; set; }
+
+        // Current symbols to pass into NL prompt 
+        public ReadOnlySymbolTable Symbols { get; set; }
+    }
 }

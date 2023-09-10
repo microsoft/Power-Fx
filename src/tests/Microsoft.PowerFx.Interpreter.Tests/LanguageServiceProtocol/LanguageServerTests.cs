@@ -1362,7 +1362,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
             {
                 // $$$ This should get symbols too. 
-                NL2FxImplementation = (string sentence) => Task.FromResult<CustomNLResult>(new CustomNLResult
+                NL2FxImplementation = (nlReq, cancel) => Task.FromResult<CustomNLResult>(new CustomNLResult
                 {
                     Expressions = new string[]
                     {
