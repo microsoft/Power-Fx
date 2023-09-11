@@ -668,7 +668,7 @@ namespace Microsoft.PowerFx.Intellisense
             return false;
         }
 
-        private static CallNode GetNearestCallNode(TexlNode node)
+        internal static CallNode GetNearestCallNode(TexlNode node)
         {
             Contracts.AssertValue(node);
             var parent = node;
@@ -728,6 +728,11 @@ namespace Microsoft.PowerFx.Intellisense
 #pragma warning disable CS0618 // Type or member is obsolete
             foreach (var function in intellisenseData.Binding.NameResolver.Functions.Functions)
             {
+                if (function.IsDeprecatedOrInternalFunction)
+                {
+                    continue;
+                }
+
                 var qualifiedName = function.QualifiedName;
                 var highlightStart = qualifiedName.IndexOf(intellisenseData.MatchingStr, StringComparison.OrdinalIgnoreCase);
                 var highlightEnd = intellisenseData.MatchingStr.Length;

@@ -213,7 +213,7 @@ namespace Microsoft.PowerFx.Tests
             RecordValue record1 = FormulaValue.NewRecordFromFields(
                 new NamedValue("b", FormulaValue.New("1")));
             RecordValue expectedRecord1 = FormulaValue.NewRecordFromFields(
-                new NamedValue("b", FormulaValue.New(1)));
+                new NamedValue("b", FormulaValue.New(1.0)));
             RecordValue inputRecord = FormulaValue.NewRecordFromFields(new NamedValue("a", record1));
 
             RecordType inputtype1 = RecordType.Empty()

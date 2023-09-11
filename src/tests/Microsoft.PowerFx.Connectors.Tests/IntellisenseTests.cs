@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService("SQL", apiDoc, client);
+            config.AddActionConnector("SQL", apiDoc);
             testConnector.SetResponseFromFile(responseIndex switch
             {
                 0 => null,
@@ -63,12 +63,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 _ => null
             });
             RecalcEngine engine = new RecalcEngine(config);
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
-            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
 
             string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
-            Assert.Equal(expectedSuggestions, list);            
+            Assert.Equal(expectedSuggestions, list);
             Assert.True((responseIndex == 0) ^ testConnector.SendAsyncCalled);
 
             string networkTrace = testConnector._log.ToString();
@@ -101,7 +102,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 "
             };
 
-            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));            
+            Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
         [Theory]
@@ -133,7 +134,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddService("SQL", apiDoc, client);
+            config.AddActionConnector("SQL", apiDoc);
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -145,9 +146,10 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
 
             CheckResult checkResult = engine.Check(expression, symbolTable: null);
-            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
 
             string list = string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text).OrderBy(x => x));
             Assert.Equal(expectedSuggestions, list);
@@ -197,7 +199,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 BaseAddress = client.BaseAddress
             };
             const string cxNamespace = "SQL";
-            config.AddService(cxNamespace, apiDoc, ignoreHttpClient);
+            config.AddActionConnector(new ConnectorSettings(cxNamespace), apiDoc);
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -209,11 +211,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             }
 
             RecalcEngine engine = new RecalcEngine(config);
-
-            var ctx = new TestRuntimeConnectorContext();
-            ctx._clients[cxNamespace] = client;
-            BasicServiceProvider services = new BasicServiceProvider();
-            services.AddService<RuntimeConnectorContext>(ctx);
+            BasicServiceProvider services = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext(cxNamespace, client));
 
             IPowerFxScope scope = new EditorContextScope((expr) => engine.Check(expression, symbolTable: null)) { Services = services };
             IIntellisenseResult suggestions = scope.Suggest(expression, expression.Length);
@@ -238,16 +236,6 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(expectedNetwork.Replace("\r\n", "\n").Replace("\r", "\n"), networkTrace.Replace("\r\n", "\n").Replace("\r", "\n"));
         }
 
-        internal class TestRuntimeConnectorContext : RuntimeConnectorContext
-        {
-            public Dictionary<string, HttpMessageInvoker> _clients = new Dictionary<string, HttpMessageInvoker>();
-
-            public override HttpMessageInvoker GetInvoker(string @namespace)
-            {
-                return _clients[@namespace];
-            }
-        }
-
         [Fact]
         public async Task ConnectorIntellisenseTest3()
         {
@@ -259,7 +247,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "2f0cc19d-893e-e765-b15d-2906e3231c09" /* env */, "6fb0a1a8e2f5487eafbe306821d8377e" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(apiDoc).OrderBy(f => f.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc).OrderBy(f => f.Name).ToList();
 
             // Total 101 functions, including 1 deprecated & 50 internal functions (and no deprecated+internal functions)
             Assert.Equal(101, functions.Count);
@@ -267,7 +255,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             Assert.Equal(50, functions.Where(f => f.IsInternal).Count());
             Assert.Empty(functions.Where(f => f.IsDeprecated && f.IsInternal));
 
-            IEnumerable<FunctionInfo> funcInfos = config.AddService("SP", apiDoc, ppClient);
+            IEnumerable<ConnectorFunction> funcInfos = config.AddActionConnector("SP", apiDoc);
             RecalcEngine engine = new RecalcEngine(config);
 
             CheckResult checkResult = engine.Check("SP.", symbolTable: null);
@@ -275,6 +263,38 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
 
             // We only suggest 50 functions as we don't include deprecated & internal functions
             Assert.Equal(50, suggestions.Suggestions.Count());
+        }
+
+        [Theory]
+        [InlineData(@"SQL.")]
+        [InlineData(@"SQ")]
+        public async Task ConnectorDoNotSuggestDeprecatedEndpoints(string expression)
+        {
+            // This Path can be found in the Swagger file SQL Server.json
+            var deprecatedFunctionExample = "SQL.ExecutePassThroughNativeQuery";
+            using LoggingTestServer testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            OpenApiDocument apiDoc = testConnector._apiDocument;
+            PowerFxConfig config = new PowerFxConfig(Features.PowerFxV1);
+
+            using HttpClient httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
+                    "tip1-shared-002.azure-apim.net",           // endpoint 
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
+                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    () => "eyJ0eXA...",
+                    httpClient)
+            {
+                SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
+            };
+
+            config.AddActionConnector("SQL", apiDoc);
+            RecalcEngine engine = new RecalcEngine(config);
+            BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
+
+            CheckResult checkResult = engine.Check(expression, symbolTable: null);
+            IIntellisenseResult suggestions = engine.Suggest(checkResult, expression.Length, serviceProvider);
+
+            Assert.DoesNotContain(suggestions.Suggestions, suggestion => suggestion.DisplayText.Text.Equals(deprecatedFunctionExample));
         }
     }
 }

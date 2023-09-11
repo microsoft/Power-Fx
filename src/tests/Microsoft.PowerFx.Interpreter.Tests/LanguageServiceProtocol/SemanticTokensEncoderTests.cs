@@ -48,18 +48,26 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
             { TokenType.StrInterpStart, 22u },
             { TokenType.StrInterpEnd, 23u },
             { TokenType.IslandStart, 24u },
-            { TokenType.IslandEnd, 25u }
+            { TokenType.IslandEnd, 25u },
+            { TokenType.Type, 26u }
         };
 
         // This test is to ensure that any changes in TokenType enum don't break the encoding of token types using their positions in TokenType for semantic tokenization
-        // Any changes that are not towards the end of TokenType would fail this test and person making changes would need to update the encoding
+        // This test would also serve as reminder for whoever is making the breaking change to update token type enum in the clients that rely on this enum such as @microsoft/power-fx-formulabar npm package
         [Fact]
         public void TestTokenTypesAreEncodedCorrectly()
         {
             // Arrange
             const string potentialChangesInTokenTypeEnumMsg = "Looks like changes in TokenType broke the encoding for semantic tokenization. Update the encoding in this test  and all the clients that uses semantic tokenization such as @microsoft/power-fx-formulabar npm package";
+            var expectedNumberOfTokenTypes = EncodedTokens.Count;
 
             // Act & Assert
+            var actualNumberOfTokenTypes = Enum.GetValues(typeof(TokenType))
+                                           .OfType<TokenType>()
+                                           .Where(tokenType => tokenType == TokenType.Unknown || (tokenType != TokenType.Min && tokenType != TokenType.Lim))
+                                           .Distinct()
+                                           .Count();
+            Assert.True(expectedNumberOfTokenTypes == actualNumberOfTokenTypes, $"{potentialChangesInTokenTypeEnumMsg}.\n Expected number of token types do not match actual number of token types. Looks like a new token type was added or an existing one was deleted");
             Assert.All(EncodedTokens.Values, (encodedVal) =>
             {
                 var tokenType = SemanticTokensEncoder.TestOnly_GetTokenTypeFromEncodedValue(encodedVal);

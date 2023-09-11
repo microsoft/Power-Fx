@@ -594,8 +594,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            // Skip over the token types that clients don't want in the response
-            var tokens = result.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
+            var tokens = result.GetTokens(tokenTypesToSkip);
 
             if (isRangeSemanticTokensMethod)
             {

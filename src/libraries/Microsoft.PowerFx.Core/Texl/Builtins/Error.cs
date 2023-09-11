@@ -26,6 +26,12 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsSelfContained => true;
 
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            type = default;
+            return false;
+        }
+
         public ErrorFunction()
             : base("Error", TexlStrings.AboutError, FunctionCategories.Logical, DType.ObjNull, 0, 1, 1)
         {
