@@ -1,0 +1,20 @@
+#SETUP: disable:NumberIsFloat
+#SETUP: disable:SupportColumnNamesAsIdentifiers
+
+// DV Decimal: These tests are compabtible with the SQL compiler used by Dataverse, with a max/min of +/-100,000,000,000 and ten decimal places.  
+// Variants of 10000000000.0000000001 are used which is not representable in floating point (rounds to 10000000000).  
+// These tests are also runnable with the C# semantics for decimal which is why they are included in the Power-Fx repo, ensuring consistency between DV and C#.
+// Where possible, unless specifically testing the C# range, should be written in the DV rnage.
+
+>> AddColumns(["1","2","3"],"dec",Decimal(Value)+10000000000.0000000007)
+Table({Value:"1",dec:10000000001.0000000007},{Value:"2",dec:10000000002.0000000007},{Value:"3",dec:10000000003.0000000007})
+
+>> AddColumns(["1","2","3"],"dec",Value+10000000000.0000000007)
+Table({Value:"1",dec:10000000001.0000000007},{Value:"2",dec:10000000002.0000000007},{Value:"3",dec:10000000003.0000000007})
+
+>> AddColumns(["1","2","3"],"dec",Float(Value)+10000000000.0000000007)
+Table({Value:"1",dec:10000000001},{Value:"2",dec:10000000002},{Value:"3",dec:10000000003})
+
+>> AddColumns(["1","2","3"],"dec",Value(Value)+10000000000.0000000007)
+Table({Value:"1",dec:10000000001.0000000007},{Value:"2",dec:10000000002.0000000007},{Value:"3",dec:10000000003.0000000007})
+
