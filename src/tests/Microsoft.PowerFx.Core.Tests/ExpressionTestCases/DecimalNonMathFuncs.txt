@@ -1,5 +1,4 @@
 #SETUP: disable:NumberIsFloat
-#SETUP: disable:SupportColumnNamesAsIdentifiers
 
 // non-decimal aware other functions
 
@@ -37,18 +36,6 @@ Table({a:1.0000000000000000000000002,b:2},{a:1.0000000000000000000000002,b:4})
 
 >> LookUp( [{a:1.0000000000000000000000001,b:1},{a:1.0000000000000000000000002,b:2},{a:1.0000000000000000000000003,b:3},{a:1.0000000000000000000000002,b:4}], a = 1.0000000000000000000000002 )
 {a:1.0000000000000000000000002,b:2}
-
->> AddColumns(["1","2","3"],"dec",Decimal(Value)+0.00000000000000000000001)
-Table({Value:"1",dec:1.00000000000000000000001},{Value:"2",dec:2.00000000000000000000001},{Value:"3",dec:3.00000000000000000000001})
-
->> AddColumns(["1","2","3"],"dec",Value+0.00000000000000000000001)
-Table({Value:"1",dec:1.00000000000000000000001},{Value:"2",dec:2.00000000000000000000001},{Value:"3",dec:3.00000000000000000000001})
-
->> AddColumns(["1","2","3"],"dec",Float(Value)+0.00000000000000000000001)
-Table({Value:"1",dec:1},{Value:"2",dec:2},{Value:"3",dec:3})
-
->> AddColumns(["1","2","3"],"dec",Value(Value)+0.00000000000000000000001)
-Table({Value:"1",dec:1.00000000000000000000001},{Value:"2",dec:2.00000000000000000000001},{Value:"3",dec:3.00000000000000000000001})
 
 >> ForAll([1,2,3],{Value:Value + 0.00000000000000000000001})
 Table({Value:1.00000000000000000000001},{Value:2.00000000000000000000001},{Value:3.00000000000000000000001})
@@ -221,22 +208,28 @@ Error({Kind:ErrorKind.InvalidArgument})
 >> Text( 123456789, "00000-0000" )
 "12345-6789"
 
+>> Text( "123456789", "00000-0000" )
+Errors: Error 0-33: The function 'Text' has some invalid arguments.|Warning 19-31: The second argument of the 'Text' function is only supported for numeric and date/time values.
+
 // strings should pass straight through
 
->> Text( ".1234567890123456789012345678912345", "0.0000000000000000000000000000000e00" )
+>> Text( ".1234567890123456789012345678912345" )
 ".1234567890123456789012345678912345"
+
+>> Text( "1234567890123456789012345678912345" )
+"1234567890123456789012345678912345"
+
+>> Text( ".1234567890123456789012345678912345", "0.0000000000000000000000000000000e00" )
+Errors: Error 0-85: The function 'Text' has some invalid arguments.|Warning 45-83: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text( ".1234567890123456789012345678912345", "00.0000000000000000000000000000000000%" )
-".1234567890123456789012345678912345"
-
->> Text( "123456789", "00000-0000" )
-"123456789"
+Errors: Error 0-87: The function 'Text' has some invalid arguments.|Warning 45-85: The second argument of the 'Text' function is only supported for numeric and date/time values.
 
 >> Text( ParseJSON("1.234567890123456789012345678"), "0.000000000000e00" )
-"1.234567890123456789012345678"
+"1.234567890123e00"
 
 >> Text( ParseJSON("1.234567890123456789012345678"), "00.0000000000000%" )
-"1.234567890123456789012345678"
+"123.4567890123457%"
 
 >> Text( ParseJSON("1.234567890123456789012345678") )
 "1.234567890123456789012345678"
@@ -254,7 +247,7 @@ Error({Kind:ErrorKind.InvalidArgument})
 "3.1415E+300"
 
 >> Text( ParseJSON("123456789"), "00000-0000" )
-"123456789"
+"12345-6789"
 
 >> Text( ParseJSON("1234.34534554e20") )
 "1234.34534554e20"
