@@ -72,5 +72,3 @@ false
 
 >> Value( "1" & Text( Value( Upper( Mid( ".3.", 2, 1) ) ), "####" ) ) * -2
 -26
-
-// Test: 4,000 character string field concat together
