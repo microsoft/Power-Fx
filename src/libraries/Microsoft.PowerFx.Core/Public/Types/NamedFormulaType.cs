@@ -26,6 +26,8 @@ namespace Microsoft.PowerFx.Types
             DisplayName = displayName == null ? default : new DName(displayName);
         }
 
+        public bool IsExpandEntity => _typedName.IsExpandEntity;
+
         internal NamedFormulaType(TypedName typedName, string displayName = null)
         {
             _typedName = typedName;
