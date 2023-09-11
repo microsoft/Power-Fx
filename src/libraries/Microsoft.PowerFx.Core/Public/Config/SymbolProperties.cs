@@ -25,5 +25,5 @@ namespace Microsoft.PowerFx
         public bool CanMutate { get; init; }
 
         // Is Copyable?
-    } 
+    }
 }
