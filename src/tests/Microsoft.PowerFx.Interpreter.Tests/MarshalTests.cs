@@ -26,7 +26,7 @@ namespace Microsoft.PowerFx.Tests
 
             var value = tm.Marshal(5);
 
-            Assert.Equal(5.0, ((NumberValue)value).Value);
+            Assert.Equal(5m, ((DecimalValue)value).Value);
         }
 
         // A FormulaValue should be passed through. 
@@ -176,13 +176,13 @@ namespace Microsoft.PowerFx.Tests
             engine.UpdateVariable("x", x);
 
             var result1 = engine.Eval("x.Data");
-            Assert.Equal(10.0, ((NumberValue)result1).Value);
+            Assert.Equal(10m, ((DecimalValue)result1).Value);
 
             var result2 = engine.Eval("x.Next.Data");
-            Assert.Equal(20.0, ((NumberValue)result2).Value);
+            Assert.Equal(20m, ((DecimalValue)result2).Value);
 
             var result3 = engine.Eval("x.Next.Next.Data");
-            Assert.Equal(30.0, ((NumberValue)result3).Value);
+            Assert.Equal(30m, ((DecimalValue)result3).Value);
 
             // Arbitrary recursion supported!
             // Practically capped here at 50 due to parser depth limit
@@ -325,7 +325,7 @@ namespace Microsoft.PowerFx.Tests
 
             Assert.Equal(2, obj1._counter); // doesn't increment
             var result1 = engine.Eval("x.Field1");
-            Assert.Equal(3.0, ((NumberValue)result1).Value);
+            Assert.Equal(3m, ((DecimalValue)result1).Value);
         }
 
         // Test using a marshalled object inside of With()
@@ -634,10 +634,10 @@ namespace Microsoft.PowerFx.Tests
             engine._symbolValues.Add("x", x);
 
             var result1 = engine.Eval("Last(x).Field1");
-            Assert.Equal(21.0, ((NumberValue)result1).Value);
+            Assert.Equal(21m, ((DecimalValue)result1).Value);
 
             var result2 = engine.Eval("First(x).Field1");
-            Assert.Equal(11.0, ((NumberValue)result2).Value);
+            Assert.Equal(11m, ((DecimalValue)result2).Value);
         }
 
         // Marshal a SCT from an array of primitive. 
@@ -653,7 +653,7 @@ namespace Microsoft.PowerFx.Tests
             engine._symbolValues.Add("x", x);
 
             var result1 = engine.Eval("Last(x).Value");
-            Assert.Equal(30.0, ((NumberValue)result1).Value);
+            Assert.Equal(30m, ((DecimalValue)result1).Value);
         }
 
         // None of these should marshal. 
@@ -855,8 +855,8 @@ namespace Microsoft.PowerFx.Tests
 
             var result2 = engine.Eval("Index(x, 2).Field1").ToObject();
             Assert.Equal(10, values[0]._counter); // unchanged.
-            Assert.Equal(21, values[1]._counter);
-            Assert.Equal(21.0, result2);
+            Assert.Equal(21m, values[1]._counter);
+            Assert.Equal(21m, result2);
 
             Assert.Equal(0, values[0]._counter2);
             Assert.Equal(2, values[1]._counter2); // index fetch again
@@ -891,7 +891,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Table doesn't have indexer, so index is a linear scan. 
             var result1 = (RecordValue)fxTable.Index(2).Value;
-            Assert.Equal(21.0, result1.GetField("Field1").ToObject());
+            Assert.Equal(21m, result1.GetField("Field1").ToObject());
         }
 
         private class MyDynamicMarshaller : IDynamicTypeMarshaller
@@ -925,7 +925,7 @@ namespace Microsoft.PowerFx.Tests
             // Disable dynamic marshaller. Static will claim it. 
             marshaller._result = null;
             var result2 = cache.Marshal(obj);
-            Assert.Equal(333.0, result2.ToObject());
+            Assert.Equal(333m, result2.ToObject());
         }
 
         public class MyType2
