@@ -364,11 +364,6 @@ namespace Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol
                 Add(name, new NameLookupInfo(type.Value, recordType, DPath.Root, 0, displayName: DName.MakeValid(name, out _)));
             }
 
-            internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
-            {
-                throw new NotImplementedException();
-            }
-
             internal override bool TryLookup(DName name, out NameLookupInfo nameInfo)
             {
                 return _variables.TryGetValue(name.Value, out nameInfo);

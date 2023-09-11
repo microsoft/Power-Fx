@@ -35,18 +35,6 @@ namespace Microsoft.PowerFx
 
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols => _variables;
 
-        internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
-        {
-            IGlobalSymbolNameResolver globals = this;  // $$$ Share?
-            foreach (var variable in globals.GlobalSymbols)
-            {
-                if (variable.Value.TryToSymbolEntry(out var x))
-                {
-                    names.Add(x);
-                }
-            }
-        }
-
         internal const string UserInfoSymbolName = "User";
 
         /// <summary>

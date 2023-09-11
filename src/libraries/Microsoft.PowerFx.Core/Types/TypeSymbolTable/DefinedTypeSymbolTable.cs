@@ -52,10 +52,5 @@ namespace Microsoft.PowerFx.Core
         {
             return _definedTypes.TryGetFromSecond(type, out typeName);
         }
-
-        internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

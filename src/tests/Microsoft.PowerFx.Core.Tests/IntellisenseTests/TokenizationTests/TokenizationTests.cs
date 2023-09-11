@@ -240,11 +240,6 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             {
                 return _variables.TryGetValue(name.Value, out nameInfo);
             }
-
-            internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }
