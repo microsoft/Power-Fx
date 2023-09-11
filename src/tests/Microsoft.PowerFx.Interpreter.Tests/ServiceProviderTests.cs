@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             if (expected != null)
             {
                 var runtimeConfig = new RuntimeConfig();
-                runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21 });
+                runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21.0 });
 
                 var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
             
@@ -231,7 +231,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public string Name { get; set; }
             
-            public int Age { get; set; }
+            public double Age { get; set; }
         }
     }
 }

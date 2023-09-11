@@ -20,7 +20,7 @@ namespace Microsoft.PowerFx.Tests
             var robinTable = new DataTableValue(table);
             var robinScope = new RobinExecutionContext(robinTable);
             var result1 = engine.Eval("Index(robintable, 2).Scores", robinScope); // 20
-            Assert.Equal(20.0, result1.ToObject());
+            Assert.Equal(20m, result1.ToObject());
             Assert.Equal(1, robinTable.TryGetIndexNumberOfCalls);
             Assert.Equal(0, robinTable.MarshalNumberOfCalls);
         }
@@ -37,7 +37,7 @@ namespace Microsoft.PowerFx.Tests
             engine._symbolValues.Add("robintable", robinTable);
 
             var result1 = engine.Eval("Index(robintable, 2).Scores"); // 20
-            Assert.Equal(20.0, result1.ToObject());
+            Assert.Equal(20m, result1.ToObject());
             Assert.Equal(1, robinTable.TryGetIndexNumberOfCalls);
             Assert.Equal(0, robinTable.MarshalNumberOfCalls);
         }
