@@ -26,7 +26,7 @@
 >> Max( [1.0000000000000000000000001, 2.0000000000000000000000002], Value )
 2.0000000000000000000000002
 
-// decimal aware aggregate functions with mixed inputs -> float
+// decimal aware aggregate functions with mixed inputs -> -> first data type
 
 >> Sum( 1.0000000000000000000000001, 2.0000000000000000000000002, Float(3))
 6.0000000000000000000000003
