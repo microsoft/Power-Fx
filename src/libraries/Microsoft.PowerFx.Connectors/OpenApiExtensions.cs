@@ -156,7 +156,7 @@ namespace Microsoft.PowerFx.Connectors
             }
             else if (openApiAny is OpenApiInteger intVal)
             {
-                formulaValue = numberIsFloat ? FormulaValue.New(intVal.Value) : FormulaValue.New((decimal)intVal.Value);
+                formulaValue = numberIsFloat ? FormulaValue.New((float)intVal.Value) : FormulaValue.New((decimal)intVal.Value);
             }
             else if (openApiAny is OpenApiDouble dbl)
             {
