@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using Microsoft.PowerFx.Core.Texl.Intellisense;
 
 namespace Microsoft.PowerFx.Tests.IntellisenseTests
 {
@@ -13,6 +15,8 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
         public IEnumerable<ExpectedToken> ExpectedTokens { get; set; }
 
         public ParserOptions Options { get; set; } = null;
+
+        public IReadOnlyCollection<TokenType> TokenTypesToSkip = null;
 
         public TokenizationTestCase(string expr, params ExpectedToken[] expectedTokens)
         {
@@ -36,6 +40,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             return testCase;
         }
 
+        public static TokenizationTestCase Create(string expr, ParserOptions options, IReadOnlyCollection<TokenType> tokenTypesToSkip = null, params ExpectedToken[] expectedTokens)
+        {
+            var testCase = Create(expr, expectedTokens);
+            testCase.Options = options;
+            testCase.TokenTypesToSkip = tokenTypesToSkip;
+            return testCase;
+        }
+
+        public static TokenizationTestCase Create(string expr, IReadOnlyCollection<TokenType> tokenTypesToSkip = null, params ExpectedToken[] expectedTokens)
+        {
+            var testCase = Create(expr, expectedTokens);
+            testCase.TokenTypesToSkip = tokenTypesToSkip;
+            return testCase;
+        }
+
         private static void BuildStartIdxs(ExpectedToken[] expectedTokens)
         {
             int prevTokenEndIndex = 0;
@@ -48,6 +67,13 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
                 prevTokenEndIndex = token.EndIndex;
             }
+        }
+
+        public override string ToString()
+        {
+            var expectedTokens = JsonSerializer.Serialize(ExpectedTokens.Select(token => token.ToString()));
+            var tokenTypesToSkip = JsonSerializer.Serialize(TokenTypesToSkip != null ? TokenTypesToSkip.Select(type => type.ToString()) : new List<string>());
+            return $"\nExpression: {Expression}\nExpectedTokens: {expectedTokens}\nTokenTypesToSkip={tokenTypesToSkip}";
         }
 
         public static IEnumerable<object[]> TestCasesAsObjectsArray(IEnumerable<TokenizationTestCase> testCases) => testCases.Select(testCase => new object[] { testCase });

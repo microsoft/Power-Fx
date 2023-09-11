@@ -4732,6 +4732,14 @@
     <value>Tipul de returnare al funcției declarate nu se potrivește cu tipul de returnare al corpului funcției.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Lipsește tipul de argument al funcției, de exemplu „:Number” în „FindMonth( d:Text ):Number = Month( DateParse( d ));”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Lipsește tipul de argument al funcției, de exemplu „:Text” în „FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” există deja.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Al doilea argument al funcției „{0}” este acceptat doar pentru valorile numerice și dată/oră.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Setarea unei variabile cu o valoare sursă de date online (tabel sau înregistrare) poate provoca mai multe solicitări către server. În curând acesta va fi blocat.</value>
     
   </data>
 </root>

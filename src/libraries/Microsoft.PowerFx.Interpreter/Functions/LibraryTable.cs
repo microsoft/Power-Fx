@@ -44,8 +44,10 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0];
 
+#pragma warning disable CS0618 // Type or member is obsolete
             if (arg0 is QueryableTableValue tableQueryable)
             {
+#pragma warning restore CS0618 // Type or member is obsolete
                 try
                 {
                     return tableQueryable.FirstN(1).Rows.FirstOrDefault()?.ToFormulaValue() ?? new BlankValue(irContext);
@@ -78,7 +80,9 @@ namespace Microsoft.PowerFx.Functions
             var arg0 = (TableValue)args[0];
             var arg1 = (NumberValue)args[1];
 
+#pragma warning disable CS0618 // Type or member is obsolete
             if (arg0 is QueryableTableValue queryableTable)
+#pragma warning restore CS0618 // Type or member is obsolete
             {
                 try
                 {
@@ -385,7 +389,9 @@ namespace Microsoft.PowerFx.Functions
                 });
             }
 
+#pragma warning disable CS0618 // Type or member is obsolete
             if (arg0 is QueryableTableValue tableQueryable)
+#pragma warning restore CS0618 // Type or member is obsolete
             {
                 try
                 {
@@ -459,9 +465,10 @@ namespace Microsoft.PowerFx.Functions
             var arg2 = (StringValue)args[2];
 
             var isDescending = arg2.Value.Equals("descending", StringComparison.OrdinalIgnoreCase);
-
+#pragma warning disable CS0618 // Type or member is obsolete
             if (arg0 is QueryableTableValue queryableTable)
             {
+#pragma warning restore CS0618 // Type or member is obsolete
                 try
                 {
                     return queryableTable.Sort(arg1, isDescending, runner, context);

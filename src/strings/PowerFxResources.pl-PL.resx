@@ -4732,6 +4732,14 @@
     <value>Deklarowany zwracany typ funkcji nie pasuje do zwracanego typu treści funkcji.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Brak zwracanego typu funkcji, na przykład typu „:Number” w wyrażeniu „FindMonth( d:Text ):Number = Month( DateParse( d ));”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Brak typu argumentu funkcji, na przykład typu „:Text” w wyrażeniu „FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Nazwana formuła „{0}” już istnieje.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Drugi argument funkcji „{0}” jest obsługiwany tylko w przypadku wartości liczbowych oraz typu data/godzina.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Ustawienie zmiennej z wartością źródła danych online (tabelą lub rekordem) może spowodować wysłanie wielu żądań do serwera. Wkrótce to zostanie zablokowane.</value>
     
   </data>
 </root>

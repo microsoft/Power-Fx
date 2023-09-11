@@ -4732,6 +4732,14 @@
     <value>Uvedený návratový typ funkce neodpovídá návratovému typu těla funkce.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Chybějící funkce vrací typ, například ":Number" v "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Chybějící typ argumentu funkce, například ":Text" v "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' již existuje.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Druhý argument funkce '{0}' je podporován pouze pro číselné hodnoty a hodnoty data a času.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Nastavení proměnné s hodnotou online zdroje dat (tabulky nebo záznamu) může způsobit vícenásobné požadavky na server. Brzy to bude zablokováno.</value>
     
   </data>
 </root>

@@ -352,7 +352,7 @@ namespace Microsoft.PowerFx
             {
                 if (_binding == null)
                 {
-                    throw new InvalidOperationException($"Must call {nameof(ApplyBinding)} before accessing combined Sybmols.");
+                    throw new InvalidOperationException($"Must call {nameof(ApplyBinding)} before accessing combined Symbols.");
                 }
 
                 return this._allSymbols;
@@ -607,8 +607,9 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
         /// </summary>
+        /// <param name="tokenTypesToSkip">Optional: Token types that would be skipped and not included in the final result. Usually provided by the language server.</param>
         /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
-        internal IEnumerable<ITokenTextSpan> GetTokens() => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false);
+        internal IEnumerable<ITokenTextSpan> GetTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false, tokenTypesToSkip);
 
         private string _expressionInvariant;
 

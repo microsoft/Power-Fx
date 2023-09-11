@@ -2169,7 +2169,7 @@ namespace Microsoft.PowerFx.Functions
                     {
                         runner.CheckCancel();
 
-                        var kindProperty = new NamedValue("Kind", FormulaValue.New((int)error.Kind));
+                        var kindProperty = new NamedValue("Kind", FormulaValue.New((double)error.Kind));
                         var messageProperty = new NamedValue(
                             "Message",
                             error.Message == null ? FormulaValue.NewBlank(FormulaType.String) : FormulaValue.New(error.Message));

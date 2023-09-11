@@ -4732,6 +4732,14 @@
     <value>Le type indiqué de retour de la fonction ne correspond pas au type de retour du corps de la fonction.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Type de retour de fonction manquant, par exemple « :Number » dans « FindMonth( d:Text ):Number = Month( DateParse( d )); »</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Type d’argument de fonction manquant, par exemple « :Text » dans « FindMonth( d:Text ):Number = Month( DateParse( d )) »</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' existe déjà.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Le deuxième argument de la fonction '{0}' est pris en charge uniquement pour les valeurs numériques et de date/heure.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Définir une variable avec une valeur de source de données en ligne (table ou enregistrement) peut entraîner plusieurs demandes sur le serveur. Cette option sera bientôt bloquée.</value>
     
   </data>
 </root>

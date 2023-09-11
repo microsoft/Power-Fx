@@ -348,6 +348,11 @@ namespace Microsoft.PowerFx
         /// </summary>
         public IIntellisenseResult Suggest(CheckResult checkResult, int cursorPosition)
         {
+            return this.Suggest(checkResult, cursorPosition, null);
+        }
+
+        public IIntellisenseResult Suggest(CheckResult checkResult, int cursorPosition, IServiceProvider services)
+        { 
             // Note that for completions, we just need binding,
             // but we don't need errors or dependency info. 
             var binding = checkResult.ApplyBindingInternal();
@@ -357,7 +362,11 @@ namespace Microsoft.PowerFx
 
             // CheckResult has the binding, which has already captured both the INameResolver and any row scope parameters. 
             // So these both become available to intellisense. 
-            var context = new IntellisenseContext(expression, cursorPosition);
+            var context = new IntellisenseContext(expression, cursorPosition)
+            {
+                Services = services
+            };
+
             var intellisense = this.CreateIntellisense();
             var suggestions = intellisense.Suggest(context, binding, formula);
 

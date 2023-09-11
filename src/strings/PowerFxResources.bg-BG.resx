@@ -4732,6 +4732,14 @@
     <value>Посоченият тип на върната стойност на функцията не съответства на типа на върнатата стойност в тялото ѝ.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Липсва тип на връщане на функция, например „:Number“ във "FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Липсва тип на аргумент на функция, например „:Text“ във „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ вече съществува.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Вторият аргумент на функцията „{0}“ се поддържа само за числови стойности и стойности за дата/час.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Задаването на променлива със стойност от онлайн източник на данни (таблица или запис) може да предизвика множество заявки към сървъра. Скоро той ще бъде блокиран.</value>
     
   </data>
 </root>

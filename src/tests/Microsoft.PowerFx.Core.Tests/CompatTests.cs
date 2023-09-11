@@ -46,7 +46,7 @@ namespace Microsoft.PowerFx.Core.Tests
             var engine = new TestEngine();
             var result = engine.Check("x"); // defined in TestEngine's custom resolver
             Assert.True(result.IsSuccess);
-            Assert.Equal(FormulaType.Number, result.ReturnType);
+            Assert.Equal(FormulaType.Decimal, result.ReturnType);
         }
 
         private class TestEngine : Engine

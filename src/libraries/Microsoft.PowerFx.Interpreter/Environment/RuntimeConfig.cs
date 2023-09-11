@@ -2,10 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.PowerFx.Core.Binding;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
@@ -63,9 +60,10 @@ namespace Microsoft.PowerFx
         // - Stack depth 
         // - Max memory 
         // - Logging
-        public void AddService<T>(T service)
+        public RuntimeConfig AddService<T>(T service)
         {
             ServiceProvider.AddService(typeof(T), service);
+            return this;
         }
 
         public T GetService<T>()

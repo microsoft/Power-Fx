@@ -6,12 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
+using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Interpreter.UDF;
+using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -26,6 +32,7 @@ namespace Microsoft.PowerFx
 
         internal readonly SymbolTable _symbolTable;
         internal readonly SymbolValues _symbolValues;
+        internal readonly DefinedTypeSymbolTable _definedTypeSymbolTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RecalcEngine"/> class.
@@ -41,6 +48,7 @@ namespace Microsoft.PowerFx
         {
             _symbolTable = new SymbolTable { DebugName = "Globals" };
             _symbolValues = new SymbolValues(_symbolTable);
+            _definedTypeSymbolTable = new DefinedTypeSymbolTable();
             _symbolValues.OnUpdate += OnSymbolValuesOnUpdate;
 
             base.EngineSymbols = _symbolTable;
@@ -50,7 +58,7 @@ namespace Microsoft.PowerFx
         }
 
         // Expose publicly. 
-        public new ReadOnlySymbolTable EngineSymbols => base.EngineSymbols; 
+        public new ReadOnlySymbolTable EngineSymbols => base.EngineSymbols;
 
         // Set of default functions supported by the interpreter. 
         private static readonly ReadOnlySymbolTable _interpreterSupportedFunctions = ReadOnlySymbolTable.NewDefault(Library.FunctionList);
@@ -77,22 +85,47 @@ namespace Microsoft.PowerFx
 
         public void UpdateVariable(string name, double value)
         {
-            UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, decimal value)
         {
-            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, int value)
         {
-            UpdateVariable(name, new NumberValue(IRContext.NotInSource(FormulaType.Number), value));
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         public void UpdateVariable(string name, long value)
         {
-            UpdateVariable(name, new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), value));
+            UpdateVariable(name, FormulaValue.New(value));
+        }
+
+        public void UpdateVariable(string name, string value)
+        {
+            UpdateVariable(name, FormulaValue.New(value));
+        }
+
+        public void UpdateVariable(string name, bool value)
+        {
+            UpdateVariable(name, FormulaValue.New(value));
+        }
+
+        public void UpdateVariable(string name, Guid value)
+        {
+            UpdateVariable(name, FormulaValue.New(value));
+        }
+
+        public void UpdateVariable(string name, DateTime value)
+        {
+            UpdateVariable(name, FormulaValue.New(value));
+        }
+
+        public void UpdateVariable(string name, TimeSpan value)
+        {
+            UpdateVariable(name, FormulaValue.New(value));
         }
 
         /// <summary>
@@ -134,7 +167,7 @@ namespace Microsoft.PowerFx
         /// <param name="expressionText">textual representation of the formula.</param>
         /// <param name="parameters">parameters for formula. The fields in the parameter record can 
         /// be acecssed as top-level identifiers in the formula.</param>
-        /// <param name="options"></param>
+        /// <param name="options"></param>        
         /// <returns>The formula's result.</returns>
         public FormulaValue Eval(string expressionText, RecordValue parameters = null, ParserOptions options = null)
         {
@@ -181,7 +214,8 @@ namespace Microsoft.PowerFx
             return result;
         }
 
-        public DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
+        // Preview functionality 
+        internal DefineFunctionsResult DefineFunctions(string script, bool numberIsFloat = false)
         {
             var parsedUDFS = new Core.Syntax.ParsedUDFs(script, numberIsFloat: numberIsFloat);
             var result = parsedUDFS.GetParsed();
@@ -191,12 +225,51 @@ namespace Microsoft.PowerFx
             var udfDefinitions = result.UDFs.Select(udf => new UDFDefinition(
                 udf.Ident.ToString(),
                 new ParseResult(udf.Body, errors, result.HasError, comments, null, null, script),
-                udf.ReturnType.GetFormulaType(),
+                GetFormulaTypeFromName(udf.ReturnType._value),
                 udf.IsImperative,
                 udf.NumberIsFloat,
-                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), arg.TypeIdent.GetFormulaType())).ToArray())).ToArray();
+                udf.Args.Select(arg => new NamedFormulaType(arg.NameIdent.ToString(), GetFormulaTypeFromName(arg.TypeIdent._value))).ToArray())).ToArray();
 
             return DefineFunctions(udfDefinitions);
+        }
+
+        [Obsolete("preview")]
+        internal IEnumerable<TexlError> DefineType(string script, ParserOptions parserOptions)
+        {
+            var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
+            var definedTypes = parsedNamedFormulasAndUDFs.DefinedTypes.ToList();
+
+            var errors = new List<TexlError>();
+
+            foreach (var defType in definedTypes)
+            {
+                var name = defType.Ident.Name.Value;
+                var res = DTypeVisitor.Run(defType.Type.TypeRoot, _definedTypeSymbolTable);
+                if (res == null)
+                {
+                    errors.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    continue;
+                }
+
+                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
+            }
+
+            return errors;
+        }
+
+        internal FormulaType GetFormulaTypeFromName(string name)
+        {
+            return FormulaType.Build(GetTypeFromName(name));
+        }
+
+        internal DType GetTypeFromName(string name)
+        {
+            if (_definedTypeSymbolTable.TryLookup(new DName(name), out NameLookupInfo nameInfo))
+            {
+                return nameInfo.Type;
+            }
+
+            return FormulaType.GetFromStringOrNull(name)._type;
         }
 
         /// <summary>

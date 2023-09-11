@@ -21,14 +21,20 @@ namespace Microsoft.PowerFx.Connectors
 
         public ConnectorType HiddenConnectorType { get; }
 
-        public ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)
+        public bool SupportsSuggestions => DynamicReturnSchema != null || DynamicReturnProperty != null;
+
+        internal ConnectorDynamicSchema DynamicReturnSchema { get; private set; }
+
+        internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
+
+        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)
             : this(type)
         {
             HiddenRecordType = hiddenRecordType;
             ConnectorType = new ConnectorType(schema, type);
         }
 
-        public ConnectorParameterType(OpenApiSchema schema, FormulaType type)
+        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type)
             : this(schema, type, null)
         {
         }
@@ -38,12 +44,12 @@ namespace Microsoft.PowerFx.Connectors
             Type = type;
         }
 
-        public ConnectorParameterType()
+        internal ConnectorParameterType()
         {
             Type = FormulaType.Blank;
         }
 
-        public ConnectorParameterType(OpenApiSchema schema, TableType tableType, ConnectorType tableConnectorType)
+        internal ConnectorParameterType(OpenApiSchema schema, TableType tableType, ConnectorType tableConnectorType)
             : this(tableType)
         {
             HiddenRecordType = null;
@@ -51,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors
             ConnectorType = new ConnectorType(schema, tableType, tableConnectorType);
         }
 
-        public ConnectorParameterType(OpenApiSchema schema, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
+        internal ConnectorParameterType(OpenApiSchema schema, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
             : this(recordType)
         {
             HiddenRecordType = hiddenRecordType;
@@ -59,16 +65,29 @@ namespace Microsoft.PowerFx.Connectors
             HiddenConnectorType = new ConnectorType(schema, hiddenRecordType, hiddenFields);
         }
 
-        public void SetProperties(string name, bool isRequired)
+        internal void SetProperties(OpenApiParameter param)
+        {
+            SetProperties(param.Name, param.Required, param.GetVisibility());
+        }
+
+        internal void SetProperties(string name, bool required, string visibility)
         {
             ConnectorType.Name = name;
-            ConnectorType.IsRequired = isRequired;
+            ConnectorType.IsRequired = required;
+            ConnectorType.SetVisibility(visibility);
 
             if (HiddenConnectorType != null)
             {
                 HiddenConnectorType.Name = name;
-                HiddenConnectorType.IsRequired = isRequired;
+                HiddenConnectorType.IsRequired = required;
+                HiddenConnectorType.SetVisibility(visibility);
             }
+        }
+
+        internal void SetDynamicReturnSchemaAndProperty(ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
+        {
+            DynamicReturnSchema = dynamicSchema;
+            DynamicReturnProperty = dynamicProperty;
         }
     }
 }

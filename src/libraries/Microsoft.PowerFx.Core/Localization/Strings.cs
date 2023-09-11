@@ -679,6 +679,10 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey ErrUDF_DuplicateParameter = new ErrorResourceKey("ErrUDF_DuplicateParameter");
         public static ErrorResourceKey ErrUDF_UnknownType = new ErrorResourceKey("ErrUDF_UnknownType");
         public static ErrorResourceKey ErrUDF_ReturnTypeDoesNotMatch = new ErrorResourceKey("ErrUDF_ReturnTypeDoesNotMatch");
+        public static ErrorResourceKey ErrUDF_MissingReturnType = new ErrorResourceKey("ErrUDF_MissingReturnType");
+        public static ErrorResourceKey ErrUDF_MissingParamType = new ErrorResourceKey("ErrUDF_MissingParamType");
+
+        public static ErrorResourceKey ErrTypeLiteral_InvalidTypeDefinition = new ErrorResourceKey("ErrTypeLiteral_InvalidTypeDefinition");
 
         // ErrorResourceKey for creating an error from an arbitrary string message. The key resolves to "{0}", meaning
         // that a single string arg can be supplied representing the entire text of the error.

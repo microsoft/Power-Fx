@@ -130,7 +130,7 @@ namespace Microsoft.PowerFx.Functions
             Dictionary<string, NamedValue> fields = new ()
             {
                 { FULLMATCH, new NamedValue(FULLMATCH, StringValue.New(m.Value)) },
-                { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New(m.Index + 1)) }
+                { STARTMATCH, new NamedValue(STARTMATCH, NumberValue.New((double)m.Index + 1)) }
             };
 
             List<string> subMatches = new List<string>();

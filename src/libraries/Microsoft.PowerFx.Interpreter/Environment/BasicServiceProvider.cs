@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.PowerFx
 {
@@ -18,7 +19,6 @@ namespace Microsoft.PowerFx
         private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 
         public BasicServiceProvider()
-            : this(null)
         {
         }
 
@@ -26,15 +26,15 @@ namespace Microsoft.PowerFx
         // Must always create a new copy since the caller can now AddServices to this. 
         public BasicServiceProvider(params IServiceProvider[] inners)
         {
-            _inners = (inners?.Length == 0) ? null : inners;
+            _inners = (inners?.Length == 0) ? null : inners?.Where(i => i != null).ToArray();
         }
 
-        public void AddService<T>(T service)
+        public BasicServiceProvider AddService<T>(T service)
         {
-            AddService(typeof(T), service);
+            return AddService(typeof(T), service);
         }
 
-        public void AddService(Type serviceType, object service)
+        public BasicServiceProvider AddService(Type serviceType, object service)
         {
             if (serviceType == null)
             {
@@ -52,6 +52,8 @@ namespace Microsoft.PowerFx
             }
 
             _services[serviceType] = service;
+
+            return this;
         }
 
         // Null if service is missing 

@@ -4732,6 +4732,14 @@
     <value>Tipe pengembalian fungsi yang dinyatakan tidak cocok dengan tipe pengembalian dari isi fungsi.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Jenis pengembalian fungsi tidak ada, misalnya ":Number" di "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Jenis argumen fungsi tidak ada, misalnya ":Text" di "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah ada.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Argumen kedua dari fungsi '{0}' hanya didukung untuk nilai numerik dan tanggal/waktu.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Mengatur variabel dengan nilai sumber data online (tabel atau data) dapat menyebabkan banyak permintaan ke server. Hal ini akan segera diblokir.</value>
     
   </data>
 </root>
