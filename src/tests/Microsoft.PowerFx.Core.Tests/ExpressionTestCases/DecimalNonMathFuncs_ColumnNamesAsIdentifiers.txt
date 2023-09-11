@@ -1,0 +1,15 @@
+#SETUP: disable:NumberIsFloat
+#SETUP: SupportColumnNamesAsIdentifiers
+
+>> AddColumns(["1","2","3"],dec,Decimal(Value)+0.00000000000000000000001)
+Table({Value:"1",dec:1.00000000000000000000001},{Value:"2",dec:2.00000000000000000000001},{Value:"3",dec:3.00000000000000000000001})
+
+>> AddColumns(["1","2","3"],dec,Value+0.00000000000000000000001)
+Table({Value:"1",dec:1.00000000000000000000001},{Value:"2",dec:2.00000000000000000000001},{Value:"3",dec:3.00000000000000000000001})
+
+>> AddColumns(["1","2","3"],dec,Float(Value)+0.00000000000000000000001)
+Table({Value:"1",dec:1},{Value:"2",dec:2},{Value:"3",dec:3})
+
+>> AddColumns(["1","2","3"],dec,Value(Value)+0.00000000000000000000001)
+Table({Value:"1",dec:1.00000000000000000000001},{Value:"2",dec:2.00000000000000000000001},{Value:"3",dec:3.00000000000000000000001})
+
