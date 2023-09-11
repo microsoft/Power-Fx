@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -22,6 +23,7 @@ using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
+using NuGet.Frameworks;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;
@@ -1354,45 +1356,156 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             }
         }
 
-        [Fact]
-        public void TestNL2FX()
+        private class TestNLHandler : NLHandler
         {
-            var expectedExpr = "score < 50";
-            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockSqlEngine());
-            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
+            public string Expected { get; set; }
+
+            public bool Throw { get; set; }
+
+            public override async Task<CustomNL2FxResult> NL2Fx(NL2FxParameters request, CancellationToken cancel)
             {
-                // $$$ This should get symbols too. 
-                NL2FxImplementation = (nlReq, cancel) => Task.FromResult<CustomNLResult>(new CustomNLResult
+                if (this.Throw)
+                {
+                    throw new InvalidOperationException($"Simulated error");
+                }
+
+                var sb = new StringBuilder();
+                sb.Append(request.Sentence);
+                sb.Append(": ");
+
+                sb.Append(this.Expected);
+                sb.Append(": ");
+
+                foreach (var sym in request.SymbolSummary.SuggestedSymbols)
+                {
+                    sb.Append($"{sym.BestName},{sym.Type}");
+                }                
+
+                return new CustomNL2FxResult
                 {
                     Expressions = new string[]
                     {
-                         expectedExpr
+                      sb.ToString()
                     }
-                })
-            };
+                };
+            }
+        }
 
-            List<Exception> exList = new List<Exception>();
-            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
-            var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";
-            testServer.OnDataReceived(JsonSerializer.Serialize(new
+        private static string NL2FxMessageJson(string documentUri)
+        {
+            return JsonSerializer.Serialize(new
             {
                 jsonrpc = "2.0",
                 id = "123",
                 method = "$/nl2fx",
-                @params = new CustomNLParams()
+                @params = new CustomNL2FxParams()
                 {
                     TextDocument = new TextDocumentItem()
                     {
                         Uri = documentUri,
                         LanguageId = "powerfx",
                         Version = 1
-                    }
+                    },
+                    Sentence = "my sentence"
                 }
-            }));
+            });
+        }
+
+        [Fact]
+        public void TestNL2FX()
+        {
+            var documentUri = "powerfx://app?context=1";
+            var expectedExpr = "score < 50";
+
+            var engine = new Engine();
+            var symbols = new SymbolTable();
+            symbols.AddVariable("Score", FormulaType.Number);
+            var editor = engine.CreateEditorScope(symbols: symbols);
+
+            var dict = new Dictionary<string, EditorContextScope>
+            {
+                { documentUri, editor }
+            };
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
+
+            var testNLHandler = new TestNLHandler { Expected = expectedExpr };
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
+            {
+                NL2FxImplementation = testNLHandler 
+            };
+
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+            
+            testServer.OnDataReceived(NL2FxMessageJson(documentUri));
             Assert.Single(_sendToClientData);
             var response = JsonSerializer.Deserialize<JsonRpcNL2FxResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("123", response.Id);
-            Assert.Equal(expectedExpr, response.Result.Expressions[0]);
+
+            // result has expected concat with symbols. 
+            Assert.Equal("my sentence: score < 50: Score,Number", response.Result.Expressions[0]);
+        }
+
+        [Fact]
+        public void TestNL2FXMissingHandler()
+        {
+            var engine = new Engine();
+            var symbols = new SymbolTable();
+            symbols.AddVariable("Score", FormulaType.Number);
+            var editor = engine.CreateEditorScope(symbols: symbols);
+
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => editor);
+
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+
+            // No handler registered
+            Assert.Null(testServer.NL2FxImplementation);
+
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+            var documentUri = "powerfx://app?context={\"A\":1,\"B\":[1,2,3]}";
+            testServer.OnDataReceived(NL2FxMessageJson(documentUri));
+            Assert.Single(_sendToClientData);
+
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+            
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Equal("123", errorResponse.Id);
+            Assert.NotNull(errorResponse.Error);
+        }
+
+        [Fact]
+        public void TestNL2FXHandlerThrows()
+        {
+            var documentUri = "powerfx://app?context=1";
+
+            var engine = new Engine();
+            var symbols = new SymbolTable();
+            symbols.AddVariable("Score", FormulaType.Number);
+            var editor = engine.CreateEditorScope(symbols: symbols);
+
+            var dict = new Dictionary<string, EditorContextScope>
+            {
+                { documentUri, editor }
+            };
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => dict[documentUri]);
+
+            var testNLHandler = new TestNLHandler { Throw = true }; // simulate error
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory)
+            {
+                NL2FxImplementation = testNLHandler
+            };
+
+            List<Exception> exList = new List<Exception>();
+            testServer.LogUnhandledExceptionHandler += (Exception ex) => exList.Add(ex);
+            testServer.OnDataReceived(NL2FxMessageJson(documentUri));
+            Assert.Single(_sendToClientData);
+
+            var errorResponse = JsonSerializer.Deserialize<JsonRpcErrorResponse>(_sendToClientData[0], _jsonSerializerOptions);
+
+            Assert.Equal("2.0", errorResponse.Jsonrpc);
+            Assert.Equal("123", errorResponse.Id);
+            Assert.NotNull(errorResponse.Error);
         }
 
         [Fact]

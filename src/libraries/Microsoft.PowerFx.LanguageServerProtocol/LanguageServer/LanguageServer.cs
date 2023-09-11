@@ -58,9 +58,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
         /// <summary>
         /// If set, provides the handler for $/nlSuggestion message.
-        /// $$$ - wire up to include symbols here too. 
         /// </summary>
-        public Func<CustomNLRequest, CancellationToken, Task<CustomNLResult>> NL2FxImplementation { get; set; }
+        public NLHandler NL2FxImplementation { get; set; }
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
@@ -411,13 +410,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
             if (this.NL2FxImplementation == null)
             {
-                throw new NotImplementedException($"NL2Fx not enabled");
+                throw new NotSupportedException($"NL2Fx not enabled");
             }
 
             Contracts.AssertValue(id);
             Contracts.AssertValue(paramsJson);
 
-            if (!TryParseParams(paramsJson, out CustomNLParams request))
+            if (!TryParseParams(paramsJson, out CustomNL2FxParams request))
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
                 return;
@@ -427,15 +426,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             var scope = _scopeFactory.GetOrCreateInstance(documentUri);
 
             var check = scope.Check("1"); // just need to get the symbols 
+            var summary = check.ApplyGetContextSummary();
 
-            var req = new CustomNLRequest
+            var req = new NL2FxParameters
             {
                 Sentence = request.Sentence,
-                Symbols = check.Symbols
+                SymbolSummary = summary
             };
 
             CancellationToken cancel = default;
-            var result = this.NL2FxImplementation(req, cancel)
+            var result = this.NL2FxImplementation.NL2Fx(req, cancel)
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
