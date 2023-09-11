@@ -119,12 +119,12 @@ namespace Microsoft.PowerFx.Tests
             var result2 = engine.Eval("fxObj2.IntField");
 
             Assert.IsType<BlankValue>(result);
-            Assert.IsType<NumberType>(result.Type);
+            Assert.IsType<DecimalType>(result.Type);
             Assert.Null(result.ToObject());
 
-            Assert.IsType<NumberValue>(result2);
-            Assert.IsType<NumberType>(result2.Type);
-            Assert.Equal(12D, result2.ToObject());
+            Assert.IsType<DecimalValue>(result2);
+            Assert.IsType<DecimalType>(result2.Type);
+            Assert.Equal(12m, result2.ToObject());
         }
 
         [Fact]
