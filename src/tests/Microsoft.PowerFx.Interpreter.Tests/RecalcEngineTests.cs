@@ -106,7 +106,7 @@ namespace Microsoft.PowerFx.Tests
             });
             var result = engine.Eval("With({y:2}, x+y)", context);
 
-            Assert.Equal(17.0, ((NumberValue)result).Value);
+            Assert.Equal(17m, ((DecimalValue)result).Value);
         }
 
         [Fact]

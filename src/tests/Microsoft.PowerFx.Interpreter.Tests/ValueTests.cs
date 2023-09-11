@@ -225,11 +225,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Users first type 
 
             var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
-            Assert.Equal(11.0, result1);
+            Assert.Equal(11m, result1);
 
             var result2 = ((RecordValue)val.Index(2).Value).GetField("b");
             Assert.IsType<BlankValue>(result2);
-            Assert.IsType<NumberType>(result2.Type);
+            Assert.IsType<DecimalType>(result2.Type);
         }
 
         [Fact]
