@@ -15,28 +15,12 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
-    // Symbol. Public veneer over NameSymbol. 
-    [DebuggerDisplay("{BestName}:{Type}")]
-    public class SymbolEntry
-    {
-        public string Name { get; init; }
-
-        public string DisplayName { get; init; }
-
-        public string BestName => string.IsNullOrEmpty(this.DisplayName) ? this.Name : this.DisplayName;
-
-        public SymbolProperties Properties { get; init; }
-
-        public FormulaType Type { get; init; }
-
-        public ISymbolSlot Slot { get; init; }
-    }
-
     /// <summary>
     /// Used between Symbol Table resolver and IR.
     /// NameInfo data to associate a symbol at bind time with a runtime config at runtime. 
     /// Object provided by resolver data in <see cref="NameLookupInfo.Data"/>.
     /// IR then recognizes this and will look these values up via ReadOnlySymbolValues.TryGetValue.
+    /// Public facing class for this is <see cref="SymbolEntry"/>.
     /// </summary>
     [DebuggerDisplay("{Name} ({Owner.DebugName}:{SlotIndex})")]
     internal class NameSymbol : ISymbolSlot

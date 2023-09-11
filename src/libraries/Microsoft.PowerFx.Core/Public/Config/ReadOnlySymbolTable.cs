@@ -402,7 +402,19 @@ namespace Microsoft.PowerFx
             return _functions.WithNamespace(nameSpace);
         }
 
-        internal abstract void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts);
+        internal virtual void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
+        {
+            if (this is IGlobalSymbolNameResolver globals)
+            {
+                foreach (var variable in globals.GlobalSymbols)
+                {
+                    if (variable.Value.TryToSymbolEntry(out var x))
+                    {
+                        names.Add(x);
+                    }
+                }
+            }
+        }
 
         internal class EnumerateNamesOptions
         {

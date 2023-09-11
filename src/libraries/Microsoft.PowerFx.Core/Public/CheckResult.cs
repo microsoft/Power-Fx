@@ -657,15 +657,25 @@ namespace Microsoft.PowerFx
             bool isV1 = this._engine.Config.Features == Features.PowerFxV1;
             bool allowSideEffects = this.ApplyParse().Options.AllowsSideEffects;
 
-            // $$$ Check for RuleScope and add "ThisRecord"
-
             // Should contain SymbolProperties
             List<SymbolEntry> symbolEntries = new List<SymbolEntry>();
-            this._allSymbols.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
+
+            if (_engine.TryGetRuleScope(out var ruleScope))
+            {
+                symbolEntries.Add(new SymbolEntry
+                {
+                     Name = "ThisRecord",
+                     Type = ruleScope
+                });
+            }
+            else
+            {
+                this._allSymbols.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
+            }
 
             var summary = new CheckContextSummary
             {
-                AllowBehaviorFunctions = allowSideEffects,
+                AllowsSideEffects = allowSideEffects,
                 IsPreV1Semantics = isV1,
                 ExpectedReturnType = this._expectedReturnTypes?.FirstOrDefault(),
                 SuggestedSymbols = symbolEntries

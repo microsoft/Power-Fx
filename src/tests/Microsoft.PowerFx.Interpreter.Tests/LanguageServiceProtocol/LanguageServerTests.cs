@@ -23,7 +23,6 @@ using Microsoft.PowerFx.Interpreter.Tests.LanguageServiceProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol;
 using Microsoft.PowerFx.LanguageServerProtocol.Protocol;
 using Microsoft.PowerFx.Types;
-using NuGet.Frameworks;
 using Xunit;
 using Xunit.Abstractions;
 using static Microsoft.PowerFx.Tests.BindingEngineTests;

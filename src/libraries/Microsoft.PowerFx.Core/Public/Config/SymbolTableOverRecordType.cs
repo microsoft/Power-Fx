@@ -87,7 +87,7 @@ namespace Microsoft.PowerFx
 
         internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
         {
-            // skip implicit scope.  Just add "ThisRecord"
+            // skip implicit scope. Just add "ThisRecord"
             if (_allowThisRecord)
             {
                 this._thisRecord.TryToSymbolEntry(out var x);
@@ -95,14 +95,7 @@ namespace Microsoft.PowerFx
             } 
             else
             {
-                IGlobalSymbolNameResolver globals = this; // @@@ Share
-                foreach (var variable in globals.GlobalSymbols)
-                {
-                    if (variable.Value.TryToSymbolEntry(out var x))
-                    {
-                        names.Add(x);
-                    }
-                }
+                base.EnumerateNames(names, opts);
             }
         }
 

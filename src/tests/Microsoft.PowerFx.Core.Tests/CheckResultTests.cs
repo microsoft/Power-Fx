@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.SymbolStore;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -486,7 +485,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var summary = check.ApplyGetContextSummary();
 
-            Assert.True(summary.AllowBehaviorFunctions);
+            Assert.True(summary.AllowsSideEffects);
             Assert.False(summary.IsPreV1Semantics);
             Assert.Null(summary.ExpectedReturnType);
             Assert.Single(summary.SuggestedSymbols);
