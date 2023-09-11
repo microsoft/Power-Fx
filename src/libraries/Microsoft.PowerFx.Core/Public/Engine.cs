@@ -257,6 +257,12 @@ namespace Microsoft.PowerFx
             return null;
         }
 
+        internal bool TryGetRuleScope(out RecordType record)
+        {
+            record = this.GetRuleScope();
+            return record != null;
+        }
+
         private BindingConfig GetDefaultBindingConfig()
         {
             var ruleScope = this.GetRuleScope();
