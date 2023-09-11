@@ -50,9 +50,10 @@ namespace Microsoft.PowerFx.Types
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
-        public static NumberValue New(float number)
+        // ** Break, change return type. 
+        public static DecimalValue New(float number)
         {
-            return new NumberValue(IRContext.NotInSource(FormulaType.Number), number);
+            return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), number);
         }
 
         public static GuidValue New(Guid guid)
