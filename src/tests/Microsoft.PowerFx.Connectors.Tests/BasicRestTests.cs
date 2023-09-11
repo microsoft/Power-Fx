@@ -3,18 +3,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Readers;
 using Microsoft.PowerFx.Connectors;
+using Microsoft.PowerFx.Connectors.Tests;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Types;
 using Xunit;
 
 namespace Microsoft.PowerFx.Tests
@@ -64,21 +60,23 @@ namespace Microsoft.PowerFx.Tests
             using var testConnector = new LoggingTestServer(swaggerFile);
             testConnector.SetResponseFromFile(@"Responses\HttpCall_1.json");
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(testConnector._apiDocument).OrderBy(cf => cf.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("Test", testConnector._apiDocument).OrderBy(cf => cf.Name).ToList();
             string funcName = new Regex(@"Test.([^(]+)").Match(fxQuery).Groups[1].Value;
             Assert.Equal("*[date:d, index:w, summary:s, temperatureC:w, temperatureF:w]", functions.First(f => funcName == f.Name).ReturnType.ToStringWithDisplayNames());
 
             var config = new PowerFxConfig(Features.PowerFxV1);
             using var httpClient = new HttpClient(testConnector) { BaseAddress = _fakeBaseAddress };
-            config.AddService("Test", testConnector._apiDocument, httpClient);
+            config.AddActionConnector("Test", testConnector._apiDocument);
 
             var engine = new RecalcEngine(config);
 
             var checkResult = engine.Check(fxQuery, options: _optionsPost);
             Assert.True(checkResult.IsSuccess, string.Join("\r\n", checkResult.Errors.Select(er => er.Message)));
 
-            var rConfig = new RuntimeConfig();
+            var rConfig = new RuntimeConfig();            
             rConfig.SetTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
+            rConfig.AddRuntimeContext(new TestConnectorRuntimeContext("Test", httpClient));
+
             var result = await engine.EvalAsync(fxQuery, CancellationToken.None, options: _optionsPost, runtimeConfig: rConfig).ConfigureAwait(false);
             Assert.NotNull(result);
 
@@ -103,7 +101,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
             var apiDoc = testConnector._apiDocument;
 
-            config.AddService("Test", apiDoc, null);
+            config.AddActionConnector("Test", apiDoc);
 
             var engine = new RecalcEngine(config);
 
@@ -121,7 +119,7 @@ namespace Microsoft.PowerFx.Tests
             var apiDoc = Helpers.ReadSwagger(@"Swagger\TestOpenAPI.json");
 
             // If we don't pass httpClient, we can still bind, we just can't invoke.
-            config.AddService("Test", apiDoc, null);
+            config.AddActionConnector("Test", apiDoc);
 
             var engine = new Engine(config);
 
@@ -137,7 +135,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             // Verify we can load the service
-            config.AddService("PetStore", apiDoc);
+            config.AddActionConnector("PetStore", apiDoc);
 
             // Ensure we use HTTPS protocol
             Assert.Equal("https", apiDoc.GetScheme().Substring(0, 5));

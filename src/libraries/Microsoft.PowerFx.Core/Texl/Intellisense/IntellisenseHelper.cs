@@ -185,6 +185,12 @@ namespace Microsoft.PowerFx.Intellisense
             return _addSuggestionHelper.AddSuggestion(intellisenseData, suggestion, suggestionKind, iconKind, type, requiresSuggestionEscaping, sortPriority);
         }
 
+        internal static bool AddSuggestion(IntellisenseData.IntellisenseData intellisenseData, KeyValuePair<string,  NameLookupInfo> suggestion, SuggestionKind suggestionKind, SuggestionIconKind iconKind, DType type, bool requiresSuggestionEscaping, uint sortPriority = 0)
+        {
+            var suggestionText = suggestion.Value.DisplayName != default ? suggestion.Value.DisplayName : suggestion.Key;
+            return AddSuggestion(intellisenseData, suggestionText, suggestionKind, iconKind, type, requiresSuggestionEscaping, sortPriority);
+        }
+
         internal static void AddSuggestionsForMatches(IntellisenseData.IntellisenseData intellisenseData, IEnumerable<string> possibilities, SuggestionKind kind, SuggestionIconKind iconKind, bool requiresSuggestionEscaping, uint sortPriority = 0)
         {
             Contracts.AssertValue(intellisenseData);
@@ -358,12 +364,14 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => NoErrorInTexlNode(texlNode))
-                                                                  .Select(texlNode => texlNode switch
-                {
-                    StrLitNode strNode => FormulaValue.New(strNode.Value),
-                    NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
-                    _ => null as FormulaValue
-                }).ToArray();
+                    .Select(texlNode => texlNode switch
+                    {
+                        BoolLitNode boolLitNode => FormulaValue.New(boolLitNode.Value),
+                        DecLitNode decNode => FormulaValue.New(decNode.ActualDecValue),
+                        NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
+                        StrLitNode strNode => FormulaValue.New(strNode.Value),
+                        _ => null as FormulaValue
+                    }).ToArray();
 
                 if (parameters.Any(p => p == null))
                 {
@@ -372,7 +380,8 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 // If connector function has some suggestions, let's add them here
-                ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                var services = intellisenseData.Services;
+                ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (suggestions != null && suggestions.Error == null && suggestions.Suggestions != null)
                 {                    
@@ -659,7 +668,7 @@ namespace Microsoft.PowerFx.Intellisense
             return false;
         }
 
-        private static CallNode GetNearestCallNode(TexlNode node)
+        internal static CallNode GetNearestCallNode(TexlNode node)
         {
             Contracts.AssertValue(node);
             var parent = node;
@@ -719,6 +728,11 @@ namespace Microsoft.PowerFx.Intellisense
 #pragma warning disable CS0618 // Type or member is obsolete
             foreach (var function in intellisenseData.Binding.NameResolver.Functions.Functions)
             {
+                if (function.IsDeprecatedOrInternalFunction)
+                {
+                    continue;
+                }
+
                 var qualifiedName = function.QualifiedName;
                 var highlightStart = qualifiedName.IndexOf(intellisenseData.MatchingStr, StringComparison.OrdinalIgnoreCase);
                 var highlightEnd = intellisenseData.MatchingStr.Length;

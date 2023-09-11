@@ -47,12 +47,12 @@ namespace Microsoft.PowerFx.Connectors.Execution
         protected abstract void WriteDateValue(DateTime dateValue);
 
         protected readonly bool _schemaLessBody;
-        protected readonly FormattingInfo _context;
+        protected readonly IConvertToUTC _utcConverter;
 
-        internal FormulaValueSerializer(FormattingInfo context, bool schemaLessBody)
+        internal FormulaValueSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
         {
             _schemaLessBody = schemaLessBody;
-            _context = context;
+            _utcConverter = utcConverter;
         }
 
         internal void SerializeValue(string paramName, OpenApiSchema schema, FormulaValue value)
@@ -228,7 +228,7 @@ namespace Microsoft.PowerFx.Connectors.Execution
                     {
                         if (propertySchema.Format == "date-time")
                         {
-                            WriteDateTimeValue(dtv.GetConvertedValue(_context.TimeZoneInfo));
+                            WriteDateTimeValue(_utcConverter.ToUTC(dtv));
                         }
                         else if (propertySchema.Format == "date-no-tz")
                         {

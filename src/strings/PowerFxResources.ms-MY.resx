@@ -4732,6 +4732,14 @@
     <value>Jenis kembali fungsi yang dinyatakan tidak sepadan dengan jenis kembali isi fungsi.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Jenis pengembalian fungsi tiada, sebagai contoh ":Number" dalam "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Jenis argumen fungsi tiada, sebagai contoh ":Text" dalam "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' sudah wujud.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Argumen kedua fungsi '{0}' hanya disokong untuk nilai angka dan tarikh/masa.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Penetapan pemboleh ubah dengan nilai sumber data dalam talian (jadual atau rekod) boleh menyebabkan berbilang permintaan kepada pelayan. Ini akan disekat tidak lama lagi.</value>
     
   </data>
 </root>

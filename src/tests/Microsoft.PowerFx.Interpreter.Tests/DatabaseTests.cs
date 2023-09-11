@@ -183,7 +183,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
     internal class TestDatabaseRecordValue : RecordValue
     {
-        public static readonly RecordType CustomRecordType = RecordType.Empty().Add("Id", FormulaType.Number).Add("Name", FormulaType.String).Add("Val", FormulaType.String);
+        public static readonly RecordType CustomRecordType = RecordType.Empty().Add("Id", FormulaType.Decimal).Add("Name", FormulaType.String).Add("Val", FormulaType.String);
 
         public int Id;
         public string Name;
@@ -366,7 +366,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // We know the primary key name is "Id" and can use it here
             FormulaValue idValue = await baseRecord.GetFieldAsync("Id", cancellationToken).ConfigureAwait(false);
 
-            if (idValue is not NumberValue idNumValue)
+            if (idValue is not DecimalValue idNumValue)
             {
                 throw new ArgumentException($"Record doesn't have a number Id", nameof(baseRecord));
             }

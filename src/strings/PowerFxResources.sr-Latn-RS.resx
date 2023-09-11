@@ -4732,6 +4732,14 @@
     <value>Navedeni tip vraćanja funkcije ne podudara se sa tipom vraćanja tela funkcije.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Nedostaje tip vraćanja funkcije, na primer „:Number“ u „FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Nedostaje tip argumenta funkcije, na primer „:Text“ u „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ već postoji.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Drugi argument funkcije „{0}“ podržan je samo za numeričke vrednosti i vrednosti datuma i vremena.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Postavljanje promenljive sa vrednošću izvora podataka na mreži (tabela ili zapis) može da izazove više zahteva upućenih serveru. Ovo će uskoro biti blokirano.</value>
     
   </data>
 </root>

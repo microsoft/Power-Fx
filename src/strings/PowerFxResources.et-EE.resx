@@ -4732,6 +4732,14 @@
     <value>Märgitud funktsiooni tagastustüüp ei vasta funktsiooni sisu tagastustüübile.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Puuduv funktsiooni tagastamise tüüp, nt „:Number“ kohas „FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Puuduv funktsiooni argumendi tüüp, nt „:Text“ kohas „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on juba olemas.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Funktsiooni „{0}“ teist argumenti toetatakse ainult numbriliste ja kuupäeva/kellaaja väärtuste puhul.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Veebiandmeallika väärtusega (tabel või kirje) muutuja määramine võib põhjustada serverisse mitme taotluse esitamise. Varsti see blokeeritakse.</value>
     
   </data>
 </root>

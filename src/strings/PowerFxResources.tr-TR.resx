@@ -4732,6 +4732,14 @@
     <value>Belirtilen işlev dönüş türü, işlev gövdesinin dönüş türüyle eşleşmiyor.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>İşlev dönüşü türü eksik. Örneğin "FindMonth( d:Text ):Number = Month( DateParse( d ));" içindeki ":Number"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>İşlev bağımsız değişken türü eksik. Örneğin, "FindMonth( d:Text ):Number = Month( DateParse( d ))" içindeki ":Text"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' zaten var.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>'{0}' işlevinin ikinci bağımsız değişkeni yalnızca sayısal değerler ve tarih/saat değerleri için desteklenir.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Çevrimiçi bir veri kaynağı değerine (tablo veya kayıt) değişken ayarlamak, sunucuya birden fazla istek gönderilmesine neden olabilir. Bu, yakında engellenecektir.</value>
     
   </data>
 </root>

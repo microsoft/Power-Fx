@@ -4732,6 +4732,14 @@
     <value>El tipo de devolución de función indicada no coincide con el tipo de devolución del cuerpo de función.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Falta el tipo de devolución de función, por ejemplo el ":Number" en "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Falta el tipo de argumento de función, por ejemplo, ":Text" en "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Ya existe una NamedFormula "{0}".</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>El segundo argumento de la función "{0}" solo se admite para valores numéricos y de fecha y hora.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Establecer una variable con un valor de origen de datos en línea (tabla o registro) puede provocar varias solicitudes al servidor. Pronto se bloqueará.</value>
     
   </data>
 </root>

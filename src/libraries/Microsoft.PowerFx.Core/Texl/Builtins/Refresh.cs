@@ -29,8 +29,6 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsAsync => true;
 
-        public override bool DisableForDataComponent => true;
-
         public override Capabilities Capabilities => Capabilities.OutboundInternetAccess | Capabilities.EnterpriseAuthentication | Capabilities.PrivateNetworkAccess;
 
         public override bool SupportsParamCoercion => false;

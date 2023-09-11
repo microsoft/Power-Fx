@@ -4732,6 +4732,14 @@
     <value>Der Rückgabetyp der angegebenen Funktion passt nicht zum Rückgabetyp des Funktionstextkörpers.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Fehlender Funktionsrückgabetyp, z. B. „:Number“ in „FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Fehlender Funktionsargumenttyp, z. B. „:Text“ in „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ ist bereits vorhanden.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Das zweite Argument der „{0}“-Funktion wird nur für numerische und Datums-/Uhrzeitwerte unterstützt.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Das Festlegen einer Variablen mit einem Onlinedatenquellenwert (Tabelle oder Datensatz) kann mehrere Anfragen an den Server verursachen. Dies wird demnächst blockiert.</value>
     
   </data>
 </root>

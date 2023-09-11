@@ -4732,6 +4732,14 @@
     <value>Loại trả về hàm đã nêu không khớp với kiểu trả về của nội dung hàm.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Thiếu kiểu trả về hàm, ví dụ ":Number" trong "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Thiếu kiểu đối số hàm, ví dụ ":Text" trong "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" đã tồn tại.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Đối số thứ hai của hàm "{0}" chỉ được hỗ trợ cho các giá trị số và ngày/giờ.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Việc đặt một biến có giá trị nguồn dữ liệu trực tuyến (bảng hoặc bản ghi) có thể gây ra nhiều yêu cầu đến máy chủ. Tính năng này sẽ sớm bị chặn.</value>
     
   </data>
 </root>

@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Tests
         {
             PowerFxConfig config = new PowerFxConfig();
             RecalcEngine engine = new RecalcEngine(config);
-            TestTableValue ttv = new TestTableValue(RecordType.Empty().Add(new NamedFormulaType("RefreshCount", FormulaType.Number)));
+            TestTableValue ttv = new TestTableValue(RecordType.Empty().Add(new NamedFormulaType("RefreshCount", FormulaType.Decimal)));
 
             engine.UpdateVariable("t", ttv);
             FormulaValue result = engine.Eval("With({ before: First(t).RefreshCount }, Refresh(t); before & First(t).RefreshCount)", null, new ParserOptions { AllowsSideEffects = true });

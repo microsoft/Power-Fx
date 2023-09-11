@@ -113,8 +113,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             foreach (var keyword in keywords)
             {
-                var expectedRecord = $"{{{keyword.ToUpperInvariant()}:Float(0),'{keyword}':Float(0)}}";
-                var expectedTable = $"Table({{{keyword.ToUpperInvariant()}:Float(0),'{keyword}':Float(0)}})";
+                var expectedRecord = $"{{{keyword.ToUpperInvariant()}:Decimal(0),'{keyword}':Decimal(0)}}";
+                var expectedTable = $"Table({{{keyword.ToUpperInvariant()}:Decimal(0),'{keyword}':Decimal(0)}})";
 
                 var fields = new List<NamedValue>()
                 {

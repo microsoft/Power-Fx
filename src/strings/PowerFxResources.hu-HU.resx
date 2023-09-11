@@ -4732,6 +4732,14 @@
     <value>A funkció visszaadott típusa nem egyezik meg a függvénytest visszaküldési típusával.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Hiányzó függvény-visszaküldési típus, például ":Number" itt: "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Hiányzó függvény argumentumtípus, például ":Text" itt: "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>A(z) '{0}' NamedFormula már létezik.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Az '{0}' függvény második argumentuma csak numerikus és dátum-/időértékek esetén támogatott.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Ha egy online adatforrásértékkel (tábla vagy rekord) rendelkező változót akar beállítani, az több kérést hozhat létre a kiszolgálón. Ez hamarosan tiltott lesz.</value>
     
   </data>
 </root>

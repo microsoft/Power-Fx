@@ -4732,6 +4732,14 @@
     <value>Den angivna funktionens returtyp överensstämmer inte med funktionstextens returtyp.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Funktionsreturtypen saknas, till exempel ":Number" i "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Funktionsargumenttypen saknas, till exempel ":Text" i "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' finns redan.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>Det andra argumentet för funktionen "{0}" stöds endast för numeriska värden och datum/tid-värden.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Om du anger en variabel med ett datakällavärde online (tabell eller post) kan det orsaka flera begäranden till servern. Detta kommer snart att blockeras.</value>
     
   </data>
 </root>

@@ -4732,6 +4732,14 @@
     <value>El tipus de retorn de la funció indicada no coincideix amb el tipus de retorn del cos de la funció.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Falta el tipus de retorn de la funció, per exemple, ":Number" a "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Falta el tipus d'argument de la funció, per exemple, ":Text" a "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>La fórmula NamedFormula "{0}" ja existeix.</value>
   </data>
@@ -5030,6 +5038,10 @@
   </data>
   <data name="ErrNotSupportedFormat_Func" xml:space="preserve">
     <value>El segon argument de la funció "{0}" només s'admet per als valors numèrics i de data i hora.</value>
+    
+  </data>
+  <data name="WrnSetExpandableType" xml:space="preserve">
+    <value>Definir una variable amb un valor de font de dades en línia (taula o registre) pot provocar diverses sol·licituds al servidor. Aviat es bloquejarà.</value>
     
   </data>
 </root>

@@ -221,7 +221,11 @@ namespace Microsoft.PowerFx
                 }
                 else if (arg is BlankValue && expectedType is NumberType)
                 {
-                    arg = FormulaValue.New(0);
+                    arg = FormulaValue.New(0.0);
+                }
+                else if (arg is BlankValue && expectedType is DecimalType)
+                {
+                    arg = FormulaValue.New(0m);
                 }
                 else if (arg is BlankValue && expectedType is StringType)
                 {

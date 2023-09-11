@@ -50,7 +50,6 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.SymbolTable",
                 "Microsoft.PowerFx.SymbolProperties",
                 "Microsoft.PowerFx.DeferredSymbolPlaceholder",
-                "Microsoft.PowerFx.SymbolTableExtensions",
 
                 // Lexer                
                 "Microsoft.PowerFx.Syntax.BinaryOp",
@@ -166,7 +165,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
-                "Microsoft.PowerFx.Intellisense.SuggestionKind",                
+                "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
 
@@ -180,8 +179,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Core.Utils.DName",
                 "Microsoft.PowerFx.Core.Utils.DPath",
                 "Microsoft.PowerFx.Core.Utils.ICheckable",                
-                "Microsoft.PowerFx.UserInfo",
-                "Microsoft.PowerFx.IUserInfo" // Deprecated, remove. 
+                "Microsoft.PowerFx.UserInfo"
             };
 
             var sb = new StringBuilder();
