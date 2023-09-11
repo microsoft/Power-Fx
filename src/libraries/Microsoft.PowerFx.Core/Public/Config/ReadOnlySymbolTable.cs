@@ -402,6 +402,12 @@ namespace Microsoft.PowerFx
             return _functions.WithNamespace(nameSpace);
         }
 
+        internal abstract void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts);
+
+        internal class EnumerateNamesOptions
+        {
+        }
+
         #region INameResolver - only implemented for unit testing for scenarios that use the full name resolver
 
         internal virtual IExternalEntityScope InternalEntityScope => default;

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -470,6 +471,37 @@ namespace Microsoft.PowerFx.Core.Tests
             var log = check.ApplyGetLogging();
             Assert.Equal(success, check.IsSuccess);
             Assert.Equal(execptedLog, log);
+        }
+
+        [Fact]
+        public void TestSummary()
+        {
+            var check = new CheckResult(new Engine());
+
+            var r1 = RecordType.Empty()
+              .Add(new NamedFormulaType("new_field", FormulaType.Number, "Field"));
+
+            check.SetText("1", new PowerFx.ParserOptions { AllowsSideEffects = true });
+            check.SetBindingInfo(r1);
+
+            var summary = check.ApplyGetContextSummary();
+
+            Assert.True(summary.AllowBehaviorFunctions);
+            Assert.False(summary.IsPreV1Semantics);
+            Assert.Null(summary.ExpectedReturnType);
+            Assert.Single(summary.SuggestedSymbols);
+
+            var sym1 = summary.SuggestedSymbols.First();
+
+            Assert.Equal("Field", sym1.DisplayName);
+            Assert.Equal("Field", sym1.BestName);
+            Assert.Equal("new_field", sym1.Name);
+            Assert.Equal(FormulaType.Number, sym1.Type);
+            Assert.False(sym1.Properties.CanSet);
+            Assert.False(sym1.Properties.CanMutate);
+
+            var type1 = sym1.Slot.Owner.GetTypeFromSlot(sym1.Slot);
+            Assert.Equal(FormulaType.Number, type1);
         }
 
         private void CheckResultExpectedReturnValue(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg, FormulaType returnType, FormulaType expectedType)

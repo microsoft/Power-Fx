@@ -197,6 +197,12 @@ namespace Microsoft.PowerFx
                     yield return new KeyValuePair<string, NameLookupInfo>(logical, nameInfo);
                 }
             }
-        }     
+        }
+
+        internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
+        {
+            // No deferred symbols added. 
+            // Must have an explicit reference to get added.
+        }
     }
 }

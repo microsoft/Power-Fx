@@ -1,8 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
+    /// <summary>
+    /// Incoming LSP payload for a NL request. 
+    /// </summary>
     public class CustomNLParams
     {
         /// <summary>
@@ -28,11 +35,23 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public string[] Expressions { get; set; }
     }
 
+    /// <summary>
+    /// Resolved from <see cref="CustomNLParams"/>.
+    /// </summary>
+    // $$$ Move to other file. 
     public class CustomNLRequest
     {
         public string Sentence { get; set; }
 
         // Current symbols to pass into NL prompt 
-        public ReadOnlySymbolTable Symbols { get; set; }
+        public CheckContextSummary SymbolSummary { get; set; }
+    }
+
+    public class NLHandler
+    {
+        public virtual Task<CustomNLResult> NL2Fx(CustomNLRequest request, CancellationToken cancel)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

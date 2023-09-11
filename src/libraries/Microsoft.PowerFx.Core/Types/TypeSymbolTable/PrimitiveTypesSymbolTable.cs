@@ -62,5 +62,10 @@ namespace Microsoft.PowerFx.Core.Public.Types
 
             return typeName != null;
         }
+
+        internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

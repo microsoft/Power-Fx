@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -25,5 +26,5 @@ namespace Microsoft.PowerFx
         public bool CanMutate { get; init; }
 
         // Is Copyable?
-    }
+    } 
 }

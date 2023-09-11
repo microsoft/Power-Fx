@@ -85,6 +85,27 @@ namespace Microsoft.PowerFx
                     data: data);
         }
 
+        internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
+        {
+            // skip implicit scope.  Just add "ThisRecord"
+            if (_allowThisRecord)
+            {
+                this._thisRecord.TryToSymbolEntry(out var x);
+                names.Add(x);
+            } 
+            else
+            {
+                IGlobalSymbolNameResolver globals = this; // @@@ Share
+                foreach (var variable in globals.GlobalSymbols)
+                {
+                    if (variable.Value.TryToSymbolEntry(out var x))
+                    {
+                        names.Add(x);
+                    }
+                }
+            }
+        }
+
         // Key is the logical name. 
         // Display names are in the NameLookupInfo.DisplayName field.
         IEnumerable<KeyValuePair<string, NameLookupInfo>> IGlobalSymbolNameResolver.GlobalSymbols
