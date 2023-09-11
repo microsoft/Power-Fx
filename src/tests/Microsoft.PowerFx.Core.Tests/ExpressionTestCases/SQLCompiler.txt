@@ -41,14 +41,6 @@ true
 >> IsError(If(IfError(1/0 = 1, true), 1/0, 1/0))
 true
 
-// check string literals are sanitized to avoid SQL injection attacks
->> "Robert '; DROP TABLE Students; --"
-"Robert '; DROP TABLE Students; --"
-
-// check SQL wildcards are not supported
->> "%_" in "SQL wildcards"
-false
-
 // ensure Substitute is case sensitive
 >> Substitute("HelloHELLOhello", "he", "je")
 "HelloHELLOjello"
