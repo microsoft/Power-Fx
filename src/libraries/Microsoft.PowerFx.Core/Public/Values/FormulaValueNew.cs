@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Types
             return new DecimalValue(IRContext.NotInSource(FormulaType.Decimal), (decimal)number);
         }
 
-        public static DecimalValue New(int number)
+        public static DecimalValue New(int number, string extra=null /*breaking change */)
         {
             // Since decimal is a lower type precedence than floating point, if a calculation includes
             // an int through this mechanism, that is treated as a float, then the entire calculation
