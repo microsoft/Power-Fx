@@ -4733,11 +4733,11 @@
     
   </data>
   <data name="ErrUDF_MissingReturnType" xml:space="preserve">
-    <value>Missing function return type, for example the ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    <value>अनुपस्थित फ़ंक्शन रिटर्न प्रकार, उदाहरण के लिए ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
     
   </data>
   <data name="ErrUDF_MissingParamType" xml:space="preserve">
-    <value>Missing function argument type, for example the ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    <value>अनुपस्थित फ़ंक्शन तर्क प्रकार, उदाहरण के लिए "FindMonth( d:Text ):Number = Month( DateParse( d ))" में ":Text"</value>
     
   </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>नियमित व्यंजकों का मान अचर होना चाहिए.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>{0}' फ़ंक्शन को पारित मान बदला नहीं जा सकता.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>कैप्चर नाम '{0}' उस पूर्वनिर्धारित गुण को छुपा रहा है जो नियमित व्यंजक के पूर्ण मिलान का स्थान लौटाता है. यदि आप निर्दिष्ट पाठ के पूर्ण मिलान का स्थान निकालने के लिए उस नाम वाले गुण का उपयोग करना चाहते हैं, तो इसका नाम बदल कर देखें.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>सभी स्वरूपण निकालता है और एक सादा पाठ मान लौटाता है.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>ऑनलाइन डेटास्रोत मान (तालिका या रिकॉर्ड) के साथ एक वैरिएबल सेट करने से सर्वर पर कई अनुरोध हो सकते हैं. जल्द ही इसे ब्लॉक कर दिया जाएगा.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>प्रकार लिटरल घोषणा अमान्य थी</value>
     
   </data>
 </root>

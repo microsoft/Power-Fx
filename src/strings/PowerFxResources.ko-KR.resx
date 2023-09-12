@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>정규식은 상수 값이어야 합니다.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>'{0}' 함수에 전달된 값은 변경할 수 없습니다.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>캡처 이름 '{0}'이(가) 정규식에서 일치 위치를 반환하는 미리 정의된 속성을 숨깁니다. 이 명명된 속성을 사용하여 지정된 텍스트에서 전체 일치의 위치를 추출하려면 이름을 변경하는 것이 좋습니다.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>모든 서식 지정을 제거하고 일반 텍스트 값을 반환합니다.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>온라인 데이터 소스 값(테이블 또는 레코드)으로 변수를 설정하면 서버에 여러 요청이 발생할 수 있습니다. 이 기능은 곧 차단될 예정입니다.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>유형 리터럴 선언이 유효하지 않습니다.</value>
     
   </data>
 </root>

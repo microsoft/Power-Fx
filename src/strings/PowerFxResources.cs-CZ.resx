@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulární výrazy musí být konstantní hodnoty.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Hodnotu předanou funkci '{0}' nelze změnit.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Název zachycení {0} skrývá předdefinovanou vlastnost, která vrací místo, kde došlo ke shodě s daným regulárním výrazem. Pokud chcete danou pojmenovanou vlastnost použít k extrakci pozice shody v zadaném textu, zvažte možnost ji přejmenovat.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Odebere veškeré formátování a vrátí hodnotu jako prostý text.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Nastavení proměnné s hodnotou online zdroje dat (tabulky nebo záznamu) může způsobit vícenásobné požadavky na server. Brzy to bude zablokováno.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Deklarace literálu typu byla neplatná</value>
     
   </data>
 </root>

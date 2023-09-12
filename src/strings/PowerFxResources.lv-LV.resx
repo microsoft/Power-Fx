@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulārajām izteiksmēm jābūt konstantām vērtībām.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Funkcijai “{0}” nodoto vērtību nevar mainīt.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Tvēruma nosaukumā “{0}” ir iekļauts sākotnēji definēts rekvizīts, kas atgriež atbilstības atrašanās vietu parastajā izteiksmē. Lai šo rekvizītu izmantotu pilnīgas norādītā teksta atbilstības atrašanās vietas izvilkšanai, ieteicams pārdēvēt tvērumu.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Noņem visu formatējumu un atgriež vienkārša teksta vērtību.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Iestatīt mainīgo ar tiešsaistes datu avota vērtību (tabula vai ieraksts) var izraisīt vairākus pieprasījumus serverim. Drīz tas tiks bloķēts.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tipa literāļa deklarācija bija nederīga</value>
     
   </data>
 </root>

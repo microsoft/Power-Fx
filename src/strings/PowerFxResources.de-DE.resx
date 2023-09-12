@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguläre Ausdrücke müssen konstante Werte sein.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Der Wert, der an die Funktion „{0}“ übergeben wurde, kann nicht geändert werden.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Durch den Aufzeichnungsnamen "{0}" wird die vordefinierte Eigenschaft ausgeblendet, die die Position der Übereinstimmung des regulären Ausdrucks zurückgibt. Sie sollten ihn umbenennen, wenn Sie diese benannte Eigenschaft zum Extrahieren der Position der vollständigen Übereinstimmung im angegebenen Text verwenden möchten.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Entfernt alle Formatierung und gibt einen unformatierten Textwert zurück.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Das Festlegen einer Variablen mit einem Onlinedatenquellenwert (Tabelle oder Datensatz) kann mehrere Anfragen an den Server verursachen. Dies wird demnächst blockiert.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Die Literal-Meldung war ungültig</value>
     
   </data>
 </root>

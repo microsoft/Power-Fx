@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Тұрақты өрнектердің мәндері тұрақты болуы керек.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>"{0}" функциясына өткен мән өзгертілмеуі керек.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>"{0}" алу атауы регуляр өрнектің сәйкестік орнын қайтаратын алдын ала анықталған сипатты жасырады. Көрсетілген мәтіндегі толық сәйкестіктің орнын шығарып алу үшін сол аталған сипатты пайдаланғыңыз келсе, оның атауын өзгертіп көріңіз.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Барлық пішімдеуді жояды және қарапайым мәтіндік мәнді қайтарады.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Онлайн дереккөз мәні (кесте немесе жазба) бар айнымалыны орнату серверге бірнеше сұрау тудыруы мүмкін. Жақын арада ол бұғатталады.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Түрдің тура декларациясы жарамсыз болды</value>
     
   </data>
 </root>
