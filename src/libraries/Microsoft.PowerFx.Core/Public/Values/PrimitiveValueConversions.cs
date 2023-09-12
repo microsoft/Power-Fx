@@ -27,7 +27,7 @@ namespace Microsoft.PowerFx.Types
             { typeof(long), FormulaType.Decimal },
             { typeof(float), FormulaType.Number },
             { typeof(double?), FormulaType.Number },
-            { typeof(int?), FormulaType.Number },
+            { typeof(int?), FormulaType.Decimal },
             { typeof(decimal?), FormulaType.Decimal },   
             { typeof(long?), FormulaType.Decimal },
             { typeof(float?), FormulaType.Number },
