@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регулярные выражения должны быть константными значениями.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Значение, переданное функции "{0}", нельзя изменить.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Имя записи "{0}" скрывает предопределенное свойство, которое возвращает расположение соответствия регулярного выражения. Попробуйте переименовать запись, если вы хотите использовать именованное свойство для извлечения позиции полного соответствия в указанном тексте.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Удаляет все форматирование и возвращает значение в виде обычного текста.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Если задать переменную со значением источника данных в интернете (таблица или запись), это может вызвать несколько запросов к серверу. Вскоре эта возможность будет заблокирована.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Недопустимая декларация типа литерала</value>
     
   </data>
 </root>

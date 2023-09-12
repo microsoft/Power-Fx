@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>A reguláris kifejezéseknek konstans értékeknek kell lenniük.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>A függvénynek átadott '{0}' érték nem módosítható.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>A(z) {0} rögzítésnév elrejti az előre definiált tulajdonságot, amely a reguláris kifejezéssel való egyezés helyét adja vissza. Fontolja meg annak átnevezését, ha ki szeretné nyerni a megadott szövegben található teljes egyezés helyét az elnevezett tulajdonsággal.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Eltávolítja az összes formázást, és egyszerű szöveges értéket ad vissza.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Ha egy online adatforrásértékkel (tábla vagy rekord) rendelkező változót akar beállítani, az több kérést hozhat létre a kiszolgálón. Ez hamarosan tiltott lesz.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>A szó szerinti deklaráció típusa érvénytelen volt</value>
     
   </data>
 </root>

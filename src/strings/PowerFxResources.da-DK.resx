@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulære udtryk skal være konstante værdier.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Den værdi, der blev sendt til "{0}" funktionen, kan ikke ændres.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Opsamlingsnavnet '{0}' skjuler den foruddefinerede egenskab, der returnerer placeringen af matchet til det regulære udtryk. Du kan overveje at omdøbe det, hvis du vil bruge den navngivne egenskab til at udtrække placeringen af det fulde match i den angivne tekst.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Fjerner al formatering og returnerer en ren tekstværdi.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Angiv en variabel med en værdi i onlinedatakilde (tabel eller post) kan medføre flere anmodninger til serveren. Snart blokeres dette.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Typens bogstavelig værdi var ugyldig</value>
     
   </data>
 </root>
