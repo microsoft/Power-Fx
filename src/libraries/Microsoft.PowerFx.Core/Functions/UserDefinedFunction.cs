@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -21,7 +24,6 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -33,6 +35,8 @@ namespace Microsoft.PowerFx.Core.Functions
         private TexlBinding _binding;
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
+
+        public override bool SupportsParamCoercion => true;
 
         public TexlNode UdfBody { get; }
 
@@ -84,7 +88,7 @@ namespace Microsoft.PowerFx.Core.Functions
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
             _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features, rule: rule);
 
-            CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding.ErrorContainer);
+            CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
             return _binding;
         }
@@ -92,12 +96,13 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Perform sub-expression type checking and produce a return type for the function declaration, this is only applicable for UDFs.
         /// </summary>
-        public void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, IErrorContainer errorContainer)
+        public void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, TexlBinding binding)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(actualBodyReturnType);
-            Contracts.AssertValue(errorContainer);
+            Contracts.AssertValue(binding);
 
+<<<<<<< Updated upstream
             if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind))
             {
                 if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
@@ -110,6 +115,17 @@ namespace Microsoft.PowerFx.Core.Functions
                 else
                 {
                     errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+=======
+            if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
+            {
+                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
+                {
+                    _binding.SetCoercedType(binding.Top, ReturnType);
+                }
+                else
+                {
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+>>>>>>> Stashed changes
                 }
             }
         }

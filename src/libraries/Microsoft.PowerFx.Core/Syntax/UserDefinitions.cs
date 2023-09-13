@@ -103,10 +103,14 @@ namespace Microsoft.PowerFx.Syntax
                 userDefinedFunctions.Add(func);
             }
 
+<<<<<<< Updated upstream
             if (shouldBindBody)
             {
                 BindUserDefinedFunctions(userDefinedFunctions, ReadOnlySymbolTable.NewDefault(texlFunctionSet) as INameResolver, errors);
             }
+=======
+            //BindUserDefinedFunctions(userDefinedFunctions, ReadOnlySymbolTable.NewDefault(texlFunctionSet) as INameResolver, errors);
+>>>>>>> Stashed changes
 
             return userDefinedFunctions;
         }
@@ -116,7 +120,7 @@ namespace Microsoft.PowerFx.Syntax
             foreach (var udf in userDefinedFunctions)
             {
                 var binding = udf.BindBody(_globalNameResolver, _documentBinderGlue, _bindingConfig, _features, functionNameResolver);
-                udf.CheckTypesOnDeclaration(binding.CheckTypesContext, actualBodyReturnType: binding.ResultType, binding.ErrorContainer);
+                udf.CheckTypesOnDeclaration(binding.CheckTypesContext, actualBodyReturnType: binding.ResultType, binding);
                 errors.AddRange(binding.ErrorContainer.GetErrors());
             }
         }
