@@ -65,7 +65,7 @@ namespace Microsoft.PowerFx.Syntax
                 return false;
             }
                
-            var functions = CreateUserDefinedFunctions(parseResult.UDFs, shouldBindBody, out var errors);
+            var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
             userDefinitionResult = new UserDefinitionResult(functions, errors, parseResult.NamedFormulas);
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Syntax
             return true;
         }
 
-        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, bool shouldBindBody, out List<TexlError> errors)
+        private IEnumerable<UserDefinedFunction> CreateUserDefinedFunctions(IEnumerable<UDF> uDFs, out List<TexlError> errors)
         {
             Contracts.AssertValue(uDFs);
 
@@ -103,27 +103,9 @@ namespace Microsoft.PowerFx.Syntax
                 userDefinedFunctions.Add(func);
             }
 
-<<<<<<< Updated upstream
-            if (shouldBindBody)
-            {
-                BindUserDefinedFunctions(userDefinedFunctions, ReadOnlySymbolTable.NewDefault(texlFunctionSet) as INameResolver, errors);
-            }
-=======
-            //BindUserDefinedFunctions(userDefinedFunctions, ReadOnlySymbolTable.NewDefault(texlFunctionSet) as INameResolver, errors);
->>>>>>> Stashed changes
-
             return userDefinedFunctions;
         }
 
-        private void BindUserDefinedFunctions(IEnumerable<UserDefinedFunction> userDefinedFunctions, INameResolver functionNameResolver, List<TexlError> errors)
-        {
-            foreach (var udf in userDefinedFunctions)
-            {
-                var binding = udf.BindBody(_globalNameResolver, _documentBinderGlue, _bindingConfig, _features, functionNameResolver);
-                udf.CheckTypesOnDeclaration(binding.CheckTypesContext, actualBodyReturnType: binding.ResultType, binding);
-                errors.AddRange(binding.ErrorContainer.GetErrors());
-            }
-        }
 
         private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
         {
