@@ -36,11 +36,25 @@ namespace Microsoft.PowerFx.Syntax
             _parserOptions = parserOptions;
         }
 
+        /// <summary>
+        /// Parses a script with both named formulas, user defined functions and user defined types.
+        /// </summary>
+        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
+        /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
         public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
         {
             return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 
+        /// <summary>
+        /// Parses and creates user definitions (named formulas, user defined functions).
+        /// </summary>
+        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
+        /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
+        /// <param name="features">PowerFx feature flags.</param>
+        /// <returns>True if there are no parser errors.</returns>
         public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
         {
             var userDefinitions = new UserDefinitions(script, parserOptions, features);
