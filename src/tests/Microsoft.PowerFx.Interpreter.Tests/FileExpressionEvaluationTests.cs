@@ -123,37 +123,48 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
         // Run cases in MutationScripts
+        //
         // Normal tests have each line as an independent test case. 
         // Whereas these are fed into a repl and each file maintains state.
+        // 
+        // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
         [Theory]
-        [InlineData("Simple1.txt")]
-        [InlineData("Collect.txt")]
-        [InlineData("Patch.txt")]
-        [InlineData("Clear.txt")]
-        [InlineData("ClearCollect.txt")]
-        [InlineData("ForAllMutate.txt")]
-        [InlineData("Set.txt")]
-        [InlineData("DeepMutation.txt")]
-        [InlineData("User.txt")]
-        [InlineData("FilterFunctions.txt")]
-        [InlineData("AndOr.txt")]
-        [InlineData("Remove.txt")]
-        public void RunMutationTests(string file)
+        [ReplFileSimpleList("MutationScripts")]
+        public void RunMutationTests_V1(string file)
+        {
+            RunMutationTestFile(file, Features.PowerFxV1, "PowerFxV1");
+        }
+
+        [Theory]
+        [ReplFileSimpleList("MutationScripts")]
+        public void RunMutationTests_Canvas(string file)
+        {
+            var features = new Features()
+            {
+                TableSyntaxDoesntWrapRecords = true,
+                ConsistentOneColumnTableResult = true,
+                PowerFxV1CompatibilityRules = true,
+            };
+
+            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit");
+        }
+
+        private void RunMutationTestFile(string file, Features features, string setup)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
-            var config = new PowerFxConfig() { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
+            var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();
             rc.SetUserInfo(UserInfoTestSetup.UserInfo);
 
-            var runner = new ReplRunner(engine, rc) { NumberIsFloat = true };
+            var runner = new ReplRunner(engine, rc);
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(TestRunner.ParseSetupString("NumberIsFloat"), path);
+            testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
 
             var result = testRunner.RunTests();
 

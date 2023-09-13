@@ -1,4 +1,4 @@
-#SETUP: disable:PowerFxV1CompatibilityRules
+#SETUP: disable:CoalesceShortCircuit
 
 // Cases to test how shortcut verification work along with behavior functions
 

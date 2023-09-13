@@ -1,3 +1,5 @@
+#SETUP: CoalesceShortCircuit
+
 // Cases to test how shortcut verification work along with behavior functions
 
 >> Set( t1, [1,2] )

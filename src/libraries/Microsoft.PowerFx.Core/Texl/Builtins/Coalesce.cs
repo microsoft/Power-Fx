@@ -47,7 +47,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
 
         public override bool IsLazyEvalParam(int index, Features features)
         {
-            if (features.PowerFxV1CompatibilityRules)
+            if (features.CoalesceShortCircuit)
             {
                 return index > 0;
             }
