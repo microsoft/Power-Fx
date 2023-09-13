@@ -272,7 +272,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // See https://swagger.io/docs/specification/data-models/data-types/
         // numberIsFloat = numbers are stored as C# double when set to true, otherwise they are stored as C# decimal
-        public static ConnectorParameterType ToFormulaType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0, bool numberIsFloat = false)
+        internal static ConnectorParameterType ToConnectorParameterType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0, bool numberIsFloat = false)
         {
             chain ??= new Stack<string>();
 
@@ -360,6 +360,12 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                 case "array":
+                    if (schema.Items == null)
+                    {
+                        // Type of items in unknown
+                        return new ConnectorParameterType(schema, FormulaType.UntypedObject);
+                    }
+
                     var innerA = GetUniqueIdentifier(schema.Items);
 
                     if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
@@ -376,7 +382,7 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     chain.Push(innerA);
-                    ConnectorParameterType cpt = schema.Items.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
+                    ConnectorParameterType cpt = schema.Items.ToConnectorParameterType(chain, level + 1, numberIsFloat: numberIsFloat);
                     cpt.SetProperties("Array", true, schema.Items.GetVisibility());
                     chain.Pop();
 
@@ -444,7 +450,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                             chain.Push(innerO);
-                            ConnectorParameterType cpt2 = kv.Value.ToFormulaType(chain, level + 1, numberIsFloat: numberIsFloat);
+                            ConnectorParameterType cpt2 = kv.Value.ToConnectorParameterType(chain, level + 1, numberIsFloat: numberIsFloat);
                             cpt2.SetProperties(propName, schema.Required.Contains(propName), kv.Value.GetVisibility());
                             chain.Pop();
 
@@ -550,7 +556,7 @@ namespace Microsoft.PowerFx.Connectors
                     ConnectorDynamicSchema connectorDynamicSchema = openApiMediaType.Schema.GetDynamicSchema(numberIsFloat);
                     ConnectorDynamicProperty connectorDynamicProperty = openApiMediaType.Schema.GetDynamicProperty(numberIsFloat);
 
-                    ConnectorParameterType connectorParameterType = openApiMediaType.Schema.ToFormulaType(numberIsFloat: numberIsFloat);
+                    ConnectorParameterType connectorParameterType = openApiMediaType.Schema.ToConnectorParameterType(numberIsFloat: numberIsFloat);
                     connectorParameterType.SetProperties("response", true, openApiMediaType.GetVisibility());
                     connectorParameterType.SetDynamicReturnSchemaAndProperty(connectorDynamicSchema, connectorDynamicProperty);
 

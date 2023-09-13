@@ -6,22 +6,19 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Intellisense
 {
-    public class ConnectorSuggestions
+    internal class ConnectorSuggestions
     {
-        public IReadOnlyList<ConnectorSuggestion> Suggestions { get; internal set; }
+        public IReadOnlyList<ConnectorSuggestion> Suggestions { get; }
+        
+        public FormulaType FormulaType { get; }
 
-        public ErrorValue Error { get; }
+        internal SuggestionMethod SuggestionMethod;
 
-        public ConnectorSuggestions(ErrorValue error)
+        internal ConnectorSuggestions(SuggestionMethod suggestionMethod, IReadOnlyList<ConnectorSuggestion> suggestions, FormulaType formulaType = null)
         {
-            Suggestions = null;
-            Error = error;
-        }
-
-        public ConnectorSuggestions(IReadOnlyList<ConnectorSuggestion> suggestions)
-        {
+            SuggestionMethod = suggestionMethod;
             Suggestions = suggestions;
-            Error = null;
+            FormulaType = formulaType;
         }
     }
 
@@ -36,5 +33,14 @@ namespace Microsoft.PowerFx.Intellisense
             Suggestion = suggestion;
             DisplayName = displayName;
         }
+    }
+
+    internal enum SuggestionMethod
+    {
+        None = 0,
+        DynamicList = 1,
+        DynamicValue = 2,
+        DynamicProperty = 3,
+        DynamicSchema = 4
     }
 }

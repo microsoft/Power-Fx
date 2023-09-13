@@ -10,31 +10,33 @@ namespace Microsoft.PowerFx.Connectors
     {
         public OpenApiSchema Schema { get; init; }
 
-        public FormulaType FormulaType { get; init; }
+        public FormulaType FormulaType { get; internal set; }
 
         public ConnectorType ConnectorType { get; init; }
+
+        internal ConnectorExtensions ConnectorExtensions { get; }
 
         /// <summary>
         /// "x-ms-dynamic-values".
         /// </summary>
-        internal ConnectorDynamicValue DynamicValue { get; init; }
+        internal ConnectorDynamicValue DynamicValue => ConnectorExtensions.ConnectorDynamicValue;
 
         /// <summary>
         /// "x-ms-dynamic-list".
         /// </summary>
-        internal ConnectorDynamicList DynamicList { get; init; }
+        internal ConnectorDynamicList DynamicList => ConnectorExtensions.ConnectorDynamicList;
 
         /// <summary>
         /// "x-ms-dynamic-schema".
         /// </summary>
-        internal ConnectorDynamicSchema DynamicSchema { get; init; }
+        internal ConnectorDynamicSchema DynamicSchema => ConnectorExtensions.ConnectorDynamicSchema;
 
         /// <summary>
         /// "x-ms-dynamic-properties".
         /// </summary>
-        internal ConnectorDynamicProperty DynamicProperty { get; init; }
+        internal ConnectorDynamicProperty DynamicProperty => ConnectorExtensions.ConnectorDynamicProperty;
 
-        public string Summary { get; init; }
+        public string Summary => ConnectorExtensions.Summary;
 
         public bool SupportsDynamicValuesOrList => DynamicValue != null || DynamicList != null;
 
@@ -42,16 +44,12 @@ namespace Microsoft.PowerFx.Connectors
 
         public bool SupportsDynamicIntellisense => SupportsDynamicValuesOrList || SupportsDynamicSchemaOrProperty;
 
-        internal ConnectorSchema(OpenApiSchema schema, FormulaType type, ConnectorType connectorType, string summary, ConnectorDynamicValue dynamicValue, ConnectorDynamicList dynamicList, ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
+        internal ConnectorSchema(OpenApiSchema schema, FormulaType type, ConnectorType connectorType, ConnectorExtensions extensions)
         {
             Schema = schema;
             FormulaType = type;
             ConnectorType = connectorType;
-            Summary = summary;
-            DynamicValue = dynamicValue;
-            DynamicList = dynamicList;
-            DynamicSchema = dynamicSchema;
-            DynamicProperty = dynamicProperty;
+            ConnectorExtensions = extensions;
         }
 
         internal ConnectorSchema(ConnectorSchema csi)
@@ -59,11 +57,7 @@ namespace Microsoft.PowerFx.Connectors
             Schema = csi.Schema;
             FormulaType = csi.FormulaType;
             ConnectorType = csi.ConnectorType;
-            Summary = csi.Summary;
-            DynamicValue = csi.DynamicValue;
-            DynamicList = csi.DynamicList;
-            DynamicSchema = csi.DynamicSchema;
-            DynamicProperty = csi.DynamicProperty;
+            ConnectorExtensions = csi.ConnectorExtensions;
         }
     }
 }

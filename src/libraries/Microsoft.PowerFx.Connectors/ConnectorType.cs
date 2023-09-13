@@ -53,33 +53,37 @@ namespace Microsoft.PowerFx.Connectors
 
         public Visibility Visibility { get; internal set; }
 
-        internal ConnectorType(OpenApiSchema schema, FormulaType formulaType)
+        internal ConnectorType(OpenApiSchema schema, FormulaType formulaType)            
         {
             FormulaType = formulaType;
-            Description = schema.Description;
-            DisplayName = schema.GetSummary();
-            ExplicitInput = schema.GetExplicitInput();
 
-            Fields = Array.Empty<ConnectorType>();
-            IsEnum = schema.Enum != null && schema.Enum.Any();
-
-            if (IsEnum)
+            if (schema != null)
             {
-                EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
-                EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue("x-ms-enum-display-name", out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
-                                    ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
-                                    : Array.Empty<string>();
-            }
-            else
-            {
-                EnumValues = Array.Empty<FormulaValue>();
-                EnumDisplayNames = Array.Empty<string>();
-            }
+                Description = schema.Description;
+                DisplayName = schema.GetSummary();
+                ExplicitInput = schema.GetExplicitInput();
 
-            IsRequired = false;
-            Name = null;
+                Fields = Array.Empty<ConnectorType>();
+                IsEnum = schema.Enum != null && schema.Enum.Any();
 
-            SetVisibility(schema);
+                if (IsEnum)
+                {
+                    EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
+                    EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue("x-ms-enum-display-name", out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
+                                        ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
+                                        : Array.Empty<string>();
+                }
+                else
+                {
+                    EnumValues = Array.Empty<FormulaValue>();
+                    EnumDisplayNames = Array.Empty<string>();
+                }
+
+                IsRequired = false;
+                Name = null;
+
+                SetVisibility(schema);
+            }
         }
 
         internal ConnectorType(OpenApiSchema schema, RecordType recordType, ConnectorType[] fields)

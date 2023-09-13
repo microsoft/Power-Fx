@@ -13,7 +13,7 @@ namespace Microsoft.PowerFx.Connectors
     [DebuggerDisplay("{Type._type}")]
     public class ConnectorParameterType
     {
-        public FormulaType Type { get; }
+        public FormulaType Type => ConnectorType.FormulaType;
 
         public RecordType HiddenRecordType { get; }
 
@@ -27,8 +27,7 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
 
-        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)
-            : this(type)
+        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)            
         {
             HiddenRecordType = hiddenRecordType;
             ConnectorType = new ConnectorType(schema, type);
@@ -39,26 +38,19 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
-        private ConnectorParameterType(FormulaType type)
-        {
-            Type = type;
-        }
-
         internal ConnectorParameterType()
         {
-            Type = FormulaType.Blank;
+            ConnectorType = new ConnectorType(null, new BlankType());
         }
 
-        internal ConnectorParameterType(OpenApiSchema schema, TableType tableType, ConnectorType tableConnectorType)
-            : this(tableType)
+        internal ConnectorParameterType(OpenApiSchema schema, TableType tableType, ConnectorType tableConnectorType)            
         {
             HiddenRecordType = null;
             HiddenConnectorType = null;
             ConnectorType = new ConnectorType(schema, tableType, tableConnectorType);
         }
 
-        internal ConnectorParameterType(OpenApiSchema schema, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
-            : this(recordType)
+        internal ConnectorParameterType(OpenApiSchema schema, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)            
         {
             HiddenRecordType = hiddenRecordType;
             ConnectorType = new ConnectorType(schema, recordType, fields);
