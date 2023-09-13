@@ -364,12 +364,14 @@ namespace Microsoft.PowerFx.Intellisense
                 }
 
                 FormulaValue[] parameters = callNode.Args.Children.Where(texlNode => NoErrorInTexlNode(texlNode))
-                                                                  .Select(texlNode => texlNode switch
-                {
-                    StrLitNode strNode => FormulaValue.New(strNode.Value),
-                    NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
-                    _ => null as FormulaValue
-                }).ToArray();
+                    .Select(texlNode => texlNode switch
+                    {
+                        BoolLitNode boolLitNode => FormulaValue.New(boolLitNode.Value),
+                        DecLitNode decNode => FormulaValue.New(decNode.ActualDecValue),
+                        NumLitNode numNode => FormulaValue.New(numNode.ActualNumValue),
+                        StrLitNode strNode => FormulaValue.New(strNode.Value),
+                        _ => null as FormulaValue
+                    }).ToArray();
 
                 if (parameters.Any(p => p == null))
                 {
@@ -666,7 +668,7 @@ namespace Microsoft.PowerFx.Intellisense
             return false;
         }
 
-        private static CallNode GetNearestCallNode(TexlNode node)
+        internal static CallNode GetNearestCallNode(TexlNode node)
         {
             Contracts.AssertValue(node);
             var parent = node;
@@ -726,6 +728,11 @@ namespace Microsoft.PowerFx.Intellisense
 #pragma warning disable CS0618 // Type or member is obsolete
             foreach (var function in intellisenseData.Binding.NameResolver.Functions.Functions)
             {
+                if (function.IsDeprecatedOrInternalFunction)
+                {
+                    continue;
+                }
+
                 var qualifiedName = function.QualifiedName;
                 var highlightStart = qualifiedName.IndexOf(intellisenseData.MatchingStr, StringComparison.OrdinalIgnoreCase);
                 var highlightEnd = intellisenseData.MatchingStr.Length;

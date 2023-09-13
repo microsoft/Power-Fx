@@ -4732,6 +4732,14 @@
     <value>宣言した関数の戻り値タイプが、関数本文の戻り値タイプと一致しません。</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>関数の戻り値の型 (例: "FindMonth( d:Text ):Number = Month( DateParse( d ));" の ":Number") が見つかりません</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>関数の引数の型 (例: "FindMonth( d:Text ):Number = Month( DateParse( d ))" の ":Text") が見つかりません</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}'は既に存在します。</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>正規表現は定数値である必要があります。</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>'{0}' 関数に渡された値は変更できません。</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>キャプチャ名 '{0}' は正規表現に一致する場所を返す定義済みのプロパティを非表示にします。その名前付きプロパティを使用して、指定したテキストから完全一致の位置を抽出する場合は、名前の変更を検討してください。</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>すべての書式設定を削除し、プレーンテキストの値を返します。</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>変数をオンラインのデータ ソース値 (テーブルまたはレコード) に設定すると、サーバーへの要求が複数発生する可能性があります。これはすぐにブロックされます。</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>タイプ リテラルの宣言が無効です</value>
     
   </data>
 </root>

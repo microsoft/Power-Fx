@@ -140,6 +140,21 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
             AssertTokens(testCase.ExpectedTokens, tokens);
         }
 
+        [Theory]
+        [MemberData(nameof(SkippingTokensTestCases.SkippingTokenTestCasesAsObjects), MemberType = typeof(SkippingTokensTestCases))]
+        internal void TestTokensAreSkippedCorrectly(TokenizationTestCase testCase)
+        {
+            // Arrange
+            var expression = testCase.Expression;
+            var checkResult = GetDefaultCheckResult(expression, testCase.Options, false);
+
+            // Act
+            var tokens = Tokenization.Tokenize(expression, checkResult.Binding, checkResult.Parse.Comments, null, false, testCase.TokenTypesToSkip);
+
+            // Assert
+            AssertTokens(testCase.ExpectedTokens, tokens);
+        }
+
         private static void AssertTokens(IEnumerable<ITokenTextSpan> expectedTokens, IEnumerable<ITokenTextSpan> actualTokens)
         {
             expectedTokens = expectedTokens.OrderBy(tok => tok.StartIndex);

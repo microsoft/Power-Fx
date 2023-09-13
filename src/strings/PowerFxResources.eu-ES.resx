@@ -4732,6 +4732,14 @@
     <value>Adierazitako funtzioak itzulitako elementu mota ez dator bat funtzioaren gorputzaren itzulitako elementu motarekin.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Funtzio-itzulera mota falta da, adibidez, ":Number" hemen: "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Funtzio-argudio mota falta da, adibidez, ":Text" hemen: "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Badago "{0}" deitzen den formula bat.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Espresio erregularrek aldaketarik gabeko balioak izan behar dute.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Ezin da aldatu "{0}" funtzioari pasatako balioa.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>"{0}" kaptura-izena espresio erregularraren bat-etortzearen kokalekua itzultzen duen eta aurrez zehaztuta dagoen propietatea ezkutatzen ari da. Izen hori duen propietatea erabili nahi baduzu bat-etortze osoaren kokalekua ateratzeko zehaztutako testutik, alda iezaiozu izena kapturari.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Formatua kendu eta testu-balio arrunta itzultzen du.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Lineako datu-iturburuaren balio bat (taula edo erregistro bat) duen aldagai bat ezartzen baduzu, hainbat eskaera sortuko dira zerbitzarian. Laster blokeatuko da aukera hau.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Deklarazio literalaren motak ez du balio</value>
     
   </data>
 </root>

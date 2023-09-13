@@ -12,7 +12,9 @@
     "__comments02": "     1. basePath is /apim/sql instead of / only",
     "__comments03": "",
     "__comments04": "     2. All paths are prefixed with /{connectionId}",
-    "__comments05": ""
+    "__comments05": "",
+    "__comments06": "     3. Added fake 'ExecuteProcedure_V2z' operation for testing",
+    "__comments07": ""
   },
   "host": "localhost:33069",
   "basePath": "/apim/sql",
@@ -1156,7 +1158,7 @@
             "x-ms-url-encoding": "double",
             "x-ms-dynamic-values": {
               "operationId": "GetDatabases",
-              "parameters": {                
+              "parameters": {
                 "server": {
                   "parameter": "server"
                 }
@@ -3030,6 +3032,141 @@
           "status": "Production",
           "family": "ExecuteProcedure",
           "revision": 2
+        }
+      }
+    },
+    "/{connectionId}/v2/datasets/pfxdev-sql.database.windows.net,{database}/procedures/{procedure}/{fake}": {
+      "post": {
+        "tags": [
+          "SqlProcedureV2z"
+        ],
+        "summary": "Execute stored procedure (V2z)",
+        "description": "This operation runs a stored procedure. *** This is an artificial function used for testing only. ***",
+        "operationId": "ExecuteProcedure_V2z",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "fakebool",
+            "in": "query",
+            "description": "Fake bool param",
+            "required": true,
+            "x-ms-summary": "Fake bool param",
+            "type": "boolean"            
+          },
+          {
+            "name": "fake",
+            "in": "path",
+            "description": "Fake param",
+            "required": true,
+            "x-ms-summary": "Fake param",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "database",
+            "in": "path",
+            "description": "Database name",
+            "required": true,
+            "x-ms-summary": "Database name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetDatabases",
+              "parameters": {
+                "server": "pfxdev-sql.database.windows.net"
+              },
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "procedure",
+            "in": "path",
+            "description": "Name of stored procedure",
+            "required": true,
+            "x-ms-summary": "Procedure name",
+            "x-ms-url-encoding": "double",
+            "x-ms-dynamic-values": {
+              "operationId": "GetProcedures_V2",
+              "parameters": {
+                "server": "pfxdev-sql.database.windows.net",
+                "database": {
+                  "parameter": "database"
+                }
+              },
+              "value-collection": "value",
+              "value-path": "Name",
+              "value-title": "DisplayName"
+            },
+            "type": "string"
+          },
+          {
+            "name": "parameters",
+            "in": "body",
+            "description": "Input parameters to the stored procedure",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/Object"
+              },
+              "x-ms-dynamic-schema": {
+                "operationId": "GetProcedure_V2",
+                "parameters": {
+                  "server": "pfxdev-sql.database.windows.net",
+                  "database": {
+                    "parameter": "database"
+                  },
+                  "procedure": {
+                    "parameter": "procedure"
+                  }
+                },
+                "value-path": "Schema/InputParameters"
+              }
+            },
+            "x-ms-summary": "Parameters list"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/ProcedureResult"
+              },
+              "x-ms-dynamic-schema": {
+                "operationId": "GetProcedure_V2",
+                "parameters": {
+                  "server": "pfxdev-sql.database.windows.net",
+                  "database": {
+                    "parameter": "database"
+                  },
+                  "procedure": {
+                    "parameter": "procedure"
+                  }
+                },
+                "value-path": "schema/procedureresultschema"
+              }
+            }
+          },
+          "default": {
+            "description": "Operation Failed."
+          }
+        },
+        "deprecated": false,
+        "x-ms-visibility": "important",
+        "x-ms-api-annotation": {
+          "status": "Production",
+          "family": "ExecuteProcedure",
+          "revision": 7
         }
       }
     },

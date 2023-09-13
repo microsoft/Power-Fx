@@ -5,50 +5,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Numerics;
-using Microsoft.AppMagic.Authoring;
-using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Core.Types;
-using Microsoft.PowerFx.Core.Utils;
-using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument)
+        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument)
         {
-            return GetFunctions(openApiDocument, null, false, new ConnectorSettings());
+            return GetFunctions(new ConnectorSettings(@namespace), openApiDocument);
         }
 
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient)
-        {
-            return GetFunctions(openApiDocument, httpClient, false, new ConnectorSettings());
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError)
-        {
-            return GetFunctions(openApiDocument, httpClient, throwOnError, new ConnectorSettings());
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, bool numberIsFloat)
-        {
-            return GetFunctions(openApiDocument, httpClient, throwOnError, new ConnectorSettings() { NumberIsFloat = numberIsFloat });
-        }
-
-        public static IEnumerable<ConnectorFunction> GetFunctions(OpenApiDocument openApiDocument, HttpClient httpClient, bool throwOnError, ConnectorSettings connectorSettings)
+        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
-            connectorSettings ??= new ConnectorSettings();
 
             ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions);
 
             List<ConnectorFunction> functions = new ();
-            List<ServiceFunction> sFunctions = new ();
             string basePath = openApiDocument.GetBasePath();
 
             foreach (KeyValuePair<string, OpenApiPathItem> kv in openApiDocument.Paths)
@@ -80,36 +57,14 @@ namespace Microsoft.PowerFx.Connectors
                     ValidateSupportedOpenApiOperation(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
                     ValidateSupportedOpenApiParameters(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
 
-                    string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty);
-                    string opPath = basePath != null ? basePath + path : path;
+                    string operationName = NormalizeOperationId(op.OperationId ?? path);
+                    string opPath = basePath != null && basePath != "/" ? basePath + path : path;
 
                     isSupported = isSupported && connectorIsSupported;
                     notSupportedReason = string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason;
 
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, null, httpClient, throwOnError, connectorSettings) { Document = openApiDocument };
-
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions) { Servers = openApiDocument.Servers };
                     functions.Add(connectorFunction);
-                    sFunctions.Add(connectorFunction._defaultServiceFunction);
-                }
-            }
-
-            // post processing for ConnectorDynamicValue, identify service functions
-            foreach (ConnectorFunction cf in functions)
-            {
-                if (cf._defaultServiceFunction != null)
-                {
-                    foreach (ServiceFunctionParameterTemplate sfpt in cf._defaultServiceFunction._requiredParameters)
-                    {
-                        if (sfpt.ConnectorDynamicValue != null)
-                        {
-                            sfpt.ConnectorDynamicValue.ServiceFunction = sFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
-                        }
-
-                        if (sfpt.ConnectorDynamicSchema != null)
-                        {
-                            sfpt.ConnectorDynamicSchema.ServiceFunction = sFunctions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicSchema.OperationId);
-                        }
-                    }
                 }
             }
 
@@ -175,7 +130,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Callback Object: A map of possible out-of band callbacks related to the parent operation.
                     // https://learn.microsoft.com/en-us/dotnet/api/microsoft.openapi.models.openapicallback
                     isSupported = false;
-                    notSupportedReason = $"OpenApiDocument Components contains Callbacks";                    
+                    notSupportedReason = $"OpenApiDocument Components contains Callbacks";
                 }
 
                 // openApiDocument.Examples can be ignored
@@ -279,7 +234,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (isSupported && op.Deprecated)
             {
-                isSupported = false;                
+                isSupported = false;
                 notSupportedReason = $"OpenApiOperation is deprecated";
             }
 
@@ -366,156 +321,38 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static List<ServiceFunction> Parse(string functionNamespace, OpenApiDocument openApiDocument, HttpMessageInvoker httpClient = null, ConnectorSettings connectorSettings = null)
+        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) Parse(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
         {
-            if (string.IsNullOrWhiteSpace(functionNamespace))
-            {
-                throw new ArgumentException(nameof(functionNamespace));
-            }
+            List<ConnectorFunction> cFunctions = GetFunctions(connectorSettings, openApiDocument).ToList();
+            List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
 
-            bool connectorIsSupported = true;
-            string connectorNotSupportedReason = string.Empty;
-
-            connectorSettings ??= new ConnectorSettings();
-            ValidateSupportedOpenApiDocument(openApiDocument, ref connectorIsSupported, ref connectorNotSupportedReason, connectorSettings.IgnoreUnknownExtensions);
-
-            List<ServiceFunction> functions = new List<ServiceFunction>();
-            string basePath = openApiDocument.GetBasePath();
-            string server = GetServer(openApiDocument, httpClient);
-            string absolutePath = httpClient is HttpClient hc ? (hc.BaseAddress?.AbsolutePath ?? string.Empty) : string.Empty;
-            DPath theNamespace = DPath.Root.Append(new DName(functionNamespace));         
-            
-            if (absolutePath.EndsWith("/", StringComparison.Ordinal))
-            { 
-                absolutePath = absolutePath.Substring(0, absolutePath.Length - 1);
-            }
-
-            foreach (var kv in openApiDocument.Paths)
-            {
-                string path = kv.Key;
-                OpenApiPathItem ops = kv.Value;
-                bool isSupported = true;
-                string notSupportedReason = string.Empty;
-
-                // Skip Webhooks
-                if (ops.Extensions.Any(kvp => kvp.Key == "x-ms-notification-content"))
-                {
-                    continue;
-                }
-
-                ValidateSupportedOpenApiPathItem(ops, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
-
-                foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
-                {
-                    HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"
-                    OpenApiOperation op = kv2.Value;
-
-                    if (op.IsTrigger())
-                    {
-                        continue;
-                    }
-
-                    ValidateSupportedOpenApiOperation(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
-                    ValidateSupportedOpenApiParameters(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
-
-                    if (isSupported)
-                    {
-                        // validate return type
-                        (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(connectorSettings.NumberIsFloat);
-
-                        if (!string.IsNullOrEmpty(unsupportedReason))
-                        {
-                            isSupported = false;
-                            notSupportedReason = unsupportedReason;
-                        }
-                    }
-
-                    // We need to remove invalid chars to be consistent with Power Apps
-                    string operationName = NormalizeOperationId(op.OperationId) ?? path.Replace("/", string.Empty).Replace("{", string.Empty).Replace("}", string.Empty).Replace(".", string.Empty);
-
-                    FormulaType returnType = op.GetReturnType(connectorSettings.NumberIsFloat);
-                    string opPath = absolutePath + (basePath != null && basePath != "/" ? basePath + path : path);
-                    ArgumentMapper argMapper = new ArgumentMapper(op.Parameters, op, connectorSettings.NumberIsFloat);
-                    ScopedHttpFunctionInvoker invoker = null;
-
-                    if (httpClient != null)
-                    {
-                        var httpInvoker = new HttpFunctionInvoker(httpClient, verb, server, opPath, returnType, argMapper, connectorSettings.Cache);
-                        invoker = new ScopedHttpFunctionInvoker(DPath.Root.Append(DName.MakeValid(functionNamespace, out _)), operationName, functionNamespace, httpInvoker);
-                    }
-
-                    ServiceFunction sfunc = new ServiceFunction(
-                        parentService: null,
-                        theNamespace: theNamespace,
-                        name: operationName,
-                        localeSpecificName: operationName,
-                        description: op.Description ?? $"Invoke {operationName}",
-                        returnType: returnType._type,
-                        maskLambdas: BigInteger.Zero,
-                        arityMin: argMapper.ArityMin,
-                        arityMax: argMapper.ArityMax,
-                        isBehaviorOnly: !IsSafeHttpMethod(verb),
-                        isAutoRefreshable: false,
-                        isDynamic: false,
-                        isCacheEnabled: false,
-                        cacheTimeoutMs: 10000,
-                        isHidden: false,
-                        parameterOptions: new Dictionary<TypedName, List<string>>(),
-                        optionalParamInfo: argMapper.OptionalParamInfo,
-                        requiredParamInfo: argMapper.RequiredParamInfo,
-                        parameterDefaultValues: new Dictionary<string, Tuple<string, DType>>(StringComparer.Ordinal),
-                        pageLink: op.PageLink(),
-                        isSupported: connectorIsSupported && isSupported,
-                        notSupportedReason: string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason,
-                        isDeprecated: op.Deprecated,
-                        isInternal: op.IsInternal(),
-                        actionName: "action",
-                        connectorSettings: connectorSettings,
-                        paramTypes: argMapper._parameterTypes)
-                    {
-                        _invoker = invoker
-                    };
-
-                    functions.Add(sfunc);
-                }
-            }
-
-            // post processing for ConnectorDynamicValue, identify service functions
-            foreach (ServiceFunction sf in functions)
-            {
-                foreach (ServiceFunctionParameterTemplate sfpt in sf._requiredParameters)
-                {
-                    if (sfpt.ConnectorDynamicValue != null)
-                    {
-                        sfpt.ConnectorDynamicValue.ServiceFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicValue.OperationId);
-                    }
-
-                    if (sfpt.ConnectorDynamicSchema != null)
-                    {
-                        sfpt.ConnectorDynamicSchema.ServiceFunction = functions.FirstOrDefault(f => f.Name == sfpt.ConnectorDynamicSchema.OperationId);
-                    }
-                }
-            }
-
-            return functions;
+            return (cFunctions, tFunctions);
         }
 
-        internal static string GetServer(OpenApiDocument openApiDocument, HttpMessageInvoker httpClient)
+        internal static string GetServer(IEnumerable<OpenApiServer> openApiServers, HttpMessageInvoker httpClient)
         {
-            if (httpClient != null && httpClient is HttpClient hc && hc.BaseAddress == null && openApiDocument != null && openApiDocument.Servers.Any())
+            if (httpClient != null && httpClient is HttpClient hc)
             {
-                // descending order to prefer https
-                return openApiDocument.Servers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                if (hc.BaseAddress != null)
+                {
+                    string path = hc.BaseAddress.AbsolutePath;
+
+                    if (path.EndsWith("/", StringComparison.Ordinal))
+                    {
+                        path = path.Substring(0, path.Length - 1);
+                    }
+
+                    return path;
+                }
+
+                if (hc.BaseAddress == null && openApiServers.Any())
+                {
+                    // descending order to prefer https
+                    return openApiServers.Select(s => new Uri(s.Url)).Where(s => s.Scheme == "https").FirstOrDefault()?.OriginalString;
+                }
             }
 
             return null;
-        }
-
-        internal static bool IsSafeHttpMethod(HttpMethod httpMethod)
-        {
-            // HTTP/1.1 spec states that only GET and HEAD requests are 'safe' by default.
-            // https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-            return httpMethod == HttpMethod.Get || httpMethod == HttpMethod.Head;
         }
     }
 }

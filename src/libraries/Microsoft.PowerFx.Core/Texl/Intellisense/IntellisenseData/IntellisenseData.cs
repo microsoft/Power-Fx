@@ -7,11 +7,15 @@ using System.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Functions;
+using Microsoft.PowerFx.Core.IR.Nodes;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Types.Enums;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Intellisense.Intellisense;
+using CallNode = Microsoft.PowerFx.Syntax.CallNode;
 
 namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 {
@@ -529,11 +533,15 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
 
             var maxArgIndex = (function?.ParamTypes?.Count() ?? 0) - 1;
 
-            var argType = maxArgIndex >= argIndex
-                ? function.ParamTypes.ElementAt(argIndex)
-                : DType.Unknown;
-
             var symbols = globalResolver.GlobalSymbols;
+
+            var parentCallNode = IntellisenseHelper.GetNearestCallNode(CurNode);
+            var argType = FunctionRecordNameSuggestionHandler.GetAggregateType(function, parentCallNode, this);
+
+            if (CurNode?.Parent?.Kind == NodeKind.Record)
+            {
+                FunctionRecordNameSuggestionHandler.AddSuggestionForAggregateAndParentRecord(CurNode, argType, this);
+            }
 
             var usePowerFxV1CompatibilityRules = this.Binding.Features.PowerFxV1CompatibilityRules;
             foreach (var symbol in symbols)

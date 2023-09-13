@@ -53,7 +53,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void SetVarNumberCoercion(string expression, bool isCheckSuccess, bool isFloat)
         {
             var option = new ParserOptions { NumberIsFloat = isFloat, AllowsSideEffects = true };
-            FormulaValue value = isFloat ? FormulaValue.New(12) : FormulaValue.New(12m);
+            FormulaValue value = isFloat ? FormulaValue.New(12.0) : FormulaValue.New(12m);
             var expectedValue = isFloat ? (object)15.0 : (object)15m;
 
             var config = new PowerFxConfig();
@@ -104,7 +104,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             engine.UpdateVariable("y", FormulaValue.New(7));
 
             var r1 = engine.Eval("Set(y, x*2);y", null, _opts);
-            Assert.Equal(10.0, r1.ToObject());
+            Assert.Equal(10m, r1.ToObject());
         }
 
         // Work with records
@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
-            var obj = cache.Marshal(new { X = 10, Y = 20 });
+            var obj = cache.Marshal(new { X = 10f, Y = 20f });
 
             engine.UpdateVariable("obj", obj);
 
@@ -197,7 +197,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
 
             var sym = symTable.CreateValues();            
-            sym.Set(slotX, FormulaValue.New(12));
+            sym.Set(slotX, FormulaValue.New(12.0));
 
             var config = new PowerFxConfig();
             config.EnableSetFunction();
@@ -215,6 +215,33 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var found = sym.TryGetValue("x", out var result2);
             Assert.True(found);
             Assert.Equal(13.0, result2.ToObject());
+        }
+
+        [Fact]
+        public void UpdateSimple_Decimal()
+        {
+            var symTable = new SymbolTable();
+            var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: true);
+
+            var sym = symTable.CreateValues();
+            sym.Set(slotX, FormulaValue.New(12));
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            var expr = "Set(x, x+1);x";
+
+            var runtimeConfig = new RuntimeConfig(sym);
+            var result = engine.EvalAsync(expr, CancellationToken.None, options: _opts, runtimeConfig: runtimeConfig).Result;
+            Assert.Equal(13m, result.ToObject());
+
+            result = sym.Get(slotX);
+            Assert.Equal(13m, result.ToObject());
+
+            var found = sym.TryGetValue("x", out var result2);
+            Assert.True(found);
+            Assert.Equal(13m, result2.ToObject());
         }
 
         [Fact]
@@ -239,7 +266,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void UpdateFailsOnReadOnlyValue()
         {
             var symTable = new SymbolTable();
-            var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: true);
+            var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: true);
 
             var sym = symTable.CreateValues();
             sym.Set(slotX, FormulaValue.New(12));
@@ -267,7 +294,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void UpdateFailsOnReadOnlyValue2()
         {
             var symTable = new SymbolTable();
-            var slotX = symTable.AddVariable("x", FormulaType.Number, mutable: false);
+            var slotX = symTable.AddVariable("x", FormulaType.Decimal, mutable: false);
 
             var sym = symTable.CreateValues();
             sym.Set(slotX, FormulaValue.New(12)); // Ok 
@@ -317,6 +344,37 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Create multiple values that share a symbol table.
             var symValues1 = symTable.CreateValues();
+            symValues1.Set(slot, FormulaValue.New(10.0));
+
+            var symValues2 = symTable.CreateValues();
+            symValues2.Set(slot, FormulaValue.New(20.0));
+
+            var check = engine.Check("Set(num, num+5)", options: _opts, symbolTable: symTable);
+            check.ThrowOnErrors();
+            var eval = check.GetEvaluator();
+
+            foreach (var symValue in new[] { symValues1, symValues2 })
+            {
+                var runtimeConfig = new RuntimeConfig(symValue);
+                var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: runtimeConfig);
+            }
+
+            AssertValue(symValues1, "num", 15.0);
+            AssertValue(symValues2, "num", 25.0);
+        }
+
+        [Fact]
+        public void Update3_Decimal()
+        {
+            var symTable = new SymbolTable();
+            var slot = symTable.AddVariable("num", FormulaType.Decimal, mutable: true);
+
+            var config = new PowerFxConfig();
+            config.EnableSetFunction();
+            var engine = new RecalcEngine(config);
+
+            // Create multiple values that share a symbol table.
+            var symValues1 = symTable.CreateValues();
             symValues1.Set(slot, FormulaValue.New(10));
 
             var symValues2 = symTable.CreateValues();
@@ -332,8 +390,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
                 var result = eval.EvalAsync(CancellationToken.None, runtimeConfig: runtimeConfig);
             }
 
-            AssertValue(symValues1, "num", 15.0);
-            AssertValue(symValues2, "num", 25.0);
+            AssertValue(symValues1, "num", 15m);
+            AssertValue(symValues2, "num", 25m);
         }
 
         [Fact]
@@ -378,7 +436,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var record1 = FormulaValue.NewRecordFromFields(
                 recordType1,
-                new NamedValue("num", FormulaValue.New(10)),
+                new NamedValue("num", FormulaValue.New(10.0)),
                 new NamedValue("str", FormulaValue.New("abc")));
 
             var recordType2 = RecordType.Empty()
@@ -386,7 +444,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var record2 = FormulaValue.NewRecordFromFields(
                 recordType2,
-                new NamedValue("num2", FormulaValue.New(20)));
+                new NamedValue("num2", FormulaValue.New(20.0)));
 
             var expr = "Set(displayNum, displayNum2+5); displayNum";
                         

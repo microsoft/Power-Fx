@@ -34,6 +34,9 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
 
                 "Microsoft.PowerFx.LanguageServerProtocol.LanguageServer",
 
+                "Microsoft.PowerFx.LanguageServerProtocol.NLHandler",
+                "Microsoft.PowerFx.LanguageServerProtocol.NL2FxParameters",
+
                 // Internal
                 "Microsoft.PowerFx.LanguageServerProtocol.JsonRpcHelper",
                 "Microsoft.PowerFx.LanguageServerProtocol.CodeActionKind",
@@ -79,6 +82,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.TextEdit",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.VersionedTextDocumentIdentifier",
                 "Microsoft.PowerFx.LanguageServerProtocol.Protocol.WorkspaceEdit",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomNL2FxParams",
+                "Microsoft.PowerFx.LanguageServerProtocol.Protocol.CustomNL2FxResult",
             };
 
             var sb = new StringBuilder();

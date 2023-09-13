@@ -4732,6 +4732,14 @@
     <value>Tipul de returnare al funcției declarate nu se potrivește cu tipul de returnare al corpului funcției.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Lipsește tipul de argument al funcției, de exemplu „:Number” în „FindMonth( d:Text ):Number = Month( DateParse( d ));”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Lipsește tipul de argument al funcției, de exemplu „:Text” în „FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}” există deja.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Expresiile regulate trebuie să fie valori constante.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Valoarea transmisă funcției „{0}” nu se poate modifica.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Numele capturii „{0}” ascunde proprietatea predefinită care returnează locația potrivirii expresiei regulate. O puteți redenumi dacă doriți să utilizați respectiva proprietate denumită pentru a extrage poziția potrivirii complete din textul specificat.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Elimină întreaga formatare și returnează o valoare text simplu.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Setarea unei variabile cu o valoare sursă de date online (tabel sau înregistrare) poate provoca mai multe solicitări către server. În curând acesta va fi blocat.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Declarația literală a tipului nu a fost validă</value>
     
   </data>
 </root>

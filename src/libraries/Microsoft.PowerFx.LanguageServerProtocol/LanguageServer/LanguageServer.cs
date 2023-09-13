@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
@@ -53,6 +55,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// This should be used for logging purposes. 
         /// </summary>
         public event OnLogUnhandledExceptionHandler LogUnhandledExceptionHandler;
+
+        /// <summary>
+        /// If set, provides the handler for $/nlSuggestion message.
+        /// </summary>
+        public NLHandler NL2FxImplementation { get; set; }
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
@@ -127,6 +134,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                             break;
                         case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
+                            break;
+                        case CustomProtocolNames.NL2FX:
+                            HandleNL2FxRequest(id, paramsJson);
                             break;
                         case TextDocumentNames.FullDocumentSemanticTokens:
                             HandleFullDocumentSemanticTokens(id, paramsJson);
@@ -388,6 +398,49 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }));
         }
 
+        private void HandleNL2FxRequest(string id, string paramsJson)
+        {
+            _logger?.Invoke($"[PFX] HandleNL2FxRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+            if (id == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return;
+            }
+
+            if (this.NL2FxImplementation == null)
+            {
+                throw new NotSupportedException($"NL2Fx not enabled");
+            }
+
+            Contracts.AssertValue(id);
+            Contracts.AssertValue(paramsJson);
+
+            if (!TryParseParams(paramsJson, out CustomNL2FxParams request))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return;
+            }
+
+            var documentUri = request.TextDocument.Uri;
+            var scope = _scopeFactory.GetOrCreateInstance(documentUri);
+
+            var check = scope.Check("1"); // just need to get the symbols 
+            var summary = check.ApplyGetContextSummary();
+
+            var req = new NL2FxParameters
+            {
+                Sentence = request.Sentence,
+                SymbolSummary = summary
+            };
+
+            CancellationToken cancel = default;
+            var result = this.NL2FxImplementation.NL2Fx(req, cancel)
+                .ConfigureAwait(false).GetAwaiter().GetResult();
+            
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
+        }
+
         private void HandleCodeActionRequest(string id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleCodeActionRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
@@ -541,8 +594,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            // Skip over the token types that clients don't want in the response
-            var tokens = result.GetTokens().Where(tok => !tokenTypesToSkip.Contains(tok.TokenType));
+            var tokens = result.GetTokens(tokenTypesToSkip);
 
             if (isRangeSemanticTokensMethod)
             {

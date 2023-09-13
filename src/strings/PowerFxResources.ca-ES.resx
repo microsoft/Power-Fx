@@ -4732,6 +4732,14 @@
     <value>El tipus de retorn de la funció indicada no coincideix amb el tipus de retorn del cos de la funció.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Falta el tipus de retorn de la funció, per exemple, ":Number" a "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Falta el tipus d'argument de la funció, per exemple, ":Text" a "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>La fórmula NamedFormula "{0}" ja existeix.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Les expressions regulars han de ser valors constants.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>El valor passat a la funció "{0}" no es pot canviar.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>El nom de la captura "{0}" amaga la propietat predefinida que retorna la ubicació de la coincidència de l'expressió regular. Considereu la possibilitat de canviar-li el nom si voleu utilitzar aquesta propietat amb nom per extreure la posició de la coincidència completa del text especificat.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Suprimeix tot el format i retorna un valor de text sense format.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Definir una variable amb un valor de font de dades en línia (taula o registre) pot provocar diverses sol·licituds al servidor. Aviat es bloquejarà.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>La declaració literal de tipus no és vàlida</value>
     
   </data>
 </root>

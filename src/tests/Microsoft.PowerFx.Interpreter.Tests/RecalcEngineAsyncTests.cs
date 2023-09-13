@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx.Tests
                 return x;
             }
 
-            public void SetResult(int value)
+            public void SetResult(double value)
             {
                 _waiter.SetResult(FormulaValue.New(value));
             }
@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Tests
             await Task.Delay(TimeSpan.FromMilliseconds(5)).ConfigureAwait(false);
             Assert.False(task.IsCompleted);
 
-            helper.SetResult(15);
+            helper.SetResult(15.0);
 
             var result = await task.ConfigureAwait(false);
 
@@ -221,8 +221,8 @@ namespace Microsoft.PowerFx.Tests
             Assert.False(task1.IsCompleted);
             Assert.False(task2.IsCompleted);
 
-            helper1.SetResult(333);
-            helper2.SetResult(444);
+            helper1.SetResult(333.0);
+            helper2.SetResult(444.0);
 
             var result1 = await task1.ConfigureAwait(false);
             var result2 = await task2.ConfigureAwait(false);

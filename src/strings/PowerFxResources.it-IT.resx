@@ -4732,6 +4732,14 @@
     <value>Il tipo restituito della funzione dichiarato non corrisponde al tipo restituito del corpo della funzione.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Tipo restituito della funzione mancante, ad esempio ":Number" in "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Tipo di argomento della funzione mancante, ad esempio ":Text" in "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" esiste già.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Le espressioni regolari devono essere costituite da valori costanti.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Il valore passato alla funzione "{0}" non può essere modificato.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Il nome dell'acquisizione '{0}' nasconde la proprietà predefinita che restituisce la posizione della corrispondenza nell'espressione regolare. Provare a rinominarla se si vuole usare tale proprietà denominata per estrarre la posizione della corrispondenza completa nel testo specificato.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Rimuove tutte le formattazioni e restituisce un valore di testo normale.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>L'impostazione di una variabile con un valore di origine dati online (tabella o record) può generare più richieste al server. Questa funzionalità verrà presto bloccata.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Dichiarazione valore letterale del tipo non valida</value>
     
   </data>
 </root>

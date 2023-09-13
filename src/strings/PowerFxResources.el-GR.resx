@@ -4732,6 +4732,14 @@
     <value>Ο τύπος επιστροφής της συνάρτησης που έχει δηλωθεί δεν συμφωνεί με τον τύπο επιστροφής του σώματος συνάρτησης.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Λείπει ο τύπος επιστροφής συνάρτησης, για παράδειγμα το ":Number" στο στοιχείο "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Λείπει ο τύπος ορίσματος συνάρτησης, για παράδειγμα το ":Text" στο στοιχείο "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Το όνομα NamedFormula '{0}' υπάρχει ήδη.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Οι κανονικές παραστάσεις πρέπει να είναι τιμές σταθεράς.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Η τιμή που μεταβιβάστηκε στη συνάρτηση '{0}' δεν είναι δυνατό να αλλάξει.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Το όνομα καταγραφής "{0}" αποκρύπτει την προκαθορισμένη ιδιότητα που επιστρέφει τη θέση της αντιστοίχισης της κανονικής παράστασης. Εξετάστε το ενδεχόμενο μετονομασίας της καταγραφής, αν θέλετε να χρησιμοποιήσετε τη συγκεκριμένη ιδιότητα με αυτό το όνομα για την εξαγωγή της θέσης της πλήρους αντιστοίχισης στο καθορισμένο κείμενο.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Καταργεί τη μορφοποίηση συνολικά και επιστρέφει μια τιμή απλού κειμένου.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Εάν ορίσετε μια μεταβλητή με μια τιμή προέλευσης δεδομένων online (πίνακας ή καρτέλα) μπορεί να προκαλέσει πολλαπλές αιτήσεις στον διακομιστή. Σύντομα θα αποκλειστεί.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Type literal declaration was invalid</value>
     
   </data>
 </root>

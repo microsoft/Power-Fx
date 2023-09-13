@@ -457,7 +457,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         "IsError(1)" => FormulaValue.New(true),
                         _ => throw new InvalidOperationException()
                     },
-                _isError = (value) => value is NumberValue
+                _isError = (value) => value is DecimalValue
             };
 
             var test = new TestCase
@@ -489,7 +489,7 @@ namespace Microsoft.PowerFx.Core.Tests
                         "IsError(1)" => FormulaValue.New(false), // expects true, should cause failure
                         _ => throw new InvalidOperationException()
                     },
-                _isError = (value) => value is NumberValue
+                _isError = (value) => value is DecimalValue
             };
 
             var test = new TestCase

@@ -4732,6 +4732,14 @@
     <value>Наведени тип враћања функције не подудара се са типом враћања тела функције.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Недостаје тип враћања функције, на пример „:Number“ у „FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Недостаје тип аргумента функције, на пример „:Text“ у „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ већ постоји.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регуларни изрази морају представљати константне вредности.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Није могуће променити вредност „{0}“ која је прослеђена функцији.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Име снимка „{0}“ скрива унапред дефинисано својство које је враћа локацију подударања регуларног израза. Требало би да га преименујете ако желите да користите то именовано својство да бисте издвојили положај потпуног подударања у наведеном тексту.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Уклања сво обликовање и враћа вредност чистог текста.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Постављање променљиве са вредношћу извора података на мрежи (табела или запис) може да изазове више захтева упућених серверу. Ово ће ускоро бити блокирано.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Type literal declaration was invalid</value>
     
   </data>
 </root>

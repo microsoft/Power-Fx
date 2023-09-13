@@ -29,6 +29,7 @@ namespace Microsoft.PowerFx.Core.Tests
             {
                 // Core namespace. 
                 "Microsoft.PowerFx.CheckResult",
+                "Microsoft.PowerFx.CheckContextSummary",
                 "Microsoft.PowerFx.Core.Parser.ParseFormulasResult",
                 "Microsoft.PowerFx.Engine",
                 "Microsoft.PowerFx.ErrorKind",
@@ -49,6 +50,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.ReadOnlySymbolTable",
                 "Microsoft.PowerFx.SymbolTable",
                 "Microsoft.PowerFx.SymbolProperties",
+                "Microsoft.PowerFx.SymbolEntry",
                 "Microsoft.PowerFx.DeferredSymbolPlaceholder",
 
                 // Lexer                
@@ -165,7 +167,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureHelp",
                 "Microsoft.PowerFx.Intellisense.SignatureHelp.SignatureInformation",
                 "Microsoft.PowerFx.Intellisense.SuggestionIconKind",
-                "Microsoft.PowerFx.Intellisense.SuggestionKind",                
+                "Microsoft.PowerFx.Intellisense.SuggestionKind",
                 "Microsoft.PowerFx.Intellisense.TokenResultType",
                 "Microsoft.PowerFx.Intellisense.UIString",
 

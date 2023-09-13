@@ -4732,6 +4732,14 @@
     <value>Navedeni tip vraćanja funkcije ne podudara se sa tipom vraćanja tela funkcije.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Nedostaje tip vraćanja funkcije, na primer „:Number“ u „FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Nedostaje tip argumenta funkcije, na primer „:Text“ u „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ već postoji.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regularni izrazi moraju predstavljati konstantne vrednosti.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nije moguće promeniti vrednost „{0}“ koja je prosleđena funkciji.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Ime snimka „{0}“ skriva unapred definisano svojstvo koje je vraća lokaciju podudaranja regularnog izraza. Trebalo bi da ga preimenujete ako želite da koristite to imenovano svojstvo da biste izdvojili položaj potpunog podudaranja u navedenom tekstu.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Uklanja sva oblikovanja i daje vrednost čistog teksta.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Postavljanje promenljive sa vrednošću izvora podataka na mreži (tabela ili zapis) može da izazove više zahteva upućenih serveru. Ovo će uskoro biti blokirano.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Type literal declaration was invalid</value>
     
   </data>
 </root>

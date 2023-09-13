@@ -4732,6 +4732,14 @@
     <value>Deklarowany zwracany typ funkcji nie pasuje do zwracanego typu treści funkcji.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Brak zwracanego typu funkcji, na przykład typu „:Number” w wyrażeniu „FindMonth( d:Text ):Number = Month( DateParse( d ));”</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Brak typu argumentu funkcji, na przykład typu „:Text” w wyrażeniu „FindMonth( d:Text ):Number = Month( DateParse( d ))”</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>Nazwana formuła „{0}” już istnieje.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Wyrażenia regularne muszą być wartościami stałymi.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nie można zmienić wartości przekazanej do funkcji „{0}”.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>W nazwie funkcji przechwytywania „{0}” jest ukryta wstępnie zdefiniowana właściwość, które zwraca lokalizację dopasowania wyrażenia regularnego. Rozważ zmianę nazwy, jeśli chcesz używać tej nazwanej właściwości do wyodrębniania położenia pełnego dopasowania w wybranym tekście.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Usuwa całe formatowanie i zwraca wartość w formie zwykłego tekstu.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Ustawienie zmiennej z wartością źródła danych online (tabelą lub rekordem) może spowodować wysłanie wielu żądań do serwera. Wkrótce to zostanie zablokowane.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Deklaracja literału typu była nieprawidłowa</value>
     
   </data>
 </root>

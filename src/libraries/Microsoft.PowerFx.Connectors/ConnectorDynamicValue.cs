@@ -1,8 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-namespace Microsoft.AppMagic.Authoring.Texl.Builtins
+namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Internal class supporting "x-ms-dynamic-values" extension.
+    /// https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-values.
+    /// </summary>
     internal class ConnectorDynamicValue : ConnectionDynamicApi
     {
         /// <summary>
@@ -18,6 +22,18 @@ namespace Microsoft.AppMagic.Authoring.Texl.Builtins
         /// <summary>
         /// "value-collection" in "x-ms-dynamic-values".
         /// </summary>
-        public string ValueCollection = null;        
+        public string ValueCollection = null;
+
+        /// <summary>
+        /// "capability" in "x-ms-dynamic-values".
+        /// https://github.com/nk-gears/pa-custom-connector-filepicker/blob/main/README.md.
+        /// https://reenhanced.com/2021/power-automate-secrets-how-to-implement-a-custom-file-picker-undocumented/.
+        /// </summary>
+        public string Capability = null;
+
+        /// <summary>
+        /// "builtInOperation" in "x-ms-dynamic-values".
+        /// </summary>
+        public string BuiltInOperation = null;
     }
 }

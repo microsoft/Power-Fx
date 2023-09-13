@@ -4732,6 +4732,14 @@
     <value>Het vermelde retourtype van de werkfunctie komt niet overeen met het retourtype van de functiehoofdtekst.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Ontbrekend retourtype van functie, bijvoorbeeld het ':Number' in 'FindMonth( d:Text ):Number = Month( DateParse( d ));'</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Ontbrekend argumenttype van functie, bijvoorbeeld de ':Text' in 'FindMonth( d:Text ):Number = Month( DateParse( d ))'</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula {0} bestaat al.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguliere expressies moeten constante waarden zijn.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>De waarde die is doorgegeven aan functie {0} kan niet worden gewijzigd.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>De opnamenaam {0} verbergt de vooraf gedefinieerde eigenschap waarmee de locatie van de overeenkomst van de reguliere expressie wordt geretourneerd. Overweeg deze te hernoemen als u die benoemde eigenschap wilt gebruiken om de positie van de volledige overeenkomst in de opgegeven tekst te extraheren.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Hiermee wordt alle opmaak verwijderd en wordt er een tekstwaarde zonder opmaak geretourneerd.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Het instellen van een variabele met een onlinegegevensbronwaarde (tabel of record) kan meerdere aanvragen bij de server veroorzaken. Dit wordt binnenkort geblokkeerd.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Type letterlijke aangifte was ongeldig</value>
     
   </data>
 </root>

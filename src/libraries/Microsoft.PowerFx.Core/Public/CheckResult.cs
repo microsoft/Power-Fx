@@ -607,8 +607,9 @@ namespace Microsoft.PowerFx
         /// <summary>
         /// Returns an enumeration of token text spans in a expression rule with their start and end indices and token type.
         /// </summary>
+        /// <param name="tokenTypesToSkip">Optional: Token types that would be skipped and not included in the final result. Usually provided by the language server.</param>
         /// <returns> Enumerable of tokens. Tokens are ordered only if comparer is provided.</returns>
-        internal IEnumerable<ITokenTextSpan> GetTokens() => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false);
+        internal IEnumerable<ITokenTextSpan> GetTokens(IReadOnlyCollection<TokenType> tokenTypesToSkip = null) => Tokenization.Tokenize(_expression, _binding, Parse?.Comments, null, false, tokenTypesToSkip);
 
         private string _expressionInvariant;
 
@@ -647,6 +648,41 @@ namespace Microsoft.PowerFx
             }
 
             return _expressionAnonymous;
+        }
+
+        public CheckContextSummary ApplyGetContextSummary()
+        {
+            this.ApplyBinding();
+
+            // $$$ Better check?
+            bool isV1 = this._engine.Config.Features == Features.PowerFxV1;
+            bool allowSideEffects = this.ApplyParse().Options.AllowsSideEffects;
+
+            // Should contain SymbolProperties
+            List<SymbolEntry> symbolEntries = new List<SymbolEntry>();
+
+            if (_engine.TryGetRuleScope(out var ruleScope))
+            {
+                symbolEntries.Add(new SymbolEntry
+                {
+                     Name = "ThisRecord",
+                     Type = ruleScope
+                });
+            }
+            else
+            {
+                this._allSymbols.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
+            }
+
+            var summary = new CheckContextSummary
+            {
+                AllowsSideEffects = allowSideEffects,
+                IsPreV1Semantics = isV1,
+                ExpectedReturnType = this._expectedReturnTypes?.FirstOrDefault(),
+                SuggestedSymbols = symbolEntries
+            };
+
+            return summary;
         }
     }
 

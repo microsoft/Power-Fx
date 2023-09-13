@@ -201,5 +201,20 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.InvalidArgument
             });
         }
+
+        internal static FormulaValue CanNotConvertToNumber(IRContext irContext, FormulaValue arg)
+        {
+            if (!arg.TryGetPrimitiveValue(out var primitveOrKind))
+            {
+                primitveOrKind = arg.Type._type.Kind.ToString();
+            }
+
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"The value '{primitveOrKind}' cannot be converted to a number.",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.InvalidArgument
+            });
+        }
     }
 }

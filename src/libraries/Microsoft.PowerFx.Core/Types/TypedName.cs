@@ -53,6 +53,8 @@ namespace Microsoft.PowerFx.Core.Types
             return this == (TypedName)obj;
         }
 
+        public bool IsExpandEntity => this.Type.IsExpandEntity;
+
         public override int GetHashCode()
         {
             return Hashing.CombineHash(Type.GetHashCode(), Name.GetHashCode());

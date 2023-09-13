@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Tests;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Microsoft.PowerFx.Connectors.Tests
 {
@@ -22,7 +21,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
         public InternalTesting(ITestOutputHelper output)
         {
-            Console = output;            
+            Console = output;
         }
 
         // This test is only meant for internal testing
@@ -32,7 +31,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
         [Fact(Skip = "Need files from AAPT-connector and PowerPlatformConnectors projects")]
 #endif
         public void TestAllConnectors()
-        {            
+        {
             string outFolder = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\..\.."));
             string srcFolder = Path.GetFullPath(Path.Combine(outFolder, ".."));
             string reportName = @"report\Analysis.txt";
@@ -100,17 +99,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     string unsupportedFunctionList = string.Empty;
                     List<(string f, string ur)> ufl = new ();
 
-                    if (connectorName == "<Unknown Name>") 
-                    { 
-                        parseError = true; 
-                        supportedFunctionList = deprecatedFunctionList = unsupportedFunctionList = "<Unknown>"; 
+                    if (connectorName == "<Unknown Name>")
+                    {
+                        parseError = true;
+                        supportedFunctionList = deprecatedFunctionList = unsupportedFunctionList = "<Unknown>";
                     }
 
-                    if (result.StartsWith("Exception")) 
-                    { 
-                        ok = false; 
+                    if (result.StartsWith("Exception"))
+                    {
+                        ok = false;
                         loadsFine = false;
-                        supportedFunctionList = deprecatedFunctionList = unsupportedFunctionList = "<Unknown>"; 
+                        supportedFunctionList = deprecatedFunctionList = unsupportedFunctionList = "<Unknown>";
                     }
 
                     if (ok && result.StartsWith("None of the"))
@@ -129,7 +128,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                         IEnumerable<string> u4 = m4.Where(m => !string.IsNullOrEmpty(m.Groups["uns"].Value)).Select(m => m.Groups["func"].Value).OrderBy(x => x);
                         unsupportedFunctionList = string.Join(", ", u4);
                         unsupportedFunctions = u4.Count();
-                        
+
                         if (int.Parse(m5.Groups[1].Value) != deprecatedFunctions + unsupportedFunctions)
                         {
                             throw new Exception("Invalid!");
@@ -232,7 +231,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     totalOrange += connectorNameColor == Color.Orange ? 1 : 0;
                     totalGreen += connectorNameColor == Color.Green ? 1 : 0;
                 }
-            }                  
+            }
 
             "Stats".Dump(Console);
             $"Total: {totalConnectors}".Dump(Console);
@@ -251,62 +250,62 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // JSON export
             string json = JsonSerializer.Serialize(orderedConnectors, new JsonSerializerOptions() { WriteIndented = true });
             File.WriteAllText(Path.Combine(outFolder, jsonReport), json);
-        }    
+        }
 
         public class Connector
         {
             public string ConnectorName { get; set; }
-            
+
             public string ConnectorNameColorStr => ConnectorNameColor.ToString();
-            
+
             internal Color ConnectorNameColor { get; set; }
 
             public bool Supported { get; set; }
-            
+
             public string SupportedColorStr => SupportedColor.ToString();
-            
+
             internal Color SupportedColor { get; set; }
-            
+
             public bool ParseError { get; set; }
-            
+
             public string ParseErrorColorStr => ParseErrorColor.ToString();
-            
+
             internal Color ParseErrorColor { get; set; }
-            
+
             public bool Loadsfine { get; set; }
-            
+
             public string LoadsFineColorStr => LoadsFineColor.ToString();
-            
+
             internal Color LoadsFineColor { get; set; }
 
             public bool AllFunctionsSupported { get; set; }
-            
+
             public string AllFuncSuppColorStr => AllFuncSuppColor.ToString();
-            
+
             internal Color AllFuncSuppColor { get; set; }
 
             public int SupportedFunctions { get; set; }
-            
+
             public string SupportedFunctionList { get; set; }
 
             public int DeprecatedFunctions { get; set; }
-            
+
             public string DeprecatedFuncColorStr => DeprecatedFuncColor.ToString();
-            
+
             public string DeprecatedFunctionList { get; set; }
-            
+
             internal Color DeprecatedFuncColor { get; set; }
-            
+
             public int UnsupportedFunctions { get; set; }
-            
+
             public string UnsupportedFuncColorStr => UnsupportedFuncColor.ToString();
-            
+
             public string UnsupportedFunctionList { get; set; }
 
             internal Color UnsupportedFuncColor { get; set; }
 
             public string SwaggerFile { get; set; }
-            
+
             public string Result { get; set; }
 
             public string RawResult { get; set; }
@@ -324,7 +323,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Orange = 2, // #FF9900
             White = 3,  // #FFFFFF
         }
-    
+
         private static void GenerateReport(string reportName, string outFolder, string srcFolder)
         {
             int i = 0;
@@ -346,7 +345,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     title = $"{doc.Info.Title} [{swaggerFile}]";
 
                     // Check we can get the functions
-                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc);                    
+                    IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc);
 
                     allFunctions.Add(title, functions);
                     var config = new PowerFxConfig();
@@ -356,7 +355,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     };
 
                     // Check we can add the service (more comprehensive test)
-                    config.AddService("Connector", doc, client);
+                    config.AddActionConnector("Connector", doc);
                 }
                 catch (Exception ex)
                 {
@@ -443,12 +442,12 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             string swaggerFile = @"c:\data\AAPT-connectors\src\ConnectorPlatform\build-system\SharedTestAssets\Assets\BaselineBuild\locPublish\Connectors\AzureAD\apidefinition.swagger.json";
             OpenApiDocument doc = Helpers.ReadSwagger(swaggerFile);
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc);
 
             var config = new PowerFxConfig();
             using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token") { SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f" };
 
-            config.AddService("Connector", doc, client);
+            config.AddActionConnector("Connector", doc);
         }
     }
 

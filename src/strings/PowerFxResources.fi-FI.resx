@@ -4732,6 +4732,14 @@
     <value>Ilmoitettu toiminnon palautustyyppi ei vastaa toiminnon rungon palautustyyppiä.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Puuttuva funktion palautustyyppi, esimerkiksi ":Number" funktiossa "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Puuttuva funktion argumenttityyppi, esimerkiksi ":Text" funktiossa "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula '{0}' on jo olemassa.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Säännönmukaisten lausekkeiden on oltava vakioarvoja.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Funktiolle {0} välitettyä arvoa ei voi muuttaa.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Sieppausnimi {0} piilottaa säännönmukaisen lausekkeen vastaavuuden sijainnin palauttavan esimääritetyn ominaisuuden. Harkitse sen nimeämistä uudelleen, jos haluat käyttää kyseistä nimettyä ominaisuutta määritetyn tekstin koko vastaavuuden sijainnin poimimiseen.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Poistaa kaiken muotoilun ja palauttaa pelkkä teksti -arvon.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Muutujan, jolla on online-tietolähteen arvo (taulukko tai tietue), määrittäminen voi aiheuttaa useita pyyntöjä palvelimelle. Tämä estetään pian.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tyyppiliteraalin esittely oli virheellinen</value>
     
   </data>
 </root>

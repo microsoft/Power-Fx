@@ -4732,6 +4732,14 @@
     <value>Loại trả về hàm đã nêu không khớp với kiểu trả về của nội dung hàm.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Thiếu kiểu trả về hàm, ví dụ ":Number" trong "FindMonth( d:Text ):Number = Month( DateParse( d ));"</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Thiếu kiểu đối số hàm, ví dụ ":Text" trong "FindMonth( d:Text ):Number = Month( DateParse( d ))"</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula "{0}" đã tồn tại.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Biểu thức chính quy phải là các giá trị không đổi.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Không thể thay đổi giá trị được truyền đến hàm "{0}".</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Tên thu thập '{0}' đang ẩn thuộc tính được xác định trước mà trả về vị trí kết quả khớp của biểu thức thông thường. Hãy xem xét việc đặt lại tên nếu bạn muốn sử dụng các thuộc tính có tên để trích xuất các vị trí kết quả khớp đầy đủ trong văn bản được chỉ định.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Loại bỏ mọi định dạng và trả về giá trị văn bản thuần.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Việc đặt một biến có giá trị nguồn dữ liệu trực tuyến (bảng hoặc bản ghi) có thể gây ra nhiều yêu cầu đến máy chủ. Tính năng này sẽ sớm bị chặn.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Khai báo ký tự loại không hợp lệ</value>
     
   </data>
 </root>

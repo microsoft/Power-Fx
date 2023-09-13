@@ -4732,6 +4732,14 @@
     <value>Посоченият тип на върната стойност на функцията не съответства на типа на върнатата стойност в тялото ѝ.</value>
     
   </data>
+  <data name="ErrUDF_MissingReturnType" xml:space="preserve">
+    <value>Липсва тип на връщане на функция, например „:Number“ във "FindMonth( d:Text ):Number = Month( DateParse( d ));“</value>
+    
+  </data>
+  <data name="ErrUDF_MissingParamType" xml:space="preserve">
+    <value>Липсва тип на аргумент на функция, например „:Text“ във „FindMonth( d:Text ):Number = Month( DateParse( d ))“</value>
+    
+  </data>
   <data name="ErrNamedFormula_AlreadyDefined" xml:space="preserve">
     <value>NamedFormula „{0}“ вече съществува.</value>
   </data>
@@ -4985,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регулярните изрази трябва да бъдат константни стойности.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Стойността, предадена на функцията „{0}“, не може да бъде променена.</value>
@@ -5001,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща местоположението на съвпадението в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете позицията на пълното съвпадение в посочения текст.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Премахва цялото форматиране и връща стойност като обикновен текст.</value>
@@ -5034,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Задаването на променлива със стойност от онлайн източник на данни (таблица или запис) може да предизвика множество заявки към сървъра. Скоро той ще бъде блокиран.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Декларацията за типа на литерала е невалидна</value>
     
   </data>
 </root>

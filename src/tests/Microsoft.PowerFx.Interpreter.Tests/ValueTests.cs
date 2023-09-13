@@ -96,7 +96,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             // Explicit field lookup 
             var numField = r.GetField("Num");
-            Assert.Equal(15.0, ((NumberValue)numField).Value);
+            Assert.Equal(15m, ((DecimalValue)numField).Value);
 
             // Get json runtime representation
             var resultStr = r.Dump();
@@ -225,11 +225,11 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             // Users first type 
 
             var result1 = ((RecordValue)val.Index(2).Value).GetField("a").ToObject();
-            Assert.Equal(11.0, result1);
+            Assert.Equal(11m, result1);
 
             var result2 = ((RecordValue)val.Index(2).Value).GetField("b");
             Assert.IsType<BlankValue>(result2);
-            Assert.IsType<NumberType>(result2.Type);
+            Assert.IsType<DecimalType>(result2.Type);
         }
 
         [Fact]
@@ -254,8 +254,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void TableFromPrimitive()
         {
-            NumberValue r1 = FormulaValue.New(10);
-            NumberValue r2 = FormulaValue.New(20);
+            NumberValue r1 = FormulaValue.New(10.0);
+            NumberValue r2 = FormulaValue.New(20.0);
             TableValue val = FormulaValue.NewSingleColumnTable(r1, r2);
 
             dynamic d = val.ToObject();
@@ -380,7 +380,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 
             var field1 = fields.First();
             Assert.Equal("Num", field1.Name);
-            Assert.Equal(12.0, field1.Value.ToObject());
+            Assert.Equal(12m, field1.Value.ToObject());
         }
 
         private IEnumerable<NamedValue> CreateFields()

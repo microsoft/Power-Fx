@@ -6,11 +6,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AppMagic.Authoring.Texl.Builtins;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Tests;
-using Microsoft.PowerFx.Functions;
 using Microsoft.PowerFx.Tests;
 using Microsoft.PowerFx.Types;
 using Newtonsoft.Json;
@@ -31,7 +29,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // OpenAPI spec: Info.Description is optional
             Assert.Equal("Azure Cognitive Service for Language, previously known as 'Text Analytics' connector detects language, sentiment and more of the text you provide.", doc.Info.Description);
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions(doc).OrderBy(cf => cf.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc).OrderBy(cf => cf.Name).ToList();
             Assert.Equal(51, functions.Count);
             ConnectorFunction function = functions[19];
 
@@ -46,21 +44,18 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void ACSL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            List<ServiceFunction> functionList = OpenApiParser.Parse("ACSL", doc);
-            Assert.Contains(
-                functionList,
-                func =>
-                    func.Namespace.Name.Value == "ACSL" &&
-                    func.Name == "ConversationAnalysisAnalyzeConversationConversation");
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(new ConnectorSettings("ACSL"), doc);
+            Assert.Contains(connectorFunctions, func => func.Namespace == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
+            Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "ACSL" && func.Name == "ConversationAnalysisAnalyzeConversationConversation");
         }
 
-#pragma warning disable SA1118, SA1137
+#pragma warning disable SA1118, SA1117, SA1119, SA1137
 
         [Fact]
         public void ACSL_GetFunctionParameters()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");
-            ConnectorFunction function = OpenApiParser.GetFunctions(doc).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", doc).OrderBy(cf => cf.Name).ToList()[19];
 
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("ConversationAnalysis_AnalyzeConversation_Conversation", function.OriginalName);
@@ -163,7 +158,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal(2, connectorReturnType.Fields.Length);
             Assert.Equal("The results of a Conversation task.", connectorReturnType.Description);
         }
-#pragma warning restore SA1118, SA1137
 
         [Fact]
         public async Task ACSL_InvokeFunction()
@@ -172,7 +166,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
-            ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc).OrderBy(cf => cf.Name).ToList()[19];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, offset:w, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -190,7 +184,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult = await function.InvokeAync(client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
+
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
             httpClient.Dispose();
             client.Dispose();
             testConnector.Dispose();
@@ -203,7 +199,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
 
-            FormulaValue httpResult2 = await function.InvokeAync(client2, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2);
+
+            FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult2);
             Assert.True(httpResult2 is RecordValue);
@@ -253,7 +251,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("OpenAI", apiDoc).OrderBy(cf => cf.Name).ToArray();
 
             Assert.Equal("ChatCompletionsCreate", functions[0].Name);
             Assert.Equal("![choices:*[finish_reason:s, index:w, message:![content:s, role:s]], created:w, id:s, model:s, object:s, usage:![completion_tokens:w, prompt_tokens:w, total_tokens:w]]", functions[0].ReturnType.ToStringWithDisplayNames());
@@ -275,24 +273,21 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
 
-            ConnectorFunction function = OpenApiParser.GetFunctions(apiDoc).OrderBy(cf => cf.Name).ToList()[13];
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc).OrderBy(cf => cf.Name).ToList()[13];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, multipleResolutions:b, offset:w, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
-            RecalcEngine engine = new RecalcEngine(pfxConfig);
+            RecalcEngine engine = new RecalcEngine(pfxConfig);            
 
             string analysisInput = @"{ conversationItem: { modality: ""text"", language: ""en-us"", text: ""Book me a flight for Munich"" } }";
             string parameters = @"{ deploymentName: ""deploy1"", projectName: ""project1"", verbose: true, stringIndexType: ""TextElement_V8"" }";
             FormulaValue analysisInputParam = engine.Eval(analysisInput);
             FormulaValue parametersParam = engine.Eval(parameters);
 
-            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient)
-            {
-                SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
-            };
-
-            // We can call the function with a RuntimeConfig parameters (unused here) that can contain TimeZoneInformation or other runtime settings
-            FormulaValue httpResult = await function.InvokeAync(FormattingInfoHelper.CreateFormattingInfo(), client, new FormulaValue[] { analysisInputParam, parametersParam }, CancellationToken.None).ConfigureAwait(false);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
+            
+            FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(httpResult);
             Assert.True(httpResult is RecordValue);
@@ -479,31 +474,23 @@ namespace Microsoft.PowerFx.Connectors.Tests
         public void LQA_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Language - Question Answering.json");
-            List<ServiceFunction> functionList = OpenApiParser.Parse("LQA", doc);
-            Assert.Contains(
-                functionList,
-                func =>
-                    func.Namespace.Name.Value == "LQA" &&
-                    func.Name == "GetAnswersFromText");
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(new ConnectorSettings("LQA"), doc);
+            Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "LQA" && func.Name == "GetAnswersFromText");
         }
 
         [Fact]
         public void SQL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
-            List<ServiceFunction> functionList = OpenApiParser.Parse("SQL", doc);
-            Assert.Contains(
-                functionList,
-                func =>
-                    func.Namespace.Name.Value == "SQL" &&
-                    func.Name == "GetProcedureV2");
+            (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) = OpenApiParser.Parse(new ConnectorSettings("SQL"), doc);
+            Assert.Contains(texlFunctions, func => func.Namespace.Name.Value == "SQL" && func.Name == "GetProcedureV2");
         }
 
         [Fact]
         public void Dataverse_Sample()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\DataverseSample.json");
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions(doc).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", doc).ToArray();
 
             Assert.NotNull(functions);
             Assert.Equal(3, functions.Count());
@@ -524,6 +511,10 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.False(functions[2].HiddenRequiredParameters[0].ConnectorType.ExplicitInput); // "Status"
             Assert.Empty(functions[2].OptionalParameters);
 
+            // "x-ms-visibility"
+            (0..3).ForAll(i => Assert.Equal(Visibility.None, functions[2].RequiredParameters[i].ConnectorType.Visibility));
+            Assert.Equal(Visibility.Internal, functions[2].HiddenRequiredParameters[0].ConnectorType.Visibility); // "Status"
+            
             // "enum"
             Assert.Equal(FormulaType.Decimal, functions[1].OptionalParameters[2].ConnectorType.FormulaType); // "leadsourcecode"
             Assert.True(functions[1].OptionalParameters[2].ConnectorType.IsEnum);
@@ -545,6 +536,238 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(os1);
             Assert.Equal("msdyn_company@odata.bind", os1.EntityName);
             Assert.Equal("msdyn_company@odata.bind", os1.FormulaType.OptionSetName);
+        }
+
+        [Fact]
+        public void VisibilityTest()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\AzureBlobStorage.json");
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("AzBlob", doc).ToArray();
+
+            ConnectorFunction createFileV2 = functions.First(f => f.Name == "CreateFileV2");
+
+            Assert.Equal(4, createFileV2.RequiredParameters.Length);
+            Assert.Equal(3, createFileV2.OptionalParameters.Length);
+            Assert.Empty(createFileV2.HiddenRequiredParameters);
+
+            Assert.Equal("important", createFileV2.Visibility);
+
+            Assert.Equal("dataset", createFileV2.RequiredParameters[0].Name);
+            Assert.Equal("folderPath", createFileV2.RequiredParameters[1].Name);
+            Assert.Equal("name", createFileV2.RequiredParameters[2].Name);
+            Assert.Equal("body", createFileV2.RequiredParameters[3].Name);
+            (0..3).ForAll(i => Assert.Equal(Visibility.None, createFileV2.RequiredParameters[i].ConnectorType.Visibility));
+
+            Assert.Equal("queryParametersSingleEncoded", createFileV2.OptionalParameters[0].Name);
+            Assert.Equal("Content-Type", createFileV2.OptionalParameters[1].Name);
+            Assert.Equal("ReadFileMetadataFromServer", createFileV2.OptionalParameters[2].Name);
+            Assert.Equal(Visibility.Internal, createFileV2.OptionalParameters[0].ConnectorType.Visibility);
+            Assert.Equal(Visibility.Advanced, createFileV2.OptionalParameters[1].ConnectorType.Visibility);
+            Assert.Equal(Visibility.Internal, createFileV2.OptionalParameters[2].ConnectorType.Visibility);
+
+            Assert.Equal(Visibility.None, createFileV2.ConnectorReturnType.Visibility);
+
+            ConnectorFunction listFolderV4 = functions.First(f => f.Name == "ListFolderV4");
+
+            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Visibility);
+            Assert.Equal(Visibility.None, listFolderV4.ConnectorReturnType.Fields[0].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[1].Visibility);
+            Assert.Equal(Visibility.Advanced, listFolderV4.ConnectorReturnType.Fields[2].Visibility);
+        }
+
+        [Fact]
+        public void DynamicReturnValueTest()
+        {
+            using HttpClient httpClient = new ();
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\SQL Server.json");
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", doc).ToArray();
+
+            ConnectorFunction createFileV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
+
+            Assert.Equal(4, createFileV2.RequiredParameters.Length);
+            Assert.Empty(createFileV2.OptionalParameters);
+            Assert.Empty(createFileV2.HiddenRequiredParameters);
+
+            Assert.NotNull(createFileV2.DynamicReturnSchema);
+            Assert.Null(createFileV2.DynamicReturnProperty);
+
+            Assert.Equal("GetProcedureV2", createFileV2.DynamicReturnSchema.OperationId);
+            Assert.NotNull(createFileV2.DynamicReturnSchema.ConnectorFunction);
+            Assert.Equal("GetProcedureV2", createFileV2.DynamicReturnSchema.ConnectorFunction.Name);
+            Assert.Equal("schema/procedureresultschema", createFileV2.DynamicReturnSchema.ValuePath);
+            Assert.Equal(3, createFileV2.DynamicReturnSchema.ParameterMap.Count);
+
+            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["server"] is DynamicConnectorExtensionValue dv1 && dv1.Reference == "server");
+            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["database"] is DynamicConnectorExtensionValue dv2 && dv2.Reference == "database");
+            Assert.True(createFileV2.DynamicReturnSchema.ParameterMap["procedure"] is DynamicConnectorExtensionValue dv3 && dv3.Reference == "procedure");
+
+            ConnectorFunction executePassThroughNativeQueryV2 = functions.First(f => f.Name == "ExecutePassThroughNativeQueryV2");
+
+            Assert.Equal(2, executePassThroughNativeQueryV2.RequiredParameters.Length);
+            Assert.Equal(3, executePassThroughNativeQueryV2.OptionalParameters.Length);
+            Assert.Empty(executePassThroughNativeQueryV2.HiddenRequiredParameters);
+
+            Assert.NotNull(executePassThroughNativeQueryV2.DynamicReturnSchema);
+            Assert.NotNull(executePassThroughNativeQueryV2.DynamicReturnProperty);
+
+            Assert.Equal("GetPassThroughNativeQueryMetadataV2", executePassThroughNativeQueryV2.DynamicReturnSchema.OperationId);
+            Assert.NotNull(executePassThroughNativeQueryV2.DynamicReturnSchema.ConnectorFunction);
+            Assert.Equal("GetPassThroughNativeQueryMetadataV2", executePassThroughNativeQueryV2.DynamicReturnSchema.ConnectorFunction.Name);
+            Assert.Equal("schema/queryresults", executePassThroughNativeQueryV2.DynamicReturnSchema.ValuePath);
+            Assert.Equal(4, executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap.Count);
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["server"] is DynamicConnectorExtensionValue dv4 && dv4.Reference == "server");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["database"] is DynamicConnectorExtensionValue dv5 && dv5.Reference == "database");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["query"] is DynamicConnectorExtensionValue dv6 && dv6.Reference == "query");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnSchema.ParameterMap["formalParameters"] is DynamicConnectorExtensionValue dv7 && dv7.Reference == "formalParameters");
+            
+            Assert.Equal("GetPassThroughNativeQueryMetadataV2", executePassThroughNativeQueryV2.DynamicReturnProperty.OperationId);
+            Assert.NotNull(executePassThroughNativeQueryV2.DynamicReturnProperty.ConnectorFunction);
+            Assert.Equal("GetPassThroughNativeQueryMetadataV2", executePassThroughNativeQueryV2.DynamicReturnProperty.ConnectorFunction.Name);
+            Assert.Equal("schema/queryresults", executePassThroughNativeQueryV2.DynamicReturnProperty.ItemValuePath);
+            Assert.Equal(4, executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap.Count);
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["server"] is DynamicConnectorExtensionValue dv8 && dv8.Reference == "server");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["database"] is DynamicConnectorExtensionValue dv9 && dv9.Reference == "database");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["query/query"] is DynamicConnectorExtensionValue dv10 && dv10.Reference == "query/query");
+            Assert.True(executePassThroughNativeQueryV2.DynamicReturnProperty.ParameterMap["query/formalParameters"] is DynamicConnectorExtensionValue dv11 && dv11.Reference == "query/formalParameters");
+        }
+
+        [Fact]
+        public async Task DirectIntellisenseTest()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
+            using var httpClient = new HttpClient(testConnector);            
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, "4bf9a87fc9054b6db3a4d07a1c1f5a5b" /* connectionId */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument).ToArray();
+            ConnectorFunction executeProcedureV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
+
+            Assert.True(executeProcedureV2.RequiredParameters[0].SupportsDynamicIntellisense);
+            Assert.True(executeProcedureV2.RequiredParameters[1].SupportsDynamicIntellisense);
+            Assert.True(executeProcedureV2.RequiredParameters[2].SupportsDynamicIntellisense);
+            Assert.True(executeProcedureV2.RequiredParameters[3].SupportsDynamicIntellisense);
+
+            // Keeping only for debugging
+            //FormulaValue result = await executeProcedureV2.InvokeAync(client, new FormulaValue[] 
+            //{
+            //    FormulaValue.New("pfxdev-sql.database.windows.net"),
+            //    FormulaValue.New("connectortest"),
+            //    FormulaValue.New("sp_1"),
+            //    FormulaValue.NewRecordFromFields(new NamedValue[] { new NamedValue("p1", FormulaValue.New(38)) })
+            //}, CancellationToken.None).ConfigureAwait(false);                        
+
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
+            ConnectorParameters parameters1 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[2];
+            Assert.NotNull(suggestions1);
+            Assert.NotNull(suggestions1.Suggestions);
+            Assert.Equal(2, suggestions1.Suggestions.Count());
+            
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
+            ConnectorParameters parameters2 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[3];
+            Assert.NotNull(suggestions2);
+            Assert.NotNull(suggestions2.Suggestions);
+            Assert.Single(suggestions2.Suggestions);
+
+            Assert.True(executeProcedureV2.ReturnParameterType.SupportsSuggestions);
+
+            testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
+            FormulaType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, context, CancellationToken.None).ConfigureAwait(false);
+            Assert.NotNull(returnType);
+            Assert.True(returnType is RecordType);
+
+            string input = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            string expected = $@"POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAi...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/datasets/pfxdev-sql.database.windows.net,connectortest/procedures
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAi...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1002-002.azure-apihub.net/invoke
+ authority: tip1002-002.azure-apihub.net
+ Authorization: Bearer eyJ0eXAi...
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/sql/4bf9a87fc9054b6db3a4d07a1c1f5a5b/v2/$metadata.json/datasets/pfxdev-sql.database.windows.net,connectortest/procedures/sp_1
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            Assert.Equal(expected, input);
+        }
+
+        [Fact]
+        public async Task DataverseTest()
+        {
+            using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
+            using var httpClient = new HttpClient(testConnector);
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+
+            BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("DV", client);
+
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", testConnector._apiDocument).ToArray();
+            ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
+
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
+            Assert.Equal(651, suggestions1.Suggestions.Count);
+            Assert.Equal("AAD Users", suggestions1.Suggestions[0].DisplayName);
+            Assert.Equal("aadusers", ((StringValue)suggestions1.Suggestions[0].Suggestion).Value);
+
+            testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_2.json");
+            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com"), FormulaValue.New("accounts") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[2];
+            Assert.Equal(119, suggestions2.Suggestions.Count);
+            Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);
+            Assert.Equal("Decimal", suggestions2.Suggestions[0].Suggestion.Type.ToString());
+
+            string input = testConnector._log.ToString();
+            var version = PowerPlatformConnectorClient.Version;
+            string expected = @$"POST https://tip1-shared.azure-apim.net/invoke
+ authority: tip1-shared.azure-apim.net
+ Authorization: Bearer eyJ0eXAiO...
+ organization: https://org283e9949.crm10.dynamics.com
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/Default-9f6be790-4a16-4dd6-9850-44a0d2649aef
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: POST
+ x-ms-request-url: /apim/commondataserviceforapps/461a30624723445c9ba87313d8bbefa3/v1.0/$metadata.json/GetEntityListEnum/GetEntitiesWithOrganization
+ x-ms-user-agent: PowerFx/{version}
+POST https://tip1-shared.azure-apim.net/invoke
+ authority: tip1-shared.azure-apim.net
+ Authorization: Bearer eyJ0eXAiO...
+ organization: https://org283e9949.crm10.dynamics.com
+ path: /invoke
+ scheme: https
+ x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/Default-9f6be790-4a16-4dd6-9850-44a0d2649aef
+ x-ms-client-session-id: a41bd03b-6c3c-4509-a844-e8c51b61f878
+ x-ms-request-method: GET
+ x-ms-request-url: /apim/commondataserviceforapps/461a30624723445c9ba87313d8bbefa3/v1.0/$metadata.json/entities/accounts/postitem
+ x-ms-user-agent: PowerFx/{version}
+";
+
+            Assert.Equal(expected, input);
         }
     }
 
@@ -584,4 +807,6 @@ namespace Microsoft.PowerFx.Connectors.Tests
             return new OptionSet(name, DisplayNameUtility.MakeUnique(names.ToDictionary(n => n, n => n)));
         }
     }
+
+#pragma warning restore SA1118, SA1117, SA1119, SA1137
 }
