@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,12 +11,20 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Abstractions;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
+        public readonly ITestOutputHelper Summary;
+
+        public FileExpressionEvaluationTests(ITestOutputHelper output)
+        {
+            Summary = output;
+        }
+
         // File expression tests are run multiple times for the different ways a host can use Power Fx.
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
@@ -174,6 +183,10 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             if (result.Fail > 0)
             {
                 Assert.True(false, result.Output);
+            }
+            else
+            {
+                Summary.WriteLine(result.Output);
             }
         }
 
