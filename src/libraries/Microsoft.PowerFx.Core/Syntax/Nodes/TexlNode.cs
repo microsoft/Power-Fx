@@ -101,7 +101,7 @@ namespace Microsoft.PowerFx.Syntax
         // TODO: Should we keep this internal?
         public virtual Span GetTextSpan()
         {
-            return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim);
+            return new Span(Token.VerifyValue().Span.Min, Token.VerifyValue().Span.Lim, Token.VerifyValue().Span.BaseIndex);
         }
 
         // TODO: Comment - what are the differences between different spans defined here?

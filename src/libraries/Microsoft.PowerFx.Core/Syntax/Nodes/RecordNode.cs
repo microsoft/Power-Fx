@@ -109,7 +109,7 @@ namespace Microsoft.PowerFx.Syntax
         public override Span GetTextSpan()
         {
             var lim = CurlyClose == null ? Token.VerifyValue().Span.Lim : CurlyClose.Span.Lim;
-            return new Span(Token.VerifyValue().Span.Min, lim);
+            return new Span(Token.VerifyValue().Span.Min, lim, Token.VerifyValue().Span.BaseIndex);
         }
 
         /// <inheritdoc />

@@ -5,8 +5,10 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 

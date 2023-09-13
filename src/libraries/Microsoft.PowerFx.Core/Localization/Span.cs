@@ -19,22 +19,28 @@ namespace Microsoft.PowerFx.Syntax
     public sealed class Span
     {
         /// <summary>
-        /// Start index of this span.
+        /// Base index of this span.
+        /// </summary>
+        internal int? BaseIndex { get; }
+
+        /// <summary>
+        /// Start index of this span from base.
         /// </summary>
         public int Min { get; }
 
         /// <summary>
-        /// End index of this span.
+        /// End index of this span from base.
         /// </summary>
         public int Lim { get; }
 
-        internal Span(int min, int lim)
+        internal Span(int min, int lim, int? basemin = null)
         {
             Contracts.CheckParam(min >= 0, "min");
             Contracts.CheckParam(lim >= min, "lim");
 
             Min = min;
             Lim = lim;
+            BaseIndex = basemin;
         }
 
         internal Span(Span span)
@@ -44,6 +50,7 @@ namespace Microsoft.PowerFx.Syntax
 
             Min = span.Min;
             Lim = span.Lim;
+            BaseIndex = span.BaseIndex;
         }
 
         /// <summary>

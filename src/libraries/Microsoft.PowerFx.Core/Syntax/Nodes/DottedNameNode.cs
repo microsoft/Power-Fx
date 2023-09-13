@@ -200,7 +200,7 @@ namespace Microsoft.PowerFx.Syntax
         /// <inheritdoc />
         public override Span GetTextSpan()
         {
-            return new Span(Token.VerifyValue().Span.Min, Right.VerifyValue().Token.VerifyValue().Span.Lim);
+            return new Span(Token.VerifyValue().Span.Min, Right.VerifyValue().Token.VerifyValue().Span.Lim, Token.VerifyValue().Span.BaseIndex);
         }
 
         /// <inheritdoc />

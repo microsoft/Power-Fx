@@ -75,7 +75,7 @@ namespace Microsoft.PowerFx.Syntax
                 return base.GetTextSpan();
             }
 
-            return new Span(Token.Span.Min, StrInterpEnd.Span.Lim);
+            return new Span(Token.Span.Min, StrInterpEnd.Span.Lim, Token.Span.BaseIndex);
         }
 
         /// <inheritdoc />
