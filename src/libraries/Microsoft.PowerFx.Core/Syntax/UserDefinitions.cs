@@ -21,10 +21,6 @@ namespace Microsoft.PowerFx.Syntax
     /// </summary>
     internal sealed class UserDefinitions
     {
-        private readonly INameResolver _globalNameResolver;
-        private readonly IBinderGlue _documentBinderGlue;
-        private readonly BindingConfig _bindingConfig;
-
         /// <summary>
         /// A script containing one or more UDFs.
         /// </summary>
@@ -33,12 +29,9 @@ namespace Microsoft.PowerFx.Syntax
         private readonly Features _features;
         private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
-        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, Features features = null)
+        private UserDefinitions(string script, ParserOptions parserOptions, Features features = null)
         {
             _features = features ?? Features.None;
-            _globalNameResolver = globalNameResolver;
-            _documentBinderGlue = documentBinderGlue;
-            _bindingConfig = bindingConfig;
             _script = script ?? throw new ArgumentNullException(nameof(script));
             _parserOptions = parserOptions;
         }
@@ -48,14 +41,14 @@ namespace Microsoft.PowerFx.Syntax
             return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 
-        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null, bool shouldBindBody = false)
+        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
         {
-            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, features);
+            var userDefinitions = new UserDefinitions(script, parserOptions, features);
 
-            return userDefinitions.ProcessUserDefinitions(shouldBindBody, out userDefinitionResult);
+            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult);
         }
 
-        private bool ProcessUserDefinitions(bool shouldBindBody, out UserDefinitionResult userDefinitionResult)
+        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
 
