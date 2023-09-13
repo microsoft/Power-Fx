@@ -55,7 +55,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 AllowsSideEffects = false
             };
 
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library), new Glue2DocumentBinderGlue(), BindingConfig.Default, parserOptions, out var userDefinitionResult, shouldBindBody: true);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
 
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
@@ -73,7 +73,7 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
             var glue = new Glue2DocumentBinderGlue();
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, nameResolver, glue, BindingConfig.Default, parserOptions, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult);
             var texlFunctionSet = new TexlFunctionSet(userDefinitionResult.UDFs);
 
             var engine = new Engine();
@@ -133,19 +133,16 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
             var glue = new Glue2DocumentBinderGlue();
-            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, nameResolver, glue, BindingConfig.Default, parserOptions, out var userDefinitionResult);
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(udfScript, parserOptions, out var userDefinitionResult);
             var udfs = new TexlFunctionSet(userDefinitionResult.UDFs);
 
             Assert.Single(userDefinitionResult.UDFs);
 
-            for (var i = 0; i < userDefinitionResult.UDFs.Count(); i++)
-            {
-                var udf = userDefinitionResult.UDFs.ElementAt(i);
-                var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
-                var actualIR = IRTranslator.Translate(binding).ToString();
+            var udf = userDefinitionResult.UDFs.First();
+            var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(udfs)), glue, BindingConfig.Default);
+            var actualIR = IRTranslator.Translate(binding).ToString();
 
-                Assert.Equal(expectedIR, actualIR);
-            }
+            Assert.Equal(expectedIR, actualIR);
         }
     }
 }
