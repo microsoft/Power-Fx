@@ -560,11 +560,6 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <param name="features">Engine features.</param>
         public virtual bool IsLazyEvalParam(int index, Features features)
         {
-            return IsLazyEvalParam(index);
-        }
-
-        public virtual bool IsLazyEvalParam(int index)
-        {
             Contracts.AssertIndexInclusive(index, MaxArity);
 
             return IsLambdaParam(index);

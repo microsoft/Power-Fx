@@ -43,7 +43,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             yield return new[] { TexlStrings.SwitchExpression, TexlStrings.SwitchCaseExpr, TexlStrings.SwitchCaseArg, TexlStrings.SwitchDefaultReturn };
         }
 
-        public override bool IsLazyEvalParam(int index)
+        public override bool IsLazyEvalParam(int index, Features features)
         {
             return index > 0;
         }

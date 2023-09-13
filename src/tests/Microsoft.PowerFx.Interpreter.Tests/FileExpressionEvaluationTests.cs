@@ -132,7 +132,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
         // Run cases in MutationScripts
-        //
+        //abcdefggegggg
         // Normal tests have each line as an independent test case. 
         // Whereas these are fed into a repl and each file maintains state.
         // 
