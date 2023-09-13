@@ -56,10 +56,19 @@ namespace Microsoft.PowerFx.Core.Tests
             };
 
             var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+            var glue = new Glue2DocumentBinderGlue();
+            var hasBinderErrors = false;
+
+            foreach (var udf in userDefinitionResult.UDFs) 
+            {
+                var binding = udf.BindBody(ReadOnlySymbolTable.Compose(nameResolver, ReadOnlySymbolTable.NewDefault(userDefinitionResult.UDFs)), glue, BindingConfig.Default);
+                hasBinderErrors |= binding.ErrorContainer.HasErrors();
+            }
 
             Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
-            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
+            Assert.Equal(expectErrors, (userDefinitionResult.Errors?.Any() ?? false) || hasBinderErrors);
         }
 
         [Theory]
