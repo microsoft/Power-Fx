@@ -142,7 +142,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // If this method crashes, then we just get 0 tests. 
                 // The only way to communicate a failure from here back to the developer
                 // is to pass a "fake" test object that always fails and contains the error.
-                // In this ecase, this will be a bogus file name that won't load.
+                // In this case, this will be a bogus file name that won't load.
 
                 var item = $"ERROR: Test discovery failed with: {e}";
 
