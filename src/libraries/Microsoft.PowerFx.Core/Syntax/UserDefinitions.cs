@@ -106,7 +106,6 @@ namespace Microsoft.PowerFx.Syntax
             return userDefinedFunctions;
         }
 
-
         private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
         {
             var isParamCheckSuccessful = true;

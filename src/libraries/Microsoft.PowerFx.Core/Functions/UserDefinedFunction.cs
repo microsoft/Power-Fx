@@ -102,20 +102,6 @@ namespace Microsoft.PowerFx.Core.Functions
             Contracts.AssertValue(actualBodyReturnType);
             Contracts.AssertValue(binding);
 
-<<<<<<< Updated upstream
-            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind))
-            {
-                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
-                {
-                    if (!_binding.CoercedToplevelType.IsValid)
-                    {
-                        _binding.SetCoercedToplevelType(ReturnType);
-                    }
-                }
-                else
-                {
-                    errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
-=======
             if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
                 if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
@@ -125,7 +111,6 @@ namespace Microsoft.PowerFx.Core.Functions
                 else
                 {
                     binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
->>>>>>> Stashed changes
                 }
             }
         }
