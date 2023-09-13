@@ -5,8 +5,10 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
@@ -840,12 +842,21 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("a = 10;; b = 20 ;; c = 20", "c")]
+        [InlineData("A0 = Filter(Accounts, 'Account Name' = \"Ian One\");", "c")]
 
         //[InlineData("a = 10;; b = in'valid ;; c = 20", "c")]
         //[InlineData("a = 10;; b = in'valid ;; c = 20;; d = also(invalid;; e = 44;;", "e")]
         public void TestFormulaParseRestart2(string script, string key)
         {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var nameResolver = ReadOnlySymbolTable.NewDefault(BuiltinFunctionsCore._library);
+            var glue = new Glue2DocumentBinderGlue();
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, nameResolver, glue, null, parserOptions, out var userDefinitionResult);
+
             var formulasResult = TexlParser.ParseFormulasScript(script, new CultureInfo("fr-FR"));
             Assert.True(formulasResult.HasError);
 
