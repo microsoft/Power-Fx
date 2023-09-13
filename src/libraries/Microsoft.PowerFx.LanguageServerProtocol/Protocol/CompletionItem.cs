@@ -11,6 +11,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
             Kind = CompletionItemKind.Text;
             Detail = string.Empty;
             Documentation = string.Empty;
+            SortText = string.Empty;
+            InsertText = string.Empty;
         }
 
         /// <summary>
@@ -37,5 +39,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// A human-readable string that represents a doc-comment.
         /// </summary>
         public string Documentation { get; set; }
+        
+        /// <summary>
+        /// A string that should be used when comparing this item
+        /// with other items. When omitted the label is used
+        /// as the sort text for this item.
+        /// </summary>
+        public string SortText { get; set; }
+        
+        /// <summary>
+        /// The text to be inserted into the editor if the completion item is selected
+        /// </summary>
+        public string InsertText { get; set; }
     }
 }
