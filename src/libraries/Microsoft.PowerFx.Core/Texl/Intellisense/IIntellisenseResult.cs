@@ -10,6 +10,7 @@ namespace Microsoft.PowerFx.Intellisense
     {
         /// <summary>
         /// Enumerates suggestions for the current position in some specified input.
+        /// The order of this result should be respected.
         /// </summary>
         IEnumerable<IIntellisenseSuggestion> Suggestions { get; }
 
