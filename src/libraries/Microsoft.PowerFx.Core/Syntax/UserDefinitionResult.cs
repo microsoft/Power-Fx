@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx
 {

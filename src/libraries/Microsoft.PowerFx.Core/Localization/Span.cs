@@ -18,6 +18,8 @@ namespace Microsoft.PowerFx.Syntax
     [ThreadSafeImmutable]
     public sealed class Span
     {
+        internal Span Offset { get; }
+
         /// <summary>
         /// Start index of this span.
         /// </summary>
@@ -28,13 +30,14 @@ namespace Microsoft.PowerFx.Syntax
         /// </summary>
         public int Lim { get; }
 
-        internal Span(int min, int lim)
+        internal Span(int min, int lim, Span offset = null)
         {
             Contracts.CheckParam(min >= 0, "min");
             Contracts.CheckParam(lim >= min, "lim");
 
             Min = min;
             Lim = lim;
+            Offset = offset;
         }
 
         internal Span(Span span)
@@ -44,6 +47,7 @@ namespace Microsoft.PowerFx.Syntax
 
             Min = span.Min;
             Lim = span.Lim;
+            Offset = span.Offset;
         }
 
         /// <summary>

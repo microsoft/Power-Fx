@@ -11,8 +11,23 @@ using Microsoft.PowerFx.Syntax;
 
 namespace Microsoft.PowerFx.Core.Parser
 {
+    public sealed class NamedFormulaNode
+    {
+        public Span RelativeSpan { get; }
+
+        public TexlNode Node { get; }
+
+        public NamedFormulaNode(Span relativeSpan, TexlNode node)
+        {
+            RelativeSpan = relativeSpan;
+            Node = node;
+        }
+    }
+
     public class ParseFormulasResult
     {
+        public IEnumerable<KeyValuePair<IdentToken, NamedFormulaNode>> NamedFormulaNodes { get; }
+
         public IEnumerable<KeyValuePair<IdentToken, TexlNode>> NamedFormulas { get; }
 
         internal IEnumerable<TexlError> Errors { get; }
@@ -33,6 +48,20 @@ namespace Microsoft.PowerFx.Core.Parser
             }
 
             NamedFormulas = namedFormulas;
+        }
+
+        internal ParseFormulasResult(IEnumerable<KeyValuePair<IdentToken, TexlNode>> namedFormulas, IEnumerable<KeyValuePair<IdentToken, NamedFormulaNode>> namedFormulaNodes, List<TexlError> errors)
+        {
+            Contracts.AssertValue(namedFormulas);
+
+            if (errors?.Any() ?? false)
+            {
+                Errors = errors;
+                HasError = true;
+            }
+
+            NamedFormulas = namedFormulas;
+            NamedFormulaNodes = namedFormulaNodes;
         }
 
         [Obsolete("Use unified UDF parser")]
