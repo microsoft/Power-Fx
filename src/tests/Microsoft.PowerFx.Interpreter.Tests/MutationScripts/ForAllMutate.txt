@@ -29,3 +29,78 @@ Table({Value:2},{Value:4},{Value:6},{Value:8},{Value:10})
      Concat(t, Value) & "," & Concat(t2, Value)
    )
 "12345,24681099"
+
+// short circuiting shouldn't execute any loops for a blank or empty table
+
+>> Set(t3,If(1<0,[1,2,3]))
+Blank()
+
+>> ForAll(t3,Patch(t3,ThisRecord,{Value:4}))
+Blank()
+
+>> 1;t3
+Blank()
+
+// interpretation of an empty table
+
+>> Set(t4,[1])
+Table({Value:1})
+
+>> Remove(t4,First(t4))
+Blank()
+
+>> 1;t4
+Table()
+
+// Should do nothing as t4 is empty
+>> ForAll(t4,Patch(t4,ThisRecord,{Value:4}))
+Table()
+
+>> 2;t4
+Table()
+
+>> Set(t5,[1])
+Table({Value:1})
+
+// ForAll shouldn't execute the collect, even once
+>> ForAll(t4,Collect(t5,{Value:9.1}))
+Table()
+
+// With shouldn't execute the collect, even once
+>> With(First(t4),Collect(t5,{Value:9.2}))
+Blank()
+
+// interpretation of one record
+
+>> 1;t5
+Table({Value:1})
+
+>> Collect(t4,{Value:1})
+{Value:1}
+
+// ForAll should execute the collect, exactly once
+>> ForAll(t4,Collect(t5,{Value:8.1}))
+Table({Value:8.1})
+
+// With shouldn execute the collect, exactly once
+>> With(First(t4),Collect(t5,{Value:8.2}))
+{Value:8.2}
+
+>> 2;t5
+Table({Value:1},{Value:8.1},{Value:8.2})
+
+// interpretation of a blank table
+
+>> Set( t4, Blank() )
+Blank()
+
+// ForAll shouldn't execute the collect, even once
+>> ForAll(t4,Collect(t5,{Value:7.1}))
+Blank()
+
+// With shouldn't execute the collect, even once
+>> With(First(t4),Collect(t5,{Value:7.2}))
+Blank()
+
+>> 3;t5
+Table({Value:1},{Value:8.1},{Value:8.2})

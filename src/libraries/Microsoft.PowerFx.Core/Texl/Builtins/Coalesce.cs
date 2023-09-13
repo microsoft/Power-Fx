@@ -45,6 +45,16 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
+        public override bool IsLazyEvalParam(int index, Features features)
+        {
+            if (features.PowerFxV1CompatibilityRules)
+            {
+                return index > 0;
+            }
+
+            return false;
+        }
+
         public override bool CheckTypes(CheckTypesContext context, TexlNode[] args, DType[] argTypes, IErrorContainer errors, out DType returnType, out Dictionary<TexlNode, DType> nodeToCoercedTypeMap)
         {
             Contracts.AssertValue(args);

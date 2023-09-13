@@ -557,6 +557,12 @@ namespace Microsoft.PowerFx.Core.Functions
         /// All lambda params are Lazy, but others may also be, including short-circuit booleans, conditionals, etc..
         /// </summary>
         /// <param name="index">Parameter index, 0-based.</param>
+        /// <param name="features">Engine features.</param>
+        public virtual bool IsLazyEvalParam(int index, Features features)
+        {
+            return IsLazyEvalParam(index);
+        }
+
         public virtual bool IsLazyEvalParam(int index)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
