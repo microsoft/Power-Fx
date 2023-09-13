@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регулярні вирази мають бути константами.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Значення, передане функції "{0}" не можна змінити.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Ім’я групи захоплення "{0}" приховує попередньо визначену властивість, що повертає розташування збігу з регулярним виразом. Перейменуйте групу, якщо хочете за допомогою цієї іменованої властивості видобути з указаного тексту розташування повного збігу.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Ця функція видаляє все форматування та повертає значення у вигляді звичайного тексту.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Установлення змінної зі значенням онлайнового джерела даних (таблиці або запису) може призвести до появи кількох запитів до сервера. Незабаром це буде заблоковано.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Неприпустиме оголошення літерала типу</value>
     
   </data>
 </root>

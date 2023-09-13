@@ -14,7 +14,7 @@ namespace Microsoft.PowerFx.Core.Tests
         // Test how .net types marshal to FormulaType
         [Theory]
         [InlineData(typeof(double), typeof(NumberType))]
-        [InlineData(typeof(int), typeof(NumberType))]
+        [InlineData(typeof(int), typeof(DecimalType))]
         [InlineData(typeof(decimal), typeof(DecimalType))]
         [InlineData(typeof(long), typeof(DecimalType))]
         [InlineData(typeof(float), typeof(NumberType))]

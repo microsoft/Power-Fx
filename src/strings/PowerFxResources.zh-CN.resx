@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>正则表达式必须是常数值。</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>无法更改传递给 '{0}' 函数的值。</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>捕获名称“{0}”将隐藏要返回正则表达式匹配项位置的预定义属性。如果要使用该命名属性来提取指定文本中完整匹配项的位置，请对其重命名。</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>删除所有格式并返回纯文本值。</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>使用在线数据源值(表或记录)设置变量可能会导致对服务器提出多个请求。这很快将被阻止。</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>类型文字声明无效</value>
     
   </data>
 </root>

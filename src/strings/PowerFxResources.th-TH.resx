@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>นิพจน์ปกติจะต้องเป็นค่าคงที่</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>ค่าที่ส่งผ่านไปยังฟังก์ชัน '{0}' ไม่สามารถเปลี่ยนแปลงได้</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>ชื่อการจับภาพ '{0}' กำลังซ่อนคุณสมบัติที่กำหนดไว้ล่วงหน้าที่ส่งกลับตำแหน่งที่ตั้งของการจับคู่ของนิพจน์ทั่วไป ลองเปลี่ยนชื่อถ้าคุณต้องการใช้คุณสมบัติที่มีการตั้งชื่อเพื่อแยกตำแหน่งของการจับคู่ที่ตรงกันทั้งหมดในข้อความที่ระบุ</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>นำการจัดรูปแบบทั้งหมดออกและส่งกลับเป็นข้อความแบบธรรมดา</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>การตั้งค่าตัวแปรที่มีค่าแหล่งข้อมูลแบบออนไลน์ (ตารางหรือเรกคอร์ด) อาจทำให้เกิดการร้องขอหลายรายการไปยังเซิร์ฟเวอร์ การดำเนินการแบบนี้จะถูกบล็อกในเร็วๆ นี้</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>การประกาศสัญพจน์ของชนิดไม่ถูกต้อง</value>
     
   </data>
 </root>

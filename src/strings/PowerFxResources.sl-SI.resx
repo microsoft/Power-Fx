@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regularni izrazi morajo biti konstantne vrednosti.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Vrednosti, ki je bila posredovana za funkcijo »{0}«, ni mogoče spremeniti.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Ime posnetka »{0}« skriva vnaprej določeno lastnost, ki vrne mesto ujemanja regularnega izraza. Priporočamo, da ga preimenujete, če želite uporabiti to poimenovano lastnost za izvlečenje mesta polnega ujemanja v navedenem besedilu.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Odstrani vse oblikovanje in vrne vrednost v navadnem besedilu.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Nastavitev spremenljivke z vrednostjo spletnega vira podatkov (tabela ali zapis) lahko povzroči več zahtev strežniku. Ta nastavitev bo kmalu blokirana.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Vrsta dobesedne deklaracije ni bila veljavna</value>
     
   </data>
 </root>

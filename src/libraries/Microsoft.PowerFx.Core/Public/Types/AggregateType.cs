@@ -122,11 +122,18 @@ namespace Microsoft.PowerFx.Types
         {
             return FieldNames.Select(field =>
             {
-                var fieldType = GetFieldType(field);
-                
                 var displayName = DType.TryGetDisplayNameForColumn(_type, field, out var dName)
                     ? dName
                     : null;
+
+                if (this.TryGetBackingDType(field, out var backingDType))
+                {
+                    var t = new TypedName(backingDType, new DName(field));
+                    return new NamedFormulaType(t, displayName);
+                }
+
+                var fieldType = GetFieldType(field);
+                
                 return new NamedFormulaType(field, GetFieldType(field), displayName);
             });
         }

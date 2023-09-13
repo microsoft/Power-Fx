@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Reguljära uttryck måste vara konstanta värden.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Det värde som skickas till funktionen "{0}" kan inte ändras.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Fånga in namnet {0} döljer den fördefinierade egenskapen som returnerar platsen för matchningen av det reguljära uttrycket. Överväg att byta namn på det om du vill använda den namngivna egenskapen för att extrahera positionen för den fullständiga matchningen i den angivna texten.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Tar bort all formatering och returnerar ett oformaterat textvärde.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Om du anger en variabel med ett datakällavärde online (tabell eller post) kan det orsaka flera begäranden till servern. Detta kommer snart att blockeras.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Typdeklarationen var ogiltig</value>
     
   </data>
 </root>

@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
+using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Syntax.Visitors;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Functions;
@@ -232,48 +234,27 @@ namespace Microsoft.PowerFx
         }
 
         [Obsolete("preview")]
-        internal void DefineType(string script, ParserOptions parserOptions)
+        internal IEnumerable<TexlError> DefineType(string script, ParserOptions parserOptions)
         {
             var parsedNamedFormulasAndUDFs = UserDefinitions.Parse(script, parserOptions);
             var definedTypes = parsedNamedFormulasAndUDFs.DefinedTypes.ToList();
 
+            var errors = new List<TexlError>();
+
             foreach (var defType in definedTypes)
             {
                 var name = defType.Ident.Name.Value;
-                var res = DTypeFromTexlNode(defType.Type.TypeRoot) ?? throw new Exception("Failed defining type");
-                _definedTypeSymbolTable.RegisterType(name, new KnownRecordType(res));
-            }
-        }
-
-        internal DType DTypeFromTexlNode(TexlNode node)
-        {
-            if (node is RecordNode recordNode)
-            {
-                return DTypeFromRecordNode(recordNode);
-            }
-            else if (node is FirstNameNode nameNode)
-            {
-                return GetTypeFromName(nameNode.Ident.Name.Value);
-            }
-
-            return null;
-        }
-
-        internal DType DTypeFromRecordNode(RecordNode recordNode)
-        {
-            var list = new List<TypedName>();
-            foreach (var (node, ident) in recordNode.ChildNodes.Zip(recordNode.Ids, (a, b) => (a, b)))
-            {
-                var ty = DTypeFromTexlNode(node);
-                if (ty == null)
+                var res = DTypeVisitor.Run(defType.Type.TypeRoot, _definedTypeSymbolTable);
+                if (res == null)
                 {
-                    return null;
+                    errors.Add(new TexlError(defType.Ident, DocumentErrorSeverity.Severe, Core.Localization.TexlStrings.ErrTypeLiteral_InvalidTypeDefinition));
+                    continue;
                 }
 
-                list.Add(new TypedName(ty, new DName(ident.Name.Value)));
+                _definedTypeSymbolTable.RegisterType(name, FormulaType.Build(res));
             }
 
-            return DType.CreateRecord(list);
+            return errors;
         }
 
         internal FormulaType GetFormulaTypeFromName(string name)

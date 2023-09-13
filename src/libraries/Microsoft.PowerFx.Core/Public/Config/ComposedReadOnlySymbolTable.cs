@@ -105,6 +105,14 @@ namespace Microsoft.PowerFx
             }
         }
 
+        internal override void EnumerateNames(List<SymbolEntry> names, EnumerateNamesOptions opts)
+        {
+            foreach (var inner in _symbolTables)
+            {
+                inner?.EnumerateNames(names, opts);
+            }
+        }
+
         IEnumerable<EnumSymbol> IEnumStore.EnumSymbols
         {
             get

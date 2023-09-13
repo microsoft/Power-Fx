@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Paprastosios išraiškos turi būti pastovios vertės.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Reikšmės, perduotos funkcijai „{0}“, pakeisti negalima.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Įrašytas pavadinimas {0} įvardija iš anksto nustatytą ypatybę, kuri pateikia grupių atitiktis paprastojoje išraiškoje. Pervardykite ją, jei norite naudoti ypatybę šiuo pavadinimu siekdami gauti visiškos atitikties vietą nurodytame tekste.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Pašalina visą formatavimą ir pateikia paprastojo teksto reikšmę.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Nustačius kintamąjį su internetinio duomenų šaltinio reikšme (lentele arba įrašu), į serverį gali būti pateikiamos kelios užklausos. Ši funkcija greitai bus užblokuota.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tipo literalo deklaracija buvo neteisinga</value>
     
   </data>
 </root>

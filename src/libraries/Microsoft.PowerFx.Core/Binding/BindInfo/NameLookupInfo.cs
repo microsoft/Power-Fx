@@ -4,6 +4,7 @@
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Binding.BindInfo
 {
@@ -43,5 +44,25 @@ namespace Microsoft.PowerFx.Core.Binding.BindInfo
             // Any connectedDataSourceInfo or option set or view needs to be accessed asynchronously to allow data to be loaded.
             IsAsync = Data is IExternalTabularDataSource || Kind == BindKind.OptionSet || Kind == BindKind.View || isAsync;
         }
+
+        public bool TryToSymbolEntry(out SymbolEntry x)
+        {
+            var ns = this.Data as NameSymbol;
+            if (ns == null)
+            {
+                x = null;
+                return false;
+            }
+
+            x = new SymbolEntry
+            {
+                Name = ns.Name,
+                DisplayName = this.DisplayName,                
+                Properties = ns.Props,
+                Type = FormulaType.Build(this.Type),
+                Slot = ns
+            };
+            return true;
+        }            
     }
 }

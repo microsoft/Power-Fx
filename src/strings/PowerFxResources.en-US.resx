@@ -5024,7 +5024,7 @@
   <data name="ErrUnsupportedFunction" xml:space="preserve">
     <value>In namespace {1}, function {0} is not supported.</value>
     <comment>An error message when a function is not supported.</comment>
-  </data>  
+  </data>
   <data name="WarnDeferredType" xml:space="preserve">
     <value>Warning: Deferred type provided.</value>
     <comment>Warning given when the input has deferred Type. Deferred type is unknown type at compile time and correct type will be supplied by user before evaluation.</comment>
@@ -5182,14 +5182,14 @@
   <data name="ErrDataSourceCannotBeRefreshed" xml:space="preserve">
     <value>Only managed connections can be refreshed.</value>
     <comment>Error message on non-service data sources passed to Refresh.</comment>
-  </data>  
+  </data>
   <data name="ErrorResource_ErrInvalidRegEx_ShortMessage" xml:space="preserve">
     <value>Invalid regular expression.</value>
     <comment>Error message indicating that the regular expression entered by the user is invalid.</comment>
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regular expressions must be constant values.</value>
-    <comment>Error Message.</comment>    
+    <comment>Error Message.</comment>
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>The value passed to the '{0}' function cannot be changed.</value>
@@ -5205,7 +5205,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>The capture name '{0}' is hiding the predefined property that returns the location of the match of the regular expression. Consider renaming it if you want to use that named property to extract the position of the full match in the specified text.</value>
-    <comment>Information message indicating that the maker used a group name that will hide the property 'StartMatch' in the function result.</comment>  
+    <comment>Information message indicating that the maker used a group name that will hide the property 'StartMatch' in the function result.</comment>
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Removes all formatting and returns a plain text value.</value>
@@ -5239,5 +5239,9 @@
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Set a variable with an online datasource value (table or record) can cause multiple requests to the server. Soon this will be blocked.</value>
     <comment>Warning for makers that a certain capability should be avoided.</comment>
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Type literal declaration was invalid</value>
+    <comment>Error message when type binding is invalid</comment>
   </data>
 </root>

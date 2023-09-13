@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var engine = new RecalcEngine(config);
 
             var cache = new TypeMarshallerCache();
-            var obj = cache.Marshal(new { X = 10, Y = 20 });
+            var obj = cache.Marshal(new { X = 10f, Y = 20f });
 
             engine.UpdateVariable("obj", obj);
 

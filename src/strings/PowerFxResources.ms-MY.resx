@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Ungkapan biasa mestilah nilai yang tetap.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Nilai yang dihantar kepada fungsi '{0}' tidak boleh diubah.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Nama tangkapan '{0}' menyembunyikan sifat dipratentukan yang mengembalikan lokasi padanan bagi ungkapan biasa. Pertimbangkan untuk menamakan semula jika anda ingin menggunakan sifat yang bernama itu untuk mengekstrak kedudukan padanan penuh dalam teks yang ditentukan.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Mengalih keluar semua pemformatan dan mengembalikan nilai teks biasa.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Penetapan pemboleh ubah dengan nilai sumber data dalam talian (jadual atau rekod) boleh menyebabkan berbilang permintaan kepada pelayan. Ini akan disekat tidak lama lagi.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Perisytiharan harfiah jenis tidak sah</value>
     
   </data>
 </root>
