@@ -792,7 +792,8 @@ namespace Microsoft.PowerFx.Tests
 
         internal class UserAsyncFunction : ReflectionFunction
         {
-            public UserAsyncFunction()
+            public UserAsyncFunction() 
+                : base("UserAsync", FormulaType.String, FormulaType.Number)
             {
                 // Specify the type used for config. 
                 // At runtime, this is pulled from the RuntimeConfig config dictionary. 
