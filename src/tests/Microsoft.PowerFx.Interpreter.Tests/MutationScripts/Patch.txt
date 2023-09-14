@@ -1,1 +1,100 @@
-﻿
+﻿#SETUP: DecimalSupport
+
+// basic mutations with blanks and coercions
+
+>> Set(y, [{d:1,t:"hi",b:true},{d:2,t:"bye",b:false},{d:3,t:"cycle",b:Blank()}] )
+Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"bye"},{b:Blank(),d:3,t:"cycle"})
+
+>> 0;y
+Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"bye"},{b:Blank(),d:3,t:"cycle"})
+
+>> Patch( y, LookUp( y, d=2 ), {t:"back"})
+{b:false,d:2,t:"back"}
+
+>> 1;y
+Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"back"},{b:Blank(),d:3,t:"cycle"})
+
+>> Patch( y, First(y), {b:Blank()})
+{b:Blank(),d:1,t:"hi"}
+
+>> 2;y
+Table({b:Blank(),d:1,t:"hi"},{b:false,d:2,t:"back"},{b:Blank(),d:3,t:"cycle"})
+
+>> Patch( y, LookUp(y, b=Blank()), {b:true})
+{b:true,d:1,t:"hi"}
+
+>> 3;y
+Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"back"},{b:Blank(),d:3,t:"cycle"})
+
+>> Patch( y, Index(y,2), {b:Blank(),d:12,t:"different"})
+{b:Blank(),d:12,t:"different"}
+
+>> 4;y
+Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle"})
+
+>> Patch( y, Index(y,2), {b:1,d:"23",t:DateTime(2002,2,2,2,2,2)})
+{b:true,d:23,t:"2/2/2002 2:02 AM"}
+
+>> 5;y
+Table({b:true,d:1,t:"hi"},{b:true,d:23,t:"2/2/2002 2:02 AM"},{b:Blank(),d:3,t:"cycle"})
+
+>> Patch( y, Index(y,3), {b:"0",d:true,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49c")} )
+#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1834, expected compile time error
+
+// should not have been changedn from the previous patch
+>> 6;y
+Table({b:true,d:1,t:"hi"},{b:true,d:23,t:"2/2/2002 2:02 AM"},{b:Blank(),d:3,t:"cycle"})
+
+>> Patch( y, Index(y,3), {b:false,d:1/0,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d")} )
+#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1835, expected {b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
+
+>> 7;y
+#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1835, expected table with {b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
+
+// deep mutation with coercions
+
+>> Set(x, { v :1 , t: [1,2,3]})
+{t:Table({Value:1},{Value:2},{Value:3}),v:1}
+
+>> 0;x.t
+Table({Value:1},{Value:2},{Value:3})
+
+>> Patch(x.t, Index(x.t,2), { Value: 99})
+{Value:99}
+
+>> 1;x.t
+Table({Value:1},{Value:99},{Value:3})
+
+>> Patch(x.t, {Value:99}, {Value:88})
+{Value:88}
+
+>> 2;x.t
+Table({Value:1},{Value:88},{Value:3})
+
+// works in Canvas, with or without Defaults function, but does not work in C# Power Fx (yet)
+>> Patch(x.t, {}, {Value:77})
+Error({Kind:ErrorKind.NotFound})
+
+>> 3;x.t
+Table({Value:1},{Value:88},{Value:3})
+
+>> Patch(x.t, {Value:88}, {Value:"77"})
+{Value:77}
+
+>> 4;x.t
+Table({Value:1},{Value:77},{Value:3})
+
+>> Patch(x.t, {Value:77}, {Value:Float(66)})
+{Value:66}
+
+>> 5;x.t
+Table({Value:1},{Value:66},{Value:3})
+
+>> Patch(x.t, {Value:66}, {Value:false})
+{Value:0}
+
+>> 6;x.t
+Table({Value:1},{Value:0},{Value:3})
+
+
+

@@ -369,7 +369,7 @@ namespace Microsoft.PowerFx.Core.IR
                         var nodeName = context.Binding.TryGetReplacedIdentName(identifierNode.Ident, out var newIdent) ? new DName(newIdent) : identifierNode.Ident.Name;
                         args.Add(new TextLiteralNode(argContext.GetIRContext(arg, DType.String), nodeName.Value));
                     }
-                    else if (func.IsLazyEvalParam(i))
+                    else if (func.IsLazyEvalParam(i, _features))
                     {
                         var child = arg.Accept(this, scope != null && func.ScopeInfo.AppliesToArgument(i) ? argContext.With(scope) : argContext);
                         args.Add(new LazyEvalNode(argContext.GetIRContext(arg), child));
