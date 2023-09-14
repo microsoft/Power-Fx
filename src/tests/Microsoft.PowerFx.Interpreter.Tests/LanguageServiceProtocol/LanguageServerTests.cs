@@ -1361,7 +1361,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             public bool Throw { get; set; }
 
-            public override async Task<CustomNL2FxResult> NL2Fx(NL2FxParameters request, CancellationToken cancel)
+            public override async Task<CustomNL2FxResult> NL2FxAsync(NL2FxParameters request, CancellationToken cancel)
             {
                 if (this.Throw)
                 {

@@ -32,6 +32,15 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         /// Possible expression.
         /// Maybe 0 length. 
         /// </summary>
-        public string[] Expressions { get; set; }
+        public CustomNL2FxResultItem[] Expressions { get; set; }        
+    }
+
+    /// <summary>
+    /// Result of an NL2Fx opereation. 
+    /// This is an object so we can include future information like ranking, model version, etc. 
+    /// </summary>
+    public class CustomNL2FxResultItem
+    {
+        public string Expression { get; set; }
     }
 }

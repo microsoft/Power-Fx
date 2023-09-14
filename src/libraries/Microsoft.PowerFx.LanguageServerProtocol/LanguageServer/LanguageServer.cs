@@ -135,9 +135,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
                             break;
+                        case CustomProtocolNames.GetCapabilities:
+                            HandleGetCapabilities(id, paramsJson);
+                            break;
                         case CustomProtocolNames.NL2FX:
                             HandleNL2FxRequest(id, paramsJson);
                             break;
+                        case CustomProtocolNames.FX2NL:
+                            HandleFx2NLRequest(id, paramsJson);
+                            break;
+
                         case TextDocumentNames.FullDocumentSemanticTokens:
                             HandleFullDocumentSemanticTokens(id, paramsJson);
                             break;
@@ -398,6 +405,74 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }));
         }
 
+        private abstract class LSPHandler<TReq, TResp>
+            where TReq : IHasTextDocument
+        {
+            private readonly LanguageServer _parent;
+
+            public void Handle(string id, string paramsJson)
+            {
+                _parent._logger?.Invoke($"[PFX] HandleGetCapabilities: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+                if (id == null)
+                {
+                    _parent._sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                    return;
+                }
+
+                Contracts.AssertValue(id);
+                Contracts.AssertValue(paramsJson);
+
+                if (!_parent.TryParseParams(paramsJson, out TReq request))
+                {
+                    _parent._sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                    return;
+                }
+
+                var documentUri = request.TextDocument.Uri;
+                var scope = _parent._scopeFactory.GetOrCreateInstance(documentUri);
+
+                TResp result = this.Handle(scope, request);
+                                
+                _parent._sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
+            }
+
+            protected abstract TResp Handle(IPowerFxScope scope, TReq req);            
+        }
+
+        private void HandleGetCapabilities(string id, string paramsJson)
+        {
+            _logger?.Invoke($"[PFX] HandleGetCapabilities: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+            if (id == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return;
+            }
+
+            Contracts.AssertValue(id);
+            Contracts.AssertValue(paramsJson);
+
+            if (!TryParseParams(paramsJson, out CustomGetCapabilitiesParams request))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return;
+            }
+
+            var documentUri = request.TextDocument.Uri;
+            var scope = _scopeFactory.GetOrCreateInstance(documentUri);
+
+            var result = new CustomGetCapabilitiesResult();
+
+            if (this.NL2FxImplementation == null)
+            {
+                result.SupportsNL2Fx = this.NL2FxImplementation.SupportsNL2Fx;
+                result.SupportsFx2NL = this.NL2FxImplementation.SupportsFx2NL;
+            }
+
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
+        }
+
         private void HandleNL2FxRequest(string id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleNL2FxRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
@@ -408,7 +483,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 return;
             }
 
-            if (this.NL2FxImplementation == null)
+            if (this.NL2FxImplementation == null || !NL2FxImplementation.SupportsNL2Fx)
             {
                 throw new NotSupportedException($"NL2Fx not enabled");
             }
@@ -435,9 +510,45 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             };
 
             CancellationToken cancel = default;
-            var result = this.NL2FxImplementation.NL2Fx(req, cancel)
+            var result = this.NL2FxImplementation.NL2FxAsync(req, cancel)
                 .ConfigureAwait(false).GetAwaiter().GetResult();
             
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
+        }
+
+        private void HandleFx2NLRequest(string id, string paramsJson)
+        {
+            _logger?.Invoke($"[PFX] HandleFx2NLRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+            if (id == null)
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                return;
+            }
+
+            if (this.NL2FxImplementation == null || !NL2FxImplementation.SupportsFx2NL)
+            {
+                throw new NotSupportedException($"NL2Fx not enabled");
+            }
+
+            Contracts.AssertValue(id);
+            Contracts.AssertValue(paramsJson);
+
+            if (!TryParseParams(paramsJson, out CustomFx2NLParams request))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                return;
+            }
+
+            var documentUri = request.TextDocument.Uri;
+            var scope = _scopeFactory.GetOrCreateInstance(documentUri);
+
+            var check = scope.Check(request.Expression);
+
+            CancellationToken cancel = default;
+            var result = this.NL2FxImplementation.Fx2NLAsync(check, cancel)
+                .ConfigureAwait(false).GetAwaiter().GetResult();
+
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
         }
 
