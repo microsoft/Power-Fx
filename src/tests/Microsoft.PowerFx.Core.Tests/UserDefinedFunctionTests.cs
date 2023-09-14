@@ -153,5 +153,20 @@ namespace Microsoft.PowerFx.Core.Tests
 
             Assert.Equal(expectedIR, actualIR);
         }
+
+        [Theory]
+        [InlineData("/* Comment1 */ Foo(x: Number): Number = /* Comment2 */ Abs(x);/* Comment3 */", 3)]
+        [InlineData("Foo(x: Number): Number /* Comment1 */ =  Abs(x);// Comment2", 3)]
+        public void TestCommentsFromUserDefinitionsScript(string script, int udfCount)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Equal(udfCount, parseResult.Comments.Count());
+        }
     }
 }
