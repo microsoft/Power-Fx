@@ -157,7 +157,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("/* Comment1 */ Foo(x: Number): Number = /* Comment2 */ Abs(x) /* Comment3 */;/* Comment4 */", 4)]
         [InlineData("Foo(x: Number): Number /* Comment1 */ =  Abs(x);// Comment2", 2)]
-        public void TestCommentsFromUserDefinitionsScript(string script, int udfCount)
+        public void TestCommentsFromUserDefinitionsScript(string script, int commentCount)
         {
             var parserOptions = new ParserOptions()
             {
@@ -166,7 +166,29 @@ namespace Microsoft.PowerFx.Core.Tests
 
             var parseResult = UserDefinitions.Parse(script, parserOptions);
 
-            Assert.Equal(udfCount, parseResult.Comments.Count());
+            Assert.Equal(commentCount, parseResult.Comments.Count());
+        }
+
+        [Theory]
+        [InlineData("/* Comment1 */ Foo(x: Number): Number = Abs(x);", 0, 15)]
+        [InlineData("Foo(x: Number): Number /* Comment1 */ = Abs(x);", 23, 38)]
+        [InlineData("Foo(x: Number): Number = Abs(x) /* Comment1 */;", 32, 46)]
+        [InlineData("Foo(x: Number): Number = Abs(x); /* Comment1 */", 33, 47)]
+        public void TestCommentSpansFromUserDefinitionsScript(string script, int begin, int end)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var parseResult = UserDefinitions.Parse(script, parserOptions);
+
+            Assert.Single(parseResult.Comments);
+
+            var commentSpan = parseResult.Comments.First().Span;
+
+            Assert.Equal(commentSpan.Min, begin);
+            Assert.Equal(commentSpan.Lim, end);
         }
     }
 }
