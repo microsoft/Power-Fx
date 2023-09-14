@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// Incoming LSP payload for a capabilities request.
     /// See <see cref="CustomProtocolNames.GetCapabilities"/>.
     /// </summary>
-    public class CustomGetCapabilitiesParams
+    public class CustomGetCapabilitiesParams : IHasTextDocument
     {
         /// <summary>
         /// The document that was opened. Just need Uri. 

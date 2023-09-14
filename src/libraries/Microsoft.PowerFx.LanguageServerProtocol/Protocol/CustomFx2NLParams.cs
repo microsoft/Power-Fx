@@ -7,16 +7,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
 {
-    // This message has an TextDocumentItem, which can be used to get a IPowerFxScope. 
-    internal interface IHasTextDocument
-    {
-        public TextDocumentItem TextDocument { get; set; }
-    }
-
     /// <summary>
     /// Incoming LSP payload for a NL request. See <see cref="CustomProtocolNames.FX2NL"/>.
     /// </summary>
-    public class CustomFx2NLParams
+    public class CustomFx2NLParams : IHasTextDocument
     {
         /// <summary>
         /// The document that was opened. Just need Uri. 

@@ -10,7 +10,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// <summary>
     /// Incoming LSP payload for a NL request. See <see cref="CustomProtocolNames.NL2FX"/>.
     /// </summary>
-    public class CustomNL2FxParams
+    public class CustomNL2FxParams : IHasTextDocument
     {
         /// <summary>
         /// The document that was opened. Just need Uri. 
@@ -41,6 +41,14 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
     /// </summary>
     public class CustomNL2FxResultItem
     {
+        /// <summary>
+        /// A power fx expression.
+        /// </summary>
         public string Expression { get; set; }
+
+        /// <summary>
+        /// Identification (such as name/version) for model that produced the result. 
+        /// </summary>
+        public string ModelId { get; set; }
     }
 }
