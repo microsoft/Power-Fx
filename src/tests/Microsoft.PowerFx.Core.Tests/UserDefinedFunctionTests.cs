@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("/* Comment1 */ Foo(x: Number): Number = /* Comment2 */ Abs(x) * Comment3 */;/* Comment4 */", 4)]
+        [InlineData("/* Comment1 */ Foo(x: Number): Number = /* Comment2 */ Abs(x) /* Comment3 */;/* Comment4 */", 4)]
         [InlineData("Foo(x: Number): Number /* Comment1 */ =  Abs(x);// Comment2", 2)]
         public void TestCommentsFromUserDefinitionsScript(string script, int udfCount)
         {
