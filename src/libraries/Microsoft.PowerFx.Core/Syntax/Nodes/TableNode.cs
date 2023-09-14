@@ -95,7 +95,7 @@ namespace Microsoft.PowerFx.Syntax
         public override Span GetTextSpan()
         {
             var lim = BracketClose == null ? Token.VerifyValue().Span.Lim : BracketClose.Span.Lim;
-            return new Span(Token.VerifyValue().Span.Min, lim);
+            return new Span(Token.VerifyValue().Span.Min, lim, Token.VerifyValue().Span.Offset);
         }
     }
 }

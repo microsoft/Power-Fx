@@ -1098,11 +1098,11 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 // Parent
                 case TokKind.Parent:
-                    return new ParentNode(ref _idNext, _curs.TokMove());
+                    return new ParentNode(ref _idNext, GetNewOrExistingToken(_curs.TokMove()));
 
                 // Self
                 case TokKind.Self:
-                    return new SelfNode(ref _idNext, _curs.TokMove());
+                    return new SelfNode(ref _idNext, GetNewOrExistingToken(_curs.TokMove()));
 
                 case TokKind.Eof:
                     return CreateError(_curs.TokCur, TexlStrings.ErrOperandExpected);
@@ -1605,7 +1605,7 @@ namespace Microsoft.PowerFx.Core.Parser
             var commaArray = commas?.ToArray();
             var colonArray = colons?.ToArray();
 
-            curlyClose = TokEat(TokKind.CurlyClose);
+            curlyClose = GetNewOrExistingToken(TokEat(TokKind.CurlyClose));
             if (curlyClose != null)
             {
                 sourceList.Add(new TokenSource(curlyClose));
