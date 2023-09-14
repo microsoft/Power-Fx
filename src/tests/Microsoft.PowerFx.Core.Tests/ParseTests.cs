@@ -842,7 +842,7 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("A0 = Filter(Accounts, 'Account Name' = \"Ian One\");", "c")]
+        [InlineData("A0 = Filter(Accounts, 'Account Name' = \"Ian One\");A1 = Filter(A, 'Account Name' = \"Ian One\");", "c")]
 
         //[InlineData("a = 10;; b = in'valid ;; c = 20", "c")]
         //[InlineData("a = 10;; b = in'valid ;; c = 20;; d = also(invalid;; e = 44;;", "e")]
