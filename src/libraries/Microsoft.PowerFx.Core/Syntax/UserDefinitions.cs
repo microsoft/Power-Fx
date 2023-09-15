@@ -69,7 +69,10 @@ namespace Microsoft.PowerFx.Syntax
             var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors);
 
             errors.AddRange(parseResult.Errors ?? Enumerable.Empty<TexlError>());
-            userDefinitionResult = new UserDefinitionResult(functions, errors, parseResult.NamedFormulas);
+            userDefinitionResult = new UserDefinitionResult(
+                functions,
+                parseResult.Errors != null ? errors.Union(parseResult.Errors) : errors,
+                parseResult.NamedFormulas);
 
             return true;
         }
