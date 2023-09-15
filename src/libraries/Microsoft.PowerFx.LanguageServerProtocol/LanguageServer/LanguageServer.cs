@@ -654,10 +654,13 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 result = TexlParser.Format(expression, flags);
             }
 
-            var response = new TextEdit()
+            var response = new List<TextEdit> 
             {
-                NewText = result,
-                Range = GetRange(expression, new Span(0, expression.Length))
+                new TextEdit()
+                {
+                    NewText = result,
+                    Range = GetRange(expression, new Span(0, expression.Length))
+                }
             };
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, response));
         }
