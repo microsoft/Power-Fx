@@ -57,7 +57,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorType = openApiParameter.Schema.ToConnectorType(openApiParameter.Name, openApiParameter.Required, openApiParameter.GetVisibility(), numberIsFloat: numberIsFloat);
+            ConnectorType = openApiParameter.ToConnectorType(numberIsFloat: numberIsFloat);
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, numberIsFloat: numberIsFloat) ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions, numberIsFloat);
         }

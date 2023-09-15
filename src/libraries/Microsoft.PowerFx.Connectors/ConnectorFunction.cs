@@ -524,7 +524,7 @@ namespace Microsoft.PowerFx.Connectors
             JsonElement je = ExtractFromJson(sv, cds.ValuePath);
             OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return schema.ToConnectorType();
+            return new OpenApiParameter() { Schema = schema }.ToConnectorType();
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
@@ -548,7 +548,7 @@ namespace Microsoft.PowerFx.Connectors
             JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);
             OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return schema.ToConnectorType();
+            return new OpenApiParameter() { Schema = schema }.ToConnectorType();
         }
 
         private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicValue cdv, CancellationToken cancellationToken)

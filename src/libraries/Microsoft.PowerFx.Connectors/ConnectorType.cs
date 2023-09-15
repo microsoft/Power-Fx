@@ -66,14 +66,13 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType formulaType, RecordType hiddenRecordType)
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
         {
+            Name = openApiParameter?.Name;
+            IsRequired = openApiParameter?.Required == true;
+            Visibility = openApiParameter?.GetVisibility().ToVisibility() ?? Visibility.Unknown;
 
-            Name = name;
-            IsRequired = required;
-            Visibility = visibility.ToVisibility();
             FormulaType = formulaType;
-            HiddenRecordType = hiddenRecordType;
 
             if (schema != null)
             {
@@ -99,30 +98,30 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType formulaType)
-            : this(schema, name, required, visibility, formulaType, null)
-        {
-        }
-
         internal ConnectorType()
         {
             FormulaType = new BlankType();
         }
 
-        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, TableType tableType, ConnectorType tableConnectorType)
-            : this(schema, name, required, visibility, tableType)
-        {
-            HiddenRecordType = null;            
-            Fields = new ConnectorType[] { tableConnectorType };            
-        }
-
-        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
-            : this(schema, name, required, visibility, recordType)
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
+            : this(schema, openApiParameter, formulaType)
         {
             HiddenRecordType = hiddenRecordType;
+        }
 
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType)
+            : this(schema, openApiParameter, tableType)
+        {
+            Fields = new ConnectorType[] { tableConnectorType };
+            HiddenRecordType = null;
+        }
+
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
+            : this(schema, openApiParameter, recordType)
+        {
             Fields = fields;
             HiddenFields = hiddenFields;
+            HiddenRecordType = hiddenRecordType;
         }
 
         internal void SetDynamicReturnSchemaAndProperty(ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
