@@ -5,8 +5,11 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Microsoft.PowerFx.Core.Binding;
+using Microsoft.PowerFx.Core.Glue;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Parser;
+using Microsoft.PowerFx.Core.Texl;
 using Microsoft.PowerFx.Syntax;
 using Xunit;
 
@@ -799,16 +802,22 @@ namespace Microsoft.PowerFx.Core.Tests
 
         internal void TestFormulasParseRoundtrip(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
-
-            Assert.False(result.HasError);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            Assert.False(userDefinitionResult.HasErrors);
         }
 
         internal void TestFormulasParseError(string script)
         {
-            var result = TexlParser.ParseFormulasScript(script, new CultureInfo("en-US"));
-
-            Assert.True(result.HasError);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            Assert.True(userDefinitionResult.HasErrors);
         }
 
         [Theory]
@@ -832,11 +841,15 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("a = 10; b = 30; c = in'valid ; d = (10; e = 42;", "e")]
         public void TestFormulaParseRestart(string script, string key)
         {
-            var formulasResult = TexlParser.ParseFormulasScript(script);
-            Assert.True(formulasResult.HasError);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+            Assert.True(userDefinitionResult.HasErrors);
 
             // Parser restarted, and found 'c' correctly
-            Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+            Assert.Contains(userDefinitionResult.NamedFormulas, kvp => kvp.Ident.Name.ToString() == key);
         }
 
         [Theory]
@@ -849,6 +862,33 @@ namespace Microsoft.PowerFx.Core.Tests
 
             // Parser restarted, and found 'c' correctly
             Assert.Contains(formulasResult.NamedFormulas, kvp => kvp.Key.Name.Value == key);
+        }
+
+        [Theory]
+        [InlineData("a = 10; b = in'valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in(valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in)valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in{valid ; c = 20;", 0, 3, true)]
+        [InlineData("a = 10; b = in}valid ; c = 20;", 0, 3, true)]
+        [InlineData("Foo(x: Number): Number = Abs(x);", 1, 0, false)]
+        [InlineData("x = 1; Foo(x: Number): Number = Abs(x); y = 2;", 1, 2, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, false)]
+        [InlineData("Add(x: Number, y:Number): Number = x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
+        [InlineData(@"F2(b: Text): Text  = ""Test"";", 1, 0, false)]
+        [InlineData(@"F2(b: Text): Text  = ""Test;", 0, 0, true)]
+        [InlineData("Add(x: Number, y:Number): Number = (x + y;;; Foo(x: Number): Number = Abs(x); y = 2;", 2, 1, true)]
+        public void TestUDFNamedFormulaCountsRestart(string script, int udfCount, int namedFormulaCount, bool expectErrors)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+
+            Assert.Equal(udfCount, userDefinitionResult.UDFs.Count());
+            Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
+            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
         }
     }
 }

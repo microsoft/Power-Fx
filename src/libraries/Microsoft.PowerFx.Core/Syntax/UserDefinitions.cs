@@ -65,12 +65,6 @@ namespace Microsoft.PowerFx.Syntax
         private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
-
-            if (parseResult.HasErrors)
-            {
-                userDefinitionResult = new UserDefinitionResult(Enumerable.Empty<UserDefinedFunction>(), parseResult.Errors, parseResult.NamedFormulas);
-                return false;
-            }
                
             var functions = CreateUserDefinedFunctions(parseResult.UDFs, out var errors);
 
