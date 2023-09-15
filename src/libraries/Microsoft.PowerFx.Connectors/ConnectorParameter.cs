@@ -29,7 +29,6 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
-
         internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool numberIsFloat)
             : this(openApiParameter, bodyExtensions, false, numberIsFloat)
         {

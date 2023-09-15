@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Connectors
         // Only used for RecordType and TableType
         public ConnectorType[] Fields { get; }
 
-        public ConnectorType[] HiddenFields { get; }
+        internal ConnectorType[] HiddenFields { get; }
 
         // FormulaType
         public FormulaType FormulaType { get; }
