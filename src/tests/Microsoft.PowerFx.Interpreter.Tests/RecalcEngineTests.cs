@@ -496,6 +496,25 @@ namespace Microsoft.PowerFx.Tests
         }
 
         [Fact]
+        public void IsTypeTest()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618 // Type or member is obsolete
+            var errors = recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
+            Assert.Empty(errors);
+
+            // IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = Float(1.0);").Errors;
+            // Assert.False(enumerable.Any());
+            Assert.Equal(true, recalcEngine.Eval("IsType({A: \"hi\"}, Complex)").ToObject());
+        }
+
+        [Fact]
         public void IncorrectType()
         {
             var config = new PowerFxConfig();

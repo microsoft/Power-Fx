@@ -930,6 +930,17 @@ namespace Microsoft.PowerFx.Functions
                     targetFunction: IsToday)
             },
             {
+                BuiltinFunctionsCore.IsType,
+                StandardErrorHandling<FormulaValue>(
+                    BuiltinFunctionsCore.IsType.Name,
+                    expandArguments: NoArgExpansion,
+                    replaceBlankValues: DoNotReplaceBlank,
+                    checkRuntimeTypes: DeferRuntimeTypeChecking,
+                    checkRuntimeValues: DeferRuntimeValueChecking,
+                    returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
+                    targetFunction: IsType)
+            },
+            {
                 BuiltinFunctionsCore.Language,
                 NoErrorHandling(Language)
             },
@@ -2064,6 +2075,11 @@ namespace Microsoft.PowerFx.Functions
                 default:
                     return new BooleanValue(irContext, false);
             }
+        }
+
+        public static FormulaValue IsType(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            throw new Exception("Todo");
         }
 
         public static async ValueTask<FormulaValue> With(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
