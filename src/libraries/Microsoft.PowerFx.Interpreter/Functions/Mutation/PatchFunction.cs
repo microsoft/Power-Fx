@@ -140,7 +140,7 @@ namespace Microsoft.PowerFx.Functions
             return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
         }
 
-        public override bool IsLazyEvalParam(int index)
+        public override bool IsLazyEvalParam(int index, Features features)
         {
             // First argument to mutation functions is Lazy for datasources that are copy-on-write.
             // If there are any side effects in the arguments, we want those to have taken place before we make the copy.
