@@ -4,7 +4,7 @@
 Errors: Error 15-16: Incompatible types for comparison. These types can't be compared: Enum (ErrorKind), Enum (Color).
 
 >> Color.Red
-Color.'Red'
+Color.Red
 
 // Both string backed enums, but incompatble for comparison
 >> TimeUnit.Days <> SortOrder.Ascending

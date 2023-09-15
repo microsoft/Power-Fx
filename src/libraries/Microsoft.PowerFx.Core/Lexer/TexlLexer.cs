@@ -619,7 +619,7 @@ namespace Microsoft.PowerFx.Syntax
                     return sb.ToString();
                 }
 
-                if (!IsKeyword(name, out var kind))
+                if (!IsKeyword(name, out _) && !IsReservedKeyword(name))
                 {
                     return name;
                 }

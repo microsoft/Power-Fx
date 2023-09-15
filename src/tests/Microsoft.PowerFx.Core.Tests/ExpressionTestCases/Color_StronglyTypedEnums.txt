@@ -1,25 +1,13 @@
 ﻿#SETUP: StronglyTypedBuiltinEnums
 
 >> Color.Red
-Color.'Red'
+Color.Red
 
 >> Color.Black
-Color.'Black'
+Color.Black
 
 >> Color.ForestGreen
-Color.'ForestGreen'
+Color.ForestGreen
 
 >> Color.AliceBlue
-Color.'AliceBlue'
-
->> Color.'Red'
-Color.'Red'
-
->> Color.'Black'
-Color.'Black'
-
->> Color.'ForestGreen'
-Color.'ForestGreen'
-
->> Color.'AliceBlue'
-Color.'AliceBlue'
+Color.AliceBlue

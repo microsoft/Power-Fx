@@ -54,7 +54,8 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             var optionSet = new OptionSet("OptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
             {
                     { "option_1", "Option1" },
-                    { "option_2", "Option2" }
+                    { "option_2", "Option2" },
+                    { "option-3", "Option-3" },
             }));
 
             var otherOptionSet = new OptionSet("OtherOptionSet", DisplayNameUtility.MakeUnique(new Dictionary<string, string>()
