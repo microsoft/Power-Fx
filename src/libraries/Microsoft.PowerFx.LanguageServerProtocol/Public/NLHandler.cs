@@ -17,7 +17,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
     /// </summary>
     public class NLHandler
     {
-        public virtual Task<CustomNL2FxResult> NL2Fx(NL2FxParameters request, CancellationToken cancel)
+        public virtual bool SupportsNL2Fx { get; } = false;
+
+        public virtual bool SupportsFx2NL { get; } = false;
+
+        public virtual Task<CustomNL2FxResult> NL2FxAsync(NL2FxParameters request, CancellationToken cancel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Task<CustomFx2NLResult> Fx2NLAsync(CheckResult check, CancellationToken cancel)
         {
             throw new NotImplementedException();
         }
