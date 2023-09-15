@@ -517,10 +517,12 @@ namespace Microsoft.PowerFx.Core.Tests
 
         private void CheckResultExpectedReturnTypes(string inputExpr, bool isSuccess, string errorMsg, FormulaType[] returnTypes, FormulaType expectedType)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var check = new CheckResult(new Engine())
                 .SetText(inputExpr)
                 .SetBindingInfo()
                 .SetExpectedReturnValue(returnTypes);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             check.ApplyBinding();
 
