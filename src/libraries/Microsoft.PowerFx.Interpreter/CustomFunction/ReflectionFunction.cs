@@ -59,14 +59,13 @@ namespace Microsoft.PowerFx
 
             var isAsync = m.ReturnType.BaseType == typeof(Task);
 
-            var configType = ConfigType ?? default;
-
-            _info = new FunctionDescr(name, m, returnType, paramTypes, configType, BigInteger.Zero, isAsync);
+            _info = new FunctionDescr(name, m, returnType, paramTypes, BigInteger.Zero, isAsync);
         }
 
         private FunctionDescr Scan()
         {
-            if (_info == null)
+            var functionDescription = _info;
+            if (functionDescription == null)
             {
                 var t = GetType();
                 var name = GetFunctionName(t);
@@ -117,10 +116,12 @@ namespace Microsoft.PowerFx
                     }
                 }
 
-                return new FunctionDescr(name, m, returnType, paramTypes.ToArray(), configType, lamdaParamMask, isAsync);
+                functionDescription = new FunctionDescr(name, m, returnType, paramTypes.ToArray(), lamdaParamMask, isAsync);
             }
 
-            return _info;
+            functionDescription.IsConfigArgPresent = ConfigType != default;
+
+            return functionDescription;
         }
 
         private static FormulaType GetType(Type t)
@@ -199,7 +200,7 @@ namespace Microsoft.PowerFx
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Call to {info.Name} is missing config type {info.ConfigType.FullName}");
+                    throw new InvalidOperationException($"Call to {info.Name} is missing config type {ConfigType.FullName}");
                 }
             }
 

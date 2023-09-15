@@ -6,7 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core.App;
 using Microsoft.PowerFx.Core.App.Controls;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -21,7 +24,6 @@ using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
-using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Core.Localization.TexlStrings;
 
 namespace Microsoft.PowerFx.Core.Functions
@@ -34,12 +36,22 @@ namespace Microsoft.PowerFx.Core.Functions
 
         public override bool IsAsync => _binding?.IsAsync(UdfBody) ?? false;
 
+        public override bool SupportsParamCoercion => true;
+
         public TexlNode UdfBody { get; }
 
         public override bool IsSelfContained => !_isImperative;
 
-        public UserDefinedFunction(string name, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
-        : base(DPath.Root, name, name, SG("Custom func " + name), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserDefinedFunction"/> class.
+        /// </summary>
+        /// <param name="functionName">Name of the function.</param>
+        /// <param name="returnType">Return type of the function.</param>
+        /// <param name="body">TexlNode for user defined function body.</param>
+        /// <param name="isImperative"></param>
+        /// <param name="args"></param>
+        public UserDefinedFunction(string functionName, DType returnType, TexlNode body, bool isImperative, ISet<UDFArg> args)
+        : base(DPath.Root, functionName, functionName, SG(functionName), FunctionCategories.UserDefined, returnType, 0, args.Count, args.Count, args.Select(a => a.TypeIdent.GetFormulaType()._type).ToArray())
         {
             this._args = args;
             this._isImperative = isImperative;
@@ -47,6 +59,12 @@ namespace Microsoft.PowerFx.Core.Functions
             this.UdfBody = body;
         }
 
+        /// <summary>
+        /// Gets argument index for a given argument.
+        /// </summary>
+        /// <param name="argName">Name of the argument.</param>
+        /// <param name="argIndex">Index of the given argument.</param>
+        /// <returns>True if argument is found.</returns>
         public bool TryGetArgIndex(string argName, out int argIndex)
         {
             argIndex = -1;
@@ -69,7 +87,16 @@ namespace Microsoft.PowerFx.Core.Functions
             return false;
         }
 
-        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, INameResolver functionNameResolver = null, IExternalRule rule = null)
+        /// <summary>
+        /// Binds user defned function body. Calling this function will change the state of IsAsync.
+        /// </summary>
+        /// <param name="nameResolver">Global name resolver to resolve names including other UDFs used inside the body.</param>
+        /// <param name="documentBinderGlue">Document binder glue.</param>
+        /// <param name="bindingConfig">Configuration for an invocation of the binder.</param>
+        /// <param name="features">PowerFx features.</param>
+        /// <param name="rule"></param>
+        /// <returns>Returns binding for the function body.</returns>
+        public TexlBinding BindBody(INameResolver nameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig = null, Features features = null, IExternalRule rule = null)
         {
             if (nameResolver is null)
             {
@@ -82,9 +109,9 @@ namespace Microsoft.PowerFx.Core.Functions
             }
 
             bindingConfig = bindingConfig ?? new BindingConfig(this._isImperative);
-            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args, functionNameResolver), bindingConfig, features: features, rule: rule);
+            _binding = TexlBinding.Run(documentBinderGlue, UdfBody, UserDefinitionsNameResolver.Create(nameResolver, _args), bindingConfig, features: features, rule: rule);
 
-            CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding.ErrorContainer);
+            CheckTypesOnDeclaration(_binding.CheckTypesContext, _binding.ResultType, _binding);
 
             return _binding;
         }
@@ -92,15 +119,22 @@ namespace Microsoft.PowerFx.Core.Functions
         /// <summary>
         /// Perform sub-expression type checking and produce a return type for the function declaration, this is only applicable for UDFs.
         /// </summary>
-        public void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, IErrorContainer errorContainer)
+        public void CheckTypesOnDeclaration(CheckTypesContext context, DType actualBodyReturnType, TexlBinding binding)
         {
             Contracts.AssertValue(context);
             Contracts.AssertValue(actualBodyReturnType);
-            Contracts.AssertValue(errorContainer);
+            Contracts.AssertValue(binding);
 
-            if (!ReturnType.Kind.Equals(actualBodyReturnType.Kind) && !actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
+            if (!ReturnType.Accepts(actualBodyReturnType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
             {
-                errorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                if (actualBodyReturnType.CoercesTo(ReturnType, true, false, context.Features.PowerFxV1CompatibilityRules))
+                {
+                    _binding.SetCoercedType(binding.Top, ReturnType);
+                }
+                else
+                {
+                    binding.ErrorContainer.EnsureError(DocumentErrorSeverity.Severe, UdfBody, TexlStrings.ErrUDF_ReturnTypeDoesNotMatch);
+                }
             }
         }
 
@@ -121,18 +155,16 @@ namespace Microsoft.PowerFx.Core.Functions
         {
             private readonly INameResolver _globalNameResolver;
             private readonly IReadOnlyDictionary<string, UDFArg> _args;
-            private readonly INameResolver _functionNameResolver;
 
-            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver)
+            public static INameResolver Create(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
             {
-                return new UserDefinitionsNameResolver(globalNameResolver, args, functionNameResolver);
+                return new UserDefinitionsNameResolver(globalNameResolver, args);
             }
 
-            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args, INameResolver functionNameResolver = null)
+            private UserDefinitionsNameResolver(INameResolver globalNameResolver, IEnumerable<UDFArg> args)
             {
                 this._globalNameResolver = globalNameResolver;
                 this._args = args.ToDictionary(arg => arg.NameIdent.Name.Value, arg => arg);
-                this._functionNameResolver = functionNameResolver;
             }
 
             public IExternalDocument Document => _globalNameResolver.Document;
@@ -145,7 +177,7 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public DPath CurrentEntityPath => _globalNameResolver.CurrentEntityPath;
 
-            public TexlFunctionSet Functions => _functionNameResolver?.Functions == null ? _globalNameResolver.Functions : new TexlFunctionSet(new List<TexlFunctionSet>() { _globalNameResolver.Functions, _functionNameResolver.Functions });
+            public TexlFunctionSet Functions => _globalNameResolver.Functions;
 
             public bool SuggestUnqualifiedEnums => _globalNameResolver.SuggestUnqualifiedEnums;
 
@@ -171,30 +203,12 @@ namespace Microsoft.PowerFx.Core.Functions
 
             public IEnumerable<TexlFunction> LookupFunctions(DPath theNamespace, string name, bool localeInvariant = false)
             {
-                var functionsFromGlobalNameResolver = _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
-                if (_functionNameResolver == null)
-                {
-                    return functionsFromGlobalNameResolver;
-                }
-                else
-                {
-                    var functions = _functionNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
-                    return functions.Any() ? functions : functionsFromGlobalNameResolver;
-                }
+               return _globalNameResolver.LookupFunctions(theNamespace, name, localeInvariant);
             }
 
             public IEnumerable<TexlFunction> LookupFunctionsInNamespace(DPath nameSpace)
             {
-                var functionsFromGlobalNameResolver = _globalNameResolver.LookupFunctionsInNamespace(nameSpace);
-                if (_functionNameResolver == null) 
-                {
-                    return functionsFromGlobalNameResolver;
-                }
-                else
-                {
-                    var functions = _functionNameResolver.LookupFunctionsInNamespace(nameSpace);
-                    return functions.Any() ? functions : functionsFromGlobalNameResolver;
-                }
+                return _globalNameResolver.LookupFunctionsInNamespace(nameSpace);
             }
 
             public bool LookupGlobalEntity(DName name, out NameLookupInfo lookupInfo)

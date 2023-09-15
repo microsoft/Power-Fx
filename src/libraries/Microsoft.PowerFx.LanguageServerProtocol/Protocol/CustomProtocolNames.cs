@@ -13,6 +13,8 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public const string PublishExpressionType = "$/publishExpressionType";
         public const string CommandExecuted = "$/commandExecuted";
 
+        public const string GetCapabilities = "$/getcapabilities";
         public const string NL2FX = "$/nl2fx";
+        public const string FX2NL = "$/fx2nl";
     }
 }

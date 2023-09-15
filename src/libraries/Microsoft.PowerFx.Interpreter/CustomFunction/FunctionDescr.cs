@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
                 var paramNames = Method.GetParameters().Select(p => p.Name);
 
                 // Config is always First arg, and user doesn't provide it.
-                if (ConfigType != null)
+                if (IsConfigArgPresent)
                 {
                     paramNames = paramNames.Skip(1);
                 }
@@ -37,20 +37,19 @@ namespace Microsoft.PowerFx
         // User-facing parameter types. 
         internal FormulaType[] ParamTypes { get; }
 
-        // If not null, then arg0 is from RuntimeConfig
-        internal Type ConfigType { get; }
+        // If true, then arg0 is from RuntimeConfig, this can't be made readonly since ConfigType is a protected field.
+        internal bool IsConfigArgPresent { get; set; }
 
         internal bool IsAsync { get; }
 
         internal BigInteger LamdaParamMask { get; }
 
-        public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, Type configType, BigInteger lamdaParamMask, bool isAsync = false)
+        public FunctionDescr(string name, MethodInfo method, FormulaType retType, FormulaType[] paramTypes, BigInteger lamdaParamMask, bool isAsync = false)
         {
             Name = name;
             Method = method;
             RetType = retType;
             ParamTypes = paramTypes;
-            ConfigType = configType;
             IsAsync = isAsync;
             LamdaParamMask = lamdaParamMask;
         }

@@ -21,10 +21,6 @@ namespace Microsoft.PowerFx.Syntax
     /// </summary>
     internal sealed class UserDefinitions
     {
-        private readonly INameResolver _globalNameResolver;
-        private readonly IBinderGlue _documentBinderGlue;
-        private readonly BindingConfig _bindingConfig;
-
         /// <summary>
         /// A script containing one or more UDFs.
         /// </summary>
@@ -33,29 +29,40 @@ namespace Microsoft.PowerFx.Syntax
         private readonly Features _features;
         private static readonly ISet<string> _restrictedUDFNames = new HashSet<string> { "Type", "IsType", "AsType" };
 
-        private UserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, Features features = null)
+        private UserDefinitions(string script, ParserOptions parserOptions, Features features = null)
         {
             _features = features ?? Features.None;
-            _globalNameResolver = globalNameResolver;
-            _documentBinderGlue = documentBinderGlue;
-            _bindingConfig = bindingConfig;
             _script = script ?? throw new ArgumentNullException(nameof(script));
             _parserOptions = parserOptions;
         }
 
+        /// <summary>
+        /// Parses a script with both named formulas, user defined functions and user defined types.
+        /// </summary>
+        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
+        /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <returns><see cref="ParseUserDefinitionResult"/>.</returns>
         public static ParseUserDefinitionResult Parse(string script, ParserOptions parserOptions)
         {
             return TexlParser.ParseUserDefinitionScript(script, parserOptions);
         }
 
-        public static bool ProcessUserDefinitions(string script, INameResolver globalNameResolver, IBinderGlue documentBinderGlue, BindingConfig bindingConfig, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
+        /// <summary>
+        /// Parses and creates user definitions (named formulas, user defined functions).
+        /// </summary>
+        /// <param name="script">Script with named formulas, user defined functions and user defined types.</param>
+        /// <param name="parserOptions">Options for parsing an expression.</param>
+        /// <param name="userDefinitionResult"><see cref="UserDefinitionResult"/>.</param>
+        /// <param name="features">PowerFx feature flags.</param>
+        /// <returns>True if there are no parser errors.</returns>
+        public static bool ProcessUserDefinitions(string script, ParserOptions parserOptions, out UserDefinitionResult userDefinitionResult, Features features = null)
         {
-            var userDefinitions = new UserDefinitions(script, globalNameResolver, documentBinderGlue, bindingConfig, parserOptions, features);
+            var userDefinitions = new UserDefinitions(script, parserOptions, features);
 
-            return userDefinitions.ProcessUserDefnitions(out userDefinitionResult);
+            return userDefinitions.ProcessUserDefinitions(out userDefinitionResult);
         }
 
-        public bool ProcessUserDefnitions(out UserDefinitionResult userDefinitionResult)
+        private bool ProcessUserDefinitions(out UserDefinitionResult userDefinitionResult)
         {
             var parseResult = TexlParser.ParseUserDefinitionScript(_script, _parserOptions);
 
@@ -103,19 +110,7 @@ namespace Microsoft.PowerFx.Syntax
                 userDefinedFunctions.Add(func);
             }
 
-            BindUserDefinedFunctions(userDefinedFunctions, ReadOnlySymbolTable.NewDefault(texlFunctionSet) as INameResolver, errors);
-
             return userDefinedFunctions;
-        }
-
-        private void BindUserDefinedFunctions(IEnumerable<UserDefinedFunction> userDefinedFunctions, INameResolver functionNameResolver, List<TexlError> errors)
-        {
-            foreach (var udf in userDefinedFunctions)
-            {
-                var binding = udf.BindBody(_globalNameResolver, _documentBinderGlue, _bindingConfig, _features, functionNameResolver);
-                udf.CheckTypesOnDeclaration(binding.CheckTypesContext, actualBodyReturnType: binding.ResultType, binding.ErrorContainer);
-                errors.AddRange(binding.ErrorContainer.GetErrors());
-            }
         }
 
         private bool CheckParameters(ISet<UDFArg> args, List<TexlError> errors)
