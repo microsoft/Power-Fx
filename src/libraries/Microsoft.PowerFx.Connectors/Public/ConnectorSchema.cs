@@ -59,15 +59,16 @@ namespace Microsoft.PowerFx.Connectors
             UseHiddenTypes = useHiddenTypes;
             ConnectorType = openApiParameter.ToConnectorType(numberIsFloat: numberIsFloat);
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, numberIsFloat: numberIsFloat) ? defaultValue : null;
+
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions, numberIsFloat);
         }
 
-        internal ConnectorSchema(ConnectorSchema csi, ConnectorType cpt)
+        internal ConnectorSchema(ConnectorSchema connectorSchema, ConnectorType connectorType)
         {
-            Schema = csi.Schema;
-            DefaultValue = csi.DefaultValue;
-            ConnectorType = cpt ?? csi.ConnectorType;
-            ConnectorExtensions = csi.ConnectorExtensions;
+            Schema = connectorSchema.Schema;
+            DefaultValue = connectorSchema.DefaultValue;
+            ConnectorType = connectorType ?? connectorSchema.ConnectorType;
+            ConnectorExtensions = connectorSchema.ConnectorExtensions;
         }
     }
 }

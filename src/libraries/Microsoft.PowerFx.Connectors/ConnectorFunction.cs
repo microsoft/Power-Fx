@@ -142,10 +142,8 @@ namespace Microsoft.PowerFx.Connectors
 
         /// <summary>
         /// Connector return type of the function (contains inner "x-ms-summary" and descriptions).
-        /// </summary>        
+        /// </summary>
         internal ConnectorType ConnectorReturnType => Operation.GetConnectorReturnType(NumberIsFloat).ConnectorType;
-
-        //public object RT1 => ConnectorReturnType.
 
         /// <summary>
         /// Minimum number of arguments.
@@ -514,7 +512,6 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             FormulaValue result = await ConnectorDynamicCallAsync(cds, newParameters, context, cancellationToken).ConfigureAwait(false);
-            List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
             if (result is not StringValue sv)
             {
@@ -524,7 +521,7 @@ namespace Microsoft.PowerFx.Connectors
             JsonElement je = ExtractFromJson(sv, cds.ValuePath);
             OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return new OpenApiParameter() { Schema = schema }.ToConnectorType();
+            return new ConnectorType(schema);
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
@@ -538,7 +535,6 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             FormulaValue result = await ConnectorDynamicCallAsync(cdp, newParameters, context, cancellationToken).ConfigureAwait(false);
-            List<ConnectorSuggestion> suggestions = new List<ConnectorSuggestion>();
 
             if (result is not StringValue sv)
             {
@@ -548,7 +544,7 @@ namespace Microsoft.PowerFx.Connectors
             JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);
             OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return new OpenApiParameter() { Schema = schema }.ToConnectorType();
+            return new ConnectorType(schema);
         }
 
         private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
@@ -632,39 +628,6 @@ namespace Microsoft.PowerFx.Connectors
             return await EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction.InvokeAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
         }
 
-        // This method only returns null when an error occurs
-        // Otherwise it will return an empty array
-        private FormulaValue[] GetArguments(ConnectionDynamicApi dynamicApi, NamedValue[] knownParameters)
-        {
-            List<FormulaValue> arguments = new List<FormulaValue>();
-
-            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction;
-
-            foreach (ConnectorParameter connectorParameter in functionToBeCalled.RequiredParameters)
-            {
-                string requiredParameterName = connectorParameter.Name;
-
-                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && kvp.Key == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
-                {
-                    arguments.Add(sValue.Value);
-                    continue;
-                }
-
-                KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && dv.Reference == requiredParameterName);
-                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == dValue.Key);
-
-                if (newParam == null)
-                {
-                    // We're missing a required parameters, nothing we can do
-                    return null;
-                }
-
-                arguments.Add(newParam.Value);
-            }
-
-            return arguments.ToArray();
-        }
-
         private void EnsureInitialized()
         {
             _internals ??= Initialize();
@@ -697,6 +660,39 @@ namespace Microsoft.PowerFx.Connectors
 
             _parameterTypes = parameterTypes.ToArray();
             return _parameterTypes;
+        }
+
+        // This method only returns null when an error occurs
+        // Otherwise it will return an empty array
+        private FormulaValue[] GetArguments(ConnectionDynamicApi dynamicApi, NamedValue[] knownParameters)
+        {
+            List<FormulaValue> arguments = new List<FormulaValue>();
+
+            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction;
+
+            foreach (ConnectorParameter connectorParameter in functionToBeCalled.RequiredParameters)
+            {
+                string requiredParameterName = connectorParameter.Name;
+
+                if (dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is StaticConnectorExtensionValue && kvp.Key == requiredParameterName).Value is StaticConnectorExtensionValue sValue)
+                {
+                    arguments.Add(sValue.Value);
+                    continue;
+                }
+
+                KeyValuePair<string, IConnectorExtensionValue> dValue = dynamicApi.ParameterMap.FirstOrDefault(kvp => kvp.Value is DynamicConnectorExtensionValue dv && dv.Reference == requiredParameterName);
+                NamedValue newParam = knownParameters.FirstOrDefault(nv => nv.Name == dValue.Key);
+
+                if (newParam == null)
+                {
+                    // We're missing a required parameters, nothing we can do
+                    return null;
+                }
+
+                arguments.Add(newParam.Value);
+            }
+
+            return arguments.ToArray();
         }
 
         private ConnectorParameterInternals Initialize()
@@ -804,7 +800,7 @@ namespace Microsoft.PowerFx.Connectors
 
                                     OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = "Body", Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
                                     openApiBodyParameters.Add(bodyParameter);
-                                    ConnectorParameter bodyConnectorParameter2 = new ConnectorParameter(bodyParameter, NumberIsFloat);
+                                    ConnectorParameter bodyConnectorParameter2 = new ConnectorParameter(bodyParameter, requestBody, NumberIsFloat);
 
                                     if (bodyConnectorParameter2.HiddenRecordType != null)
                                     {
@@ -840,7 +836,6 @@ namespace Microsoft.PowerFx.Connectors
                         contentType = OpenApiExtensions.ContentType_ApplicationJson;
                         OpenApiSchema bodyParameterSchema = new OpenApiSchema() { Type = "string" };
 
-                        ConnectorExtensions bodyConnectorExtensions = new ConnectorExtensions(bodyParameterSchema, NumberIsFloat);
                         OpenApiParameter bodyParameter3 = new OpenApiParameter() { Name = bodyName, Schema = bodyParameterSchema, Description = "Body", Required = requestBody.Required };
                         openApiBodyParameters.Add(bodyParameter3);
 

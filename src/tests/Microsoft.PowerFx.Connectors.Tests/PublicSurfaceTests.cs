@@ -35,13 +35,14 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorSchema",
               "Microsoft.PowerFx.Connectors.ConnectorSettings",
               "Microsoft.PowerFx.Connectors.ConnectorType",
+              "Microsoft.PowerFx.Connectors.Constants",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
-              "Microsoft.PowerFx.Connectors.OpenApiExtensions",
-              "Microsoft.PowerFx.Connectors.OpenApiHelperFunctions",
+              "Microsoft.PowerFx.Connectors.OpenApiExtensions",              
               "Microsoft.PowerFx.Connectors.OpenApiParser",
               "Microsoft.PowerFx.Connectors.PowerFxConnectorException",
               "Microsoft.PowerFx.Connectors.PowerPlatformConnectorClient",
+              "Microsoft.PowerFx.Connectors.RuntimeConfigExtensions",
               "Microsoft.PowerFx.Connectors.RuntimeConnectorContextExtensions",
               "Microsoft.PowerFx.Connectors.Visibility"
             };

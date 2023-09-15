@@ -41,6 +41,17 @@ namespace Microsoft.PowerFx.Connectors.Tests
         }
 
         [Fact]
+        public void ACSL_GetFunctionNames22()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language v2.2.json");               
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction detectSentimentV3 = functions.First(cf => cf.Name == "DetectSentimentV3");
+
+            Assert.Equal("Documents", detectSentimentV3.OptionalParameters[0].Summary);
+            Assert.Equal("The document to analyze.", detectSentimentV3.OptionalParameters[0].Description);
+        }
+
+        [Fact]
         public void ACSL_Load()
         {
             OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language.json");

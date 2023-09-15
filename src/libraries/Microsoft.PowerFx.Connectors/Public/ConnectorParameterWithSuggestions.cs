@@ -3,57 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OpenApi.Interfaces;
-using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    /// <summary>
-    /// Represents a parameter of a connector function.
-    /// </summary>
-    public class ConnectorParameter : ConnectorSchema
-    {
-        public string Name { get; private set; }
-
-        public string Description { get; }
-
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool numberIsFloat)
-            : this(openApiParameter, null, false, numberIsFloat)
-        {
-        }
-
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, bool numberIsFloat)
-            : this(openApiParameter, null, useHiddenTypes, numberIsFloat)
-        {
-        }
-
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool numberIsFloat)
-            : this(openApiParameter, bodyExtensions, false, numberIsFloat)
-        {
-        }
-
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, bool numberIsFloat)
-            : base(openApiParameter, bodyExtensions, useHiddenTypes, numberIsFloat)
-        {
-            Name = openApiParameter.Name;
-            Description = openApiParameter.Description;
-        }
-
-        internal ConnectorParameter(ConnectorParameter cpi, ConnectorType cpt)
-            : base(cpi, cpt)
-        {
-            Name = cpi.Name;
-            Description = cpi.Description;
-        }
-
-        internal void SetName(string name)
-        {
-            Name = name;
-        }
-    }
-
     public class ConnectorParameterWithSuggestions : ConnectorParameter
     {
         /// <summary>
@@ -105,15 +59,5 @@ namespace Microsoft.PowerFx.Connectors
             bool dynamicPropertyOrSchema = (suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicProperty || suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicSchema) == true;
             return suggestions != null && connectorParameter.Name == parameterName && dynamicPropertyOrSchema ? suggestions?.ConnectorType : null;
         }
-    }
-
-    public class ConnectorParameters
-    {
-        /// <summary>
-        /// Indicates that all parameters are having a defined value and we can generate/execute an expression with this parameter set.
-        /// </summary>
-        public bool IsCompleted { get; internal set; }
-
-        public ConnectorParameterWithSuggestions[] ParametersWithSuggestions { get; internal set; }
     }
 }

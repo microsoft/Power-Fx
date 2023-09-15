@@ -11,13 +11,14 @@ using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.Connectors.Constants;
 
 namespace Microsoft.PowerFx.Connectors
 {
     // Wrapper class around FormulaType and ConnectorType
     // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
     // ConnectorType contains more details information coming from the swagger file and extensions
-    [DebuggerDisplay("{Type._type}")]
+    [DebuggerDisplay("{FormulaType._type}")]
     public class ConnectorType
     {
         // "name"
@@ -86,7 +87,7 @@ namespace Microsoft.PowerFx.Connectors
                 if (IsEnum)
                 {
                     EnumValues = schema.Enum.Select(oaa => OpenApiExtensions.TryGetOpenApiValue(oaa, out FormulaValue fv) ? fv : throw new NotSupportedException($"Invalid conversion for type {oaa.GetType().Name} in enum")).ToArray();
-                    EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue("x-ms-enum-display-name", out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
+                    EnumDisplayNames = schema.Extensions != null && schema.Extensions.TryGetValue(XMsEnumDisplayName, out IOpenApiExtension enumNames) && enumNames is OpenApiArray oaa
                                         ? oaa.Cast<OpenApiString>().Select(oas => oas.Value).ToArray()
                                         : Array.Empty<string>();
                 }
@@ -101,6 +102,11 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorType()
         {
             FormulaType = new BlankType();
+        }
+
+        internal ConnectorType(OpenApiSchema schema)
+            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType().FormulaType)
+        {
         }
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using static Microsoft.PowerFx.Connectors.Constants;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
 namespace Microsoft.PowerFx.Connectors
@@ -243,12 +244,14 @@ namespace Microsoft.PowerFx.Connectors
                 List<string> opExtensions = op.Extensions.Keys.ToList();
 
                 // https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions
-                opExtensions.Remove("x-ms-visibility");
-                opExtensions.Remove("x-ms-summary");
-                opExtensions.Remove("x-ms-explicit-input");
-                opExtensions.Remove("x-ms-dynamic-value");
-                opExtensions.Remove("x-ms-dynamic-schema");
-                opExtensions.Remove("x-ms-require-user-confirmation");
+                opExtensions.Remove(XMsVisibility);
+                opExtensions.Remove(XMsSummary);
+                opExtensions.Remove(XMsExplicitInput);
+                opExtensions.Remove(XMsDynamicValues);
+                opExtensions.Remove(XMsDynamicSchema);
+                opExtensions.Remove(XMsDynamicProperties);
+                opExtensions.Remove(XMsDynamicList);
+                opExtensions.Remove(XMsRequireUserConfirmation);
                 opExtensions.Remove("x-ms-api-annotation");
                 opExtensions.Remove("x-ms-no-generic-test");
 
@@ -256,10 +259,10 @@ namespace Microsoft.PowerFx.Connectors
                 opExtensions.Remove("x-ms-capabilities");
 
                 // https://github.com/Azure/autorest/blob/main/docs/extensions/readme.md#x-ms-pageable
-                opExtensions.Remove("x-ms-pageable");
+                opExtensions.Remove(XMsPageable);
 
                 opExtensions.Remove("x-ms-test-value");
-                opExtensions.Remove("x-ms-url-encoding");
+                opExtensions.Remove(XMsUrlEncoding);
 
                 // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
                 // Other not supported extensions:
