@@ -60,7 +60,7 @@ namespace Microsoft.PowerFx.Connectors
 
         public override bool TryGetParamDescription(string paramName, out string paramDescription)
         {
-            paramDescription = ConnectorFunction.RequiredParameters.FirstOrDefault(p => p.Name == paramName).Description ?? ConnectorFunction.OptionalParameters.FirstOrDefault(p => p.Name == paramName).Description;
+            paramDescription = ConnectorFunction.RequiredParameters.FirstOrDefault(p => p.Name == paramName)?.Description ?? ConnectorFunction.OptionalParameters.FirstOrDefault(p => p.Name == paramName)?.Description;
             return !string.IsNullOrEmpty(paramDescription);
         }
 
@@ -78,12 +78,13 @@ namespace Microsoft.PowerFx.Connectors
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (serviceProvider?.GetService(typeof(BaseRuntimeConnectorContext)) is not BaseRuntimeConnectorContext runtimeContext)
+            if (serviceProvider?.GetService(typeof(BaseRuntimeConnectorContext)) is not BaseRuntimeConnectorContext runtimeContext || argPosition >= ConnectorFunction.RequiredParameters.Length)
             {
                 return null;
             }
 
-            return await ConnectorFunction.GetConnectorSuggestionsAsync(knownParameters, argPosition, runtimeContext, cancellationToken).ConfigureAwait(false);
+            NamedValue[] namedValues = knownParameters.Select((kp, i) => new NamedValue(ConnectorFunction.RequiredParameters[i].Name, kp)).ToArray();
+            return (await ConnectorFunction.GetConnectorSuggestionsAsync(namedValues.ToArray(), ConnectorFunction.RequiredParameters[argPosition].Name, runtimeContext, cancellationToken).ConfigureAwait(false))?.ConnectorSuggestions;
         }
     }
 }
