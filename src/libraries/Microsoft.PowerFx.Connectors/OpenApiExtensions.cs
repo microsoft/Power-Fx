@@ -272,7 +272,7 @@ namespace Microsoft.PowerFx.Connectors
 
         // See https://swagger.io/docs/specification/data-models/data-types/
         // numberIsFloat = numbers are stored as C# double when set to true, otherwise they are stored as C# decimal
-        internal static ConnectorParameterType ToConnectorParameterType(this OpenApiSchema schema, Stack<string> chain = null, int level = 0, bool numberIsFloat = false)
+        internal static ConnectorParameterType ToConnectorParameterType(this OpenApiSchema schema, string name = null, bool required = false, string visibility = null, Stack<string> chain = null, int level = 0, bool numberIsFloat = false)
         {
             chain ??= new Stack<string>();
 
@@ -294,18 +294,18 @@ namespace Microsoft.PowerFx.Connectors
                     {
                         case "date":
                         case "date-time":
-                            return new ConnectorParameterType(schema, FormulaType.DateTime);
+                            return new ConnectorParameterType(schema, name, required, visibility, FormulaType.DateTime);
                         case "date-no-tz":
-                            return new ConnectorParameterType(schema, FormulaType.DateTimeNoTimeZone);
+                            return new ConnectorParameterType(schema, name, required, visibility, FormulaType.DateTimeNoTimeZone);
 
                         case "binary":
-                            return new ConnectorParameterType(schema, FormulaType.String);
+                            return new ConnectorParameterType(schema, name, required, visibility, FormulaType.String);
 
                         case "enum":
                             if (schema.Enum.All(e => e is OpenApiString))
                             {
                                 OptionSet os = new OptionSet("enum", schema.Enum.Select(e => new DName((e as OpenApiString).Value)).ToDictionary(k => k, e => e).ToImmutableDictionary());
-                                return new ConnectorParameterType(schema, os.FormulaType);
+                                return new ConnectorParameterType(schema, name, required, visibility, os.FormulaType);
                             }
                             else
                             {
@@ -313,7 +313,7 @@ namespace Microsoft.PowerFx.Connectors
                             }
 
                         default:
-                            return new ConnectorParameterType(schema, FormulaType.String);
+                            return new ConnectorParameterType(schema, name, required, visibility, FormulaType.String);
                     }
 
                 // OpenAPI spec: Format could be float, double, or not specified.
@@ -328,19 +328,19 @@ namespace Microsoft.PowerFx.Connectors
                         case "byte":
                         case "number":
                         case "int32":
-                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return numberIsFloat ? new ConnectorParameterType(schema, name, required, visibility, FormulaType.Number) : new ConnectorParameterType(schema, name, required, visibility, FormulaType.Decimal);
 
                         case null:
                         case "decimal":
                         case "currency":
-                            return new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return new ConnectorParameterType(schema, name, required, visibility, FormulaType.Decimal);
 
                         default:
                             throw new NotImplementedException($"Unsupported type of number: {schema.Format}");
                     }
 
                 // Always a boolean (Format not used)                
-                case "boolean": return new ConnectorParameterType(schema, FormulaType.Boolean);
+                case "boolean": return new ConnectorParameterType(schema, name, required, visibility, FormulaType.Boolean);
 
                 // OpenAPI spec: Format could be <null>, int32, int64
                 case "integer":
@@ -349,11 +349,11 @@ namespace Microsoft.PowerFx.Connectors
                         case null:
                         case "integer":
                         case "int32":
-                            return numberIsFloat ? new ConnectorParameterType(schema, FormulaType.Number) : new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return numberIsFloat ? new ConnectorParameterType(schema, name, required, visibility, FormulaType.Number) : new ConnectorParameterType(schema, name, required, visibility, FormulaType.Decimal);
 
                         case "int64":
                         case "unixtime":
-                            return new ConnectorParameterType(schema, FormulaType.Decimal);
+                            return new ConnectorParameterType(schema, name, required, visibility, FormulaType.Decimal);
 
                         default:
                             throw new NotImplementedException($"Unsupported type of integer: {schema.Format}");
@@ -363,7 +363,7 @@ namespace Microsoft.PowerFx.Connectors
                     if (schema.Items == null)
                     {
                         // Type of items in unknown
-                        return new ConnectorParameterType(schema, FormulaType.UntypedObject);
+                        return new ConnectorParameterType(schema, name, required, visibility, FormulaType.UntypedObject);
                     }
 
                     var innerA = GetUniqueIdentifier(schema.Items);
@@ -371,37 +371,37 @@ namespace Microsoft.PowerFx.Connectors
                     if (innerA.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerA))
                     {
                         // Here, we have a circular reference and default to a string
-                        return new ConnectorParameterType(schema, FormulaType.String);
+                        return new ConnectorParameterType(schema, name, required, visibility, FormulaType.String);
                     }
 
                     // Inheritance/Polymorphism - Can't know the exact type
                     // https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md
                     if (schema.Items.Discriminator != null)
                     {
-                        return new ConnectorParameterType(schema, FormulaType.UntypedObject);
+                        return new ConnectorParameterType(schema, name, required, visibility, FormulaType.UntypedObject);
                     }
 
                     chain.Push(innerA);
-                    ConnectorParameterType cpt = schema.Items.ToConnectorParameterType(chain, level + 1, numberIsFloat: numberIsFloat);
-                    cpt.SetProperties("Array", true, schema.Items.GetVisibility());
+                    ConnectorParameterType cpt = schema.Items.ToConnectorParameterType("Array", true, schema.Items.GetVisibility(), chain, level + 1, numberIsFloat: numberIsFloat);
+
                     chain.Pop();
 
-                    if (cpt.Type is RecordType r)
+                    if (cpt.FormulaType is RecordType recordType2)
                     {
-                        return new ConnectorParameterType(schema, r.ToTable(), cpt.ConnectorType);
+                        return new ConnectorParameterType(schema, name, required, visibility, recordType2.ToTable(), cpt.ConnectorType);
                     }
-                    else if (cpt.Type is TableType t)
+                    else if (cpt.FormulaType is TableType tableType)
                     {
                         // Array of array 
-                        TableType tt = new TableType(TableType.Empty().Add(TableValue.ValueName, t)._type);
-                        return new ConnectorParameterType(schema, tt, cpt.ConnectorType);
+                        TableType tableType2 = new TableType(TableType.Empty().Add(TableValue.ValueName, tableType)._type);
+                        return new ConnectorParameterType(schema, name, required, visibility, tableType2, cpt.ConnectorType);
                     }
-                    else if (cpt.Type is not AggregateType)
+                    else if (cpt.FormulaType is not AggregateType)
                     {
                         // Primitives get marshalled as a SingleColumn table.
                         // Make sure this is consistent with invoker. 
-                        var r2 = RecordType.Empty().Add(TableValue.ValueName, cpt.Type);
-                        return new ConnectorParameterType(schema, r2.ToTable(), cpt.ConnectorType);
+                        var recordType3 = RecordType.Empty().Add(TableValue.ValueName, cpt.FormulaType);
+                        return new ConnectorParameterType(schema, name, required, visibility, recordType3.ToTable(), cpt.ConnectorType);
                     }
                     else
                     {
@@ -415,7 +415,7 @@ namespace Microsoft.PowerFx.Connectors
                     // Key is always a string, Value is in AdditionalProperties
                     if ((schema.AdditionalProperties != null && schema.AdditionalProperties.Properties.Any()) || schema.Discriminator != null)
                     {
-                        return new ConnectorParameterType(schema, FormulaType.UntypedObject);
+                        return new ConnectorParameterType(schema, name, required, visibility, FormulaType.UntypedObject);
                     }
                     else
                     {
@@ -446,12 +446,11 @@ namespace Microsoft.PowerFx.Connectors
                             if (innerO.StartsWith("R:", StringComparison.Ordinal) && chain.Contains(innerO))
                             {
                                 // Here, we have a circular reference and default to a string                                
-                                return new ConnectorParameterType(schema, FormulaType.String, hiddenRecordType);
+                                return new ConnectorParameterType(schema, name, required, visibility, FormulaType.String, hiddenRecordType);
                             }
 
                             chain.Push(innerO);
-                            ConnectorParameterType cpt2 = kv.Value.ToConnectorParameterType(chain, level + 1, numberIsFloat: numberIsFloat);
-                            cpt2.SetProperties(propName, schema.Required.Contains(propName), kv.Value.GetVisibility());
+                            ConnectorParameterType cpt2 = kv.Value.ToConnectorParameterType(propName, schema.Required.Contains(propName), kv.Value.GetVisibility(), chain, level + 1, numberIsFloat: numberIsFloat);
                             chain.Pop();
 
                             if (cpt2.HiddenRecordType != null)
@@ -462,17 +461,17 @@ namespace Microsoft.PowerFx.Connectors
 
                             if (hiddenRequired)
                             {
-                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, cpt2.Type);
+                                hiddenRecordType = (hiddenRecordType ?? RecordType.Empty()).Add(propName, cpt2.FormulaType);
                                 hiddenConnectorTypes.Add(cpt2.ConnectorType);
                             }
                             else
                             {
-                                recordType = recordType.Add(propName, cpt2.Type);
+                                recordType = recordType.Add(propName, cpt2.FormulaType);
                                 connectorTypes.Add(cpt2.ConnectorType);
                             }
                         }
 
-                        return new ConnectorParameterType(schema, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
+                        return new ConnectorParameterType(schema, name, required, visibility, recordType, hiddenRecordType, connectorTypes.ToArray(), hiddenConnectorTypes.ToArray());
                     }
 
                 default:
@@ -500,7 +499,8 @@ namespace Microsoft.PowerFx.Connectors
             };
         }
 
-        public static ConnectorType GetConnectorReturnType(this OpenApiOperation op, bool numberIsFloat)
+        // $$$ lucgen
+        internal static ConnectorType GetConnectorReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
             (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(numberIsFloat);
             return ct?.ConnectorType;
@@ -509,7 +509,7 @@ namespace Microsoft.PowerFx.Connectors
         public static FormulaType GetReturnType(this OpenApiOperation op, bool numberIsFloat)
         {
             (ConnectorParameterType ct, string unsupportedReason) = op.GetConnectorParameterReturnType(numberIsFloat);
-            return ct?.Type ?? new BlankType();
+            return ct?.FormulaType ?? new BlankType();
         }
 
         public static bool GetRequiresUserConfirmation(this OpenApiOperation op)
@@ -532,6 +532,7 @@ namespace Microsoft.PowerFx.Connectors
 
             if (response == null || response.Content.Count == 0)
             {
+                // $$$ lucgen
                 // No return type. Void() method. 
                 return (new ConnectorParameterType(), null);
             }
@@ -550,14 +551,14 @@ namespace Microsoft.PowerFx.Connectors
                     if (openApiMediaType.Schema == null)
                     {
                         // Treat as void. 
+                        // $$$ lucgen
                         return (new ConnectorParameterType(), null);
                     }
 
                     ConnectorDynamicSchema connectorDynamicSchema = openApiMediaType.Schema.GetDynamicSchema(numberIsFloat);
                     ConnectorDynamicProperty connectorDynamicProperty = openApiMediaType.Schema.GetDynamicProperty(numberIsFloat);
 
-                    ConnectorParameterType connectorParameterType = openApiMediaType.Schema.ToConnectorParameterType(numberIsFloat: numberIsFloat);
-                    connectorParameterType.SetProperties("response", true, openApiMediaType.GetVisibility());
+                    ConnectorParameterType connectorParameterType = openApiMediaType.Schema.ToConnectorParameterType("response", true, openApiMediaType.GetVisibility(), numberIsFloat: numberIsFloat);
                     connectorParameterType.SetDynamicReturnSchemaAndProperty(connectorDynamicSchema, connectorDynamicProperty);
 
                     return (connectorParameterType, null);

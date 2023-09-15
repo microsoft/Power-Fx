@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Intellisense
     internal class ConnectorSuggestions
     {
         public IReadOnlyList<ConnectorSuggestion> Suggestions { get; }
-        
+                
         public FormulaType FormulaType { get; }
 
         internal SuggestionMethod SuggestionMethod;

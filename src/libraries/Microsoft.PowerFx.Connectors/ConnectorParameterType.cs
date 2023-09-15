@@ -13,13 +13,14 @@ namespace Microsoft.PowerFx.Connectors
     [DebuggerDisplay("{Type._type}")]
     public class ConnectorParameterType
     {
-        public FormulaType Type => ConnectorType.FormulaType;
+        public FormulaType FormulaType => ConnectorType.FormulaType;
 
-        public RecordType HiddenRecordType { get; }
+        // $$$ lucgen
+        internal ConnectorType ConnectorType { get; }
 
-        public ConnectorType ConnectorType { get; }
+        internal RecordType HiddenRecordType { get; }
 
-        public ConnectorType HiddenConnectorType { get; }
+        internal ConnectorType HiddenConnectorType { get; }
 
         public bool SupportsSuggestions => DynamicReturnSchema != null || DynamicReturnProperty != null;
 
@@ -27,53 +28,34 @@ namespace Microsoft.PowerFx.Connectors
 
         internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
 
-        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type, RecordType hiddenRecordType)            
+        internal ConnectorParameterType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType type, RecordType hiddenRecordType)
         {
             HiddenRecordType = hiddenRecordType;
-            ConnectorType = new ConnectorType(schema, type);
+            ConnectorType = new ConnectorType(schema, name, required, visibility, type);
         }
 
-        internal ConnectorParameterType(OpenApiSchema schema, FormulaType type)
-            : this(schema, type, null)
+        internal ConnectorParameterType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType type)
+            : this(schema, name, required, visibility, type, null)
         {
         }
 
         internal ConnectorParameterType()
         {
-            ConnectorType = new ConnectorType(null, new BlankType());
+            ConnectorType = new ConnectorType(null, null, false, null, new BlankType());
         }
 
-        internal ConnectorParameterType(OpenApiSchema schema, TableType tableType, ConnectorType tableConnectorType)            
+        internal ConnectorParameterType(OpenApiSchema schema, string name, bool required, string visibility, TableType tableType, ConnectorType tableConnectorType)
         {
             HiddenRecordType = null;
             HiddenConnectorType = null;
-            ConnectorType = new ConnectorType(schema, tableType, tableConnectorType);
+            ConnectorType = new ConnectorType(schema, name, required, visibility, tableType, tableConnectorType);
         }
 
-        internal ConnectorParameterType(OpenApiSchema schema, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)            
+        internal ConnectorParameterType(OpenApiSchema schema, string name, bool required, string visibility, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
         {
             HiddenRecordType = hiddenRecordType;
-            ConnectorType = new ConnectorType(schema, recordType, fields);
-            HiddenConnectorType = new ConnectorType(schema, hiddenRecordType, hiddenFields);
-        }
-
-        internal void SetProperties(OpenApiParameter param)
-        {
-            SetProperties(param.Name, param.Required, param.GetVisibility());
-        }
-
-        internal void SetProperties(string name, bool required, string visibility)
-        {
-            ConnectorType.Name = name;
-            ConnectorType.IsRequired = required;
-            ConnectorType.SetVisibility(visibility);
-
-            if (HiddenConnectorType != null)
-            {
-                HiddenConnectorType.Name = name;
-                HiddenConnectorType.IsRequired = required;
-                HiddenConnectorType.SetVisibility(visibility);
-            }
+            ConnectorType = new ConnectorType(schema, name, required, visibility, recordType, fields);
+            HiddenConnectorType = new ConnectorType(schema, name, required, visibility, hiddenRecordType, hiddenFields);
         }
 
         internal void SetDynamicReturnSchemaAndProperty(ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)

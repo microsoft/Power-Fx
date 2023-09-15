@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Types;
@@ -14,26 +15,43 @@ namespace Microsoft.PowerFx.Connectors
     /// </summary>
     public class ConnectorParameter : ConnectorSchema
     {
-        public string Name { get; internal set; }
-
-        public FormulaValue DefaultValue { get; }
+        public string Name { get; private set; }
 
         public string Description { get; }
 
-        internal ConnectorParameter(string name, string description, OpenApiSchema schema, FormulaType type, ConnectorType connectorType, ConnectorExtensions extensions, bool numberIsFloat)           
-            : base(schema, type, connectorType, extensions)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool numberIsFloat)
+            : this(openApiParameter, null, false, numberIsFloat)
         {
-            Name = name;
-            Description = description;
-            DefaultValue = schema.TryGetDefaultValue(type, out FormulaValue dv, numberIsFloat: numberIsFloat) ? dv : null;
         }
 
-        internal ConnectorParameter(ConnectorParameter cpi)
-            : base(cpi)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, bool numberIsFloat)
+            : this(openApiParameter, null, useHiddenTypes, numberIsFloat)
+        {
+        }
+
+
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool numberIsFloat)
+            : this(openApiParameter, bodyExtensions, false, numberIsFloat)
+        {
+        }
+
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, bool numberIsFloat)
+            : base(openApiParameter, bodyExtensions, useHiddenTypes, numberIsFloat)
+        {
+            Name = openApiParameter.Name;
+            Description = openApiParameter.Description;
+        }
+
+        internal ConnectorParameter(ConnectorParameter cpi, ConnectorParameterType cpt)
+            : base(cpi, cpt)
         {
             Name = cpi.Name;
-            DefaultValue = cpi.DefaultValue;
             Description = cpi.Description;
+        }
+
+        internal void SetName(string name)
+        {
+            Name = name;
         }
     }
 
@@ -43,8 +61,6 @@ namespace Microsoft.PowerFx.Connectors
         /// List of suggestions.
         /// </summary>
         public IReadOnlyList<ConnectorSuggestion> Suggestions { get; }
-        
-        public ConnectorParameterType ConnectorParameterType { get; }
 
         /// <summary>
         /// Parameter value.
@@ -62,12 +78,11 @@ namespace Microsoft.PowerFx.Connectors
         public string[] ParameterNames { get; }
 
         internal ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue value, string parameterName, ConnectorEnhancedSuggestions suggestions, NamedValue[] knownParameters)
-            : base(connectorParameter)
+            : base(connectorParameter, GetConnectorParameterType(connectorParameter, parameterName, suggestions))
         {
-            Suggestions = new List<ConnectorSuggestion>();         
+            Suggestions = new List<ConnectorSuggestion>();
             Value = value;
             Values = null;
-            ConnectorParameterType = null;
 
             bool dynamicPropertyOrSchema = (suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicProperty || suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicSchema) == true;
             bool error = suggestions == null;
@@ -78,14 +93,18 @@ namespace Microsoft.PowerFx.Connectors
                     Suggestions = suggestions.ConnectorSuggestions.Suggestions.Where(s => !knownParameters.Any(kp => kp.Name == s.DisplayName)).ToList();
                     Values = suggestions.ConnectorSuggestions.Suggestions.Join(knownParameters, (ConnectorSuggestion cs) => cs.DisplayName, (NamedValue nv) => nv.Name, (ConnectorSuggestion cs, NamedValue nv) => nv.Value).ToArray();
                     ParameterNames = suggestions.ConnectorSuggestions.Suggestions.Select(s => s.DisplayName).ToArray();
-                    FormulaType = suggestions.ConnectorSuggestions.FormulaType;
-                    ConnectorParameterType = suggestions.ConnectorParameterType;
                 }
                 else
                 {
                     Suggestions = suggestions.ConnectorSuggestions.Suggestions;
-                }   
+                }
             }
+        }
+
+        private static ConnectorParameterType GetConnectorParameterType(ConnectorParameter connectorParameter, string parameterName, ConnectorEnhancedSuggestions suggestions)
+        {
+            bool dynamicPropertyOrSchema = (suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicProperty || suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicSchema) == true;
+            return suggestions != null && connectorParameter.Name == parameterName && dynamicPropertyOrSchema ? suggestions?.ConnectorParameterType : null;
         }
     }
 

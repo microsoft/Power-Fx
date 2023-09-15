@@ -15,25 +15,19 @@ namespace Microsoft.PowerFx.Connectors
         internal bool ExplicitInput;
 
         internal ConnectorExtensions(IOpenApiExtensible extension, bool numberIsFloat)
+            : this(extension, null, numberIsFloat)
         {
-            ConnectorDynamicValue = extension.GetDynamicValue(numberIsFloat);
-            ConnectorDynamicList = extension.GetDynamicList(numberIsFloat);
-            ConnectorDynamicSchema = extension.GetDynamicSchema(numberIsFloat);
-            ConnectorDynamicProperty = extension.GetDynamicProperty(numberIsFloat);
-
-            Summary = extension.GetSummary();
-            ExplicitInput = extension.GetExplicitInput();
         }
 
-        internal ConnectorExtensions(IOpenApiExtensible body, IOpenApiExtensible extension, bool numberIsFloat)
+        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body, bool numberIsFloat)
         {
             ConnectorDynamicValue = extension.GetDynamicValue(numberIsFloat);
             ConnectorDynamicList = extension.GetDynamicList(numberIsFloat);
             ConnectorDynamicSchema = extension.GetDynamicSchema(numberIsFloat);
             ConnectorDynamicProperty = extension.GetDynamicProperty(numberIsFloat);
 
-            Summary = body.GetSummary();
-            ExplicitInput = body.GetExplicitInput();
+            Summary = (body ?? extension).GetSummary();
+            ExplicitInput = (body ?? extension).GetExplicitInput();
         }
     }
 }

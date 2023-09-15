@@ -15,7 +15,7 @@ using Microsoft.PowerFx.Types;
 namespace Microsoft.PowerFx.Connectors
 {
     [DebuggerDisplay("{Name}: {Description}")]
-    public class ConnectorType
+    internal class ConnectorType
     {
         // "name"
         public string Name { get; internal set; }
@@ -53,8 +53,11 @@ namespace Microsoft.PowerFx.Connectors
 
         public Visibility Visibility { get; internal set; }
 
-        internal ConnectorType(OpenApiSchema schema, FormulaType formulaType)            
+        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType formulaType)
         {
+            Name = name;
+            IsRequired = required;
+            Visibility = visibility.ToVisibility();
             FormulaType = formulaType;
 
             if (schema != null)
@@ -78,34 +81,19 @@ namespace Microsoft.PowerFx.Connectors
                     EnumValues = Array.Empty<FormulaValue>();
                     EnumDisplayNames = Array.Empty<string>();
                 }
-
-                IsRequired = false;
-                Name = null;
-
-                SetVisibility(schema);
             }
         }
 
-        internal ConnectorType(OpenApiSchema schema, RecordType recordType, ConnectorType[] fields)
-            : this(schema, recordType)
+        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, RecordType recordType, ConnectorType[] fields)
+            : this(schema, name, required, visibility, recordType)
         {
             Fields = fields;
         }
 
-        internal ConnectorType(OpenApiSchema schema, TableType recordType, ConnectorType field)
-            : this(schema, recordType)
+        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, TableType recordType, ConnectorType field)
+            : this(schema, name, required, visibility, recordType)
         {
             Fields = new ConnectorType[] { field };
-        }
-
-        internal void SetVisibility(OpenApiSchema schema)
-        {
-            SetVisibility(schema.GetVisibility());
-        }
-
-        internal void SetVisibility(string visibility)
-        {
-            Visibility = visibility.ToVisibility();
         }
 
         private OptionSet GetOptionSet()

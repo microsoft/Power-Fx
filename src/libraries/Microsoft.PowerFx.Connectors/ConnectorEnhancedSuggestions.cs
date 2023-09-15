@@ -6,6 +6,7 @@ using Microsoft.PowerFx.Intellisense;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    // Wraps ConnectorSuggestions (defined in PFx.Core) to add ConnectorParameterType (Pfx.Connectors only)
     public class ConnectorEnhancedSuggestions
     {
         public ConnectorParameterType ConnectorParameterType { get; }
@@ -15,7 +16,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorEnhancedSuggestions(SuggestionMethod suggestionMethod, IReadOnlyList<ConnectorSuggestion> suggestions, ConnectorParameterType connectorParameterType = null)
         {
             ConnectorParameterType = connectorParameterType;
-            ConnectorSuggestions = new ConnectorSuggestions(suggestionMethod, suggestions, connectorParameterType?.Type);
+            ConnectorSuggestions = new ConnectorSuggestions(suggestionMethod, suggestions, connectorParameterType?.FormulaType);
         }
     }
 }

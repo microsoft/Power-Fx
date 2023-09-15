@@ -35,7 +35,7 @@ namespace Microsoft.PowerFx.Connector.Tests
               "Microsoft.PowerFx.Connectors.ConnectorParameterWithSuggestions",
               "Microsoft.PowerFx.Connectors.ConnectorSchema",
               "Microsoft.PowerFx.Connectors.ConnectorSettings",
-              "Microsoft.PowerFx.Connectors.ConnectorType",
+              //"Microsoft.PowerFx.Connectors.ConnectorType",
               "Microsoft.PowerFx.Connectors.ODataParameters",
               "Microsoft.PowerFx.Connectors.ODataQueryableTableValue",
               "Microsoft.PowerFx.Connectors.OpenApiExtensions",

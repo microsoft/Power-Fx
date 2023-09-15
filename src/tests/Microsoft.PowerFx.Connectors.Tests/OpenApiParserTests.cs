@@ -704,7 +704,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 CancellationToken.None).ConfigureAwait(false);
 
             Assert.NotNull(returnType);
-            Assert.True(returnType.Type is RecordType);
+            Assert.True(returnType.FormulaType is RecordType);
 
             string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
