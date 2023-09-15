@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Web;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.Parser;
 using Microsoft.PowerFx.Core.Public;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Utils;
@@ -133,6 +136,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                             break;
                         case TextDocumentNames.RangeDocumentSemanticTokens:
                             HandleRangeDocumentSemanticTokens(id, paramsJson);
+                            break;
+                        case TextDocumentNames.DocumentFormatting:
+                            HandleDocumentFormatting(id, paramsJson);
                             break;
                         default:
                             _logger?.Invoke($"[PFX] OnDataReceived CreateErrorResult InvalidRequest (unknown method)");
@@ -474,6 +480,51 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
 
             HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.FullDocumentSemanticTokens);
+        }
+
+        private void HandleDocumentFormatting(string id, string paramsJson)
+        {
+            if (!TryParseParams(paramsJson, out DocumentFormattingParams formattingParams))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidParams));
+                return;
+            }
+
+            var documentUri = formattingParams.TextDocument.Uri;
+            var uri = new Uri(documentUri);
+            var expression = GetExpression(formattingParams, HttpUtility.ParseQueryString(uri.Query));
+
+            if (string.IsNullOrEmpty(expression))
+            {
+                _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidParams));
+                return;
+            }
+
+            var scope = _scopeFactory.GetOrCreateInstance(documentUri);
+
+            // We do not know what parser options consumer is using so allow them to return check result with configured options
+            // Should be a lightweight check result only configured with parser options
+            // do not run binding or parsing or anything as it is not need for formatting
+            var checkResult = scope.Check(expression);
+            var parserOptions = checkResult.ParserOptions;
+            var flags = parserOptions.Flags;
+            var result = expression;
+
+            if (formattingParams.Options?.RemoveFormatting ?? false)
+            {
+                result = TexlLexer.InvariantLexer.RemoveWhiteSpace(expression);
+            }
+            else
+            {
+                result = TexlParser.Format(expression, flags);
+            }
+
+            var response = new TextEdit()
+            {
+                NewText = result,
+                Range = GetRange(expression, new Span(0, expression.Length))
+            };
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, response));
         }
 
         /// <summary>

@@ -14,5 +14,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public const string CodeAction = "textDocument/codeAction";
         public const string FullDocumentSemanticTokens = "textDocument/semanticTokens/full";
         public const string RangeDocumentSemanticTokens = "textDocument/semanticTokens/range";
+        public const string DocumentFormatting = "textDocument/formatting";
     }
 }

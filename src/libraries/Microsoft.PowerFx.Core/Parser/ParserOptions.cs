@@ -70,13 +70,21 @@ namespace Microsoft.PowerFx
                 return result2;
             }
 
-            var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
-                        (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
-                        (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0);
-
+            var flags = Flags;
             var result = TexlParser.ParseScript(script, features, Culture, flags);
             result.Options = this;
             return result;
+        }
+
+        internal TexlParser.Flags Flags
+        {
+            get
+            {
+                var flags = (AllowsSideEffects ? TexlParser.Flags.EnableExpressionChaining : 0) |
+                            (NumberIsFloat ? TexlParser.Flags.NumberIsFloat : 0) |
+                            (DisableReservedKeywords ? TexlParser.Flags.DisableReservedKeywords : 0);
+                return flags;
+            }
         }
     }
 }

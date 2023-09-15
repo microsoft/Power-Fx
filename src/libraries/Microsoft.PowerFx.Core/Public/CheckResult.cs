@@ -42,6 +42,8 @@ namespace Microsoft.PowerFx
 
         private ParserOptions _parserOptions;
 
+        internal ParserOptions ParserOptions => _parserOptions;
+
         private CultureInfo _defaultErrorCulture;
 
         // We must call all Set() operations before calling Apply(). 
