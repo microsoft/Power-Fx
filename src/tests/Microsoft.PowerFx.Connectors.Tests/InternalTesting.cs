@@ -331,7 +331,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using StreamWriter writer = new StreamWriter(Path.Combine(outFolder, reportName), append: false);
 
             Dictionary<string, int> exceptionMessages = new ();
-            Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new ();            
+            Dictionary<string, IEnumerable<ConnectorFunction>> allFunctions = new ();
 
             // To create aapt and ppc folders locally, you can use NTFS junctions. Ex: mklink /J ppc <folder to PowerPlatformConnectors>
             foreach (string swaggerFile in Directory.EnumerateFiles(@$"{srcFolder}\aapt\src", "apidefinition*swagger*json", new EnumerationOptions() { RecurseSubdirectories = true })
@@ -374,7 +374,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     }
                 }
             }
-            
+
             writer.WriteLine();
             writer.WriteLine("----------");
 

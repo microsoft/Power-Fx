@@ -531,8 +531,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             if (response == null || response.Content.Count == 0)
-            {
-                // $$$ lucgen
+            {                
                 // No return type. Void() method. 
                 return (new ConnectorType(), null);
             }
@@ -550,8 +549,7 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     if (openApiMediaType.Schema == null)
                     {
-                        // Treat as void. 
-                        // $$$ lucgen
+                        // Treat as void.                         
                         return (new ConnectorType(), null);
                     }
 
