@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Регулярните изрази трябва да бъдат константни стойности.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Стойността, предадена на функцията „{0}“, не може да бъде променена.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Името на записа „{0}“ крие предварително зададеното свойство, което връща местоположението на съвпадението в регулярния израз. Обмислете дали да не го преименувате, ако искате да използвате именуваното свойство, за да извлечете позицията на пълното съвпадение в посочения текст.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Премахва цялото форматиране и връща стойност като обикновен текст.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Задаването на променлива със стойност от онлайн източник на данни (таблица или запис) може да предизвика множество заявки към сървъра. Скоро той ще бъде блокиран.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Декларацията за типа на литерала е невалидна</value>
     
   </data>
 </root>

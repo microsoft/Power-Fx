@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
@@ -42,6 +43,17 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool CanSuggestInputColumns => true;
 
+        public override bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            if (argIndex == 1)
+            {
+                type = default;
+                return false;
+            }
+
+            return base.TryGetTypeForArgSuggestionAt(argIndex, out type);
+        }
+
         public override bool ArgMatchesDatasourceType(int argNum)
         {
             return argNum >= 1;
@@ -49,7 +61,7 @@ namespace Microsoft.PowerFx.Interpreter
 
         public override bool MutatesArg0 => true;
 
-        public override bool IsLazyEvalParam(int index)
+        public override bool IsLazyEvalParam(int index, Features features)
         {
             // First argument to mutation functions is Lazy for datasources that are copy-on-write.
             // If there are any side effects in the arguments, we want those to have taken place before we make the copy.

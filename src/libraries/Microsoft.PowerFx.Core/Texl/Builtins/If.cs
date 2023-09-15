@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.Core.Texl.Builtins
             return base.GetSignatures(arity);
         }
 
-        public override bool IsLazyEvalParam(int index)
+        public override bool IsLazyEvalParam(int index, Features features)
         {
             return index >= 1;
         }

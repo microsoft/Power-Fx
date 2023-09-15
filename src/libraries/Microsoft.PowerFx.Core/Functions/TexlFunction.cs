@@ -124,14 +124,8 @@ namespace Microsoft.PowerFx.Core.Functions
         /// </summary>
         public virtual bool HasPreciseErrors => false;
 
-        // Returns true if the function is disabled for component.
-        public virtual bool DisableForComponent => false;
-
         // Returns true if the function will mutate the value of argument 0, as is the case with Patch, Collect, Remove, etc.
         public virtual bool MutatesArg0 => false;
-
-        // Returns true if the function should be suppressed in Intellisense for component.
-        public virtual bool SuppressIntellisenseForComponent => DisableForComponent;
 
         public virtual RequiredDataSourcePermissions FunctionPermission => RequiredDataSourcePermissions.None;
 
@@ -162,6 +156,27 @@ namespace Microsoft.PowerFx.Core.Functions
         // Return true if the function uses an input's column names to inform Intellisense's suggestions.
         public virtual bool CanSuggestInputColumns => false;
 
+        /// <summary>
+        /// If this returns false, the Intellisense will use Arg[0] type to suggest the type of the argument.
+        /// e.g. Collect(), Remove(), etc.
+        /// </summary>
+        /// <param name="argIndex"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public virtual bool TryGetTypeForArgSuggestionAt(int argIndex, out DType type)
+        {
+            var maxArgIndex = (ParamTypes?.Count() ?? 0) - 1;
+
+            if (argIndex >= 0 && argIndex <= maxArgIndex)
+            {
+                type = ParamTypes.ElementAt(argIndex);
+                return true;
+            }
+
+            type = default;
+            return false;
+        }
+
         // Return true if the function expects a screen's context variables to be suggested within a record argument.
         public virtual bool CanSuggestContextVariables => false;
 
@@ -179,9 +194,6 @@ namespace Microsoft.PowerFx.Core.Functions
 
         // Return true if this function can return a type with ExpandInfo.
         public virtual bool CanReturnExpandInfo => false;
-
-        // Return true if this function requires binding context info.
-        public virtual bool RequiresBindingContext => false;
 
         // Return true if this function can generate new data on its own without re-evaluating a rule.
         public virtual bool IsAutoRefreshable => false;
@@ -318,6 +330,8 @@ namespace Microsoft.PowerFx.Core.Functions
         // The function's fully qualified locale-specific name, including the namespace.
         // If the function is in the global namespace, this.QualifiedName is the same as this.Name.
         public string QualifiedName => Namespace.IsRoot ? Name : Namespace.ToDottedSyntax() + TexlLexer.PunctuatorDot + TexlLexer.EscapeName(Name);
+
+        public bool IsDeprecatedOrInternalFunction => this is IHasUnsupportedFunctions sdf && (sdf.IsDeprecated || sdf.IsInternal);
 
         public TexlFunction(
             DPath theNamespace,
@@ -543,7 +557,8 @@ namespace Microsoft.PowerFx.Core.Functions
         /// All lambda params are Lazy, but others may also be, including short-circuit booleans, conditionals, etc..
         /// </summary>
         /// <param name="index">Parameter index, 0-based.</param>
-        public virtual bool IsLazyEvalParam(int index)
+        /// <param name="features">Engine features.</param>
+        public virtual bool IsLazyEvalParam(int index, Features features)
         {
             Contracts.AssertIndexInclusive(index, MaxArity);
 

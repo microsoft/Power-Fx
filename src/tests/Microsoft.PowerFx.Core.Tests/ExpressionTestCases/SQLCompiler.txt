@@ -1,0 +1,67 @@
+// These tests originated in the SQL compiler test suite.  
+// Some of these tests will seem silly as they are testing specific SQL compiler functionality.
+// But these all pass with C# too, so moved here instead for coverage of all backends to ensure consistency.
+
+// IsError inside If
+>> If(true, IsError(1/0 + 1))
+true
+
+>> If(IsError(1/0), 1, 2)
+1
+
+>> Switch(IsError(1/0), true, 1, 2)
+1
+
+// If inside IsError
+>> IsError(If(false, 1/0, 1/0))
+true 
+
+>> IsError(If(true, 1/0, 1/0))
+true
+
+>> IsError(Switch(1, 1, 1/0, 1/0))
+true
+
+// IsError inside If inside IsError
+>> IsError(If(false, IsError(1/0), IsError(1/0)))
+false
+
+>> IsError(1/2 + 1) && IsError(1/0)
+false
+
+>> IsError(1/2 + 2)
+false
+
+>> IsError(1/0 + 1)
+true
+
+>> IfError(If(true, 1/0, 1/0), 2)
+2
+
+>> IsError(If(IfError(1/0 = 1, true), 1/0, 1/0))
+true
+
+// ensure Substitute is case sensitive
+>> Substitute("HelloHELLOhello", "he", "je")
+"HelloHELLOjello"
+
+>> Substitute("HelloHelloHello", "he", "je", 2)
+"HelloHelloHello"
+
+>> Substitute("HelloHELLOhelloHelloHELLOhello", "he", "je", 2)
+"HelloHELLOhelloHelloHELLOjello"
+
+>> Value( "1" & "2" & "3" ) * Value( "4" & "5" & "6" )
+56088
+
+>> 123 * 456
+56088
+
+>> Value( "1" & Text( Value( "3" ), "####" ) ) * -2
+-26
+
+>> Value( "1" & Text( Value( Mid( ".3.", 2, 1) ), "####" ) ) * -2
+-26
+
+>> Value( "1" & Text( Value( Upper( Mid( ".3.", 2, 1) ) ), "####" ) ) * -2
+-26

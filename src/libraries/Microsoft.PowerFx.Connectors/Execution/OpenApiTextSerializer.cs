@@ -4,7 +4,6 @@
 using System;
 using System.Globalization;
 using System.Text;
-using Microsoft.PowerFx.Functions;
 
 namespace Microsoft.PowerFx.Connectors.Execution
 {
@@ -12,8 +11,8 @@ namespace Microsoft.PowerFx.Connectors.Execution
     {
         private readonly StringBuilder _writer;
 
-        public OpenApiTextSerializer(FormattingInfo context, bool schemaLessBody)
-            : base(context, schemaLessBody)
+        public OpenApiTextSerializer(IConvertToUTC utcConverter, bool schemaLessBody)
+            : base(utcConverter, schemaLessBody)
         {
             _writer = new StringBuilder(1024);
         }

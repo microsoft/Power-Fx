@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using Microsoft.AppMagic.Authoring.Texl.Builtins;
-
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Internal class supporting "x-ms-dynamic-properties" extension.
+    /// https://learn.microsoft.com/en-us/connectors/custom-connectors/openapi-extensions#use-dynamic-schema.
+    /// </summary>
     internal class ConnectorDynamicProperty : ConnectionDynamicApi
     {
         /// <summary>

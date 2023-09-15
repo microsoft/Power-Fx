@@ -651,6 +651,41 @@ namespace Microsoft.PowerFx
 
             return _expressionAnonymous;
         }
+
+        public CheckContextSummary ApplyGetContextSummary()
+        {
+            this.ApplyBinding();
+
+            // $$$ Better check?
+            bool isV1 = this._engine.Config.Features == Features.PowerFxV1;
+            bool allowSideEffects = this.ApplyParse().Options.AllowsSideEffects;
+
+            // Should contain SymbolProperties
+            List<SymbolEntry> symbolEntries = new List<SymbolEntry>();
+
+            if (_engine.TryGetRuleScope(out var ruleScope))
+            {
+                symbolEntries.Add(new SymbolEntry
+                {
+                     Name = "ThisRecord",
+                     Type = ruleScope
+                });
+            }
+            else
+            {
+                this._allSymbols.EnumerateNames(symbolEntries, new ReadOnlySymbolTable.EnumerateNamesOptions());
+            }
+
+            var summary = new CheckContextSummary
+            {
+                AllowsSideEffects = allowSideEffects,
+                IsPreV1Semantics = isV1,
+                ExpectedReturnType = this._expectedReturnTypes?.FirstOrDefault(),
+                SuggestedSymbols = symbolEntries
+            };
+
+            return summary;
+        }
     }
 
     // Internal interface to ensure that Result objects have a common contract

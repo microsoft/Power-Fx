@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>規則運算式必須是常數值。</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>無法變更傳遞至 '{0}' 函式的值。</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>擷取名稱 '{0}' 已隱藏傳回規則運算式相符項目之位置的預先定義屬性。如果您要使用該具名屬性擷取指定文字中完全相符項目的位置，建議將它重新命名。</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>移除所有格式設定，並傳回純文字值。</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>使用線上資料來源值 (資料表或記錄) 來設定變數可能導致向伺服器提出多個要求。這很快就會被封鎖。</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>類型常值宣告無效</value>
     
   </data>
 </root>

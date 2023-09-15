@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Regulárne výrazy musia byť konštantnými hodnotami.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>Hodnotu odovzdanú funkcii {0} nemožno zmeniť.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Názov záznamu {0} skrýva preddefinovanú vlastnosť, ktorá vracia miesto, kde nastala zhoda s daným regulárnym výrazom. Zvážte jeho premenovanie, pokiaľ chcete takto nazvanú vlastnosť použiť na extrahovanie pozície úplnej zhody v zadanom texte.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Odstráni všetko formátovanie a vráti hodnotu vo formáte obyčajného textu.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Nastavenie premennej s hodnotou online zdroja údajov (tabuľky alebo záznamu) môže spôsobiť viacero požiadaviek na server. Čoskoro to bude zablokované.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Deklarácia explicitnej hodnoty premennej typu bola neplatná</value>
     
   </data>
 </root>

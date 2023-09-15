@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Normal ifadeler sabit değer olmalıdır.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>'{0}' işlevine aktarılan değer değiştirilemez.</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>Yakalama adı '{0}', normal ifade eşleşmesinin konumunu döndüren önceden tanımlanmış özelliğini gizliyor. Belirtilen metinde tam eşleşmeyi ayıklamak için bu adlandırılan özelliği kullanmak istiyorsanız yeniden adlandırmanız yararlı olabilir.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Tüm biçimlendirmeyi kaldırır ve bir düz metin değeri döndürür.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Çevrimiçi bir veri kaynağı değerine (tablo veya kayıt) değişken ayarlamak, sunucuya birden fazla istek gönderilmesine neden olabilir. Bu, yakında engellenecektir.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>Tür değişmez bildirimi geçersiz</value>
     
   </data>
 </root>

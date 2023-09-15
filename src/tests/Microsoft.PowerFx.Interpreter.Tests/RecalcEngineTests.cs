@@ -68,7 +68,7 @@ namespace Microsoft.PowerFx.Tests
 
                 // Services for functions. 
                 $"{ns}.Functions.IRandomService",
-                $"{ns}.Functions.IClockService"
+                $"{ns}.Functions.IClockService"                
             };
 
             var sb = new StringBuilder();
@@ -106,14 +106,14 @@ namespace Microsoft.PowerFx.Tests
             });
             var result = engine.Eval("With({y:2}, x+y)", context);
 
-            Assert.Equal(17.0, ((NumberValue)result).Value);
+            Assert.Equal(17m, ((DecimalValue)result).Value);
         }
 
         [Fact]
         public void EvalWithoutParse()
         {
             var engine = new RecalcEngine();
-            engine.UpdateVariable("x", 2);
+            engine.UpdateVariable("x", 2.0);
 
             var check = new CheckResult(engine)
                 .SetText("x*3")
@@ -149,11 +149,11 @@ namespace Microsoft.PowerFx.Tests
         public void BasicRecalc()
         {
             var engine = new RecalcEngine();
-            engine.UpdateVariable("A", 15);
+            engine.UpdateVariable("A", 15.0);
             engine.SetFormula("B", "A*2", OnUpdate);
             AssertUpdate("B-->30;");
 
-            engine.UpdateVariable("A", 20);
+            engine.UpdateVariable("A", 20.0);
             AssertUpdate("B-->40;");
 
             // Ensure we can update to null. 
@@ -175,6 +175,92 @@ namespace Microsoft.PowerFx.Tests
             // Ensure we can update to null. 
             engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Decimal));
             AssertUpdate("B-->0;");
+        }
+
+        [Fact]
+        public void BasicRecalcString()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", "abcdef");
+            engine.SetFormula("B", "Mid(A,3,2)", OnUpdate);
+            engine.SetFormula("C", "Len(A)", OnUpdate);
+            AssertUpdate("B-->cd;C-->6;");
+
+            engine.UpdateVariable("A", "hello");
+            AssertUpdate("B-->ll;C-->5;");
+
+            // Ensure we can update to null. 
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.String));
+            AssertUpdate("B-->;C-->0;");
+        }
+
+        [Fact]
+        public void BasicRecalcBoolean()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", true);
+            engine.SetFormula("B", "Not(A)", OnUpdate);
+            engine.SetFormula("C", "A Or false", OnUpdate);
+            AssertUpdate("B-->False;C-->True;");
+
+            engine.UpdateVariable("A", false);
+            AssertUpdate("B-->True;C-->False;");
+
+            // Ensure we can update to null.
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Boolean));
+            AssertUpdate("B-->True;C-->False;");
+        }
+
+        [Fact]
+        public void BasicRecalcGuid()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", new Guid("0f8fad5b-D9CB-469f-a165-70867728950E"));
+            engine.SetFormula("B", "A", OnUpdate);
+            AssertUpdate("B-->0f8fad5b-d9cb-469f-a165-70867728950e;");
+
+            engine.UpdateVariable("A", new Guid("f9168c5e-CEB2-4FAA-b6bf-329bf39fa1e4"));
+            AssertUpdate("B-->f9168c5e-ceb2-4faa-b6bf-329bf39fa1e4;");
+
+            // Ensure we can update to null. 
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Guid));
+            AssertUpdate("B-->;");
+        }
+
+        [Fact]
+        public void BasicRecalcDateTime()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", new DateTime(2023, 09, 06, 03, 12, 45));
+            engine.SetFormula("B", "Hour(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            engine.SetFormula("C", "Minute(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            AssertUpdate("B-->3;C-->32;");
+
+            engine.UpdateVariable("A", new DateTime(2023, 09, 06, 12, 45, 45));
+            AssertUpdate("B-->13;C-->5;");
+
+            // Ensure we can update to null. 
+            // null is treated as 0 or DateTime(1899,12,30,0,0,0,0)
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.DateTime));
+            AssertUpdate("B-->0;C-->20;");
+        }
+
+        [Fact]
+        public void BasicRecalcTime()
+        {
+            var engine = new RecalcEngine();
+            engine.UpdateVariable("A", new TimeSpan(03, 12, 45));
+            engine.SetFormula("B", "Hour(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            engine.SetFormula("C", "Minute(DateAdd(A,20,TimeUnit.Minutes))", OnUpdate);
+            AssertUpdate("B-->3;C-->32;");
+
+            engine.UpdateVariable("A", new TimeSpan(12, 45, 45));
+            AssertUpdate("B-->13;C-->5;");
+
+            // Ensure we can update to null. 
+            // null is treated as 0 or Time(0,0,0,0)
+            engine.UpdateVariable("A", FormulaValue.NewBlank(FormulaType.Time));
+            AssertUpdate("B-->0;C-->20;");
         }
 
         // depend on grand child directly 
@@ -347,10 +433,11 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
+            var errors = recalcEngine.DefineType("Person = Type({ Age: Number});", parserOptions);
 #pragma warning restore CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("getAge(p: Person): Number = p.Age;").Errors;
-            Assert.False(enumberable.Any());
+            Assert.Empty(errors);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("getAge(p: Person): Number = p.Age;").Errors;
+            Assert.False(enumerable.Any());
             Assert.Equal(1.0, recalcEngine.Eval("getAge({Age: Float(1)})").ToObject());
         }
 
@@ -364,11 +451,48 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
+            var errors = recalcEngine.DefineType("Complex = Type({ A: {B: Number}});", parserOptions);
 #pragma warning restore CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: Complex): Number = p.A.B;").Errors;
-            Assert.False(enumberable.Any());
+            Assert.Empty(errors);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = p.A.B;").Errors;
+            Assert.False(enumerable.Any());
             Assert.Equal(1.0, recalcEngine.Eval("foo({A: {B: Float(1.0)}})").ToObject());
+        }
+
+        [Fact]
+        public void DefTableType()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618
+            var errors = recalcEngine.DefineType("People = Type([{Age: Number}]);", parserOptions);
+#pragma warning restore CS0618
+            Assert.Empty(errors);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age < 18)));").Errors;
+            Assert.False(enumerable.Any());
+            Assert.Equal(2.0, recalcEngine.Eval("countMinors([{Age: Float(1)}, {Age: Float(18)}, { Age: Float(4) }])").ToObject());
+        }
+
+        [Fact]
+        public void DefComplexTableType()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618
+            var errors = recalcEngine.DefineType("A = Type({A: Number}); People = Type([{Age: A}]);", parserOptions);
+#pragma warning restore CS0618
+            Assert.Empty(errors);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("countMinors(p: People): Number = Float(CountRows(Filter(p, Age.A < 18)));").Errors;
+            Assert.False(enumerable.Any());
+            Assert.Equal(2.0, recalcEngine.Eval("countMinors([{Age: {A: Float(1)}}, {Age: {A: Float(18)}}, { Age: {A: Float(4)} }])").ToObject());
         }
 
         [Fact]
@@ -381,10 +505,11 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
+            var errors = recalcEngine.DefineType("Complex = Type({ A: Number });", parserOptions);
 #pragma warning restore CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: Complex): Number = Float(1.0);").Errors;
-            Assert.False(enumberable.Any());
+            Assert.Empty(errors);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: Complex): Number = Float(1.0);").Errors;
+            Assert.False(enumerable.Any());
             Assert.Throws<System.AggregateException>(() => recalcEngine.Eval("foo({A: \"hi\"})"));
         }
 
@@ -398,11 +523,30 @@ namespace Microsoft.PowerFx.Tests
                 AllowsSideEffects = false,
             };
 #pragma warning disable CS0618 // Type or member is obsolete
-            recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions);
+            var errors = recalcEngine.DefineType("A = Type({ num: Number}); B = Type({ a: A}); C = Type({ b: B, a: A});", parserOptions);
 #pragma warning restore CS0618 // Type or member is obsolete
-            IEnumerable<ExpressionError> enumberable = recalcEngine.DefineFunctions("foo(p: C): Number = p.b.a.num + p.a.num;").Errors;
-            Assert.False(enumberable.Any());
+            Assert.Empty(errors);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("foo(p: C): Number = p.b.a.num + p.a.num;").Errors;
+            Assert.False(enumerable.Any());
             Assert.Equal(1.5, recalcEngine.Eval("foo({b: {a: {num: Float(0.5)}}, a: {num: Float(1.0)}})").ToObject());
+        }
+
+        [Fact]
+        public void TypeAlias()
+        {
+            var config = new PowerFxConfig();
+            var recalcEngine = new RecalcEngine(config);
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false,
+            };
+#pragma warning disable CS0618 // Type or member is obsolete
+            var errors = recalcEngine.DefineType("Weight = Type(Number);", parserOptions);
+#pragma warning restore CS0618 // Type or member is obsolete
+            Assert.Empty(errors);
+            IEnumerable<ExpressionError> enumerable = recalcEngine.DefineFunctions("over50Pounds(weight: Weight): Boolean = weight > 50;").Errors;
+            Assert.False(enumerable.Any());
+            Assert.Equal(true, recalcEngine.Eval("over50Pounds(Float(51.0))").ToObject());
         }
 
         [Fact]
@@ -581,6 +725,24 @@ namespace Microsoft.PowerFx.Tests
 
             engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
                 new NamedValue("F1", FormulaValue.NewBlank(FormulaType.Number)),
+                new NamedValue("F2", FormulaValue.New(6.0))));
+
+            engine.SetFormula("A", "R.F2 + 3 + R.F1", OnUpdate);
+            AssertUpdate("A-->9;");
+
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
+                new NamedValue("F1", FormulaValue.New(2.0)),
+                new NamedValue("F2", FormulaValue.New(7.0))));
+            AssertUpdate("A-->12;");
+        }
+
+        [Fact]
+        public void ChangeRecord_Decimal()
+        {
+            var engine = new RecalcEngine();
+
+            engine.UpdateVariable("R", FormulaValue.NewRecordFromFields(
+                new NamedValue("F1", FormulaValue.NewBlank(FormulaType.Decimal)),
                 new NamedValue("F2", FormulaValue.New(6))));
 
             engine.SetFormula("A", "R.F2 + 3 + R.F1", OnUpdate);
@@ -757,7 +919,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Test evaluation of parsed expression
             var recordValue = FormulaValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(5)));
+                new NamedValue("x", FormulaValue.New(5.0)));
             var formulaValue = result.GetEvaluator().Eval(recordValue);
             Assert.Equal(11.0, (double)formulaValue.ToObject());
         }
@@ -780,7 +942,7 @@ namespace Microsoft.PowerFx.Tests
 
             // Test evaluation of parsed expression
             var recordValue = FormulaValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(5)));
+                new NamedValue("x", FormulaValue.New(5.0)));
 
             var formulaValue = result.GetEvaluator().Eval(recordValue);
 
@@ -1186,7 +1348,7 @@ namespace Microsoft.PowerFx.Tests
 
             var eval = result.GetEvaluator();
             var symValues = symTable.CreateValues();
-            symValues.Set(slot, FormulaValue.New(10));
+            symValues.Set(slot, FormulaValue.New(10.0));
 
             var result1 = await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false);
             Assert.Equal(11.0, result1.ToObject());
@@ -1203,7 +1365,7 @@ namespace Microsoft.PowerFx.Tests
             // Even re-adding with same type still fails. 
             // (somebody could have re-added with a different type)
             var slot2 = symTable.AddVariable("x", FormulaType.Number, null);
-            symValues.Set(slot2, FormulaValue.New(20));
+            symValues.Set(slot2, FormulaValue.New(20.0));
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await eval.EvalAsync(CancellationToken.None, symValues).ConfigureAwait(false)).ConfigureAwait(false);
         }
@@ -1222,15 +1384,15 @@ namespace Microsoft.PowerFx.Tests
             var eval = result.GetEvaluator();
 
             var recordXY = RecordValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(10)),
-                new NamedValue("y", FormulaValue.New(100)));
+                new NamedValue("x", FormulaValue.New(10.0)),
+                new NamedValue("y", FormulaValue.New(100.0)));
 
             var result2 = eval.Eval(recordXY);
             Assert.Equal(110.0, result2.ToObject());
 
             // Missing y , treated as blank (0)
             var recordX = RecordValue.NewRecordFromFields(
-                new NamedValue("x", FormulaValue.New(10)));
+                new NamedValue("x", FormulaValue.New(10.0)));
             result2 = eval.Eval(recordX);
             Assert.Equal(10.0, result2.ToObject());
         }
@@ -1298,7 +1460,7 @@ namespace Microsoft.PowerFx.Tests
             var config = new PowerFxConfig();
 
             var engine = new RecalcEngine(config);
-            engine.UpdateVariable("A", FormulaValue.New(0));
+            engine.UpdateVariable("A", FormulaValue.New(0.0));
 
             Assert.True(engine.TryGetVariableType("A", out var type));
             Assert.Equal(FormulaType.Number, type);

@@ -34,6 +34,8 @@ namespace Microsoft.PowerFx
 
         private readonly bool _isBehavior;
 
+        public override bool CanSuggestInputColumns => true;
+
         public CustomTexlFunction(string name, FunctionCategories functionCategory, FormulaType returnType, string[] argNames, params FormulaType[] paramTypes)
             : this(name, functionCategory, returnType._type, argNames, Array.ConvertAll(paramTypes, x => x._type))
         {
@@ -56,7 +58,7 @@ namespace Microsoft.PowerFx
             return _impl(serviceProvider, args, cancellationToken);
         }
 
-        public override bool IsLazyEvalParam(int index)
+        public override bool IsLazyEvalParam(int index, Features features)
         {
             return LamdaParamMask.TestBit(index);
         }

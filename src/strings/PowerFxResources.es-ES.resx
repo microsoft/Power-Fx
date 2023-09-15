@@ -4993,7 +4993,7 @@
   </data>
   <data name="ErrorResource_ErrVariableRegEx_ShortMessage" xml:space="preserve">
     <value>Las expresiones regulares deben ser valores constantes.</value>
-        
+    
   </data>
   <data name="ErrorResource_MutationFunctionCannotBeUsedWithImmutableValue" xml:space="preserve">
     <value>No se puede cambiar el valor pasado a la función "{0}".</value>
@@ -5009,7 +5009,7 @@
   </data>
   <data name="InfoRegExCaptureNameHidesPredefinedStartMatchField" xml:space="preserve">
     <value>El nombre de la captura "{0}" oculta la propiedad predefinida que devuelve la ubicación de la coincidencia de la expresión regular. Considere la posibilidad de cambiarle el nombre si quiere utilizar esa propiedad con nombre para extraer la posición de la coincidencia completa en el texto especificado.</value>
-      
+    
   </data>
   <data name="AboutPlainText" xml:space="preserve">
     <value>Quita el formato y devuelve un valor de texto sin formato.</value>
@@ -5042,6 +5042,10 @@
   </data>
   <data name="WrnSetExpandableType" xml:space="preserve">
     <value>Establecer una variable con un valor de origen de datos en línea (tabla o registro) puede provocar varias solicitudes al servidor. Pronto se bloqueará.</value>
+    
+  </data>
+  <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
+    <value>La declaración literal de tipo no fue válida</value>
     
   </data>
 </root>

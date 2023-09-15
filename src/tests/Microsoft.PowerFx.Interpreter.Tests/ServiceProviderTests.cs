@@ -2,8 +2,6 @@
 // Licensed under the MIT license.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,12 +34,9 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         [Fact]
         public void ServiceChaining()
         {
-            var service1 = new MyService();
-            var r1 = new BasicServiceProvider();
+            var service1 = new MyService();            
             var otherService = new OtherService();
-
-            r1.AddService(service1);
-            r1.AddService(otherService);
+            var r1 = new BasicServiceProvider().AddService(service1).AddService(otherService);
 
             // Lookup succeeds
             var lookup = r1.GetService(typeof(MyService));
@@ -121,9 +116,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         public void Derived()
         {
             var derivedService = new MyService();
-            var r1 = new BasicServiceProvider();
-
-            r1.AddService(derivedService);
+            var r1 = new BasicServiceProvider().AddService(derivedService);
 
             // Lookup must be exact type; doesn't lookup by base class.
             var lookup = r1.GetService(typeof(BaseService));
@@ -162,7 +155,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             if (expected != null)
             {
                 var runtimeConfig = new RuntimeConfig();
-                runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21 });
+                runtimeConfig.AddService<User>(new User() { Name = "test", Age = 21.0 });
 
                 var res = await check.GetEvaluator().EvalAsync(CancellationToken.None, runtimeConfig).ConfigureAwait(false);
             
@@ -238,7 +231,7 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         {
             public string Name { get; set; }
             
-            public int Age { get; set; }
+            public double Age { get; set; }
         }
     }
 }

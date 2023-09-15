@@ -1,38 +1,45 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Xml.Linq;
+using System;
 
 namespace Microsoft.PowerFx.Connectors
 {
+    /// <summary>
+    /// Settings for a connector.
+    /// </summary>
     public class ConnectorSettings 
-    {
-        public ICachingHttpClient Cache { get; set; } = null;
-
-        public bool NumberIsFloat { get; set; } = false;
-
-        public int MaxRows { get; set; } = 1000;
-
-        public bool IgnoreUnknownExtensions { get; set; } = false;
-
-        public bool ThrowOnError { get; set; } = true;
-
-        public bool ReturnRawResult { get; set; } = false;
-
-        public string Namespace { get; set; } = null;
-
-        public ConnectorSettings Clone(string @namespace = null, bool? throwOnError = null, bool? returnRawResult = null)
+    {        
+        public ConnectorSettings(string @namespace)
         {
-            return new ConnectorSettings()
-            {
-                Cache = Cache,
-                NumberIsFloat = NumberIsFloat,
-                MaxRows = MaxRows,
-                IgnoreUnknownExtensions = IgnoreUnknownExtensions,
-                ThrowOnError = throwOnError ?? ThrowOnError,
-                ReturnRawResult = returnRawResult ?? ReturnRawResult,
-                Namespace = @namespace ?? Namespace
-            };
+            Namespace = @namespace;
         }
+
+        /// <summary>
+        /// Namespace of the connector.
+        /// </summary>
+        public string Namespace { get; }
+
+        /// <summary>
+        /// NumberIsFloat.
+        /// </summary>
+        [Obsolete("This shouldn't be used anymore.")]
+        public bool NumberIsFloat { get; init; } = false;
+
+        /// <summary>
+        /// Maximum number of rows to return, per page.
+        /// </summary>
+        public int MaxRows { get; init; } = 1000;
+
+        /// <summary>
+        /// Unknown extensions in swagger file will be ignored during the validation process.
+        /// </summary>
+        public bool IgnoreUnknownExtensions { get; init; } = false;
+
+        /// <summary>
+        /// Allow using functions that are identified as unsupported.
+        /// NotSupportedReason property will still be specified.
+        /// </summary>
+        public bool AllowUnsupportedFunctions { get; init; } = false;            
     }
 }

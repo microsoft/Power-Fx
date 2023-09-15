@@ -7,8 +7,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Errors;
 using Microsoft.PowerFx.Core.Parser;
@@ -56,6 +56,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// This should be used for logging purposes. 
         /// </summary>
         public event OnLogUnhandledExceptionHandler LogUnhandledExceptionHandler;
+
+        /// <summary>
+        /// If set, provides the handler for $/nlSuggestion message.
+        /// </summary>
+        public NLHandler NL2FxImplementation { get; set; }
 
         public LanguageServer(SendToClient sendToClient, IPowerFxScopeFactory scopeFactory, Action<string> logger = null)
         {
@@ -131,6 +136,17 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case CustomProtocolNames.CommandExecuted:
                             HandleCommandExecutedRequest(id, paramsJson);
                             break;
+
+                        case CustomProtocolNames.GetCapabilities:
+                            new GetCapabilitiesHandler(this).Handle(id, paramsJson);
+                            break;
+                        case CustomProtocolNames.NL2FX:
+                            new NL2FxHandler(this).Handle(id, paramsJson);
+                            break;
+                        case CustomProtocolNames.FX2NL:
+                            new Fx2NLHandler(this).Handle(id, paramsJson);
+                            break;
+
                         case TextDocumentNames.FullDocumentSemanticTokens:
                             HandleFullDocumentSemanticTokens(id, paramsJson);
                             break;
@@ -392,6 +408,125 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 Uri = documentUri,
                 Text = expression
             }));
+        }
+
+        // Base class handler for LSP commands. PArse message, dispatch, and handle error cases.
+        private abstract class LSPHandler<TReq, TResp>
+            where TReq : IHasTextDocument
+        {
+            protected readonly LanguageServer _parent;
+
+            public LSPHandler(LanguageServer parent)
+            {
+                this._parent = parent;
+            }
+
+            public void Handle(string id, string paramsJson)
+            {
+                _parent._logger?.Invoke($"[PFX] HandleGetCapabilities: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+                if (id == null)
+                {
+                    _parent._sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
+                    return;
+                }
+
+                Contracts.AssertValue(id);
+                Contracts.AssertValue(paramsJson);
+
+                if (!_parent.TryParseParams(paramsJson, out TReq request))
+                {
+                    _parent._sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.ParseError));
+                    return;
+                }
+
+                var documentUri = request.TextDocument.Uri;
+                var scope = _parent._scopeFactory.GetOrCreateInstance(documentUri);
+
+                TResp result = this.Handle(scope, request);
+                                
+                _parent._sendToClient(JsonRpcHelper.CreateSuccessResult(id, result));
+            }
+
+            protected abstract TResp Handle(IPowerFxScope scope, TReq req);            
+        }
+
+        private class GetCapabilitiesHandler : LSPHandler<CustomGetCapabilitiesParams, CustomGetCapabilitiesResult>
+        {
+            public GetCapabilitiesHandler(LanguageServer parent)
+                : base(parent)
+            {
+            }
+
+            protected override CustomGetCapabilitiesResult Handle(IPowerFxScope scope, CustomGetCapabilitiesParams req)
+            {
+                var result = new CustomGetCapabilitiesResult();
+
+                var nl = _parent.NL2FxImplementation;
+                if (nl != null)
+                {
+                    result.SupportsNL2Fx = nl.SupportsNL2Fx;
+                    result.SupportsFx2NL = nl.SupportsFx2NL;
+                }
+
+                return result;
+            }
+        }
+
+        private class NL2FxHandler : LSPHandler<CustomNL2FxParams, CustomNL2FxResult>
+        {
+            public NL2FxHandler(LanguageServer parent)
+                : base(parent)
+            {
+            }
+
+            protected override CustomNL2FxResult Handle(IPowerFxScope scope, CustomNL2FxParams request)
+            {
+                var nl = _parent.NL2FxImplementation;
+                if (nl == null || !nl.SupportsNL2Fx)
+                {
+                    throw new NotSupportedException($"NL2Fx not enabled");
+                }
+
+                var check = scope.Check("1"); // just need to get the symbols 
+                var summary = check.ApplyGetContextSummary();
+
+                var req = new NL2FxParameters
+                {
+                    Sentence = request.Sentence,
+                    SymbolSummary = summary
+                };
+
+                CancellationToken cancel = default;
+                var result = _parent.NL2FxImplementation.NL2FxAsync(req, cancel)
+                    .ConfigureAwait(false).GetAwaiter().GetResult();
+
+                return result;
+            }
+        }
+
+        private class Fx2NLHandler : LSPHandler<CustomFx2NLParams, CustomFx2NLResult>
+        {
+            public Fx2NLHandler(LanguageServer parent)
+            : base(parent)
+            {
+            }
+
+            protected override CustomFx2NLResult Handle(IPowerFxScope scope, CustomFx2NLParams request)
+            {
+                var nl = _parent.NL2FxImplementation;
+                if (nl == null || !nl.SupportsFx2NL)
+                {
+                    throw new NotSupportedException($"NL2Fx not enabled");
+                }
+
+                var check = scope.Check(request.Expression);
+
+                CancellationToken cancel = default;
+                var result = nl.Fx2NLAsync(check, cancel)
+                    .ConfigureAwait(false).GetAwaiter().GetResult();
+                return result;
+            }
         }
 
         private void HandleCodeActionRequest(string id, string paramsJson)
