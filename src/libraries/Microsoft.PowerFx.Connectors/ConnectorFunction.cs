@@ -798,7 +798,7 @@ namespace Microsoft.PowerFx.Connectors
                                         }
                                     }
 
-                                    OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = "Body", Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
+                                    OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = requestBody.Description, Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
                                     openApiBodyParameters.Add(bodyParameter);
                                     ConnectorParameter bodyConnectorParameter2 = new ConnectorParameter(bodyParameter, requestBody, NumberIsFloat);
 
@@ -815,7 +815,7 @@ namespace Microsoft.PowerFx.Connectors
                             {
                                 schemaLessBody = true;
 
-                                OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = "Body", Required = requestBody.Required, Extensions = bodySchema.Extensions };
+                                OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = requestBody.Description, Required = requestBody.Required, Extensions = bodySchema.Extensions };
                                 openApiBodyParameters.Add(bodyParameter2);
 
                                 ConnectorParameter bodyConnectorParameter3 = new ConnectorParameter(bodyParameter2, requestBody, NumberIsFloat);

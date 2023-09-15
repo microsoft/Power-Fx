@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("procedure", parameters[2].Name);
             Assert.Equal(FormulaType.String, parameters[2].FormulaType);
 
-            Assert.Equal("Body", parameters[3].Description);
+            Assert.Equal("Input parameters to the stored procedure", parameters[3].Description);
             Assert.Equal("Parameters list", parameters[3].Summary);
             Assert.Equal("parameters", parameters[3].Name);
             Assert.Equal(paramaterTypeDetermined ? @"![p1:w, p2:s]" : @"![]", parameters[3].FormulaType.ToStringWithDisplayNames());

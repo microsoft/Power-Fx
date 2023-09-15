@@ -15,6 +15,8 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Description { get; }
 
+        internal bool IsBodyParameter = false;
+
         internal ConnectorParameter(OpenApiParameter openApiParameter, bool numberIsFloat)
             : this(openApiParameter, null, false, numberIsFloat)
         {
@@ -28,6 +30,7 @@ namespace Microsoft.PowerFx.Connectors
         internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool numberIsFloat)
             : this(openApiParameter, bodyExtensions, false, numberIsFloat)
         {
+            IsBodyParameter = true;
         }
 
         internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, bool numberIsFloat)

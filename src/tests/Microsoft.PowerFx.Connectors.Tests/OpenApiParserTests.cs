@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             ConnectorFunction detectSentimentV3 = functions.First(cf => cf.Name == "DetectSentimentV3");
 
             Assert.Equal("Documents", detectSentimentV3.OptionalParameters[0].Summary);
-            Assert.Equal("The document to analyze.", detectSentimentV3.OptionalParameters[0].Description);
+            Assert.Equal("The documents to analyze.", detectSentimentV3.OptionalParameters[0].Description);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // -- Parameter 1 --
             Assert.Equal("analysisInput", function.RequiredParameters[0].Name);
             Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].FormulaType);
-            Assert.Equal("Body", function.RequiredParameters[0].Description);
+            Assert.Equal("A single conversational task to execute.", function.RequiredParameters[0].Description);
             Assert.Null(function.RequiredParameters[0].DefaultValue);
             Assert.NotNull(function.RequiredParameters[0].ConnectorType);
             Assert.Equal("analysisInput", function.RequiredParameters[0].ConnectorType.Name);
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // -- Parameter 2 --
             Assert.Equal("parameters", function.RequiredParameters[1].Name);
             Assert.Equal(parametersRecordType, function.RequiredParameters[1].FormulaType);
-            Assert.Equal("Body", function.RequiredParameters[1].Description);
+            Assert.Equal("A single conversational task to execute.", function.RequiredParameters[1].Description);
             Assert.Null(function.RequiredParameters[1].DefaultValue);
 
             RecordType analysisInputRecordTypeH = Extensions.MakeRecordType(
@@ -122,13 +122,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // -- Hidden Required Parameter 2 --
             Assert.Equal("kind", function.HiddenRequiredParameters[1].Name);
             Assert.Equal(FormulaType.String, function.HiddenRequiredParameters[1].FormulaType);
-            Assert.Equal("Body", function.HiddenRequiredParameters[1].Description);
+            Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[1].Description);
             Assert.Equal("Conversation", function.HiddenRequiredParameters[1].DefaultValue.ToObject());
 
             // -- Hidden Required Parameter 3 --
             Assert.Equal("analysisInput", function.HiddenRequiredParameters[2].Name);
             Assert.Equal(analysisInputRecordTypeH, function.HiddenRequiredParameters[2].FormulaType);
-            Assert.Equal("Body", function.HiddenRequiredParameters[2].Description);
+            Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[2].Description);
             Assert.Equal(@"{""conversationItem"":{""id"":""0"",""participantId"":""0""}}", System.Text.Json.JsonSerializer.Serialize(function.HiddenRequiredParameters[2].DefaultValue.ToObject()));
 
             Assert.Equal(2, function.ArityMin);
