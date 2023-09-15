@@ -322,6 +322,20 @@ namespace Microsoft.PowerFx.Types
             sb.Append("}");
         }
 
+        [Obsolete("This will be removed in afuture version.")]
+        protected string ToExpressionField(string tableFieldName)
+        {
+            var fieldName = IdentToken.MakeValidIdentifier(tableFieldName);
+
+            if ((TexlLexer.IsKeyword(fieldName, out _) || TexlLexer.IsReservedKeyword(fieldName)) &&
+                !fieldName.StartsWith("'", StringComparison.Ordinal) && !fieldName.EndsWith("'", StringComparison.Ordinal))
+            {
+                fieldName = $"'{fieldName}'";
+            }
+
+            return fieldName;
+        }
+
         /// <summary>
         /// It is assumed that all records can be copied to an InMemoryRecordValue during a mutation copy-on-write.
         /// This is possible for records, which will have a finite number of fields, but not for tables
