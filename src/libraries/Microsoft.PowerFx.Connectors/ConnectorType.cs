@@ -14,8 +14,11 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
-    [DebuggerDisplay("{Name}: {Description}")]
-    internal class ConnectorType
+    // Wrapper class around FormulaType and ConnectorType
+    // FormulaType is used to represent the type of the parameter in the Power Fx expression as used in Power Apps
+    // ConnectorType contains more details information coming from the swagger file and extensions
+    [DebuggerDisplay("{Type._type}")]
+    public class ConnectorType
     {
         // "name"
         public string Name { get; internal set; }
@@ -31,6 +34,8 @@ namespace Microsoft.PowerFx.Connectors
 
         // Only used for RecordType and TableType
         public ConnectorType[] Fields { get; }
+
+        public ConnectorType[] HiddenFields { get; }
 
         // FormulaType
         public FormulaType FormulaType { get; }
@@ -53,12 +58,22 @@ namespace Microsoft.PowerFx.Connectors
 
         public Visibility Visibility { get; internal set; }
 
-        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType formulaType)
+        internal RecordType HiddenRecordType { get; }
+
+        public bool SupportsSuggestions => DynamicReturnSchema != null || DynamicReturnProperty != null;
+
+        internal ConnectorDynamicSchema DynamicReturnSchema { get; private set; }
+
+        internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
+
+        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType formulaType, RecordType hiddenRecordType)
         {
+
             Name = name;
             IsRequired = required;
             Visibility = visibility.ToVisibility();
             FormulaType = formulaType;
+            HiddenRecordType = hiddenRecordType;
 
             if (schema != null)
             {
@@ -84,16 +99,36 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, RecordType recordType, ConnectorType[] fields)
-            : this(schema, name, required, visibility, recordType)
+        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, FormulaType formulaType)
+            : this(schema, name, required, visibility, formulaType, null)
         {
-            Fields = fields;
         }
 
-        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, TableType recordType, ConnectorType field)
+        internal ConnectorType()
+        {
+            FormulaType = new BlankType();
+        }
+
+        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, TableType tableType, ConnectorType tableConnectorType)
+            : this(schema, name, required, visibility, tableType)
+        {
+            HiddenRecordType = null;            
+            Fields = new ConnectorType[] { tableConnectorType };            
+        }
+
+        internal ConnectorType(OpenApiSchema schema, string name, bool required, string visibility, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
             : this(schema, name, required, visibility, recordType)
         {
-            Fields = new ConnectorType[] { field };
+            HiddenRecordType = hiddenRecordType;
+
+            Fields = fields;
+            HiddenFields = hiddenFields;
+        }
+
+        internal void SetDynamicReturnSchemaAndProperty(ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
+        {
+            DynamicReturnSchema = dynamicSchema;
+            DynamicReturnProperty = dynamicProperty;
         }
 
         private OptionSet GetOptionSet()

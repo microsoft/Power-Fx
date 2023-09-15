@@ -237,7 +237,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             cParameters = await getWithDynamicValuesMultipleDynamic.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("Date|Index|Summary|SummaryEnum|TemperatureC|TemperatureF", string.Join("|", cParameters.ParametersWithSuggestions[3].Suggestions.Select(s => s.DisplayName)));
             Assert.Equal("![Date:d, Index:w, Summary:s, SummaryEnum:w, TemperatureC:w, TemperatureF:w]", cParameters.ParametersWithSuggestions[3].FormulaType.ToStringWithDisplayNames());
-            Assert.Equal(Visibility.Important, cParameters.ParametersWithSuggestions[3].ConnectorParameterType.ConnectorType.Fields[4].Visibility);
+            Assert.Equal(Visibility.Important, cParameters.ParametersWithSuggestions[3].ConnectorType.Fields[4].Visibility);
         }
 
         [SkippableFact]

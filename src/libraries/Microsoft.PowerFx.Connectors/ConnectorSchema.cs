@@ -9,7 +9,7 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class ConnectorSchema
     {
-        public ConnectorParameterType ConnectorParameterType { get; }
+        public ConnectorType ConnectorType { get; }
 
         public FormulaValue DefaultValue { get; }
 
@@ -21,14 +21,9 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Title => Schema.Title;
 
-        public FormulaType FormulaType => UseHiddenTypes ? ConnectorParameterType.HiddenRecordType : ConnectorParameterType.FormulaType;
-
-        // $$$ lucgen
-        internal ConnectorType ConnectorType => UseHiddenTypes ? ConnectorParameterType.HiddenConnectorType : ConnectorParameterType.ConnectorType;
-
-        internal RecordType HiddenRecordType => ConnectorParameterType.HiddenRecordType;
-
-        internal ConnectorType HiddenConnectorType => ConnectorParameterType.HiddenConnectorType;
+        public FormulaType FormulaType => UseHiddenTypes ? ConnectorType.HiddenRecordType : ConnectorType.FormulaType;
+       
+        internal RecordType HiddenRecordType => ConnectorType.HiddenRecordType;
 
         /// <summary>
         /// "x-ms-dynamic-values".
@@ -50,7 +45,7 @@ namespace Microsoft.PowerFx.Connectors
         /// </summary>
         internal ConnectorDynamicProperty DynamicProperty => ConnectorExtensions.ConnectorDynamicProperty;
 
-        public string Summary => ConnectorExtensions.Summary;
+        public string Summary => ConnectorExtensions.Summary;        
 
         public bool SupportsDynamicValuesOrList => DynamicValue != null || DynamicList != null;
 
@@ -62,16 +57,16 @@ namespace Microsoft.PowerFx.Connectors
         {
             Schema = openApiParameter.Schema;
             UseHiddenTypes = useHiddenTypes;
-            ConnectorParameterType = openApiParameter.Schema.ToConnectorParameterType(openApiParameter.Name, openApiParameter.Required, openApiParameter.GetVisibility(), numberIsFloat: numberIsFloat);
+            ConnectorType = openApiParameter.Schema.ToConnectorType(openApiParameter.Name, openApiParameter.Required, openApiParameter.GetVisibility(), numberIsFloat: numberIsFloat);
             DefaultValue = openApiParameter.Schema.TryGetDefaultValue(FormulaType, out FormulaValue defaultValue, numberIsFloat: numberIsFloat) ? defaultValue : null;
             ConnectorExtensions = new ConnectorExtensions(openApiParameter, bodyExtensions, numberIsFloat);
         }
 
-        internal ConnectorSchema(ConnectorSchema csi, ConnectorParameterType cpt)
+        internal ConnectorSchema(ConnectorSchema csi, ConnectorType cpt)
         {
             Schema = csi.Schema;
             DefaultValue = csi.DefaultValue;
-            ConnectorParameterType = cpt ?? csi.ConnectorParameterType;
+            ConnectorType = cpt ?? csi.ConnectorType;
             ConnectorExtensions = csi.ConnectorExtensions;
         }
     }

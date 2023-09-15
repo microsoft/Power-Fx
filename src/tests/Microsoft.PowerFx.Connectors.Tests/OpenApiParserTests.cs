@@ -693,7 +693,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.True(executeProcedureV2.ReturnParameterType.SupportsSuggestions);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
-            ConnectorParameterType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(
+            ConnectorType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(
                  new NamedValue[]
                 {
                     new NamedValue("server", FormulaValue.New("pfxdev-sql.database.windows.net")),

@@ -42,7 +42,7 @@ namespace Microsoft.PowerFx.Connectors
             Description = openApiParameter.Description;
         }
 
-        internal ConnectorParameter(ConnectorParameter cpi, ConnectorParameterType cpt)
+        internal ConnectorParameter(ConnectorParameter cpi, ConnectorType cpt)
             : base(cpi, cpt)
         {
             Name = cpi.Name;
@@ -78,7 +78,7 @@ namespace Microsoft.PowerFx.Connectors
         public string[] ParameterNames { get; }
 
         internal ConnectorParameterWithSuggestions(ConnectorParameter connectorParameter, FormulaValue value, string parameterName, ConnectorEnhancedSuggestions suggestions, NamedValue[] knownParameters)
-            : base(connectorParameter, GetConnectorParameterType(connectorParameter, parameterName, suggestions))
+            : base(connectorParameter, GetConnectorType(connectorParameter, parameterName, suggestions))
         {
             Suggestions = new List<ConnectorSuggestion>();
             Value = value;
@@ -101,10 +101,10 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
-        private static ConnectorParameterType GetConnectorParameterType(ConnectorParameter connectorParameter, string parameterName, ConnectorEnhancedSuggestions suggestions)
+        private static ConnectorType GetConnectorType(ConnectorParameter connectorParameter, string parameterName, ConnectorEnhancedSuggestions suggestions)
         {
             bool dynamicPropertyOrSchema = (suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicProperty || suggestions?.ConnectorSuggestions.SuggestionMethod == SuggestionMethod.DynamicSchema) == true;
-            return suggestions != null && connectorParameter.Name == parameterName && dynamicPropertyOrSchema ? suggestions?.ConnectorParameterType : null;
+            return suggestions != null && connectorParameter.Name == parameterName && dynamicPropertyOrSchema ? suggestions?.ConnectorType : null;
         }
     }
 
