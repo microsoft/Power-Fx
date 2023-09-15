@@ -619,7 +619,7 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal static string PageLink(this OpenApiOperation op)
-            => op.Extensions.TryGetValue(XMsPageable , out IOpenApiExtension ext) &&
+            => op.Extensions.TryGetValue(XMsPageable, out IOpenApiExtension ext) &&
                ext is OpenApiObject oao &&
                oao.Any() &&
                oao.First().Key == "nextLinkName" &&

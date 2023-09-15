@@ -1,12 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
-using Microsoft.PowerFx.Intellisense;
-using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -53,5 +49,4 @@ namespace Microsoft.PowerFx.Connectors
             Name = name;
         }
     }
-
 }
