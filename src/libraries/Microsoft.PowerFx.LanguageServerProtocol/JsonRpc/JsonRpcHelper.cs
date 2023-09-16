@@ -33,18 +33,18 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             ServerError = -32000
         }
 
-        public static string CreateErrorResult(string id, ErrorCode code) => CreateErrorResult(id, new
+        public static string CreateErrorResult(object id, ErrorCode code) => CreateErrorResult(id, new
         {
             code = (int)code
         });
 
-        public static string CreateErrorResult(string id, ErrorCode code, string message) => CreateErrorResult(id, new
+        public static string CreateErrorResult(object id, ErrorCode code, string message) => CreateErrorResult(id, new
         {
             code = (int)code,
             message = message
         });
 
-        private static string CreateErrorResult(string id, object error) => JsonSerializer.Serialize(
+        private static string CreateErrorResult(object id, object error) => JsonSerializer.Serialize(
             new
             {
                 jsonrpc = "2.0",
@@ -52,7 +52,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 error
             }, _jsonSerializerOptions);
 
-        public static string CreateSuccessResult(string id, object result) => JsonSerializer.Serialize(
+        public static string CreateSuccessResult(object id, object result) => JsonSerializer.Serialize(
             new
             {
                 jsonrpc = "2.0",

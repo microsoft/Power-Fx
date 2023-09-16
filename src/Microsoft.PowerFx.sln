@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmark", "Benchmark", "{
 		..\.scripts\WriteBenchmark.ps1 = ..\.scripts\WriteBenchmark.ps1
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "lsp", "tools\LSP\lsp.csproj", "{29E7757D-FB14-4236-8829-70F718EE5C9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29E7757D-FB14-4236-8829-70F718EE5C9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29E7757D-FB14-4236-8829-70F718EE5C9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29E7757D-FB14-4236-8829-70F718EE5C9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29E7757D-FB14-4236-8829-70F718EE5C9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,6 +141,7 @@ Global
 		{D4CC6660-8C30-41E5-A28A-C018DDDF8D96} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
 		{8986E836-2F55-4D71-B23E-50F4A8427A5B} = {AD743B78-D61F-4FBF-B620-FA83CE599A50}
 		{89514D49-4D5D-4423-A6EC-F0FF1D23EF43} = {4269F3C3-6B42-419B-B64A-3E6DC0F1574A}
+		{29E7757D-FB14-4236-8829-70F718EE5C9D} = {5EEC2873-35B5-4364-A2A0-97AAD7BF960D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {30372F91-B206-4351-A621-F0E2773C337B}

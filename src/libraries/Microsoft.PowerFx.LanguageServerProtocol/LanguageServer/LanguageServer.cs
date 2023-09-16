@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Only create log strings when logger is not null
             _logger?.Invoke($"[PFX] OnDataReceived Received: {jsonRpcPayload ?? "<null>"}");
 
-            string id = null;
+            object id = null;
             try
             {
                 using (var doc = JsonDocument.Parse(jsonRpcPayload))
@@ -92,7 +92,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     var element = doc.RootElement;
                     if (element.TryGetProperty("id", out var idElement))
                     {
-                        id = idElement.GetString();
+                        id = idElement;
                     }
 
                     if (!element.TryGetProperty("method", out var methodElement))
@@ -152,6 +152,9 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                         case TextDocumentNames.RangeDocumentSemanticTokens:
                             HandleRangeDocumentSemanticTokens(id, paramsJson);
                             break;
+                        case "initialize":
+                            HandleInitialize(id, paramsJson);
+                            break;
                         default:
                             _logger?.Invoke($"[PFX] OnDataReceived CreateErrorResult InvalidRequest (unknown method)");
                             _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.MethodNotFound));
@@ -170,7 +173,16 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
         }
 
-        private void HandleCommandExecutedRequest(string id, string paramsJson)
+        private void HandleInitialize(object id, string paramsJson)
+        {
+            _logger?.Invoke($"[PFX] Initialize: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
+
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, null));
+
+            return;
+        }
+
+        private void HandleCommandExecutedRequest(object id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleCommandExecutedRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -276,7 +288,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             PublishExpressionType(documentUri, result);
         }
 
-        private void HandleCompletionRequest(string id, string paramsJson)
+        private void HandleCompletionRequest(object id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleCompletionRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -338,7 +350,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }));
         }
 
-        private void HandleSignatureHelpRequest(string id, string paramsJson)
+        private void HandleSignatureHelpRequest(object id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleSignatureHelpRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -374,7 +386,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, result.SignatureHelp));
         }
 
-        private void HandleInitialFixupRequest(string id, string paramsJson)
+        private void HandleInitialFixupRequest(object id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleInitialFixupRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -417,7 +429,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 this._parent = parent;
             }
 
-            public void Handle(string id, string paramsJson)
+            public void Handle(object id, string paramsJson)
             {
                 _parent._logger?.Invoke($"[PFX] HandleGetCapabilities: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -525,7 +537,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             }
         }
 
-        private void HandleCodeActionRequest(string id, string paramsJson)
+        private void HandleCodeActionRequest(object id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleCodeActionRequest: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -601,7 +613,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         /// <param name="id">Request Id.</param>
         /// <param name="paramsJson">Request Params Stringified Body.</param>
-        private void HandleFullDocumentSemanticTokens(string id, string paramsJson)
+        private void HandleFullDocumentSemanticTokens(object id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleFullDocumentSemanticTokens: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -618,7 +630,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
         /// </summary>
         /// <param name="id">Request Id.</param>
         /// <param name="paramsJson">Request Params Stringified Body.</param>
-        private void HandleRangeDocumentSemanticTokens(string id, string paramsJson)
+        private void HandleRangeDocumentSemanticTokens(object id, string paramsJson)
         {
             _logger?.Invoke($"[PFX] HandleRangeDocumentSemanticTokens: id={id ?? "<null>"}, paramsJson={paramsJson ?? "<null>"}");
 
@@ -637,7 +649,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             HandleSemanticTokens(id, semanticTokensParams, TextDocumentNames.RangeDocumentSemanticTokens);
         }
 
-        private void HandleSemanticTokens<T>(string id, T semanticTokensParams, string method)
+        private void HandleSemanticTokens<T>(object id, T semanticTokensParams, string method)
             where T : SemanticTokensParams
         {
             var uri = new Uri(semanticTokensParams.TextDocument.Uri);
@@ -714,11 +726,11 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             return tokenTypesToSkip;
         }
 
-        private bool TryParseAndValidateSemanticTokenParams<T>(string id, string paramsJson, out T semanticTokenParams)
+        private bool TryParseAndValidateSemanticTokenParams<T>(object id, string paramsJson, out T semanticTokenParams)
             where T : SemanticTokensParams
         {
             semanticTokenParams = null;
-            if (string.IsNullOrWhiteSpace(id))
+            if (id == null || (id is string sid && string.IsNullOrWhiteSpace(sid)))
             {
                 _sendToClient(JsonRpcHelper.CreateErrorResult(id, JsonRpcHelper.ErrorCode.InvalidRequest));
                 return false;
@@ -733,7 +745,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             return true;
         }
 
-        private void SendEmptySemanticTokensResponse(string id)
+        private void SendEmptySemanticTokensResponse(object id)
         {
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new SemanticTokensResponse()));
         }
