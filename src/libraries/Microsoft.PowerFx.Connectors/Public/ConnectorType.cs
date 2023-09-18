@@ -105,8 +105,14 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         internal ConnectorType(OpenApiSchema schema)
-            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType().FormulaType)
+            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType())
         {
+        }
+
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, ConnectorType connectorType)
+            : this(schema, openApiParameter, connectorType.FormulaType)
+        {
+            Fields = connectorType.Fields;
         }
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
