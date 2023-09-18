@@ -71,7 +71,7 @@ namespace Microsoft.PowerFx.Core.Parser
         internal IdentToken Ident { get; }
 
         internal IdentToken ReturnType { get; }
-        
+
         internal TexlNode Body { get; }
 
         internal ISet<UDFArg> Args { get; }
@@ -115,6 +115,6 @@ namespace Microsoft.PowerFx.Core.Parser
             NameIdent = nameIdent;
             TypeIdent = typeIdent;
             ArgIndex = argIndex;
-        } 
+        }
     }
 }
