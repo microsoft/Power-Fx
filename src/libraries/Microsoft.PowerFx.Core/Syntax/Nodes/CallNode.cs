@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Syntax
                 return new Span(dotted.GetCompleteSpan().Min, ParenClose.Span.Lim);
             }
 
-            return new Span(Head.Token.Span.Min, ParenClose.Span.Lim);
+            return new Span(Head.Token.Span.Min, ParenClose.Span.Lim, Head.Token.Span.Offset);
         }
 
         /// <inheritdoc />
@@ -168,10 +168,10 @@ namespace Microsoft.PowerFx.Syntax
             DottedNameNode dotted;
             if (HeadNode != null && (dotted = HeadNode.AsDottedName()) != null)
             {
-                return new Span(dotted.GetCompleteSpan().Min, limit);
+                return new Span(dotted.GetCompleteSpan().Min, limit, dotted.GetCompleteSpan().Offset);
             }
 
-            return new Span(Head.Token.Span.Min, limit);
+            return new Span(Head.Token.Span.Min, limit, Head.Token.Span.Offset);
         }
 
         // Does the CallNode have an argument/expression that is async without side effects

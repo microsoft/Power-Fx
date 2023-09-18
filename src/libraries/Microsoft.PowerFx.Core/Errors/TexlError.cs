@@ -33,7 +33,7 @@ namespace Microsoft.PowerFx.Core.Errors
             Contracts.AssertValue(tok);
 
             Tok = tok;
-            TextSpan = new Span(tok.VerifyValue().Span.Min, tok.VerifyValue().Span.Lim);
+            TextSpan = new Span(tok.VerifyValue().Span.Min, tok.VerifyValue().Span.Lim, tok.VerifyValue().Span.Offset);
 
             _nameMapIDs = new List<string>();
         }
@@ -49,6 +49,11 @@ namespace Microsoft.PowerFx.Core.Errors
             TextSpan = node.GetTextSpan();
 
             _nameMapIDs = new List<string>();
+        }
+
+        IRuleError IRuleError.Clone(Span span)
+        {
+            return new TexlError(this.Tok.Clone(span), this.Severity, this.ErrorResourceKey, this.MessageArgs);
         }
 
         public void MarkSinkTypeError(DName name)
