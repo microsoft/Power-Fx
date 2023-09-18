@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -193,6 +194,26 @@ namespace Microsoft.PowerFx.Json.Tests
             Assert.IsAssignableFrom(type, deserialized);
 
             Assert.Equal("num", ((AggregateType)deserialized).FieldNames.First());
+        }
+
+        [Fact]
+        public void T1()
+        {
+            var optionSetDisplayNameProvider = DisplayNameUtility.MakeUnique(new Dictionary<string, string>
+            {
+                { "1", "One" },
+                { "2", "Two" },
+                { "0", "Zero" },
+                { "4", "Four" },
+            });
+
+            var optionSet = new OptionSet("MyOptionSet", optionSetDisplayNameProvider);
+            FormulaType ft = optionSet.FormulaType;
+
+            var opts = new JsonSerializerOptions();
+            opts.Converters.Add(new FormulaTypeJsonConverter());
+
+            var json = JsonSerializer.Serialize(ft, opts);
         }
     }
 }

@@ -180,11 +180,14 @@ namespace Microsoft.PowerFx
 
         private FormulaType[] _expectedReturnTypes;
 
+        internal FormulaType ExpectedReturnType => _expectedReturnTypes?.FirstOrDefault() ?? FormulaType.Unknown;
+
         // This function only injects errors but does not do any coercion.
         public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
             if (allowCoerceTo)
             {
+#pragma warning disable CS0618 // Type or member is obsolete, uses soon to be private method SetExpectedReturnValue(params FormulaType[] expectedReturnTypes).
                 switch (type)
                 {
                     case StringType:
@@ -203,8 +206,10 @@ namespace Microsoft.PowerFx
             }
 
             return SetExpectedReturnValue(new FormulaType[] { type });
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
+        [Obsolete("Use SetExpectedReturnValue(FormulaType type, bool allowCoerceTo) instead")]
         public CheckResult SetExpectedReturnValue(params FormulaType[] expectedReturnTypes)
         {
             VerifyEngine();
