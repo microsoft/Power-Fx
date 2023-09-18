@@ -48,7 +48,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol.Protocol
         public string SortText { get; set; }
         
         /// <summary>
-        /// The text to be inserted into the editor if the completion item is selected
+        /// The text to be inserted into the editor if the completion item is selected.
         /// </summary>
         public string InsertText { get; set; }
     }

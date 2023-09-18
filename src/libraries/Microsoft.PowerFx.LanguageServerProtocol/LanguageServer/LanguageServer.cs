@@ -327,7 +327,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
 
                     // If the current position is in front of a single quote and the completion result starts with a single quote,
                     // we don't want to make it harder on the end user by inserting an extra single quote.
-                    InsertText = item.DisplayText.Text is { } label && label[0] == '\'' && precedingCharacter == '\'' ? label.Substring(1) : item.DisplayText.Text
+                    InsertText = item.DisplayText.Text is { } label && TexlLexer.IsIdentDelimiter(label[0]) && precedingCharacter == TexlLexer.IdentifierDelimiter ? label.Substring(1) : item.DisplayText.Text
                 }),
                 isIncomplete = false
             }));
