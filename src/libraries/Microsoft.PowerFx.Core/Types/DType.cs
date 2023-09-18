@@ -2817,6 +2817,11 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     fieldType = field1Type == ObjNull ? field2Type : field1Type;
                 }
+                else if ((field1Type == Polymorphic && field2Type.IsRecord) || 
+                    (field2Type == Polymorphic && field1Type.IsRecord))
+                {
+                    fieldType = field1Type == Polymorphic ? field2Type : field1Type;
+                }
                 else if (field1Type.IsAggregate && field2Type.IsAggregate)
                 {
                     fieldType = Union(ref fError, field1Type, field2Type, useLegacyDateTimeAccepts, usePowerFxV1CompatibilityRules, allowCoerce, unionToLeftTypeOnly);
