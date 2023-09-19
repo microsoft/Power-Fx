@@ -319,7 +319,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Avoid this if possible
             _logger?.Invoke($"[PFX] HandleCompletionRequest: Suggest results: Count:{result.Suggestions.Count()}, Suggestions:{string.Join(", ", result.Suggestions.Select(s => $@"[{s.Kind}]: '{s.DisplayText.Text}'"))}");
 
-            var precedingCharacter = expression[cursorPosition - 1];
+            var precedingCharacter = cursorPosition != 0 ? expression[cursorPosition - 1] : '\0';
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new
             {
                 items = result.Suggestions.Select((item, index) => new CompletionItem()
