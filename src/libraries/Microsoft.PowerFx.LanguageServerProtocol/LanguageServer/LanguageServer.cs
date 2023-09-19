@@ -331,7 +331,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     // The order of the results should be preserved.  To do that, we embed the index
                     // into the sort text, which clients may sort lexigraphically.
                     SortText = index.ToString(CultureInfo.InvariantCulture),
-
                     InsertText = item.DisplayText.Text
                 }),
                 isIncomplete = false
