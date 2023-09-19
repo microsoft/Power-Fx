@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core;
@@ -487,6 +488,47 @@ namespace Microsoft.PowerFx.Tests.IntellisenseTests
 
             var actualSuggestions = SuggestStrings(expression, config, null);
             Assert.Equal(expected, actualSuggestions);
+        }
+
+        [Theory]
+        [InlineData("{|", "output1:", "output2:")]
+        [InlineData("{output1: {|", "Arg1F1:", "Arg1F2:")]
+
+        // output2 is tabletype, so don't show suggestion if current node is not a table.
+        [InlineData("{output2: {|")]
+        [InlineData("{output2: [{|", "Arg2Field1:", "Arg2Field2:")]
+
+        // output2 is tabletype, so don't show suggestion if current node is not a table.
+        [InlineData("{output1: {Arg1F1: 1, Arg1F2:\"test\"}, output2: {|")]
+        [InlineData("{output1: {Arg1F1: 1, Arg1F2:\"test\"}, output2: [{|", "Arg2Field1:", "Arg2Field2:")]
+        [InlineData("{output2: {Arg2Field1: 1, Arg2Field2:\"test\"}, output1: {|", "Arg1F1:", "Arg1F2:")]
+        public void SuggestAggregateReturnType(string expression, params string[] expected)
+        {
+            (var exp, var cursorPosition) = Decode(expression);
+
+            var config = SuggestTests.Default;
+
+            var outputArg1 = RecordType.Empty()
+                .Add("Arg1F1", FormulaType.Number)
+                .Add("Arg1F2", FormulaType.String);
+
+            var outputArg2 = RecordType.Empty()
+                .Add("Arg2Field1", FormulaType.Number)
+                .Add("Arg2Field2", FormulaType.String).ToTable();
+
+            var expectedReturnType = RecordType.Empty()
+                .Add("output1", outputArg1)
+                .Add("output2", outputArg2);
+
+            var engine = new Engine(config);
+            var check = new CheckResult(engine)
+                .SetText(exp)
+                .SetBindingInfo()
+                .SetExpectedReturnValue(expectedReturnType);
+
+            var suggestion = engine.Suggest(check, cursorPosition).Suggestions.Select(suggestion => suggestion.DisplayText.Text);
+
+            Assert.Equal(expected, suggestion);
         }
 
         private class LazyRecursiveRecordType : RecordType

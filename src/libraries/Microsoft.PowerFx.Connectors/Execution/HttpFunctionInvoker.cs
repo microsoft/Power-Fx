@@ -155,7 +155,7 @@ namespace Microsoft.PowerFx.Connectors
                 FormulaValue value = args[i];
 
                 // Objects are always flattenned                
-                if (value is RecordValue record && !(_function.RequiredParameters[i].Description == "Body"))
+                if (value is RecordValue record && !_function.RequiredParameters[i].IsBodyParameter)
                 {
                     foreach (NamedValue field in record.Fields)
                     {

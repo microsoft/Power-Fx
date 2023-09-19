@@ -10,12 +10,12 @@ using System.Text.RegularExpressions;
 namespace Microsoft.PowerFx.Connectors
 {
     [ThreadSafeImmutable]
-    public class OpenApiHelperFunctions
+    internal class OpenApiHelperFunctions
     {
         private static readonly Regex NotAnXsdNCNameCharRegex = new Regex(@"[^a-zA-Z0-9_-]+", RegexOptions.Compiled);
         private static readonly Regex XsdNCNameStartCharRegex = new Regex(@"^[a-zA-Z_]", RegexOptions.Compiled);
 
-        public static string NormalizeOperationId(string operationId)
+        internal static string NormalizeOperationId(string operationId)
         {
             if (operationId == null)
             {

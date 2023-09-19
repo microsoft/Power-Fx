@@ -441,7 +441,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
         }
 
         // Parse the script

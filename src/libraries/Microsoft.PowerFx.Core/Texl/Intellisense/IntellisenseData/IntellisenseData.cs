@@ -61,10 +61,13 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
             BoundTo = string.Empty;
             CleanupHandlers = new List<ISpecialCaseHandler>();
             Services = (context as IntellisenseContext)?.Services;
+            ExpectedExpressionReturnType = context.ExpectedExpressionReturnType ?? DType.Unknown;
         }
 
         // can be null
         internal IServiceProvider Services { get; set; }
+
+        public DType ExpectedExpressionReturnType { get; }
 
         internal DType ExpectedType { get; }
 
@@ -455,6 +458,14 @@ namespace Microsoft.PowerFx.Intellisense.IntellisenseData
         /// </summary>
         internal virtual void AddAlternativeTopLevelSuggestionsForErrorNode()
         {
+            var parentNode = CurNode?.Parent;
+            if (parentNode != null &&
+                parentNode.Kind == NodeKind.Record &&
+                CurFunc == null && 
+                ExpectedExpressionReturnType.IsRecord) 
+            {
+                FunctionRecordNameSuggestionHandler.AddSuggestionForAggregateAndParentRecord(parentNode, ExpectedExpressionReturnType, this);
+            }
         }
 
         /// <summary>

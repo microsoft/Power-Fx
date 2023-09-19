@@ -157,8 +157,7 @@ namespace Microsoft.PowerFx.Core.Tests
                 // Most evaluators should never need these. 
                 "Microsoft.PowerFx.Intellisense.CodeFixHandler",
                 "Microsoft.PowerFx.Intellisense.CodeFixSuggestion",
-                "Microsoft.PowerFx.Intellisense.ConnectorSuggestion",
-                "Microsoft.PowerFx.Intellisense.ConnectorSuggestions",
+                "Microsoft.PowerFx.Intellisense.ConnectorSuggestion",                
                 "Microsoft.PowerFx.Intellisense.IIntellisenseResult",
                 "Microsoft.PowerFx.Intellisense.IIntellisenseSuggestion",
                 "Microsoft.PowerFx.Intellisense.IntellisenseOperations",

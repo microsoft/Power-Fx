@@ -106,14 +106,19 @@ namespace Microsoft.PowerFx.Intellisense
                 {
                     aggregateType = lastFieldType;
                 }
+                else if (recordNode?.Parent?.Kind == NodeKind.Record && 
+                    recordNode?.Parent?.Parent?.Kind != NodeKind.Table)
+                {
+                    // If Parent not is record node, that means it was nested field and above method should have found type, if it did not, return false. unless it was [{<cursor position>.
+                    return false;
+                }
 
-                var suggestionsAdded = AddAggregateSuggestions(aggregateType, intellisenseData, intellisenseData.CursorPos);
-                return suggestionsAdded;
+                return AddAggregateSuggestions(aggregateType, intellisenseData, intellisenseData.CursorPos);
             }
 
             /// <summary>
             /// Recursively finds field type of parent record node's last field.
-            /// e.g. *[field1: {field2: { field3: "test", field4: currentNode}}] => field3's type is returned.
+            /// e.g. *[field1: {field2: { field3: "test", field4: currentNode}}] => field4's type is returned.
             /// </summary>
             private static bool TryGetParentRecordFieldType(DType aggregateType, TexlNode currentNode, out DType fieldType)
             {
@@ -126,7 +131,9 @@ namespace Microsoft.PowerFx.Intellisense
                 if (TryGetParentRecordNode(currentNode, out var parentRecord))
                 {
                     var fieldName = parentRecord.Ids.LastOrDefault()?.Name;
-                    if (fieldName.HasValue && aggregateType.TryGetType(fieldName.Value, out var type))
+                    if (fieldName.HasValue && 
+                        aggregateType.TryGetType(fieldName.Value, out var type) && 
+                        (type.IsRecord || currentNode.Parent?.Kind == NodeKind.Table))
                     {
                         fieldType = type;
                         return true;

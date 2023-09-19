@@ -106,8 +106,8 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Theory]
-        [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", ", @"{ p1:")]        // stored proc with 1 param, out of record
-        [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", ", @"{ p1:|{ p2:")]  // stored proc with 2 params, out of record
+        [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", ", @"p1")]           // stored proc with 1 param, out of record
+        [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", ", @"p1|p2")]        // stored proc with 2 params, out of record
         [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", {  ", "p1")]         // in record, only suggest param names
         [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { ", "p1|p2")]       // two parameters
         [InlineData(2, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_2"", { p", @"p1|p2")]     // partial typing
@@ -172,7 +172,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
         }
 
         [Theory]
-        [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", ", @"{ p1:")]        // stored proc with 1 param, out of record
+        [InlineData(1, 1, @"SQL.ExecuteProcedureV2(""default"", ""default"", ""sp_1"", ", @"p1")]        // stored proc with 1 param, out of record
         public void ConnectorIntellisenseTestLSP(int responseIndex, int networkCall, string expression, string expectedSuggestions)
         {
             // These tests are exercising 'x-ms-dynamic-schema' extension property

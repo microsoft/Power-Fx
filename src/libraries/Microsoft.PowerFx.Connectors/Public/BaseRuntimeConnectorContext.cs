@@ -22,35 +22,11 @@ namespace Microsoft.PowerFx.Connectors
         }
     }
 
-    internal class RuntimeConnectorContextWithRawResults : BaseRuntimeConnectorContext
-    {
-        private readonly BaseRuntimeConnectorContext _brcc;
-
-        internal RuntimeConnectorContextWithRawResults(BaseRuntimeConnectorContext brcc)
-        {
-            _brcc = brcc;
-        }
-
-        public override TimeZoneInfo TimeZoneInfo => _brcc.TimeZoneInfo;
-
-        public override HttpMessageInvoker GetInvoker(string @namespace) => _brcc.GetInvoker(@namespace);
-
-        public override bool ThrowOnError => _brcc.ThrowOnError;
-
-        internal override bool ReturnRawResults => true;
-    }
-
     public static class RuntimeConnectorContextExtensions
     {
         public static BasicServiceProvider AddRuntimeContext(this BasicServiceProvider serviceProvider, BaseRuntimeConnectorContext context)
         {
             return serviceProvider.AddService(typeof(BaseRuntimeConnectorContext), context);
-        }
-
-        public static RuntimeConfig AddRuntimeContext(this RuntimeConfig runtimeConfig, BaseRuntimeConnectorContext context)
-        {
-            runtimeConfig.ServiceProvider.AddService(typeof(BaseRuntimeConnectorContext), context);
-            return runtimeConfig;
         }
     }
 }
