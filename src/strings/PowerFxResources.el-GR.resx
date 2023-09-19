@@ -5045,7 +5045,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid</value>
+    <value>Η κυριολεκτική δήλωση τύπου δεν ήταν έγκυρη</value>
     
   </data>
 </root>
