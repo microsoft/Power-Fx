@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -204,6 +205,45 @@ namespace Microsoft.PowerFx.Functions
                     errors.EnsureError(args[i], TexlStrings.ErrNeedRecord);
                     isValid = false;
                     continue;
+                }
+
+                foreach (var typedName in curType.GetNames(DPath.Root))
+                {
+                    // If the datasource doesn't contain the supplied type.
+                    DName name = typedName.Name;
+
+                    if (!dataSourceType.TryGetType(name, out DType dsNameType))
+                    {
+                        dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, name, args[i]);
+                        isValid = isSafeToUnion = false;
+                        continue;
+                    }
+
+                    DType type = typedName.Type;
+
+                    // For patching entities, we expand the type and drop entities and attachments for the purpose of comparison.
+                    if (dsNameType.Kind == DKind.DataEntity && type.Kind != DKind.DataEntity)
+                    {
+                        if (dsNameType.TryGetExpandedEntityTypeWithoutDataSourceSpecificColumns(out DType expandedType))
+                        {
+                            dsNameType = expandedType;
+                        }
+                    }
+
+                    if (!dsNameType.Accepts(type, out var schemaDifference, out var schemaDifferenceType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) &&
+                        (!SupportsParamCoercion || !type.CoercesTo(dsNameType, out var coercionIsSafe, aggregateCoercion: false, isTopLevelCoercion: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules) || !coercionIsSafe))
+                    {
+                        if (dsNameType.Kind == type.Kind)
+                        {
+                            errors.Errors(args[i], type, schemaDifference, schemaDifferenceType);
+                        }
+                        else
+                        {
+                            errors.EnsureError(DocumentErrorSeverity.Severe, args[i], TexlStrings.ErrTypeError_Arg_Expected_Found, name, dsNameType.GetKindString(), type.GetKindString());
+                        }
+
+                        isValid = isSafeToUnion = false;
+                    }
                 }
 
                 // Checks if all record names exist against table type and if its possible to coerce.

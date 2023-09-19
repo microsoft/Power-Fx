@@ -39,17 +39,17 @@ Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle
 Table({b:true,d:1,t:"hi"},{b:true,d:23,t:"2/2/2002 2:02 AM"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,3), {b:"0",d:true,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49c")} )
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1834, expected compile time error
+Errors: Error 22-83: The type of this argument 'b' does not match the expected type 'Boolean'. Found type 'Text'.|Error 0-85: The function 'Patch' has some invalid arguments.
 
-// should not have been changedn from the previous patch
+// should not have been changed from the previous patch
 >> 6;y
 Table({b:true,d:1,t:"hi"},{b:true,d:23,t:"2/2/2002 2:02 AM"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,3), {b:false,d:1/0,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d")} )
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1835, expected {b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
+{b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
 
 >> 7;y
-#SKIP: waiting on https://github.com/microsoft/Power-Fx/issues/1835, expected table with {b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
+{b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
 
 // deep mutation with coercions
 
