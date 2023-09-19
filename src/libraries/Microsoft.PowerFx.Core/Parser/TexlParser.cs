@@ -137,7 +137,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
 
-                    // If the result was an error, keep moving cursor until end of named formula expression
+                    // If the result was an error, keep moving cursor until end of expression
                     while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
                         _curs.TokMove();
@@ -153,7 +153,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
 
-                    // If the result was an error, keep moving cursor until end of named formula expression
+                    // If the result was an error, keep moving cursor until end of expression
                     while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
                         _curs.TokMove();
@@ -164,7 +164,7 @@ namespace Microsoft.PowerFx.Core.Parser
 
                 if (varIdent == null)
                 {
-                    // If the result was an error, keep moving cursor until end of named formula expression
+                    // If the result was an error, keep moving cursor until end of expression
                     while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
                         _curs.TokMove();
@@ -180,7 +180,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
 
-                    // If the result was an error, keep moving cursor until end of named formula expression
+                    // If the result was an error, keep moving cursor until end of expression
                     while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
                     {
                         _curs.TokMove();
