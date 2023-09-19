@@ -319,7 +319,6 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Avoid this if possible
             _logger?.Invoke($"[PFX] HandleCompletionRequest: Suggest results: Count:{result.Suggestions.Count()}, Suggestions:{string.Join(", ", result.Suggestions.Select(s => $@"[{s.Kind}]: '{s.DisplayText.Text}'"))}");
 
-            var precedingCharacter = expression[cursorPosition - 1];
             _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new
             {
                 items = result.Suggestions.Select((item, index) => new CompletionItem()
@@ -333,9 +332,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                     // into the sort text, which clients may sort lexigraphically.
                     SortText = index.ToString(CultureInfo.InvariantCulture),
 
-                    // If the current position is in front of a single quote and the completion result starts with a single quote,
-                    // we don't want to make it harder on the end user by inserting an extra single quote.
-                    InsertText = item.DisplayText.Text is { } label && TexlLexer.IsIdentDelimiter(label[0]) && precedingCharacter == TexlLexer.IdentifierDelimiter ? label.Substring(1) : item.DisplayText.Text
+                    InsertText = item.DisplayText.Text
                 }),
                 isIncomplete = false
             }));
