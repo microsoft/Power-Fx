@@ -2817,8 +2817,9 @@ namespace Microsoft.PowerFx.Core.Types
                 {
                     fieldType = field1Type == ObjNull ? field2Type : field1Type;
                 }
-                else if ((field1Type == Polymorphic && field2Type.IsRecord) || 
-                    (field2Type == Polymorphic && field1Type.IsRecord))
+                else if (usePowerFxV1CompatibilityRules &&
+                    ((field1Type == Polymorphic && field2Type.IsRecord) ||
+                    (field2Type == Polymorphic && field1Type.IsRecord)))
                 {
                     fieldType = field1Type == Polymorphic ? field2Type : field1Type;
                 }

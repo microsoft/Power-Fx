@@ -307,12 +307,15 @@ namespace Microsoft.PowerFx.Interpreter.Tests
         }
 
         [Theory]
-        [InlineData("Collect(t1, {subject: \"something\", poly: {} })", true)]
-        [InlineData("Collect(t1, {subject: \"something\", poly: [] })", false)]
-        public void PolymorphicFieldUnions(string expr, bool isSuccess)
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })", true, true)]
+        [InlineData("Collect(t1, {subject: \"something\", poly: [] })", false, true)]
+
+        [InlineData("Collect(t1, {subject: \"something\", poly: {} })", false, false)]
+        [InlineData("Collect(t1, {subject: \"something\", poly: [] })", false, false)]
+        public void PolymorphicFieldUnions(string expr, bool isSuccess, bool isPowerFxV1)
         {
-            var engine = new RecalcEngine(new PowerFxConfig(Features.PowerFxV1));
-            var fv = FormulaValueJSON.FromJson("100", numberIsFloat: true);
+            var features = isPowerFxV1 ? Features.PowerFxV1 : Features.None;
+            var engine = new RecalcEngine(new PowerFxConfig(features));
 
             var rType = RecordType.Empty()
                 .Add(new NamedFormulaType("subject", FormulaType.String))
