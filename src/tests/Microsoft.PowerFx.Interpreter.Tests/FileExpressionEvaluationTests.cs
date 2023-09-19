@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -10,12 +11,20 @@ using Microsoft.PowerFx.Core.Tests;
 using Microsoft.PowerFx.Interpreter.Tests.XUnitExtensions;
 using Microsoft.PowerFx.Types;
 using Xunit;
+using Xunit.Abstractions;
 using static Microsoft.PowerFx.Interpreter.Tests.ExpressionEvaluationTests;
 
 namespace Microsoft.PowerFx.Interpreter.Tests
 {
     public class FileExpressionEvaluationTests : PowerFxTest
     {
+        public readonly ITestOutputHelper Summary;
+
+        public FileExpressionEvaluationTests(ITestOutputHelper output)
+        {
+            Summary = output;
+        }
+
         // File expression tests are run multiple times for the different ways a host can use Power Fx.
         // 
         // 1. Features.PowerFxV1 without NumberIsFloat - the main way that most hosts will use Power Fx.
@@ -123,43 +132,61 @@ namespace Microsoft.PowerFx.Interpreter.Tests
 #endif
 
         // Run cases in MutationScripts
+        //
         // Normal tests have each line as an independent test case. 
         // Whereas these are fed into a repl and each file maintains state.
+        // 
+        // These tests are run twice, as they are for the non-mutation tests, for both V1 and non-V1 compatibility.
+        // For Canvas, the important difference is the CoalesceShortCircuit feature, a part of PowerFxV1.
         [Theory]
-        [InlineData("Simple1.txt")]
-        [InlineData("Collect.txt")]
-        [InlineData("Patch.txt")]
-        [InlineData("Clear.txt")]
-        [InlineData("ClearCollect.txt")]
-        [InlineData("ForAllMutate.txt")]
-        [InlineData("Set.txt")]
-        [InlineData("DeepMutation.txt")]
-        [InlineData("User.txt")]
-        [InlineData("FilterFunctions.txt")]
-        [InlineData("AndOr.txt")]
-        [InlineData("Remove.txt")]
-        public void RunMutationTests(string file)
+        [ReplFileSimpleList("MutationScripts")]
+        public void RunMutationTests_V1(string file)
+        {
+            RunMutationTestFile(file, Features.PowerFxV1, "PowerFxV1");
+        }
+
+        [Theory]
+        [ReplFileSimpleList("MutationScripts")]
+        public void RunMutationTests_Canvas(string file)
+        {
+            var features = new Features()
+            {
+                TableSyntaxDoesntWrapRecords = true,
+                ConsistentOneColumnTableResult = true,
+                PowerFxV1CompatibilityRules = true,    // although not in Canvas today, mutation tests assume this semantic, which doesn't conflict with what is being tested
+            };
+
+            // disable:CoalesceShortCircuit will force the tests specifically for that behavior to be excluded from this run
+            // DecimalSupport allows tests that are written with Float and Decimal functions to operate; it is not itself a feature
+            RunMutationTestFile(file, features, "disable:CoalesceShortCircuit,TableSyntaxDoesntWrapRecords,ConsistentOneColumnTableResult,PowerFxV1CompatibilityRules,DecimalSupport");
+        }
+
+        private void RunMutationTestFile(string file, Features features, string setup)
         {
             var path = Path.Combine(System.Environment.CurrentDirectory, "MutationScripts", file);
 
-            var config = new PowerFxConfig() { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
+            var config = new PowerFxConfig(features) { SymbolTable = UserInfoTestSetup.GetUserInfoSymbolTable() };
             config.SymbolTable.EnableMutationFunctions();
             var engine = new RecalcEngine(config);
 
             var rc = new RuntimeConfig();
             rc.SetUserInfo(UserInfoTestSetup.UserInfo);
 
-            var runner = new ReplRunner(engine, rc) { NumberIsFloat = true };
+            var runner = new ReplRunner(engine, rc);
 
             var testRunner = new TestRunner(runner);
 
-            testRunner.AddFile(TestRunner.ParseSetupString("NumberIsFloat"), path);
+            testRunner.AddFile(TestRunner.ParseSetupString(setup), path);
 
             var result = testRunner.RunTests();
 
             if (result.Fail > 0)
             {
                 Assert.True(false, result.Output);
+            }
+            else
+            {
+                Summary.WriteLine(result.Output);
             }
         }
 

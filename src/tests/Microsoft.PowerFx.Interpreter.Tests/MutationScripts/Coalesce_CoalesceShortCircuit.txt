@@ -1,0 +1,46 @@
+#SETUP: CoalesceShortCircuit
+
+// Cases to test how shortcut verification work along with behavior functions
+
+>> Set( t1, [1,2] )
+Table({Value:1},{Value:2})
+
+>> Coalesce(1,Collect(t1,{Value:3}).Value)
+1
+
+>> 1;t1
+Table({Value:1},{Value:2})
+
+>> Coalesce(1,Blank(),Collect(t1,{Value:3}).Value)
+1
+
+>> 1.1;t1
+Table({Value:1},{Value:2})
+
+>> Set( bn, If(1<0,1))
+Blank()
+
+>> Coalesce( bn, Collect(t1,{Value:3}).Value )
+3
+
+>> 2;t1
+Table({Value:1},{Value:2},{Value:3})
+
+>> Coalesce( bn, Collect(t1,{Value:4}).Value, Collect(t1,{Value:5}).Value )
+4
+
+>> 3;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4})
+
+>> Coalesce( bn, Blank(), Collect(t1,{Value:5}).Value )
+5
+
+>> 4;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5})
+
+>> Coalesce( bn, Blank(), Collect(t1,{Value:6}).Value, Collect(t1,{Value:7}).Value )
+6
+
+>> 5;t1
+Table({Value:1},{Value:2},{Value:3},{Value:4},{Value:5},{Value:6})
+

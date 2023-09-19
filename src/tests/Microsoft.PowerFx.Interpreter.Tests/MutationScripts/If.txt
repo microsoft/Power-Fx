@@ -1,0 +1,46 @@
+// Cases to test how shortcut verification work along with behavior functions
+
+>> Set( t1, [1,2] )
+Table({Value:1},{Value:2})
+
+>> If(false,Collect(t1,{Value:3}).Value,2)
+2
+
+>> 1;t1
+Table({Value:1},{Value:2})
+
+>> If(true,3,Collect(t1,{Value:3}).Value)
+3
+
+>> 2;t1
+Table({Value:1},{Value:2})
+
+>> If(false,Collect(t1,{Value:3}).Value,false,Collect(t1,{Value:4}).Value,2)
+2
+
+>> 3;t1
+Table({Value:1},{Value:2})
+
+>> If(false,Collect(t1,{Value:3}).Value,true,2,Collect(t1,{Value:4}).Value,2)
+2
+
+>> 3.1;t1
+Table({Value:1},{Value:2})
+
+>> If(true,3,true,Collect(t1,{Value:3}).Value,Collect(t1,{Value:4}).Value)
+3
+
+>> 4;t1
+Table({Value:1},{Value:2})
+
+>> If(false,Collect(t1,{Value:3}).Value,false,Collect(t1,{Value:4}).Value,5)
+5
+
+>> 5;t1
+Table({Value:1},{Value:2})
+
+>> If(true,3,true,6,true,Collect(t1,{Value:3}).Value,Collect(t1,{Value:4}).Value)
+3
+
+>> 6;t1
+Table({Value:1},{Value:2})

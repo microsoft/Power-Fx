@@ -1,0 +1,17 @@
+// This is a placeholder for when we add the Assert function, to ensure we test short circuit behavior.
+// Case to test how shortcut verification work along with behavior functions
+
+>> Set( t1, ["hello"] )
+Table({Value:"hello"})
+
+>> Assert( false, Collect( t1, {Value:"there"}).Value )
+#SKIP: not implemented yet
+
+>> 1;t1
+Table({Value:"hello"})
+
+>> Assert( true, Collect( t1, {Value:"there"}).Value )
+#SKIP: not implemented yet
+
+>> 2;t1
+#SKIP: not implemented yet, expected Table({Value:"hello"},{Value:"there"})

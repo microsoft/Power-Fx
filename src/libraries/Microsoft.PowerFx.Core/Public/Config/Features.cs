@@ -67,6 +67,11 @@ namespace Microsoft.PowerFx
         internal bool SkipExpandableSetSemantics { get; set; }
 
         /// <summary>
+        /// Short circuit support in the Coalesce function: Coalesce(1,Collect()) will not run the Collect.
+        /// </summary>
+        internal bool CoalesceShortCircuit { get; set; }
+
+        /// <summary>
         /// This is specific for Cards team and it is a temporary feature.
         /// It will be soon deleted.
         /// </summary>
@@ -95,6 +100,7 @@ namespace Microsoft.PowerFx
             RestrictedIsEmptyArguments = true,
             FirstLastNRequiresSecondArguments = true,
             PowerFxV1CompatibilityRules = true,
+            CoalesceShortCircuit = true,
         };
 
         internal Features()
