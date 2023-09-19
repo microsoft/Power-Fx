@@ -532,6 +532,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(payload.id, response.Id);
             var foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
+            Assert.True(foundItems.First().InsertText == "AliceBlue");
+            Assert.True(foundItems.First().SortText == "0");
 
             _sendToClientData.Clear();
             payload = GetCompletionPayload(params2);
@@ -543,6 +545,8 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             foundItems = response.Result.Items.Where(item => item.Label == "AliceBlue");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
             Assert.True(Enumerable.Count(foundItems) == 1, "AliceBlue should be found from suggestion result");
+            Assert.True(foundItems.First().InsertText == "AliceBlue");
+            Assert.True(foundItems.First().SortText == "0");
 
             _sendToClientData.Clear();
             payload = GetCompletionPayload(params3);
@@ -551,15 +555,24 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
             Assert.Equal("2.0", response.Jsonrpc);
             Assert.Equal(payload.id, response.Id);
+
             foundItems = response.Result.Items.Where(item => item.Label == "a");
             Assert.True(Enumerable.Count(foundItems) == 1, "'a' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
+            Assert.True(foundItems.First().InsertText == "a");
+            Assert.True(foundItems.First().SortText == "0");
+
             foundItems = response.Result.Items.Where(item => item.Label == "b");
             Assert.True(Enumerable.Count(foundItems) == 1, "'b' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
+            Assert.True(foundItems.First().InsertText == "b");
+            Assert.True(foundItems.First().SortText == "1");
+
             foundItems = response.Result.Items.Where(item => item.Label == "c");
             Assert.True(Enumerable.Count(foundItems) == 1, "'c' should be found from suggestion result");
             Assert.Equal(CompletionItemKind.Variable, foundItems.First().Kind);
+            Assert.True(foundItems.First().InsertText == "c");
+            Assert.True(foundItems.First().SortText == "2");
 
             // missing 'expression' in documentUri
             _sendToClientData.Clear();
@@ -577,6 +590,37 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Equal(InvalidParams, errorResponse.Error.Code);
 
             Assert.Empty(_exList);
+        }
+
+        [Theory]
+        [InlineData("'A", 1)]
+        [InlineData("'Acc", 1)]
+        public void TestCompletionWithIdentifierDelimiter(string text, int offset)
+        {
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockDataSourceEngine());
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            var params1 = new CompletionParams()
+            {
+                TextDocument = GetTextDocument(GetUri("expression=" + text)),
+                Text = text,
+                Position = GetPosition(offset),
+                Context = GetCompletionContext()
+            };
+            _sendToClientData.Clear();
+            var payload = GetCompletionPayload(params1);
+            testServer.OnDataReceived(payload.payload);
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal(payload.id, response.Id);
+            var foundItems = response.Result.Items.Where(item => item.Label == "'Account'");
+            Assert.True(Enumerable.Count(foundItems) == 1, "'Account' should be found from suggestion result");
+
+            // Test that the Identifier delimiter is ignored in case of insertText,
+            // when preceding character is also the same identifier delimiter
+            Assert.True(foundItems.First().InsertText == "Account'");
+            Assert.True(foundItems.First().SortText == "0");
         }
 
         private static (string payload, string id) GetCompletionPayload(CompletionParams completionParams)
