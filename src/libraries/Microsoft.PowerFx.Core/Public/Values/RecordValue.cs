@@ -322,7 +322,7 @@ namespace Microsoft.PowerFx.Types
             sb.Append("}");
         }
 
-        [Obsolete("This will be removed in afuture version.")]
+        [Obsolete("This will be removed in a future version.")]
         protected string ToExpressionField(string tableFieldName)
         {
             var fieldName = IdentToken.MakeValidIdentifier(tableFieldName);
