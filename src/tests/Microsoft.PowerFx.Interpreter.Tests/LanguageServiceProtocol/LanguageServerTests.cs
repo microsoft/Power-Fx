@@ -592,6 +592,37 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
             Assert.Empty(_exList);
         }
 
+        [Theory]
+        [InlineData("'A", 1)]
+        [InlineData("'Acc", 1)]
+        public void TestCompletionWithIdentifierDelimiter(string text, int offset)
+        {
+            var scopeFactory = new TestPowerFxScopeFactory((string documentUri) => new MockDataSourceEngine());
+            var testServer = new TestLanguageServer(_output, _sendToClientData.Add, scopeFactory);
+            var params1 = new CompletionParams()
+            {
+                TextDocument = GetTextDocument(GetUri("expression=" + text)),
+                Text = text,
+                Position = GetPosition(offset),
+                Context = GetCompletionContext()
+            };
+            _sendToClientData.Clear();
+            var payload = GetCompletionPayload(params1);
+            testServer.OnDataReceived(payload.payload);
+            Assert.Single(_sendToClientData);
+            var response = JsonSerializer.Deserialize<JsonRpcCompletionResponse>(_sendToClientData[0], _jsonSerializerOptions);
+
+            Assert.Equal("2.0", response.Jsonrpc);
+            Assert.Equal(payload.id, response.Id);
+            var foundItems = response.Result.Items.Where(item => item.Label == "'Account'");
+            Assert.True(Enumerable.Count(foundItems) == 1, "'Account' should be found from suggestion result");
+
+            // Test that the Identifier delimiter is ignored in case of insertText,
+            // when preceding character is also the same identifier delimiter
+            Assert.True(foundItems.First().InsertText == "Account'");
+            Assert.True(foundItems.First().SortText == "0");
+        }
+
         private static (string payload, string id) GetCompletionPayload(CompletionParams completionParams)
         {
             return GetRequestPayload(completionParams, TextDocumentNames.Completion);
