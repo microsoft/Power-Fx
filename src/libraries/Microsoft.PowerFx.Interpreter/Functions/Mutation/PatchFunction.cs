@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Errors;
@@ -215,7 +214,7 @@ namespace Microsoft.PowerFx.Functions
                     if (!dataSourceType.TryGetType(name, out DType dsNameType))
                     {
                         dataSourceType.ReportNonExistingName(FieldNameKind.Display, errors, name, args[i]);
-                        isValid = isSafeToUnion = false;
+                        isValid = isSafeToUnion = false;        
                         continue;
                     }
 

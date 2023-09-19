@@ -33,23 +33,20 @@ Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"back"},{b:Blank(),d:3,t:"cycle"})
 Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,2), {b:1,d:"23",t:DateTime(2002,2,2,2,2,2)})
-{b:true,d:23,t:"2/2/2002 2:02 AM"}
+Errors: Error 22-61: The type of this argument 'd' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-62: The function 'Patch' has some invalid arguments.
 
 >> 5;y
-Table({b:true,d:1,t:"hi"},{b:true,d:23,t:"2/2/2002 2:02 AM"},{b:Blank(),d:3,t:"cycle"})
+Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,3), {b:"0",d:true,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49c")} )
 Errors: Error 22-83: The type of this argument 'b' does not match the expected type 'Boolean'. Found type 'Text'.|Error 0-85: The function 'Patch' has some invalid arguments.
 
 // should not have been changed from the previous patch
 >> 6;y
-Table({b:true,d:1,t:"hi"},{b:true,d:23,t:"2/2/2002 2:02 AM"},{b:Blank(),d:3,t:"cycle"})
+Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,3), {b:false,d:1/0,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d")} )
-{b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
-
->> 7;y
-{b:false,d:<Error: Invalid operation: division by zero.>,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
+{b:false,d:Error({Kind:ErrorKind.Div0}),t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d")}
 
 // deep mutation with coercions
 
@@ -79,22 +76,22 @@ Error({Kind:ErrorKind.NotFound})
 Table({Value:1},{Value:88},{Value:3})
 
 >> Patch(x.t, {Value:88}, {Value:"77"})
-{Value:77}
+Errors: Error 23-35: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Text'.|Error 0-36: The function 'Patch' has some invalid arguments.
 
 >> 4;x.t
-Table({Value:1},{Value:77},{Value:3})
+Table({Value:1},{Value:88},{Value:3})
 
 >> Patch(x.t, {Value:77}, {Value:Float(66)})
-{Value:66}
+Errors: Error 23-40: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Number'.|Error 0-41: The function 'Patch' has some invalid arguments.
 
 >> 5;x.t
-Table({Value:1},{Value:66},{Value:3})
+Table({Value:1},{Value:88},{Value:3})
 
->> Patch(x.t, {Value:66}, {Value:false})
+>> Patch(x.t, First(x.t), {Value:false})
 {Value:0}
 
 >> 6;x.t
-Table({Value:1},{Value:0},{Value:3})
+Table({Value:0},{Value:88},{Value:3})
 
 
 

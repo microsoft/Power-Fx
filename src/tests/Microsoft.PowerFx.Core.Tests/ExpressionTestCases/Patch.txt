@@ -93,7 +93,7 @@ Table({Field1:0,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:true})
 Errors: Error 21-50: The specified column 'DisplayNameField5' does not exist. The column with the most similar name is 'DisplayNameField1'.|Error 0-51: The function 'Patch' has some invalid arguments.
 
 >> Patch(t1, First(Filter(t1, Field2="earth")), {Field3: "2022-11-14 7:22:06 pm"})
-Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.|Error 0-79: The function 'Patch' has some invalid arguments.
+Errors: Error 45-78: The type of this argument 'Field3' does not match the expected type 'DateTime'. Found type 'Text'.|Error 0-79: The function 'Patch' has some invalid arguments.
 
 >> Patch(t1,LookUp(t1,DisplayNameField2="earth"),{Field1:100,Field4:false});t1
 Table({Field1:100,Field2:"earth",Field3:DateTime(2022,1,1,0,0,0,0),Field4:false})
