@@ -33,8 +33,8 @@ namespace Microsoft.PowerFx.Connectors
             {
                 string path = kv.Key;
                 OpenApiPathItem ops = kv.Value;
-                bool isSupported = true;
-                string notSupportedReason = string.Empty;
+                bool isSupportedForPath = true;
+                string notSupportedReasonForPath = string.Empty;
 
                 // Skip Webhooks
                 if (ops.Extensions.Any(kvp => kvp.Key == "x-ms-notification-content"))
@@ -42,10 +42,13 @@ namespace Microsoft.PowerFx.Connectors
                     continue;
                 }
 
-                ValidateSupportedOpenApiPathItem(ops, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
+                ValidateSupportedOpenApiPathItem(ops, ref isSupportedForPath, ref notSupportedReasonForPath, connectorSettings.IgnoreUnknownExtensions);
 
                 foreach (KeyValuePair<OperationType, OpenApiOperation> kv2 in ops.Operations)
                 {
+                    bool isSupportedForOperation = true;
+                    string notSupportedReasonForOperation = string.Empty;
+
                     HttpMethod verb = kv2.Key.ToHttpMethod(); // "GET", "POST"...
                     OpenApiOperation op = kv2.Value;
 
@@ -55,14 +58,18 @@ namespace Microsoft.PowerFx.Connectors
                         continue;
                     }
 
-                    ValidateSupportedOpenApiOperation(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
-                    ValidateSupportedOpenApiParameters(op, ref isSupported, ref notSupportedReason, connectorSettings.IgnoreUnknownExtensions);
+                    ValidateSupportedOpenApiOperation(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions);
+                    ValidateSupportedOpenApiParameters(op, ref isSupportedForOperation, ref notSupportedReasonForOperation, connectorSettings.IgnoreUnknownExtensions);
 
                     string operationName = NormalizeOperationId(op.OperationId ?? path);
                     string opPath = basePath != null && basePath != "/" ? basePath + path : path;
 
-                    isSupported = isSupported && connectorIsSupported;
-                    notSupportedReason = string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason;
+                    bool isSupported = isSupportedForPath && connectorIsSupported && isSupportedForOperation;
+                    string notSupportedReason = !string.IsNullOrEmpty(connectorNotSupportedReason)
+                                              ? connectorNotSupportedReason
+                                              : !string.IsNullOrEmpty(notSupportedReasonForPath)
+                                              ? notSupportedReasonForPath
+                                              : notSupportedReasonForOperation;
 
                     ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions) { Servers = openApiDocument.Servers };
                     functions.Add(connectorFunction);
@@ -115,6 +122,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 // Undocumented but safe to ignore
                 infoExtensions.Remove("x-ms-connector-name");
+                infoExtensions.Remove("x-ms-keywords");                
 
                 if (infoExtensions.Any())
                 {
@@ -263,6 +271,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 opExtensions.Remove("x-ms-test-value");
                 opExtensions.Remove(XMsUrlEncoding);
+                opExtensions.Remove("x-ms-openai-data");
 
                 // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
                 // Other not supported extensions:
