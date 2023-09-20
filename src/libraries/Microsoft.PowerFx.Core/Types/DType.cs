@@ -3412,7 +3412,7 @@ namespace Microsoft.PowerFx.Core.Types
                     break;
                 case DKind.Decimal:
                     // Ill-formatted strings coerce to null; unsafe.
-                    isSafe = Kind != DKind.String && Kind != DKind.Number;
+                    isSafe = Kind != DKind.String;
                     doesCoerce = Kind == DKind.String ||
                                  Currency.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
                                  Number.Accepts(this, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: usePowerFxV1CompatibilityRules) ||
