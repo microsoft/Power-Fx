@@ -674,8 +674,8 @@ namespace Microsoft.PowerFx.Connectors.Tests
                 { 
                     new NamedValue("server", FormulaValue.New("pfxdev-sql.database.windows.net")),
                     new NamedValue("database", FormulaValue.New("connectortest"))
-                }, 
-                "procedure", 
+                },
+                executeProcedureV2.RequiredParameters[2], // procedure
                 context, 
                 CancellationToken.None).ConfigureAwait(false);
 
@@ -692,7 +692,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
                     new NamedValue("database", FormulaValue.New("connectortest")),
                     new NamedValue("procedure", FormulaValue.New("sp_1"))
                 },
-                "parameters",
+                executeProcedureV2.RequiredParameters[3], // parameters
                 context,
                 CancellationToken.None).ConfigureAwait(false);
             
@@ -700,11 +700,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.NotNull(suggestions2);
             Assert.NotNull(suggestions2.Suggestions);
             Assert.Single(suggestions2.Suggestions);
-
+            
             Assert.True(executeProcedureV2.ReturnParameterType.SupportsSuggestions);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
-            ConnectorType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(
+            ConnectorType returnType = await executeProcedureV2.GetConnectorReturnTypeAsync(
                  new NamedValue[]
                 {
                     new NamedValue("server", FormulaValue.New("pfxdev-sql.database.windows.net")),
@@ -767,14 +767,31 @@ POST https://tip1002-002.azure-apihub.net/invoke
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");
-            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("organization", FormulaValue.New("https://org283e9949.crm10.dynamics.com")) }, "entityName", context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(
+                new NamedValue[] 
+                { 
+                    new NamedValue("organization", FormulaValue.New("https://org283e9949.crm10.dynamics.com")) 
+                },
+                createRecord.RequiredParameters[1], // entityName
+                context,
+                CancellationToken.None).ConfigureAwait(false);
+
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
             Assert.Equal(651, suggestions1.Suggestions.Count);
             Assert.Equal("AAD Users", suggestions1.Suggestions[0].DisplayName);
             Assert.Equal("aadusers", ((StringValue)suggestions1.Suggestions[0].Suggestion).Value);
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_2.json");
-            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("organization", FormulaValue.New("https://org283e9949.crm10.dynamics.com")), new NamedValue("entityName", FormulaValue.New("accounts")) }, "item", context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(
+                new NamedValue[] 
+                { 
+                    new NamedValue("organization", FormulaValue.New("https://org283e9949.crm10.dynamics.com")), 
+                    new NamedValue("entityName", FormulaValue.New("accounts")) 
+                },
+                createRecord.RequiredParameters[2], // item
+                context, 
+                CancellationToken.None).ConfigureAwait(false);
+
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[2];
             Assert.Equal(119, suggestions2.Suggestions.Count);
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);

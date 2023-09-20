@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             NamedValue[] namedValues = knownParameters.Select((kp, i) => new NamedValue(ConnectorFunction.RequiredParameters[i].Name, kp)).ToArray();
-            return (await ConnectorFunction.GetConnectorSuggestionsAsync(namedValues.ToArray(), ConnectorFunction.RequiredParameters[argPosition].Name, runtimeContext, cancellationToken).ConfigureAwait(false))?.ConnectorSuggestions;
+            return (await ConnectorFunction.GetConnectorSuggestionsAsync(namedValues.ToArray(), ConnectorFunction.RequiredParameters[argPosition], runtimeContext, cancellationToken).ConfigureAwait(false))?.ConnectorSuggestions;
         }
     }
 }
