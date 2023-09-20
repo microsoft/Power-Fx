@@ -520,8 +520,10 @@ namespace Microsoft.PowerFx.Connectors
 
         internal static (ConnectorType ConnectorType, string UnsupportedReason) GetConnectorReturnType(this OpenApiOperation openApiOperation, bool numberIsFloat)
         {
-            var responses = openApiOperation.Responses;
-            if (!responses.TryGetValue("200", out OpenApiResponse response))
+            OpenApiResponses responses = openApiOperation.Responses;
+            OpenApiResponse response = responses.FirstOrDefault(kvp => kvp.Key?.Length == 3 && kvp.Key.StartsWith("2", StringComparison.Ordinal)).Value;
+
+            if (response == null)
             {
                 // If no 200, but "default", use that. 
                 if (!responses.TryGetValue("default", out response))
@@ -539,10 +541,10 @@ namespace Microsoft.PowerFx.Connectors
 
             // Responses is a list by content-type. Find "application/json"
             // Headers are case insensitive.
-            foreach (var kv3 in response.Content)
+            foreach (KeyValuePair<string, OpenApiMediaType> contentKvp in response.Content)
             {
-                string mediaType = kv3.Key.Split(';')[0];
-                OpenApiMediaType openApiMediaType = kv3.Value;
+                string mediaType = contentKvp.Key.Split(';')[0];
+                OpenApiMediaType openApiMediaType = contentKvp.Value;
 
                 if (string.Equals(mediaType, ContentType_ApplicationJson, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(mediaType, ContentType_TextPlain, StringComparison.OrdinalIgnoreCase) ||
