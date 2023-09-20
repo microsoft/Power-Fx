@@ -37,6 +37,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private bool _hasSemicolon = false;
 
+        // This is used in NamedFormula mode to record startindex of named formula identifier token.
+        private int _startingIndex = 0;
+
         private readonly TokenCursor _curs;
         private readonly Stack<Flags> _flagsMode;
         private List<TexlError> _errors;
@@ -306,6 +309,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
 
                 ParseTrivia();
+                _startingIndex = thisIdentifier.Span.Min;
 
                 if (_curs.TidCur == TokKind.Semicolon)
                 {
@@ -342,7 +346,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result)));
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex));
 
                         // If the result was an error, keep moving cursor until end of named formula expression
                         if (result.Kind == NodeKind.Error)
