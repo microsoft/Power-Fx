@@ -122,6 +122,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 // Undocumented but safe to ignore
                 infoExtensions.Remove("x-ms-connector-name");
+                infoExtensions.Remove("x-ms-keywords");                
 
                 if (infoExtensions.Any())
                 {
@@ -270,6 +271,7 @@ namespace Microsoft.PowerFx.Connectors
 
                 opExtensions.Remove("x-ms-test-value");
                 opExtensions.Remove(XMsUrlEncoding);
+                opExtensions.Remove("x-ms-openai-data");
 
                 // Not supported x-ms-no-generic-test - Present in https://github.com/microsoft/PowerPlatformConnectors but not documented
                 // Other not supported extensions:
