@@ -890,5 +890,30 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(namedFormulaCount, userDefinitionResult.NamedFormulas.Count());
             Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
         }
+
+        [Theory]
+
+        [InlineData("a = 10; b = a + c ; c = 20;", 3, false, new int[] { 0, 8, 20 })]
+        [InlineData("a = 10; b = in(valid ; c = 20;", 3, true, new int[] { 0, 8, 23 })]
+        public void TestNamedFormulaStarIndex(string script, int namedFormulaCount, bool expectErrors, int[] expectedStartingIndex)
+        {
+            var parserOptions = new ParserOptions()
+            {
+                AllowsSideEffects = false
+            };
+
+            var userDefinitions = UserDefinitions.ProcessUserDefinitions(script, parserOptions, out var userDefinitionResult);
+
+            var nfs = userDefinitionResult.NamedFormulas;
+            Assert.Equal(namedFormulaCount, nfs.Count());
+            Assert.Equal(expectErrors, userDefinitionResult.Errors?.Any() ?? false);
+
+            int i = 0;
+            foreach (var nf in nfs)
+            {
+                Assert.Equal(expectedStartingIndex[i], nf.StartingIndex);
+                i++;
+            }
+        }
     }
 }
