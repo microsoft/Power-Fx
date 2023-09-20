@@ -37,6 +37,9 @@ namespace Microsoft.PowerFx.Core.Parser
 
         private bool _hasSemicolon = false;
 
+        // This is used in NamedFormula mode to record startindex of named formula identifier token.
+        private int _startingIndex = 0;
+
         private readonly TokenCursor _curs;
         private readonly Stack<Flags> _flagsMode;
         private List<TexlError> _errors;
@@ -287,6 +290,24 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
+        private Token GetNewOrExistingToken(Token existingToken)
+        {
+            var isNamedFormulaMode = _flagsMode.Peek().HasFlag(Flags.NamedFormulas);
+            if (existingToken == null || !isNamedFormulaMode || existingToken.Span.BaseIndex != null)
+            {
+                return existingToken;
+            }
+
+            Token tok = existingToken;
+            Contracts.Assert(tok.Span.Min >= _startingIndex);
+            Contracts.Assert(tok.Span.Lim >= _startingIndex);
+
+            var min = tok.Span.Min - _startingIndex;
+            var lim = tok.Span.Lim - _startingIndex;
+
+            return tok.Clone(new Span(min, lim, _startingIndex));
+        }
+
         private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
@@ -306,6 +327,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
 
                 ParseTrivia();
+                _startingIndex = thisIdentifier.Span.Min;
 
                 if (_curs.TidCur == TokKind.Semicolon)
                 {
@@ -342,7 +364,7 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result)));
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex));
 
                         // If the result was an error, keep moving cursor until end of named formula expression
                         if (result.Kind == NodeKind.Error)
