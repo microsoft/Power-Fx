@@ -81,17 +81,17 @@ Errors: Error 23-35: The type of this argument 'Value' does not match the expect
 >> 4;x.t
 Table({Value:1},{Value:88},{Value:3})
 
->> Patch(x.t, {Value:77}, {Value:Float(66)})
-Errors: Error 23-40: The type of this argument 'Value' does not match the expected type 'Decimal'. Found type 'Number'.|Error 0-41: The function 'Patch' has some invalid arguments.
+>> Patch(x.t, {Value:88}, {Value:Float(66)})
+{Value:66}
 
 >> 5;x.t
-Table({Value:1},{Value:88},{Value:3})
+Table({Value:1},{Value:66},{Value:3})
 
 >> Patch(x.t, First(x.t), {Value:false})
 {Value:0}
 
 >> 6;x.t
-Table({Value:0},{Value:88},{Value:3})
+Table({Value:0},{Value:66},{Value:3})
 
 
 
