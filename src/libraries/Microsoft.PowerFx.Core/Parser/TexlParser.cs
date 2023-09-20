@@ -290,24 +290,6 @@ namespace Microsoft.PowerFx.Core.Parser
             }
         }
 
-        private Token GetNewOrExistingToken(Token existingToken)
-        {
-            var isNamedFormulaMode = _flagsMode.Peek().HasFlag(Flags.NamedFormulas);
-            if (existingToken == null || !isNamedFormulaMode || existingToken.Span.BaseIndex != null)
-            {
-                return existingToken;
-            }
-
-            Token tok = existingToken;
-            Contracts.Assert(tok.Span.Min >= _startingIndex);
-            Contracts.Assert(tok.Span.Lim >= _startingIndex);
-
-            var min = tok.Span.Min - _startingIndex;
-            var lim = tok.Span.Lim - _startingIndex;
-
-            return tok.Clone(new Span(min, lim, _startingIndex));
-        }
-
         private ParseUserDefinitionResult ParseUDFsAndNamedFormulas(string script, ParserOptions parserOptions)
         {
             var udfs = new List<UDF>();
