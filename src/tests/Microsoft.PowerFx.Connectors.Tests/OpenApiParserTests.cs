@@ -177,7 +177,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             OpenApiDocument apiDoc = testConnector._apiDocument;
 
             PowerFxConfig pfxConfig = new PowerFxConfig(Features.PowerFxV1);
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc).OrderBy(cf => cf.Name).ToList()[19];
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b").OrderBy(cf => cf.Name).ToList()[19];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, offset:w, resolutions:O, text:s], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -190,7 +190,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language_Response.json");
-            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient)
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, () => "No Auth", httpClient)
             {
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
@@ -205,11 +205,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var testConnector2 = new LoggingTestServer(@"Swagger\Azure Cognitive Service for Language.json");
             using var httpClient2 = new HttpClient(testConnector2);
             testConnector2.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language_Response.json");
-            using PowerPlatformConnectorClient client2 = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient2)
+            using PowerPlatformConnectorClient client2 = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, () => "No Auth", httpClient2)
             {
                 SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878",
             };
-
+            
             BaseRuntimeConnectorContext context2 = new TestConnectorRuntimeContext("ACSL", client2);
 
             FormulaValue httpResult2 = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context2, CancellationToken.None).ConfigureAwait(false);
@@ -284,7 +284,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using var httpClient = new HttpClient(testConnector);
             testConnector.SetResponseFromFile(@"Responses\Azure Cognitive Service for Language v2.1_Response.json");
 
-            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc).OrderBy(cf => cf.Name).ToList()[13];
+            ConnectorFunction function = OpenApiParser.GetFunctions("ACSL", apiDoc, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b").OrderBy(cf => cf.Name).ToList()[13];
             Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
             Assert.Equal("![kind:s, result:![detectedLanguage:s, prediction:![entities:*[category:s, confidenceScore:w, extraInformation:O, length:w, multipleResolutions:b, offset:w, resolutions:O, text:s, topResolution:O], intents:*[category:s, confidenceScore:w], projectKind:s, topIntent:s], query:s]]", function.ReturnType.ToStringWithDisplayNames());
 
@@ -295,7 +295,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             FormulaValue analysisInputParam = engine.Eval(analysisInput);
             FormulaValue parametersParam = engine.Eval(parameters);
 
-            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, "16e7c181-2f8d-4cae-b1f0-179c5c4e4d8b" /* connectionId */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://lucgen-apim.azure-api.net", "aaa373836ffd4915bf6eefd63d164adc" /* environment Id */, () => "No Auth", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878", };
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("ACSL", client);
             
             FormulaValue httpResult = await function.InvokeAsync(new FormulaValue[] { analysisInputParam, parametersParam }, context, CancellationToken.None).ConfigureAwait(false);
@@ -647,11 +647,11 @@ namespace Microsoft.PowerFx.Connectors.Tests
         {
             using var testConnector = new LoggingTestServer(@"Swagger\SQL Server.json");
             using var httpClient = new HttpClient(testConnector);            
-            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, "4bf9a87fc9054b6db3a4d07a1c1f5a5b" /* connectionId */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1002-002.azure-apihub.net", "ddadf2c7-ebdd-ec01-a5d1-502dc07f04b4" /* environment Id */, () => "eyJ0eXAi...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client);
 
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("SQL", testConnector._apiDocument, "4bf9a87fc9054b6db3a4d07a1c1f5a5b").ToArray();
             ConnectorFunction executeProcedureV2 = functions.First(f => f.Name == "ExecuteProcedureV2");
 
             Assert.True(executeProcedureV2.RequiredParameters[0].SupportsDynamicIntellisense);
@@ -759,11 +759,11 @@ POST https://tip1002-002.azure-apihub.net/invoke
         {
             using var testConnector = new LoggingTestServer(@"Swagger\Dataverse.json");
             using var httpClient = new HttpClient(testConnector);
-            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, "461a30624723445c9ba87313d8bbefa3" /* connectionId */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
+            using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient("https://tip1-shared.azure-apim.net", "Default-9f6be790-4a16-4dd6-9850-44a0d2649aef" /* environment Id */, () => "eyJ0eXAiO...", httpClient) { SessionId = "a41bd03b-6c3c-4509-a844-e8c51b61f878" };
 
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("DV", client);
 
-            ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", testConnector._apiDocument).ToArray();
+            ConnectorFunction[] functions = OpenApiParser.GetFunctions("DV", testConnector._apiDocument, "461a30624723445c9ba87313d8bbefa3").ToArray();
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");

@@ -45,15 +45,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
-                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment                    
                     () => "eyJ0eXA...",
                     httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddActionConnector("SQL", apiDoc);
+            config.AddPowerPlatformActionConnector("SQL", apiDoc, "5f57ec83acef477b8ccc769e52fa22cc");
             testConnector.SetResponseFromFile(responseIndex switch
             {
                 0 => null,
@@ -126,15 +125,14 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
-                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment                    
                     () => "eyJ0eXA...",
                     httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddActionConnector("SQL", apiDoc);
+            config.AddPowerPlatformActionConnector("SQL", apiDoc, "5f57ec83acef477b8ccc769e52fa22cc");
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -183,8 +181,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
-                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment                    
                     () => "eyJ0eXA...",
                     httpClient)
             {
@@ -199,7 +196,7 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
                 BaseAddress = client.BaseAddress
             };
             const string cxNamespace = "SQL";
-            config.AddActionConnector(new ConnectorSettings(cxNamespace), apiDoc);
+            config.AddPowerPlatformActionConnector(cxNamespace, apiDoc, "5f57ec83acef477b8ccc769e52fa22cc");
             if (networkCall > 0)
             {
                 testConnector.SetResponseFromFile(responseIndex switch
@@ -245,9 +242,9 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             string token = @"eyJ0eXA...";
 
             using HttpClient httpClient = new HttpClient(testConnector);
-            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "2f0cc19d-893e-e765-b15d-2906e3231c09" /* env */, "6fb0a1a8e2f5487eafbe306821d8377e" /* connId */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
+            using PowerPlatformConnectorClient ppClient = new PowerPlatformConnectorClient("https://tip1-shared-002.azure-apim.net", "2f0cc19d-893e-e765-b15d-2906e3231c09" /* env */, () => $"{token}", httpClient) { SessionId = "547d471f-c04c-4c4a-b3af-337ab0637a0d" };
 
-            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc).OrderBy(f => f.Name).ToList();
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("SP", apiDoc, "6fb0a1a8e2f5487eafbe306821d8377e").OrderBy(f => f.Name).ToList();
 
             // Total 101 functions, including 1 deprecated & 50 internal functions (and no deprecated+internal functions)
             Assert.Equal(101, functions.Count);
@@ -279,15 +276,14 @@ $@"POST https://tip1-shared-002.azure-apim.net/invoke
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
-                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment                    
                     () => "eyJ0eXA...",
                     httpClient)
             {
                 SessionId = "8e67ebdc-d402-455a-b33a-304820832383"
             };
 
-            config.AddActionConnector("SQL", apiDoc);
+            config.AddPowerPlatformActionConnector("SQL", apiDoc, "5f57ec83acef477b8ccc769e52fa22cc");
             RecalcEngine engine = new RecalcEngine(config);
             BasicServiceProvider serviceProvider = new BasicServiceProvider().AddRuntimeContext(new TestConnectorRuntimeContext("SQL", client));
 

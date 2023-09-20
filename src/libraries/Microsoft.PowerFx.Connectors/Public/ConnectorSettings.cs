@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 using System;
+using Microsoft.PowerFx.Core.Utils;
 
 namespace Microsoft.PowerFx.Connectors
 {
@@ -13,6 +14,7 @@ namespace Microsoft.PowerFx.Connectors
         public ConnectorSettings(string @namespace)
         {
             Namespace = @namespace;
+            Validate();
         }
 
         /// <summary>
@@ -40,6 +42,19 @@ namespace Microsoft.PowerFx.Connectors
         /// Allow using functions that are identified as unsupported.
         /// NotSupportedReason property will still be specified.
         /// </summary>
-        public bool AllowUnsupportedFunctions { get; init; } = false;            
+        public bool AllowUnsupportedFunctions { get; init; } = false;        
+        
+        public void Validate()
+        {
+            if (Namespace == null)
+            {
+                throw new ArgumentNullException(nameof(Namespace), "Namespace cannot be null");
+            }
+
+            if (!DName.IsValidDName(Namespace))
+            {
+                throw new ArgumentException(nameof(Namespace), $"invalid functionNamespace: {Namespace}");
+            }
+        }
     }
 }

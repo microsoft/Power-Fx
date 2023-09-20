@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -23,13 +24,13 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly HttpMessageInvoker _httpClient;
         private readonly ConnectorFunction _function;
-        private readonly bool _returnRawResults;
+        private readonly bool _returnRawResults;        
 
-        public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext brcc)
+        public HttpFunctionInvoker(ConnectorFunction function, BaseRuntimeConnectorContext connectorContext)
         {
-            _function = function;
-            _httpClient = brcc.GetInvoker(function.Namespace);            
-            _returnRawResults = brcc.ReturnRawResults;
+            _function = function ?? throw new ArgumentNullException(nameof(function));
+            _httpClient = (connectorContext ?? throw new ArgumentNullException(nameof(connectorContext))).GetInvoker(function.Namespace);            
+            _returnRawResults = connectorContext.ReturnRawResults;            
         }
 
         internal static void VerifyCanHandle(ParameterLocation? location)
@@ -78,7 +79,7 @@ namespace Microsoft.PowerFx.Connectors
 
             foreach (OpenApiParameter param in _function.Operation.Parameters)
             {
-                if (map.TryGetValue(param.Name, out var paramValue))
+                if (map.TryGetValue(param.Name, out FormulaValue paramValue) || _function.GlobalContext.ConnectorValues?.TryGetValue(param.Name, out paramValue) == true)
                 {
                     var valueStr = paramValue?.ToObject()?.ToString() ?? string.Empty;
 
@@ -112,6 +113,18 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             var url = (OpenApiParser.GetServer(_function.Servers, _httpClient) ?? string.Empty) + path + query.ToString();
+
+            // Replace connectionId or other parameters in the URL
+            foreach (Match m in new Regex(@"{(?<p>[^{}]+)}").Matches(url))
+            {
+                string toReplace = m.Groups["p"].Value;
+
+                if (_function.GlobalContext.ConnectorValues?.TryGetValue(toReplace, out FormulaValue value) == true)
+                {
+                    url = url.Replace("{" + toReplace + "}", value.ToObject().ToString());
+                }
+            }
+
             var request = new HttpRequestMessage(_function.HttpMethod, url);
 
             foreach (var kv in headers)
@@ -339,7 +352,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private async Task<FormulaValue> ExecuteHttpRequest(string cacheScope, bool throwOnError, HttpRequestMessage request, HttpMessageInvoker localInvoker, CancellationToken cancellationToken)
         {
-            var client = localInvoker ?? _httpClient;
+            HttpMessageInvoker client = localInvoker ?? _httpClient;
             var response = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
             return await DecodeResponseAsync(response, throwOnError).ConfigureAwait(false);
         }
@@ -350,7 +363,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         private readonly string _cacheScope;
         private readonly HttpFunctionInvoker _invoker;
-        private readonly bool _throwOnError;
+        private readonly bool _throwOnError;        
 
         public ScopedHttpFunctionInvoker(DPath ns, string name, string cacheScope, HttpFunctionInvoker invoker, bool throwOnError = false)
         {
@@ -359,7 +372,7 @@ namespace Microsoft.PowerFx.Connectors
 
             _cacheScope = cacheScope;
             _invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
-            _throwOnError = throwOnError;
+            _throwOnError = throwOnError;            
         }
 
         public DPath Namespace { get; }

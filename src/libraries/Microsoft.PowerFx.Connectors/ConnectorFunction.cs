@@ -71,6 +71,8 @@ namespace Microsoft.PowerFx.Connectors
             }
         }
 
+        internal bool Filtered { get; }
+
         /// <summary>
         /// Defines if the function is deprecated.
         /// </summary>
@@ -222,12 +224,12 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Dynamic schema extension on return type (response).
         /// </summary>
-        internal ConnectorDynamicSchema DynamicReturnSchema => EnsureConnectorFunction(ReturnParameterType?.DynamicReturnSchema, FunctionList);
+        internal ConnectorDynamicSchema DynamicReturnSchema => EnsureConnectorFunction(ReturnParameterType?.DynamicReturnSchema, GlobalContext.FunctionList);
 
         /// <summary>
         /// Dynamic schema extension on return type (response).
         /// </summary>
-        internal ConnectorDynamicProperty DynamicReturnProperty => EnsureConnectorFunction(ReturnParameterType?.DynamicReturnProperty, FunctionList);
+        internal ConnectorDynamicProperty DynamicReturnProperty => EnsureConnectorFunction(ReturnParameterType?.DynamicReturnProperty, GlobalContext.FunctionList);
 
         /// <summary>
         /// Return type when determined at runtime/by dynamic intellisense.
@@ -248,10 +250,7 @@ namespace Microsoft.PowerFx.Connectors
 
         private DType[] _parameterTypes;
 
-        /// <summary>
-        /// List of functions in the same swagger file. Used for resolving dynamic schema/property.
-        /// </summary>
-        internal IReadOnlyList<ConnectorFunction> FunctionList { get; }
+        internal ConnectorGlobalContext GlobalContext { get; }
 
         // Those parameters are protected by EnsureInitialized
         private int _arityMin;
@@ -266,17 +265,31 @@ namespace Microsoft.PowerFx.Connectors
         // Those properties are only used by HttpFunctionInvoker
         internal ConnectorParameterInternals _internals = null;
 
-        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList)
+        internal ConnectorFunction(OpenApiOperation openApiOperation, bool isSupported, string notSupportedReason, string name, string operationPath, HttpMethod httpMethod, ConnectorSettings connectorSettings, List<ConnectorFunction> functionList, IReadOnlyDictionary<string, FormulaValue> namedValues)
         {
             Operation = openApiOperation ?? throw new ArgumentNullException(nameof(openApiOperation));
             Name = name ?? throw new ArgumentNullException(nameof(name));
             OperationPath = operationPath ?? throw new ArgumentNullException(nameof(operationPath));
             HttpMethod = httpMethod ?? throw new ArgumentNullException(nameof(httpMethod));
             ConnectorSettings = connectorSettings;
-            FunctionList = functionList ?? throw new ArgumentNullException(nameof(functionList));
+            GlobalContext = new ConnectorGlobalContext(functionList ?? throw new ArgumentNullException(nameof(functionList)), namedValues);
 
             _isSupported = isSupported || connectorSettings.AllowUnsupportedFunctions;
             _notSupportedReason = notSupportedReason ?? (isSupported ? string.Empty : throw new ArgumentNullException(nameof(notSupportedReason)));
+
+            int nvCount = namedValues?.Count(nv => nv.Key != "connectionId") ?? 0;
+            if (nvCount > 0)
+            {
+                EnsureInitialized();
+                Filtered = _requiredParameters.Length < nvCount || !_requiredParameters.Take(nvCount).All(rp => namedValues.Keys.Contains(rp.Name));
+
+                if (!Filtered)
+                {
+                    _requiredParameters = _requiredParameters.Skip(nvCount).ToArray();
+                    _arityMin -= nvCount;
+                    _arityMax -= nvCount;
+                }
+            }
         }
 
         /// <summary>
@@ -625,7 +638,7 @@ namespace Microsoft.PowerFx.Connectors
         private async Task<FormulaValue> ConnectorDynamicCallAsync(ConnectionDynamicApi dynamicApi, FormulaValue[] arguments, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction.InvokeAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
+            return await EnsureConnectorFunction(dynamicApi, GlobalContext.FunctionList).ConnectorFunction.InvokeAsync(arguments, runtimeContext.WithRawResults(), cancellationToken).ConfigureAwait(false);
         }
 
         private void EnsureInitialized()
@@ -668,7 +681,7 @@ namespace Microsoft.PowerFx.Connectors
         {
             List<FormulaValue> arguments = new List<FormulaValue>();
 
-            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, FunctionList).ConnectorFunction;
+            ConnectorFunction functionToBeCalled = EnsureConnectorFunction(dynamicApi, GlobalContext.FunctionList).ConnectorFunction;
 
             foreach (ConnectorParameter connectorParameter in functionToBeCalled.RequiredParameters)
             {

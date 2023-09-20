@@ -44,7 +44,7 @@ namespace Microsoft.PowerFx.Functions
         {
             var arg0 = args[0];
 
-#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete -- IRRewrite :: First(SP) -> First(GetItems(SP, ConnectorContext)) // First(SetContext(SP, ConnectorContext))
             if (arg0 is QueryableTableValue tableQueryable)
             {
 #pragma warning restore CS0618 // Type or member is obsolete

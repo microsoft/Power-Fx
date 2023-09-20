@@ -349,13 +349,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
                     allFunctions.Add(title, functions);
                     var config = new PowerFxConfig();
-                    using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token")
+                    using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", () => "Some JWT token")
                     {
                         SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
                     };
 
                     // Check we can add the service (more comprehensive test)
-                    config.AddActionConnector("Connector", doc);
+                    config.AddPowerPlatformActionConnector("Connector", doc, "72c42ee1b3c7403c8e73aa9c02a7fbcc");
                 }
                 catch (Exception ex)
                 {
@@ -445,9 +445,9 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("C", doc);
 
             var config = new PowerFxConfig();
-            using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", "72c42ee1b3c7403c8e73aa9c02a7fbcc", () => "Some JWT token") { SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f" };
+            using var client = new PowerPlatformConnectorClient("firstrelease-001.azure-apim.net", "839eace6-59ab-4243-97ec-a5b8fcc104e4", () => "Some JWT token") { SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f" };
 
-            config.AddActionConnector("Connector", doc);
+            config.AddPowerPlatformActionConnector("Connector", doc, "72c42ee1b3c7403c8e73aa9c02a7fbcc");
         }
     }
 

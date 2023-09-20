@@ -3,10 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Microsoft.PowerFx.Types;
 using static Microsoft.PowerFx.Connectors.Constants;
 using static Microsoft.PowerFx.Connectors.OpenApiHelperFunctions;
 
@@ -14,12 +16,17 @@ namespace Microsoft.PowerFx.Connectors
 {
     public class OpenApiParser
     {
-        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument)
+        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> namedValues = null)
         {
-            return GetFunctions(new ConnectorSettings(@namespace), openApiDocument);
+            return GetFunctions(new ConnectorSettings(@namespace), openApiDocument, namedValues);
         }
 
-        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
+        public static IEnumerable<ConnectorFunction> GetFunctions(string @namespace, OpenApiDocument openApiDocument, string connectionId)
+        {
+            return GetFunctions(new ConnectorSettings(@namespace), openApiDocument, new ReadOnlyDictionary<string, FormulaValue>(new Dictionary<string, FormulaValue>() { { "connectionId", FormulaValue.New(connectionId) } }));
+        }        
+
+        public static IEnumerable<ConnectorFunction> GetFunctions(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> namedValues = null)
         {
             bool connectorIsSupported = true;
             string connectorNotSupportedReason = string.Empty;
@@ -37,7 +44,7 @@ namespace Microsoft.PowerFx.Connectors
                 string notSupportedReason = string.Empty;
 
                 // Skip Webhooks
-                if (ops.Extensions.Any(kvp => kvp.Key == "x-ms-notification-content"))
+                if (ops.Extensions.Any(kvp => kvp.Key == XMsNotificationContent))
                 {
                     continue;
                 }
@@ -64,12 +71,12 @@ namespace Microsoft.PowerFx.Connectors
                     isSupported = isSupported && connectorIsSupported;
                     notSupportedReason = string.IsNullOrEmpty(connectorNotSupportedReason) ? notSupportedReason : connectorNotSupportedReason;
 
-                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions) { Servers = openApiDocument.Servers };
+                    ConnectorFunction connectorFunction = new ConnectorFunction(op, isSupported, notSupportedReason, operationName, opPath, verb, connectorSettings, functions, namedValues) { Servers = openApiDocument.Servers };
                     functions.Add(connectorFunction);
                 }
             }
 
-            return functions;
+            return functions.Where(f => !f.Filtered);
         }
 
         private static void ValidateSupportedOpenApiDocument(OpenApiDocument openApiDocument, ref bool isSupported, ref string notSupportedReason, bool ignoreUnknownExtensions)
@@ -324,9 +331,9 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         // Parse an OpenApiDocument and return functions. 
-        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) Parse(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument)
+        internal static (List<ConnectorFunction> connectorFunctions, List<ConnectorTexlFunction> texlFunctions) Parse(ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> namedValues = null)
         {
-            List<ConnectorFunction> cFunctions = GetFunctions(connectorSettings, openApiDocument).ToList();
+            List<ConnectorFunction> cFunctions = GetFunctions(connectorSettings, openApiDocument, namedValues).ToList();
             List<ConnectorTexlFunction> tFunctions = cFunctions.Select(f => new ConnectorTexlFunction(f)).ToList();
 
             return (cFunctions, tFunctions);

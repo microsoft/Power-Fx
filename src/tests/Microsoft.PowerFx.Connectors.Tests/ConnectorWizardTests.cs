@@ -28,8 +28,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
-                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment                    
                     () => "_eyJ0eXA...",
                     httpClient)
             {
@@ -42,7 +41,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // Get all functions based on OpenApi document and using provided http client
             // throwOnError is set to true so that any later GetParameters call will generate an exception in case of HTTP failure (HTTP result not 200)
             // Default behavior: no exception and no suggestion in case of error
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc);
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, "5f57ec83acef477b8ccc769e52fa22cc");
 
             Assert.Equal(64, functions.Count());
 
@@ -150,8 +149,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             using HttpClient httpClient = new HttpClient(testConnector);
             using PowerPlatformConnectorClient client = new PowerPlatformConnectorClient(
                     "tip1-shared-002.azure-apim.net",           // endpoint 
-                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment
-                    "5f57ec83acef477b8ccc769e52fa22cc",         // connectionId
+                    "a2df3fb8-e4a4-e5e6-905c-e3dff9f93b46",     // environment                    
                     () => "_eyJ0eXA...",
                     httpClient)
             {
@@ -159,7 +157,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             };
 
             OpenApiDocument apiDoc = testConnector._apiDocument;
-            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc); 
+            IEnumerable<ConnectorFunction> functions = OpenApiParser.GetFunctions("SQL", apiDoc, "5f57ec83acef477b8ccc769e52fa22cc"); 
             ConnectorFunction function = functions.First(cf => cf.Name == "ExecuteProcedureV2");
 
             BaseRuntimeConnectorContext context = new TestConnectorRuntimeContext("SQL", client, throwOnError: true);
