@@ -290,7 +290,7 @@ namespace Microsoft.PowerFx
                         //    else
                         //        list.Add(arg);
 
-                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, list).ConfigureAwait(false);
+                        result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
                     }
                     catch (CustomFunctionErrorException ex)
                     {

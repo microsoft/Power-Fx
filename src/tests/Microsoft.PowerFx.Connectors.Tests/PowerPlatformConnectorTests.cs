@@ -857,8 +857,9 @@ namespace Microsoft.PowerFx.Tests
             });
 
             ConnectorTableValue sqlTable = await config.AddTabularConnector("Customers", apiDoc, globals, client, CancellationToken.None).ConfigureAwait(false);
-            client.Dispose();
-            client = new PowerPlatformConnectorClient();
+            
+            //client.Dispose();
+            //client = new PowerPlatformConnectorClient();
 
             var engine = new RecalcEngine(config);
             RuntimeConfig rc = new RuntimeConfig(new SymbolValues().Add(sqlTable.Name, sqlTable)).AddRuntimeContext(new TestConnectorRuntimeContext(sqlTable.Namespace, client));

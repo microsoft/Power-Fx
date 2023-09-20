@@ -88,7 +88,7 @@ namespace Microsoft.PowerFx
 
             // Retrieve table schema with dynamic intellisense on 'GetItem' function            
             ConnectorFunction getItem = tabularFunctions.First(f => f.Name.Contains("GetItem") && !f.Name.Contains("GetItems")); // SQL: GetItemV2 (not GetItemsV2)
-            ConnectorType tableSchema = await getItem.GetConnectorReturnSchemaAsync(globalValues.Select(kvp => new NamedValue(kvp)).ToArray(), new TempConnectorContext(client), cancellationToken).ConfigureAwait(false);
+            ConnectorType tableSchema = await getItem.GetConnectorReturnTypeAsync(globalValues.Select(kvp => new NamedValue(kvp)).ToArray(), new TempConnectorContext(client), cancellationToken).ConfigureAwait(false);
 
             return tableSchema == null
                 ? throw new InvalidOperationException("Cannot determine table schema")
