@@ -703,7 +703,6 @@ namespace Microsoft.PowerFx.Core.Localization
 
         public static ErrorResourceKey ErrNotSupportedFormat_Func = new ErrorResourceKey("ErrNotSupportedFormat_Func");
 
-        public static ErrorResourceKey ErrExpectedRVRecordTableMismatch = new ErrorResourceKey("ErrExpectedRVRecordTableMismatch");
         public static ErrorResourceKey ErrExpectedRVExtraFields = new ErrorResourceKey("ErrExpectedRVExtraFields");
         public static ErrorResourceKey ErrExpectedRVMissingFields = new ErrorResourceKey("ErrExpectedRVMissingFields");
         public static ErrorResourceKey ErrExpectedRVFieldNotFound = new ErrorResourceKey("ErrExpectedRVFieldNotFound");

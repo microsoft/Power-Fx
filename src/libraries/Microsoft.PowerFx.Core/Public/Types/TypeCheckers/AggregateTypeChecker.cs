@@ -43,8 +43,6 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
         }
 
         public abstract bool IsMatch(AggregateType sourceType, AggregateType typeToCheck, FormulaTypeChecker formulaTypeChecker);
-
-        //public abstract bool IsFieldMatch(FormulaType sourceField, FormulaType fieldToCheck);
     }
 
     internal class StrictAggregateTypeChecker : AggregateTypeChecker
@@ -65,7 +63,8 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                 _errorList.Add(new ExpressionError()
                 {
                     Kind = ErrorKind.Validation,
-                    ResourceKey = TexlStrings.ErrExpectedRVRecordTableMismatch
+                    ResourceKey = TexlStrings.ErrExpectedRVTypeMismatch,
+                    MessageArgs = new object[] { maybeDVEntitySource ?? sourceType._type.GetKindString(),  maybeDVEntityTarget ?? typeToCheck._type.GetKindString() }
                 });
 
                 return false;
@@ -119,6 +118,9 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
 
                 if (!formulaTypeChecker.Run(sourceFieldType, targetFieldType))
                 {
+                    // remove error added by formulaTypeChecker
+                    _errorList.Remove(_errorList.Last());
+
                     _errorList.Add(new ExpressionError()
                     {
                         Kind = ErrorKind.Validation,

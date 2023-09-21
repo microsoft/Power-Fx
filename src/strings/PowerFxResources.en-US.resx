@@ -5244,10 +5244,6 @@
     <value>Type literal declaration was invalid</value>
     <comment>Error message when type binding is invalid</comment>
   </data>
-  <data name="ErrExpectedRVRecordTableMismatch" xml:space="preserve">
-    <value>Type mismatch between source and target record types. Both does not belong to the same Table.</value>
-    <comment>Error Message.</comment>
-  </data>
   <data name="ErrExpectedRVExtraFields" xml:space="preserve">
     <value>Type mismatch between source and target record types. Given type has extra fields: {0}.</value>
     <comment>Error Message.</comment>

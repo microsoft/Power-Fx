@@ -465,9 +465,8 @@ namespace Microsoft.PowerFx
 
         private void VerifyReturnTypeMatch()
         {
-            var aggregateErrors = new List<ExpressionError>();
             var ftErrors = new List<ExpressionError>();
-            var aggregateTypeChecker = new StrictAggregateTypeChecker(aggregateErrors);
+            var aggregateTypeChecker = new StrictAggregateTypeChecker(ftErrors);
 
             FormulaTypeChecker ftChecker;
             if (_expectedReturnTypesCoerces)
@@ -481,14 +480,7 @@ namespace Microsoft.PowerFx
 
             ftChecker.Run(this._expectedReturnTypes, this.ReturnType);
 
-            if (aggregateErrors.Count > 0)
-            {
-                _errors.AddRange(aggregateErrors);
-            }
-            else
-            {
-                _errors.AddRange(ftErrors);
-            }
+            _errors.AddRange(ftErrors);
         }
 
         /// <summary>
