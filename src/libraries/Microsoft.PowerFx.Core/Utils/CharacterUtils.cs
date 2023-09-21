@@ -179,9 +179,11 @@ namespace Microsoft.PowerFx.Core.Utils
                         if (isValueAnInterpolatedString)
                         {
                             UpdateEscapeInternals($"{value[i]}{value[i]}", value, lengthForBuilder, i, ref charsToAdd, ref sb);
+                            break;
                         }
 
-                        break;
+                        // fall through
+                        goto default;
                     default:
                         charsToAdd++;
                         break;
