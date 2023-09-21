@@ -283,13 +283,6 @@ namespace Microsoft.PowerFx
                 {
                     try
                     {
-                        //List<FormulaValue> list = new List<FormulaValue>();
-                        //foreach (var arg in args)
-                        //    if (arg is ISupportServices iss)
-                        //        list.Add(iss.Clone().SetServices(_services))
-                        //    else
-                        //        list.Add(arg);
-
                         result = await ptr(this, context.IncrementStackDepthCounter(childContext), node.IRContext, args).ConfigureAwait(false);
                     }
                     catch (CustomFunctionErrorException ex)

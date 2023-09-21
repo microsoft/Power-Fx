@@ -1,41 +1,45 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
+using Microsoft.PowerFx.Core.Functions;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.IR.Nodes;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Syntax;
+using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Connectors
 {
     public static class EngineExtensions
     {
         public static void EnableTabularConnectors(this Engine engine)
-        {
-            IRTransform t = new TabularTransform(hooks, maxRows);
-
-            engine.IRTransformList.Add(t);
-        }
-    }
-
-    private class TabularTransform : IRTransform
-    {
-        private readonly DelegationEngineExtensions.DelegationHooks _hooks;
-        private readonly int _maxRows;
-
-        public DelegationIRTransform(DelegationEngineExtensions.DelegationHooks hooks, int maxRows)
-            : base("DelegationIRTransform")
-        {
-            _hooks = hooks;
-            _maxRows = maxRows;
+        {            
+            engine.IRTransformList.Add(new TabularTransform());
         }
 
-        public override IntermediateNode Transform(IntermediateNode node, ICollection<ExpressionError> errors)
+        private class TabularTransform : IRTransform
         {
-            var visitor = new DelegationIRVisitor(_hooks, errors, _maxRows);
-            var context = new DelegationIRVisitor.Context();
+            public TabularTransform()
+                : base(nameof(TabularTransform))
+            {
+            }
 
-            var ret = node.Accept(visitor, context);
-            var result = visitor.Materialize(ret);
-            return result;
+            public override IntermediateNode Transform(IntermediateNode node, ICollection<ExpressionError> errors)
+            {
+                TabularIRVisitor visitor = new TabularIRVisitor();
+                TabularIRVisitor.Context context = new TabularIRVisitor.Context();
+
+                TabularIRVisitor.RetVal ret = node.Accept(visitor, context);
+                IntermediateNode result = visitor.Materialize(ret);
+                return result;
+            }
         }
     }
 }

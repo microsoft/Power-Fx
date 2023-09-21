@@ -4,8 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.Entities;
 using Microsoft.PowerFx.Core.IR;
@@ -19,17 +17,15 @@ namespace Microsoft.PowerFx.Connectors
 
         public string Namespace => _tabularFunctions[0].Namespace;
 
-        private readonly IReadOnlyList<ConnectorFunction> _tabularFunctions;
-        private readonly ConnectorFunction _getItems;
-        private IEnumerable<DValue<RecordValue>> _cachedRows;
+        protected internal readonly IReadOnlyList<ConnectorFunction> _tabularFunctions;
+        protected readonly ConnectorFunction _getItems;        
 
         public ConnectorTableValue(string tableName, IReadOnlyList<ConnectorFunction> tabularFunctions, RecordType recordType)
-            : this(IRContext.NotInSource(recordType.ToTable()))
+            : this(IRContext.NotInSource(new ConnectorTableType(recordType)))
         {
             Name = tableName;
 
-            _tabularFunctions = tabularFunctions;            
-            _cachedRows = null;
+            _tabularFunctions = tabularFunctions;                        
             _getItems = _tabularFunctions.First(f => f.Name.Contains("GetItems"));
         }
 
@@ -50,23 +46,15 @@ namespace Microsoft.PowerFx.Connectors
         {
         }
 
-        public override IEnumerable<DValue<RecordValue>> Rows => GetRows().ConfigureAwait(false).GetAwaiter().GetResult();
+        public override IEnumerable<DValue<RecordValue>> Rows => GetRowsInternal().ConfigureAwait(false).GetAwaiter().GetResult();
 
-        private async Task<IEnumerable<DValue<RecordValue>>> GetRows()
+        protected virtual Task<IEnumerable<DValue<RecordValue>>> GetRowsInternal()
         {
-            if (_cachedRows != null)
-            {
-                return _cachedRows;
-            }
-
-            FormulaValue rows = await _getItems.InvokeAsync(Array.Empty<FormulaValue>(), null, CancellationToken.None).ConfigureAwait(false);
-
-            return null;
+            throw new Exception("No HttpClient context");
         }
 
-        public void Refresh()
-        {            
-            _cachedRows = null;
+        public virtual void Refresh()
+        {                        
         }
     }
 }
