@@ -332,7 +332,7 @@ namespace Microsoft.PowerFx.Connectors
         public async Task<ConnectorType> GetConnectorTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            return await GetConnectorTypeAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, context, cancellationToken).ConfigureAwait(false);           
+            return await GetConnectorTypeAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, context, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -466,11 +466,11 @@ namespace Microsoft.PowerFx.Connectors
             result = await PostProcessResultAsync(result, context, invoker, cancellationToken).ConfigureAwait(false);
 
             return result;
-        }        
+        }
 
         internal async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsAsync(NamedValue[] knownParameters, ConnectorParameter parameter, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();            
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (parameter != null)
             {
@@ -510,7 +510,7 @@ namespace Microsoft.PowerFx.Connectors
             }
 
             return null;
-        }       
+        }
 
         private static JsonElement ExtractFromJson(StringValue sv, string location)
         {
