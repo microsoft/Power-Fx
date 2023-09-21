@@ -96,5 +96,12 @@ Table({Value:1},{Value:66},{Value:3})
 >> 6;x.t
 Table({Value:1},{Value:0},{Value:3})
 
+>> Set(j, [{d:1,t:"hi",b:true},{d:2,t:"bye",b:false},{d:3,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"),b:Blank()}] )
+Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"bye"},{b:Blank(),d:3,t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"})
 
+>> Patch( j, Index(j,3), {b:true,d:1,t:GUID("1d9ec9bf-0000-0000-0000-c2a723a0f49d")} )
+{b:true,d:1,t:"1d9ec9bf-0000-0000-0000-c2a723a0f49d"}
+
+>> 0;j
+Table({b:true,d:1,t:"hi"},{b:false,d:2,t:"bye"},{b:true,d:1,t:"1d9ec9bf-0000-0000-0000-c2a723a0f49d"})
 

@@ -5045,7 +5045,7 @@
     
   </data>
   <data name="ErrTypeLiteral_InvalidTypeDefinition" xml:space="preserve">
-    <value>Type literal declaration was invalid</value>
+    <value>Tüübi sõnasõnaline deklaratsioon ei sobinud</value>
     
   </data>
 </root>
