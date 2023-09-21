@@ -61,13 +61,13 @@ namespace Microsoft.PowerFx.Connectors
 
         internal RecordType HiddenRecordType { get; }
 
-        public bool SupportsSuggestions => DynamicReturnSchema != null || DynamicReturnProperty != null;
+        public bool SupportsSuggestions => DynamicSchema != null || DynamicProperty != null;
 
-        internal ConnectorDynamicSchema DynamicReturnSchema { get; private set; }
+        internal ConnectorDynamicSchema DynamicSchema { get; private set; }
 
-        internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
+        internal ConnectorDynamicProperty DynamicProperty { get; private set; }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, bool numberIsFloat)
         {
             Name = openApiParameter?.Name;
             IsRequired = openApiParameter?.Required == true;
@@ -95,8 +95,11 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     EnumValues = Array.Empty<FormulaValue>();
                     EnumDisplayNames = Array.Empty<string>();
-                }
+                }                                               
             }
+
+            DynamicSchema = openApiParameter.GetDynamicSchema(numberIsFloat);
+            DynamicProperty = openApiParameter.GetDynamicProperty(numberIsFloat);
         }
 
         internal ConnectorType()
@@ -104,42 +107,36 @@ namespace Microsoft.PowerFx.Connectors
             FormulaType = new BlankType();
         }
 
-        internal ConnectorType(OpenApiSchema schema)
-            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType())
+        internal ConnectorType(OpenApiSchema schema, bool numberIsFloat)
+            : this(schema, null, new OpenApiParameter() { Schema = schema }.ToConnectorType(), numberIsFloat)
         {
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, ConnectorType connectorType)
-            : this(schema, openApiParameter, connectorType.FormulaType)
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, ConnectorType connectorType, bool numberIsFloat)
+            : this(schema, openApiParameter, connectorType.FormulaType, numberIsFloat)
         {
             Fields = connectorType.Fields;
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType)
-            : this(schema, openApiParameter, formulaType)
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType, RecordType hiddenRecordType, bool numberIsFloat)
+            : this(schema, openApiParameter, formulaType, numberIsFloat)
         {
             HiddenRecordType = hiddenRecordType;
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType)
-            : this(schema, openApiParameter, tableType)
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, TableType tableType, ConnectorType tableConnectorType, bool numberIsFloat)
+            : this(schema, openApiParameter, tableType, numberIsFloat)
         {
             Fields = new ConnectorType[] { tableConnectorType };
             HiddenRecordType = null;
         }
 
-        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields)
-            : this(schema, openApiParameter, recordType)
+        internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, RecordType recordType, RecordType hiddenRecordType, ConnectorType[] fields, ConnectorType[] hiddenFields, bool numberIsFloat)
+            : this(schema, openApiParameter, recordType, numberIsFloat)
         {
             Fields = fields;
             HiddenFields = hiddenFields;
             HiddenRecordType = hiddenRecordType;
-        }
-
-        internal void SetDynamicReturnSchemaAndProperty(ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
-        {
-            DynamicReturnSchema = dynamicSchema;
-            DynamicReturnProperty = dynamicProperty;
         }
 
         private OptionSet GetOptionSet()

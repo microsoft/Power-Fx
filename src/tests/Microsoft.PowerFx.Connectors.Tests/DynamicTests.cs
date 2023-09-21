@@ -84,7 +84,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal("14|24", string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesStatic.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStatic.RequiredParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesStatic.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStatic.RequiredParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("14|24", string.Join("|", cParameters.ParametersWithSuggestions[0].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal(string.Empty, string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesStaticOptional.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticOptional.OptionalParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesStaticOptional.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticOptional.OptionalParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("14|24", string.Join("|", cParameters.ParametersWithSuggestions[0].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -126,7 +126,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal("14|24", string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesStaticNoValueCollection.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticNoValueCollection.RequiredParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesStaticNoValueCollection.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticNoValueCollection.RequiredParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("14|24", string.Join("|", cParameters.ParametersWithSuggestions[0].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -146,7 +146,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal(string.Empty, string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesStaticInvalidValueCollection.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticInvalidValueCollection.RequiredParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesStaticInvalidValueCollection.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticInvalidValueCollection.RequiredParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(string.Empty, string.Join("|", cParameters.ParametersWithSuggestions[0].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -166,7 +166,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal(string.Empty, string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesStaticInvalidDisplayName.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticInvalidDisplayName.RequiredParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesStaticInvalidDisplayName.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticInvalidDisplayName.RequiredParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(string.Empty, string.Join("|", cParameters.ParametersWithSuggestions[0].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -186,7 +186,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal(string.Empty, string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesStaticInvalidValuePath.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticInvalidValuePath.RequiredParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesStaticInvalidValuePath.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesStaticInvalidValuePath.RequiredParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(string.Empty, string.Join("|", cParameters.ParametersWithSuggestions[0].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal("15|25", string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(5)) }, getWithDynamicValuesDynamic.RequiredParameters[1].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(5)) }, getWithDynamicValuesDynamic.RequiredParameters[1], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("15|25", string.Join("|", cParameters.ParametersWithSuggestions[1].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -227,17 +227,23 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal("50|60", string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicValuesMultipleDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(5)), new NamedValue("j", FormulaValue.New(7)) }, getWithDynamicValuesMultipleDynamic.RequiredParameters[2].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicValuesMultipleDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(5)), new NamedValue("j", FormulaValue.New(7)) }, getWithDynamicValuesMultipleDynamic.RequiredParameters[2], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("50|60", string.Join("|", cParameters.ParametersWithSuggestions[2].Suggestions.Select(s => s.DisplayName)));
 
             // Missing parameter
-            cParameters = await getWithDynamicValuesMultipleDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(5)) }, getWithDynamicValuesMultipleDynamic.RequiredParameters[2].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            cParameters = await getWithDynamicValuesMultipleDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(5)) }, getWithDynamicValuesMultipleDynamic.RequiredParameters[2], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal(string.Empty, string.Join("|", cParameters.ParametersWithSuggestions[2].Suggestions.Select(s => s.DisplayName)));
 
-            cParameters = await getWithDynamicValuesMultipleDynamic.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            cParameters = await getWithDynamicValuesMultipleDynamic.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("Database|Date|Index|Summary|SummaryEnum|TemperatureC|TemperatureF", string.Join("|", cParameters.ParametersWithSuggestions[3].Suggestions.Select(s => s.DisplayName)));
             Assert.Equal("![Database:![], Date:d, Index:w, Summary:s, SummaryEnum:w, TemperatureC:w, TemperatureF:w]", cParameters.ParametersWithSuggestions[3].FormulaType.ToStringWithDisplayNames());
             Assert.Equal(Visibility.Important, cParameters.ParametersWithSuggestions[3].ConnectorType.Fields[4].Visibility);
+
+            ConnectorType cType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal("![Database:![], Date:d, Index:w, Summary:s, SummaryEnum:w, TemperatureC:w, TemperatureF:w]", cType.FormulaType.ToStringWithDisplayNames());
+
+            cType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), cType.Fields[5], connectorContext, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal("![Name:s, PrimaryKey:s]", cType.FormulaType.ToStringWithDisplayNames());
         }
 
         [SkippableFact]
@@ -256,7 +262,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal("13|23", string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicListStatic.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicListStatic.RequiredParameters[0].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicListStatic.GetParameterSuggestionsAsync(Array.Empty<NamedValue>(), getWithDynamicListStatic.RequiredParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("13|23", string.Join("|", cParameters.ParametersWithSuggestions[0].Suggestions.Select(s => s.DisplayName)));
         }
 
@@ -276,7 +282,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             IIntellisenseResult suggestions = engine.Suggest(result, expr.Length, services);
             Assert.Equal("16|26", string.Join("|", suggestions.Suggestions.Select(s => s.DisplayText.Text)));
 
-            ConnectorParameters cParameters = await getWithDynamicListDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(6)) }, getWithDynamicListDynamic.RequiredParameters[1].Name, connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters cParameters = await getWithDynamicListDynamic.GetParameterSuggestionsAsync(new NamedValue[] { new NamedValue("i", FormulaValue.New(6)) }, getWithDynamicListDynamic.RequiredParameters[1], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("16|26", string.Join("|", cParameters.ParametersWithSuggestions[1].Suggestions.Select(s => s.DisplayName)));
         }
     }

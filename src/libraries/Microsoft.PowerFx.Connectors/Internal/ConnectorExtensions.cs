@@ -14,12 +14,7 @@ namespace Microsoft.PowerFx.Connectors
         internal string Summary;
         internal bool ExplicitInput;
 
-        internal ConnectorExtensions(IOpenApiExtensible extension)
-            : this(extension, null)
-        {
-        }
-
-        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body)
+        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body, bool numberIsFloat)
         {
             ConnectorDynamicValue = extension.GetDynamicValue();
             ConnectorDynamicList = extension.GetDynamicList();
