@@ -14,12 +14,12 @@ namespace Microsoft.PowerFx.Connectors
         internal string Summary;
         internal bool ExplicitInput;
 
-        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body, bool numberIsFloat)
+        internal ConnectorExtensions(IOpenApiExtensible extension, IOpenApiExtensible body)
         {
-            ConnectorDynamicValue = extension.GetDynamicValue(numberIsFloat);
-            ConnectorDynamicList = extension.GetDynamicList(numberIsFloat);
-            ConnectorDynamicSchema = extension.GetDynamicSchema(numberIsFloat);
-            ConnectorDynamicProperty = extension.GetDynamicProperty(numberIsFloat);
+            ConnectorDynamicValue = extension.GetDynamicValue();
+            ConnectorDynamicList = extension.GetDynamicList();
+            ConnectorDynamicSchema = extension.GetDynamicSchema();
+            ConnectorDynamicProperty = extension.GetDynamicProperty();
 
             Summary = (body ?? extension).GetSummary();
             ExplicitInput = (body ?? extension).GetExplicitInput();

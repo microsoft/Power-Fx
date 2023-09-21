@@ -28,7 +28,7 @@ namespace Microsoft.PowerFx
         /// </summary>
         /// 
         /// <param name="config">Config to add the functions to.</param>
-        /// <param name="connectorSettings">Connector settings containing Namespace, NumberIsFloat and MaxRows to be returned.</param>        
+        /// <param name="connectorSettings">Connector settings containing Namespace and MaxRows to be returned.</param>        
         /// <param name="openApiDocument">An API document. This can represent multiple formats, including Swagger 2.0 and OpenAPI 3.0.</param>
         /// <param name="globalValues">Global constant values, like connectionId.</param>
         public static IReadOnlyList<ConnectorFunction> AddActionConnector(this PowerFxConfig config, ConnectorSettings connectorSettings, OpenApiDocument openApiDocument, IReadOnlyDictionary<string, FormulaValue> globalValues = null)

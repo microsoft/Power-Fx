@@ -23,12 +23,6 @@ namespace Microsoft.PowerFx.Connectors
         public string Namespace { get; }
 
         /// <summary>
-        /// NumberIsFloat.
-        /// </summary>
-        [Obsolete("This shouldn't be used anymore.")]
-        public bool NumberIsFloat { get; init; } = false;
-
-        /// <summary>
         /// Maximum number of rows to return, per page.
         /// </summary>
         public int MaxRows { get; init; } = 1000;
