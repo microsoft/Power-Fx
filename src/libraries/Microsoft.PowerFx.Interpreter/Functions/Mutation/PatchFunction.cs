@@ -206,7 +206,7 @@ namespace Microsoft.PowerFx.Functions
                     continue;
                 }
 
-                // Checks if all record names exist against table type and if its possible to coerce.
+                // Checks if all record names exist against table type and if its possible to coerce.                
                 bool checkAggregateNames = curType.CheckAggregateNames(dataSourceType, args[i], errors, SupportsParamCoercion, context.Features.PowerFxV1CompatibilityRules);
 
                 isValid = isValid && checkAggregateNames;
@@ -214,7 +214,7 @@ namespace Microsoft.PowerFx.Functions
 
                 if (isValid && SupportsParamCoercion && !dataSourceType.Accepts(curType, exact: true, useLegacyDateTimeAccepts: false, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                 {
-                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded))
+                    if (!curType.TryGetCoercionSubType(dataSourceType, out DType coercionType, out var coercionNeeded, usePowerFxV1CompatibilityRules: context.Features.PowerFxV1CompatibilityRules))
                     {
                         isValid = false;
                     }
