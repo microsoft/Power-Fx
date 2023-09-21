@@ -351,7 +351,7 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(a.Value, b.Value);
         }
 
-        private static Engine GetEngineWithFeatureGatedFunctions()
+        internal static Engine GetEngineWithFeatureGatedFunctions()
         {
             SymbolTable symbol = new SymbolTable();
             symbol.AddFunctions(BuiltinFunctionsCore._featureGateFunctions);
