@@ -97,7 +97,7 @@ namespace Microsoft.PowerFx.Tests
  x-ms-client-environment-id: /providers/Microsoft.PowerApps/environments/839eace6-59ab-4243-97ec-a5b8fcc104e4
  x-ms-client-session-id: MySessionId
  x-ms-request-method: GET
- x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=Imperial
+ x-ms-request-url: /apim/msnweather/shared-msnweather-8d08e763-937a-45bf-a2ea-c5ed-ecc70ca4/current/Redmond?units=I
  x-ms-user-agent: PowerFx/{version}
 ";
             AssertEqual(expected, actual);
@@ -576,7 +576,12 @@ namespace Microsoft.PowerFx.Tests
                 SessionId = "ce55fe97-6e74-4f56-b8cf-529e275b253f"
             };
 
-            config.AddPowerPlatformActionConnector("Office365Outlook", apiDoc, "c112a9268f2a419bb0ced71f5e48ece9");
+            IReadOnlyList<ConnectorFunction> functions = config.AddActionConnector("Office365Outlook", apiDoc);
+            Assert.True(functions.First(f => f.Name == "GetEmailsV2").IsDeprecated);
+            Assert.False(functions.First(f => f.Name == "SendEmailV2").IsDeprecated);
+            Assert.Equal("OpenApiOperation is deprecated", functions.First(f => f.Name == "GetEmailsV2").NotSupportedReason);
+            Assert.Equal(string.Empty, functions.First(f => f.Name == "SendEmailV2").NotSupportedReason);
+
             RecalcEngine engine = new RecalcEngine(config);
             RuntimeConfig runtimeConfig = new RuntimeConfig().AddRuntimeContext(new TestConnectorRuntimeContext("Office365Outlook", client));
 
