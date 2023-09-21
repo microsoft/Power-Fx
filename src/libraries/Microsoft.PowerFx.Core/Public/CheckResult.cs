@@ -5,19 +5,23 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
+using Microsoft.PowerFx.Core.App.ErrorContainers;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Logging;
 using Microsoft.PowerFx.Core.Public;
+using Microsoft.PowerFx.Core.Public.Types.TypeCheckers;
 using Microsoft.PowerFx.Core.Texl.Intellisense;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Intellisense;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
+using static Microsoft.PowerFx.CheckResult;
 
 namespace Microsoft.PowerFx
 {
@@ -178,35 +182,19 @@ namespace Microsoft.PowerFx
             return this.SetBindingInfo(symbolTable);
         }
 
-        private FormulaType[] _expectedReturnTypes;
+        private FormulaType _expectedReturnTypes;
+        private bool _expectedReturnTypesCoerces;
 
-        internal FormulaType ExpectedReturnType => _expectedReturnTypes?.FirstOrDefault() ?? FormulaType.Unknown;
+        internal FormulaType ExpectedReturnType => _expectedReturnTypes ?? FormulaType.Unknown;
 
         // This function only injects errors but does not do any coercion.
         public CheckResult SetExpectedReturnValue(FormulaType type, bool allowCoerceTo = false)
         {
-            if (allowCoerceTo)
-            {
-#pragma warning disable CS0618 // Type or member is obsolete, uses soon to be private method SetExpectedReturnValue(params FormulaType[] expectedReturnTypes).
-                switch (type)
-                {
-                    case StringType:
-                        return SetExpectedReturnValue(StringValue.AllowedListConvertToString.ToArray());
-                    case NumberType:
-                        return SetExpectedReturnValue(NumberValue.AllowedListConvertToNumber.ToArray());
-                    case DecimalType:
-                        return SetExpectedReturnValue(DecimalValue.AllowedListConvertToDecimal.ToArray());
-                    case DateTimeType:
-                        return SetExpectedReturnValue(DateTimeValue.AllowedListConvertToDateTime.ToArray());
-                    case BooleanType:
-                        return SetExpectedReturnValue(BooleanValue.AllowedListConvertToBoolean.ToArray());
-                    default:
-                        throw new NotImplementedException($"Setting ExpectedReturnType to {type.GetType().FullName} is not implemented");
-                }
-            }
+            VerifyEngine();
 
-            return SetExpectedReturnValue(new FormulaType[] { type });
-#pragma warning restore CS0618 // Type or member is obsolete
+            _expectedReturnTypes = type;
+            _expectedReturnTypesCoerces = allowCoerceTo;
+            return this;
         }
 
         [Obsolete("Use SetExpectedReturnValue(FormulaType type, bool allowCoerceTo) instead")]
@@ -214,8 +202,7 @@ namespace Microsoft.PowerFx
         {
             VerifyEngine();
 
-            _expectedReturnTypes = expectedReturnTypes;
-            return this;
+            return this.SetExpectedReturnValue(expectedReturnTypes.FirstOrDefault(), true);
         }
 
         // No additional binding is required
@@ -468,33 +455,34 @@ namespace Microsoft.PowerFx
                     if (binding.ResultType.Kind != DKind.Enum)
                     {
                         this.ReturnType = FormulaType.Build(binding.ResultType);
+                        VerifyReturnTypeMatch();
                     }
-                }
-
-                if (this.ReturnType != null && this.ReturnType != FormulaType.Blank && this._expectedReturnTypes != null && !this._expectedReturnTypes.Contains(this.ReturnType))
-                {
-                    string expectedTypesStr = this._expectedReturnTypes[0]._type.GetKindString();
-                    for (int i = 1; i < this._expectedReturnTypes.Length; i++)
-                    {
-                        expectedTypesStr += ", " + this._expectedReturnTypes[i]._type.GetKindString();
-                    }
-
-                    _errors.Add(new ExpressionError
-                    {
-                        Kind = ErrorKind.Validation,
-                        Severity = ErrorSeverity.Critical,
-                        Span = new Span(0, this._expression.Length),
-                        ResourceKey = TexlStrings.ErrTypeError_WrongType,
-                        _messageArgs = new object[]
-                        {
-                            expectedTypesStr,
-                            this.ReturnType._type.GetKindString()
-                        }
-                    });
                 }
             }
 
             return _binding;
+        }
+
+        private void VerifyReturnTypeMatch()
+        {
+            var aggregateErrors = new List<ExpressionError>();
+            var ftErrors = new List<ExpressionError>();
+            var aggregateTypeChecker = new StrictAggregateTypeChecker(aggregateErrors);
+
+            FormulaTypeChecker ftChecker;
+            if (_expectedReturnTypesCoerces)
+            {
+                ftChecker = new FormulaTypeCheckerWithCoercion(aggregateTypeChecker, ftErrors);
+            }
+            else
+            {
+                ftChecker = new FormulaTypeCheckerNumberCoercionOnly(aggregateTypeChecker, ftErrors);
+            }
+
+            ftChecker.Run(this._expectedReturnTypes, this.ReturnType);
+
+            _errors.AddRange(aggregateErrors);
+            _errors.AddRange(ftErrors);
         }
 
         /// <summary>
@@ -683,7 +671,7 @@ namespace Microsoft.PowerFx
             {
                 AllowsSideEffects = allowSideEffects,
                 IsPreV1Semantics = isV1,
-                ExpectedReturnType = this._expectedReturnTypes?.FirstOrDefault(),
+                ExpectedReturnType = this._expectedReturnTypes,
                 SuggestedSymbols = symbolEntries
             };
 

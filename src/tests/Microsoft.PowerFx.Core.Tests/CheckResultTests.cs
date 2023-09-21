@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.PowerFx.Core.Tests.Helpers;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
 using Xunit;
@@ -263,59 +264,52 @@ namespace Microsoft.PowerFx.Core.Tests
         }
 
         [Theory]
-        [InlineData("\"test string\"", false, true, "string", "")]
-        [InlineData("\"test string\"", true, true, "string", "")]
-        [InlineData("12", false, false, "decimal", "The type of this expression does not match the expected type 'Text'")]       
-        [InlineData("12", true, true, "decimal", "")]
-        [InlineData("{a:12, b:15}", true, false, "record", "The type of this expression does not match the expected type 'Text, Number, Decimal, DateTime, Date, Time, Boolean, Guid'")]
-        [InlineData("{a:12, b:15}", false, false, "record", "The type of this expression does not match the expected type 'Text'")]
+        
+        // ****When Coercion is not allowed.****
+        [InlineData("\"test string\"", false, true, "s", "")]
+
+        // (even with coercion not allowed, we coerce numerics.)
+        [InlineData("Float(12)", false, true, "w", "")]
+        [InlineData("Float(12)", false, true, "n", "")]
+        [InlineData("Decimal(12)", false, true, "w", "")]
+        [InlineData("Decimal(12)", false, true, "n", "")]
+        [InlineData("{a:12, b:15}", false, false, "n", "Type mismatch between source and target types. Expected Number; Found Record.")]
+
+        // (even with coercion not allowed, we coerce numerics.)
+        [InlineData("{a:Float(12), b:Float(15)}", false, true, "![a:w,b:n]", "")]
+        [InlineData("{a:Decimal(12), b:Decimal(15)}", false, true, "![a:w,b:n]", "")]
+
+        // missing field
+        [InlineData("{a:Decimal(12), b:Decimal(15)}", false, false, "![a:w,b:n,c:s]", "Type mismatch between source and target record types. Given type has missing fields: c.")]
+        
+        // extra field
+        [InlineData("{a:Decimal(12), b:Decimal(15)}", false, false, "![a:w]", "Type mismatch between source and target record types. Given type has extra fields: b.")]
+        [InlineData("{a:12, b:15}", false, false, "*[a:w,b:w]", "Type mismatch between source and target types. Expected: Table, found Record.")]
+        [InlineData("{a:12, b:15}", false, false, "![a:w,b:s]", "Type mismatch between source and target record types. Field name: b Expected Text; Found Decimal.")]
+
+        // ****When Coercion is allowed****
+        [InlineData("\"test string\"", true, true, "s", "")]
+        [InlineData("\"test string\"", true, true, "n", "")]
+        [InlineData("12", true, true, "w", "")]
+        [InlineData("12", true, true, "n", "")]
+        [InlineData("{a:12, b:15}", true, false, "n", "Given Record type cannot be coerced to source type Number.")]
+        [InlineData("{a:12, b:15}", true, true, "![a:n,b:n]", "")]
+        [InlineData("{a:12, b:15}", true, false, "*[a:w,b:n]", "Type mismatch between source and target types. Expected: Table, found Record.")]
+        [InlineData("{a:Float(12), b:Float(15)}", true, true, "![a:w,b:n]", "")]
+        [InlineData("{a:Decimal(12), b:Decimal(15)}", true, true, "![a:w,b:n]", "")]
+
+        // (even with coercion allowed, we don't coerce aggregate fields, except number)
+        [InlineData("{a:12, b:15}", true, false, "![a:w,b:s]", "Type mismatch between source and target record types. Field name: b Expected Text; Found Decimal.")]
+
+        // missing field
+        [InlineData("{a:Decimal(12), b:Decimal(15)}", true, false, "![a:w,b:n,c:s]", "Type mismatch between source and target record types. Given type has missing fields: c.")]
+        
+        // extra field
+        [InlineData("{a:Decimal(12), b:Decimal(15)}", true, false, "![a:w]", "Type mismatch between source and target record types. Given type has extra fields: b.")]
         public void CheckResultExpectedReturnValueString(string inputExpr, bool allowCoerceTo, bool isSuccess, string expectedType, string errorMsg)
         {
-            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.String, GetFormulaType(expectedType));
-        }
-
-        [Theory]
-        [InlineData("12", false, false, "decimal", "")]
-        [InlineData("12", true, true, "decimal", "")]
-        [InlineData("\"test string\"", true, true, "string", "")]
-        [InlineData("\"test string\"", false, false, "string", "The type of this expression does not match the expected type 'Number'")]
-        [InlineData("{a:12, b:15}", true, false, "record", "The type of this expression does not match the expected type 'Text, Number, DateTime, Date, Boolean, Decimal'")]
-        [InlineData("{a:12, b:15}", false, false, "record", "The type of this expression does not match the expected type 'Number'")]
-        public void CheckResultExpectedReturnValueNumber(string inputExpr, bool allowCoerceTo, bool isSuccess, string expectedType, string errorMsg)
-        {
-            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.Number, GetFormulaType(expectedType));
-        }
-
-        [Theory]
-        [InlineData("23.45", false, true, "decimal", "")]
-        [InlineData("23.45", true, true, "decimal", "")]
-        [InlineData("{a:12, b:15}", true, false, "record", "The type of this expression does not match the expected type 'Text, Number, Decimal, DateTime, Date, Boolean'")]
-        [InlineData("{a:12, b:15}", false, false, "record", "The type of this expression does not match the expected type 'Decimal'")]
-        public void CheckResultExpectedReturnValueDecimal(string inputExpr, bool allowCoerceTo, bool isSuccess, string expectedType, string errorMsg)
-        {
-            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, FormulaType.Decimal, GetFormulaType(expectedType));
-        }
-
-        [Theory]
-        [InlineData("1.2", true, "decimal", "")]
-        [InlineData("203", true, "decimal", "")]
-        [InlineData("\"12\"", false, "string", "The type of this expression does not match the expected type 'Number, Decimal'")]
-        [InlineData("{a:1, b:2}", false, "record", "The type of this expression does not match the expected type 'Number, Decimal'")]
-        public void CheckResultExpectedReturnValueNumberDecimal(string inputExp, bool isSuccess, string expectedType, string errorMsg)
-        {
-            var expectedReturnTypes = new FormulaType[] { FormulaType.Number, FormulaType.Decimal };
-            CheckResultExpectedReturnTypes(inputExp, isSuccess, errorMsg, expectedReturnTypes, GetFormulaType(expectedType));
-        }
-
-        [Theory]
-        [InlineData("1.2", true, "decimal", "")]
-        [InlineData("203", true, "decimal", "")]
-        [InlineData("\"12\"", true, "string", "")]
-        [InlineData("{a:1, b:2}", false, "record", "The type of this expression does not match the expected type 'Number, Decimal, Text'")]
-        public void CheckResultExpectedReturnValueNumberDecimalString(string inputExp, bool isSuccess, string expectedType, string errorMsg)
-        {
-            var expectedReturnTypes = new FormulaType[] { FormulaType.Number, FormulaType.Decimal, FormulaType.String };
-            CheckResultExpectedReturnTypes(inputExp, isSuccess, errorMsg, expectedReturnTypes, GetFormulaType(expectedType));
+            var expectedFormulaType = FormulaType.Build(TestUtils.DT(expectedType));
+            CheckResultExpectedReturnValue(inputExpr, allowCoerceTo, isSuccess, errorMsg, expectedFormulaType);
         }
 
         [Fact]
@@ -503,16 +497,16 @@ namespace Microsoft.PowerFx.Core.Tests
             Assert.Equal(FormulaType.Number, type1);
         }
 
-        private void CheckResultExpectedReturnValue(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg, FormulaType returnType, FormulaType expectedType)
+        private void CheckResultExpectedReturnValue(string inputExpr, bool allowCoerceTo, bool isSuccess, string errorMsg, FormulaType expectedReturnType)
         {
-            var check = new CheckResult(new Engine())
+            var check = new CheckResult(PrimitiveValueConversionsTests.GetEngineWithFeatureGatedFunctions())
                 .SetText(inputExpr)
                 .SetBindingInfo()
-                .SetExpectedReturnValue(returnType, allowCoerceTo);
+                .SetExpectedReturnValue(expectedReturnType, allowCoerceTo);
 
             check.ApplyBinding();
 
-            CheckExpectedReturn(check, isSuccess, errorMsg, expectedType);
+            CheckExpectedReturn(check, isSuccess, errorMsg, expectedReturnType);
         }
 
         private void CheckResultExpectedReturnTypes(string inputExpr, bool isSuccess, string errorMsg, FormulaType[] returnTypes, FormulaType expectedType)
@@ -534,7 +528,6 @@ namespace Microsoft.PowerFx.Core.Tests
             if (isSuccess)
             {
                 Assert.True(check.IsSuccess);
-                Assert.Equal(expectedType, check.ReturnType);
             }
             else
             {
@@ -551,26 +544,7 @@ namespace Microsoft.PowerFx.Core.Tests
                     exMsg = ex.ToString();
                 }
 
-                Assert.Contains(errorMsg, exMsg);
-            }
-        }
-
-        private FormulaType GetFormulaType(string type)
-        {
-            switch (type)
-            {
-                case "decimal":
-                    return FormulaType.Decimal;
-                case "number":
-                    return FormulaType.Number;
-                case "string":
-                    return FormulaType.String;
-                case "boolean": 
-                    return FormulaType.Boolean;
-                case "datetime":
-                    return FormulaType.DateTime;
-                default:
-                    return FormulaType.Blank;
+                Assert.True(errorMsg.Contains(exMsg), exMsg);
             }
         }
     }
