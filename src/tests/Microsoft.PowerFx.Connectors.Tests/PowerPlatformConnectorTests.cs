@@ -867,6 +867,7 @@ namespace Microsoft.PowerFx.Tests
             //client = new PowerPlatformConnectorClient();
 
             var engine = new RecalcEngine(config);
+            engine.EnableTabularConnectors();
             RuntimeConfig rc = new RuntimeConfig(new SymbolValues().Add(sqlTable.Name, sqlTable)).AddRuntimeContext(new TestConnectorRuntimeContext(sqlTable.Namespace, client));
 
             //testConnector.SetResponseFromFile(@"Responses\SQL Server ExecuteStoredProcedureV2.json");
