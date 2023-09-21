@@ -21,7 +21,7 @@ namespace Microsoft.PowerFx.Connectors
         protected readonly ConnectorFunction _getItems;        
 
         public ConnectorTableValue(string tableName, IReadOnlyList<ConnectorFunction> tabularFunctions, RecordType recordType)
-            : this(IRContext.NotInSource(new ConnectorTableType(recordType)))
+            : base(IRContext.NotInSource(new ConnectorTableType(recordType)))
         {
             Name = tableName;
 

@@ -23,6 +23,11 @@ namespace Microsoft.PowerFx.Connectors
             return new RetVal(node);
         }
 
+        public override RetVal Visit(CallNode node, Context context)
+        {
+            return base.Visit(node, context);
+        }
+
         public override IntermediateNode Materialize(RetVal ret)
         {
             if (!ret.NeedsInjection)

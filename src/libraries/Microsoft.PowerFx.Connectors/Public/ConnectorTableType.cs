@@ -18,13 +18,14 @@ namespace Microsoft.PowerFx.Connectors
 
         public override void Visit(ITypeVisitor vistor)
         {
+            throw new System.NotImplementedException();
         }
     }
 
     // Used in TabularIRVisitor
     internal class ConnectorDType : DType
     {
-        internal RecordType RecordType;
+        internal RecordType RecordType;        
 
         internal ConnectorDType(RecordType recordType)
             : base(recordType.ToTable()._type.Kind)
