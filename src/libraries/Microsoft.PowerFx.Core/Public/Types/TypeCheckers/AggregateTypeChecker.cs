@@ -4,21 +4,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.PowerFx.Core.IR;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
+using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
 {
     internal abstract class AggregateTypeChecker
     {
-        protected ICollection<ExpressionError> _errorList;
+        protected readonly ICollection<ExpressionError> _errorList;
 
         public AggregateTypeChecker(ICollection<ExpressionError> errorList)
         {
             _errorList = errorList ?? throw new ArgumentNullException(nameof(errorList));
         }
 
-        public bool Run(AggregateType sourceType, AggregateType typeToCheck)
+        public bool Run(AggregateType sourceType, AggregateType typeToCheck, FormulaTypeChecker formulaTypeChecker)
         {
             if (sourceType == null || typeToCheck == null)
             {
@@ -29,18 +32,19 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                 _errorList.Add(new ExpressionError()
                 {
                     Kind = ErrorKind.Validation,
-                    Severity = ErrorSeverity.Critical,
-                    Message = $"Type mismatch between source and target types. Expected: {sourceType._type.GetKindString()}, found {typeToCheck._type.GetKindString()}."
+                    ResourceKey = TexlStrings.ErrExpectedRVTypeMismatch,
+                    MessageArgs = new object[] { sourceType._type.GetKindString(), typeToCheck._type.GetKindString() }
                 });
+
                 return false;
             }
 
-            return IsMatch(sourceType, typeToCheck);
+            return IsMatch(sourceType, typeToCheck, formulaTypeChecker);
         }
 
-        public abstract bool IsMatch(AggregateType sourceType, AggregateType typeToCheck);
+        public abstract bool IsMatch(AggregateType sourceType, AggregateType typeToCheck, FormulaTypeChecker formulaTypeChecker);
 
-        public abstract bool IsFieldMatch(FormulaType sourceField, FormulaType fieldToCheck);
+        //public abstract bool IsFieldMatch(FormulaType sourceField, FormulaType fieldToCheck);
     }
 
     internal class StrictAggregateTypeChecker : AggregateTypeChecker
@@ -50,8 +54,23 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
         {
         }
 
-        public override bool IsMatch(AggregateType sourceType, AggregateType typeToCheck)
+        public override bool IsMatch(AggregateType sourceType, AggregateType typeToCheck, FormulaTypeChecker formulaTypeChecker)
         {
+            var maybeDVEntitySource = sourceType.TableSymbolName;
+            var maybeDVEntityTarget = typeToCheck.TableSymbolName;
+
+            if ((maybeDVEntitySource != null || maybeDVEntityTarget != null) &&
+                maybeDVEntitySource != maybeDVEntityTarget)
+            {
+                _errorList.Add(new ExpressionError()
+                {
+                    Kind = ErrorKind.Validation,
+                    ResourceKey = TexlStrings.ErrExpectedRVRecordTableMismatch
+                });
+
+                return false;
+            }
+
             var sourceFieldCount = sourceType.FieldNames.Count();
             var typeToCheckFieldCount = typeToCheck.FieldNames.Count();
             if (sourceFieldCount != typeToCheckFieldCount)
@@ -62,8 +81,8 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                     _errorList.Add(new ExpressionError()
                     {
                         Kind = ErrorKind.Validation,
-                        Severity = ErrorSeverity.Critical,
-                        Message = $"Type mismatch between source and target record types. Given type has extra fields: {extraFields}."
+                        ResourceKey = TexlStrings.ErrExpectedRVExtraFields,
+                        MessageArgs = new object[] { extraFields }
                     });
                 }
                 else
@@ -72,17 +91,11 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                     _errorList.Add(new ExpressionError()
                     {
                         Kind = ErrorKind.Validation,
-                        Severity = ErrorSeverity.Critical,
-                        Message = $"Type mismatch between source and target record types. Given type has missing fields: {missingFields}."
+                        ResourceKey = TexlStrings.ErrExpectedRVMissingFields,
+                        MessageArgs = new object[] { missingFields }
                     });
                 }
 
-                _errorList.Add(new ExpressionError()
-                {
-                    Kind = ErrorKind.Validation,
-                    Severity = ErrorSeverity.Critical,
-                    Message = $"Type mismatch between source and target record types. SourceType field count: {sourceType.FieldNames.Count()}; TypeToCheck field count {typeToCheck.FieldNames.Count()}."
-                });
                 return false;
             }
 
@@ -98,52 +111,25 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                     _errorList.Add(new ExpressionError()
                     {
                         Kind = ErrorKind.Validation,
-                        Severity = ErrorSeverity.Critical,
-                        Message = $"Type mismatch between source and target record types. Field name: {sourceField} not found."
+                        ResourceKey = TexlStrings.ErrExpectedRVFieldNotFound,
+                        MessageArgs = new object[] { sourceField }
                     });
                     return false;
                 }
 
-                if (!IsFieldMatch(sourceFieldType, targetFieldType))
+                if (!formulaTypeChecker.Run(sourceFieldType, targetFieldType))
                 {
                     _errorList.Add(new ExpressionError()
                     {
                         Kind = ErrorKind.Validation,
-                        Severity = ErrorSeverity.Critical,
-                        Message = $"Type mismatch between source and target record types. Field name: {sourceField} Expected {sourceFieldType._type.GetKindString()}; Found {targetFieldType._type.GetKindString()}."
+                        ResourceKey = TexlStrings.ErrExpectedRVFieldTypeMismatch,
+                        MessageArgs = new object[] { sourceField, sourceFieldType._type.GetKindString(), targetFieldType._type.GetKindString() }
                     });
                     return false;
                 }
             }
 
             return true;
-        }
-
-        public override bool IsFieldMatch(FormulaType sourceField, FormulaType fieldToCheck)
-        {
-            if (sourceField == null || fieldToCheck == null)
-            {
-                return false;
-            }
-
-            if (sourceField._type == DType.ObjNull || fieldToCheck._type == DType.ObjNull)
-            {
-                return true;
-            }
-
-            if (sourceField._type.IsAggregate && fieldToCheck._type.IsAggregate)
-            {
-                return IsMatch((AggregateType)sourceField, (AggregateType)fieldToCheck);
-            }
-
-            // allow numeric coercion
-            if ((sourceField._type == DType.Number || sourceField._type == DType.Decimal) &&
-                (fieldToCheck._type == DType.Number || fieldToCheck._type == DType.Decimal))
-            {
-                return true;
-            }
-
-            return sourceField == fieldToCheck;
         }
     }
 }

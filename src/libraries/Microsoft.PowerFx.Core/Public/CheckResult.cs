@@ -481,8 +481,14 @@ namespace Microsoft.PowerFx
 
             ftChecker.Run(this._expectedReturnTypes, this.ReturnType);
 
-            _errors.AddRange(aggregateErrors);
-            _errors.AddRange(ftErrors);
+            if (aggregateErrors.Count > 0)
+            {
+                _errors.AddRange(aggregateErrors);
+            }
+            else
+            {
+                _errors.AddRange(ftErrors);
+            }
         }
 
         /// <summary>

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Types;
 using Microsoft.PowerFx.Types;
 
@@ -10,7 +11,8 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
 {
     internal abstract class FormulaTypeChecker
     {
-        protected ICollection<ExpressionError> _errorList;
+        protected readonly ICollection<ExpressionError> _errorList;
+
         protected readonly AggregateTypeChecker _aggregateTypeChecker;
 
         public bool Run(FormulaType sourceType, FormulaType typeToCheck)
@@ -26,9 +28,9 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
             }
 
             // check Aggregate types
-            if (sourceType._type.IsAggregate && typeToCheck._type.IsAggregate)
+            if (sourceType is AggregateType sourceAggregateType && typeToCheck is AggregateType aggregateTypeToCheck)
             {
-                return _aggregateTypeChecker.Run((AggregateType)sourceType, (AggregateType)typeToCheck);
+                return _aggregateTypeChecker.Run(sourceAggregateType, aggregateTypeToCheck, this);
             }
 
             return IsMatch(sourceType, typeToCheck);
@@ -66,8 +68,8 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                 _errorList.Add(new ExpressionError()
                 {
                     Kind = ErrorKind.Validation,
-                    Severity = ErrorSeverity.Critical,
-                    Message = $"Type mismatch between source and target types. Expected {sourceType._type.GetKindString()}; Found {typeToCheck._type.GetKindString()}."
+                    ResourceKey = TexlStrings.ErrExpectedRVTypeMismatch,
+                    MessageArgs = new object[] { sourceType._type.GetKindString(), typeToCheck._type.GetKindString() }
                 });
             }
 
@@ -90,8 +92,8 @@ namespace Microsoft.PowerFx.Core.Public.Types.TypeCheckers
                 _errorList.Add(new ExpressionError()
                 {
                     Kind = ErrorKind.Validation,
-                    Severity = ErrorSeverity.Critical,
-                    Message = $"Given {typeToCheck._type.GetKindString()} type cannot be coerced to source type {sourceType._type.GetKindString()}."
+                    ResourceKey = TexlStrings.ErrExpectedRVCannotCoerceType,
+                    MessageArgs = new object[] { typeToCheck._type.GetKindString(), sourceType._type.GetKindString() }
                 });
             }
 

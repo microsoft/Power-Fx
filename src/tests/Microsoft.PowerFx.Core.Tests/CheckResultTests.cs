@@ -284,7 +284,7 @@ namespace Microsoft.PowerFx.Core.Tests
         
         // extra field
         [InlineData("{a:Decimal(12), b:Decimal(15)}", false, false, "![a:w]", "Type mismatch between source and target record types. Given type has extra fields: b.")]
-        [InlineData("{a:12, b:15}", false, false, "*[a:w,b:w]", "Type mismatch between source and target types. Expected: Table, found Record.")]
+        [InlineData("{a:12, b:15}", false, false, "*[a:w,b:w]", "Type mismatch between source and target types. Expected Table; Found Record.")]
         [InlineData("{a:12, b:15}", false, false, "![a:w,b:s]", "Type mismatch between source and target record types. Field name: b Expected Text; Found Decimal.")]
 
         // ****When Coercion is allowed****
@@ -294,12 +294,12 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("12", true, true, "n", "")]
         [InlineData("{a:12, b:15}", true, false, "n", "Given Record type cannot be coerced to source type Number.")]
         [InlineData("{a:12, b:15}", true, true, "![a:n,b:n]", "")]
-        [InlineData("{a:12, b:15}", true, false, "*[a:w,b:n]", "Type mismatch between source and target types. Expected: Table, found Record.")]
+        [InlineData("{a:12, b:15}", true, false, "*[a:w,b:n]", "Type mismatch between source and target types. Expected Table; Found Record.")]
         [InlineData("{a:Float(12), b:Float(15)}", true, true, "![a:w,b:n]", "")]
         [InlineData("{a:Decimal(12), b:Decimal(15)}", true, true, "![a:w,b:n]", "")]
 
-        // (even with coercion allowed, we don't coerce aggregate fields, except number)
-        [InlineData("{a:12, b:15}", true, false, "![a:w,b:s]", "Type mismatch between source and target record types. Field name: b Expected Text; Found Decimal.")]
+        // (with coercion allowed, aggregate's field also coerces)
+        [InlineData("{a:12, b:15}", true, true, "![a:w,b:s]", "")]
 
         // missing field
         [InlineData("{a:Decimal(12), b:Decimal(15)}", true, false, "![a:w,b:n,c:s]", "Type mismatch between source and target record types. Given type has missing fields: c.")]
