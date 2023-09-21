@@ -25,10 +25,10 @@ namespace Microsoft.PowerFx.Connectors
     // Used in TabularIRVisitor
     internal class ConnectorDType : DType
     {
-        internal RecordType RecordType;        
+        internal RecordType RecordType;      
 
         internal ConnectorDType(RecordType recordType)
-            : base(recordType.ToTable()._type.Kind)
+            : base(recordType._type.ToTable().Kind)
         {
             RecordType = recordType;
         }
