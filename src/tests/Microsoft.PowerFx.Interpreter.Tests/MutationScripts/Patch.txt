@@ -46,7 +46,7 @@ Errors: Error 22-83: The type of this argument 'b' does not match the expected t
 Table({b:true,d:1,t:"hi"},{b:Blank(),d:12,t:"different"},{b:Blank(),d:3,t:"cycle"})
 
 >> Patch( y, Index(y,3), {b:false,d:1/0,t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d")} )
-{b:false,d:Error({Kind:ErrorKind.Div0}),t:GUID("1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d")}
+{b:false,d:Error({Kind:ErrorKind.Div0}),t:"1d9ec9bf-3b8b-4ff3-bac4-c2a723a0f49d"}
 
 // deep mutation with coercions
 
