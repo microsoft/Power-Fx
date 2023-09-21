@@ -182,7 +182,7 @@ namespace Microsoft.PowerFx.Core.Utils
                             break;
                         }
 
-                        // fall through
+                        // fall through since we want to add the character as a "regular" one
                         goto default;
                     default:
                         charsToAdd++;
