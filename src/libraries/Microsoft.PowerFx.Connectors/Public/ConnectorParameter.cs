@@ -17,24 +17,24 @@ namespace Microsoft.PowerFx.Connectors
 
         internal bool IsBodyParameter = false;
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool numberIsFloat)
-            : this(openApiParameter, null, false, numberIsFloat)
+        internal ConnectorParameter(OpenApiParameter openApiParameter)
+            : this(openApiParameter, null, false)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes, bool numberIsFloat)
-            : this(openApiParameter, null, useHiddenTypes, numberIsFloat)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, bool useHiddenTypes)
+            : this(openApiParameter, null, useHiddenTypes)
         {
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool numberIsFloat)
-            : this(openApiParameter, bodyExtensions, false, numberIsFloat)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions)
+            : this(openApiParameter, bodyExtensions, false)
         {
             IsBodyParameter = true;
         }
 
-        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes, bool numberIsFloat)
-            : base(openApiParameter, bodyExtensions, useHiddenTypes, numberIsFloat)
+        internal ConnectorParameter(OpenApiParameter openApiParameter, IOpenApiExtensible bodyExtensions, bool useHiddenTypes)
+            : base(openApiParameter, bodyExtensions, useHiddenTypes)
         {
             Name = openApiParameter.Name;
             Description = openApiParameter.Description;
