@@ -36,13 +36,6 @@ namespace Microsoft.PowerFx.Connectors
         public string Namespace => ConnectorSettings.Namespace;
 
         /// <summary>
-        /// Numbers are defined as "double" type (otherwise "decimal").
-        /// </summary>        
-#pragma warning disable CS0618 // Type or member is obsolete
-        public bool NumberIsFloat => ConnectorSettings.NumberIsFloat;
-#pragma warning restore CS0618 // Type or member is obsolete
-
-        /// <summary>
         /// ConnectorSettings. Contains the Namespace and other parameters.
         /// </summary>
         public ConnectorSettings ConnectorSettings { get; }
@@ -138,12 +131,12 @@ namespace Microsoft.PowerFx.Connectors
         /// <summary>
         /// Return type of the function.
         /// </summary>
-        public FormulaType ReturnType => Operation.GetReturnType(NumberIsFloat);
+        public FormulaType ReturnType => Operation.GetReturnType();
 
         /// <summary>
         /// Connector return type of the function (contains inner "x-ms-summary" and descriptions).
         /// </summary>
-        internal ConnectorType ConnectorReturnType => Operation.GetConnectorReturnType(NumberIsFloat).ConnectorType;
+        internal ConnectorType ConnectorReturnType => Operation.GetConnectorReturnType().ConnectorType;
 
         /// <summary>
         /// Minimum number of arguments.
@@ -550,7 +543,7 @@ namespace Microsoft.PowerFx.Connectors
             JsonElement je = ExtractFromJson(sv, cds.ValuePath);
             OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return new ConnectorType(schema, NumberIsFloat);
+            return new ConnectorType(schema);
         }
 
         private async Task<ConnectorType> GetConnectorSuggestionsFromDynamicPropertyAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicProperty cdp, CancellationToken cancellationToken)
@@ -573,7 +566,7 @@ namespace Microsoft.PowerFx.Connectors
             JsonElement je = ExtractFromJson(sv, cdp.ItemValuePath);
             OpenApiSchema schema = new OpenApiStringReader().ReadFragment<OpenApiSchema>(je.ToString(), Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0, out OpenApiDiagnostic diag);
 
-            return new ConnectorType(schema, NumberIsFloat);
+            return new ConnectorType(schema);
         }
 
         private async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsFromDynamicValueAsync(NamedValue[] knownParameters, BaseRuntimeConnectorContext context, ConnectorDynamicValue cdv, CancellationToken cancellationToken)
@@ -768,14 +761,14 @@ namespace Microsoft.PowerFx.Connectors
                     }
 
                     HttpFunctionInvoker.VerifyCanHandle(parameter.In);
-                    ConnectorParameter connectorParameter = new ConnectorParameter(parameter, NumberIsFloat);
+                    ConnectorParameter connectorParameter = new ConnectorParameter(parameter);
 
                     if (connectorParameter.HiddenRecordType != null)
                     {
                         throw new NotImplementedException("Unexpected value for a parameter");
                     }
 
-                    if (parameter.Schema.TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue, numberIsFloat: NumberIsFloat))
+                    if (parameter.Schema.TryGetDefaultValue(connectorParameter.FormulaType, out FormulaValue defaultValue))
                     {
                         parameterDefaultValues[parameter.Name] = (connectorParameter.ConnectorType.IsRequired, defaultValue, connectorParameter.FormulaType._type);
                     }
@@ -829,11 +822,11 @@ namespace Microsoft.PowerFx.Connectors
 
                                     OpenApiParameter bodyParameter = new OpenApiParameter() { Name = bodyPropertyName, Schema = bodyPropertySchema, Description = requestBody.Description, Required = bodyPropertyRequired, Extensions = bodyPropertySchema.Extensions };
                                     openApiBodyParameters.Add(bodyParameter);
-                                    ConnectorParameter bodyConnectorParameter2 = new ConnectorParameter(bodyParameter, requestBody, NumberIsFloat);
+                                    ConnectorParameter bodyConnectorParameter2 = new ConnectorParameter(bodyParameter, requestBody);
 
                                     if (bodyConnectorParameter2.HiddenRecordType != null)
                                     {
-                                        hiddenRequiredParameters.Add(new ConnectorParameter(bodyParameter, true, NumberIsFloat));
+                                        hiddenRequiredParameters.Add(new ConnectorParameter(bodyParameter, true));
                                     }
 
                                     List<ConnectorParameter> parameterList = !bodyPropertyRequired ? optionalParameters : bodyPropertyHiddenRequired ? hiddenRequiredParameters : requiredParameters;
@@ -847,7 +840,7 @@ namespace Microsoft.PowerFx.Connectors
                                 OpenApiParameter bodyParameter2 = new OpenApiParameter() { Name = bodyName, Schema = bodySchema, Description = requestBody.Description, Required = requestBody.Required, Extensions = bodySchema.Extensions };
                                 openApiBodyParameters.Add(bodyParameter2);
 
-                                ConnectorParameter bodyConnectorParameter3 = new ConnectorParameter(bodyParameter2, requestBody, NumberIsFloat);
+                                ConnectorParameter bodyConnectorParameter3 = new ConnectorParameter(bodyParameter2, requestBody);
 
                                 if (bodyConnectorParameter3.HiddenRecordType != null)
                                 {
@@ -868,7 +861,7 @@ namespace Microsoft.PowerFx.Connectors
                         OpenApiParameter bodyParameter3 = new OpenApiParameter() { Name = bodyName, Schema = bodyParameterSchema, Description = "Body", Required = requestBody.Required };
                         openApiBodyParameters.Add(bodyParameter3);
 
-                        ConnectorParameter bodyParameter = new ConnectorParameter(bodyParameter3, requestBody, NumberIsFloat);
+                        ConnectorParameter bodyParameter = new ConnectorParameter(bodyParameter3, requestBody);
 
                         List<ConnectorParameter> parameterList = requestBody.Required ? requiredParameters : optionalParameters;
                         parameterList.Add(bodyParameter);
@@ -908,7 +901,7 @@ namespace Microsoft.PowerFx.Connectors
                 _arityMin = _requiredParameters.Length;
                 _arityMax = _arityMin + (_optionalParameters.Length == 0 ? 0 : 1);
 
-                (ConnectorType connectorType, string unsupportedReason) = Operation.GetConnectorReturnType(NumberIsFloat);
+                (ConnectorType connectorType, string unsupportedReason) = Operation.GetConnectorReturnType();
                 _returnParameterType = connectorType;
 
                 if (!string.IsNullOrEmpty(unsupportedReason))
