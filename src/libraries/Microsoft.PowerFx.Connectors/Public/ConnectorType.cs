@@ -59,13 +59,21 @@ namespace Microsoft.PowerFx.Connectors
 
         public Visibility Visibility { get; internal set; }
 
-        internal RecordType HiddenRecordType { get; }
+        internal RecordType HiddenRecordType { get; }       
 
-        public bool SupportsSuggestions => DynamicReturnSchema != null || DynamicReturnProperty != null;
+        public bool SupportsDynamicValuesOrList => DynamicValues != null || DynamicList != null;
 
-        internal ConnectorDynamicSchema DynamicReturnSchema { get; private set; }
+        public bool SupportsDynamicSchemaOrProperty => DynamicSchema != null || DynamicProperty != null;
 
-        internal ConnectorDynamicProperty DynamicReturnProperty { get; private set; }
+        public bool SupportsDynamicIntellisense => SupportsDynamicValuesOrList || SupportsDynamicSchemaOrProperty;
+
+        internal ConnectorDynamicSchema DynamicSchema { get; private set; }
+
+        internal ConnectorDynamicProperty DynamicProperty { get; private set; }
+
+        internal ConnectorDynamicValue DynamicValues { get; private set; }
+
+        internal ConnectorDynamicList DynamicList { get; private set; }
 
         internal ConnectorType(OpenApiSchema schema, OpenApiParameter openApiParameter, FormulaType formulaType)
         {
@@ -95,8 +103,13 @@ namespace Microsoft.PowerFx.Connectors
                 {
                     EnumValues = Array.Empty<FormulaValue>();
                     EnumDisplayNames = Array.Empty<string>();
-                }
+                }                                               
             }
+
+            DynamicSchema = openApiParameter.GetDynamicSchema();
+            DynamicProperty = openApiParameter.GetDynamicProperty();
+            DynamicValues = openApiParameter.GetDynamicValue();
+            DynamicList = openApiParameter.GetDynamicList();
         }
 
         internal ConnectorType()
@@ -134,12 +147,6 @@ namespace Microsoft.PowerFx.Connectors
             Fields = fields;
             HiddenFields = hiddenFields;
             HiddenRecordType = hiddenRecordType;
-        }
-
-        internal void SetDynamicReturnSchemaAndProperty(ConnectorDynamicSchema dynamicSchema, ConnectorDynamicProperty dynamicProperty)
-        {
-            DynamicReturnSchema = dynamicSchema;
-            DynamicReturnProperty = dynamicProperty;
         }
 
         private OptionSet GetOptionSet()

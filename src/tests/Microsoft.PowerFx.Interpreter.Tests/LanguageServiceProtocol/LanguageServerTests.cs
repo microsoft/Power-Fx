@@ -1865,7 +1865,7 @@ namespace Microsoft.PowerFx.Tests.LanguageServiceProtocol.Tests
 
             CheckBehaviorError(_sendToClientData[0], false, out var diags);
 
-            Assert.Contains("The type of this expression does not match the expected type 'Text'. Found type 'Decimal'.", diags.First().Message);
+            Assert.True(diags.First().Message.Contains("Type mismatch between source and target types. Expected Text; Found Decimal."), diags.First().Message);
             Assert.Empty(exList);
         }
 

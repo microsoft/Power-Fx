@@ -11,7 +11,7 @@ namespace Microsoft.PowerFx.Connectors
     {
         public ConnectorType ConnectorType { get; }
 
-        internal ConnectorSuggestions ConnectorSuggestions { get; }
+        public ConnectorSuggestions ConnectorSuggestions { get; }
 
         internal ConnectorEnhancedSuggestions(SuggestionMethod suggestionMethod, IReadOnlyList<ConnectorSuggestion> suggestions, ConnectorType connectorType = null)
         {
