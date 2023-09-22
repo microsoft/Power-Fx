@@ -1043,7 +1043,7 @@
     <comment>Description of the second argument to the 'EDate' function.</comment>    
   </data>
   <data name="AboutEOMonth" xml:space="preserve">
-    <value>Returns a date adjusted by a number of months. The result is the last day of the new month.</value>
+    <value>Returns the last day of the month for a specified date, adjusted by a number of months.</value>
     <comment>Description of 'EOMonth' function.</comment>
   </data>
   <data name="EOMonthArg1" xml:space="preserve">
