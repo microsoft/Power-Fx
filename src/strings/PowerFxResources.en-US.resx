@@ -1060,7 +1060,7 @@
   </data>
   <data name="AboutEOMonth_months" xml:space="preserve">
     <value>>Number of months by which to change the date. A positive value yields a future date, a negative value a past date, and zero will not change the month.</value>
-    <comment>Description of the first argument to the 'EOMonth' function.</comment>     
+    <comment>Description of the second argument to the 'EOMonth' function.</comment>     
   </data>
   <data name="AboutInt" xml:space="preserve">
     <value>Truncates 'number' by rounding toward negative infinity.</value>
