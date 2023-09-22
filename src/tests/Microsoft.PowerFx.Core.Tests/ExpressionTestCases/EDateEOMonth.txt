@@ -150,81 +150,81 @@ Date(2016,2,29)
 Date(2016,3,15)
 
 >> EOMonth(Date(2016,1,15),2)
-Date(2016,3,30)
+Date(2016,3,31)
 
 // Fractional months, should truncate (toward zero)
 
 >> EDate(Date(2012,1,31),1)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EDate(Date(2012,1,31),1.1)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EDate(Date(2012,1,31),1.5)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EDate(Date(2012,1,31),1.9)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EDate(Date(2012,1,31),1.9999999)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EDate(Date(2012,1,31),2)
-Date(2016,3,30)
+Date(2012,3,31)
 
 >> EDate(Date(2012,1,31),-1)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EDate(Date(2012,1,31),-1.1)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EDate(Date(2012,1,31),-1.5)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EDate(Date(2012,1,31),-1.9)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EDate(Date(2012,1,31),-1.9999999)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EDate(Date(2012,1,31),-2)
-Date(2016,3,30)
+Date(2011,11,30)
 
 >> EOMonth(Date(2012,1,31),1)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EOMonth(Date(2012,1,31),1.1)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EOMonth(Date(2012,1,31),1.5)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EOMonth(Date(2012,1,31),1.9)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EOMonth(Date(2012,1,31),1.9999999)
-Date(2016,2,29)
+Date(2012,2,29)
 
 >> EOMonth(Date(2012,1,31),2)
-Date(2016,3,30)
+Date(2012,3,31)
 
 >> EOMonth(Date(2012,1,31),-1)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EOMonth(Date(2012,1,31),-1.1)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EOMonth(Date(2012,1,31),-1.5)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EOMonth(Date(2012,1,31),-1.9)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EOMonth(Date(2012,1,31),-1.9999999)
-Date(2016,2,29)
+Date(2011,12,31)
 
 >> EOMonth(Date(2012,1,31),-2)
-Date(2016,3,30)
+Date(2011,11,30)
 
 // EDate with a DateTime at thee end of the month
 // Ensure 31 is properly translated for other months with less than 31 days
@@ -564,3 +564,18 @@ Date(1927,12,31)
 
 >> EOMonth(10273,2)
 Date(1928,4,30)
+
+// Ensure date values are truncated and do not include time
+
+>> Text(EOMonth(DateTime(2023,1,15,12,34,56),0),"yyyy-mm-dd hh:mm:ss")
+"2023-01-31 00:00:00"
+
+>> Text(EDate(DateTime(2023,1,15,12,34,56),0),"yyyy-mm-dd hh:mm:ss")
+"2023-01-15 00:00:00"
+
+>> Value(EOMonth(DateTime(2023,1,15,12,34,56),0))
+44957
+
+>> Value(EDate(DateTime(2023,1,15,12,34,56),0))
+44941
+
