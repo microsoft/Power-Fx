@@ -805,7 +805,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 {
                     diagnostics.Add(new Diagnostic()
                     {
-                        Range = GetRange(expression, item.Span),
+                        Range = GetRange(expression, item.Span ?? new Span(0, 0)),
                         Message = item.Message,
                         Severity = DocumentSeverityToDiagnosticSeverityMap(item.Severity)
                     });

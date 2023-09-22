@@ -23,6 +23,7 @@ namespace Microsoft.PowerFx.Core.Texl.Intellisense
         /// <summary>
         /// Expected Return Type of the expression when evaluated successfully.
         /// </summary>
+        [TransportDisabled]
         public DType ExpectedExpressionReturnType { get; }
     }
 }
