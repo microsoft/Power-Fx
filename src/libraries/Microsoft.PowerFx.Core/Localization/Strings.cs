@@ -702,5 +702,12 @@ namespace Microsoft.PowerFx.Core.Localization
         public static ErrorResourceKey WrnSetExpandableType = new ErrorResourceKey("WrnSetExpandableType");
 
         public static ErrorResourceKey ErrNotSupportedFormat_Func = new ErrorResourceKey("ErrNotSupportedFormat_Func");
+
+        public static ErrorResourceKey ErrExpectedRVExtraFields = new ErrorResourceKey("ErrExpectedRVExtraFields");
+        public static ErrorResourceKey ErrExpectedRVMissingFields = new ErrorResourceKey("ErrExpectedRVMissingFields");
+        public static ErrorResourceKey ErrExpectedRVFieldNotFound = new ErrorResourceKey("ErrExpectedRVFieldNotFound");
+        public static ErrorResourceKey ErrExpectedRVFieldTypeMismatch = new ErrorResourceKey("ErrExpectedRVFieldTypeMismatch");
+        public static ErrorResourceKey ErrExpectedRVCannotCoerceType = new ErrorResourceKey("ErrExpectedRVCannotCoerceType");
+        public static ErrorResourceKey ErrExpectedRVTypeMismatch = new ErrorResourceKey("ErrExpectedRVTypeMismatch");
     }
 }

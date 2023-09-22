@@ -35,6 +35,7 @@ namespace Microsoft.PowerFx.Core.Tests
         [Theory]
         [InlineData("a\"\"{{interpolation}}", "a\"{interpolation}", true)]
         [InlineData("test", "test", false)]
+        [InlineData("{\"\"Name\"\":\"\"John Doe\"\",\"\"Age\"\":33}", "{\"Name\":\"John Doe\",\"Age\":33}", false)]
         public void ExcelEscapeStringTests(string expected, string input, bool isValueAnInterpolated)
         {
             var actual = CharacterUtils.ExcelEscapeString(input, isValueAnInterpolated);
