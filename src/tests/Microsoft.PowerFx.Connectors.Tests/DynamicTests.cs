@@ -239,11 +239,14 @@ namespace Microsoft.PowerFx.Connectors.Tests
             Assert.Equal("![Database:![], Date:d, Index:w, Summary:s, SummaryEnum:w, TemperatureC:w, TemperatureF:w]", cParameters.ParametersWithSuggestions[3].FormulaType.ToStringWithDisplayNames());
             Assert.Equal(Visibility.Important, cParameters.ParametersWithSuggestions[3].ConnectorType.Fields[4].Visibility);
 
-            ConnectorType cType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
+            ConnectorType cType = await getWithDynamicValuesMultipleDynamic.GetConnectorParameterTypeAsync(Array.Empty<NamedValue>(), getWithDynamicValuesMultipleDynamic.OptionalParameters[0], connectorContext, CancellationToken.None).ConfigureAwait(false);
             Assert.Equal("![Database:![], Date:d, Index:w, Summary:s, SummaryEnum:w, TemperatureC:w, TemperatureF:w]", cType.FormulaType.ToStringWithDisplayNames());
 
-            cType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), cType.Fields[5], connectorContext, CancellationToken.None).ConfigureAwait(false);
-            Assert.Equal("![Name:s, PrimaryKey:s]", cType.FormulaType.ToStringWithDisplayNames());
+            ConnectorType innerType = await getWithDynamicValuesMultipleDynamic.GetConnectorTypeAsync(Array.Empty<NamedValue>(), cType.Fields.First(field => field.Name == "Database"), connectorContext, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal("![Index:w, Name:s, PrimaryKey:s]", innerType.FormulaType.ToStringWithDisplayNames());
+
+            ConnectorEnhancedSuggestions ces = await getWithDynamicValuesMultipleDynamic.GetConnectorSuggestionsAsync(Array.Empty<NamedValue>(), innerType.Fields.First(field => field.Name == "Index"), connectorContext, CancellationToken.None).ConfigureAwait(false);
+            Assert.Equal("110|120", string.Join("|", ces.ConnectorSuggestions.Suggestions.Select(cs => cs.DisplayName)));            
         }
 
         [SkippableFact]

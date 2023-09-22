@@ -6,7 +6,7 @@ using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Intellisense
 {
-    internal class ConnectorSuggestions
+    public class ConnectorSuggestions
     {
         public IReadOnlyList<ConnectorSuggestion> Suggestions { get; }
                 

@@ -285,7 +285,7 @@ namespace Microsoft.PowerFx.Connectors
             cancellationToken.ThrowIfCancellationRequested();
 
             List<ConnectorParameterWithSuggestions> parametersWithSuggestions = new List<ConnectorParameterWithSuggestions>();
-            ConnectorEnhancedSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, connectorParameter, runtimeContext, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
+            ConnectorEnhancedSuggestions suggestions = GetConnectorSuggestionsAsync(knownParameters, connectorParameter.ConnectorType, runtimeContext, cancellationToken).ConfigureAwait(false).GetAwaiter().GetResult();
 
             foreach (ConnectorParameter parameter in RequiredParameters.Union(OptionalParameters))
             {
@@ -302,6 +302,56 @@ namespace Microsoft.PowerFx.Connectors
         }
 
         /// <summary>
+        /// Get connector function parameter suggestions.
+        /// </summary>
+        /// <param name="knownParameters">Known parameters.</param>
+        /// <param name="connectorType">Connector type for which we need a set of suggestions.</param>
+        /// <param name="runtimeContext">Runtime connector context.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>ConnectorParameters class with suggestions.</returns>
+        public async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsAsync(NamedValue[] knownParameters, ConnectorType connectorType, BaseRuntimeConnectorContext runtimeContext, CancellationToken cancellationToken)
+        {            
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (connectorType != null)
+            {
+                if (connectorType.DynamicList != null)
+                {
+                    return await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, runtimeContext, connectorType.DynamicList, cancellationToken).ConfigureAwait(false);
+                }
+
+                if (connectorType.DynamicValues != null && string.IsNullOrEmpty(connectorType.DynamicValues.Capability))
+                {
+                    return await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, runtimeContext, connectorType.DynamicValues, cancellationToken).ConfigureAwait(false);
+                }
+
+                ConnectorType outputConnectorType = null;
+                SuggestionMethod suggestionMethod = SuggestionMethod.None;
+
+                if (connectorType.DynamicProperty != null && !string.IsNullOrEmpty(connectorType.DynamicProperty.ItemValuePath))
+                {
+                    outputConnectorType = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, runtimeContext, connectorType.DynamicProperty, cancellationToken).ConfigureAwait(false);
+                    suggestionMethod = SuggestionMethod.DynamicProperty;
+                }
+                else
+                if (connectorType.DynamicSchema != null && !string.IsNullOrEmpty(connectorType.DynamicSchema.ValuePath))
+                {
+                    outputConnectorType = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, runtimeContext, connectorType.DynamicSchema, cancellationToken).ConfigureAwait(false);
+                    suggestionMethod = SuggestionMethod.DynamicSchema;
+                }
+
+                if (outputConnectorType != null && outputConnectorType.FormulaType is RecordType rt)
+                {
+                    return new ConnectorEnhancedSuggestions(suggestionMethod, rt.FieldNames.Select(fn => new ConnectorSuggestion(FormulaValue.NewBlank(rt.GetFieldType(fn)), fn)).ToList(), outputConnectorType);
+                }
+
+                return null;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Dynamic intellisense (dynamic property/schema) on a given parameter.
         /// </summary>
         /// <param name="knownParameters">Known parameters.</param>
@@ -309,7 +359,7 @@ namespace Microsoft.PowerFx.Connectors
         /// <param name="context">Connector context.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Formula Type determined by dynamic Intellisense.</returns>
-        public async Task<ConnectorType> GetConnectorTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
+        public async Task<ConnectorType> GetConnectorParameterTypeAsync(NamedValue[] knownParameters, ConnectorParameter connectorParameter, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             return await GetConnectorTypeAsync(knownParameters, connectorParameter.ConnectorType ?? ReturnParameterType, context, cancellationToken).ConfigureAwait(false);           
@@ -446,51 +496,7 @@ namespace Microsoft.PowerFx.Connectors
             result = await PostProcessResultAsync(result, context, invoker, cancellationToken).ConfigureAwait(false);
 
             return result;
-        }        
-
-        internal async Task<ConnectorEnhancedSuggestions> GetConnectorSuggestionsAsync(NamedValue[] knownParameters, ConnectorParameter parameter, BaseRuntimeConnectorContext context, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();            
-
-            if (parameter != null)
-            {
-                ConnectorExtensions connectorExtensions = parameter.ConnectorExtensions;
-
-                if (connectorExtensions.ConnectorDynamicList != null)
-                {
-                    return await GetConnectorSuggestionsFromDynamicListAsync(knownParameters, context, connectorExtensions.ConnectorDynamicList, cancellationToken).ConfigureAwait(false);
-                }
-
-                if (connectorExtensions.ConnectorDynamicValue != null && string.IsNullOrEmpty(connectorExtensions.ConnectorDynamicValue.Capability))
-                {
-                    return await GetConnectorSuggestionsFromDynamicValueAsync(knownParameters, context, connectorExtensions.ConnectorDynamicValue, cancellationToken).ConfigureAwait(false);
-                }
-
-                ConnectorType connectorType = null;
-                SuggestionMethod suggestionMethod = SuggestionMethod.None;
-
-                if (connectorExtensions.ConnectorDynamicProperty != null && !string.IsNullOrEmpty(connectorExtensions.ConnectorDynamicProperty.ItemValuePath))
-                {
-                    connectorType = await GetConnectorSuggestionsFromDynamicPropertyAsync(knownParameters, context, connectorExtensions.ConnectorDynamicProperty, cancellationToken).ConfigureAwait(false);
-                    suggestionMethod = SuggestionMethod.DynamicProperty;
-                }
-                else
-                if (connectorExtensions.ConnectorDynamicSchema != null && !string.IsNullOrEmpty(connectorExtensions.ConnectorDynamicSchema.ValuePath))
-                {
-                    connectorType = await GetConnectorSuggestionsFromDynamicSchemaAsync(knownParameters, context, connectorExtensions.ConnectorDynamicSchema, cancellationToken).ConfigureAwait(false);
-                    suggestionMethod = SuggestionMethod.DynamicSchema;
-                }
-
-                if (connectorType != null && connectorType.FormulaType is RecordType rt)
-                {
-                    return new ConnectorEnhancedSuggestions(suggestionMethod, rt.FieldNames.Select(fn => new ConnectorSuggestion(FormulaValue.NewBlank(rt.GetFieldType(fn)), fn)).ToList(), connectorType);
-                }
-
-                return null;
-            }
-
-            return null;
-        }       
+        }
 
         private static JsonElement ExtractFromJson(StringValue sv, string location)
         {
