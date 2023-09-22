@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
-using Microsoft.PowerFx.Interpreter;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx.Functions
@@ -916,6 +915,17 @@ namespace Microsoft.PowerFx.Functions
             return new DecimalValue(irContext, val);
         }
 
+        public static FormulaValue Trunc(IRContext irContext, FormulaValue[] args)
+        {
+            // Trunc rounds down.
+            return args[0] switch
+            {
+                NumberValue num => RoundFloat(irContext, num, 0, RoundType.Down, checkFinite: false),
+                DecimalValue dec => RoundDecimal(irContext, dec, 0, RoundType.Down),
+                _ => CommonErrors.UnreachableCodeError(irContext)
+            };
+        }
+
         public static FormulaValue Round(IRContext irContext, FormulaValue[] args)
         {
             double digits;
@@ -937,7 +947,7 @@ namespace Microsoft.PowerFx.Functions
             };
         }
 
-        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default)
+        internal static FormulaValue RoundFloat(IRContext irContext, NumberValue num, double doubleDigs, RoundType rt = RoundType.Default, bool checkFinite = true)
         {
             var number = num.Value;
             var s = number < 0 ? -1d : 1d;
@@ -947,9 +957,9 @@ namespace Microsoft.PowerFx.Functions
                           doubleDigs < int.MinValue ? int.MinValue :
                                 (int)doubleDigs;
 
-            if (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d)
+            if (checkFinite && (dg < -15 || dg > 15 || number < -1e20d || number > 1e20d))
             {
-                return num;
+                return CommonErrors.NonFiniteNumber(irContext, RoundFunctionName(rt));
             }
 
             // Dividing by m, since multiplication was introducing floating point error
@@ -999,7 +1009,7 @@ namespace Microsoft.PowerFx.Functions
 
             if (digits < -28)
             {
-                return new DecimalValue(irContext, 0m);
+                return CommonErrors.NonFiniteNumber(irContext, RoundFunctionName(roundType));
             }
             else if (digits > 28)
             {
@@ -1521,6 +1531,18 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return NumberOrDecimalValue_Long(irContext, result);
+        }
+
+        private static string RoundFunctionName(RoundType roundType)
+        {
+            var functionName = "Round";
+
+            if (roundType != RoundType.Default)
+            {
+                functionName = roundType == RoundType.Up ? "RoundUp" : "RoundDown";
+            }
+
+            return functionName;
         }
     }
 }

@@ -98,10 +98,10 @@ Table({Value:1E+24},{Value:2E+24})
 Table({Value:1E+24},{Value:2E+24})
 
 >> Round( 1000000000000000000000001.1, 2 )
-1E+24
+Error({Kind:ErrorKind.Numeric})
 
 >> Round( [1000000000000000000000001.1, 2000000000000000000000002.2], 2 )
-Table({Value:1E+24},{Value:2E+24})
+Table({Value:Error({Kind:ErrorKind.Numeric})},{Value:Error({Kind:ErrorKind.Numeric})})
 
 >> Round( 1000000000000000000000001.1, Value(2) )
 1E+24

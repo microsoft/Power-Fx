@@ -5244,4 +5244,8 @@
     <value>Type literal declaration was invalid</value>
     <comment>Error message when type binding is invalid</comment>
   </data>
+  <data name="ErrNonFiniteNumber" xml:space="preserve">
+    <value>The function '{0}' returned a non-finite number.</value>
+    <comment>Error message when number overflows max capacity</comment>
+  </data>
 </root>

@@ -1628,14 +1628,14 @@ namespace Microsoft.PowerFx.Functions
                 BuiltinFunctionsCore.Trunc,
                 StandardErrorHandling<FormulaValue>(
                     BuiltinFunctionsCore.Trunc.Name,
-                    expandArguments: InsertDefaultValues(outputArgsCount: 2, fillWith: new NumberValue(IRContext.NotInSource(FormulaType.Number), 0)),
+                    expandArguments: NoArgExpansion,
                     replaceBlankValues: NoOpAlreadyHandledByIR,
                     checkRuntimeTypes: ExactSequence(
                         NumberOrDecimal,
                         ExactValueType<NumberValue>),
                     checkRuntimeValues: DeferRuntimeValueChecking,
                     returnBehavior: ReturnBehavior.AlwaysEvaluateAndReturnResult,
-                    targetFunction: RoundDown)
+                    targetFunction: Trunc)
             },
             {
                 BuiltinFunctionsCore.Upper,
@@ -1950,7 +1950,7 @@ namespace Microsoft.PowerFx.Functions
             },
             {
                 BuiltinFunctionsCore.TruncT,
-                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.RoundDown], ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(1)))
+                NoErrorHandling(MultiSingleColumnTable(SimpleFunctionImplementations[BuiltinFunctionsCore.Trunc], ReplaceBlankWithCallZeroButFloatZeroForSpecificIndices(1)))
             },
         };
 

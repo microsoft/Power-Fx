@@ -216,5 +216,15 @@ namespace Microsoft.PowerFx.Functions
                 Kind = ErrorKind.InvalidArgument
             });
         }
+
+        public static ErrorValue NonFiniteNumber(IRContext irContext, string functionName)
+        {
+            return new ErrorValue(irContext, new ExpressionError()
+            {
+                Message = $"The function '{functionName}' returned a non-finite number.",
+                Span = irContext.SourceContext,
+                Kind = ErrorKind.Numeric
+            });
+        }
     }
 }
