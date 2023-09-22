@@ -31,13 +31,24 @@ namespace Microsoft.PowerFx.Connectors.Tests
 
             List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc).OrderBy(cf => cf.Name).ToList();
             Assert.Equal(51, functions.Count);
-            ConnectorFunction function = functions[19];
+            ConnectorFunction conversationAnalysisAnalyzeConversationConversation = functions[19];
 
-            Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", function.Name);
-            Assert.Equal("Analyzes the input conversation utterance.", function.Description);
-            Assert.Equal("Conversations (CLU) (2022-05-01)", function.Summary);
-            Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", function.OperationPath);
-            Assert.Equal(HttpMethod.Post, function.HttpMethod);
+            Assert.Equal("ConversationAnalysisAnalyzeConversationConversation", conversationAnalysisAnalyzeConversationConversation.Name);
+            Assert.Equal("Analyzes the input conversation utterance.", conversationAnalysisAnalyzeConversationConversation.Description);
+            Assert.Equal("Conversations (CLU) (2022-05-01)", conversationAnalysisAnalyzeConversationConversation.Summary);
+            Assert.Equal("/apim/cognitiveservicestextanalytics/{connectionId}/language/:analyze-conversations", conversationAnalysisAnalyzeConversationConversation.OperationPath);
+            Assert.Equal(HttpMethod.Post, conversationAnalysisAnalyzeConversationConversation.HttpMethod);
+        }
+
+        [Fact]
+        public void ACSL_GetFunctionNames22()
+        {
+            OpenApiDocument doc = Helpers.ReadSwagger(@"Swagger\Azure Cognitive Service for Language v2.2.json");               
+            List<ConnectorFunction> functions = OpenApiParser.GetFunctions("ACSL", doc).OrderBy(cf => cf.Name).ToList();
+            ConnectorFunction detectSentimentV3 = functions.First(cf => cf.Name == "DetectSentimentV3");
+
+            Assert.Equal("Documents", detectSentimentV3.OptionalParameters[0].Summary);
+            Assert.Equal("The documents to analyze.", detectSentimentV3.OptionalParameters[0].Description);
         }
 
         [Fact]
@@ -77,7 +88,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // -- Parameter 1 --
             Assert.Equal("analysisInput", function.RequiredParameters[0].Name);
             Assert.Equal(analysisInputRecordType, function.RequiredParameters[0].FormulaType);
-            Assert.Equal("Body", function.RequiredParameters[0].Description);
+            Assert.Equal("A single conversational task to execute.", function.RequiredParameters[0].Description);
             Assert.Null(function.RequiredParameters[0].DefaultValue);
             Assert.NotNull(function.RequiredParameters[0].ConnectorType);
             Assert.Equal("analysisInput", function.RequiredParameters[0].ConnectorType.Name);
@@ -94,7 +105,7 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // -- Parameter 2 --
             Assert.Equal("parameters", function.RequiredParameters[1].Name);
             Assert.Equal(parametersRecordType, function.RequiredParameters[1].FormulaType);
-            Assert.Equal("Body", function.RequiredParameters[1].Description);
+            Assert.Equal("A single conversational task to execute.", function.RequiredParameters[1].Description);
             Assert.Null(function.RequiredParameters[1].DefaultValue);
 
             RecordType analysisInputRecordTypeH = Extensions.MakeRecordType(
@@ -111,13 +122,13 @@ namespace Microsoft.PowerFx.Connectors.Tests
             // -- Hidden Required Parameter 2 --
             Assert.Equal("kind", function.HiddenRequiredParameters[1].Name);
             Assert.Equal(FormulaType.String, function.HiddenRequiredParameters[1].FormulaType);
-            Assert.Equal("Body", function.HiddenRequiredParameters[1].Description);
+            Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[1].Description);
             Assert.Equal("Conversation", function.HiddenRequiredParameters[1].DefaultValue.ToObject());
 
             // -- Hidden Required Parameter 3 --
             Assert.Equal("analysisInput", function.HiddenRequiredParameters[2].Name);
             Assert.Equal(analysisInputRecordTypeH, function.HiddenRequiredParameters[2].FormulaType);
-            Assert.Equal("Body", function.HiddenRequiredParameters[2].Description);
+            Assert.Equal("A single conversational task to execute.", function.HiddenRequiredParameters[2].Description);
             Assert.Equal(@"{""conversationItem"":{""id"":""0"",""participantId"":""0""}}", System.Text.Json.JsonSerializer.Serialize(function.HiddenRequiredParameters[2].DefaultValue.ToObject()));
 
             Assert.Equal(2, function.ArityMin);
@@ -658,25 +669,53 @@ namespace Microsoft.PowerFx.Connectors.Tests
             //}, CancellationToken.None).ConfigureAwait(false);                        
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response 3.json");
-            ConnectorParameters parameters1 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters1 = await executeProcedureV2.GetParameterSuggestionsAsync(
+                new NamedValue[] 
+                { 
+                    new NamedValue("server", FormulaValue.New("pfxdev-sql.database.windows.net")),
+                    new NamedValue("database", FormulaValue.New("connectortest"))
+                },
+                executeProcedureV2.RequiredParameters[2], // procedure
+                context, 
+                CancellationToken.None).ConfigureAwait(false);
+
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[2];
             Assert.NotNull(suggestions1);
             Assert.NotNull(suggestions1.Suggestions);
             Assert.Equal(2, suggestions1.Suggestions.Count());
             
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
-            ConnectorParameters parameters2 = await executeProcedureV2.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters2 = await executeProcedureV2.GetParameterSuggestionsAsync(
+                new NamedValue[]
+                {
+                    new NamedValue("server", FormulaValue.New("pfxdev-sql.database.windows.net")),
+                    new NamedValue("database", FormulaValue.New("connectortest")),
+                    new NamedValue("procedure", FormulaValue.New("sp_1"))
+                },
+                executeProcedureV2.RequiredParameters[3], // parameters
+                context,
+                CancellationToken.None).ConfigureAwait(false);
+            
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[3];
             Assert.NotNull(suggestions2);
             Assert.NotNull(suggestions2.Suggestions);
             Assert.Single(suggestions2.Suggestions);
-
-            Assert.True(executeProcedureV2.ReturnParameterType.SupportsSuggestions);
+            
+            Assert.True(executeProcedureV2.ReturnParameterType.SupportsDynamicIntellisense);
 
             testConnector.SetResponseFromFile(@"Responses\SQL Server Intellisense Response2 1.json");
-            FormulaType returnType = await executeProcedureV2.GetConnectorReturnSchemaAsync(new FormulaValue[] { FormulaValue.New("pfxdev-sql.database.windows.net"), FormulaValue.New("connectortest"), FormulaValue.New("sp_1") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorType returnType = await executeProcedureV2.GetConnectorReturnTypeAsync(
+                 new NamedValue[]
+                {
+                    new NamedValue("server", FormulaValue.New("pfxdev-sql.database.windows.net")),
+                    new NamedValue("database", FormulaValue.New("connectortest")),
+                    new NamedValue("procedure", FormulaValue.New("sp_1"))
+                },            
+                context,
+                CancellationToken.None).ConfigureAwait(false);
+
             Assert.NotNull(returnType);
-            Assert.True(returnType is RecordType);
+            Assert.True(returnType.FormulaType is RecordType);
 
             string input = testConnector._log.ToString();
             var version = PowerPlatformConnectorClient.Version;
@@ -728,14 +767,31 @@ POST https://tip1002-002.azure-apihub.net/invoke
             ConnectorFunction createRecord = functions.First(f => f.Name == "CreateRecordWithOrganization");
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_1.json");
-            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters1 = await createRecord.GetParameterSuggestionsAsync(
+                new NamedValue[] 
+                { 
+                    new NamedValue("organization", FormulaValue.New("https://org283e9949.crm10.dynamics.com")) 
+                },
+                createRecord.RequiredParameters[1], // entityName
+                context,
+                CancellationToken.None).ConfigureAwait(false);
+
             ConnectorParameterWithSuggestions suggestions1 = parameters1.ParametersWithSuggestions[1];
             Assert.Equal(651, suggestions1.Suggestions.Count);
             Assert.Equal("AAD Users", suggestions1.Suggestions[0].DisplayName);
             Assert.Equal("aadusers", ((StringValue)suggestions1.Suggestions[0].Suggestion).Value);
 
             testConnector.SetResponseFromFile(@"Responses\Dataverse_Response_2.json");
-            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(new FormulaValue[] { FormulaValue.New("https://org283e9949.crm10.dynamics.com"), FormulaValue.New("accounts") }, context, CancellationToken.None).ConfigureAwait(false);
+            ConnectorParameters parameters2 = await createRecord.GetParameterSuggestionsAsync(
+                new NamedValue[] 
+                { 
+                    new NamedValue("organization", FormulaValue.New("https://org283e9949.crm10.dynamics.com")), 
+                    new NamedValue("entityName", FormulaValue.New("accounts")) 
+                },
+                createRecord.RequiredParameters[2], // item
+                context, 
+                CancellationToken.None).ConfigureAwait(false);
+
             ConnectorParameterWithSuggestions suggestions2 = parameters2.ParametersWithSuggestions[2];
             Assert.Equal(119, suggestions2.Suggestions.Count);
             Assert.Equal("accountcategorycode", suggestions2.Suggestions[0].DisplayName);

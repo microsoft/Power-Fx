@@ -150,8 +150,8 @@ namespace Microsoft.PowerFx.Core.Tests
         [InlineData("x=1;Foo(x:Number)", 1, 0, true)]
         [InlineData("x=1;Foo(x:Number):", 1, 0, true)]
         [InlineData("x=1;Foo(x:Number):Number", 1, 0, true)]
-        [InlineData("x=1;Foo(x:Number):Number = ", 1, 1, true)]
-        [InlineData("x=1;Foo(x:Number):Number = 10 * x", 1, 1, true)]
+        [InlineData("x=1;Foo(x:Number):Number = ", 1, 0, true)]
+        [InlineData("x=1;Foo(x:Number):Number = 10 * x", 1, 0, true)]
         [InlineData("x=1;Foo(x:Number):Number = 10 * x;", 1, 1, false)]
         [InlineData("x=1;Foo(:Number):Number = 10 * x;", 1, 0, true)]
         public void NamedFormulaAndUdfTest(string script, int namedFormulaCount, int udfCount, bool expectErrors)

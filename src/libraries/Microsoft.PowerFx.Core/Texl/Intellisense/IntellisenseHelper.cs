@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Microsoft.PowerFx.Core.Binding;
 using Microsoft.PowerFx.Core.Binding.BindInfo;
@@ -379,18 +380,31 @@ namespace Microsoft.PowerFx.Intellisense
                     return;
                 }
 
-                // If connector function has some suggestions, let's add them here
-                var services = intellisenseData.Services;
-                ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+                // If connector function has some suggestions, let's add them here                
+                ConnectorSuggestions suggestions = info.Function.GetConnectorSuggestionsAsync(parameters, argPosition, intellisenseData.Services, CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                if (suggestions != null && suggestions.Error == null && suggestions.Suggestions != null)
+                if (suggestions != null && suggestions.Suggestions != null)
                 {                    
                     foreach (ConnectorSuggestion suggestion in suggestions.Suggestions)
                     {
-                        // for all parameters, except last one we have direct parameters / not in a record
-                        if (argPosition < info.Function.MaxArity - 1)
+                        int requiredParamaterCount = info.Function.MaxArity - (info.Function.MaxArity == info.Function.MinArity ? 0 : 1);
+                        TexlNode currentArg = callNode.Args.Children[argPosition];
+
+                        if (argPosition <= requiredParamaterCount && currentArg.Kind != NodeKind.Record)
                         {
-                            string suggestionStr = suggestion.Suggestion.ToExpression();
+                            string suggestionStr = null;
+
+                            // When x-ms-dynamic-schema or x-ms-dynamic-property are used, we get a BlankType suggestion
+                            if (suggestion.Suggestion is BlankValue)
+                            {
+                                suggestionStr = suggestion.DisplayName;
+                            }
+                            else
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                suggestion.Suggestion.ToExpression(sb, new FormulaValueSerializerSettings() { UseCompactRepresentation = true });
+                                suggestionStr = sb.ToString();
+                            }
 
                             if (!string.IsNullOrEmpty(suggestionStr))
                             {
@@ -398,46 +412,37 @@ namespace Microsoft.PowerFx.Intellisense
                             }
                         }
                         else
-                        {
-                            TexlNode currentArg = callNode.Args.Children[argPosition];
+                        {                                                        
+                            List<string> possibleFields = suggestions.Suggestions.Select(s => s.DisplayName).ToList();
+                            string[] existingFieldsInCall = currentArg.AsRecord().Ids.Select(id => id.Token._value).ToArray();
 
-                            if (currentArg.Kind != NodeKind.Record)
+                            // remove all existing valid ids
+                            for (int i = 0; i < existingFieldsInCall.Length - 1; i++)
                             {
-                                AddSuggestion(intellisenseData, $@"{{ {suggestion.DisplayName}:", SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
-                            }
-                            else
-                            {
-                                List<string> possibleFields = suggestions.Suggestions.Select(s => s.DisplayName).ToList();
-                                string[] existingFieldsInCall = currentArg.AsRecord().Ids.Select(id => id.Token._value).ToArray();
+                                string idInCall = existingFieldsInCall[i];
+                                string possibleField = possibleFields.FirstOrDefault(pf => pf.Equals(idInCall, StringComparison.OrdinalIgnoreCase));
 
-                                // remove all existing valid ids
-                                for (int i = 0; i < existingFieldsInCall.Length - 1; i++)
+                                if (!string.IsNullOrWhiteSpace(possibleField))
                                 {
-                                    string idInCall = existingFieldsInCall[i];
-                                    string possibleField = possibleFields.FirstOrDefault(pf => pf.Equals(idInCall, StringComparison.OrdinalIgnoreCase));
-
-                                    if (!string.IsNullOrWhiteSpace(possibleField))
-                                    {
-                                        possibleFields.Remove(possibleField);
-                                    }
-                                }
-
-                                // filter on last element name
-                                if (existingFieldsInCall.Length > 0)
-                                {
-                                    string lastIdInCall = existingFieldsInCall[existingFieldsInCall.Length - 1];
-
-                                    if (!string.IsNullOrWhiteSpace(lastIdInCall))
-                                    {
-                                        possibleFields = possibleFields.Where(f => f.StartsWith(lastIdInCall, StringComparison.OrdinalIgnoreCase)).ToList();
-                                    }
-                                }
-
-                                foreach (string possibleField in possibleFields)
-                                {
-                                    AddSuggestion(intellisenseData, possibleField, SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                                    possibleFields.Remove(possibleField);
                                 }
                             }
+
+                            // filter on last element name
+                            if (existingFieldsInCall.Length > 0)
+                            {
+                                string lastIdInCall = existingFieldsInCall[existingFieldsInCall.Length - 1];
+
+                                if (!string.IsNullOrWhiteSpace(lastIdInCall))
+                                {
+                                    possibleFields = possibleFields.Where(f => f.StartsWith(lastIdInCall, StringComparison.OrdinalIgnoreCase)).ToList();
+                                }
+                            }
+
+                            foreach (string possibleField in possibleFields)
+                            {
+                                AddSuggestion(intellisenseData, possibleField, SuggestionKind.Global, SuggestionIconKind.Other, DType.String, false);
+                            }                            
                         }
                     }
                 }

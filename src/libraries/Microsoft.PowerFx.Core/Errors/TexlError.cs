@@ -51,6 +51,11 @@ namespace Microsoft.PowerFx.Core.Errors
             _nameMapIDs = new List<string>();
         }
 
+        IRuleError IRuleError.Clone(Span span)
+        {
+            return new TexlError(this.Tok.Clone(span), this.Severity, this.ErrorResourceKey, this.MessageArgs);
+        }
+
         public void MarkSinkTypeError(DName name)
         {
             Contracts.AssertValid(name);

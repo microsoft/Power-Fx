@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.PowerFx.Core.Errors;
+using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Localization;
 using Microsoft.PowerFx.Core.Utils;
 using Microsoft.PowerFx.Syntax;
@@ -35,6 +36,9 @@ namespace Microsoft.PowerFx.Core.Parser
         }
 
         private bool _hasSemicolon = false;
+
+        // This is used in NamedFormula mode to record startindex of named formula identifier token.
+        private int _startingIndex = 0;
 
         private readonly TokenCursor _curs;
         private readonly Stack<Flags> _flagsMode;
@@ -135,7 +139,14 @@ namespace Microsoft.PowerFx.Core.Parser
                 if (TokEat(TokKind.Colon, addError: false) == null)
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
-                    break;
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                    {
+                        _curs.TokMove();
+                    }
+
+                    return false;
                 }
 
                 ParseTrivia();
@@ -144,11 +155,24 @@ namespace Microsoft.PowerFx.Core.Parser
                 if (varType == null)
                 {
                     CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingParamType);
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                    {
+                        _curs.TokMove();
+                    }
+
                     return false;
                 }
 
                 if (varIdent == null)
                 {
+                    // If the result was an error, keep moving cursor until end of expression
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                    {
+                        _curs.TokMove();
+                    }
+
                     return false;
                 }
 
@@ -158,6 +182,13 @@ namespace Microsoft.PowerFx.Core.Parser
                 if (_curs.TokCur.Kind != TokKind.ParenClose && _curs.TokCur.Kind != TokKind.Comma)
                 {
                     ErrorTid(_curs.TokCur, TokKind.Comma);
+
+                    // If the result was an error, keep moving cursor until end of expression
+                    while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                    {
+                        _curs.TokMove();
+                    }
+
                     return false;
                 }
                 else if (_curs.TokCur.Kind == TokKind.Comma)
@@ -272,15 +303,19 @@ namespace Microsoft.PowerFx.Core.Parser
                 var thisIdentifier = TokEat(TokKind.Ident);
                 if (thisIdentifier == null)
                 {
-                    break;
+                    CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingValue);
+                    _curs.TokMove();
+                    continue;
                 }
 
                 ParseTrivia();
+                _startingIndex = thisIdentifier.Span.Min;
 
                 if (_curs.TidCur == TokKind.Semicolon)
                 {
                     CreateError(thisIdentifier, TexlStrings.ErrNamedFormula_MissingValue);
-                    break;
+                    _curs.TokMove();
+                    continue;
                 }
 
                 if (_curs.TidCur == TokKind.Equ)
@@ -311,7 +346,16 @@ namespace Microsoft.PowerFx.Core.Parser
                             continue;
                         }
 
-                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result)));
+                        namedFormulas.Add(new NamedFormula(thisIdentifier.As<IdentToken>(), new Formula(result.GetCompleteSpan().GetFragment(script), result), _startingIndex));
+
+                        // If the result was an error, keep moving cursor until end of named formula expression
+                        if (result.Kind == NodeKind.Error)
+                        {
+                            while (_curs.TidCur != TokKind.Semicolon && _curs.TidCur != TokKind.Eof)
+                            {
+                                _curs.TokMove();
+                            }
+                        }
                     }
 
                     _curs.TokMove();
@@ -321,7 +365,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 {
                     if (!ParseUDFArgs(out HashSet<UDFArg> args))
                     {
-                        break;
+                        continue;
                     }
 
                     ParseTrivia();
@@ -329,7 +373,8 @@ namespace Microsoft.PowerFx.Core.Parser
                     if (TokEat(TokKind.Colon, addError: false) == null)
                     {
                         CreateError(_curs.TokCur, TexlStrings.ErrUDF_MissingReturnType);
-                        break;
+                        _curs.TokMove();
+                        continue;
                     }
 
                     ParseTrivia();
@@ -367,6 +412,14 @@ namespace Microsoft.PowerFx.Core.Parser
                         ParseTrivia();
                         var result = ParseExpr(Precedence.None);
                         ParseTrivia();
+
+                        // Check if we're at EOF before a semicolon is found
+                        if (_curs.TidCur == TokKind.Eof)
+                        {
+                            CreateError(_curs.TokCur, TexlStrings.ErrNamedFormula_MissingSemicolon);
+                            break;
+                        }
+
                         udfs.Add(new UDF(thisIdentifier.As<IdentToken>(), returnType.As<IdentToken>(), new HashSet<UDFArg>(args), result, false, parserOptions.NumberIsFloat));
                     }
                     else
@@ -392,7 +445,7 @@ namespace Microsoft.PowerFx.Core.Parser
                 }
             }
 
-            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors);
+            return new ParseUserDefinitionResult(namedFormulas, udfs, definedTypes, _errors, _comments);
         }
 
         // Parse the script

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -318,22 +319,24 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
             // Avoid this if possible
             _logger?.Invoke($"[PFX] HandleCompletionRequest: Suggest results: Count:{result.Suggestions.Count()}, Suggestions:{string.Join(", ", result.Suggestions.Select(s => $@"[{s.Kind}]: '{s.DisplayText.Text}'"))}");
 
-            var items = new List<CompletionItem>();
-
-            foreach (var item in result.Suggestions)
+            var precedingCharacter = cursorPosition != 0 ? expression[cursorPosition - 1] : '\0';
+            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new
             {
-                items.Add(new CompletionItem()
+                items = result.Suggestions.Select((item, index) => new CompletionItem()
                 {
                     Label = item.DisplayText.Text,
                     Detail = item.FunctionParameterDescription,
                     Documentation = item.Definition,
-                    Kind = GetCompletionItemKind(item.Kind)
-                });
-            }
+                    Kind = GetCompletionItemKind(item.Kind),
 
-            _sendToClient(JsonRpcHelper.CreateSuccessResult(id, new
-            {
-                items,
+                    // The order of the results should be preserved.  To do that, we embed the index
+                    // into the sort text, which clients may sort lexigraphically.
+                    SortText = index.ToString(CultureInfo.InvariantCulture),
+
+                    // If the current position is in front of a single quote and the completion result starts with a single quote,
+                    // we don't want to make it harder on the end user by inserting an extra single quote.
+                    InsertText = item.DisplayText.Text is { } label && TexlLexer.IsIdentDelimiter(label[0]) && precedingCharacter == TexlLexer.IdentifierDelimiter ? label.Substring(1) : item.DisplayText.Text
+                }),
                 isIncomplete = false
             }));
         }
@@ -802,7 +805,7 @@ namespace Microsoft.PowerFx.LanguageServerProtocol
                 {
                     diagnostics.Add(new Diagnostic()
                     {
-                        Range = GetRange(expression, item.Span),
+                        Range = GetRange(expression, item.Span ?? new Span(0, 0)),
                         Message = item.Message,
                         Severity = DocumentSeverityToDiagnosticSeverityMap(item.Severity)
                     });

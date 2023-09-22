@@ -12,13 +12,16 @@ namespace Microsoft.PowerFx.Core.Parser
 
         internal Formula Formula { get; }
 
-        public NamedFormula(IdentToken ident, Formula formula)
+        internal int StartingIndex { get; }
+
+        public NamedFormula(IdentToken ident, Formula formula, int startingIndex)
         {
             Contracts.AssertValue(ident);
             Contracts.AssertValue(formula);
             
             Ident = ident;
             Formula = formula;
+            StartingIndex = startingIndex;
         }
     }
 }
