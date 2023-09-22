@@ -2,12 +2,15 @@
 // Licensed under the MIT license.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Core.IR;
 using Microsoft.PowerFx.Core.Utils;
+using Microsoft.PowerFx.Interpreter.Exceptions;
 using Microsoft.PowerFx.Types;
 using static System.TimeZoneInfo;
 
@@ -716,6 +719,66 @@ namespace Microsoft.PowerFx.Functions
             }
 
             return NumberOrDecimalValue(irContext, weekday);
+        }
+
+        public static FormulaValue EDate(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
+
+            var arg0 = runner.GetNormalizedDateTime(args[0]);
+
+            if (args[1] is NumberValue nv)
+            {
+                try
+                {
+                    int truncAdd = (int)nv.Value;
+
+                    DateTime added = arg0.AddMonths(truncAdd);
+
+                    DateTime newDate = MakeValidDateTime(runner, added, timeZoneInfo);
+
+                    return new DateValue(irContext, newDate);
+                }
+                catch
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+            }
+            else
+            {
+                throw CommonExceptions.RuntimeMisMatch;
+            }
+        }
+
+        public static FormulaValue EOMonth(EvalVisitor runner, EvalVisitorContext context, IRContext irContext, FormulaValue[] args)
+        {
+            var timeZoneInfo = runner.TimeZoneInfo;
+
+            DateTime arg0 = runner.GetNormalizedDateTime(args[0]);
+
+            if (args[1] is NumberValue nv)
+            {
+                try
+                {
+                    int truncAdd = (int)nv.Value;
+
+                    DateTime firstOfOriginal = new DateTime(arg0.Year, arg0.Month, 1);
+                    DateTime plusMonths = firstOfOriginal.AddMonths(truncAdd);
+                    DateTime lastOfMonth = plusMonths.AddDays(DateTime.DaysInMonth(plusMonths.Year, plusMonths.Month) - 1);
+
+                    DateTime newDate = MakeValidDateTime(runner, lastOfMonth, timeZoneInfo);
+
+                    return new DateValue(irContext, newDate);
+                }
+                catch
+                {
+                    return CommonErrors.ArgumentOutOfRange(irContext);
+                }
+            }
+            else
+            {
+                throw CommonExceptions.RuntimeMisMatch;
+            }
         }
     }
 }
