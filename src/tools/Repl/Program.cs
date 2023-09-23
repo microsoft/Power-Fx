@@ -310,8 +310,8 @@ namespace Microsoft.PowerFx
             config.EnableSetFunction();
             config.EnableParseJSONFunction();
 
-            config.AddFunction(new HelpFunction());
             config.AddFunction(new ResetFunction());
+            config.AddFunction(new HelpFunction());
             config.AddFunction(new ExitFunction());
             config.AddFunction(new OptionFunction());
             config.AddFunction(new ResetImportFunction());
@@ -525,26 +525,12 @@ namespace Microsoft.PowerFx
         {
             public BooleanValue Execute()
             {
-                var column = 0;
-                var funcList = string.Empty;
-                List<string> funcNames = _repl.Engine.SupportedFunctions.FunctionNames.ToList();
-                
-                funcNames.Sort();
-                foreach (var func in funcNames)
+                if (_repl._outputConsole)
                 {
-                    funcList += $"  {func,-14}";
-                    if (++column % 5 == 0)
-                    {
-                        funcList += "\n";
-                    }
-                }
-
-                funcList += "  Set";
-
-                // If we return a string, it gets escaped. 
-                // Just write to console 
-                Console.WriteLine(
-                @"
+                    // If we return a string, it gets escaped. 
+                    // Just write to console 
+                    Console.WriteLine(
+                    @"
 <formula> alone is evaluated and the result displayed.
     Example: 1+1 or ""Hello, World""
 Set( <identifier>, <formula> ) creates or changes a variable's value.
@@ -566,7 +552,7 @@ Set( <identifier>, <formula> ) creates or changes a variable's value.
 Supported types: Number, String, Boolean, DateTime, Date, Time
 
 Available functions (all are case sensitive):
-" + funcList + @"
+" + _repl.HelpFunctionList() + "  Set" + @"
 
 Available operators: = <> <= >= + - * / % && And || Or ! Not in exactin 
 
@@ -583,6 +569,7 @@ Use Option( Options.FormatTable, false ) to disable table formatting.
 Once a formula is defined or a variable's type is defined, it cannot be changed.
 Use the Reset() function to clear all formulas and variables.
 ");
+                }
 
                 return FormulaValue.New(true);
             }
