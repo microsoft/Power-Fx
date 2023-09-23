@@ -22,7 +22,7 @@ namespace Microsoft.PowerFx
              UseCompactRepresentation = true
         };
 
-        public string Format(FormulaValue value)
+        public virtual string Format(FormulaValue value)
         {
             var sb = new StringBuilder();
             value.ToExpression(sb, this.Settings);

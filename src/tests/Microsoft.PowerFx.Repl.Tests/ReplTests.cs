@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -23,6 +24,15 @@ namespace Microsoft.PowerFx.Repl.Tests
             };
         }
 
+        private static readonly BasicUserInfo _userInfo = new BasicUserInfo
+        {
+            FullName = "Susan Burk",
+            Email = "susan@contoso.com",
+            DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
+            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
+            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
+        };
+
         [Fact]
         public void Test1()
         {
@@ -41,6 +51,16 @@ namespace Microsoft.PowerFx.Repl.Tests
             Assert.Equal(
 @"x: 3
 30", log);
+        }
+
+        [Fact]
+        public void TestUser()
+        {
+            _repl.UserInfo = _userInfo.UserInfo;
+            _repl.HandleLine("User.Email");
+
+            var log = _output.Get(OutputKind.Repl);
+            Assert.Equal("\"susan@contoso.com\"", log);
         }
 
         [Fact]

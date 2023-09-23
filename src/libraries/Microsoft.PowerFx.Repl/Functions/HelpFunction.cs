@@ -9,25 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.PowerFx.Types;
 
-namespace Microsoft.PowerFx
+namespace Microsoft.PowerFx.Repl.Functions
 {
-    internal class NotifyFunction : ReflectionFunction
-    {
-        public NotifyFunction()
-        {
-            this.ConfigType = typeof(IReplOutput);
-        }
-
-        public async Task<BooleanValue> Execute(IReplOutput output, StringValue message, CancellationToken cancel)
-        {
-            await output.WriteLineAsync(message.Value, OutputKind.Notify, cancel)
-                .ConfigureAwait(false);
-
-            // $$$ fix return value ... void / blank?
-            return FormulaValue.New(true);
-        }
-    }
-
     internal class HelpFunction : ReflectionFunction
     {
         private readonly PowerFxReplBase _repl;
@@ -40,13 +23,17 @@ namespace Microsoft.PowerFx
 
         private async Task WriteAsync(string msg, CancellationToken cancel)
         {
+            // $$$ Pointer to web URL?
+
             await _repl.Output.WriteAsync(msg, OutputKind.Notify, cancel)
                 .ConfigureAwait(false);
         }
 
         public async Task<BooleanValue> Execute(CancellationToken cancel)
         {
-            await this.WriteAsync("Available functions:\n", cancel)
+            // $$$ include custom message 
+
+            await WriteAsync("Available functions:\n", cancel)
                 .ConfigureAwait(false);
 
             var column = 0;
@@ -56,7 +43,7 @@ namespace Microsoft.PowerFx
                 _repl.Engine.SupportedFunctions.FunctionNames
                     .Concat(_repl.MetaFunctions.FunctionNames);
 
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
 
             var funcNames = original.ToList();
             funcNames.Sort();
@@ -71,10 +58,10 @@ namespace Microsoft.PowerFx
 
             stringBuilder.AppendLine();
 
-            await this.WriteAsync(stringBuilder.ToString(), cancel)
+            await WriteAsync(stringBuilder.ToString(), cancel)
                     .ConfigureAwait(false);
 
             return FormulaValue.New(true);
-        }   
+        }
     }
 }
