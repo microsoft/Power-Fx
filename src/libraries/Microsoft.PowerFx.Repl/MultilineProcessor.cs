@@ -23,7 +23,7 @@ namespace Microsoft.PowerFx
             _commandBuffer.AppendLine(line);
 
             // $$$ fix this check and apply ReadFormula logic.
-            bool complete = !line.EndsWith(" ", StringComparison.Ordinal); 
+            bool complete = !line.TrimEnd('\r', '\n').EndsWith(" ", StringComparison.Ordinal); 
 
             if (complete)
             {

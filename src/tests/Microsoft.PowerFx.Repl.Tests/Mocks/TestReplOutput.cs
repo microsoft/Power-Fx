@@ -31,6 +31,7 @@ namespace Microsoft.PowerFx.Repl.Tests
         public string Get(OutputKind kind)
         {
             var log = _buffers[kind].ToString().Trim();
+            Clear(kind);
 
             // Normalize \r\n to whatever the literal are.
             var newLine = @"

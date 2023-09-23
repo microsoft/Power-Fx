@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Types;
 
@@ -53,14 +54,27 @@ namespace Microsoft.PowerFx
         // Metata function "IR" that dumps the IR. 
         public bool AllowIRFunction { get; set; } = true;
 
-        // Optional. If set, then 
+        /// <summary>
+        /// Optional - provide the current user. 
+        /// Must call <see cref="EnableUserObject(string[])"/> first to declare the schema.
+        /// </summary>
         public UserInfo UserInfo { get; set; }
+
+        /// <summary>
+        /// Optional set of Services provided to Repl at eval time. 
+        /// </summary>
+        public IServiceProvider InnerServices { get; set; }
 
         // Policy for handling multiple lines. 
         public MultilineProcessor MultilineProcessor { get; set; } = new MultilineProcessor();
 
         // example override, switching to [1], [2] etc.
         public virtual string Prompt => ">> ";
+
+        /// <summary>
+        /// Optional - if set, additional symbol values that are fed into the repl . 
+        /// </summary>
+        public ReadOnlySymbolValues ExtraSymbolValues { get; set; }
 
         // Interpreter should normally not throw.
         // Exceptions should be caught and converted to ErrorResult.
@@ -75,29 +89,53 @@ namespace Microsoft.PowerFx
 
         public PowerFxReplBase()
         {
-            // $$$ Make it easy for host to hook Notify? 
+            // $$$ Make it easy for host to hook Notify()? 
             this.MetaFunctions.AddFunction(new NotifyFunction());
             this.MetaFunctions.AddFunction(new HelpFunction(this));
-
-            var allKeys = UserInfo.AllKeys;
-            this.MetaFunctions.AddUserInfoObject(allKeys);
         }
 
-        // $$$ Should we just put on engine? 
-        // useful to keep separate if engine is passed in.
+        private bool _userEnabled = false;
+
+        // Either inherited symbols must define User (and it's schema), 
+        // or we can define it now. 
+        public void EnableUserObject(params string[] keys)
+        {
+            if (_userEnabled)
+            {
+                throw new InvalidOperationException($"Can't enable User object twice.");
+            }
+
+            _userEnabled = true;
+            if (keys.Length == 0)
+            {
+                // Assume inherited has defined it.
+                var check = this.Engine.Check("User");
+                if (!check.IsSuccess)
+                {
+                    throw new InvalidOperationException($"Must either specify User properties or engine must have it enabled already.");
+                }
+            }
+            else
+            {
+                this.MetaFunctions.AddUserInfoObject(keys);
+            }
+        }
+
+        // Separate symbol table so that Repl doesn't interfere with engine.
         public SymbolTable MetaFunctions { get; } = new SymbolTable { DebugName = "Repl Functions" };
 
         // Can we get direct Reader/Writer?
         // - writer can't do colorizing...
         // public async Task RunAsync(TextReader input, TextWriter output, CancellationToken cancel)        
 
+        // $$$ Move to caller?
         public virtual async Task WritePromptAsync(CancellationToken cancel = default)
         {
             string prompt;
 
             if (this.MultilineProcessor.IsFirstLine)
             {
-                prompt = this.Prompt;                
+                prompt = this.Prompt;
             }
             else
             {
@@ -110,20 +148,25 @@ namespace Microsoft.PowerFx
         }
 
         // Accept a line of input.  This supports multi-line handling. 
-        // Caller invokes this in a loop.  $$$ How to signal an exit?
+        // Caller invokes this in a loop.  $$$ How to signal an exit? OperationCanceledException?
         public async Task HandleLineAsync(string line, CancellationToken cancel = default)
         {
             string cmd = this.MultilineProcessor.HandleLine(line);
 
             if (cmd != null)
             {
-                await this.HandleCommand(cmd, cancel);
-            }            
+                await this.HandleCommandAsync(cmd, cancel);
+            }
         }
 
-        // $$$ pre-post hook? Capture result. 
-        // Handle a command - does not allow multi-line processing.
-        public virtual async Task HandleCommand(string line, CancellationToken cancel = default)
+        /// <summary>
+        /// Directly invoke a command. This skips multiline handling. 
+        /// </summary>
+        /// <param name="line">expression to run.</param>
+        /// <param name="cancel">cancellation token.</param>
+        /// <returns>status object with details.</returns>
+        /// <exception cref="InvalidOperationException">invalid.</exception>
+        public virtual async Task<ReplResult> HandleCommandAsync(string line, CancellationToken cancel = default)
         {
             if (this.Engine == null)
             {
@@ -132,7 +175,7 @@ namespace Microsoft.PowerFx
 
             if (string.IsNullOrWhiteSpace(line))
             {
-                return;
+                return new ReplResult();
             }
 
             if (this.Echo)
@@ -140,6 +183,7 @@ namespace Microsoft.PowerFx
                 await this.Output.WriteLineAsync(line, OutputKind.Repl, cancel);
             }
 
+            var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
             var parserOpts = new ParserOptions { AllowsSideEffects = true };
 
             if (this.AllowIRFunction)
@@ -148,30 +192,41 @@ namespace Microsoft.PowerFx
                 if (match.Success)
                 {
                     var inner = match.Groups["expr"].Value;
-                    var cr = this.Engine.Check(inner, options: parserOpts);
+                    var cr = this.Engine.Check(inner, options: parserOpts, symbolTable: extraSymbolTable);
                     var irText = cr.PrintIR();
                     await this.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
                         .ConfigureAwait(false);
-                    return;
+
+                    return new ReplResult();
                 }
             }
-
-            //SymbolTable symbolTable = new SymbolTable { DebugName = "REPL" };
-
-            var runtimeConfig = new RuntimeConfig();
+            
+            var runtimeConfig = new RuntimeConfig(this.ExtraSymbolValues)
+            {
+                 ServiceProvider = new BasicServiceProvider(this.InnerServices)
+            };
 
             if (this.UserInfo != null)
             {
+                if (!_userEnabled)
+                {
+                    throw new InvalidOperationException($"Must call {nameof(EnableUserObject)} before setting {nameof(UserInfo)}.");
+                }
+
                 runtimeConfig.SetUserInfo(this.UserInfo);
             }
 
             runtimeConfig.AddService<IReplOutput>(this.Output);
 
+            var currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);
+
             var check = new CheckResult(this.Engine)
                 .SetText(line, parserOpts)
-                .SetBindingInfo(this.MetaFunctions);
+                .SetBindingInfo(currentSymbolTable);
 
             check.ApplyParse();
+
+            HashSet<string> varsToDisplay = new HashSet<string>();
 
             // Pre-scan expression for declarations, like Set(x, y)
             // If found, declare 'x'. And the proceed with eval like normal. 
@@ -185,6 +240,7 @@ namespace Microsoft.PowerFx
                 foreach (var declare in vis._declarations)
                 {
                     var name = declare._variableName;
+                    varsToDisplay.Add(name);
                     if (!Engine.TryGetVariableType(name, out var existingType))
                     {
                         // Deosn't exist yet!
@@ -192,17 +248,20 @@ namespace Microsoft.PowerFx
                         // Get the type. 
                         var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(line);
 
-                        // $$$ better eval, handle errors?
-                        var setValue = this.Engine.Eval(rhsExpr);
+                        var setCheck = this.Engine.Check(rhsExpr, parserOpts, this.ExtraSymbolValues?.SymbolTable);
+                        if (!setCheck.IsSuccess)
+                        {
+                            await this.Output.WriteLineAsync($"Failed to initialize '{name}'.", OutputKind.Error, cancel)
+                                .ConfigureAwait(false);
+                            return new ReplResult { CheckResult = setCheck };
+                        }
+
+                        // Start as blank. Will execute expression below to actually assign. 
+                        var setValue = FormulaValue.NewBlank(setCheck.ReturnType);
 
                         // $$$ separate symbol table?
                         this.Engine.UpdateVariable(name, setValue);
-
-                        var output2 = this.ValueFormatter.Format(setValue);
-
-                        await this.Output.WriteLineAsync($"{name}: {output2}", OutputKind.Repl, cancel)
-                            .ConfigureAwait(false);
-
+                        
                         createdDeclarations = true;
                     }
                     else
@@ -216,7 +275,7 @@ namespace Microsoft.PowerFx
                     // Rebind expression with new declarations. 
                     check = new CheckResult(this.Engine)
                         .SetText(line, new ParserOptions { AllowsSideEffects = true })
-                        .SetBindingInfo(this.MetaFunctions);
+                        .SetBindingInfo(currentSymbolTable);
 
                     check.ApplyParse();
                 }
@@ -235,7 +294,7 @@ namespace Microsoft.PowerFx
                         .ConfigureAwait(false);
                 }
 
-                return;
+                return new ReplResult { CheckResult = check };
             }
 
             // Now eval
@@ -258,23 +317,73 @@ namespace Microsoft.PowerFx
             catch (Exception e)
             {
                 await this.OnEvalExceptionAsync(e, cancel);
-                return;
+
+                // $$$ Should be an error. 
+                return new ReplResult { CheckResult = check };
+            }
+
+            var replResult = new ReplResult
+            {
+                CheckResult = check,
+                EvalResult = result,
+            };
+
+            foreach (var varName in varsToDisplay)
+            {
+                var varValue = this.Engine.GetValue(varName);
+                replResult.DeclaredVars[varName] = varValue;
+
+                await this.WriteLineVarAsync(varValue, cancel, $"{varName}: ");
             }
 
             // Now print the result
-            {
-                var output = this.ValueFormatter.Format(result);
-                var kind = (result is ErrorValue) ? OutputKind.Error : OutputKind.Repl;
+            await this.WriteLineVarAsync(result, cancel);
 
-                await this.Output.WriteLineAsync(output, kind, cancel);
+            return replResult;
+        }
+
+        private async Task WriteLineVarAsync(FormulaValue result, CancellationToken cancel, string prefix = null)
+        {
+            if (prefix == null)
+            {
+                prefix = string.Empty;
             }
+
+            if (result == null)
+            {
+                await this.Output.WriteLineAsync(string.Empty, OutputKind.Repl, cancel);
+                return;
+            }
+
+            var output = this.ValueFormatter.Format(result);
+            var kind = (result is ErrorValue) ? OutputKind.Error : OutputKind.Repl;
+
+            await this.Output.WriteLineAsync(prefix + output, kind, cancel);
         }
     }
 
-    // $$$ delete
+    /// <summary>
+    /// Result from <see cref="PowerFxReplBase.HandleCommandAsync(string, CancellationToken)"/>.
+    /// </summary>
     public class ReplResult
     {
-        // middle of a multiline operation. 
-        public bool NeedMoreInput { get; set; }
+        /// <summary>
+        /// Check Result, after ApplyErrors() is called. Could have be failures.
+        /// Could be null on a nop. 
+        /// </summary>
+        public CheckResult CheckResult { get; set; }
+
+        public bool IsSuccess => this.CheckResult == null ? true : this.CheckResult.IsSuccess;
+
+        /// <summary>
+        /// Result after evaluation. Null if didn't eval. 
+        /// </summary>
+        public FormulaValue EvalResult { get; set; }
+
+        /// <summary>
+        /// Updates to variables via Set(). 
+        /// key is the name, value is the final value at the end of the expression. 
+        /// </summary>
+        public IDictionary<string, FormulaValue> DeclaredVars { get; set; } = new Dictionary<string, FormulaValue>();
     }
 }

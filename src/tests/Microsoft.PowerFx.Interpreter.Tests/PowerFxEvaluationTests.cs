@@ -403,81 +403,47 @@ namespace Microsoft.PowerFx.Interpreter.Tests
             }
         }
 
-        // Runts through a .txt in sequence, allowing Set() functions that can create state. 
+        // Run through a .txt in sequence, allowing Set() functions that can create state. 
         // Useful for testing mutation functions. 
+        // The .txt format still provides an expected return value after each expression.
         internal class ReplRunner : BaseRunner
         {
             private readonly RecalcEngine _engine;
 
-            private readonly RuntimeConfig _runtimeConfig;
+            // Repl engine does all the policy around declaring variables via Set().
+            public readonly PowerFxReplBase _repl;
 
-            public ReplRunner(RecalcEngine engine, RuntimeConfig runtimeConfig)
+            public ReplRunner(RecalcEngine engine)
             {
                 _engine = engine;
-                _runtimeConfig = runtimeConfig;
+
+                _repl = new PowerFxReplBase
+                {
+                    Engine = _engine,
+                    AllowSetDefinitions = true
+                };
             }
 
             protected override async Task<RunResult> RunAsyncInternal(string expr, string setupHandlerName = null)
             {
-                if (TryMatchSet(expr, out var runResult, NumberIsFloat))
+                var replResult = await _repl.HandleCommandAsync(expr, default).ConfigureAwait(false);
+
+                // .txt output format - if there are any Set(), compare those.
+                if (replResult.DeclaredVars.Count > 0)
                 {
+                    var newVar = replResult.DeclaredVars.First().Value;
+                    var runResult = new RunResult(newVar);
                     return runResult;
                 }
 
-                ParserOptions opts = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
-
-                var check = _engine.Check(expr, opts);
+                var check = replResult.CheckResult;
                 if (!check.IsSuccess)
                 {
                     return new RunResult(check);
                 }
 
-                var result = check.GetEvaluator().Eval(_runtimeConfig);
+                var result = replResult.EvalResult;
                 return new RunResult(result);
-            }
-
-            // Pattern match for Set(x,y) so that we can define the variable
-            public bool TryMatchSet(string expr, out RunResult runResult, bool numberIsFloat = false)
-            {
-                var parserOptions = new ParserOptions { AllowsSideEffects = true, NumberIsFloat = NumberIsFloat };
-
-                var parse = _engine.Parse(expr, parserOptions);
-                if (parse.IsSuccess)
-                {
-                    if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
-                    {
-                        if (parse.Root is Microsoft.PowerFx.Syntax.CallNode call)
-                        {
-                            if (call.Head.Name.Value == "Set")
-                            {
-                                // Infer type based on arg1. 
-                                var arg0 = call.Args.ChildNodes[0];
-                                if (arg0 is Microsoft.PowerFx.Syntax.FirstNameNode arg0node)
-                                {
-                                    var arg0name = arg0node.Ident.Name.Value;
-
-                                    var arg1 = call.Args.ChildNodes[1];
-                                    var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
-
-                                    var check = _engine.Check(arg1expr, parserOptions);
-                                    if (check.IsSuccess)
-                                    {
-                                        var arg1Type = check.ReturnType;
-
-                                        var varValue = check.GetEvaluator().Eval(_runtimeConfig);
-                                        _engine.UpdateVariable(arg0name, varValue);
-
-                                        runResult = new RunResult(varValue);
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                runResult = null;
-                return false;
             }
         }
     }

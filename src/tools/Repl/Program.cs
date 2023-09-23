@@ -176,7 +176,7 @@ namespace Microsoft.PowerFx
                 Console.ResetColor();
             }
 
-            public override async Task HandleCommand(string expr, CancellationToken cancel = default)
+            public override async Task<ReplResult> HandleCommandAsync(string expr, CancellationToken cancel = default)
             {
                 this.Engine = _engine; // apply latest engine. 
 
@@ -196,11 +196,13 @@ namespace Microsoft.PowerFx
                     }
 
                     _engine.SetFormula(ident, match.Groups["formula"].Value, OnUpdate);
+
+                    return new ReplResult();
                 }
                 else
                 {
                     // Default to standard behavior. 
-                    await base.HandleCommand(expr, cancel).ConfigureAwait(false);
+                    return await base.HandleCommandAsync(expr, cancel).ConfigureAwait(false);
                 }
             }
         }
