@@ -12,151 +12,66 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Microsoft.CodeAnalysis;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
-using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.REPL;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
 {
-    public static class ConsoleRepl
+    public class TestREPL : RecalcEngineREPL
     {
-        private static RecalcEngine _engine;
+        public bool _hashCodes = false;
+        public bool _formatTable = true;
 
-        private const string OptionFormatTable = "FormatTable";
-        private static bool _formatTable = true;
-
-        private const string OptionNumberIsFloat = "NumberIsFloat";
-        private static bool _numberIsFloat = false;
-
-        private const string OptionLargeCallDepth = "LargeCallDepth";
-        private static bool _largeCallDepth = false;
-
-        private const string OptionFeaturesNone = "FeaturesNone";
-
-        private const string OptionPowerFxV1 = "PowerFxV1";
-
-        private const string OptionHashCodes = "HashCodes";
-        private static bool _hashCodes = false;
-
-        private const string OptionStackTrace = "StackTrace";
-        private static bool _stackTrace = false;
-
-        private static readonly BasicUserInfo _userInfo = new BasicUserInfo
+        public TestREPL(PowerFxConfig config, bool outputConsole)
+            : base(config, outputConsole)
         {
-            FullName = "Susan Burk",
-            Email = "susan@contoso.com",
-            DataverseUserId = new Guid("aa1d4f65-044f-4928-a95f-30d4c8ebf118"),
-            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
-            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
-        };
-
-        private static readonly Features _features = Features.PowerFxV1;
-
-        private static void ResetEngine()
-        {
-            var props = new Dictionary<string, object>
-            {
-                { "FullName", _userInfo.FullName },
-                { "Email", _userInfo.Email },
-                { "DataverseUserId", _userInfo.DataverseUserId },
-                { "TeamsMemberId", _userInfo.TeamsMemberId }
-            };
-
-            var allKeys = props.Keys.ToArray();
-            SymbolTable userSymbolTable = new SymbolTable();
-
-            userSymbolTable.AddUserInfoObject(allKeys);
-
-            var config = new PowerFxConfig(_features) { SymbolTable = userSymbolTable };
-
-            if (_largeCallDepth)
-            {
-                config.MaxCallDepth = 200;
-            }
-
-            Dictionary<string, string> options = new Dictionary<string, string>
-            {
-                { OptionFormatTable, OptionFormatTable },
-                { OptionNumberIsFloat, OptionNumberIsFloat },
-                { OptionLargeCallDepth, OptionLargeCallDepth },
-                { OptionFeaturesNone, OptionFeaturesNone },
-                { OptionPowerFxV1, OptionPowerFxV1 },
-                { OptionHashCodes, OptionHashCodes },
-                { OptionStackTrace, OptionStackTrace }
-            };
-
-            foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-            {
-                if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
-                {
-                    var feature = featureProperty.Name;
-                    options.Add(feature.ToString(), feature.ToString());
-                }
-            }
-
-            config.SymbolTable.EnableMutationFunctions();
-
-            config.EnableSetFunction();
-            config.EnableParseJSONFunction();
-
-            config.AddFunction(new HelpFunction());
-            config.AddFunction(new ResetFunction());
-            config.AddFunction(new ExitFunction());
-            config.AddFunction(new OptionFunction());
-            config.AddFunction(new ResetImportFunction());
-            config.AddFunction(new ImportFunction1Arg());
-            config.AddFunction(new ImportFunction2Arg());
-
-            var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
-#pragma warning restore CS0618 // Type or member is obsolete
-
-            config.AddOptionSet(optionsSet);
-
-            _engine = new RecalcEngine(config);
         }
 
-        public static void Main()
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+        public override FormulaValue Eval(string expr, TextWriter? output, bool echo)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         {
-            var enabled = new StringBuilder();
+            Match match;
 
-            Console.InputEncoding = System.Text.Encoding.Unicode;
-            Console.OutputEncoding = System.Text.Encoding.Unicode;
-
-            ResetEngine();
-
-            var version = typeof(RecalcEngine).Assembly.GetName().Version.ToString();
-            Console.WriteLine($"Microsoft Power Fx Console Formula REPL, Version {version}");
-
-            foreach (var propertyInfo in typeof(Features).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
+            // variable assignment: Set( <ident>, <expr> )
+            if (TryMatchSet(expr, out var varName, out var varValue))
             {
-                if (propertyInfo.PropertyType == typeof(bool) && ((bool)propertyInfo.GetValue(_engine.Config.Features)) == true)
+                if (_outputConsole)
                 {
-                    enabled.Append(" " + propertyInfo.Name);
+                    Console.WriteLine(varName + ": " + PrintResult(varValue));
                 }
+
+                return null;
             }
 
-            if (enabled.Length == 0)
+            // IR pretty printer: IR( <expr> )
+            else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
             {
-                enabled.Append(" <none>");
+                var opts = this.GetParserOptions();
+                var cr = Engine.Check(match.Groups["expr"].Value, options: opts);
+                var ir = cr.PrintIR();
+                if (_outputConsole)
+                { 
+                    Console.WriteLine(ir);
+                }
+
+                return null;
             }
 
-            Console.WriteLine($"Experimental features enabled:{enabled}");
-
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
-            Console.WriteLine($"Enter Excel formulas.  Use \"Help()\" for details.");
-#pragma warning restore CA1303 // Do not pass literals as localized parameters
-
-            REPL(Console.In, false);
+            // Evertyhing else
+            else
+            {
+                return base.Eval(expr, output, echo);
+            }
         }
 
         // Pattern match for Set(x,y) so that we can define the variable
-        public static bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
+        private bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
         {
-            var parserOptions = _engine.GetDefaultParserOptionsCopy();
+            var parserOptions = Engine.GetDefaultParserOptionsCopy();
             parserOptions.AllowsSideEffects = true;
 
             var parse = Engine.Parse(expr, options: parserOptions);
@@ -177,13 +92,13 @@ namespace Microsoft.PowerFx
                                 var arg1 = call.Args.ChildNodes[1];
                                 var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
 
-                                var check = _engine.Check(arg1expr, GetParserOptions(), GetSymbolTable());
+                                var check = Engine.Check(arg1expr, GetParserOptions(), GetSymbolTable());
                                 if (check.IsSuccess)
                                 {
                                     var arg1Type = check.ReturnType;
 
                                     varValue = check.GetEvaluator().Eval(GetRuntimeConfig());
-                                    _engine.UpdateVariable(arg0name, varValue);
+                                    Engine.UpdateVariable(arg0name, varValue);
 
                                     return true;
                                 }
@@ -198,280 +113,7 @@ namespace Microsoft.PowerFx
             return false;
         }
 
-        private static ParserOptions GetParserOptions()
-        {
-            return new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
-        }
-
-        private static ReadOnlySymbolTable GetSymbolTable()
-        {
-            return _engine.EngineSymbols;
-        }
-
-        private static RuntimeConfig GetRuntimeConfig()
-        {
-            var rc = new RuntimeConfig();
-            rc.SetUserInfo(_userInfo);
-            return rc;
-        }
-
-        private static FormulaValue Eval(string expressionText)
-        {
-            CheckResult checkResult = _engine.Check(expressionText, GetParserOptions(), GetSymbolTable());
-            checkResult.ThrowOnErrors();
-
-            IExpressionEvaluator evaluator = checkResult.GetEvaluator();
-            return evaluator.Eval(GetRuntimeConfig());
-        }
-
-        public static void REPL(TextReader input, bool echo = false, TextWriter output = null)
-        {
-            string expr;
-
-            // main loop
-            while ((expr = ReadFormula(input, output, echo)) != null)
-            {
-                Match match;
-
-                try
-                {
-                    // variable assignment: Set( <ident>, <expr> )
-                    if (TryMatchSet(expr, out var varName, out var varValue))
-                    {
-                        Console.WriteLine(varName + ": " + PrintResult(varValue));
-                        output?.WriteLine(varName + ": " + PrintResult(varValue));
-                    }
-
-                    // IR pretty printer: IR( <expr> )
-                    else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
-                    {
-                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
-                        var cr = _engine.Check(match.Groups["expr"].Value, options: opts);
-                        var ir = cr.PrintIR();
-                        Console.WriteLine(ir);
-                        output?.WriteLine(ir);
-                    }
-
-                    // named formula definition: <ident> = <formula>
-                    else if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
-                              !Regex.IsMatch(match.Groups["ident"].Value, "^\\d") &&
-                              match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
-                    {
-                        var ident = match.Groups["ident"].Value;
-                        if (ident.StartsWith('\''))
-                        {
-                            ident = ident.Substring(1, ident.Length - 2).Replace("''", "'", StringComparison.Ordinal);
-                        }
-
-                        _engine.SetFormula(ident, match.Groups["formula"].Value, OnUpdate);
-                    }
-
-                    // function definition: <ident>( <ident> : <type>, ... ) : <type> = <formula>
-                    //                      <ident>( <ident> : <type>, ... ) : <type> { <formula>; <formula>; ... }
-                    else if (Regex.IsMatch(expr, @"^\s*\w+\((\s*\w+\s*\:\s*\w+\s*,?)*\)\s*\:\s*\w+\s*(\=|\{).*$", RegexOptions.Singleline))
-                    {
-                        var res = _engine.DefineFunctions(expr, _numberIsFloat);
-                        if (res.Errors.Count() > 0)
-                        {
-                            throw new Exception("Error: " + res.Errors.First());
-                        }
-                    }
-
-                    // eval and print everything else
-                    else
-                    {
-                        var opts = new ParserOptions() { AllowsSideEffects = true, NumberIsFloat = _numberIsFloat };
-                        var rc = new RuntimeConfig();
-                        rc.SetUserInfo(_userInfo);
-                        var result = Eval(expr);
-
-                        if (output != null)
-                        {
-                            // same algorithm used by BaseRunner.cs
-                            var sb = new StringBuilder();
-                            var settings = new FormulaValueSerializerSettings()
-                            {
-                                UseCompactRepresentation = true,
-                            };
-
-                            // Serializer will produce a human-friedly representation of the value
-                            result.ToExpression(sb, settings);
-
-                            output.Write(sb.ToString() + "\n\n");
-                        }
-
-                        if (result is ErrorValue errorValue)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine($"Error: {errorValue.Errors[0].Kind} - {errorValue.Errors[0].Message}");
-                            Console.ResetColor();
-                        }
-                        else
-                        {
-                            Console.WriteLine(PrintResult(result));
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(e.Message);
-
-                    if (_stackTrace)
-                    {
-                        Console.WriteLine(e.ToString());
-                    }
-
-                    Console.ResetColor();
-                    output?.WriteLine(Regex.Replace(e.InnerException.Message, "\r\n", "|") + "\n");
-                }
-            }
-        }
-
-        private static void OnUpdate(string name, FormulaValue newValue)
-        {
-            Console.Write($"{name}: ");
-            if (newValue is ErrorValue errorValue)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error: " + errorValue.Errors[0].Message);
-                Console.ResetColor();
-            }
-            else
-            {
-                if (newValue is TableValue)
-                {
-                    Console.WriteLine();
-                }
-
-                Console.WriteLine(PrintResult(newValue));
-            }
-        }
-
-        public static string ReadFormula(TextReader input, TextWriter output = null, bool echo = false)
-        {
-            string exprPartial;
-            int usefulCount;
-
-            // read
-            do
-            {
-                string exprOne;
-                int parenCount;
-
-                exprPartial = null;
-
-                do
-                {
-                    bool doubleQuote, singleQuote;
-                    bool lineComment, blockComment;
-                    char last;
-
-                    if (exprPartial == null && !echo)
-                    {
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
-                        Console.Write("\n> ");
-#pragma warning restore CA1303 // Do not pass literals as localized parameters
-                    }
-
-                    exprOne = input.ReadLine();
-
-                    if (exprOne == null)
-                    {
-                        Console.Write("\n");
-                        return exprPartial;
-                    }
-
-                    exprPartial += exprOne + "\n";
-
-                    // determines if the parens, curly braces, and square brackets are closed
-                    // taking into escaping, block, and line comments
-                    // and continues reading lines if they are not, with a blank link terminating
-                    parenCount = 0;
-                    doubleQuote = singleQuote = lineComment = blockComment = false;
-                    last = '\0';
-                    usefulCount = 0;
-                    foreach (var c in exprPartial)
-                    {
-                        // don't need to worry about escaping as it looks like two 
-                        if (c == '"' && !singleQuote)
-                        {
-                            doubleQuote = !doubleQuote; // strings that are back to back
-                        }
-
-                        if (c == '\'' && !doubleQuote)
-                        {
-                            singleQuote = !singleQuote;
-                        }
-
-                        if (c == '*' && last == '/' && !blockComment)
-                        {
-                            blockComment = true;
-                            usefulCount--;                         // compensates for the last character already being added
-                        }
-
-                        if (c == '/' && last == '*' && blockComment)
-                        {
-                            blockComment = false;
-                            usefulCount--;
-                        }
-
-                        if (!doubleQuote && !singleQuote && !blockComment && !lineComment && c == '/' && last == '/')
-                        {
-                            lineComment = true;
-                            usefulCount--;
-                        }
-
-                        if (c == '\n')
-                        {
-                            lineComment = false;
-                        }
-
-                        if (!lineComment && !blockComment && !doubleQuote && !singleQuote)
-                        {
-                            if (c == '(' || c == '{' || c == '[')
-                            {
-                                parenCount++;
-                            }
-
-                            if (c == ')' || c == '}' || c == ']')
-                            {
-                                parenCount--;
-                            }
-                        }
-
-                        if (!char.IsWhiteSpace(c) && !lineComment && !blockComment)
-                        {
-                            usefulCount++;
-                        }
-
-                        last = c;
-                    }
-                }
-                while (!Regex.IsMatch(exprOne, "^\\s*$") && (parenCount != 0 || Regex.IsMatch(exprOne, "(=|=\\>)\\s*$")));
-
-                if (echo)
-                {
-                    // skip >> for comments and setup
-                    if (Regex.IsMatch(exprPartial, "^\\s*//") || Regex.IsMatch(exprPartial, "^#SETUP"))
-                    {
-                        Console.Write(exprPartial);
-                        output?.Write(exprPartial + "\n");
-                        usefulCount = 0;
-                    }
-                    else if (!Regex.IsMatch(exprPartial, "^\\s*$"))
-                    {
-                        Console.Write("\n>> " + exprPartial);
-                        output?.Write(">> " + exprPartial);
-                    }
-                }
-            }
-            while (usefulCount == 0);
-
-            return exprPartial;
-        }
-
-        private static string PrintResult(FormulaValue value, bool minimal = false)
+        public override string PrintResult(FormulaValue value, bool minimal = false)
         {
             string resultString = string.Empty;
 
@@ -664,6 +306,118 @@ namespace Microsoft.PowerFx
 
             return resultString;
         }
+    }
+
+    public static class ConsoleRepl
+    {
+        private static TestREPL _engine;
+
+        private const string OptionFormatTable = "FormatTable";
+
+        private const string OptionNumberIsFloat = "NumberIsFloat";
+        private static bool _numberIsFloat = false;
+
+        private const string OptionLargeCallDepth = "LargeCallDepth";
+        private static bool _largeCallDepth = false;
+
+        private const string OptionFeaturesNone = "FeaturesNone";
+
+        private const string OptionPowerFxV1 = "PowerFxV1";
+
+        private const string OptionHashCodes = "HashCodes";
+        private static bool _hashCodes = false;
+
+        private const string OptionStackTrace = "StackTrace";
+        private static bool _stackTrace = false;
+
+        private static readonly Features _features = Features.PowerFxV1;
+
+        private static void ResetEngine()
+        {
+            var config = new PowerFxConfig(_features);
+
+            if (_largeCallDepth)
+            {
+                config.MaxCallDepth = 200;
+            }
+
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { OptionFormatTable, OptionFormatTable },
+                { OptionNumberIsFloat, OptionNumberIsFloat },
+                { OptionLargeCallDepth, OptionLargeCallDepth },
+                { OptionFeaturesNone, OptionFeaturesNone },
+                { OptionPowerFxV1, OptionPowerFxV1 },
+                { OptionHashCodes, OptionHashCodes },
+                { OptionStackTrace, OptionStackTrace }
+            };
+
+            foreach (var featureProperty in typeof(Features).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                if (featureProperty.PropertyType == typeof(bool) && featureProperty.CanWrite)
+                {
+                    var feature = featureProperty.Name;
+                    options.Add(feature.ToString(), feature.ToString());
+                }
+            }
+
+            config.SymbolTable.EnableMutationFunctions();
+
+            config.EnableSetFunction();
+            config.EnableParseJSONFunction();
+
+            config.AddFunction(new HelpFunction());
+            config.AddFunction(new ResetFunction());
+            config.AddFunction(new ExitFunction());
+            config.AddFunction(new OptionFunction());
+            config.AddFunction(new ResetImportFunction());
+            config.AddFunction(new ImportFunction1Arg());
+            config.AddFunction(new ImportFunction2Arg());
+
+            var optionsSet = new OptionSet("Options", DisplayNameUtility.MakeUnique(options));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            config.EnableRegExFunctions(new TimeSpan(0, 0, 5));
+#pragma warning restore CS0618 // Type or member is obsolete
+
+            config.AddOptionSet(optionsSet);
+
+            _engine = new TestREPL(config, true);
+        }
+
+        public static void Main()
+        {
+            var enabled = new StringBuilder();
+
+            Console.InputEncoding = System.Text.Encoding.Unicode;
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+
+            ResetEngine();
+
+            var version = typeof(RecalcEngine).Assembly.GetName().Version.ToString();
+            Console.WriteLine($"Microsoft Power Fx Console Formula REPL, Version {version}");
+
+            foreach (var propertyInfo in typeof(Features).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
+            {
+                if (propertyInfo.PropertyType == typeof(bool) && ((bool)propertyInfo.GetValue(_engine.Engine.Config.Features)) == true)
+                {
+                    enabled.Append(" " + propertyInfo.Name);
+                }
+            }
+
+            if (enabled.Length == 0)
+            {
+                enabled.Append(" <none>");
+            }
+
+            Console.WriteLine($"Experimental features enabled:{enabled}");
+
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
+            Console.WriteLine($"Enter Excel formulas.  Use \"Help()\" for details.");
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
+
+            _engine.REPL(Console.In, null, false);
+        }
 
         private class ResetFunction : ReflectionFunction
         {
@@ -695,7 +449,7 @@ namespace Microsoft.PowerFx
             {
                 if (string.Equals(option.Value, OptionFormatTable, StringComparison.OrdinalIgnoreCase))
                 {
-                    _formatTable = value.Value;
+                    _engine._formatTable = value.Value;
                     return value;
                 }
 
@@ -793,7 +547,7 @@ namespace Microsoft.PowerFx
                         outputWriter = new StreamWriter(outputSV.Value, false, System.Text.Encoding.UTF8);
                     }
 
-                    ConsoleRepl.REPL(fileReader, true, outputWriter);
+                    _engine.REPL(fileReader, outputWriter, true);
                     fileReader.Close();
                     outputWriter?.Close();
                 }
@@ -829,7 +583,7 @@ namespace Microsoft.PowerFx
             {
                 var column = 0;
                 var funcList = string.Empty;
-                List<string> funcNames = _engine.SupportedFunctions.FunctionNames.ToList();
+                List<string> funcNames = _engine.Engine.SupportedFunctions.FunctionNames.ToList();
                 
                 funcNames.Sort();
                 foreach (var func in funcNames)
