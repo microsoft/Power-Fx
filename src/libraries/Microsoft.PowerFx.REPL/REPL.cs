@@ -52,13 +52,33 @@ namespace Microsoft.PowerFx.REPL
             return rc;
         }
 
-        public virtual FormulaValue Eval(string expressionText, TextWriter? output, bool echo)
+        public virtual FormulaValue? Eval(string expr, TextWriter? output, bool echo)
         {
-            CheckResult checkResult = Engine.Check(expressionText, GetParserOptions(), GetSymbolTable());
-            checkResult.ThrowOnErrors();
+            Match match;
 
-            IExpressionEvaluator evaluator = checkResult.GetEvaluator();
-            return evaluator.Eval(GetRuntimeConfig());
+            // named formula definition: <ident> = <formula>
+            if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+                !Regex.IsMatch(match.Groups["ident"].Value, "^\\d") &&
+                match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
+            {
+                var ident = match.Groups["ident"].Value;
+                if (ident.StartsWith("\'", StringComparison.InvariantCulture))
+                {
+                    ident = ident.Substring(1, ident.Length - 2).Replace("''", "'");
+                }
+
+                Engine.SetFormula(ident, match.Groups["formula"].Value, OnUpdate);
+
+                return null;
+            }
+            else
+            {
+                CheckResult checkResult = Engine.Check(expr, GetParserOptions(), GetSymbolTable());
+                checkResult.ThrowOnErrors();
+
+                IExpressionEvaluator evaluator = checkResult.GetEvaluator();
+                return evaluator.Eval(GetRuntimeConfig());
+            }
         }
 
         public RecalcEngineREPL(PowerFxConfig config, bool outputConsole)

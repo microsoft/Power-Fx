@@ -31,7 +31,7 @@ namespace Microsoft.PowerFx
         }
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-        public override FormulaValue Eval(string expr, TextWriter? output, bool echo)
+        public override FormulaValue? Eval(string expr, TextWriter? output, bool echo)
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         {
             Match match;
