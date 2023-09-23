@@ -58,8 +58,19 @@ namespace Microsoft.PowerFx.REPL
         {
             Match match;
 
+            // variable assignment: Set( <ident>, <expr> )
+            if (TryMatchSet(expr, out var varName, out var varValue))
+            {
+                if (_outputConsole)
+                {
+                    Console.WriteLine(varName + ": " + PrintResult(varValue));
+                }
+
+                return null;
+            }
+
             // named formula definition: <ident> = <formula>
-            if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
+            else if ((match = Regex.Match(expr, @"^\s*(?<ident>(\w+|'([^']|'')+'))\s*=(?<formula>.*)$", RegexOptions.Singleline)).Success &&
                 !Regex.IsMatch(match.Groups["ident"].Value, "^\\d") &&
                 match.Groups["ident"].Value != "true" && match.Groups["ident"].Value != "false" && match.Groups["ident"].Value != "blank")
             {
@@ -96,6 +107,11 @@ namespace Microsoft.PowerFx.REPL
             };
             var allKeys = props.Keys.ToArray();
             config.SymbolTable.AddUserInfoObject(allKeys);
+
+            if (!Engine.SupportedFunctions.TryLookupSlot("Help", out _))
+            {
+                config.AddFunction(new HelpFunction(this));
+            }
 
             _outputConsole = outputConsole;
         }
@@ -163,7 +179,7 @@ namespace Microsoft.PowerFx.REPL
         public virtual void OnUpdate(string name, FormulaValue newValue)
         {
             if (_outputConsole)
-            { 
+            {
                 Console.Write($"{name}: ");
                 if (newValue is ErrorValue errorValue)
                 {
@@ -305,6 +321,87 @@ namespace Microsoft.PowerFx.REPL
             while (usefulCount == 0);
 
             return exprPartial;
+        }
+
+        // Pattern match for Set(x,y) so that we can define the variable
+        private bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
+        {
+            var parserOptions = Engine.GetDefaultParserOptionsCopy();
+            parserOptions.AllowsSideEffects = true;
+
+            var parse = Engine.Parse(expr, options: parserOptions);
+            if (parse.IsSuccess)
+            {
+                if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
+                {
+                    if (parse.Root is Microsoft.PowerFx.Syntax.CallNode call)
+                    {
+                        if (call.Head.Name.Value == "Set")
+                        {
+                            // Infer type based on arg1. 
+                            var arg0 = call.Args.ChildNodes[0];
+                            if (arg0 is Microsoft.PowerFx.Syntax.FirstNameNode arg0node)
+                            {
+                                arg0name = arg0node.Ident.Name.Value;
+
+                                var arg1 = call.Args.ChildNodes[1];
+                                var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
+
+                                var check = Engine.Check(arg1expr, GetParserOptions(), GetSymbolTable());
+                                if (check.IsSuccess)
+                                {
+                                    var arg1Type = check.ReturnType;
+
+                                    varValue = check.GetEvaluator().Eval(GetRuntimeConfig());
+                                    Engine.UpdateVariable(arg0name, varValue);
+
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            varValue = FormulaValue.New(false);
+            arg0name = string.Empty;
+            return false;
+        }
+
+        public string HelpFunctionList()
+        {
+            var column = 0;
+            var funcList = string.Empty;
+            List<string> funcNames = Engine.SupportedFunctions.FunctionNames.ToList();
+
+            funcNames.Sort();
+            foreach (var func in funcNames)
+            {
+                funcList += $"  {func,-14}";
+                if (++column % 5 == 0)
+                {
+                    funcList += "\n";
+                }
+            }
+
+            return funcList;
+        }
+
+        private class HelpFunction : ReflectionFunction
+        {
+            private readonly RecalcEngineREPL _repl;
+
+            public HelpFunction(RecalcEngineREPL repl)
+                : base()
+            {   
+                _repl = repl;
+            }
+
+            public BooleanValue Execute()
+            {
+                Console.WriteLine("Available functions:\n" + _repl.HelpFunctionList());
+                return FormulaValue.New(true);
+            }
         }
     }
 }

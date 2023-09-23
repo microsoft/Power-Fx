@@ -36,19 +36,8 @@ namespace Microsoft.PowerFx
         {
             Match match;
 
-            // variable assignment: Set( <ident>, <expr> )
-            if (TryMatchSet(expr, out var varName, out var varValue))
-            {
-                if (_outputConsole)
-                {
-                    Console.WriteLine(varName + ": " + PrintResult(varValue));
-                }
-
-                return null;
-            }
-
             // IR pretty printer: IR( <expr> )
-            else if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
+            if ((match = Regex.Match(expr, @"^\s*IR\((?<expr>.*)\)\s*$", RegexOptions.Singleline)).Success)
             {
                 var opts = this.GetParserOptions();
                 var cr = Engine.Check(match.Groups["expr"].Value, options: opts);
@@ -66,51 +55,6 @@ namespace Microsoft.PowerFx
             {
                 return base.Eval(expr, output, echo);
             }
-        }
-
-        // Pattern match for Set(x,y) so that we can define the variable
-        private bool TryMatchSet(string expr, out string arg0name, out FormulaValue varValue)
-        {
-            var parserOptions = Engine.GetDefaultParserOptionsCopy();
-            parserOptions.AllowsSideEffects = true;
-
-            var parse = Engine.Parse(expr, options: parserOptions);
-            if (parse.IsSuccess)
-            {
-                if (parse.Root.Kind == Microsoft.PowerFx.Syntax.NodeKind.Call)
-                {
-                    if (parse.Root is Microsoft.PowerFx.Syntax.CallNode call)
-                    {
-                        if (call.Head.Name.Value == "Set")
-                        {
-                            // Infer type based on arg1. 
-                            var arg0 = call.Args.ChildNodes[0];
-                            if (arg0 is Microsoft.PowerFx.Syntax.FirstNameNode arg0node)
-                            {
-                                arg0name = arg0node.Ident.Name.Value;
-
-                                var arg1 = call.Args.ChildNodes[1];
-                                var arg1expr = arg1.GetCompleteSpan().GetFragment(expr);
-
-                                var check = Engine.Check(arg1expr, GetParserOptions(), GetSymbolTable());
-                                if (check.IsSuccess)
-                                {
-                                    var arg1Type = check.ReturnType;
-
-                                    varValue = check.GetEvaluator().Eval(GetRuntimeConfig());
-                                    Engine.UpdateVariable(arg0name, varValue);
-
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            varValue = null;
-            arg0name = null;
-            return false;
         }
 
         public override string PrintResult(FormulaValue value, bool minimal = false)
@@ -310,7 +254,7 @@ namespace Microsoft.PowerFx
 
     public static class ConsoleRepl
     {
-        private static TestREPL _engine;
+        private static TestREPL _repl;
 
         private const string OptionFormatTable = "FormatTable";
 
@@ -382,7 +326,7 @@ namespace Microsoft.PowerFx
 
             config.AddOptionSet(optionsSet);
 
-            _engine = new TestREPL(config, true);
+            _repl = new TestREPL(config, true);
         }
 
         public static void Main()
@@ -399,7 +343,7 @@ namespace Microsoft.PowerFx
 
             foreach (var propertyInfo in typeof(Features).GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic))
             {
-                if (propertyInfo.PropertyType == typeof(bool) && ((bool)propertyInfo.GetValue(_engine.Engine.Config.Features)) == true)
+                if (propertyInfo.PropertyType == typeof(bool) && ((bool)propertyInfo.GetValue(_repl.Engine.Config.Features)) == true)
                 {
                     enabled.Append(" " + propertyInfo.Name);
                 }
@@ -416,7 +360,7 @@ namespace Microsoft.PowerFx
             Console.WriteLine($"Enter Excel formulas.  Use \"Help()\" for details.");
 #pragma warning restore CA1303 // Do not pass literals as localized parameters
 
-            _engine.REPL(Console.In, null, false);
+            _repl.REPL(Console.In, null, false);
         }
 
         private class ResetFunction : ReflectionFunction
@@ -449,7 +393,7 @@ namespace Microsoft.PowerFx
             {
                 if (string.Equals(option.Value, OptionFormatTable, StringComparison.OrdinalIgnoreCase))
                 {
-                    _engine._formatTable = value.Value;
+                    _repl._formatTable = value.Value;
                     return value;
                 }
 
@@ -547,7 +491,7 @@ namespace Microsoft.PowerFx
                         outputWriter = new StreamWriter(outputSV.Value, false, System.Text.Encoding.UTF8);
                     }
 
-                    _engine.REPL(fileReader, outputWriter, true);
+                    _repl.REPL(fileReader, outputWriter, true);
                     fileReader.Close();
                     outputWriter?.Close();
                 }
@@ -583,7 +527,7 @@ namespace Microsoft.PowerFx
             {
                 var column = 0;
                 var funcList = string.Empty;
-                List<string> funcNames = _engine.Engine.SupportedFunctions.FunctionNames.ToList();
+                List<string> funcNames = _repl.Engine.SupportedFunctions.FunctionNames.ToList();
                 
                 funcNames.Sort();
                 foreach (var func in funcNames)
