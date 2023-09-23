@@ -33,6 +33,8 @@ namespace Microsoft.PowerFx.REPL
 
         public virtual bool StackTrace => false;
 
+        public virtual string Prompt => "\n> ";
+
         public readonly bool _outputConsole;
 
         public virtual ParserOptions GetParserOptions()
@@ -205,9 +207,7 @@ namespace Microsoft.PowerFx.REPL
 
                     if (exprPartial == null && !echo)
                     {
-    #pragma warning disable CA1303 // Do not pass literals as localized parameters
-                        Console.Write("\n> ");
-    #pragma warning restore CA1303 // Do not pass literals as localized parameters
+                        Console.Write(Prompt);
                     }
 
                     exprOne = input.ReadLine();
