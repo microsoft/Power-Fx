@@ -119,7 +119,7 @@ namespace Microsoft.PowerFx
             _engine = new RecalcEngine(config);
         }
 
-        public static void Main()
+        public static void Main2()
         {
             var enabled = new StringBuilder();
 

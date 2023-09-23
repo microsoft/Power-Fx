@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <Version Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</Version>
+    <Version Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</Version>
+    <PackageVersion Condition=" '$(ReleasePackageVersion)' == '' ">$(LocalPackageVersion)</PackageVersion>
+    <PackageVersion Condition=" '$(ReleasePackageVersion)' != '' ">$(ReleasePackageVersion)</PackageVersion>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <!-- Nuget Properties -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Microsoft.PowerFx.Repl</PackageId>
+    <Title>Microsoft Power Fx Repl</Title>
+    <Description>Repl</Description>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.PowerFx.Core\Microsoft.PowerFx.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.PowerFx.Interpreter\Microsoft.PowerFx.Interpreter.csproj" />
+  </ItemGroup>
+</Project>
