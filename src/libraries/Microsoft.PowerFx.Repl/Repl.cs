@@ -86,6 +86,8 @@ namespace Microsoft.PowerFx
         // example override, switching to [1], [2] etc.
         public virtual string Prompt => ">> ";
 
+        public virtual string PromptContinuation => ".. ";
+
         /// <summary>
         /// Optional - if set, additional symbol values that are fed into the repl . 
         /// </summary>
@@ -160,7 +162,7 @@ namespace Microsoft.PowerFx
             else
             {
                 // in the middle of a multiline
-                prompt = "  "; // standard indent
+                prompt = this.PromptContinuation;
             }
 
             // Start of new command 
@@ -171,13 +173,23 @@ namespace Microsoft.PowerFx
         // Caller invokes this in a loop.  $$$ How to signal an exit? OperationCanceledException?
         public async Task HandleLineAsync(string line, CancellationToken cancel = default)
         {
+            if (this.Engine == null)
+            {
+                throw new InvalidOperationException($"Engine is not set.");
+            }
+
             string cmd = this.MultilineProcessor.HandleLine(line);
 
             var result = PowerFx.Engine.Parse(cmd, Engine.Config.Features, ParserOptions);
 
-            var missingClose = result.Errors.Count(error => error.Message.Contains("where 'ParenClose' is expected.") || error.Message.Contains("where 'CurlyClose' is expected") || error.Message.Contains("where 'BracketClose' is expected"));
+            var missingClose = result.Errors.Count(error => 
+                                    error.Message.Contains("where 'ParenClose' is expected.") || 
+                                    error.Message.Contains("where 'CurlyClose' is expected") || 
+                                    error.Message.Contains("where 'BracketClose' is expected"));
 
-            if (missingClose == 0 || cmd.EndsWith("\r\n\r\n", StringComparison.InvariantCulture) || cmd.EndsWith("\n\n", StringComparison.InvariantCulture))
+            if (missingClose == 0 || 
+                result.Errors.Count(error => error.Message.Contains("Characters are used in the formula in an unexpected way.")) > 0 ||
+                Regex.IsMatch(cmd, "\n[ \t]*\r?\n$", RegexOptions.Multiline))
             {
                 this.MultilineProcessor.Clear();
                 await this.HandleCommandAsync(cmd, result, cancel);
