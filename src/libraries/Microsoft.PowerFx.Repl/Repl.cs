@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Microsoft.PowerFx.Core.Localization;
+using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Repl.Functions;
 using Microsoft.PowerFx.Syntax;
 using Microsoft.PowerFx.Types;
@@ -55,23 +57,11 @@ namespace Microsoft.PowerFx
         // Useful if we're running a file, or ir input UI is separated from output UI. 
         public bool Echo { get; set; } = false;
 
-        // Metata function "IR" that dumps the IR. 
-        public bool AllowIRFunction { get; set; } = true;
-
         /// <summary>
         /// Optional - provide the current user. 
         /// Must call <see cref="EnableUserObject(string[])"/> first to declare the schema.
         /// </summary>
-        public UserInfo UserInfo { get; set; } = SampleUserInfo.UserInfo;
-            
-        public static readonly BasicUserInfo SampleUserInfo = new BasicUserInfo
-        {
-            FullName = "Susan Burk",
-            Email = "susan@contoso.com",
-            DataverseUserId = new Guid("88888888-044f-4928-a95f-30d4c8ebf118"),
-            TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
-            EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
-        };
+        public UserInfo UserInfo { get; set; }
 
         /// <summary>
         /// Optional set of Services provided to Repl at eval time. 
@@ -86,6 +76,7 @@ namespace Microsoft.PowerFx
         // example override, switching to [1], [2] etc.
         public virtual string Prompt => ">> ";
 
+        // prompt for multiline continuation
         public virtual string PromptContinuation => ".. ";
 
         /// <summary>
@@ -104,6 +95,13 @@ namespace Microsoft.PowerFx
             await this.Output.WriteLineAsync(msg, OutputKind.Error, cancel);
         }
 
+        public IDictionary<string, IPsuedoFunction> _pseudoFunctions = new Dictionary<string, IPsuedoFunction>();
+
+        public void AddPseudoFunction(IPsuedoFunction func)
+        {
+            _pseudoFunctions.Add(func.Name(), func);
+        }
+
         public PowerFxReplBase()
         {
             // $$$ Make it easy for host to hook Notify()? 
@@ -115,6 +113,17 @@ namespace Microsoft.PowerFx
 
         public void EnableUserObject()
         {
+            var sampleUserInfo = new BasicUserInfo
+            {
+                FullName = "Susan Burk",
+                Email = "susan@contoso.com",
+                DataverseUserId = new Guid("88888888-044f-4928-a95f-30d4c8ebf118"),
+                TeamsMemberId = "29:1DUjC5z4ttsBQa0fX2O7B0IDu30R",
+                EntraObjectId = new Guid("99999999-044f-4928-a95f-30d4c8ebf118"),
+            };
+
+            UserInfo = sampleUserInfo.UserInfo;
+
             this.EnableUserObject(UserInfo.AllKeys);
         }
 
@@ -180,56 +189,44 @@ namespace Microsoft.PowerFx
 
             string cmd = this.MultilineProcessor.HandleLine(line);
 
-            var result = PowerFx.Engine.Parse(cmd, Engine.Config.Features, ParserOptions);
-
-            var missingClose = result.Errors.Count(error => 
-                                    error.Message.Contains("where 'ParenClose' is expected.") || 
-                                    error.Message.Contains("where 'CurlyClose' is expected") || 
-                                    error.Message.Contains("where 'BracketClose' is expected"));
-
-            if (missingClose == 0 || 
-                result.Errors.Count(error => error.Message.Contains("Characters are used in the formula in an unexpected way.")) > 0 ||
-                Regex.IsMatch(cmd, "\n[ \t]*\r?\n$", RegexOptions.Multiline))
+            if (cmd != null)
             {
-                this.MultilineProcessor.Clear();
-                await this.HandleCommandAsync(cmd, result, cancel);
+                await this.HandleCommandAsync(cmd, cancel);
             }
         }
 
         /// <summary>
         /// Directly invoke a command. This skips multiline handling. 
         /// </summary>
-        /// <param name="line">expression to run.</param>
-        /// <param name="parseResult">result of parsing line.</param>
+        /// <param name="cmd">expression to run.</param>
         /// <param name="cancel">cancellation token.</param>
         /// <returns>status object with details.</returns>
         /// <exception cref="InvalidOperationException">invalid.</exception>
-        public virtual async Task<ReplResult> HandleCommandAsync(string line, ParseResult parseResult, CancellationToken cancel = default)
+        public virtual async Task<ReplResult> HandleCommandAsync(string cmd, CancellationToken cancel = default)
         {
             if (this.Engine == null)
             {
                 throw new InvalidOperationException($"Engine is not set.");
             }
 
-            if (string.IsNullOrWhiteSpace(line))
+            if (string.IsNullOrWhiteSpace(cmd))
             {
                 return new ReplResult();
             }
 
             if (this.Echo)
             {
-                await this.Output.WriteLineAsync(line, OutputKind.Repl, cancel);
+                await this.Output.WriteLineAsync(cmd, OutputKind.Repl, cancel);
             }
 
             var extraSymbolTable = this.ExtraSymbolValues?.SymbolTable;
 
-            if (this.AllowIRFunction && parseResult.Root is CallNode cn && cn.Head.Name == "IR")
-            {
-                var cr = this.Engine.Check(cn.Args.ToString(), options: ParserOptions, symbolTable: extraSymbolTable);
-                var irText = cr.PrintIR();
-                await this.Output.WriteLineAsync(irText, OutputKind.Repl, cancel)
-                    .ConfigureAwait(false);
+            // pseudo functions and named formula assignments, handled outside of the interpreter
+            var parseResult = PowerFx.Engine.Parse(cmd);
 
+            if (parseResult.IsSuccess && parseResult.Root is CallNode cn && _pseudoFunctions.TryGetValue(cn.Head.Name, out var psuedoFunction))
+            {
+                psuedoFunction.Execute(cn, this, extraSymbolTable, cancel);
                 return new ReplResult();
             }
             
@@ -253,7 +250,7 @@ namespace Microsoft.PowerFx
             var currentSymbolTable = ReadOnlySymbolTable.Compose(this.MetaFunctions, extraSymbolTable);
 
             var check = new CheckResult(this.Engine)
-                .SetText(line, ParserOptions)
+                .SetText(cmd, ParserOptions)
                 .SetBindingInfo(currentSymbolTable);
 
             check.ApplyParse();
@@ -278,7 +275,7 @@ namespace Microsoft.PowerFx
                         // Deosn't exist yet!
 
                         // Get the type. 
-                        var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(line);
+                        var rhsExpr = declare._rhs.GetCompleteSpan().GetFragment(cmd);
 
                         var setCheck = this.Engine.Check(rhsExpr, ParserOptions, this.ExtraSymbolValues?.SymbolTable);
                         if (!setCheck.IsSuccess)
@@ -306,7 +303,7 @@ namespace Microsoft.PowerFx
                 {
                     // Rebind expression with new declarations. 
                     check = new CheckResult(this.Engine)
-                        .SetText(line, new ParserOptions { AllowsSideEffects = true })
+                        .SetText(cmd, new ParserOptions { AllowsSideEffects = true })
                         .SetBindingInfo(currentSymbolTable);
 
                     check.ApplyParse();
@@ -395,7 +392,7 @@ namespace Microsoft.PowerFx
     }
 
     /// <summary>
-    /// Result from <see cref="PowerFxReplBase.HandleCommandAsync(string, ParseResult, CancellationToken)"/>.
+    /// Result from <see cref="PowerFxReplBase.HandleCommandAsync(string, CancellationToken)"/>.
     /// </summary>
     public class ReplResult
     {

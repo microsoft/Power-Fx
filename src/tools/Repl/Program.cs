@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.PowerFx;
 using Microsoft.PowerFx.Core;
 using Microsoft.PowerFx.Core.Texl.Builtins;
+using Microsoft.PowerFx.Repl;
 using Microsoft.PowerFx.Types;
 
 namespace Microsoft.PowerFx
@@ -140,6 +141,7 @@ namespace Microsoft.PowerFx
             public MyRepl()
             {
                 this.EnableUserObject();
+                this.AddPseudoFunction(new IRPsuedoFunction());
                 this.Engine = _engine;
             }
 
@@ -156,7 +158,7 @@ namespace Microsoft.PowerFx
                 Console.ResetColor();
             }
 
-            public override async Task<ReplResult> HandleCommandAsync(string expr, ParseResult parseResult, CancellationToken cancel = default)
+            public override async Task<ReplResult> HandleCommandAsync(string expr, CancellationToken cancel = default)
             {
                 this.Engine = _engine; // apply latest engine. 
 
@@ -182,7 +184,7 @@ namespace Microsoft.PowerFx
                 else
                 {
                     // Default to standard behavior. 
-                    return await base.HandleCommandAsync(expr, parseResult, cancel).ConfigureAwait(false);
+                    return await base.HandleCommandAsync(expr, cancel).ConfigureAwait(false);
                 }
             }
         }
@@ -192,8 +194,7 @@ namespace Microsoft.PowerFx
             var repl = new MyRepl
             {
                 Echo = echo,
-                AllowSetDefinitions = true,
-                AllowIRFunction = true
+                AllowSetDefinitions = true
             };
 
             while (true)
